@@ -63,12 +63,6 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="d-flex align-items-center mb-3">
-            <div class="flex-grow-1">
-                <h5 class="mb-0 fs-16">Realisasi Pajak Daerah</h5>
-            </div>
-            <div class="flexshrink-0"></div>
-        </div>
 
         <div class="swiper pajakSlider">
             <div class="swiper-wrapper">
@@ -401,6 +395,177 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">
+                        SERIES PAJAK DAERAH
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-info">
+                        <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                @{
+                    var startYear = 2019;
+                    var endYear = 2025;
+                }
+
+                @(
+                    Html.DevExtreme().DataGrid()
+                    .ID("dg-pajakDaerah")
+                    .ShowBorders(true)
+                    .ShowColumnHeaders(true)
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    .ColumnAutoWidth(true)
+                    .DataSource(new object[0])
+                    .KeyExpr("ID")
+                    .Columns(columns =>
+                    {
+                        columns.Add()
+                            .Caption("No")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Left);
+
+                        columns.Add()
+                            .Caption("Jenis Pajak")
+                            .Fixed(true)
+                            .FixedPosition(HorizontalEdge.Left);
+
+                        for (int year = startYear; year <= endYear; year++)
+                        {
+                            columns.Add()
+                            .Caption(year.ToString())
+                            .Columns(subColumns =>
+                            {
+                                subColumns.Add().Caption("Target");
+                                subColumns.Add().Caption("Persentase");
+                                subColumns.Add().Caption("%");
+                            });
+                        }
+                    })
+                    .Summary(s => {
+                        for (int year = startYear; year <= endYear; year++)
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.Add()
+                                    .Column($"Target{year}")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total: {0:c}");
+
+                                items.Add()
+                                    .Column($"Realisasi{year}")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total: {0:c}");
+
+                                items.Add()
+                                    .Column($"Persentase{year}")
+                                    .SummaryType(SummaryType.Avg)
+                                    .DisplayFormat("Rata-rata: {0:p2}");
+                            });
+                        }
+                    })
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">JUMLAH OBJEK PAJAK</h4>
+                </div>
+                <div class="flex-shrink-0">
+                     <select class="form-select form-select-sm mb-3" aria-label="Default select example">
+                        <option value="1" selected>2025</option>
+                        <option value="2">2024</option>
+                        <option value="3">2023</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#op-tahunan" role="tab" aria-selected="false">
+                            JML OP TAHUNAN
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" aria-selected="false">
+                            JML OP SERIES
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content text-muted">
+                    <div class="tab-pane active" id="op-tahunan" role="tabpanel">
+                            @(
+                                Html.DevExtreme().DataGrid()
+                                .ID("dg-JmlObjekPajakTahunan")
+                                .ShowBorders(true)
+                                .ShowColumnHeaders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .ColumnAutoWidth(true)
+                                .DataSource(new object[0])
+                                .KeyExpr("ID")
+                                .Columns(columns =>
+                                {
+                                    columns.Add().Caption("JENIS PAJAK");
+                                    columns.Add().Caption("JML OP AWAL");
+                                    columns.Add().Caption("JML OP TUTUP SEMENTARA");
+                                    columns.Add().Caption("JML OP TUTUP PERMANEN");
+                                    columns.Add().Caption("JML OP BARU");
+                                })
+                            )
+                    </div>
+                    <div class="tab-pane" id="op-series" role="tabpanel">
+                            @(
+                                Html.DevExtreme().DataGrid()
+                                .ID("dg-JmlObjekPajakSeries")
+                                .ShowBorders(true)
+                                .ShowColumnHeaders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .ColumnAutoWidth(true)
+                                .DataSource(new object[0])
+                                .KeyExpr("ID")
+                                .Columns(columns =>
+                                {
+                                    columns.Add().Caption("JENIS PAJAK");
+                                    columns.Add().Caption("2020");
+                                    columns.Add().Caption("2021");
+                                    columns.Add().Caption("2022");
+                                    columns.Add().Caption("2023");
+                                    columns.Add().Caption("2024");
+                                    columns.Add().Caption("2025");
+                                })
+                            )
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex">
+                <div class="flex-grow-1"></div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-info">
+                    <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
