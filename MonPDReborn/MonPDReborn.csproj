@@ -5,11 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="BuildBundlerMinifierPlus" Version="5.3.0" />
     <PackageReference Include="ClosedXML" Version="0.102.2" />
-    <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="DevExpress.AspNetCore.Core" Version="23.1.5" />
     <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="23.1.5" />
     <PackageReference Include="DevExpress.Reporting.Core" Version="23.1.5" />
