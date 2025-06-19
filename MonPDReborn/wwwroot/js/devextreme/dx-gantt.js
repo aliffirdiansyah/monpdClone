@@ -1,7 +1,7 @@
 /*!
  * DevExpress Gantt (dx-gantt)
- * Version: 4.1.48
- * Build date: Mon Aug 14 2023
+ * Version: 4.1.51
+ * Build date: Fri Dec 08 2023
  *
  * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
@@ -8948,6 +8948,7 @@ exports.Task = void 0;
 var tslib_1 = __webpack_require__(655);
 var common_1 = __webpack_require__(2491);
 var DataObject_1 = __webpack_require__(6124);
+var invalidDateMillseconds = -8000000000000000;
 var Task = (function (_super) {
     tslib_1.__extends(Task, _super);
     function Task() {
@@ -8980,8 +8981,8 @@ var Task = (function (_super) {
             this.parentId = (0, common_1.isDefined)(sourceObj.parentId) ? String(sourceObj.parentId) : null;
             this.description = sourceObj.description;
             this.title = sourceObj.title;
-            this.start = typeof sourceObj.start === "string" ? new Date(sourceObj.start) : sourceObj.start || new Date(0);
-            this.end = typeof sourceObj.end === "string" ? new Date(sourceObj.end) : sourceObj.end || new Date(0);
+            this.start = typeof sourceObj.start === "string" ? new Date(sourceObj.start) : sourceObj.start || this.createInvalidDate();
+            this.end = typeof sourceObj.end === "string" ? new Date(sourceObj.end) : sourceObj.end || this.createInvalidDate();
             this.duration = sourceObj.duration;
             this.progress = sourceObj.progress;
             this.taskType = sourceObj.taskType;
@@ -9007,8 +9008,14 @@ var Task = (function (_super) {
     Task.prototype.getDuration = function () {
         return this.end.getTime() - this.start.getTime();
     };
+    Task.prototype.isValidStart = function () { return this.isValidTaskaDte(this.start); };
+    Task.prototype.isValidEnd = function () { return this.isValidTaskaDte(this.end); };
     Task.prototype.isValid = function () {
-        return !!this.start.getTime() && !!this.end.getTime();
+        return this.isValidStart() && this.isValidEnd();
+    };
+    Task.prototype.createInvalidDate = function () { return new Date(invalidDateMillseconds); };
+    Task.prototype.isValidTaskaDte = function (value) {
+        return !!value && value.getTime() !== invalidDateMillseconds;
     };
     return Task;
 }(DataObject_1.DataObject));
@@ -11161,8 +11168,8 @@ var ViewVisualModel = (function () {
         var parentId = rootId && task.parentId === rootId ? task.parentId : parentTask === null || parentTask === void 0 ? void 0 : parentTask.id;
         var taskObject = {
             id: task.id,
-            start: task.start,
-            end: task.end,
+            start: task.isValidStart() ? task.start : null,
+            end: task.isValidEnd() ? task.end : null,
             duration: task.duration,
             description: task.description,
             parentId: parentId,
@@ -11562,7 +11569,7 @@ var ViewVisualModel = (function () {
         end !== null && end !== void 0 ? end : (end = this._viewItemList.length - 1);
         for (var i = start; i <= end; i++) {
             var item = this._viewItemList[i];
-            if ((item === null || item === void 0 ? void 0 : item.getVisible()) && ((_a = item === null || item === void 0 ? void 0 : item.task) === null || _a === void 0 ? void 0 : _a.isValid))
+            if ((item === null || item === void 0 ? void 0 : item.getVisible()) && ((_a = item === null || item === void 0 ? void 0 : item.task) === null || _a === void 0 ? void 0 : _a.isValid()))
                 result.push(i);
         }
         return result;
@@ -17591,7 +17598,8 @@ var ScaleCalculator = (function () {
             var nextDate = this.getNextScaleDate(currentDate, scaleType);
             var isStart = currentDate.getTime() === this.range.start.getTime();
             var isEnd = nextDate.getTime() >= this.range.end.getTime();
-            var width = isStart || isEnd ? this.getRangeTickCount(currentDate, nextDate) * defWidth : defWidth;
+            var needWidthCorrection = isStart || isEnd || (scaleType > Enums_1.ViewType.Hours && DateUtils_1.DateUtils.hasDST());
+            var width = needWidthCorrection ? this.getRangeTickCount(currentDate, nextDate) * defWidth : defWidth;
             items.push(new ScaleItemInfo(currentDate, nextDate, new point_1.Point(x, undefined), new size_1.Size(width, 0)));
             currentDate = nextDate;
             x += width;
@@ -19717,6 +19725,8 @@ var TaskRender = (function () {
         if (!viewItem.task.isValid() || !viewItem.visible) {
             var taskDependencies = this.getTaskDependencies(viewItem.task.internalId);
             this.addInvalidTaskDependencies(taskDependencies);
+            if (viewItem.selected)
+                this.createTaskSelectionElement(index);
             return;
         }
         if (!viewItem.isCustom)
@@ -20507,7 +20517,7 @@ var DateUtils = (function () {
         return DateUtils.getRangeMSPeriod(start, end) / DateUtils.getTickTimeSpan(scaleType);
     };
     DateUtils.getRangeMSPeriod = function (start, end) {
-        return end.getTime() - DateUtils.getDSTDelta(start, end) - start.getTime();
+        return end.getTime() - DateUtils.getDSTTotalDelta(start, end) - start.getTime();
     };
     DateUtils.getRangeTickCountInMonthsViewType = function (start, end) {
         var startMonthStartDate = new Date(start.getFullYear(), start.getMonth(), 1);
@@ -20543,10 +20553,38 @@ var DateUtils = (function () {
         var timeZoneDiff = DateUtils.getTimezoneOffsetDiff(start, end) * DateUtils.msPerMinute;
         return timeZoneDiff > 0 ? timeZoneDiff : 0;
     };
+    DateUtils.getDSTTotalDelta = function (start, end) {
+        if (!DateUtils.hasDST())
+            return 0;
+        var refDate = start;
+        var delta = 0;
+        var year = refDate.getFullYear();
+        var month = refDate.getMonth();
+        while (refDate < end) {
+            if (month >= 5) {
+                year++;
+                month = 0;
+            }
+            else
+                month = 5;
+            var newRefDate = new Date(year, month, 1);
+            if (newRefDate > end)
+                newRefDate = end;
+            delta += DateUtils.getDSTDelta(refDate, newRefDate);
+            refDate = newRefDate;
+        }
+        return delta;
+    };
     DateUtils.getDSTCorrectedTaskEnd = function (start, period) {
         var time = start.getTime() + period;
-        var delta = DateUtils.getDSTDelta(start, new Date(time));
+        var delta = DateUtils.getDSTTotalDelta(start, new Date(time));
         return new Date(time + delta);
+    };
+    DateUtils.hasDST = function () {
+        var year = (new Date()).getFullYear();
+        var firstJan = new Date(year, 0, 1);
+        var firstJune = new Date(year, 5, 1);
+        return DateUtils.getTimezoneOffsetDiff(firstJan, firstJune) !== 0;
     };
     DateUtils.msPerMinute = 60 * 1000;
     DateUtils.msPerHour = 3600000;

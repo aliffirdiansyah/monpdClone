@@ -1,9 +1,9 @@
 /*!
 * DevExtreme (dx.messages.ca.js)
-* Version: 23.1.5
-* Build date: Wed Aug 30 2023
+* Version: 23.2.5
+* Build date: Mon Mar 11 2024
 *
-* Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+* Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
@@ -79,7 +79,7 @@
             "dxFileUploader-selectFile": "Seleccioneu un fitxer",
             "dxFileUploader-dropFile": "o deixar un fitxer aqu\xed",
             "dxFileUploader-bytes": "bytes",
-            "dxFileUploader-kb": "kb",
+            "dxFileUploader-kb": "KB",
             "dxFileUploader-Mb": "MB",
             "dxFileUploader-Gb": "GB",
             "dxFileUploader-upload": "Penjar",
@@ -141,6 +141,10 @@
             "dxDataGrid-sortingAscendingText": "Ordena Ascending",
             "dxDataGrid-sortingDescendingText": "Ordena descendent",
             "dxDataGrid-sortingClearText": "Ordenaci\xf3 clara",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "Guardar canvis",
             "dxDataGrid-editingCancelAllChanges": "Descartar els canvis",
             "dxDataGrid-editingAddRow": "Afegiu una fila",
@@ -172,10 +176,18 @@
             "dxDataGrid-ariaAdaptiveCollapse": "Amagueu les dades addicionals",
             "dxDataGrid-ariaAdaptiveExpand": "Mostra dades addicionals",
             "dxDataGrid-ariaColumn": "Columna",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "Valorar",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "Filtrar la cel\xb7la",
             "dxDataGrid-ariaCollapse": "Col\xb7lapsar",
+            "dxDataGrid-ariaModifiedCell": "Modified",
+            "dxDataGrid-ariaDeletedCell": "Deleted",
+            "dxDataGrid-ariaEditableCell": "Editable",
             "dxDataGrid-ariaExpand": "Expandir",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Dades Grim",
             "dxDataGrid-ariaSearchInGrid": "Cerqueu a la graella de dades",
             "dxDataGrid-ariaSelectAll": "Seleccionar tot",
@@ -255,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "a la data",
             "dxScheduler-recurrenceRepeatCount": "Aparici\xf3 (s)",
             "dxScheduler-allDay": "Tot el dia",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Voleu editar nom\xe9s aquesta cita o tota la s\xe8rie?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Voleu eliminar nom\xe9s aquesta cita o tota la s\xe8rie?",
             "dxScheduler-confirmRecurrenceEditSeries": "Editar la s\xe8rie",
@@ -265,7 +279,18 @@
             "dxScheduler-moreAppointments": "{0} M\xe9s",
             "dxCalendar-todayButtonText": "Avui",
             "dxCalendar-ariaWidgetName": "Calendari",
-            "dxCalendar-ariaHotKeysInfo": "To navigate between views, press Control, and then Left Arrow or Right Arrow. To zoom in on a view, press Control, and then Down Arrow. To zoom out, press Control, and then Up Arrow.",
+            "dxCalendar-previousMonthButtonLabel": "Previous month",
+            "dxCalendar-previousYearButtonLabel": "Previous year",
+            "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+            "dxCalendar-previousCenturyButtonLabel": "Previous century",
+            "dxCalendar-nextMonthButtonLabel": "Next month",
+            "dxCalendar-nextYearButtonLabel": "Next year",
+            "dxCalendar-nextDecadeButtonLabel": "Next decade",
+            "dxCalendar-nextCenturyButtonLabel": "Next century",
+            "dxCalendar-captionMonthLabel": "Month selection",
+            "dxCalendar-captionYearLabel": "Year selection",
+            "dxCalendar-captionDecadeLabel": "Decade selection",
+            "dxCalendar-captionCenturyLabel": "Century selection",
             "dxColorView-ariaRed": "Vermell",
             "dxColorView-ariaGreen": "Verd",
             "dxColorView-ariaBlue": "Blava",
@@ -384,6 +409,16 @@
             "dxHtmlEditor-right": "Dret",
             "dxHtmlEditor-indent": "Sagnat",
             "dxHtmlEditor-justify": "Justificar",
+            "dxHtmlEditor-borderStyleNone": "none",
+            "dxHtmlEditor-borderStyleHidden": "hidden",
+            "dxHtmlEditor-borderStyleDotted": "dotted",
+            "dxHtmlEditor-borderStyleDashed": "dashed",
+            "dxHtmlEditor-borderStyleSolid": "solid",
+            "dxHtmlEditor-borderStyleDouble": "double",
+            "dxHtmlEditor-borderStyleGroove": "groove",
+            "dxHtmlEditor-borderStyleRidge": "ridge",
+            "dxHtmlEditor-borderStyleInset": "inset",
+            "dxHtmlEditor-borderStyleOutset": "outset",
             "dxFileManager-newDirectoryName": "Directori sense t\xedtol",
             "dxFileManager-rootDirectoryName": "Fitxers",
             "dxFileManager-errorNoAccess": "Acc\xe9s denegat. L'operaci\xf3 no s'ha pogut completar.",
@@ -643,7 +678,12 @@
             "dxGantt-showResources": "Mostrar recursos",
             "dxGantt-showDependencies": "Mostrar depend\xe8ncies",
             "dxGantt-dialogStartDateValidation": "La data d'inici ha de ser despr\xe9s de {0}",
-            "dxGantt-dialogEndDateValidation": "La data de finalitzaci\xf3 ha de ser despr\xe9s de {0}"
+            "dxGantt-dialogEndDateValidation": "La data de finalitzaci\xf3 ha de ser despr\xe9s de {0}",
+            "dxGallery-itemName": "Gallery item",
+            "dxMultiView-elementAriaRoleDescription": "MultiView",
+            "dxMultiView-elementAriaLabel": "Use the arrow keys or swipe to navigate between views",
+            "dxMultiView-itemAriaRoleDescription": "View",
+            "dxMultiView-itemAriaLabel": "{0} of {1}"
         }
     })
 }));
