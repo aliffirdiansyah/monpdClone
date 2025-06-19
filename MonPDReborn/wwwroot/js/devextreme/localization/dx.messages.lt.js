@@ -1,9 +1,9 @@
 /*!
 * DevExtreme (dx.messages.lt.js)
-* Version: 23.1.5
-* Build date: Wed Aug 30 2023
+* Version: 23.2.5
+* Build date: Mon Mar 11 2024
 *
-* Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+* Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
@@ -79,9 +79,9 @@
             "dxFileUploader-selectFile": "Pasirinkite byl\u0105",
             "dxFileUploader-dropFile": "arba numeskite byl\u0105 \u010dia",
             "dxFileUploader-bytes": "baitai",
-            "dxFileUploader-kb": "kb",
-            "dxFileUploader-Mb": "Mb",
-            "dxFileUploader-Gb": "Gb",
+            "dxFileUploader-kb": "KB",
+            "dxFileUploader-Mb": "MB",
+            "dxFileUploader-Gb": "GB",
             "dxFileUploader-upload": "\u012ekelti",
             "dxFileUploader-uploaded": "\u012ekelta",
             "dxFileUploader-readyToUpload": "Paruo\u0161ta \u012fk\u0117limui",
@@ -141,6 +141,10 @@
             "dxDataGrid-sortingAscendingText": "R\u016b\u0161iuoti did\u0117jan\u010diai",
             "dxDataGrid-sortingDescendingText": "R\u016b\u0161iuoti ma\u017e\u0117jan\u010diai",
             "dxDataGrid-sortingClearText": "Ner\u016b\u0161iuoti",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "I\u0161saugoti pakeitimus",
             "dxDataGrid-editingCancelAllChanges": "Atmesti pakeitimus",
             "dxDataGrid-editingAddRow": "Prid\u0117ti eilut\u0119",
@@ -172,10 +176,18 @@
             "dxDataGrid-ariaAdaptiveCollapse": "Sl\u0117pti papildomus duomenis",
             "dxDataGrid-ariaAdaptiveExpand": "Rodyti papildomus duomenis",
             "dxDataGrid-ariaColumn": "Stulpelis",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "Reik\u0161m\u0117",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "Filtro laukas",
             "dxDataGrid-ariaCollapse": "Suskleisti",
+            "dxDataGrid-ariaModifiedCell": "Modified",
+            "dxDataGrid-ariaDeletedCell": "Deleted",
+            "dxDataGrid-ariaEditableCell": "Editable",
             "dxDataGrid-ariaExpand": "I\u0161skleisti",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Duomen\u0173 lentel\u0117",
             "dxDataGrid-ariaSearchInGrid": "Ie\u0161koti duomen\u0173 lentel\u0117je",
             "dxDataGrid-ariaSelectAll": "Pasirinkti visk\u0105",
@@ -255,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "iki datos",
             "dxScheduler-recurrenceRepeatCount": "kart\u0105(us)",
             "dxScheduler-allDay": "Visa diena",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Norite redaguoti tik \u0161\u012f paskyrim\u0105 ar vis\u0105 serij\u0105?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Norite i\u0161trinti tik \u0161\u012f paskyrim\u0105 ar vis\u0105 serij\u0105?",
             "dxScheduler-confirmRecurrenceEditSeries": "Redaguoti serij\u0105",
@@ -265,7 +279,18 @@
             "dxScheduler-moreAppointments": "dar {0}",
             "dxCalendar-todayButtonText": "\u0160iandien",
             "dxCalendar-ariaWidgetName": "Kalendorius",
-            "dxCalendar-ariaHotKeysInfo": "To navigate between views, press Control, and then Left Arrow or Right Arrow. To zoom in on a view, press Control, and then Down Arrow. To zoom out, press Control, and then Up Arrow.",
+            "dxCalendar-previousMonthButtonLabel": "Previous month",
+            "dxCalendar-previousYearButtonLabel": "Previous year",
+            "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+            "dxCalendar-previousCenturyButtonLabel": "Previous century",
+            "dxCalendar-nextMonthButtonLabel": "Next month",
+            "dxCalendar-nextYearButtonLabel": "Next year",
+            "dxCalendar-nextDecadeButtonLabel": "Next decade",
+            "dxCalendar-nextCenturyButtonLabel": "Next century",
+            "dxCalendar-captionMonthLabel": "Month selection",
+            "dxCalendar-captionYearLabel": "Year selection",
+            "dxCalendar-captionDecadeLabel": "Decade selection",
+            "dxCalendar-captionCenturyLabel": "Century selection",
             "dxColorView-ariaRed": "Raudona",
             "dxColorView-ariaGreen": "\u017dalia",
             "dxColorView-ariaBlue": "M\u0117lyna",
@@ -384,6 +409,16 @@
             "dxHtmlEditor-right": "De\u0161in\u0117",
             "dxHtmlEditor-indent": "\u012etrauka",
             "dxHtmlEditor-justify": "\u012e plot\u012f",
+            "dxHtmlEditor-borderStyleNone": "none",
+            "dxHtmlEditor-borderStyleHidden": "hidden",
+            "dxHtmlEditor-borderStyleDotted": "dotted",
+            "dxHtmlEditor-borderStyleDashed": "dashed",
+            "dxHtmlEditor-borderStyleSolid": "solid",
+            "dxHtmlEditor-borderStyleDouble": "double",
+            "dxHtmlEditor-borderStyleGroove": "groove",
+            "dxHtmlEditor-borderStyleRidge": "ridge",
+            "dxHtmlEditor-borderStyleInset": "inset",
+            "dxHtmlEditor-borderStyleOutset": "outset",
             "dxFileManager-newDirectoryName": "Nepavadintas aplankas",
             "dxFileManager-rootDirectoryName": "Bylos",
             "dxFileManager-errorNoAccess": "N\u0117ra prieigos. Veiksmas negali b\u016bti atliktas.",
@@ -643,7 +678,12 @@
             "dxGantt-showResources": "Rodyti resursus",
             "dxGantt-showDependencies": "Rodyti priklausomybes",
             "dxGantt-dialogStartDateValidation": "Prad\u017eios data turi b\u016bti po {0}",
-            "dxGantt-dialogEndDateValidation": "Pabaigos data turi b\u016bti po {0}"
+            "dxGantt-dialogEndDateValidation": "Pabaigos data turi b\u016bti po {0}",
+            "dxGallery-itemName": "Gallery item",
+            "dxMultiView-elementAriaRoleDescription": "MultiView",
+            "dxMultiView-elementAriaLabel": "Use the arrow keys or swipe to navigate between views",
+            "dxMultiView-itemAriaRoleDescription": "View",
+            "dxMultiView-itemAriaLabel": "{0} of {1}"
         }
     })
 }));

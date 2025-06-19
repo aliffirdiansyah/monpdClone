@@ -1,9 +1,9 @@
 /*!
  * DevExpress Diagram (dx-diagram)
- * Version: 2.2.1
- * Build date: Fri Aug 18 2023
+ * Version: 2.2.5
+ * Build date: Mon Jan 22 2024
  *
- * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+ * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -6319,7 +6319,7 @@ var point_1 = __webpack_require__(8900);
 var ModelUtils_1 = __webpack_require__(4867);
 var unit_converter_1 = __webpack_require__(9291);
 var SimpleCommandBase_1 = __webpack_require__(9741);
-var __1 = __webpack_require__(3607);
+var DragHelper_1 = __webpack_require__(4742);
 var MoveCommand = (function (_super) {
     __extends(MoveCommand, _super);
     function MoveCommand() {
@@ -6332,34 +6332,11 @@ var MoveCommand = (function (_super) {
         var _this = this;
         this.control.history.beginTransaction();
         var selection = this.control.selection;
-        var selectedShapes = selection.getSelectedShapes();
-        var selectedShapesWithoutDuplicates = selectedShapes.filter(function (shape) {
-            while (shape.container) {
-                if (selectedShapes.indexOf(shape.container) !== -1)
-                    return false;
-                shape = shape.container;
-            }
-            return true;
-        });
-        selectedShapesWithoutDuplicates.forEach(function (shape) {
-            _this.permissionsProvider.addInteractingItem(shape, __1.DiagramModelOperation.MoveShape);
-            var pos = _this.getPosition(shape.position);
-            ModelUtils_1.ModelUtils.setShapePosition(_this.control.history, _this.control.model, shape, pos);
-            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(_this.control.history, _this.control.model, shape);
-            _this.permissionsProvider.clearInteractingItems();
-        });
-        var selectedItems = ModelUtils_1.ModelUtils.createSelectedItems(selection);
-        selection.getSelectedConnectors().forEach(function (connector) {
-            if (ModelUtils_1.ModelUtils.canMoveConnector(selectedItems, connector)) {
-                var startPtIndex = connector.beginItem ? 1 : 0;
-                var endPtIndex = connector.endItem ? (connector.points.length - 2) : (connector.points.length - 1);
-                for (var i = startPtIndex; i <= endPtIndex; i++) {
-                    var pos = _this.getPosition(connector.points[i]);
-                    ModelUtils_1.ModelUtils.moveConnectorPoint(_this.control.history, connector, i, pos);
-                }
-            }
-        });
-        ModelUtils_1.ModelUtils.tryUpdateModelRectangle(this.control.history);
+        var helper = new DragHelper_1.SelectionDragHelper(this.control.history, this.control.model, this.permissionsProvider, new point_1.Point(0, 0), selection.getSelectedItems(true));
+        helper.initDraggingShapes(selection.getSelectedShapes(false, true), false);
+        helper.initDraggingConnectors(selection.getSelectedConnectors(false, true), false);
+        helper.move(false, function (p) { return _this.getPosition(p); }, function () { }, function () { });
+        ModelUtils_1.ModelUtils.tryUpdateModelRectangle(this.control.history, function (offsetLeft, offsetTop) { return helper.onTryUpdateModelSize(offsetLeft, offsetTop); });
         this.control.history.endTransaction();
         return true;
     };
@@ -12876,14 +12853,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MouseHandlerDragDiagramItemStateBase = exports.DraggingConnector = void 0;
-var vector_1 = __webpack_require__(9716);
-var ChangeConnectorPointsHistoryItem_1 = __webpack_require__(58);
-var ConnectorRenderPoint_1 = __webpack_require__(4717);
-var ConnectorRenderPointsContext_1 = __webpack_require__(1510);
 var ModelUtils_1 = __webpack_require__(4867);
 var ModelOperationSettings_1 = __webpack_require__(6879);
 var Event_1 = __webpack_require__(6031);
 var MouseHandlerDraggingState_1 = __webpack_require__(8816);
+var DragHelper_1 = __webpack_require__(4742);
 var DraggingConnector = (function () {
     function DraggingConnector(connector) {
         this.connector = connector;
@@ -12893,13 +12867,6 @@ var DraggingConnector = (function () {
     return DraggingConnector;
 }());
 exports.DraggingConnector = DraggingConnector;
-var DraggingShape = (function () {
-    function DraggingShape(shape) {
-        this.shape = shape;
-        this.startPosition = shape.position.clone();
-    }
-    return DraggingShape;
-}());
 var MouseHandlerDragDiagramItemStateBase = (function (_super) {
     __extends(MouseHandlerDragDiagramItemStateBase, _super);
     function MouseHandlerDragDiagramItemStateBase(handler, history, model, selection, visualizerManager) {
@@ -12919,14 +12886,11 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
         _super.prototype.finish.call(this);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.onMouseDown = function (evt) {
-        var _this = this;
         this.handler.addDiagramItemToSelection(evt);
         this.shouldClone = this.handler.canCopySelectedItems(evt);
         this.startPoint = evt.modelPoint;
         this.initDrag();
         this.lockInitDrag = false;
-        if (!this.shouldClone)
-            this.draggingShapes.forEach(function (draggingShape) { return _this.handler.addInteractingItem(draggingShape.shape, ModelOperationSettings_1.DiagramModelOperation.MoveShape); });
         _super.prototype.onMouseDown.call(this, evt);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.onMouseMove = function (evt) {
@@ -12966,48 +12930,28 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
     MouseHandlerDragDiagramItemStateBase.prototype.onApplyChanges = function (evt) {
         var _this = this;
         this.calculateFixedPosition(evt);
-        if (this.draggingShapes.length) {
-            var selectedShapes_1 = this.draggingShapes.map(function (ds) { return ds.shape; });
-            this.draggingShapes.forEach(function (ds) {
-                var shape = ds.shape;
-                while (shape.container) {
-                    if (selectedShapes_1.indexOf(shape.container) !== -1)
-                        return false;
-                    shape = shape.container;
-                }
-                _this.moveShape(ds, evt);
-            });
-            var firstDraggingShape = this.draggingShapes[0];
-            var offset_1 = vector_1.Vector.fromPoints(firstDraggingShape.startPosition.clone(), firstDraggingShape.shape.position.clone());
-            if (offset_1.x || offset_1.y)
-                this.draggingConnectors.forEach(function (dc) { return _this.moveConnectorCore(dc.connector, dc.startPoints, dc.startRenderContext, offset_1); });
-        }
-        else
-            this.draggingConnectors.forEach(function (x) { return _this.moveConnector(x, evt); });
+        this.dragHelper.move(this.shouldClone, function (pt) { return _this.getSnappedPoint(evt, pt); }, function () {
+            _this.visualizerManager.resetConnectionTarget();
+            _this.visualizerManager.resetConnectionPoints();
+        }, function (shape, connectionPointIndex) {
+            _this.visualizerManager.setConnectionTarget(shape, Event_1.MouseEventElementType.Shape);
+            _this.visualizerManager.setConnectionPoints(shape, Event_1.MouseEventElementType.Shape, connectionPointIndex, true);
+        });
         var container = ModelUtils_1.ModelUtils.findContainerByEventKey(this.model, this.selection, evt.source.key);
         if (container && this.allowInsertToContainer(evt, container))
             ModelUtils_1.ModelUtils.insertSelectionToContainer(this.history, this.model, this.selection, container);
         else
             ModelUtils_1.ModelUtils.removeSelectionFromContainer(this.history, this.model, this.selection);
-        this.handler.tryUpdateModelSize(function (offsetLeft, offsetTop) {
-            _this.modelConnectorsWithoutBeginItemInfo.forEach(function (pi) {
-                pi.point.x += offsetLeft;
-                pi.point.y += offsetTop;
-            });
-            _this.modelConnectorsWithoutEndItemInfo.forEach(function (pi) {
-                pi.point.x += offsetLeft;
-                pi.point.y += offsetTop;
-            });
-        });
+        this.handler.tryUpdateModelSize(function (offsetLeft, offsetTop) { return _this.dragHelper.onTryUpdateModelSize(offsetLeft, offsetTop); });
     };
     MouseHandlerDragDiagramItemStateBase.prototype.getDraggingElementKeys = function () {
-        return this.draggingShapes.map(function (x) { return x.shape.key; }).concat(this.draggingConnectors.map(function (x) { return x.connector.key; }));
+        return this.dragHelper.draggingShapes.map(function (x) { return x.shape.key; }).concat(this.dragHelper.draggingConnectors.map(function (x) { return x.connector.key; }));
     };
     MouseHandlerDragDiagramItemStateBase.prototype.getSnappedPoint = function (evt, point) {
         return this.handler.getSnappedPointOnDragDiagramItem(evt, point, this.fixedX, this.fixedY, this.startPoint);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.initDrag = function () {
-        this.selectedItems = ModelUtils_1.ModelUtils.createSelectedItems(this.selection);
+        this.dragHelper = new DragHelper_1.SelectionDragHelper(this.history, this.model, this.handler.permissionsProvider, this.startPoint, this.selection.getSelectedItems(true));
         this.initDraggingShapes();
         if (!this.areValidDraggingShapes) {
             this.handler.switchToDefaultState();
@@ -13018,27 +12962,12 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
             this.handler.switchToDefaultState();
             return;
         }
-        this.modelConnectorsWithoutBeginItemInfo = this.createModelConnectorsWithoutBeginItemInfo();
-        this.modelConnectorsWithoutEndItemInfo = this.createModelConnectorsWithoutEndItemInfo();
     };
     MouseHandlerDragDiagramItemStateBase.prototype.initDraggingShapes = function () {
-        this.draggingShapes = this.selection.getSelectedShapes(false, true).map(function (s) { return new DraggingShape(s); });
+        this.dragHelper.initDraggingShapes(this.selection.getSelectedShapes(false, true), this.shouldClone);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.initDraggingConnectors = function () {
-        var _this = this;
-        this.draggingConnectors = [];
-        this.draggingConnectorsIndexByKey = {};
-        this.selection.getSelectedConnectors(false, true).forEach(function (c) { return _this.registerConnector(c); });
-        if (this.shouldClone)
-            return;
-        this.draggingShapes.forEach(function (x) {
-            var attachedConnectors = x.shape.attachedConnectors;
-            if (attachedConnectors)
-                attachedConnectors.forEach(function (c) {
-                    if (!_this.containsDraggingConnectorByKey(c.key))
-                        _this.registerConnector(c);
-                });
-        });
+        this.dragHelper.initDraggingConnectors(this.selection.getSelectedConnectors(false, true), this.shouldClone);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.copySelection = function () {
         var _this = this;
@@ -13060,86 +12989,10 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
                 this.fixedY = true;
         }
     };
-    MouseHandlerDragDiagramItemStateBase.prototype.containsDraggingConnectorByKey = function (key) {
-        return this.draggingConnectorsIndexByKey[key] !== undefined;
-    };
     MouseHandlerDragDiagramItemStateBase.prototype.allowInsertToContainer = function (evt, container) {
         if (this.handler.canMultipleSelection(evt))
             return false;
         return container && container.expanded && ModelUtils_1.ModelUtils.canInsertSelectionToContainer(this.model, this.selection, container);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.registerConnector = function (connector) {
-        this.draggingConnectorsIndexByKey[connector.key] = this.draggingConnectors.push(new DraggingConnector(connector)) - 1;
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.createModelConnectorsWithoutBeginItemInfo = function () {
-        var _this = this;
-        var connectors = this.model.findConnectorsCore(function (c) { return !c.beginItem && !_this.containsDraggingConnectorByKey(c.key); });
-        return connectors.map(function (c) {
-            return {
-                connector: c,
-                point: c.points[0].clone()
-            };
-        });
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.createModelConnectorsWithoutEndItemInfo = function () {
-        var _this = this;
-        var connectors = this.model.findConnectorsCore(function (c) { return !c.endItem && !_this.containsDraggingConnectorByKey(c.key); });
-        return connectors.map(function (c) {
-            return {
-                connector: c,
-                point: c.points[c.points.length - 1].clone()
-            };
-        });
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.moveConnector = function (dc, evt) {
-        var startPoints = dc.startPoints;
-        var offset = vector_1.Vector.fromPoints(startPoints[0].clone(), this.getSnappedPoint(evt, startPoints[0]).clone());
-        if (offset.x || offset.y)
-            this.moveConnectorCore(dc.connector, startPoints, dc.startRenderContext, offset);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.moveConnectorCore = function (connector, startPoints, startRenderContext, offset) {
-        if (this.shouldClone || ModelUtils_1.ModelUtils.canMoveConnector(this.selectedItems, connector))
-            this.offsetConnector(connector, startPoints, startRenderContext, offset);
-        else
-            this.changeConnector(connector);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.moveShape = function (ds, evt) {
-        var _this = this;
-        var shape = ds.shape;
-        var position = this.getSnappedPoint(evt, ds.startPosition);
-        ModelUtils_1.ModelUtils.setShapePosition(this.history, this.model, shape, position);
-        ModelUtils_1.ModelUtils.updateMovingShapeConnections(this.history, shape, this.modelConnectorsWithoutBeginItemInfo, this.modelConnectorsWithoutEndItemInfo, function () {
-            _this.visualizerManager.resetConnectionTarget();
-            _this.visualizerManager.resetConnectionPoints();
-        }, function (shape, connectionPointIndex) {
-            _this.visualizerManager.setConnectionTarget(shape, Event_1.MouseEventElementType.Shape);
-            _this.visualizerManager.setConnectionPoints(shape, Event_1.MouseEventElementType.Shape, connectionPointIndex, true);
-        }, function (connector) { return _this.handler.addInteractingItem(connector); });
-        if (!this.draggingConnectors.filter(function (dc) { return !!_this.selectedItems[dc.connector.key]; }).length)
-            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(this.history, this.model, shape);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.offsetConnector = function (connector, startPoints, startRenderContext, offset) {
-        var _this = this;
-        var newPoints = startPoints.map(function (p) { return _this.offsetPoint(p, offset); });
-        if (!newPoints[0].equals(connector.points[0]))
-            this.history.addAndRedo(new ChangeConnectorPointsHistoryItem_1.ChangeConnectorPointsHistoryItem(connector.key, newPoints, this.offsetRenderContext(startRenderContext, offset)));
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.offsetRenderContext = function (context, offset) {
-        var _this = this;
-        if (context === undefined)
-            return undefined;
-        return new ConnectorRenderPointsContext_1.ConnectorRenderPointsContext(context.renderPoints.map(function (p) {
-            var newPoint = _this.offsetPoint(p, offset);
-            return new ConnectorRenderPoint_1.ConnectorRenderPoint(newPoint.x, newPoint.y, p.pointIndex, p.skipped);
-        }), true, context.actualRoutingMode);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.offsetPoint = function (point, offset) {
-        var pointOffset = vector_1.Vector.fromPoints(point, this.startPoint);
-        return this.startPoint.clone().offset(offset.x - pointOffset.x, offset.y - pointOffset.y);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.changeConnector = function (connector) {
-        ModelUtils_1.ModelUtils.tryRemoveConnectorIntermediatePoints(this.history, connector);
-        ModelUtils_1.ModelUtils.updateConnectorAttachedPoints(this.history, this.model, connector);
     };
     return MouseHandlerDragDiagramItemStateBase;
 }(MouseHandlerDraggingState_1.MouseHandlerDraggingState));
@@ -13802,12 +13655,12 @@ var MouseHandlerMoveConnectorState = (function (_super) {
         get: function () {
             var _this = this;
             if (this.shouldClone)
-                return this.draggingShapes.length > 0 || this.draggingConnectors.length > 0;
-            if (!this.draggingConnectors.length)
+                return this.dragHelper.draggingShapes.length > 0 || this.dragHelper.draggingConnectors.length > 0;
+            if (!this.dragHelper.draggingConnectors.length)
                 return false;
-            if (!this.draggingShapes.length)
-                return !this.draggingConnectors.some(function (x) { return !ModelUtils_1.ModelUtils.canMoveConnector(_this.selectedItems, x.connector); });
-            return ModelUtils_1.ModelUtils.canMoveConnector(this.selectedItems, this.draggingConnectors[this.draggingConnectorsIndexByKey[this.handler.mouseDownEvent.source.key]].connector);
+            if (!this.dragHelper.draggingShapes.length)
+                return !this.dragHelper.draggingConnectors.some(function (x) { return !ModelUtils_1.ModelUtils.canMoveConnector(_this.dragHelper.selectedItems, x.connector); });
+            return ModelUtils_1.ModelUtils.canMoveConnector(this.dragHelper.selectedItems, this.dragHelper.draggingConnectors[this.dragHelper.draggingConnectorsIndexByKey[this.handler.mouseDownEvent.source.key]].connector);
         },
         enumerable: false,
         configurable: true
@@ -13912,7 +13765,7 @@ var MouseHandlerMoveShapeState = (function (_super) {
     }
     Object.defineProperty(MouseHandlerMoveShapeState.prototype, "areValidDraggingShapes", {
         get: function () {
-            return this.shouldClone || this.draggingShapes.length > 0;
+            return this.shouldClone || this.dragHelper.draggingShapes.length > 0;
         },
         enumerable: false,
         configurable: true
@@ -18250,6 +18103,9 @@ var Exporter = (function () {
         var styleTextObj = connector.styleText.toObject();
         if (styleTextObj)
             result["styleText"] = styleTextObj;
+        var context = connector.tryCreateRenderPointsContext();
+        if (context)
+            result["context"] = context.toObject();
         return result;
     };
     Exporter.prototype.exportSvg = function (modelSize, pageColor, exportManager, callback) {
@@ -18327,6 +18183,7 @@ var ImageInfo_1 = __webpack_require__(6617);
 var ImporterBase_1 = __webpack_require__(8577);
 var ImportUtils_1 = __webpack_require__(6572);
 var color_1 = __webpack_require__(13);
+var ConnectorRenderPointsContext_1 = __webpack_require__(1510);
 var Importer = (function (_super) {
     __extends(Importer, _super);
     function Importer(shapeDescriptionManager, json) {
@@ -18447,6 +18304,8 @@ var Importer = (function (_super) {
             connector.styleText.fromObject(connectorObj["styleText"]);
         if (typeof connectorObj["zIndex"] === "number")
             connector.zIndex = connectorObj["zIndex"];
+        if (connectorObj["context"] !== undefined)
+            connector.replaceRenderPoints(ConnectorRenderPointsContext_1.ConnectorRenderPointsContext.fromObject(connectorObj["context"]), false);
         return connector;
     };
     return Importer;
@@ -22336,9 +22195,12 @@ var Connector = (function (_super) {
         else
             this.invalidateRenderPoints();
     };
-    Connector.prototype.replaceRenderPoints = function (context) {
-        if (context !== undefined)
+    Connector.prototype.replaceRenderPoints = function (context, shouldInvalidateRenderPoints) {
+        if (context !== undefined) {
             this.replaceRenderPointsCore(context.renderPoints, context.lockCreateRenderPoints, context.actualRoutingMode);
+            if (shouldInvalidateRenderPoints !== undefined)
+                this.shouldInvalidateRenderPoints = shouldInvalidateRenderPoints;
+        }
         else
             this.invalidateRenderPoints();
     };
@@ -22768,6 +22630,20 @@ var ConnectorRenderPoint = (function (_super) {
         return this;
     };
     ConnectorRenderPoint.prototype.clone = function () { return new ConnectorRenderPoint(this.x, this.y, this.pointIndex, this.skipped); };
+    ConnectorRenderPoint.equal = function (p1, p2) {
+        return p1.equals(p2) && p1.pointIndex === p2.pointIndex && p1.skipped === p2.skipped;
+    };
+    ConnectorRenderPoint.prototype.toObject = function () {
+        return {
+            x: this.x,
+            y: this.y,
+            pointIndex: this.pointIndex,
+            skipped: this.skipped
+        };
+    };
+    ConnectorRenderPoint.fromObject = function (obj) {
+        return new ConnectorRenderPoint(obj["x"], obj["y"], obj["pointIndex"], obj["skipped"]);
+    };
     return ConnectorRenderPoint;
 }(point_1.Point));
 exports.ConnectorRenderPoint = ConnectorRenderPoint;
@@ -23381,17 +23257,28 @@ exports.ConnectorProhibitedSegments = ConnectorProhibitedSegments;
 /***/ }),
 
 /***/ 1510:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ConnectorRenderPointsContext = void 0;
+var ConnectorRenderPoint_1 = __webpack_require__(4717);
 var ConnectorRenderPointsContext = (function () {
     function ConnectorRenderPointsContext(renderPoints, lockCreateRenderPoints, actualRoutingMode) {
         this.renderPoints = renderPoints;
         this.lockCreateRenderPoints = lockCreateRenderPoints;
         this.actualRoutingMode = actualRoutingMode;
     }
+    ConnectorRenderPointsContext.prototype.toObject = function () {
+        return {
+            actualRoutingMode: this.actualRoutingMode,
+            lockCreateRenderPoints: this.lockCreateRenderPoints,
+            renderPoints: this.renderPoints.map(function (p) { return p.toObject(); })
+        };
+    };
+    ConnectorRenderPointsContext.fromObject = function (obj) {
+        return new ConnectorRenderPointsContext(obj["renderPoints"].map(function (p) { return ConnectorRenderPoint_1.ConnectorRenderPoint.fromObject(p); }), obj["lockCreateRenderPoints"], obj["actualRoutingMode"]);
+    };
     return ConnectorRenderPointsContext;
 }());
 exports.ConnectorRenderPointsContext = ConnectorRenderPointsContext;
@@ -24445,6 +24332,178 @@ exports.DiagramItem = DiagramItem;
 
 /***/ }),
 
+/***/ 4742:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DraggingConnector = exports.SelectionDragHelper = void 0;
+var vector_1 = __webpack_require__(9716);
+var ChangeConnectorPointsHistoryItem_1 = __webpack_require__(58);
+var ConnectorRenderPointsContext_1 = __webpack_require__(1510);
+var ModelUtils_1 = __webpack_require__(4867);
+var ConnectorRenderPoint_1 = __webpack_require__(4717);
+var ModelOperationSettings_1 = __webpack_require__(6879);
+var SelectionDragHelper = (function () {
+    function SelectionDragHelper(history, model, permissionsProvider, startPoint, selectedItems) {
+        var _this = this;
+        this.history = history;
+        this.model = model;
+        this.permissionsProvider = permissionsProvider;
+        this.startPoint = startPoint;
+        this.draggingShapes = [];
+        this.draggingConnectors = [];
+        this.selectedItems = {};
+        this.draggingConnectorsIndexByKey = {};
+        selectedItems.forEach(function (i) { return _this.selectedItems[i.key] = i; });
+    }
+    SelectionDragHelper.prototype.initDraggingShapes = function (shapes, shouldClone) {
+        var _this = this;
+        this.draggingShapes = shapes.map(function (s) { return new DraggingShape(s); });
+        if (!shouldClone)
+            this.draggingShapes.forEach(function (draggingShape) { return _this.permissionsProvider.addInteractingItem(draggingShape.shape, ModelOperationSettings_1.DiagramModelOperation.MoveShape); });
+    };
+    SelectionDragHelper.prototype.initDraggingConnectors = function (connectors, shouldClone) {
+        var _this = this;
+        this.draggingConnectors = [];
+        this.draggingConnectorsIndexByKey = {};
+        connectors.forEach(function (c) { return _this.registerConnector(c); });
+        if (!shouldClone)
+            this.draggingShapes.forEach(function (x) {
+                var attachedConnectors = x.shape.attachedConnectors;
+                if (attachedConnectors)
+                    attachedConnectors.forEach(function (c) {
+                        if (!_this.containsDraggingConnectorByKey(c.key))
+                            _this.registerConnector(c);
+                    });
+            });
+        this.modelConnectorsWithoutBeginItemInfo = this.createModelConnectorsWithoutBeginItemInfo();
+        this.modelConnectorsWithoutEndItemInfo = this.createModelConnectorsWithoutEndItemInfo();
+    };
+    SelectionDragHelper.prototype.move = function (shouldClone, getMovePoint, resetTargetCallback, updateTargetCallback) {
+        var _this = this;
+        if (this.draggingShapes.length) {
+            var selectedShapes_1 = this.draggingShapes.map(function (ds) { return ds.shape; });
+            this.draggingShapes.forEach(function (ds) {
+                var shape = ds.shape;
+                while (shape.container) {
+                    if (selectedShapes_1.indexOf(shape.container) !== -1)
+                        return false;
+                    shape = shape.container;
+                }
+                _this.moveShape(ds, getMovePoint, resetTargetCallback, updateTargetCallback);
+            });
+            var firstDraggingShape = this.draggingShapes[0];
+            var offset_1 = vector_1.Vector.fromPoints(firstDraggingShape.startPosition.clone(), firstDraggingShape.shape.position.clone());
+            if (offset_1.x || offset_1.y)
+                this.draggingConnectors.forEach(function (dc) { return _this.moveConnectorCore(dc.connector, dc.startPoints, dc.startRenderContext, offset_1, shouldClone); });
+        }
+        else
+            this.draggingConnectors.forEach(function (x) { return _this.moveConnector(x, shouldClone, getMovePoint); });
+    };
+    SelectionDragHelper.prototype.containsDraggingConnectorByKey = function (key) {
+        return this.draggingConnectorsIndexByKey[key] !== undefined;
+    };
+    SelectionDragHelper.prototype.onTryUpdateModelSize = function (offsetLeft, offsetTop) {
+        this.modelConnectorsWithoutBeginItemInfo.forEach(function (pi) {
+            pi.point.x += offsetLeft;
+            pi.point.y += offsetTop;
+        });
+        this.modelConnectorsWithoutEndItemInfo.forEach(function (pi) {
+            pi.point.x += offsetLeft;
+            pi.point.y += offsetTop;
+        });
+    };
+    SelectionDragHelper.prototype.moveConnector = function (dc, shouldClone, getMovePoint) {
+        var startPoints = dc.startPoints;
+        var offset = vector_1.Vector.fromPoints(startPoints[0].clone(), getMovePoint(startPoints[0]).clone());
+        if (offset.x || offset.y)
+            this.moveConnectorCore(dc.connector, startPoints, dc.startRenderContext, offset, shouldClone);
+    };
+    SelectionDragHelper.prototype.moveConnectorCore = function (connector, startPoints, startRenderContext, offset, shouldClone) {
+        if (shouldClone || ModelUtils_1.ModelUtils.canMoveConnector(this.selectedItems, connector))
+            this.offsetConnector(connector, startPoints, startRenderContext, offset);
+        else
+            this.changeConnector(connector);
+    };
+    SelectionDragHelper.prototype.moveShape = function (ds, getMovePoint, resetTargetCallback, updateTargetCallback) {
+        var _this = this;
+        var shape = ds.shape;
+        var position = getMovePoint(ds.startPosition);
+        ModelUtils_1.ModelUtils.setShapePosition(this.history, this.model, shape, position);
+        ModelUtils_1.ModelUtils.updateMovingShapeConnections(this.history, shape, this.modelConnectorsWithoutBeginItemInfo, this.modelConnectorsWithoutEndItemInfo, resetTargetCallback, updateTargetCallback, function (connector) { return _this.permissionsProvider.addInteractingItem(connector); });
+        if (!this.draggingConnectors.filter(function (dc) { return !!_this.selectedItems[dc.connector.key]; }).length)
+            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(this.history, this.model, shape);
+    };
+    SelectionDragHelper.prototype.offsetConnector = function (connector, startPoints, startRenderContext, offset) {
+        var _this = this;
+        var newPoints = startPoints.map(function (p) { return _this.offsetPoint(p, offset); });
+        if (!newPoints[0].equals(connector.points[0]))
+            this.history.addAndRedo(new ChangeConnectorPointsHistoryItem_1.ChangeConnectorPointsHistoryItem(connector.key, newPoints, this.offsetRenderContext(startRenderContext, offset)));
+    };
+    SelectionDragHelper.prototype.offsetRenderContext = function (context, offset) {
+        var _this = this;
+        if (context === undefined)
+            return undefined;
+        return new ConnectorRenderPointsContext_1.ConnectorRenderPointsContext(context.renderPoints.map(function (p) {
+            var newPoint = _this.offsetPoint(p, offset);
+            return new ConnectorRenderPoint_1.ConnectorRenderPoint(newPoint.x, newPoint.y, p.pointIndex, p.skipped);
+        }), true, context.actualRoutingMode);
+    };
+    SelectionDragHelper.prototype.offsetPoint = function (point, offset) {
+        var pointOffset = vector_1.Vector.fromPoints(point, this.startPoint);
+        return this.startPoint.clone().offset(offset.x - pointOffset.x, offset.y - pointOffset.y);
+    };
+    SelectionDragHelper.prototype.changeConnector = function (connector) {
+        ModelUtils_1.ModelUtils.tryRemoveConnectorIntermediatePoints(this.history, connector);
+        ModelUtils_1.ModelUtils.updateConnectorAttachedPoints(this.history, this.model, connector);
+    };
+    SelectionDragHelper.prototype.registerConnector = function (connector) {
+        this.draggingConnectorsIndexByKey[connector.key] = this.draggingConnectors.push(new DraggingConnector(connector)) - 1;
+    };
+    SelectionDragHelper.prototype.createModelConnectorsWithoutBeginItemInfo = function () {
+        var _this = this;
+        var connectors = this.model.findConnectorsCore(function (c) { return !c.beginItem && !_this.containsDraggingConnectorByKey(c.key); });
+        return connectors.map(function (c) {
+            return {
+                connector: c,
+                point: c.points[0].clone()
+            };
+        });
+    };
+    SelectionDragHelper.prototype.createModelConnectorsWithoutEndItemInfo = function () {
+        var _this = this;
+        var connectors = this.model.findConnectorsCore(function (c) { return !c.endItem && !_this.containsDraggingConnectorByKey(c.key); });
+        return connectors.map(function (c) {
+            return {
+                connector: c,
+                point: c.points[c.points.length - 1].clone()
+            };
+        });
+    };
+    return SelectionDragHelper;
+}());
+exports.SelectionDragHelper = SelectionDragHelper;
+var DraggingConnector = (function () {
+    function DraggingConnector(connector) {
+        this.connector = connector;
+        this.startPoints = connector.points.map(function (x) { return x.clone(); });
+        this.startRenderContext = connector.tryCreateRenderPointsContext();
+    }
+    return DraggingConnector;
+}());
+exports.DraggingConnector = DraggingConnector;
+var DraggingShape = (function () {
+    function DraggingShape(shape) {
+        this.shape = shape;
+        this.startPosition = shape.position.clone();
+    }
+    return DraggingShape;
+}());
+
+
+/***/ }),
+
 /***/ 6613:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -25287,14 +25346,14 @@ var ModelUtils = (function () {
     ModelUtils.deleteConnectorUnnecessaryPoints = function (history, connector) {
         var oldRenderPoints = connector.getRenderPoints(true).map(function (p) { return p.clone(); });
         if (connector.properties.lineOption === ConnectorProperties_1.ConnectorLineOption.Straight) {
-            var unnecessaryPoints = ModelUtils.createUnnecessaryRenderPoints(oldRenderPoints.filter(function (p) { return !p.skipped; }).map(function (p) { return p.clone(); }), connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return p.equals(removedPoint); }); });
+            var unnecessaryPoints = ModelUtils.createUnnecessaryRenderPoints(oldRenderPoints.filter(function (p) { return !p.skipped; }).map(function (p) { return p.clone(); }), connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return ConnectorRenderPoint_1.ConnectorRenderPoint.equal(p, removedPoint); }); });
             if (Object.keys(unnecessaryPoints).length)
                 history.addAndRedo(new ChangeConnectorPointsHistoryItem_1.ReplaceConnectorPointsHistoryItem(connector.key, ModelUtils.createNecessaryPoints(connector.points.map(function (p) { return p.clone(); }), unnecessaryPoints)));
         }
         else {
             var oldContext = connector.tryCreateRenderPointsContext(true);
             var newRenderPoints = oldRenderPoints.filter(function (p) { return !p.skipped; }).map(function (p) { return p.clone(); });
-            var unnecessaryPoints = ModelUtils.createUnnecessaryRightAngleRenderPoints(newRenderPoints, connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return p.equals(removedPoint); }); });
+            var unnecessaryPoints = ModelUtils.createUnnecessaryRightAngleRenderPoints(newRenderPoints, connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return ConnectorRenderPoint_1.ConnectorRenderPoint.equal(p, removedPoint); }); });
             if (Object.keys(unnecessaryPoints).length) {
                 var newPoints = ModelUtils.createNecessaryPoints(connector.points.map(function (p) { return p.clone(); }), unnecessaryPoints);
                 var newRenderContext = new ConnectorRenderPointsContext_1.ConnectorRenderPointsContext(ModelUtils.validateRenderPointIndexes(newPoints, newRenderPoints, 0), oldContext.lockCreateRenderPoints, oldContext.actualRoutingMode);
@@ -25368,15 +25427,16 @@ var ModelUtils = (function () {
     };
     ModelUtils.collectNotSkippedRenderPoints = function (targetRenderPoints, sourceRenderPoints, removedPoint, removedIndex, getPosition, predicate) {
         if (predicate === void 0) { predicate = function (_) { return true; }; }
-        if (!predicate(removedPoint))
-            return false;
-        var positionIndex = getPosition(removedPoint);
-        if (targetRenderPoints[positionIndex] === undefined) {
-            targetRenderPoints[positionIndex] = removedPoint;
-            removedPoint.skipped = true;
-            sourceRenderPoints.splice(removedIndex, 1);
+        if (predicate(removedPoint)) {
+            var positionIndex = getPosition(removedPoint);
+            if (targetRenderPoints[positionIndex] === undefined) {
+                targetRenderPoints[positionIndex] = removedPoint;
+                removedPoint.skipped = true;
+                sourceRenderPoints.splice(removedIndex, 1);
+                return true;
+            }
         }
-        return true;
+        return false;
     };
     ModelUtils.removeUnnecessaryPoint = function (points, point, removedIndex, removeExcessPoints) {
         if (removeExcessPoints && point.pointIndex === -1) {

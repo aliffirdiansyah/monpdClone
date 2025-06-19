@@ -1,9 +1,9 @@
 /*!
 * DevExtreme (dx.messages.zh-tw.js)
-* Version: 23.1.5
-* Build date: Wed Aug 30 2023
+* Version: 23.2.5
+* Build date: Mon Mar 11 2024
 *
-* Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+* Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
@@ -79,9 +79,9 @@
             "dxFileUploader-selectFile": "\u9078\u64c7\u6587\u4ef6",
             "dxFileUploader-dropFile": "\u6216\u8005\u628a\u6587\u4ef6\u653e\u5728\u6b64\u8655",
             "dxFileUploader-bytes": "bytes",
-            "dxFileUploader-kb": "kb",
-            "dxFileUploader-Mb": "Mb",
-            "dxFileUploader-Gb": "Gb",
+            "dxFileUploader-kb": "KB",
+            "dxFileUploader-Mb": "MB",
+            "dxFileUploader-Gb": "GB",
             "dxFileUploader-upload": "\u4e0a\u50b3",
             "dxFileUploader-uploaded": "\u5df2\u4e0a\u50b3",
             "dxFileUploader-readyToUpload": "\u6e96\u5099\u4e0a\u50b3",
@@ -141,6 +141,10 @@
             "dxDataGrid-sortingAscendingText": "\u905e\u589e\u6392\u5e8f",
             "dxDataGrid-sortingDescendingText": "\u905e\u6e1b\u6392\u5e8f",
             "dxDataGrid-sortingClearText": "\u6e05\u9664\u6392\u5e8f",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "\u4fdd\u5b58\u4fee\u6539",
             "dxDataGrid-editingCancelAllChanges": "\u653e\u68c4\u4fee\u6539",
             "dxDataGrid-editingAddRow": "\u6dfb\u52a0\u4e00\u5217",
@@ -172,10 +176,18 @@
             "dxDataGrid-ariaAdaptiveCollapse": "Hide additional data",
             "dxDataGrid-ariaAdaptiveExpand": "Display additional data",
             "dxDataGrid-ariaColumn": "\u6b04",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "\u503c",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "\u904e\u6ffe\u55ae\u5143",
             "dxDataGrid-ariaCollapse": "\u647a\u758a",
+            "dxDataGrid-ariaModifiedCell": "Modified",
+            "dxDataGrid-ariaDeletedCell": "Deleted",
+            "dxDataGrid-ariaEditableCell": "Editable",
             "dxDataGrid-ariaExpand": "\u5c55\u958b",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "\u8cc7\u6599\u7db2\u683c",
             "dxDataGrid-ariaSearchInGrid": "\u5728\u8cc7\u6599\u7db2\u683c\u4e2d\u641c\u5c0b",
             "dxDataGrid-ariaSelectAll": "\u5168\u9078",
@@ -255,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "\u65bc\u65e5\u671f",
             "dxScheduler-recurrenceRepeatCount": "\u4e8b\u4ef6",
             "dxScheduler-allDay": "\u5168\u5929",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "\u4f60\u60f3\u53ea\u4fee\u6539\u8a72\u65e5\u7a0b\u9084\u662f\u60f3\u4fee\u6539\u6574\u500b\u7cfb\u5217\u7684\u65e5\u7a0b?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "\u4f60\u60f3\u53ea\u522a\u9664\u9019\u500b\u65e5\u7a0b\u9084\u662f\u60f3\u522a\u9664\u6574\u500b\u7cfb\u5217\u7684\u65e5\u7a0b?",
             "dxScheduler-confirmRecurrenceEditSeries": "\u4fee\u6539\u8a72\u7cfb\u5217\u7684\u65e5\u7a0b",
@@ -265,7 +279,18 @@
             "dxScheduler-moreAppointments": "{0} \u66f4\u591a",
             "dxCalendar-todayButtonText": "\u4eca\u5929",
             "dxCalendar-ariaWidgetName": "\u65e5\u66c6",
-            "dxCalendar-ariaHotKeysInfo": "To navigate between views, press Control, and then Left Arrow or Right Arrow. To zoom in on a view, press Control, and then Down Arrow. To zoom out, press Control, and then Up Arrow.",
+            "dxCalendar-previousMonthButtonLabel": "Previous month",
+            "dxCalendar-previousYearButtonLabel": "Previous year",
+            "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+            "dxCalendar-previousCenturyButtonLabel": "Previous century",
+            "dxCalendar-nextMonthButtonLabel": "Next month",
+            "dxCalendar-nextYearButtonLabel": "Next year",
+            "dxCalendar-nextDecadeButtonLabel": "Next decade",
+            "dxCalendar-nextCenturyButtonLabel": "Next century",
+            "dxCalendar-captionMonthLabel": "Month selection",
+            "dxCalendar-captionYearLabel": "Year selection",
+            "dxCalendar-captionDecadeLabel": "Decade selection",
+            "dxCalendar-captionCenturyLabel": "Century selection",
             "dxColorView-ariaRed": "\u7d05\u8272",
             "dxColorView-ariaGreen": "\u7da0\u8272",
             "dxColorView-ariaBlue": "\u85cd\u8272",
@@ -384,6 +409,16 @@
             "dxHtmlEditor-right": "Right",
             "dxHtmlEditor-indent": "Indent",
             "dxHtmlEditor-justify": "Justify",
+            "dxHtmlEditor-borderStyleNone": "none",
+            "dxHtmlEditor-borderStyleHidden": "hidden",
+            "dxHtmlEditor-borderStyleDotted": "dotted",
+            "dxHtmlEditor-borderStyleDashed": "dashed",
+            "dxHtmlEditor-borderStyleSolid": "solid",
+            "dxHtmlEditor-borderStyleDouble": "double",
+            "dxHtmlEditor-borderStyleGroove": "groove",
+            "dxHtmlEditor-borderStyleRidge": "ridge",
+            "dxHtmlEditor-borderStyleInset": "inset",
+            "dxHtmlEditor-borderStyleOutset": "outset",
             "dxFileManager-newDirectoryName": "Untitled directory",
             "dxFileManager-rootDirectoryName": "Files",
             "dxFileManager-errorNoAccess": "Access Denied. Operation could not be completed.",
@@ -643,7 +678,12 @@
             "dxGantt-showResources": "Show Resources",
             "dxGantt-showDependencies": "Show Dependencies",
             "dxGantt-dialogStartDateValidation": "Start date must be after {0}",
-            "dxGantt-dialogEndDateValidation": "End date must be after {0}"
+            "dxGantt-dialogEndDateValidation": "End date must be after {0}",
+            "dxGallery-itemName": "Gallery item",
+            "dxMultiView-elementAriaRoleDescription": "MultiView",
+            "dxMultiView-elementAriaLabel": "Use the arrow keys or swipe to navigate between views",
+            "dxMultiView-itemAriaRoleDescription": "View",
+            "dxMultiView-itemAriaLabel": "{0} of {1}"
         }
     })
 }));
