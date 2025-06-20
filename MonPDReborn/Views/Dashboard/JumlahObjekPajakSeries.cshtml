@@ -1,0 +1,29 @@
+﻿@{
+}
+
+@(
+            Html.DevExtreme().DataGrid()
+            .ID("dg-JmlObjekPajakSeries")
+            .ShowBorders(true)
+            .ShowColumnHeaders(true)
+            .ShowColumnLines(true)
+            .ShowRowLines(true)
+            .ColumnAutoWidth(true)
+.SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+.FilterRow(f => f.Visible(true))
+.HeaderFilter(h => h.Visible(true))
+.Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .AllowColumnResizing(true)
+            .DataSource(new object[0])
+            .KeyExpr("ID")
+            .Columns(columns =>
+            {
+                columns.Add().Caption("JENIS PAJAK");
+                columns.Add().Caption("2020");
+                columns.Add().Caption("2021");
+                columns.Add().Caption("2022");
+                columns.Add().Caption("2023");
+                columns.Add().Caption("2024");
+                columns.Add().Caption("2025");
+            })
+        )

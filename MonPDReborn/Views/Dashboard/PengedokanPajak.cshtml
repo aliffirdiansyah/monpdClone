@@ -1,0 +1,27 @@
+﻿@{
+}
+
+@(
+    Html.DevExtreme().DataGrid()
+    .ID("dg-PengedokanOp")
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ColumnAutoWidth(true)
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .AllowColumnResizing(true)
+    .DataSource(new object[0])
+    .KeyExpr("ID")
+    .Columns(columns =>
+    {
+        columns.Add().Caption("JENIS PAJAK");
+        columns.Add().Caption("JML OP");
+        columns.Add().Caption("POTENSI HASIL");
+        columns.Add().Caption("REALISASI");
+        columns.Add().Caption("SELISIH");
+    })
+)
