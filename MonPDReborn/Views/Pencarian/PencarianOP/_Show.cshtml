@@ -32,6 +32,15 @@
         columns.AddFor(m => m.Alamat).Caption("Alamat");
         columns.AddFor(m => m.JenisOp).Caption("Jenis OP");
         columns.AddFor(m => m.JenisPenarikan).Caption("Jenis Penarikan");
+        columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b =>
+            {
+                b.Add()
+            .Text("Detail")
+            .Icon("search")
+            .OnClick("function(e) { fnDetail(e.row.data.NOP); }");
+        });
     })
 )
 </div>

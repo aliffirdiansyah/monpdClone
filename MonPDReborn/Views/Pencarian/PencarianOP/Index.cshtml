@@ -88,11 +88,35 @@
             });
         }
 
-        function fnDetail(e){
-            var nop = $(e).data("nop");
-            var url = `@(Url.Action("Detail"))?nop=${nop}`
-
-            window.location.href = url;
+        function fnDetail(nop) {
+            $.ajax({
+                url: '@Url.Action("Detail")',
+                type: 'GET',
+                data: { nop: nop },
+                beforeSend: function () {
+                    $("#loader").show();
+                    $("#StaticBackdropLarge").modal('hide');
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $("#modal-content").html(response);
+                        $("#StaticBackdropLarge").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#modal-content").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#StaticBackdropLarge").modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
         }
     </script>
 }
