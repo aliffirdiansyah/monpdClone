@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@(
+    Html.DevExtreme().DataGrid()
+        .ID("dg-JmlObjekPajakTahunan")
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .AllowColumnResizing(true)
+        .DataSource(new object[0])
+        .KeyExpr("ID")
+        .Columns(columns =>
+        {
+            columns.Add().Caption("JENIS PAJAK");
+            columns.Add().Caption("JML OP AWAL");
+            columns.Add().Caption("JML OP TUTUP SEMENTARA");
+            columns.Add().Caption("JML OP TUTUP PERMANEN");
+            columns.Add().Caption("JML OP BARU");
+        })
+)

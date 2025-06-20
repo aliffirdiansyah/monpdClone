@@ -1,9 +1,9 @@
 /*!
 * DevExtreme (dx.messages.fi.js)
-* Version: 23.1.5
-* Build date: Wed Aug 30 2023
+* Version: 23.2.5
+* Build date: Mon Mar 11 2024
 *
-* Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+* Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
@@ -141,6 +141,10 @@
             "dxDataGrid-sortingAscendingText": "Lajittele nouseva",
             "dxDataGrid-sortingDescendingText": "Lajittele laskeva",
             "dxDataGrid-sortingClearText": "Tyhjenn\xe4 lajittelu",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "Tallenna muutokset",
             "dxDataGrid-editingCancelAllChanges": "Hylk\xe4\xe4 muutokset",
             "dxDataGrid-editingAddRow": "Lis\xe4\xe4 rivi",
@@ -172,10 +176,18 @@
             "dxDataGrid-ariaAdaptiveCollapse": "Hide additional data",
             "dxDataGrid-ariaAdaptiveExpand": "Display additional data",
             "dxDataGrid-ariaColumn": "Sarake",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "Arvo",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "Suodatinsolu",
             "dxDataGrid-ariaCollapse": "Tiivist\xe4",
+            "dxDataGrid-ariaModifiedCell": "Modified",
+            "dxDataGrid-ariaDeletedCell": "Deleted",
+            "dxDataGrid-ariaEditableCell": "Editable",
             "dxDataGrid-ariaExpand": "Laajenna",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Tietoruudukko",
             "dxDataGrid-ariaSearchInGrid": "Hae tietorivilt\xe4",
             "dxDataGrid-ariaSelectAll": "Valitse kaikki",
@@ -255,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "p\xe4iv\xe4m\xe4\xe4r\xe4ll\xe4",
             "dxScheduler-recurrenceRepeatCount": "esiintymi\xe4",
             "dxScheduler-allDay": "Koko p\xe4iv\xe4",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Haluatko muokata vain t\xe4m\xe4n tapaamisen tai koko sarja?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Haluatko poistaa vain t\xe4m\xe4n tapaamisen tai koko sarja?",
             "dxScheduler-confirmRecurrenceEditSeries": "Muokkaa sarjaa",
@@ -265,7 +279,18 @@
             "dxScheduler-moreAppointments": "{0} lis\xe4\xe4",
             "dxCalendar-todayButtonText": "T\xe4n\xe4\xe4n",
             "dxCalendar-ariaWidgetName": "Kalenteri",
-            "dxCalendar-ariaHotKeysInfo": "To navigate between views, press Control, and then Left Arrow or Right Arrow. To zoom in on a view, press Control, and then Down Arrow. To zoom out, press Control, and then Up Arrow.",
+            "dxCalendar-previousMonthButtonLabel": "Previous month",
+            "dxCalendar-previousYearButtonLabel": "Previous year",
+            "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+            "dxCalendar-previousCenturyButtonLabel": "Previous century",
+            "dxCalendar-nextMonthButtonLabel": "Next month",
+            "dxCalendar-nextYearButtonLabel": "Next year",
+            "dxCalendar-nextDecadeButtonLabel": "Next decade",
+            "dxCalendar-nextCenturyButtonLabel": "Next century",
+            "dxCalendar-captionMonthLabel": "Month selection",
+            "dxCalendar-captionYearLabel": "Year selection",
+            "dxCalendar-captionDecadeLabel": "Decade selection",
+            "dxCalendar-captionCenturyLabel": "Century selection",
             "dxColorView-ariaRed": "Punainen",
             "dxColorView-ariaGreen": "Vihre\xe4",
             "dxColorView-ariaBlue": "Sininen",
@@ -384,6 +409,16 @@
             "dxHtmlEditor-right": "Right",
             "dxHtmlEditor-indent": "Indent",
             "dxHtmlEditor-justify": "Justify",
+            "dxHtmlEditor-borderStyleNone": "none",
+            "dxHtmlEditor-borderStyleHidden": "hidden",
+            "dxHtmlEditor-borderStyleDotted": "dotted",
+            "dxHtmlEditor-borderStyleDashed": "dashed",
+            "dxHtmlEditor-borderStyleSolid": "solid",
+            "dxHtmlEditor-borderStyleDouble": "double",
+            "dxHtmlEditor-borderStyleGroove": "groove",
+            "dxHtmlEditor-borderStyleRidge": "ridge",
+            "dxHtmlEditor-borderStyleInset": "inset",
+            "dxHtmlEditor-borderStyleOutset": "outset",
             "dxFileManager-newDirectoryName": "Untitled directory",
             "dxFileManager-rootDirectoryName": "Files",
             "dxFileManager-errorNoAccess": "Access Denied. Operation could not be completed.",
@@ -643,7 +678,12 @@
             "dxGantt-showResources": "Show Resources",
             "dxGantt-showDependencies": "Show Dependencies",
             "dxGantt-dialogStartDateValidation": "Start date must be after {0}",
-            "dxGantt-dialogEndDateValidation": "End date must be after {0}"
+            "dxGantt-dialogEndDateValidation": "End date must be after {0}",
+            "dxGallery-itemName": "Gallery item",
+            "dxMultiView-elementAriaRoleDescription": "MultiView",
+            "dxMultiView-elementAriaLabel": "Use the arrow keys or swipe to navigate between views",
+            "dxMultiView-itemAriaRoleDescription": "View",
+            "dxMultiView-itemAriaLabel": "{0} of {1}"
         }
     })
 }));

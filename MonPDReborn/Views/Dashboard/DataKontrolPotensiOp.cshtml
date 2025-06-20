@@ -1,0 +1,39 @@
+﻿@{
+}
+
+@(
+    Html.DevExtreme().DataGrid()
+            .ID("dg-PotensiOp")
+            .ShowBorders(true)
+            .ShowColumnHeaders(true)
+            .ShowColumnLines(true)
+            .ShowRowLines(true)
+            .ColumnAutoWidth(true)
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .AllowColumnResizing(true)
+            .DataSource(new object[0])
+            .KeyExpr("ID")
+            .Columns(columns =>
+            {
+                columns.Add().Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center);
+                columns.Add().Caption("2024").Alignment(HorizontalAlignment.Center)
+                .Columns(subColumns =>
+                {
+                    subColumns.Add().Caption("TARGET");
+                    subColumns.Add().Caption("REALISASI");
+                    subColumns.Add().Caption("SELISIH");
+                    subColumns.Add().Caption("CAPAIAN (%)");
+                });
+                columns.Add().Caption("2025").Alignment(HorizontalAlignment.Center)
+                .Columns(subColumns =>
+                {
+                    subColumns.Add().Caption("TARGET");
+                    subColumns.Add().Caption("REALISASI");
+                    subColumns.Add().Caption("SELISIH");
+                    subColumns.Add().Caption("CAPAIAN (%)");
+                });
+            })
+)

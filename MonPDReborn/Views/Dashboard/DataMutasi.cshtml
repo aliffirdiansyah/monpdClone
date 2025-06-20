@@ -1,0 +1,27 @@
+﻿@{
+}
+
+@(
+    Html.DevExtreme().DataGrid()
+            .ID("dg-Mutasi")
+            .ShowBorders(true)
+            .ShowColumnHeaders(true)
+            .ShowColumnLines(true)
+            .ShowRowLines(true)
+            .ColumnAutoWidth(true)
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .AllowColumnResizing(true)
+            .DataSource(new object[0])
+            .KeyExpr("ID")
+            .Columns(columns =>
+            {
+                columns.Add().Caption("MUTASI").Alignment(HorizontalAlignment.Center);
+                columns.Add().Caption("2021").Alignment(HorizontalAlignment.Center);
+                columns.Add().Caption("2022").Alignment(HorizontalAlignment.Center);
+                columns.Add().Caption("2023").Alignment(HorizontalAlignment.Center);
+                columns.Add().Caption("2024").Alignment(HorizontalAlignment.Center);
+            })
+)

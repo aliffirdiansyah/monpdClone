@@ -1,0 +1,65 @@
+﻿@{
+}
+
+@{
+    var startYear = 2019;
+    var endYear = 2025;
+}
+
+@(
+    Html.DevExtreme().DataGrid()
+    .ID("dg-pajakDaerah")
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ColumnAutoWidth(true)
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .AllowColumnResizing(true)
+    .DataSource(new object[0])
+    .KeyExpr("ID")
+    .Columns(columns =>
+    {
+        columns.Add()
+            .Caption("JENIS PAJAK")
+            .Fixed(true)
+            .FixedPosition(HorizontalEdge.Left);
+
+        for (int year = startYear; year <= endYear; year++)
+        {
+            columns.Add()
+            .Caption(year.ToString())
+            .Columns(subColumns =>
+            {
+                subColumns.Add().Caption("TARGET");
+                subColumns.Add().Caption("REALISASI");
+                subColumns.Add().Caption("%");
+            });
+        }
+    })
+    .Summary(s => {
+        for (int year = startYear; year <= endYear; year++)
+        {
+            s.TotalItems(items =>
+            {
+                items.Add()
+                    .Column($"Target{year}")
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("Total: {0:c}");
+
+                items.Add()
+                    .Column($"Realisasi{year}")
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("Total: {0:c}");
+
+                items.Add()
+                    .Column($"Persentase{year}")
+                    .SummaryType(SummaryType.Avg)
+                    .DisplayFormat("Rata-rata: {0:p2}");
+            });
+        }
+    })
+)

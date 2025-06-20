@@ -1,14 +1,25 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MonPDReborn.Models.DashboardVM.Index
+
 @{
+    ViewData["Title"] = "Dashboard";
 }
+
+<style>
+    .dx-datagrid-headers .dx-header-row > td {
+        font-weight: bold;
+        color: black;
+    }
+</style>
+
 
 <div class="row">
     <div class="col-lg-9">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title fs-16 mb-0">Statistic</h4>
+                <h4 class="card-title fs-16 mb-0">
+                    📊 STATISTIC
+                </h4>
+
             </div><!-- end card header -->
 
             <div class="card-body">
@@ -17,41 +28,41 @@
         </div><!-- end card -->
     </div>
     <div class="col-lg-3">
-        <div class="card">
+        <div class="card card-animate">
             <div class="card-body">
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <h5 class="fs-13 mb-3">Target</h5>
-                        <h2>Rp. 61,91,967</h2>
+                        <h5 class="fs-13 mb-3">TARGET</h5>
+                        <h2 class="text-danger">Rp. @(Model.Data.TotalTarget.ToString("n0"))</h2>
                     </div>
                     <div class="flex-shrink-0">
-                        <i class="mdi mdi-wallet-outline text-primary h1"></i>
+                        <i class="mdi mdi-wallet-outline text-success h1"></i>
                     </div>
                 </div>
             </div>
         </div><!--end card-->
-        <div class="card">
+        <div class="card card-animate">
             <div class="card-body">
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <h5 class="fs-13 mb-3">Realisasi</h5>
-                        <h2>Rp. 2,74,365</h2>
+                        <h5 class="fs-13 mb-3">REALISASI</h5>
+                        <h2 class="text-success">Rp. @(Model.Data.TotalRealisasi.ToString("n0"))</h2>
                     </div>
                     <div class="flex-shrink-0">
-                        <i class="ri-hand-coin-line text-primary h1"></i>
+                        <i class="ri-hand-coin-line text-secondary h1"></i>
                     </div>
                 </div>
             </div>
         </div><!--end card-->
-        <div class="card bg-soft-success">
+        <div class="card card-animate bg-soft-success">
             <div class="card-body">
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <h5 class="fs-13 mb-3">Persentase</h5>
-                        <h2>50%</h2>
+                        <h5 class="fs-13 mb-3">PERSENTASE</h5>
+                        <h2>@(Model.Data.TotalPersentase)%</h2>
                     </div>
                     <div class="flex-shrink-0">
-                        <i class="ri-line-chart-line text-primary h1"></i>
+                        <i class="ri-percent-line text-dark h1"></i>
                     </div>
                 </div>
             </div>
@@ -78,14 +89,14 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseHotel) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiHotel)</span> / <span class="text-danger">@(Model.Data.TargetHotel )</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
@@ -110,21 +121,21 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseHiburan) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiHiburan)</span> / <span class="text-danger">@(Model.Data.TargetHiburan )</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hiburan.png" />
                                 </div>
                             </div>
                         </div>
@@ -142,21 +153,21 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseParkir) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiParkir)</span> / <span class="text-danger">@(Model.Data.TargetParkir )</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/parkir.png" />
                                 </div>
                             </div>
                         </div>
@@ -174,21 +185,21 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseMamin) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiMamin)</span> / <span class="text-danger">@(Model.Data.TargetMamin )</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/restoran.png" />
                                 </div>
                             </div>
                         </div>
@@ -206,21 +217,22 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseListrik) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiListrik)</span> / <span class="text-danger">@(Model.Data.TargetListrik )</span>
+
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/listrik.png" />
                                 </div>
                             </div>
                         </div>
@@ -238,21 +250,22 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseAbt) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiAbt)</span> / <span class="text-danger">@(Model.Data.TargetAbt )</span>
+
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/airtanah.png" />
                                 </div>
                             </div>
                         </div>
@@ -270,21 +283,55 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentasePbb) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiPbb)</span> / <span class="text-danger">@(Model.Data.TargetPbb )</span>
+
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/pbb.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                        REKLAME
+                                    </p>
+                                </div>
+                                 <div class="flex-shrink-0">
+                                    <h5 class="text-success fs-14 mb-0">
+                                        @(Model.Data.PersentaseReklame) %
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-end justify-content-between mt-4">
+                                <div>
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiReklame)</span> / <span class="text-danger">@(Model.Data.TargetReklame )</span>
+
+                                    </h4>
+                                    <a href="" class="fs-12 text-decoration-underline">
+                                        Detail
+                                    </a>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/reklame.png" />
                                 </div>
                             </div>
                         </div>
@@ -301,23 +348,24 @@
                                         BPHTB
                                     </p>
                                 </div>
-                                <div class="flex-shrink-0">
+                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseBphtb) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiBphtb)</span> / <span class="text-danger">@(Model.Data.TargetBphtb )</span>
+
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/bphtb.png" />
                                 </div>
                             </div>
                         </div>
@@ -336,21 +384,22 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseOpsenPkb) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiOpsenPkb)</span> / <span class="text-danger">@(Model.Data.TargetOpsenPkb )</span>
+
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/penerangan.png" />
                                 </div>
                             </div>
                         </div>
@@ -369,21 +418,22 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
-                                        +16.24 %
+                                        @(Model.Data.PersentaseOpsenBbnkb) %
                                     </h5>
                                 </div>
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h4 class="fs-12 fw-bold ff-secondary mb-4">
-                                        150.000.000.000 / 150.000.000.000
+                                    <h4 class="fs-16 fw-bold ff-secondary mb-4">
+                                        <span class="text-success">@(Model.Data.RealisasiOpsenBbnkb)</span> / <span class="text-danger">@(Model.Data.TargetOpsenBbnkb )</span>
+
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
                                     </a>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <img class="rounded avatar-sm" src="~/assets/images/icon/hotel.png" />
+                                    <img class="rounded avatar-sm" src="~/assets/images/icon/sarangwalet.png" />
                                 </div>
                             </div>
                         </div>
@@ -400,9 +450,10 @@
         <div class="card">
             <div class="card-header d-flex">
                 <div class="flex-grow-1">
-                    <h4 class="card-title">
-                        SERIES PAJAK DAERAH
+                    <h4 class="card-title fs-16 mb-0">
+                        🧾 SERIES PAJAK DAERAH
                     </h4>
+
                 </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
@@ -412,68 +463,12 @@
                 </div>
             </div>
             <div class="card-body">
-                @{
-                    var startYear = 2019;
-                    var endYear = 2025;
-                }
-
-                @(
-                    Html.DevExtreme().DataGrid()
-                    .ID("dg-pajakDaerah")
-                    .ShowBorders(true)
-                    .ShowColumnHeaders(true)
-                    .ShowColumnLines(true)
-                    .ShowRowLines(true)
-                    .ColumnAutoWidth(true)
-                    .DataSource(new object[0])
-                    .KeyExpr("ID")
-                    .Columns(columns =>
-                    {
-                        columns.Add()
-                            .Caption("No")
-                            .Fixed(true)
-                            .FixedPosition(HorizontalEdge.Left);
-
-                        columns.Add()
-                            .Caption("Jenis Pajak")
-                            .Fixed(true)
-                            .FixedPosition(HorizontalEdge.Left);
-
-                        for (int year = startYear; year <= endYear; year++)
-                        {
-                            columns.Add()
-                            .Caption(year.ToString())
-                            .Columns(subColumns =>
-                            {
-                                subColumns.Add().Caption("Target");
-                                subColumns.Add().Caption("Persentase");
-                                subColumns.Add().Caption("%");
-                            });
-                        }
-                    })
-                    .Summary(s => {
-                        for (int year = startYear; year <= endYear; year++)
-                        {
-                            s.TotalItems(items =>
-                            {
-                                items.Add()
-                                    .Column($"Target{year}")
-                                    .SummaryType(SummaryType.Sum)
-                                    .DisplayFormat("Total: {0:c}");
-
-                                items.Add()
-                                    .Column($"Realisasi{year}")
-                                    .SummaryType(SummaryType.Sum)
-                                    .DisplayFormat("Total: {0:c}");
-
-                                items.Add()
-                                    .Column($"Persentase{year}")
-                                    .SummaryType(SummaryType.Avg)
-                                    .DisplayFormat("Rata-rata: {0:p2}");
-                            });
-                        }
-                    })
-                )
+                <div class="text-center">
+                    <div id="loading2-SeriesPajakDaerah" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="SeriesPajakDaerah"></div>
             </div>
         </div>
     </div>
@@ -481,17 +476,18 @@
 
 <div class="row">
     <div class="col-lg-6">
-        <div class="card">
+        <div class="card card-height-100">
             <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h4 class="card-title">JUMLAH OBJEK PAJAK</h4>
+                <div class="flex-grow-1 mb-0">
+                    <h4 class="card-title">
+                        🏢JUMLAH OBJEK PAJAK
+                    </h4>
                 </div>
-                <div class="flex-shrink-0">
-                     <select class="form-select form-select-sm mb-3" aria-label="Default select example">
-                        <option value="1" selected>2025</option>
-                        <option value="2">2024</option>
-                        <option value="3">2023</option>
-                    </select>
+                <div class="flex-shrink-0 mb-0">
+                    <button class="btn btn-sm btn-info">
+                    <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
                 </div>
             </div>
             <div class="card-body">
@@ -502,66 +498,215 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" aria-selected="false">
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" aria-selected="false" onclick="fnJumlahObjekPajakSeries()">
                             JML OP SERIES
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content text-muted">
                     <div class="tab-pane active" id="op-tahunan" role="tabpanel">
-                            @(
-                                Html.DevExtreme().DataGrid()
-                                .ID("dg-JmlObjekPajakTahunan")
-                                .ShowBorders(true)
-                                .ShowColumnHeaders(true)
-                                .ShowColumnLines(true)
-                                .ShowRowLines(true)
-                                .ColumnAutoWidth(true)
-                                .DataSource(new object[0])
-                                .KeyExpr("ID")
-                                .Columns(columns =>
-                                {
-                                    columns.Add().Caption("JENIS PAJAK");
-                                    columns.Add().Caption("JML OP AWAL");
-                                    columns.Add().Caption("JML OP TUTUP SEMENTARA");
-                                    columns.Add().Caption("JML OP TUTUP PERMANEN");
-                                    columns.Add().Caption("JML OP BARU");
-                                })
-                            )
+                        <div class="text-center">
+                            <div id="loading2-JumlahObjekPajakTahunan" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="JumlahObjekPajakTahunan"></div>
                     </div>
                     <div class="tab-pane" id="op-series" role="tabpanel">
-                            @(
-                                Html.DevExtreme().DataGrid()
-                                .ID("dg-JmlObjekPajakSeries")
-                                .ShowBorders(true)
-                                .ShowColumnHeaders(true)
-                                .ShowColumnLines(true)
-                                .ShowRowLines(true)
-                                .ColumnAutoWidth(true)
-                                .DataSource(new object[0])
-                                .KeyExpr("ID")
-                                .Columns(columns =>
-                                {
-                                    columns.Add().Caption("JENIS PAJAK");
-                                    columns.Add().Caption("2020");
-                                    columns.Add().Caption("2021");
-                                    columns.Add().Caption("2022");
-                                    columns.Add().Caption("2023");
-                                    columns.Add().Caption("2024");
-                                    columns.Add().Caption("2025");
-                                })
-                            )
+                        <div class="text-center">
+                            <div id="loading2-JumlahObjekPajakSeries" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="JumlahObjekPajakSeries"></div>
                     </div>
                 </div>
             </div>
-            <div class="card-footer d-flex">
-                <div class="flex-grow-1"></div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card card-height-100">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">
+                        🧮 MONITORING PEMASANGAN ALAT REKAM ONLINE
+                    </h4>
+                </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
                     <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#ts-detail" role="tab" aria-selected="false">
+                            DETAIL
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#ts-series" role="tab" aria-selected="false" onclick="fnPemasanganAlatRekamSeries()">
+                            SERIES
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content text-muted">
+                    <div class="tab-pane active" id="ts-detail" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-PemasanganAlatRekamDetail" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="PemasanganAlatRekamDetail"></div>
+                    </div>
+                    <div class="tab-pane" id="ts-series" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-PemasanganAlatRekamSeries" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="PemasanganAlatRekamSeries"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-height-100">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">
+                        💰 PEMERIKSAAN PAJAK
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-info">
+                    <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-PemeriksaanPajak" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="PemeriksaanPajak"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-height-100">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">
+                        📄PENGEDOKAN PAJAK
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-info">
+                    <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-PengedokanPajak" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="PengedokanPajak"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-height-100">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">
+                        🏛️ DATA KONTROL (POTENSI OP)
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-info">
+                    <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-DataKontrolPotensiOp" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="DataKontrolPotensiOp"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card card-height-100">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">
+                        💵 PIUTANG
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-info">
+                    <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-DataPiutang" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="DataPiutang"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card card-height-100">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">
+                        🧾 MUTASI
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-info">
+                    <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-DataMutasi" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="DataMutasi"></div>
             </div>
         </div>
     </div>
@@ -601,7 +746,7 @@
                 prevEl: ".swiper-button-prev",
             },
             autoplay: {
-                delay: 5000,
+                delay: 3000,
                 disableOnInteraction: false,
             },
             breakpoints: {
@@ -638,16 +783,14 @@
                 curve: 'straight'
             },
             series: [{
-                    name: "Target",
-                    data: [26, 24, 32, 36, 33, 31, 33]
-                },
-                {
-                    name: "Realisasi",
-                    data: [14, 11, 16, 12, 17, 13, 12]
-                }
-            ],
+                name: "Target",
+                data: [@(Model.ChartData.Target1), @(Model.ChartData.Target2), @(Model.ChartData.Target3), @(Model.ChartData.Target4), @(Model.ChartData.Target5), @(Model.ChartData.Target6), @(Model.ChartData.Target7), @(Model.ChartData.Target8), @(Model.ChartData.Target9), @(Model.ChartData.Target10), @(Model.ChartData.Target11), @(Model.ChartData.Target12)]
+            }, {
+                name: "Realisasi",
+                data: [@(Model.ChartData.Realisasi1), @(Model.ChartData.Realisasi2), @(Model.ChartData.Realisasi3), @(Model.ChartData.Realisasi4), @(Model.ChartData.Realisasi5), @(Model.ChartData.Realisasi6), @(Model.ChartData.Realisasi7), @(Model.ChartData.Realisasi8), @(Model.ChartData.Realisasi9), @(Model.ChartData.Realisasi10), @(Model.ChartData.Realisasi11), @(Model.ChartData.Realisasi12)]
+            }],
             title: {
-                text: 'Target & Realisasi PAD',
+                text: 'Target & Realisasi PAD 2025',
                 align: 'left',
                 style: {
                     fontWeight: 500,
@@ -665,7 +808,7 @@
                 size: 6
             },
             xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
                 title: {
                     text: 'Bulan'
                 }
@@ -674,6 +817,18 @@
                 title: {
                     text: 'Nominal'
                 },
+                labels: {
+                    formatter: function (val) {
+                        return 'Rp' + val.toLocaleString('id-ID');
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return 'Rp' + val.toLocaleString('id-ID');
+                    }
+                }
             },
             legend: {
                 position: 'top',
@@ -703,5 +858,321 @@
         );
 
         chart.render();
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            fnSeriesPajakDaerah();
+            fnJumlahObjekPajakTahunan();
+            fnPemasanganAlatRekamDetail();
+            fnPemasanganAlatRekamSeries();
+            fnPemeriksaanPajak();
+            fnPengedokanPajak();
+            fnDataKontrolPotensiOp();
+            fnDataPiutang();
+            fnDataMutasi();
+        });
+
+        function fnSeriesPajakDaerah()
+        {
+            $.ajax({
+              url: '@(Url.Action("SeriesPajakDaerah"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-SeriesPajakDaerah').show();
+                 $('#SeriesPajakDaerah').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-SeriesPajakDaerah').hide();
+                        $('#SeriesPajakDaerah').show();
+                        $('#SeriesPajakDaerah').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-SeriesPajakDaerah').hide();
+                 $('#SeriesPajakDaerah').hide();
+                 $('#SeriesPajakDaerah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnJumlahObjekPajakTahunan()
+        {
+            $.ajax({
+              url: '@(Url.Action("JumlahObjekPajakTahunan"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-JumlahObjekPajakTahunan').show();
+                 $('#JumlahObjekPajakTahunan').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-JumlahObjekPajakTahunan').hide();
+                        $('#JumlahObjekPajakTahunan').show();
+                        $('#JumlahObjekPajakTahunan').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-JumlahObjekPajakTahunan').hide();
+                 $('#JumlahObjekPajakTahunan').hide();
+                 $('#JumlahObjekPajakTahunan').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnJumlahObjekPajakSeries()
+        {
+            $.ajax({
+              url: '@(Url.Action("JumlahObjekPajakSeries"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-JumlahObjekPajakSeries').show();
+                 $('#JumlahObjekPajakSeries').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-JumlahObjekPajakSeries').hide();
+                        $('#JumlahObjekPajakSeries').show();
+                        $('#JumlahObjekPajakSeries').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-JumlahObjekPajakSeries').hide();
+                 $('#JumlahObjekPajakSeries').hide();
+                 $('#JumlahObjekPajakSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemasanganAlatRekamDetail()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemasanganAlatRekamDetail"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemasanganAlatRekamDetail').show();
+                 $('#PemasanganAlatRekamDetail').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemasanganAlatRekamDetail').hide();
+                        $('#PemasanganAlatRekamDetail').show();
+                        $('#PemasanganAlatRekamDetail').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemasanganAlatRekamDetail').hide();
+                 $('#PemasanganAlatRekamDetail').hide();
+                 $('#PemasanganAlatRekamDetail').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemasanganAlatRekamSeries()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemasanganAlatRekamSeries"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemasanganAlatRekamSeries').show();
+                 $('#PemasanganAlatRekamSeries').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemasanganAlatRekamSeries').hide();
+                        $('#PemasanganAlatRekamSeries').show();
+                        $('#PemasanganAlatRekamSeries').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemasanganAlatRekamSeries').hide();
+                 $('#PemasanganAlatRekamSeries').hide();
+                 $('#PemasanganAlatRekamSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemeriksaanPajak()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemeriksaanPajak"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemeriksaanPajak').show();
+                 $('#PemeriksaanPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemeriksaanPajak').hide();
+                        $('#PemeriksaanPajak').show();
+                        $('#PemeriksaanPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemeriksaanPajak').hide();
+                 $('#PemeriksaanPajak').hide();
+                 $('#PemeriksaanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPengedokanPajak()
+        {
+            $.ajax({
+              url: '@(Url.Action("PengedokanPajak"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PengedokanPajak').show();
+                 $('#PengedokanPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PengedokanPajak').hide();
+                        $('#PengedokanPajak').show();
+                        $('#PengedokanPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PengedokanPajak').hide();
+                 $('#PengedokanPajak').hide();
+                 $('#PengedokanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataKontrolPotensiOp()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataKontrolPotensiOp"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataKontrolPotensiOp').show();
+                 $('#DataKontrolPotensiOp').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataKontrolPotensiOp').hide();
+                        $('#DataKontrolPotensiOp').show();
+                        $('#DataKontrolPotensiOp').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataKontrolPotensiOp').hide();
+                 $('#DataKontrolPotensiOp').hide();
+                 $('#DataKontrolPotensiOp').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataPiutang()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataPiutang"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataPiutang').show();
+                 $('#DataPiutang').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataPiutang').hide();
+                        $('#DataPiutang').show();
+                        $('#DataPiutang').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataPiutang').hide();
+                 $('#DataPiutang').hide();
+                 $('#DataPiutang').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataMutasi()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataMutasi"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataMutasi').show();
+                 $('#DataMutasi').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataMutasi').hide();
+                        $('#DataMutasi').show();
+                        $('#DataMutasi').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataMutasi').hide();
+                 $('#DataMutasi').hide();
+                 $('#DataMutasi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
     </script>
 }

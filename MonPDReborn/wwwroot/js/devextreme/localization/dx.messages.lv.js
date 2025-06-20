@@ -1,9 +1,9 @@
 /*!
 * DevExtreme (dx.messages.lv.js)
-* Version: 23.1.5
-* Build date: Wed Aug 30 2023
+* Version: 23.2.5
+* Build date: Mon Mar 11 2024
 *
-* Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+* Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
@@ -79,9 +79,9 @@
             "dxFileUploader-selectFile": "Izv\u0113l\u0113ties failu",
             "dxFileUploader-dropFile": "vai Nomest failu \u0161eit",
             "dxFileUploader-bytes": "baiti",
-            "dxFileUploader-kb": "kb",
-            "dxFileUploader-Mb": "Mb",
-            "dxFileUploader-Gb": "Gb",
+            "dxFileUploader-kb": "KB",
+            "dxFileUploader-Mb": "MB",
+            "dxFileUploader-Gb": "GB",
             "dxFileUploader-upload": "Aug\u0161upiel\u0101d\u0113t",
             "dxFileUploader-uploaded": "Aug\u0161upiel\u0101d\u0113ts",
             "dxFileUploader-readyToUpload": "Gatavs aug\u0161upiel\u0101dei",
@@ -141,6 +141,10 @@
             "dxDataGrid-sortingAscendingText": "K\u0101rtot Augo\u0161i",
             "dxDataGrid-sortingDescendingText": "K\u0101rtot Dilsto\u0161i",
             "dxDataGrid-sortingClearText": "Not\u012br\u012bt K\u0101rto\u0161anu",
+            "dxDataGrid-ariaNotSortedColumn": "Not sorted column",
+            "dxDataGrid-ariaSortedAscendingColumn": "Column sorted in ascending order",
+            "dxDataGrid-ariaSortedDescendingColumn": "Column sorted in descending order",
+            "dxDataGrid-ariaSortIndex": "Sort index {0}",
             "dxDataGrid-editingSaveAllChanges": "Saglab\u0101t izmai\u0146as",
             "dxDataGrid-editingCancelAllChanges": "Atcelt izmai\u0146as",
             "dxDataGrid-editingAddRow": "Pievienot rindu",
@@ -172,10 +176,18 @@
             "dxDataGrid-ariaAdaptiveCollapse": "Sl\u0113pt papildus datus",
             "dxDataGrid-ariaAdaptiveExpand": "R\u0101d\u012bt papildus datus",
             "dxDataGrid-ariaColumn": "Kolonna",
+            "dxDataGrid-ariaColumnHeader": "Column header",
             "dxDataGrid-ariaValue": "V\u0113rt\u012bba",
+            "dxDataGrid-ariaError": "Error",
+            "dxDataGrid-ariaRevertButton": "Press Escape to discard the changes",
             "dxDataGrid-ariaFilterCell": "Filtr\u0113t \u0161\u016bnu",
             "dxDataGrid-ariaCollapse": "Sav\u0113rst",
+            "dxDataGrid-ariaModifiedCell": "Modified",
+            "dxDataGrid-ariaDeletedCell": "Deleted",
+            "dxDataGrid-ariaEditableCell": "Editable",
             "dxDataGrid-ariaExpand": "Izv\u0113rst",
+            "dxDataGrid-ariaCollapsedRow": "Collapsed row",
+            "dxDataGrid-ariaExpandedRow": "Expanded row",
             "dxDataGrid-ariaDataGrid": "Datu tabula ar {0} rind\u0101m un {1} kolonn\u0101m",
             "dxDataGrid-ariaSearchInGrid": "Mekl\u0113t datu tabul\u0101",
             "dxDataGrid-ariaSelectAll": "Izv\u0113l\u0113ties visu",
@@ -255,6 +267,8 @@
             "dxScheduler-recurrenceRepeatOnDate": "datum\u0101",
             "dxScheduler-recurrenceRepeatCount": "atk\u0101rto\u0161an\u0101(s)",
             "dxScheduler-allDay": "Visa diena",
+            "dxScheduler-confirmRecurrenceEditTitle": "Edit Recurring Appointment",
+            "dxScheduler-confirmRecurrenceDeleteTitle": "Delete Recurring Appointment",
             "dxScheduler-confirmRecurrenceEditMessage": "Vai v\u0113laties atk\u0101rtot \u0161o apmekl\u0113jumu vai visu apmekl\u0113jumu sec\u012bbu?",
             "dxScheduler-confirmRecurrenceDeleteMessage": "Vai v\u0113laties dz\u0113st \u0161o apmekl\u0113jumu vai visu apmekl\u0113jumu sec\u012bbu?",
             "dxScheduler-confirmRecurrenceEditSeries": "Redi\u0123\u0113t sec\u012bbu",
@@ -265,7 +279,18 @@
             "dxScheduler-moreAppointments": "{0} vair\u0101k",
             "dxCalendar-todayButtonText": "\u0160odien",
             "dxCalendar-ariaWidgetName": "Kalend\u0101rs",
-            "dxCalendar-ariaHotKeysInfo": "Lai p\u0101rvietotos starp skatiem, nospiediet Control un tad Bultu Pa Kreisi vai Bultu Pa Labi. Lai pietuvin\u0101tu skatu, nospiediet Control, un tad Bultu Uz Leju. Lai att\u0101lin\u0101tu skalu, nospiediet Control un tad Bultu Uz Aug\u0161u",
+            "dxCalendar-previousMonthButtonLabel": "Previous month",
+            "dxCalendar-previousYearButtonLabel": "Previous year",
+            "dxCalendar-previousDecadeButtonLabel": "Previous decade",
+            "dxCalendar-previousCenturyButtonLabel": "Previous century",
+            "dxCalendar-nextMonthButtonLabel": "Next month",
+            "dxCalendar-nextYearButtonLabel": "Next year",
+            "dxCalendar-nextDecadeButtonLabel": "Next decade",
+            "dxCalendar-nextCenturyButtonLabel": "Next century",
+            "dxCalendar-captionMonthLabel": "Month selection",
+            "dxCalendar-captionYearLabel": "Year selection",
+            "dxCalendar-captionDecadeLabel": "Decade selection",
+            "dxCalendar-captionCenturyLabel": "Century selection",
             "dxColorView-ariaRed": "Sarkans",
             "dxColorView-ariaGreen": "Za\u013c\u0161",
             "dxColorView-ariaBlue": "Zils",
@@ -384,6 +409,16 @@
             "dxHtmlEditor-right": "Pa Labi",
             "dxHtmlEditor-indent": "Ievilkums",
             "dxHtmlEditor-justify": "Taisnot",
+            "dxHtmlEditor-borderStyleNone": "none",
+            "dxHtmlEditor-borderStyleHidden": "hidden",
+            "dxHtmlEditor-borderStyleDotted": "dotted",
+            "dxHtmlEditor-borderStyleDashed": "dashed",
+            "dxHtmlEditor-borderStyleSolid": "solid",
+            "dxHtmlEditor-borderStyleDouble": "double",
+            "dxHtmlEditor-borderStyleGroove": "groove",
+            "dxHtmlEditor-borderStyleRidge": "ridge",
+            "dxHtmlEditor-borderStyleInset": "inset",
+            "dxHtmlEditor-borderStyleOutset": "outset",
             "dxFileManager-newDirectoryName": "Nenosaukta direktorija",
             "dxFileManager-rootDirectoryName": "Faili",
             "dxFileManager-errorNoAccess": "Piek\u013cuve liegta. Oper\u0101ciju nevar\u0113ja izpild\u012bt.",
@@ -643,7 +678,12 @@
             "dxGantt-showResources": "R\u0101d\u012bt Resursus",
             "dxGantt-showDependencies": "R\u0101d\u012bt Sasaistes",
             "dxGantt-dialogStartDateValidation": "S\u0101kuma datumam j\u0101b\u016bt v\u0113l\u0101kam par {0}",
-            "dxGantt-dialogEndDateValidation": "Beigu datumam j\u0101b\u016bt v\u0113l\u0101kam par {0}"
+            "dxGantt-dialogEndDateValidation": "Beigu datumam j\u0101b\u016bt v\u0113l\u0101kam par {0}",
+            "dxGallery-itemName": "Gallery item",
+            "dxMultiView-elementAriaRoleDescription": "MultiView",
+            "dxMultiView-elementAriaLabel": "Use the arrow keys or swipe to navigate between views",
+            "dxMultiView-itemAriaRoleDescription": "View",
+            "dxMultiView-itemAriaLabel": "{0} of {1}"
         }
     })
 }));
