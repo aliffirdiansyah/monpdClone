@@ -1,5 +1,88 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using DevExtreme.AspNet.Mvc  
+@using DevExtreme.AspNet.Mvc.Builders  
+@{  
+    ViewData["Title"] = "Dashboard Rekap Pelaporan Pajak";  
+}  
+
+<h2>Dashboard Rekap Pelaporan Pajak</h2>  
+
+<!-- FILTER FORM -->  
+<div class="dx-card p-3 mb-4">  
+    @(Html.DevExtreme().Form()  
+        .ColCount(3)  
+        .Items(items => {  
+            items.AddSimple().Label(label => label.Text("Tahun")).Editor(e => e.SelectBox().DataSource(new[] { "2024", "2023" }).Value("2024"));  
+            items.AddSimple().Label(label => label.Text("Jenis Pajak")).Editor(e => e.SelectBox().DataSource(new[] { "Semua", "Pajak Hotel", "Pajak Restoran" }).Value("Semua"));  
+            items.AddSimple().Label(label => label.Text("Bulan")).Editor(e => e.SelectBox().DataSource(new[] { "Semua", "Januari", "Februari", "Maret" }).Value("Semua"));  
+        })  
+    )  
+</div>  
+
+<!-- KPI CARDS -->  
+<div class="row mb-4">  
+    <div class="col-md-3">  
+        <div class="dx-card dx-theme-accent p-3">  
+            <div class="fw-bold">Jumlah Pelaporan</div>  
+            <div class="fs-4">125</div>  
+        </div>  
+    </div>  
+    <div class="col-md-3">  
+        <div class="dx-card dx-theme-success p-3">  
+            <div class="fw-bold">Total Nilai Laporan</div>  
+            <div class="fs-4">Rp 2.150.000.000</div>  
+        </div>  
+    </div>  
+    <div class="col-md-3">  
+        <div class="dx-card dx-theme-warning p-3">  
+            <div class="fw-bold">WP Belum Lapor</div>  
+            <div class="fs-4">23</div>  
+        </div>  
+    </div>  
+    <div class="col-md-3">  
+        <div class="dx-card dx-theme-info p-3">  
+            <div class="fw-bold">WP Terdaftar</div>  
+            <div class="fs-4">180</div>  
+        </div>  
+    </div>  
+</div>  
+
+<!-- TABEL REKAP -->  
+<div class="dx-card p-3">  
+    @(Html.DevExtreme().DataGrid()  
+        .ID("rekapGrid")  
+        .DataSource(new[] {  
+            new { Bulan = "Januari", JumlahPelaporan = 35, TotalNilai = 540000000, WP_Aktif = 50, WP_Belum = 15 },  
+            new { Bulan = "Februari", JumlahPelaporan = 30, TotalNilai = 480000000, WP_Aktif = 50, WP_Belum = 20 },  
+            new { Bulan = "Maret", JumlahPelaporan = 28, TotalNilai = 390000000, WP_Aktif = 50, WP_Belum = 22 }  
+        })  
+        .ShowBorders(true)  
+        .Columns(columns => {
+    columns.Add().DataField("Bulan").Caption("Bulan");
+    columns.Add().DataField("JumlahPelaporan").Caption("Jumlah Pelaporan");
+    columns.Add().DataField("TotalNilai").Caption("Total Nilai (Rp)").Format(Format.Currency);
+    columns.Add().DataField("WP_Aktif").Caption("WP Aktif");
+    columns.Add().DataField("WP_Belum").Caption("WP Belum Lapor");
+
+    // 👇 Tambahkan kolom aksi
+    columns.Add()
+        .Caption("Aksi")
+        .Width(100)
+        .CellTemplate(@<text>
+            <div class="text-center">
+                <button class="dx-button dx-button-mode-contained dx-button-normal" onclick="lihatDetail('Haha')">
+                    <i class="dx-icon dx-icon-file"></i>
+                </button>
+            </div>
+        </text>);
+})
+
+    )  
+</div>
+<script>
+    function lihatDetail(bulan) {
+        DevExpress.ui.notify("Lihat detail bulan: " + bulan, "info", 1000);
+        // Ganti dengan redirect atau modal detail jika perlu
+        // window.location.href = "/Detail/Bulan?nama=" + encodeURIComponent(bulan);
+    }
+</script>
+
