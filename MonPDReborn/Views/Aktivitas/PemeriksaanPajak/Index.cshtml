@@ -1,0 +1,163 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Pemeriksaan Pajak
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Pemeriksaan Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                @{
+                    Html.DevExtreme().DataGrid()
+                        .ID("pemeriksaanGrid")
+                        .DataSource(new object[] { }) // Data kosong
+                        .ShowBorders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnFixing(c => c.Enabled(true))
+                        .KeyExpr("JenisPajak")
+                        .Columns(columns =>
+                        {
+                            columns.Add().DataField("JenisPajak").Caption("JENIS PAJAK").Fixed(true).FixedPosition(HorizontalEdge.Left).Alignment(HorizontalAlignment.Center);
+
+                            // JUMLAH OP YANG DIPERIKSA
+                            columns.Add().Caption("JUMLAH OP YANG DIPERIKSA").Alignment(HorizontalAlignment.Center).Columns(sub =>
+                            {
+                                sub.Add().DataField("OP2023").Caption("2023").Alignment(HorizontalAlignment.Center);
+                                sub.Add().DataField("OP2024").Caption("2024").Alignment(HorizontalAlignment.Center);
+                                sub.Add().DataField("OP2025").Caption("2025").Alignment(HorizontalAlignment.Center);
+                            });
+
+                            // JUMLAH KURANG BAYAR
+                            columns.Add().Caption("JUMLAH KURANG BAYAR").Alignment(HorizontalAlignment.Center).Columns(sub =>
+                            {
+                                sub.Add().Caption("2023").Alignment(HorizontalAlignment.Center).Columns(year =>
+                                {
+                                year.Add().DataField("Pokok2023").Caption("POKOK").Alignment(HorizontalAlignment.Center);
+                                year.Add().DataField("Sanksi2023").Caption("SANKSI").Alignment(HorizontalAlignment.Center);
+                                year.Add().DataField("Total2023").Caption("TOTAL").Alignment(HorizontalAlignment.Center);
+                                });
+
+                                sub.Add().Caption("2024").Alignment(HorizontalAlignment.Center).Columns(year =>
+                                {
+                                year.Add().DataField("Pokok2024").Caption("POKOK").Alignment(HorizontalAlignment.Center);
+                                year.Add().DataField("Sanksi2024").Caption("SANKSI").Alignment(HorizontalAlignment.Center);
+                                year.Add().DataField("Total2024").Caption("TOTAL").Alignment(HorizontalAlignment.Center);
+                                });
+
+                                sub.Add().Caption("2025").Alignment(HorizontalAlignment.Center).Columns(year =>
+                                {
+                                year.Add().DataField("Pokok2025").Caption("POKOK").Alignment(HorizontalAlignment.Center);
+                                year.Add().DataField("Sanksi2025").Caption("SANKSI").Alignment(HorizontalAlignment.Center);
+                                year.Add().DataField("Total2025").Caption("TOTAL").Alignment(HorizontalAlignment.Center);
+                                });
+                            });
+                        })
+                         .Render();
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Detail Pemeriksaan Objek Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-4">
+                    @{
+                        Html.DevExtreme().SelectBox()
+                        .ID("jenisPajakSelect")
+                        .DataSource(new[] {
+                                        new { value = "hotel", text = "Hotel" },
+                                        new { value = "restoran", text = "Restoran" },
+                                        new { value = "reklame", text = "Reklame" },
+                                        new { value = "hiburan", text = "Hiburan" },
+                                        new { value = "parkir", text = "Parkir" },
+                                        new { value = "ppj", text = "PPJ" },
+                                        new { value = "pbb", text = "PBB" },
+                                        new { value = "bphtb", text = "BPHTB" },
+                                        new { value = "airtanah", text = "Air Tanah" },
+                                        new { value = "opsenpkb", text = "OPSEN PKB" },
+                                        new { value = "opsenbbnkb", text = "OPSEN BBNKB" }
+                        })
+                        .ValueExpr("value")
+                        .DisplayExpr("text")
+                        .Placeholder("Pilih Jenis Pajak")
+                        .OnValueChanged("onJenisPajakChanged")
+                        .Width("100%")
+                        .Render();
+                    }
+                </div>
+                <br />
+                @{
+                    Html.DevExtreme().DataGrid()
+                        .ID("detailPemeriksaanGrid")
+                        .ShowBorders(true)
+                        .ShowRowLines(true)
+                        .ColumnAutoWidth(true)
+                        .Paging(p => p.PageSize(10))
+                        .ColumnHidingEnabled(true)
+                        .DataSource(new object[] { }) // Kosong dulu, ganti dengan ajax jika pakai data asli
+                        .Columns(columns =>
+                        {
+                            columns.Add().DataField("JenisPajak").Caption("Jenis Pajak");
+                            columns.Add().DataField("NOP").Caption("NOP");
+                            columns.Add().DataField("WajibPajak").Caption("Wajib Pajak");
+                            columns.Add().DataField("Alamat").Caption("Alamat");
+                            columns.Add().DataField("UPTB").Caption("UPTB");
+                            columns.Add().DataField("NoSP").Caption("No SP");
+                            columns.Add().DataField("TglST").Caption("Tgl ST").DataType(GridColumnDataType.Date);
+                            columns.Add().DataField("Tahun").Caption("Tahun");
+                            columns.Add().DataField("JumlahKB").Caption("Jumlah KB");
+                            columns.Add().DataField("Keterangan").Caption("Keterangan");
+                            columns.Add().DataField("LHP").Caption("LHP");
+                            columns.Add().DataField("TglLHP").Caption("Tgl LHP").DataType(GridColumnDataType.Date);
+                            columns.Add().DataField("TglBayar").Caption("Tgl Bayar").DataType(GridColumnDataType.Date);
+                            columns.Add().DataField("Tim").Caption("Tim");
+                            columns.Add().DataField("TahunPajak").Caption("Tahun Pajak");
+                            columns.Add().DataField("Pokok").Caption("Pokok");
+                        })
+                         .Render();
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function onJenisPajakChanged(e) {
+            const selectedValue = e.value;
+            // Lakukan logic filtering / load data sesuai jenis pajak di sini
+            console.log("Jenis Pajak dipilih:", selectedValue);
+            // Contoh: reload dataGrid (jika pakai remote)
+            // $("#detailPemeriksaanGrid").dxDataGrid("instance").refresh();
+        }
+    </script>
+}

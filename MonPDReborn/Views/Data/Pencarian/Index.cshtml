@@ -1,0 +1,225 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Pencarian
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        FILTER
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body px-4 py-3">
+                @{
+                    Html.DevExtreme().Form()
+                    .ID("filterForm")
+                    .ColCount(1)
+                    .AlignItemLabels(true)
+                    .Items(items =>
+                    {
+
+                        items.AddSimple()
+                                    .DataField("JenisPajak")
+                                    .Label(l => l.Text("Jenis Pajak"))
+                                    .Editor(e => e.SelectBox()
+                                    .DataSource(new[] {
+                                        new { value = "", text = "Pilih Jenis Pajak" },
+                                        new { value = "hotel", text = "Hotel" },
+                                        new { value = "restoran", text = "Restoran" },
+                                        new { value = "parkir", text = "Parkir" },
+                                        new { value = "hiburan", text = "Hiburan" },
+                                        new { value = "ppj", text = "PPJ" },
+                                        new { value = "pbb", text = "PBB" },
+                                        new { value = "bphtb", text = "BPHTB" },
+                                        new { value = "reklame", text = "Reklame" },
+                                        new { value = "airtanah", text = "Air Tanah" }
+                    })
+                                    .DisplayExpr("text")
+                                    .ValueExpr("value")
+                                    .Placeholder("Pilih Jenis Pajak")
+                                    .OnValueChanged("onJenisChanged")
+                                    );
+
+                        items.AddSimple()
+                                    .DataField("KategoriPajak")
+                                    .Label(l => l.Text("Kategori Pajak"))
+                                    .Editor(e => e.SelectBox()
+                                    .ID("kategoriPajak") // Penting untuk bisa diakses dari JS
+                                    .DisplayExpr("text")
+                                    .ValueExpr("value")
+                                    .Placeholder("Pilih Kategori")
+                                    .DataSource(new object[] { }) // kosong, akan diisi lewat JS
+                                    );
+
+                        items.AddSimple()
+                                    .DataField("WilayahPajak")
+                                    .Label(l => l.Text("Wilayah"))
+                                    .Editor(e => e.SelectBox()
+                                    .DataSource(new[] {
+                                        new { value = "uptb1", text = "UPTB 1" },
+                                        new { value = "uptb2", text = "UPTB 2" },
+                                        new { value = "uptb3", text = "UPTB 3" },
+                                        new { value = "uptb4", text = "UPTB 4" },
+                                        new { value = "uptb5", text = "UPTB 5" }
+                    })
+                                    .DisplayExpr("text")
+                                    .ValueExpr("value")
+                                    .Placeholder("Pilih Wilayah")
+                                    );
+
+                        items.AddSimple()
+                                    .DataField("StatusPembayaran")
+                                    .Label(l => l.Text("Status Pembayaran"))
+                                    .Editor(e => e.SelectBox()
+                                    .DataSource(new[] {
+                                        new { value = "sudahBayar", text = "Sudah Bayar" },
+                                        new { value = "belumBayar", text = "Belum Bayar" }
+                    })
+                                    .DisplayExpr("text")
+                                    .ValueExpr("value")
+                                    .Placeholder("Pilih Status")
+                                    );
+
+                        items.AddSimple()
+                                    .DataField("StatusObjek")
+                                    .Label(l => l.Text("Status Objek"))
+                                    .Editor(e => e.SelectBox()
+                                    .DataSource(new[] {
+                                        new { value = "buka", text = "Buka" },
+                                        new { value = "tutup", text = "Tutup" }
+                    })
+                                    .DisplayExpr("text")
+                                    .ValueExpr("value")
+                                    .Placeholder("Pilih Status")
+                                    );
+
+                        items.AddSimple()
+                                    .DataField("MasaPajak")
+                                    .Label(l => l.Text("Masa Pajak"))
+                                    .Editor(e => e.SelectBox()
+                                    .DataSource(System.Globalization.DateTimeFormatInfo
+                                    .InvariantInfo.MonthNames
+                                    .Where(m => !string.IsNullOrWhiteSpace(m))
+                                    .Select(m => new { value = m.ToLower(), text = m })
+                                    )
+                                    .DisplayExpr("text")
+                                    .ValueExpr("value")
+                                    .Placeholder("Pilih Masa Pajak")
+                                    );
+
+                        items.AddSimple()
+                                    .DataField("Tahun")
+                                    .Label(l => l.Text("Tahun"))
+                                    .Editor(e => e.SelectBox()
+                                    .DataSource(new[] {
+                                        new { value = "2025", text = "2025" },
+                                        new { value = "2024", text = "2024" },
+                                        new { value = "2023", text = "2023" },
+                                        new { value = "2022", text = "2022" },
+                                        new { value = "2021", text = "2021" },
+                                        new { value = "2020", text = "2020" }
+                    })
+                                    .DisplayExpr("text")
+                                    .ValueExpr("value")
+                                    .Placeholder("Pilih Tahun")
+                                    );
+
+                        items.AddSimple()
+                                    .ColSpan(2)
+                                    .Template(@<text>
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button id="btnReset" class="btn btn-secondary me-2" type="reset">Reset</button>
+                                        <button id="btnSearch" class="btn btn-primary" type="submit">Cari Objek</button>
+                                    </div>
+                                </text>
+                    );
+                    })
+                    .Render();
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Hasil Pencarian
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                @{
+                    Html.DevExtreme().DataGrid()
+                    .ID("PencarianGrid")
+                    .ShowBorders(true)
+                    .ShowRowLines(true)
+                    .ColumnAutoWidth(true)
+                    .ColumnHidingEnabled(true)
+                    .DataSource(new object[] { })
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("No").Caption("No").Alignment(HorizontalAlignment.Center);
+                        columns.Add().DataField("Wilayah").Caption("Wilayah").Alignment(HorizontalAlignment.Center);
+                        columns.Add().DataField("Nama OP").Caption("Nama OP").Alignment(HorizontalAlignment.Center);
+                        columns.Add().DataField("Alamat OP").Caption("Alamat OP").Alignment(HorizontalAlignment.Center);
+                        columns.Add().DataField("Tanggal Bayar").Caption("Tanggal Bayar").Alignment(HorizontalAlignment.Center);
+                        columns.Add().DataField("Ketetapan").Caption("Ketetapan").Alignment(HorizontalAlignment.Center);
+                        columns.Add().DataField("Realisasi").Caption("Realisasi").Alignment(HorizontalAlignment.Center);
+                        columns.Add().DataField("Keterangan").Caption("Keterangan").Alignment(HorizontalAlignment.Center);
+                    })
+                    .Render();
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+            const kategoriOptions = {
+            hotel: ['Hotel Bintang Lima', 'Hotel Bintang Empat', 'Hotel Bintang Tiga', 'Hotel Bintang Dua', 'Hotel Bintang Satu', 'Hotel Non Bintang', 'Rumah Kos'],
+            restoran: ['Restoran', 'Depot/Kedai', 'Rumah Makan', 'Tenant Makanan/Minuman', 'Cafe', 'Fast Food', 'Bakery/Pastry', 'Restoran Pada Minimarket', 'Restoran Pada Objek Hiburan', 'Catering', 'Buffet/All You Can Eat'],
+            parkir: ['Minimarket', 'Usaha Restoran', 'Pertokoan', 'Perkantoran', 'Perbankan', 'Hotel/Penginapan', 'Parkir', 'Usaha Hiburan', 'Usaha Parkir', 'Rumah Sakit', 'Swalayan/Supermarket', 'Mall/Plaza', 'Apartemen', 'Pergudangan/Pabrik', 'Klinik', 'Laboratorium', 'Apotik', 'Pasar', 'Persewaan Gedung', 'Stasiun'],
+            hiburan: ['Insidentil', 'Panti Pijat/Therapy/Sauna/SPA', 'Permainan Anak/Ketangkasan', 'Fitness/Pusat Kebugaran', 'Non Bioskop', 'Bar/Cafe/Klab Malam/Diskotik', 'Billyard', 'Karaoke Dewasa', 'Bioskop', 'Karaoke Keluarga', 'Kolam Renang', 'Futsal (Olahraga)', 'Gedung Olahraga', 'Taman Satwa/Pemandian Alam/Taman Rekreasi/Wisata Tirta/Rekreasi Air', 'Bowling', 'Pameran Seni Budaya'],
+            ppj: ['PPJ Non PLN', 'PPJ PLN'],
+            pbb: ['Perumahan', 'Perkantoran Swasta', 'Pabrik', 'Toko/Apotik/Pasar/Ruko', 'Rumah Sakit/Klinik', 'Olahraga/Rekreasi', 'Hotel/Wisma', 'Bengkel/Gudang/Pertanian', 'Gedung Pemerintah', 'Lain-Lain', 'Bagunan Tidak Kena Pajak', 'Bagunan Parkir', 'Apartemen/Rusun', 'Pompa Bensin', 'Tangki Minyak', 'Gedung Sekolah', 'Menara/Tower', 'Tanah Kosong'],
+            bphtb: ['Pemberian', 'Pemindahan'],
+            reklame: ['(INSIDENTIL) NON MEGATRON/VIDEOTRON/LED', '(PERMANEN) MEGATRON/VIDEOTRON/LED', '(PERMANEN) NON MEGATRON/VIDEOTRON/LED', '(TERBATAS) MEGATRON/VIDEOTRON/LED', '(TERBATAS) NON MEGATRON/VIDEOTRON/LED'],
+            airtanah: ['Air Tanah']
+        };
+
+        function onJenisChanged(e) {
+            const selectedJenis = e.value;
+            const selectBox = $('#kategoriPajak').dxSelectBox('instance');
+            const options = kategoriOptions[selectedJenis] || [];
+
+            const newDataSource = options.map(o => ({
+                value: o.toLowerCase().replace(/\s+/g, '_'),
+                text: o
+            }));
+
+            selectBox.option({
+                items: newDataSource,
+                value: null,
+                placeholder: "Pilih Kategori"
+            });
+        }
+    </script>
+}
