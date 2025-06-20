@@ -42,5 +42,18 @@ namespace MonPDReborn.Controllers.Pencarian
                 throw;
             }
         }
+        public IActionResult Detail(string nop)
+        {
+            try
+            {
+                var model = new Models.Pencarian.PencarianOP.Detail(nop);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
