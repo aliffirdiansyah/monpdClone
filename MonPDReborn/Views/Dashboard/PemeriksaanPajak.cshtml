@@ -1,0 +1,60 @@
+﻿@{
+}
+
+@(
+    Html.DevExtreme().DataGrid()
+    .ID("dg-PemeriksaanPajak")
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ColumnAutoWidth(true)
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .AllowColumnResizing(true)
+    .DataSource(new object[0])
+    .KeyExpr("ID")
+    .Columns(columns =>
+    {
+        columns.Add().Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center);
+        columns.Add().Caption("JUMLAH OP PERIKSA")
+        .Alignment(HorizontalAlignment.Center)
+        .Columns(subColumns =>
+        {
+            subColumns.Add().Caption("2023").Alignment(HorizontalAlignment.Center);
+            subColumns.Add().Caption("2024").Alignment(HorizontalAlignment.Center);
+            subColumns.Add().Caption("2025").Alignment(HorizontalAlignment.Center);
+        });
+        columns.Add().Caption("JUMLAH KURANG BAYAR")
+        .Alignment(HorizontalAlignment.Center)
+        .Columns(subColumns =>
+        {
+            subColumns.Add().Caption("2023")
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(subColumns2 =>
+            {
+                subColumns2.Add().Caption("POKOK").Alignment(HorizontalAlignment.Right);
+                subColumns2.Add().Caption("SANKSI").Alignment(HorizontalAlignment.Right);
+                subColumns2.Add().Caption("TOTAL").Alignment(HorizontalAlignment.Right);
+            });
+            subColumns.Add().Caption("2024")
+                .Alignment(HorizontalAlignment.Center)
+                .Columns(subColumns2 =>
+                {
+                    subColumns2.Add().Caption("POKOK").Alignment(HorizontalAlignment.Right);
+                    subColumns2.Add().Caption("SANKSI").Alignment(HorizontalAlignment.Right);
+                    subColumns2.Add().Caption("TOTAL").Alignment(HorizontalAlignment.Right);
+                });
+            subColumns.Add().Caption("2025")
+                .Alignment(HorizontalAlignment.Center)
+                .Columns(subColumns2 =>
+                {
+                    subColumns2.Add().Caption("POKOK").Alignment(HorizontalAlignment.Right);
+                    subColumns2.Add().Caption("SANKSI").Alignment(HorizontalAlignment.Right);
+                    subColumns2.Add().Caption("TOTAL").Alignment(HorizontalAlignment.Right);
+                });
+        });
+    })
+)
