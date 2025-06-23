@@ -1,0 +1,31 @@
+﻿@model MonPDReborn.Models.PemasanganAlat.PemasanganAlat.Detail
+
+@using DevExtreme.AspNet.Mvc
+@using Newtonsoft.Json
+
+<div class="table-responsive">
+    @{
+        Html.DevExtreme().DataGrid()
+        .ID("DetailGrid")
+        .DataSource(new JS("masterData"))
+        .KeyExpr("JenisPajak")
+        .ShowBorders(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .Columns(columns =>
+        {
+            columns.Add().DataField("JenisPajak").Caption("Jenis Pajak");
+            columns.Add().DataField("JumlahOP");
+            columns.Add().DataField("TerpasangTS");
+            columns.Add().DataField("TerpasangTB");
+            columns.Add().DataField("TerpasangSB");
+            columns.Add().DataField("TotalTerpasang");
+            columns.Add().DataField("BelumTerpasang");
+        })
+        .MasterDetail(md => md
+        .Enabled(true)
+        .Template(new JS("detailTemplate"))
+        )
+        .Render();
+    }
+</div>
