@@ -87,6 +87,9 @@
                 }
             });
         }
+        function onDetailClick(e) {
+            fnDetail(e.row.data.NOP);
+        }
 
         function fnDetail(nop) {
             $.ajax({
@@ -95,12 +98,14 @@
                 data: { nop: nop },
                 beforeSend: function () {
                     $("#loader").show();
-                    $("#StaticBackdropLarge").modal('hide');
+                    $("#staticBackdropLargeScrollable").modal('hide');
                 },
                 success: function (response) {
+                    $("#loader").hide();
                     if (response.Status === undefined) {
-                        $("#modal-content").html(response);
-                        $("#StaticBackdropLarge").modal('show');
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail OP");
+                        $("#staticBackdropLargeScrollable .modal-body").html(data);
+                        $("#staticBackdropLargeScrollable").modal('show');
                     } else {
                         Swal.fire({
                             icon: 'warning',
@@ -110,8 +115,9 @@
                     }
                 },
                 error: function (xhr, status, error) {
-                    $("#modal-content").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                    $("#StaticBackdropLarge").modal('show');
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail OP");
+                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#staticBackdropLargeScrollable").modal('show');
                 },
                 complete: function () {
                     $("#loader").hide();
