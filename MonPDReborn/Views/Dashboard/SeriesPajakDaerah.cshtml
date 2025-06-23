@@ -49,28 +49,96 @@
                 subColumns.AddFor(x => x.Realisasi2).Caption("REALISASI");
                 subColumns.AddFor(x => x.Persentase2).Caption("%");
             });
-        
+
+        columns.Add()
+            .Caption(tahun3)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target3).Caption("TARGET");
+                subColumns.AddFor(x => x.Realisasi3).Caption("REALISASI");
+                subColumns.AddFor(x => x.Persentase3).Caption("%");
+            });
+
+        columns.Add()
+            .Caption(tahun4)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target4).Caption("TARGET");
+                subColumns.AddFor(x => x.Realisasi4).Caption("REALISASI");
+                subColumns.AddFor(x => x.Persentase4).Caption("%");
+            });
+
+        columns.Add()
+            .Caption(tahun5)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target5).Caption("TARGET");
+                subColumns.AddFor(x => x.Realisasi5).Caption("REALISASI");
+                subColumns.AddFor(x => x.Persentase5).Caption("%");
+            });
+  
     })
     .Summary(s => {
-        @* for (int year = startYear; year <= endYear; year++)
-        {
-            s.TotalItems(items =>
-            {
-                items.Add()
-                    .Column($"Target{year}")
-                    .SummaryType(SummaryType.Sum)
-                    .DisplayFormat("Total: {0:c}");
+    s.TotalItems(items => {
+        items.AddFor(x => x.Target1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
 
-                items.Add()
-                    .Column($"Realisasi{year}")
-                    .SummaryType(SummaryType.Sum)
-                    .DisplayFormat("Total: {0:c}");
+        items.AddFor(x => x.Realisasi1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
 
-                items.Add()
-                    .Column($"Persentase{year}")
-                    .SummaryType(SummaryType.Avg)
-                    .DisplayFormat("Rata-rata: {0:p2}");
-            });
-        } *@
-    })
+        items.AddFor(x => x.Persentase1)
+            .SummaryType(SummaryType.Avg)
+            .DisplayFormat("Rata-rata: {0:n2}%");
+
+        items.AddFor(x => x.Target2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Realisasi2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Persentase2)
+            .SummaryType(SummaryType.Avg)
+            .DisplayFormat("Rata-rata: {0:n2}%");
+
+        items.AddFor(x => x.Target3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Realisasi3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Persentase3)
+            .SummaryType(SummaryType.Avg)
+            .DisplayFormat("Rata-rata: {0:n2}%");
+
+        items.AddFor(x => x.Target4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Realisasi4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Persentase4)
+            .SummaryType(SummaryType.Avg)
+            .DisplayFormat("Rata-rata: {0:n2}%");
+
+        items.AddFor(x => x.Target5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Realisasi5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0:n0}");
+
+        items.AddFor(x => x.Persentase5)
+            .SummaryType(SummaryType.Avg)
+            .DisplayFormat("Rata-rata: {0:n2}%");
+    });
+})
 )
