@@ -1,0 +1,203 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Index
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Profil Pembayaran
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3 gap-2">
+                    @{
+                        Html.DevExtreme().TextBox()
+                        .ID("searchBox")
+                        .Placeholder("Cari berdasarkan Nama Objek Pajak...")
+                        .ShowClearButton(true)
+                        .Width("300px")
+                        .Render();
+                    }
+                    @{
+                        Html.DevExtreme().Button()
+                        .ID("btnSearch")
+                        .Text("Cari")
+                        .Type(ButtonType.Default)
+                        .Icon("search")
+                        .OnClick("onSearchClick")
+                        .Render();
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Identitas Objek Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                @{
+                    var profilOP = new[] {
+                                new { Label = "NOP", Value = Model.IdentitasPajak.NOP },
+                                new { Label = "Nama Objek Pajak", Value = Model.IdentitasPajak.NamaObjekPajak },
+                                new { Label = "Alamat Lengkap", Value = Model.IdentitasPajak.AlamatLengkap },
+                                new { Label = "Kecamatan - Kelurahan", Value = Model.IdentitasPajak.Kecamatan_Kelurahan }
+                                };
+                }
+                @{
+                    Html.DevExtreme().List()
+                        .ID("profilOPList")
+                        .DataSource(profilOP)
+                        .ItemTemplate(@<text>
+                                <div class="d-flex justify-content-between align-items-center px-2 py-2 border-bottom">
+                                    <span style="font-weight: bold"><%- Label %></span>
+                                    <span><%- Value %></span>
+                                </div>
+                            </text>
+                    )
+                        .Height("auto")
+                        .Render();
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Masa Pajak
+                    </h4>
+                </div>
+                <div class="d-flex gap-2">
+                    @{
+                        Html.DevExtreme().SelectBox()
+                            .ID("tahunMasaSelect")
+                            .DataSource(new[] { 2025, 2024, 2023, 2022 })
+                            .Value(Model.MasaPajakData.Tahun)
+                            .Width(150)
+                            .Placeholder("Pilih Tahun")
+                            .Render();
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                @{
+                    Html.DevExtreme().DataGrid()
+                    .ID("masaPajakGrid")
+                    .DataSource(Model.MasaPajakData.DataRealisasi)
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .RowAlternationEnabled(true)
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("TglSSPD")
+                                    .Caption("Tgl SSPD")
+                                    .DataType(GridColumnDataType.DateTime)
+                                    .Format("dd/MM/yyyy")
+                                    .Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("Realisasi")
+                                    .Caption("Realisasi")
+                                    .Format("#,##0")
+                                    .Alignment(HorizontalAlignment.Right);
+                    })
+                    .Summary(summary => summary.TotalItems(totals =>
+                    {
+                        totals.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Total Masa Pajak: {0}");
+                    }))
+                    .Render();
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Masa Bayar
+                    </h4>
+                </div>
+                <div class="d-flex gap-2">
+                    @{
+                        Html.DevExtreme().SelectBox()
+                        .ID("tahunBayarSelect")
+                        .DataSource(new[] { 2025, 2024, 2023, 2022 })
+                        .Value(2025)
+                        .Width(150)
+                        .Placeholder("Pilih Tahun")
+                        .Render();
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                @{
+                    Html.DevExtreme().DataGrid()
+                    .ID("masaBayarGrid")
+                    .DataSource(Model.MasaBayarData.DataRealisasi)
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .RowAlternationEnabled(true)
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("TglSSPD")
+                                    .Caption("Tgl SSPD")
+                                    .DataType(GridColumnDataType.DateTime)
+                                    .Format("dd/MM/yyyy")
+                                    .Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("Realisasi")
+                                    .Caption("Realisasi")
+                                    .Format("#,##0")
+                                    .Alignment(HorizontalAlignment.Right);
+                    })
+                    .Summary(summary => summary.TotalItems(totals =>
+                    {
+                        totals.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Total Masa Pajak: {0}");
+                    }))
+
+                    .Render();
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onSearchClick() {
+        var keyword = $("#searchBox").dxTextBox("instance").option("value");
+        var grid = $("#dataGrid").dxDataGrid("instance");
+        grid.searchByText(keyword);
+    }
+</script>
+
+

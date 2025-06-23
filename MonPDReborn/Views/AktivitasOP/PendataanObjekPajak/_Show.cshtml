@@ -1,0 +1,19 @@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model PendataanObjekPajakVM.Show
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.DataPendataan>()
+    .ID("gridPendataanShow")
+    .DataSource(Model.DataPendataanList)
+    .ShowBorders(true)
+    .ShowRowLines(true)
+    .ColumnAutoWidth(true)
+    .Columns(columns => {
+        columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+        columns.AddFor(m => m.JumlahOp).Caption("Jumlah OP");
+        columns.AddFor(m => m.Potensi).Caption("Potensi").Format("currency");
+        columns.AddFor(m => m.TotalRealisasi).Caption("Total Realisasi").Format("currency");
+        columns.AddFor(m => m.Selisih).Caption("Selisih").Format("currency");
+    })
+)
+</div>

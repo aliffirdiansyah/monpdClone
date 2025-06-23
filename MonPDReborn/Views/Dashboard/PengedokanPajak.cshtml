@@ -1,8 +1,8 @@
-﻿@{
-}
+﻿@using static MonPDReborn.Models.DashboardVM
+@model MonPDReborn.Models.DashboardVM.PengedokanPajak
 
 @(
-    Html.DevExtreme().DataGrid()
+    Html.DevExtreme().DataGrid<ViewModel.PengedokanPajak>()
     .ID("dg-PengedokanOp")
     .ShowBorders(true)
     .ShowColumnHeaders(true)
@@ -14,14 +14,35 @@
     .HeaderFilter(h => h.Visible(true))
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
     .AllowColumnResizing(true)
-    .DataSource(new object[0])
+    .DataSource(Model.Data)
     .KeyExpr("ID")
     .Columns(columns =>
     {
-        columns.Add().Caption("JENIS PAJAK");
-        columns.Add().Caption("JML OP");
-        columns.Add().Caption("POTENSI HASIL");
-        columns.Add().Caption("REALISASI");
-        columns.Add().Caption("SELISIH");
+        columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Fixed(true)
+            .FixedPosition(HorizontalEdge.Left);
+        columns.AddFor(x => x.JmlOp).Caption("JML OP").DataType(GridColumnDataType.Number).Format("#,##0");
+        columns.AddFor(x => x.PotensiHasilPengedokan).Caption("POTENSI HASIL").DataType(GridColumnDataType.Number).Format("#,##0");
+        columns.AddFor(x => x.TotalRealisasi).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");
+        columns.AddFor(x => x.Selisih).Caption("SELISIH").DataType(GridColumnDataType.Number).Format("#,##0");
     })
+.Summary(s => {
+    s.TotalItems(items => {
+        items.AddFor(x => x.JmlOp)
+            .ValueFormat("#,##0")
+            .DisplayFormat("Total: {0}")
+            .SummaryType(SummaryType.Sum);
+        items.AddFor(x => x.PotensiHasilPengedokan)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}")
+            .SummaryType(SummaryType.Sum);
+        items.AddFor(x => x.TotalRealisasi)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}")
+            .SummaryType(SummaryType.Sum);
+        items.AddFor(x => x.Selisih)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}")
+            .SummaryType(SummaryType.Sum);
+    });
+})
 )

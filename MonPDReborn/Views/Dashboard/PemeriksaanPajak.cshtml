@@ -1,8 +1,15 @@
-﻿@{
+﻿@using static MonPDReborn.Models.DashboardVM
+@model MonPDReborn.Models.DashboardVM.PemeriksaanPajak
+
+@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 2).ToString();
+    var tahun2 = (currentYear - 1).ToString();
+    var tahun3 = currentYear.ToString();
 }
 
 @(
-    Html.DevExtreme().DataGrid()
+    Html.DevExtreme().DataGrid<ViewModel.PemeriksaanPajak>()
     .ID("dg-PemeriksaanPajak")
     .ShowBorders(true)
     .ShowColumnHeaders(true)
@@ -14,47 +21,100 @@
     .HeaderFilter(h => h.Visible(true))
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
     .AllowColumnResizing(true)
-    .DataSource(new object[0])
+    .DataSource(Model.Data)
     .KeyExpr("ID")
     .Columns(columns =>
     {
-        columns.Add().Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center);
+        columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center).Fixed(true)
+            .FixedPosition(HorizontalEdge.Left);
         columns.Add().Caption("JUMLAH OP PERIKSA")
         .Alignment(HorizontalAlignment.Center)
         .Columns(subColumns =>
         {
-            subColumns.Add().Caption("2023").Alignment(HorizontalAlignment.Center);
-            subColumns.Add().Caption("2024").Alignment(HorizontalAlignment.Center);
-            subColumns.Add().Caption("2025").Alignment(HorizontalAlignment.Center);
+            subColumns.AddFor(x => x.OpPeriksa1).Caption(tahun1).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
+            subColumns.AddFor(x => x.OpPeriksa2).Caption(tahun2).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
+            subColumns.AddFor(x => x.OpPeriksa3).Caption(tahun3).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
         });
         columns.Add().Caption("JUMLAH KURANG BAYAR")
         .Alignment(HorizontalAlignment.Center)
         .Columns(subColumns =>
         {
-            subColumns.Add().Caption("2023")
+            subColumns.Add().Caption(tahun1)
             .Alignment(HorizontalAlignment.Center)
             .Columns(subColumns2 =>
             {
-                subColumns2.Add().Caption("POKOK").Alignment(HorizontalAlignment.Right);
-                subColumns2.Add().Caption("SANKSI").Alignment(HorizontalAlignment.Right);
-                subColumns2.Add().Caption("TOTAL").Alignment(HorizontalAlignment.Right);
+                subColumns2.AddFor(x => x.Pokok1).Caption("POKOK").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
+                subColumns2.AddFor(x => x.Sanksi1).Caption("SANKSI").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
+                subColumns2.AddFor(x => x.Total1).Caption("TOTAL").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
             });
-            subColumns.Add().Caption("2024")
+            subColumns.Add().Caption(tahun2)
                 .Alignment(HorizontalAlignment.Center)
                 .Columns(subColumns2 =>
                 {
-                    subColumns2.Add().Caption("POKOK").Alignment(HorizontalAlignment.Right);
-                    subColumns2.Add().Caption("SANKSI").Alignment(HorizontalAlignment.Right);
-                    subColumns2.Add().Caption("TOTAL").Alignment(HorizontalAlignment.Right);
+                    subColumns2.AddFor(x => x.Pokok2).Caption("POKOK").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
+                    subColumns2.AddFor(x => x.Sanksi2).Caption("SANKSI").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
+                    subColumns2.AddFor(x => x.Total2).Caption("TOTAL").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
                 });
-            subColumns.Add().Caption("2025")
+            subColumns.Add().Caption(tahun3)
                 .Alignment(HorizontalAlignment.Center)
                 .Columns(subColumns2 =>
                 {
-                    subColumns2.Add().Caption("POKOK").Alignment(HorizontalAlignment.Right);
-                    subColumns2.Add().Caption("SANKSI").Alignment(HorizontalAlignment.Right);
-                    subColumns2.Add().Caption("TOTAL").Alignment(HorizontalAlignment.Right);
+                    subColumns2.AddFor(x => x.Pokok3).Caption("POKOK").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
+                    subColumns2.AddFor(x => x.Sanksi3).Caption("SANKSI").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
+                    subColumns2.AddFor(x => x.Total3).Caption("TOTAL").Alignment(HorizontalAlignment.Right).DataType(GridColumnDataType.Number).Format("#,##0");
                 });
+        });
+    })
+    .Summary(s => {
+        s.TotalItems(items => {
+            items.AddFor(x => x.OpPeriksa1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Total: {0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.OpPeriksa2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.OpPeriksa3)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Pokok1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Sanksi1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Total1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Pokok2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Sanksi2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Total2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Pokok3)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Sanksi3)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+            items.AddFor(x => x.Total3)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
         });
     })
 )

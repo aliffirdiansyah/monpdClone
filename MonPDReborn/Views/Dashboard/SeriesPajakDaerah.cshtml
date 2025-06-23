@@ -1,13 +1,17 @@
-﻿@{
-}
+﻿@using static MonPDReborn.Models.DashboardVM
+@model MonPDReborn.Models.DashboardVM.SeriesPajakDaerah
 
 @{
-    var startYear = 2019;
-    var endYear = 2025;
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear-4).ToString();
+    var tahun2 = (currentYear-3).ToString();
+    var tahun3 = (currentYear-2).ToString();
+    var tahun4 = (currentYear-1).ToString();
+    var tahun5 = currentYear.ToString();
 }
 
 @(
-    Html.DevExtreme().DataGrid()
+    Html.DevExtreme().DataGrid<ViewModel.SeriesPajakDaerah>()
     .ID("dg-pajakDaerah")
     .ShowBorders(true)
     .ShowColumnHeaders(true)
@@ -19,47 +23,132 @@
     .HeaderFilter(h => h.Visible(true))
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
     .AllowColumnResizing(true)
-    .DataSource(new object[0])
+    .DataSource(Model.Data)
     .KeyExpr("ID")
     .Columns(columns =>
     {
-        columns.Add()
+        columns.AddFor(x => x.JenisPajak)
             .Caption("JENIS PAJAK")
             .Fixed(true)
             .FixedPosition(HorizontalEdge.Left);
 
-        for (int year = startYear; year <= endYear; year++)
-        {
-            columns.Add()
-            .Caption(year.ToString())
+        columns.Add()
+            .Caption(tahun1).Alignment(HorizontalAlignment.Center)
             .Columns(subColumns =>
             {
-                subColumns.Add().Caption("TARGET");
-                subColumns.Add().Caption("REALISASI");
-                subColumns.Add().Caption("%");
+                subColumns.AddFor(x => x.Target1).Caption("TARGET").DataType(GridColumnDataType.Number).Format("#,##0");
+                subColumns.AddFor(x => x.Realisasi1).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Persentase1).Caption("%");
             });
-        }
+
+        columns.Add()
+            .Caption(tahun2).Alignment(HorizontalAlignment.Center)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target2).Caption("TARGET").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Realisasi2).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Persentase2).Caption("%");
+            });
+
+        columns.Add()
+            .Caption(tahun3).Alignment(HorizontalAlignment.Center)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target3).Caption("TARGET").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Realisasi3).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Persentase3).Caption("%");
+            });
+
+        columns.Add()
+            .Caption(tahun4).Alignment(HorizontalAlignment.Center)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target4).Caption("TARGET").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Realisasi4).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Persentase4).Caption("%");
+            });
+
+        columns.Add()
+            .Caption(tahun5).Alignment(HorizontalAlignment.Center)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target5).Caption("TARGET").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Realisasi5).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Persentase5).Caption("%");
+            });
+  
     })
     .Summary(s => {
-        for (int year = startYear; year <= endYear; year++)
-        {
-            s.TotalItems(items =>
-            {
-                items.Add()
-                    .Column($"Target{year}")
-                    .SummaryType(SummaryType.Sum)
-                    .DisplayFormat("Total: {0:c}");
+        s.TotalItems(items => {
+            items.AddFor(x => x.Target1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Total: {0}")
+                .SummaryType(SummaryType.Sum);
 
-                items.Add()
-                    .Column($"Realisasi{year}")
-                    .SummaryType(SummaryType.Sum)
-                    .DisplayFormat("Total: {0:c}");
+            items.AddFor(x => x.Realisasi1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
 
-                items.Add()
-                    .Column($"Persentase{year}")
-                    .SummaryType(SummaryType.Avg)
-                    .DisplayFormat("Rata-rata: {0:p2}");
-            });
-        }
+            items.AddFor(x => x.Persentase1)
+                .SummaryType(SummaryType.Avg)
+                .DisplayFormat("{0}%");
+
+            items.AddFor(x => x.Target2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Realisasi2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Persentase2)
+                .SummaryType(SummaryType.Avg)
+                .DisplayFormat("{0}%");
+
+            items.AddFor(x => x.Target3)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Realisasi3)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Persentase3)
+                .SummaryType(SummaryType.Avg)
+                .DisplayFormat("{0}%");
+
+            items.AddFor(x => x.Target4)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Realisasi4)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Persentase4)
+                .SummaryType(SummaryType.Avg)
+                .DisplayFormat("{0}%");
+
+            items.AddFor(x => x.Target5)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Realisasi5)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+
+            items.AddFor(x => x.Persentase5)
+                .SummaryType(SummaryType.Avg)
+                .DisplayFormat("{0}%");
+        });
     })
 )

@@ -1,0 +1,93 @@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model PendataanObjekPajakVM.Index
+@{
+    ViewData["Title"] = "Pendataan Objek";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Pendataan Pajak
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Rekap Pengedokan Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Detail Pendataan Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="Detail"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadShow();       // Tampilkan data rekap saat pertama kali halaman dibuka
+            loadDetail("");   // Tampilkan semua data detail saat awal
+        });
+
+        // Fungsi untuk memuat partial _Show.cshtml
+        function loadShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "PendataanObjekPajak")',
+                type: 'GET',
+                success: function (result) {
+                    $('#Show').html(result);
+                },
+                error: function () {
+                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data rekap.</div>');
+                }
+            });
+        }
+
+        // Fungsi untuk memuat partial _Detail.cshtml
+        function loadDetail(keyword) {
+            $.ajax({
+                url: '@Url.Action("Detail", "PendataanObjekPajak")',
+                type: 'GET',
+                data: { jenisPajak: keyword },
+                success: function (result) {
+                    $('#Detail').html(result);
+                },
+                error: function () {
+                    $('#Detail').html('<div class="alert alert-danger">Gagal memuat data detail.</div>');
+                }
+            });
+        }
+
+        // ✅ Jika kamu ingin menambahkan dropdown untuk filter jenis pajak:
+        // contoh pemanggilan:
+        // <select id="filterJenisPajak" onchange="onJenisPajakChanged(this.value)">
+        function onJenisPajakChanged(jenis) {
+            loadDetail(jenis);
+        }
+    </script>
+}
