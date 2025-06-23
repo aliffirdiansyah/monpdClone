@@ -1,4 +1,4 @@
-﻿@using MonPDReborn.Models.Aktivitas
+﻿@using MonPDReborn.Models.AktivitasOP
 @model PemeriksaanPajakVM.Index
 
 @{
@@ -85,7 +85,7 @@
         // Fungsi untuk memuat data rekap pemeriksaan
         function loadShow() {
             $.ajax({
-                url: '@Url.Action("Show", "PemeriksaanPajakVM")',
+                url: '@Url.Action("Show", "PemeriksaanPajak")',
                 type: 'GET',
                 success: function (result) {
                     $('#Show').html(result);
@@ -99,7 +99,7 @@
         // Fungsi untuk memuat data detail pemeriksaan
         function loadDetail(keyword) {
             $.ajax({
-                url: '@Url.Action("Detail", "PemeriksaanPajakVM")',
+                url: '@Url.Action("Detail", "PemeriksaanPajak")',
                 type: 'GET',
                 data: { jenisPajak: keyword },
                 success: function (result) {

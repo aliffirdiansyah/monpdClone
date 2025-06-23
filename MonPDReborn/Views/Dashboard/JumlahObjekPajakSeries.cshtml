@@ -29,11 +29,11 @@
             .Columns(columns =>
             {
                 columns.AddFor(x => x.JenisPajak).DataType(GridColumnDataType.Number).Caption("JENIS PAJAK").Fixed(true).FixedPosition(HorizontalEdge.Left);
-                columns.AddFor(x => x.Jumlah1).DataType(GridColumnDataType.Number).Caption(tahun1);
-                columns.AddFor(x => x.Jumlah2).DataType(GridColumnDataType.Number).Caption(tahun2);
-                columns.AddFor(x => x.Jumlah3).DataType(GridColumnDataType.Number).Caption(tahun3);
-                columns.AddFor(x => x.Jumlah4).DataType(GridColumnDataType.Number).Caption(tahun4);
-                columns.AddFor(x => x.Jumlah5).DataType(GridColumnDataType.Number).Caption(tahun5);
+                columns.AddFor(x => x.Jumlah1).DataType(GridColumnDataType.Number).Format("#,##0").Caption(tahun1);
+                columns.AddFor(x => x.Jumlah2).DataType(GridColumnDataType.Number).Format("#,##0").Caption(tahun2);
+                columns.AddFor(x => x.Jumlah3).DataType(GridColumnDataType.Number).Format("#,##0").Caption(tahun3);
+                columns.AddFor(x => x.Jumlah4).DataType(GridColumnDataType.Number).Format("#,##0").Caption(tahun4);
+                columns.AddFor(x => x.Jumlah5).DataType(GridColumnDataType.Number).Format("#,##0").Caption(tahun5);
             })
             .Summary(s => {
                 s.TotalItems(items => {

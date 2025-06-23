@@ -105,11 +105,6 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","FilterOP")" data-key="t-pencarian">
-                                    Filter
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Index","PencarianOP")" data-key="t-pencarian">
                                     Pencarian
                                 </a>
@@ -124,17 +119,17 @@
                     <div id="sidebarMonitoring" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-harian">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolHarian")" data-key="t-harian">
                                     Kontrol harian
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-bulanan">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolBulanan")" data-key="t-bulanan">
                                     Kontrol Bulanan
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-tahunan">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolTahunan")" data-key="t-tahunan">
                                     Kontrol Tahunan
                                 </a>
                             </li>
@@ -143,27 +138,27 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link collapse" href="#sidebarMonitoringWilayah" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="#sidebarMonitoringWilayah">
-                        <i class="bx bx-map"></i><span data-key="t-monitoringwilayah">Monitoring per Wilayah</span>
+                        <i class="bx bx-map"></i><span data-key="t-monitoringwilayah">Monitoring Per Wilayah</span>
                     </a>
                     <div id="sidebarMonitoringWilayah" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolHarianWilayah">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolHarianWilayah")" data-key="t-kontrolHarianWilayah">
                                     Kontrol Harian Wilayah
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolBulananWilayah">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolBulananWilayah")" data-key="t-kontrolBulananWilayah">
                                     Kontrol Bulanan Wilayah
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolTahunanWilayah">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolTahunanWilayah")" data-key="t-kontrolTahunanWilayah">
                                     Kontrol Tahunan Wilayah
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolPotensiWilayah">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolPotensiBulananWilayah")" data-key="t-kontrolPotensiWilayah">
                                     Kontrol Potensi Bulanan Wilayah
                                 </a>
                             </li>
@@ -172,7 +167,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link collapse" href="#sidebarMonitoringJenis" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="#sidebarMonitoringJenis">
-                        <i class="bx bx-bar-chart-alt"></i><span data-key="t-monitoringjenis">Monitoring per Jenis Pajak</span>
+                        <i class="bx bx-bar-chart-alt"></i><span data-key="t-monitoringjenis">Monitoring Per Jenis Pajak</span>
                     </a>
                     <div id="sidebarMonitoringJenis" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
@@ -212,17 +207,17 @@
                     <div id="sidebarAktivitasWP" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-penghimbauan">
+                                <a class="nav-link" href="@Url.Action("Index","PenghimbauanWP")" data-key="t-penghimbauan">
                                     Penghimbauan
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-peneguran">
+                                <a class="nav-link" href="@Url.Action("Index","PenegiranWP")" data-key="t-peneguran">
                                     Peneguran
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-penagihan">
+                                <a class="nav-link" href="@Url.Action("Index","PenagihanWP")" data-key="t-penagihan">
                                     Penagihan
                                 </a>
                             </li>
@@ -236,18 +231,18 @@
                     <div id="sidebarDataWP" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-profilWP">
-                                    Profil WP
+                                <a class="nav-link" href="@Url.Action("Index","ProfileWP")" data-key="t-profilWP">
+                                    Profile WP
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-profilPembayaranWP">
-                                    Profil Pembayaran
+                                <a class="nav-link" href="@Url.Action("Index","ProfilePembayaranWP")" data-key="t-profilPembayaranWP">
+                                    Profile Pembayaran
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-profilPiutang">
-                                    Profil Piutang
+                                <a class="nav-link" href="@Url.Action("Index","ProfilePiutangWP")" data-key="t-profilPiutang">
+                                    Profile Piutang
                                 </a>
                             </li>
                         </ul>
@@ -260,7 +255,7 @@
                     <div id="sidebarMonitoringWP" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-upayaBulanan">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolUpayaBulanan")" data-key="t-upayaBulanan">
                                     Kontrol Upaya Bulanan
                                 </a>
                         </ul>

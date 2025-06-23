@@ -1,24 +1,35 @@
-﻿@(
-    Html.DevExtreme().DataGrid()
+﻿@using static MonPDReborn.Models.DashboardVM
+@model MonPDReborn.Models.DashboardVM.DataPiutang
+
+@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 3).ToString();
+    var tahun2 = (currentYear - 2).ToString();
+    var tahun3 = (currentYear - 1).ToString();
+    var tahun4 = currentYear.ToString();
+}
+
+@(
+    Html.DevExtreme().DataGrid<ViewModel.DataPiutang>()
             .ID("dg-Piutang")
             .ShowBorders(true)
             .ShowColumnHeaders(true)
             .ShowColumnLines(true)
             .ShowRowLines(true)
             .ColumnAutoWidth(true)
-    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(h => h.Visible(true))
-    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
             .AllowColumnResizing(true)
-            .DataSource(new object[0])
+            .DataSource(Model.Data)
             .KeyExpr("ID")
             .Columns(columns =>
             {
-                columns.Add().Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center);
-                columns.Add().Caption("2021").Alignment(HorizontalAlignment.Center);
-                columns.Add().Caption("2022").Alignment(HorizontalAlignment.Center);
-                columns.Add().Caption("2023").Alignment(HorizontalAlignment.Center);
-                columns.Add().Caption("2024").Alignment(HorizontalAlignment.Center);
+                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center);
+                columns.AddFor(x => x.NominalPiutang1).Caption(tahun1).Alignment(HorizontalAlignment.Center);
+                columns.AddFor(x => x.NominalPiutang2).Caption(tahun2).Alignment(HorizontalAlignment.Center);
+                columns.AddFor(x => x.NominalPiutang3).Caption(tahun3).Alignment(HorizontalAlignment.Center);
+                columns.AddFor(x => x.NominalPiutang4).Caption(tahun4).Alignment(HorizontalAlignment.Center);
             })
 )
