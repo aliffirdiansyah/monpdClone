@@ -15,6 +15,10 @@ public partial class ModelContext : DbContext
     {
     }
 
+    public virtual DbSet<DbAkun> DbAkuns { get; set; }
+
+    public virtual DbSet<DbAkunKategori> DbAkunKategoris { get; set; }
+
     public virtual DbSet<DbAkunTarget> DbAkunTargets { get; set; }
 
     public virtual DbSet<DbMonAbt> DbMonAbts { get; set; }
@@ -52,6 +56,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbOpReklame> DbOpReklames { get; set; }
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
+
+    public virtual DbSet<LastRun> LastRuns { get; set; }
 
     public virtual DbSet<MFasilita> MFasilitas { get; set; }
 
@@ -169,13 +175,27 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("MONPD");
+
+        modelBuilder.Entity<DbAkun>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian }).HasName("DB_AKUN_PK");
+        });
+
+        modelBuilder.Entity<DbAkunKategori>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.Kategori }).HasName("DB_AKUN_KATEGORI_PK");
+
+            entity.HasOne(d => d.DbAkun).WithMany(p => p.DbAkunKategoris)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DB_AKUN_KATEGORI_DB_AKUN_FK");
+        });
 
         modelBuilder.Entity<DbAkunTarget>(entity =>
         {
@@ -357,6 +377,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.MaksimalProduksiPorsiHari).HasDefaultValueSql("0                     ");
             entity.Property(e => e.RataTerjualPorsiHari).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<LastRun>(entity =>
+        {
+            entity.HasKey(e => e.Job).HasName("LAST_RUN_PK");
         });
 
         modelBuilder.Entity<MFasilita>(entity =>
