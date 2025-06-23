@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MonPDReborn.Controllers.Pencarian
+namespace MonPDReborn.Controllers.DataOP
 {
     public class PencarianOPController : Controller
     {

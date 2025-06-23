@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MonPDReborn.Controllers.Filter
+namespace MonPDReborn.Controllers.DataOP
 {
     public class PenetapanOPController : Controller
     {

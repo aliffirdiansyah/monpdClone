@@ -1,27 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MonPDReborn.Controllers.DataOP
+namespace MonPDReborn.Controllers.Aktivitas
 {
-    public class ProfilePembayaranOPController : Controller
+    public class PendataanObjekPajakController : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<ProfilePembayaranOPController> _logger;
+        private readonly ILogger<PendataanObjekPajakController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
-        public ProfilePembayaranOPController(ILogger<ProfilePembayaranOPController> logger)
+        public PendataanObjekPajakController(ILogger<PendataanObjekPajakController> logger)
         {
-            URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../Aktivitas/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
         {
             try
             {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Index();
+                var model = new Models.Aktivitas.PendataanObjekPajakVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception)
@@ -33,7 +33,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Show(keyword);
+                var model = new Models.Aktivitas.PendataanObjekPajakVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -46,7 +46,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Detail(nop);
+                var model = new Models.Aktivitas.PendataanObjekPajakVM.Detail(nop);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)

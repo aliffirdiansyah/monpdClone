@@ -2,17 +2,17 @@
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class ProfilePembayaranOPController : Controller
+    public class ProfileTargetOPController : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<ProfilePembayaranOPController> _logger;
+        private readonly ILogger<ProfileTargetOPController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
-        public ProfilePembayaranOPController(ILogger<ProfilePembayaranOPController> logger)
+        public ProfileTargetOPController(ILogger<ProfileTargetOPController> logger)
         {
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
@@ -21,7 +21,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Index();
+                var model = new Models.DataOP.ProfileTargetOPVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception)
@@ -33,7 +33,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Show(keyword);
+                var model = new Models.DataOP.ProfileTargetOPVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -46,7 +46,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Detail(nop);
+                var model = new Models.DataOP.ProfileTargetOPVM.Detail(nop);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
