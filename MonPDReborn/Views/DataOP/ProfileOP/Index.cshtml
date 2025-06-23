@@ -83,31 +83,31 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-semibold">Nama Objek Pajak</span>
-                    <span>The Westin Surabaya</span>
+                    <span>@Model.IdentitasPajak.NamaObjekPajak</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-semibold">Alamat Lengkap</span>
-                    <span>Puncak Indah Lontar No. 2</span>
+                    <span>@Model.IdentitasPajak.AlamatLengkap</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-semibold">Kecamatan – Kelurahan</span>
-                    <span>Sambikerep – Lontar</span>
+                    <span>@Model.IdentitasPajak.Kecamatan_Kelurahan</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-semibold">NOP</span>
-                    <span>35.78.011.010.901.00007</span>
+                    <span>@Model.IdentitasPajak.NamaObjekPajak</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-semibold">Telp</span>
-                    <span>58208788</span>
+                    <span>@Model.IdentitasPajak.Telepon</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-semibold">Tanggal Buka</span>
-                    <span>01 Desember 2020</span>
+                    <span>@Model.IdentitasPajak.TanggalBuka</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="fw-semibold">Jenis Objek Pajak</span>
-                    <span>Hotel Bintang Lima</span>
+                    <span>@Model.IdentitasPajak.JenisObjekPajak</span>
                 </li>
             </ul>
         </div>
@@ -115,7 +115,7 @@
         <!-- Card Row -->
         <div class="row g-3">
             <!-- Data Perizinan -->
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-6">
                 <div class="card mb-4">
                     <div class="card bg-soft-secondary border-0">
                         <div class="card-body px-4 py-3">
@@ -124,48 +124,23 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Nomor IMB</span><span>503/IMB/0192/2015</span>
+                            <span class="fw-semibold">Nomor IMB</span><span>@Model.Perizinan.NomorIMB</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Tanggal IMB</span><span>15 Maret 2015</span>
+                            <span class="fw-semibold">Tanggal IMB</span><span>@Model.Perizinan.TanggalIMB</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Nomor SITU/NIB</span><span>8129381273981237</span>
+                            <span class="fw-semibold">Nomor SITU/NIB</span><span>@Model.Perizinan.NomorSITU_NIB</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Nomor Izin Operasional</span><span>503/HO/093/2016</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Pendapatan -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card mb-4">
-                    <div class="card bg-soft-secondary border-0">
-                        <div class="card-body px-4 py-3">
-                            <h4 class="fw-semibold mb-0">Pendapatan</h4>
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Okupansi</span><span>85% per bulan</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Rata Tarif Kamar</span><span>Rp 750.000</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Pendapatan Kotor</span><span>± Rp 1.250.000.000</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Jumlah Transaksi</span><span>± 3.500 transaksi</span>
+                            <span class="fw-semibold">Nomor Izin Operasional</span><span>@Model.Perizinan.NomorIzinOperasional</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <!-- Sarana Pendukung -->
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-6">
                 <div class="card mb-4">
                     <div class="card bg-soft-secondary border-0">
                         <div class="card-body px-4 py-3">
@@ -174,16 +149,13 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Jumlah Pegawai</span><span>58 orang</span>
+                            <span class="fw-semibold">Jumlah Karyawan</span><span>@Model.FasilitasPendukung.JumlahKaryawan</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Luas Area Parkir</span><span>± 1.000 m²</span>
+                            <span class="fw-semibold">MetodePembayaran</span><span>@Model.FasilitasPendukung.MetodePembayaran</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Jumlah Lift</span><span>3 Lift Pengunjung</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="fw-semibold">Pembayaran</span><span>Tunai, Kartu Kredit, QRIS</span>
+                            <span class="fw-semibold">MetodePenjualan</span><span>@Model.FasilitasPendukung.MetodePenjualan</span>
                         </li>
                     </ul>
                 </div>
