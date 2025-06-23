@@ -1,6 +1,6 @@
-﻿namespace MonPDReborn.Models.Pencarian
+﻿namespace MonPDReborn.Models.DataOP
 {
-    public class PencarianOP
+    public class PencarianOPVM
     {
         public class Index
         {
