@@ -14,14 +14,14 @@ namespace MonPDReborn.Controllers.Aktivitas
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         public PemeriksaanPajakController(ILogger<PemeriksaanPajakController> logger)
         {
-            URLView = string.Concat("../Aktivitas/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../AktivitasOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
         {
             try
             {
-                var model = new Models.Aktivitas.PemeriksaanPajakVM.Index();
+                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception)
@@ -33,7 +33,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                var model = new Models.Aktivitas.PemeriksaanPajakVM.Show(keyword);
+                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -46,7 +46,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                var model = new Models.Aktivitas.PemeriksaanPajakVM.Detail(nop);
+                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Detail(nop);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
