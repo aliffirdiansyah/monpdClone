@@ -29,31 +29,5 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Show(string keyword)
-        {
-            try
-            {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Show(keyword);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-        public IActionResult Detail(string nop)
-        {
-            try
-            {
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Detail(nop);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
     }
 }

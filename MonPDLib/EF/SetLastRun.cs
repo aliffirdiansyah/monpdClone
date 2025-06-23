@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Table("LAST_RUN")]
-public partial class LastRun
+[Table("SET_LAST_RUN")]
+public partial class SetLastRun
 {
     [Key]
     [Column("JOB")]
