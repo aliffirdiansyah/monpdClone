@@ -1,0 +1,122 @@
+﻿@using MonPDReborn.Models.Aktivitas
+@model PemeriksaanPajakVM.Index
+
+@{
+    ViewData["Title"] = "Pemeriksaan Pajak";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Pemeriksaan Pajak
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Pemeriksaan Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Detail Pemeriksaan Objek Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-4">
+                    @{
+                        Html.DevExtreme().SelectBox()
+                        .ID("jenisPajakSelect")
+                        .DataSource(new[] {
+                                        new { value = "hotel", text = "Hotel" },
+                                        new { value = "restoran", text = "Restoran" },
+                                        new { value = "reklame", text = "Reklame" },
+                                        new { value = "hiburan", text = "Hiburan" },
+                                        new { value = "parkir", text = "Parkir" },
+                                        new { value = "ppj", text = "PPJ" },
+                                        new { value = "pbb", text = "PBB" },
+                                        new { value = "bphtb", text = "BPHTB" },
+                                        new { value = "airtanah", text = "Air Tanah" },
+                                        new { value = "opsenpkb", text = "OPSEN PKB" },
+                                        new { value = "opsenbbnkb", text = "OPSEN BBNKB" }
+                        })
+                        .ValueExpr("value")
+                        .DisplayExpr("text")
+                        .Placeholder("Pilih Jenis Pajak")
+                        .OnValueChanged("onJenisPajakChanged")
+                        .Width("100%")
+                        .Render();
+                    }
+                </div>
+                <br />
+                <div id="Detail"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Saat halaman selesai dimuat
+        $(document).ready(function () {
+            loadShow("");       // Load rekap awal
+            loadDetail("");   // Load semua detail awal
+        });
+
+        // Fungsi untuk memuat data rekap pemeriksaan
+        function loadShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "PemeriksaanPajakVM")',
+                type: 'GET',
+                success: function (result) {
+                    $('#Show').html(result);
+                },
+                error: function () {
+                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data rekap.</div>');
+                }
+            });
+        }
+
+        // Fungsi untuk memuat data detail pemeriksaan
+        function loadDetail(keyword) {
+            $.ajax({
+                url: '@Url.Action("Detail", "PemeriksaanPajakVM")',
+                type: 'GET',
+                data: { jenisPajak: keyword },
+                success: function (result) {
+                    $('#Detail').html(result);
+                },
+                error: function () {
+                    $('#Detail').html('<div class="alert alert-danger">Gagal memuat data detail.</div>');
+                }
+            });
+        }
+
+        // Event ketika select box berubah
+       /* function onJenisPajakChanged(e) {
+            const keyword = e.value;
+            loadDetail(keyword); // Kirim value terpilih ke server untuk memfilter
+        }*/
+    </script>
+}
+
+

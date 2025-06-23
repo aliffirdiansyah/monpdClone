@@ -1,0 +1,48 @@
+﻿@using MonPDReborn.Models.Aktivitas
+@model PemeriksaanPajakVM.Show
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<PemeriksaanPajakVM.DataPemeriksaan>()
+        .ID("gridPemeriksaanPajak")
+        .DataSource(Model.DataPemeriksaanList)
+        .KeyExpr("JenisPajak")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ColumnAutoWidth(true)
+        .HeaderFilter(h => h.Visible(true))
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.JenisPajak).Caption("JENIS PAJAK");
+
+            columns.Add().Caption("JUMLAH OP YANG DIPERIKSA").Columns(sub =>
+            {
+                sub.Add().DataField("JumlahOP2023").Caption("2023");
+                sub.Add().DataField("JumlahOP2024").Caption("2024");
+                sub.Add().DataField("JumlahOP2025").Caption("2025");
+            });
+
+            columns.Add().Caption("JUMLAH KURANG BAYAR").Columns(sub =>
+            {
+                sub.Add().Caption("2023").Columns(kb2023 =>
+            {
+                kb2023.Add().DataField("Pokok2023").Caption("POKOK").Format("#,##0");
+                kb2023.Add().DataField("Sanksi2023").Caption("SANKSI").Format("#,##0");
+                kb2023.Add().DataField("Total2023").Caption("TOTAL").Format("#,##0");
+            });
+                sub.Add().Caption("2024").Columns(kb2024 =>
+            {
+                kb2024.Add().DataField("Pokok2024").Caption("POKOK").Format("#,##0");
+                kb2024.Add().DataField("Sanksi2024").Caption("SANKSI").Format("#,##0");
+                kb2024.Add().DataField("Total2024").Caption("TOTAL").Format("#,##0");
+            });
+                sub.Add().Caption("2025").Columns(kb2025 =>
+            {
+                kb2025.Add().DataField("Pokok2025").Caption("POKOK").Format("#,##0");
+                kb2025.Add().DataField("Sanksi2025").Caption("SANKSI").Format("#,##0");
+                kb2025.Add().DataField("Total2025").Caption("TOTAL").Format("#,##0");
+            });
+            });
+        })
+        )
+</div>
+
