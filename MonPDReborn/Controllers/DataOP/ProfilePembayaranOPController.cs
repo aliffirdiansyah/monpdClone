@@ -1,27 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MonPDReborn.Controllers.Pencarian
+namespace MonPDReborn.Controllers.DataOP
 {
-    public class PencarianOPController : Controller
+    public class ProfilePembayaranOPController : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<PencarianOPController> _logger;
+        private readonly ILogger<ProfilePembayaranOPController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
-        public PencarianOPController(ILogger<PencarianOPController> logger)
+        public ProfilePembayaranOPController(ILogger<ProfilePembayaranOPController> logger)
         {
-            URLView = string.Concat("../Pencarian/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
         {
             try
             {
-                var model = new Models.Pencarian.PencarianOP.Index();
+                var model = new Models.DataOP.ProfilePembayaranOPVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception)
@@ -33,7 +33,7 @@ namespace MonPDReborn.Controllers.Pencarian
         {
             try
             {
-                var model = new Models.Pencarian.PencarianOP.Show(keyword);
+                var model = new Models.DataOP.ProfilePembayaranOPVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -46,7 +46,7 @@ namespace MonPDReborn.Controllers.Pencarian
         {
             try
             {
-                var model = new Models.Pencarian.PencarianOP.Detail(nop);
+                var model = new Models.DataOP.ProfilePembayaranOPVM.Detail(nop);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)

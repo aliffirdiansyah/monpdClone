@@ -1,9 +1,9 @@
-﻿@model MonPDReborn.Models.Pencarian.PencarianOP.Detail
+﻿@model MonPDReborn.Models.DataOP.PencarianOPVM.Detail
 
 <div class="table-responsive">
 
 
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Pencarian.PencarianOP.RealisasiBulanan>()
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PencarianOPVM.RealisasiBulanan>()
         .ID("gridRealisasiOP")
         .DataSource(Model.DataRealisasiBulananList)
         .KeyExpr("NOP")
