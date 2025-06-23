@@ -196,8 +196,12 @@
             }
             public class JumlahObjekPajakSeries
             {
-                public int Tahun { get; set; }
-                public decimal Jumlah { get; set; }
+                public string JenisPajak { get; set; }
+                public decimal Jumlah1 { get; set; }
+                public decimal Jumlah2 { get; set; }
+                public decimal Jumlah3 { get; set; }
+                public decimal Jumlah4 { get; set; }
+                public decimal Jumlah5 { get; set; }
             }
             public class PemasanganAlatRekamSeries
             {
@@ -206,6 +210,7 @@
             }
             public class PemasanganAlatRekamDetail
             {
+                public string JenisPajak { get; set; } = "";
                 public int JmlOp { get; set; }
                 public int JmlTerpasangTS { get; set; }
                 public int JmlTerpasangTB { get; set; }
@@ -364,11 +369,11 @@
                         Realisasi3 = 100000000,
                         Realisasi4 = 110000000,
                         Realisasi5 = 120000000,
-                        Persentase1 = 70000000m / 80000000m * 100,
-                        Persentase2 = 90000000m / 100000000m * 100,
-                        Persentase3 = 100000000m / 110000000m * 100,
-                        Persentase4 = 110000000m / 130000000m * 100,
-                        Persentase5 = 120000000m / 150000000m * 100
+                        Persentase1 = Math.Round(70000000m / 80000000m * 100, 2),
+                        Persentase2 = Math.Round(90000000m / 100000000m * 100, 2),
+                        Persentase3 = Math.Round(100000000m / 110000000m * 100, 2),
+                        Persentase4 = Math.Round(110000000m / 130000000m * 100, 2),
+                        Persentase5 = Math.Round(120000000m / 150000000m * 10, 2)
                     },
                     new ViewModel.SeriesPajakDaerah
                     {
@@ -383,11 +388,11 @@
                         Realisasi3 = 100000000,
                         Realisasi4 = 110000000,
                         Realisasi5 = 120000000,
-                        Persentase1 = 70000000m / 80000000m * 100,
-                        Persentase2 = 90000000m / 100000000m * 100,
-                        Persentase3 = 100000000m / 110000000m * 100,
-                        Persentase4 = 110000000m / 130000000m * 100,
-                        Persentase5 = 120000000m / 150000000m * 100
+                        Persentase1 = Math.Round(70000000m / 80000000m * 100, 2),
+                        Persentase2 = Math.Round(90000000m / 100000000m * 100, 2),
+                        Persentase3 = Math.Round(100000000m / 110000000m * 100, 2),
+                        Persentase4 = Math.Round(110000000m / 130000000m * 100, 2),
+                        Persentase5 = Math.Round(120000000m / 150000000m * 100, 2)
                     },
                 };
             }
@@ -432,34 +437,27 @@
             }
             public static List<ViewModel.JumlahObjekPajakSeries> GetJumlahObjekPajakSeriesData()
             {
-                return new List<ViewModel.JumlahObjekPajakSeries>
+                var result = new List<ViewModel.JumlahObjekPajakSeries>();
+                result.Add(new ViewModel.JumlahObjekPajakSeries()
                 {
-                    new ViewModel.JumlahObjekPajakSeries
-                    {
-                        Tahun = 2020,
-                        Jumlah = 950
-                    },
-                    new ViewModel.JumlahObjekPajakSeries
-                    {
-                        Tahun = 2021,
-                        Jumlah = 980
-                    },
-                    new ViewModel.JumlahObjekPajakSeries
-                    {
-                        Tahun = 2022,
-                        Jumlah = 1025
-                    },
-                    new ViewModel.JumlahObjekPajakSeries
-                    {
-                        Tahun = 2023,
-                        Jumlah = 1080
-                    },
-                    new ViewModel.JumlahObjekPajakSeries
-                    {
-                        Tahun = 2024,
-                        Jumlah = 1150
-                    }
-                };
+                    JenisPajak = "Hotel",
+                    Jumlah1 = 950,
+                    Jumlah2 = 980,
+                    Jumlah3 = 1025,
+                    Jumlah4 = 1080,
+                    Jumlah5 = 1150,
+                });
+                result.Add(new ViewModel.JumlahObjekPajakSeries()
+                {
+                    JenisPajak = "Resto",
+                    Jumlah1 = 951,
+                    Jumlah2 = 982,
+                    Jumlah3 = 1035,
+                    Jumlah4 = 1040,
+                    Jumlah5 = 1120,
+                });
+
+                return result;
             }
             public static List<ViewModel.PemasanganAlatRekamSeries> GetPemasanganAlatRekamSeriesData()
             {
@@ -498,6 +496,7 @@
                 {
                     new ViewModel.PemasanganAlatRekamDetail
                     {
+                        JenisPajak = "Hotel",
                         JmlOp = 100,
                         JmlTerpasangTS = 30,    // Terpasang SPT
                         JmlTerpasangTB = 20,    // Terpasang Biller
@@ -507,6 +506,7 @@
                     },
                     new ViewModel.PemasanganAlatRekamDetail
                     {
+                        JenisPajak = "Resto",
                         JmlOp = 150,
                         JmlTerpasangTS = 50,
                         JmlTerpasangTB = 30,
@@ -516,6 +516,7 @@
                     },
                     new ViewModel.PemasanganAlatRekamDetail
                     {
+                        JenisPajak = "Parkir",
                         JmlOp = 200,
                         JmlTerpasangTS = 70,
                         JmlTerpasangTB = 50,

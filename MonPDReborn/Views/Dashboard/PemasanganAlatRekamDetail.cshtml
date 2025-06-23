@@ -1,27 +1,57 @@
-﻿@{
-}
+﻿@using static MonPDReborn.Models.DashboardVM
+@model MonPDReborn.Models.DashboardVM.PemasanganAlatRekamDetail
 
 @(
-            Html.DevExtreme().DataGrid()
+            Html.DevExtreme().DataGrid<ViewModel.PemasanganAlatRekamDetail>()
             .ID("dg-JmlTsDetail")
             .ShowBorders(true)
             .ShowColumnHeaders(true)
             .ShowColumnLines(true)
             .ShowRowLines(true)
             .ColumnAutoWidth(true)
-.SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-.FilterRow(f => f.Visible(true))
-.HeaderFilter(h => h.Visible(true))
-.Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
             .AllowColumnResizing(true)
-            .DataSource(new object[0])
+            .DataSource(Model.Data)
             .KeyExpr("ID")
             .Columns(columns =>
             {
-                columns.Add().Caption("JENIS PAJAK");
-                columns.Add().Caption("JML OP AWAL");
-                columns.Add().Caption("JML OP TUTUP SEMENTARA");
-                columns.Add().Caption("JML OP TUTUP PERMANEN");
-                columns.Add().Caption("JML OP BARU");
+                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK");
+                columns.AddFor(x => x.JmlOp).DataType(GridColumnDataType.Number).Caption("JML OP");
+                columns.AddFor(x => x.JmlTerpasangTS).DataType(GridColumnDataType.Number).Caption("JML OP TERPASANG TS");
+                columns.AddFor(x => x.JmlTerpasangTB).DataType(GridColumnDataType.Number).Caption("JML OP TERPASANG TB");
+                columns.AddFor(x => x.JmlTerpasangSB).DataType(GridColumnDataType.Number).Caption("JML OP TERPASANG SB");
+                columns.AddFor(x => x.TotalTerpasang).DataType(GridColumnDataType.Number).Caption("TOTAL TERPASANG");
+                columns.AddFor(x => x.TotalBelumTerpasang).DataType(GridColumnDataType.Number).Caption("TOTAL BELUM TERPASANG");
+            })
+            .Summary(s => {
+                s.TotalItems(items => {
+                    items.AddFor(x => x.JmlOp)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("Total: {0}")
+                        .SummaryType(SummaryType.Sum);
+                    items.AddFor(x => x.JmlTerpasangTS)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}")
+                        .SummaryType(SummaryType.Sum);
+                    items.AddFor(x => x.JmlTerpasangTB)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}")
+                        .SummaryType(SummaryType.Sum);
+                    items.AddFor(x => x.JmlTerpasangSB)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}")
+                        .SummaryType(SummaryType.Sum);
+                    items.AddFor(x => x.TotalTerpasang)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}")
+                        .SummaryType(SummaryType.Sum);
+                    items.AddFor(x => x.TotalBelumTerpasang)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}")
+                        .SummaryType(SummaryType.Sum);
+                });
             })
         )
