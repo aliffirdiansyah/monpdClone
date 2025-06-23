@@ -48,6 +48,10 @@ namespace AbtWs
 
             //}
 
+            
+
+
+
             using (var context = DBClass.GetSurabayaTaxContext())
             {
                 var sql = @"SELECT A.NOP,C.NPWPD_NO,C.NAMA NPWPD_NAMA,C.ALAMAT NPWPD_ALAMAT,6 PAJAK_ID,'PAJAK AIR TANAH' PAJAK_NAMA,
@@ -78,14 +82,45 @@ FROM OBJEK_PAJAK A
 JOIN OBJEK_PAJAK_ABT B ON A.NOP=B.NOP
 JOIN NPWPD  C ON A.NPWPD=C.NPWPD_no
 JOIN M_KATEGORI_PAJAK D ON D.ID=A.KATEGORI";
-                var result =await context.Database.SqlQueryRaw<MonPDLib.EF.OpAbt>(sql).ToListAsync();
                 var _contMonPd = DBClass.GetContext();
+                var result =await context.Database.SqlQueryRaw<MonPDLib.EF.OpAbt>(sql).ToListAsync();
+                
                 var source=await _contMonPd.DbOpAbts.ToListAsync();  
+
 
                 
 
             }            
             
+        }
+
+        private bool IsGetDBOp()
+        {
+            var _contMonPd = DBClass.GetContext();
+            var row = _contMonPd.LastRuns.FirstOrDefault(x => x.Job == EnumFactory.EJobName.DBOPABT.ToString());
+            if (row!=null)
+            {
+                if (row.InsDate.HasValue)
+                {
+                    var tglTarik = row.InsDate.Value.Date;
+                    var tglServer= DateTime.Now.Date;
+                    if (tglTarik >= tglServer)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        row.InsDate = DateTime.Now;
+                        _contMonPd.SaveChanges();
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return true;
         }
     }
 }
