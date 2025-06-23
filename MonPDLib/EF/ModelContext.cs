@@ -17,8 +17,6 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbAkun> DbAkuns { get; set; }
 
-    public virtual DbSet<DbAkunKategori> DbAkunKategoris { get; set; }
-
     public virtual DbSet<DbAkunTarget> DbAkunTargets { get; set; }
 
     public virtual DbSet<DbMonAbt> DbMonAbts { get; set; }
@@ -56,8 +54,6 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbOpReklame> DbOpReklames { get; set; }
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
-
-    public virtual DbSet<LastRun> LastRuns { get; set; }
 
     public virtual DbSet<MFasilita> MFasilitas { get; set; }
 
@@ -163,6 +159,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PenTeguranBayar> PenTeguranBayars { get; set; }
 
+    public virtual DbSet<SetLastRun> SetLastRuns { get; set; }
+
+    public virtual DbSet<SetYearJobScan> SetYearJobScans { get; set; }
+
     public virtual DbSet<THimbauanSptpd> THimbauanSptpds { get; set; }
 
     public virtual DbSet<TPemeriksaan> TPemeriksaans { get; set; }
@@ -186,15 +186,147 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbAkun>(entity =>
         {
             entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian }).HasName("DB_AKUN_PK");
-        });
 
-        modelBuilder.Entity<DbAkunKategori>(entity =>
-        {
-            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.Kategori }).HasName("DB_AKUN_KATEGORI_PK");
+            entity.HasMany(d => d.KategoriKenaikans).WithMany(p => p.DbAkunsNavigation)
+                .UsingEntity<Dictionary<string, object>>(
+                    "DbAkunKategoriKenaikan",
+                    r => r.HasOne<MKategoriPajak>().WithMany()
+                        .HasForeignKey("KategoriKenaikan")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("DB_AKUN_KATEGORI_KENAIKAN_R02"),
+                    l => l.HasOne<DbAkun>().WithMany()
+                        .HasForeignKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("DB_AKUN_KATEGORI_KENAIKAN_R01"),
+                    j =>
+                    {
+                        j.HasKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian", "KategoriKenaikan").HasName("DB_AKUN_KATEGORI_KENAIKAN_PK");
+                        j.ToTable("DB_AKUN_KATEGORI_KENAIKAN");
+                        j.IndexerProperty<decimal>("TahunBuku")
+                            .HasColumnType("NUMBER")
+                            .HasColumnName("TAHUN_BUKU");
+                        j.IndexerProperty<string>("Akun")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("AKUN");
+                        j.IndexerProperty<string>("Kelompok")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("KELOMPOK");
+                        j.IndexerProperty<string>("Jenis")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("JENIS");
+                        j.IndexerProperty<string>("Objek")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("OBJEK");
+                        j.IndexerProperty<string>("Rincian")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("RINCIAN");
+                        j.IndexerProperty<string>("SubRincian")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("SUB_RINCIAN");
+                        j.IndexerProperty<decimal>("KategoriKenaikan")
+                            .HasColumnType("NUMBER")
+                            .HasColumnName("KATEGORI_KENAIKAN");
+                    });
 
-            entity.HasOne(d => d.DbAkun).WithMany(p => p.DbAkunKategoris)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DB_AKUN_KATEGORI_DB_AKUN_FK");
+            entity.HasMany(d => d.KategoriSanksis).WithMany(p => p.DbAkuns1)
+                .UsingEntity<Dictionary<string, object>>(
+                    "DbAkunKategoriSanksi",
+                    r => r.HasOne<MKategoriPajak>().WithMany()
+                        .HasForeignKey("KategoriSanksi")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("DB_AKUN_KATEGORI_SANKSI_R02"),
+                    l => l.HasOne<DbAkun>().WithMany()
+                        .HasForeignKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("DB_AKUN_KATEGORI_SANKSI_R01"),
+                    j =>
+                    {
+                        j.HasKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian", "KategoriSanksi").HasName("DB_AKUN_KATEGORI_SANKSI_PK");
+                        j.ToTable("DB_AKUN_KATEGORI_SANKSI");
+                        j.IndexerProperty<decimal>("TahunBuku")
+                            .HasColumnType("NUMBER")
+                            .HasColumnName("TAHUN_BUKU");
+                        j.IndexerProperty<string>("Akun")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("AKUN");
+                        j.IndexerProperty<string>("Kelompok")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("KELOMPOK");
+                        j.IndexerProperty<string>("Jenis")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("JENIS");
+                        j.IndexerProperty<string>("Objek")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("OBJEK");
+                        j.IndexerProperty<string>("Rincian")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("RINCIAN");
+                        j.IndexerProperty<string>("SubRincian")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("SUB_RINCIAN");
+                        j.IndexerProperty<decimal>("KategoriSanksi")
+                            .HasColumnType("NUMBER")
+                            .HasColumnName("KATEGORI_SANKSI");
+                    });
+
+            entity.HasMany(d => d.Kategoris).WithMany(p => p.DbAkuns)
+                .UsingEntity<Dictionary<string, object>>(
+                    "DbAkunKategori",
+                    r => r.HasOne<MKategoriPajak>().WithMany()
+                        .HasForeignKey("Kategori")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("DB_AKUN_KATEGORI_R01"),
+                    l => l.HasOne<DbAkun>().WithMany()
+                        .HasForeignKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("DB_AKUN_KATEGORI_DB_AKUN_FK"),
+                    j =>
+                    {
+                        j.HasKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian", "Kategori").HasName("DB_AKUN_KATEGORI_PK");
+                        j.ToTable("DB_AKUN_KATEGORI");
+                        j.IndexerProperty<decimal>("TahunBuku")
+                            .HasColumnType("NUMBER")
+                            .HasColumnName("TAHUN_BUKU");
+                        j.IndexerProperty<string>("Akun")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("AKUN");
+                        j.IndexerProperty<string>("Kelompok")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("KELOMPOK");
+                        j.IndexerProperty<string>("Jenis")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("JENIS");
+                        j.IndexerProperty<string>("Objek")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("OBJEK");
+                        j.IndexerProperty<string>("Rincian")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("RINCIAN");
+                        j.IndexerProperty<string>("SubRincian")
+                            .HasMaxLength(20)
+                            .IsUnicode(false)
+                            .HasColumnName("SUB_RINCIAN");
+                        j.IndexerProperty<decimal>("Kategori")
+                            .HasColumnType("NUMBER")
+                            .HasColumnName("KATEGORI");
+                    });
         });
 
         modelBuilder.Entity<DbAkunTarget>(entity =>
@@ -377,11 +509,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.MaksimalProduksiPorsiHari).HasDefaultValueSql("0                     ");
             entity.Property(e => e.RataTerjualPorsiHari).HasDefaultValueSql("0                     ");
-        });
-
-        modelBuilder.Entity<LastRun>(entity =>
-        {
-            entity.HasKey(e => e.Job).HasName("LAST_RUN_PK");
         });
 
         modelBuilder.Entity<MFasilita>(entity =>
@@ -1000,6 +1127,22 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<PenTeguranBayar>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PEN_TEGURAN_BAYAR_PK");
+        });
+
+        modelBuilder.Entity<SetLastRun>(entity =>
+        {
+            entity.HasKey(e => e.Job).HasName("LAST_RUN_PK");
+        });
+
+        modelBuilder.Entity<SetYearJobScan>(entity =>
+        {
+            entity.HasKey(e => e.IdPajak).HasName("SET_YEAR_JOB_SCAN_PK");
+
+            entity.Property(e => e.IdPajak).ValueGeneratedNever();
+
+            entity.HasOne(d => d.IdPajakNavigation).WithOne(p => p.SetYearJobScan)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("SET_YEAR_JOB_SCAN_R01");
         });
 
         modelBuilder.Entity<THimbauanSptpd>(entity =>

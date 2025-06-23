@@ -1,4 +1,4 @@
-﻿namespace MonPDReborn.Models.Aktivitas
+﻿namespace MonPDReborn.Models.AktivitasOP
 {
     public class PemeriksaanPajakVM
     {

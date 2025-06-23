@@ -41,4 +41,7 @@ public partial class MPajak
 
     [InverseProperty("Pajak")]
     public virtual ICollection<Op> Ops { get; set; } = new List<Op>();
+
+    [InverseProperty("IdPajakNavigation")]
+    public virtual SetYearJobScan? SetYearJobScan { get; set; }
 }

@@ -81,4 +81,16 @@ public partial class MKategoriPajak
     [ForeignKey("PajakId")]
     [InverseProperty("MKategoriPajaks")]
     public virtual MPajak Pajak { get; set; } = null!;
+
+    [ForeignKey("Kategori")]
+    [InverseProperty("Kategoris")]
+    public virtual ICollection<DbAkun> DbAkuns { get; set; } = new List<DbAkun>();
+
+    [ForeignKey("KategoriSanksi")]
+    [InverseProperty("KategoriSanksis")]
+    public virtual ICollection<DbAkun> DbAkuns1 { get; set; } = new List<DbAkun>();
+
+    [ForeignKey("KategoriKenaikan")]
+    [InverseProperty("KategoriKenaikans")]
+    public virtual ICollection<DbAkun> DbAkunsNavigation { get; set; } = new List<DbAkun>();
 }

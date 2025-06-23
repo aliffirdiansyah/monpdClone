@@ -80,6 +80,15 @@ public partial class DbAkun
     [Unicode(false)]
     public string NamaSubRincian { get; set; } = null!;
 
-    [InverseProperty("DbAkun")]
-    public virtual ICollection<DbAkunKategori> DbAkunKategoris { get; set; } = new List<DbAkunKategori>();
+    [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
+    [InverseProperty("DbAkunsNavigation")]
+    public virtual ICollection<MKategoriPajak> KategoriKenaikans { get; set; } = new List<MKategoriPajak>();
+
+    [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
+    [InverseProperty("DbAkuns1")]
+    public virtual ICollection<MKategoriPajak> KategoriSanksis { get; set; } = new List<MKategoriPajak>();
+
+    [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
+    [InverseProperty("DbAkuns")]
+    public virtual ICollection<MKategoriPajak> Kategoris { get; set; } = new List<MKategoriPajak>();
 }

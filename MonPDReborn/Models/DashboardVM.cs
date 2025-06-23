@@ -261,14 +261,18 @@
             public class DataPiutang
             {
                 public string JenisPajak { get; set; } = "";
-                public int Tahun { get; set; }
-                public decimal NominalPiutang { get; set; }
+                public decimal NominalPiutang1 { get; set; }
+                public decimal NominalPiutang2 { get; set; }
+                public decimal NominalPiutang3 { get; set; }
+                public decimal NominalPiutang4 { get; set; }
             }
             public class DataMutasi
             {
                 public string Keterangan { get; set; } = "";
-                public int Tahun { get; set; }
-                public decimal NominalMutasi { get; set; }
+                public decimal NominalMutasi1 { get; set; }
+                public decimal NominalMutasi2 { get; set; }
+                public decimal NominalMutasi3 { get; set; }
+                public decimal NominalMutasi4 { get; set; }
             }
         }
 
@@ -664,46 +668,33 @@
                     }
                 };
             }
-
             public static List<ViewModel.DataPiutang> GetDataPiutangData()
             {
                 return new List<ViewModel.DataPiutang>
                 {
                     new ViewModel.DataPiutang
                     {
-                        JenisPajak = "Hotel",
-                        Tahun = 2022,
-                        NominalPiutang = 75_000_000
-                    },
-                    new ViewModel.DataPiutang
-                    {
-                        JenisPajak = "Hotel",
-                        Tahun = 2023,
-                        NominalPiutang = 60_000_000
-                    },
-                    new ViewModel.DataPiutang
-                    {
                         JenisPajak = "Restoran",
-                        Tahun = 2022,
-                        NominalPiutang = 120_000_000
+                        NominalPiutang1 = 15000000,
+                        NominalPiutang2 = 12000000,
+                        NominalPiutang3 = 10000000,
+                        NominalPiutang4 = 8000000
                     },
                     new ViewModel.DataPiutang
                     {
-                        JenisPajak = "Restoran",
-                        Tahun = 2023,
-                        NominalPiutang = 100_000_000
-                    },
-                    new ViewModel.DataPiutang
-                    {
-                        JenisPajak = "Parkir",
-                        Tahun = 2023,
-                        NominalPiutang = 30_000_000
+                        JenisPajak = "Hotel",
+                        NominalPiutang1 = 25000000,
+                        NominalPiutang2 = 23000000,
+                        NominalPiutang3 = 18000000,
+                        NominalPiutang4 = 16000000
                     },
                     new ViewModel.DataPiutang
                     {
                         JenisPajak = "Hiburan",
-                        Tahun = 2022,
-                        NominalPiutang = 45_000_000
+                        NominalPiutang1 = 10000000,
+                        NominalPiutang2 = 9000000,
+                        NominalPiutang3 = 7500000,
+                        NominalPiutang4 = 7000000
                     }
                 };
             }
@@ -713,42 +704,31 @@
                 {
                     new ViewModel.DataMutasi
                     {
-                        Keterangan = "Penambahan OP Baru",
-                        Tahun = 2022,
-                        NominalMutasi = 150_000_000
+                        Keterangan = "Penyesuaian akhir tahun",
+                        NominalMutasi1 = 5000000,
+                        NominalMutasi2 = 4500000,
+                        NominalMutasi3 = 4000000,
+                        NominalMutasi4 = 3500000
                     },
                     new ViewModel.DataMutasi
                     {
-                        Keterangan = "Penghapusan OP Tutup Permanen",
-                        Tahun = 2022,
-                        NominalMutasi = -50_000_000
+                        Keterangan = "Koreksi sistem",
+                        NominalMutasi1 = 3000000,
+                        NominalMutasi2 = 2800000,
+                        NominalMutasi3 = 2600000,
+                        NominalMutasi4 = 2400000
                     },
                     new ViewModel.DataMutasi
                     {
-                        Keterangan = "Perubahan Tarif Pajak",
-                        Tahun = 2023,
-                        NominalMutasi = 80_000_000
-                    },
-                    new ViewModel.DataMutasi
-                    {
-                        Keterangan = "Pemutakhiran Data",
-                        Tahun = 2023,
-                        NominalMutasi = 30_000_000
-                    },
-                    new ViewModel.DataMutasi
-                    {
-                        Keterangan = "Koreksi Kesalahan Data",
-                        Tahun = 2024,
-                        NominalMutasi = -20_000_000
-                    },
-                    new ViewModel.DataMutasi
-                    {
-                        Keterangan = "Penambahan OP Baru",
-                        Tahun = 2024,
-                        NominalMutasi = 100_000_000
+                        Keterangan = "Pemindahan saldo",
+                        NominalMutasi1 = 7000000,
+                        NominalMutasi2 = 6800000,
+                        NominalMutasi3 = 6500000,
+                        NominalMutasi4 = 6000000
                     }
                 };
             }
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿@*
+﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Index
+
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -49,10 +51,10 @@
             <div class="card-body">
                 @{
                     var profilOP = new[] {
-                                new { Label = "Nama Objek Pajak", Value = "" },
-                                new { Label = "Alamat Lengkap", Value = "" },
-                                new { Label = "Kecamatan - Kelurahan", Value = "" },
-                                new { Label = "NOP", Value = "" }
+                                new { Label = "NOP", Value = Model.IdentitasPajak.NOP },
+                                new { Label = "Nama Objek Pajak", Value = Model.IdentitasPajak.NamaObjekPajak },
+                                new { Label = "Alamat Lengkap", Value = Model.IdentitasPajak.AlamatLengkap },
+                                new { Label = "Kecamatan - Kelurahan", Value = Model.IdentitasPajak.Kecamatan_Kelurahan }
                                 };
                 }
                 @{
@@ -72,6 +74,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-lg-6">
         <div class="card mb-4">
             <div class="card-header d-flex">
@@ -79,52 +82,57 @@
                     <h4 class="card-title fs-16 mb-0">
                         Masa Pajak
                     </h4>
-                    
                 </div>
                 <div class="d-flex gap-2">
                     @{
                         Html.DevExtreme().SelectBox()
-                        .ID("tahunMasaSelect")
-                        .DataSource(new[] { 2025, 2024, 2023, 2022 })
-                        .Value(2025)
-                        .Width(150)
-                        .Placeholder("Pilih Tahun")
-                        .Render();
+                            .ID("tahunMasaSelect")
+                            .DataSource(new[] { 2025, 2024, 2023, 2022 })
+                            .Value(Model.MasaPajakData.Tahun)
+                            .Width(150)
+                            .Placeholder("Pilih Tahun")
+                            .Render();
                     }
                 </div>
             </div>
             <div class="card-body">
                 @{
                     Html.DevExtreme().DataGrid()
-                        .ID("masaPajakGrid")
-                        .DataSource(new object[] { }) 
-                        .ShowBorders(true)
-                        .ColumnAutoWidth(true)
-                        .RowAlternationEnabled(true)
-                        .Columns(columns =>
-                        {
-                            columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
-                            columns.Add()
-                                        .DataField("TglSSPD")
-                                        .Caption("Tgl SSPD")
-                                        .DataType(GridColumnDataType.DateTime)
-                                        .Format("M/d/yyyy h:mm:ss a")
-                                        .Alignment(HorizontalAlignment.Center);
-                            columns.Add()
-                                        .DataField("Realisasi")
-                                        .Caption("Realisasi")
-                                        .Format("#,##0")
-                                        .Alignment(HorizontalAlignment.Right);
-                        })
-                        .Summary(summary => summary.TotalItems(totals =>
-                        {
-                            totals.Add().Column("Realisasi").SummaryType(SummaryType.Sum).DisplayFormat("Total: {0:#,##0}");
-                        }))
-                        .Render();
+                    .ID("masaPajakGrid")
+                    .DataSource(Model.MasaPajakData.DataRealisasi)
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .RowAlternationEnabled(true)
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("TglSSPD")
+                                    .Caption("Tgl SSPD")
+                                    .DataType(GridColumnDataType.DateTime)
+                                    .Format("dd/MM/yyyy")
+                                    .Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("Realisasi")
+                                    .Caption("Realisasi")
+                                    .Format("#,##0")
+                                    .Alignment(HorizontalAlignment.Right);
+                    })
+                    .Summary(summary => summary.TotalItems(totals =>
+                    {
+                        totals.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Total Masa Pajak: {0}");
+                    }))
+                    .Render();
                 }
             </div>
+
         </div>
     </div>
+
     <div class="col-lg-6">
         <div class="card mb-4">
             <div class="card-header d-flex">
@@ -132,7 +140,6 @@
                     <h4 class="card-title fs-16 mb-0">
                         Masa Bayar
                     </h4>
-
                 </div>
                 <div class="d-flex gap-2">
                     @{
@@ -149,31 +156,36 @@
             <div class="card-body">
                 @{
                     Html.DevExtreme().DataGrid()
-                        .ID("masaBayarGrid")
-                        .DataSource(new object[] { })
-                        .ShowBorders(true)
-                        .ColumnAutoWidth(true)
-                        .RowAlternationEnabled(true)
-                        .Columns(columns =>
-                        {
-                            columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
-                            columns.Add()
-                                        .DataField("TglSSPD")
-                                        .Caption("Tgl SSPD")
-                                        .DataType(GridColumnDataType.DateTime)
-                                        .Format("M/d/yyyy h:mm:ss a")
-                                        .Alignment(HorizontalAlignment.Center);
-                            columns.Add()
-                                        .DataField("Realisasi")
-                                        .Caption("Realisasi")
-                                        .Format("#,##0")
-                                        .Alignment(HorizontalAlignment.Right);
-                        })
-                        .Summary(summary => summary.TotalItems(totals =>
-                        {
-                            totals.Add().Column("Realisasi").SummaryType(SummaryType.Sum).DisplayFormat("Total: {0:#,##0}");
-                        }))
-                        .Render();
+                    .ID("masaBayarGrid")
+                    .DataSource(Model.MasaBayarData.DataRealisasi)
+                    .ShowBorders(true)
+                    .ColumnAutoWidth(true)
+                    .RowAlternationEnabled(true)
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("TglSSPD")
+                                    .Caption("Tgl SSPD")
+                                    .DataType(GridColumnDataType.DateTime)
+                                    .Format("dd/MM/yyyy")
+                                    .Alignment(HorizontalAlignment.Center);
+                        columns.Add()
+                                    .DataField("Realisasi")
+                                    .Caption("Realisasi")
+                                    .Format("#,##0")
+                                    .Alignment(HorizontalAlignment.Right);
+                    })
+                    .Summary(summary => summary.TotalItems(totals =>
+                    {
+                        totals.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Total Masa Pajak: {0}");
+                    }))
+
+                    .Render();
                 }
             </div>
         </div>
