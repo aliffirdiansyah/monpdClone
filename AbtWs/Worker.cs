@@ -216,6 +216,8 @@ JOIN M_KATEGORI_PAJAK D ON D.ID=A.KATEGORI";
 
             var _contSbyTaxOld = DBClass.GetSurabayaTaxContext();
 
+
+
             // do fill ketetapan
 
 
