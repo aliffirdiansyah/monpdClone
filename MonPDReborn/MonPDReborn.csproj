@@ -38,6 +38,6 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\Pencarian\" />
+    <Folder Include="Views\DataWP\" />
   </ItemGroup>
 </Project>
