@@ -1,8 +1,8 @@
-﻿@using MonPDReborn.Models.Aktivitas
+﻿@using MonPDReborn.Models.AktivitasOP
 @model PendataanObjekPajakVM.Show
 
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Aktivitas.PendataanObjekPajakVM.DataPendataan>()
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.DataPendataan>()
     .ID("gridPendataanShow")
     .DataSource(Model.DataPendataanList)
     .ShowBorders(true)

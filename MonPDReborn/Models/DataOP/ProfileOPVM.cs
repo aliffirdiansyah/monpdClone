@@ -4,114 +4,94 @@
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
+            public IdentitasObjekPajak IdentitasPajak { get; set; }
+            public DataPerizinan Perizinan { get; set; }
+            public Pendapatan Pendapatan { get; set; }
+            public SaranaPendukung FasilitasPendukung { get; set; }
             public Index()
             {
+                IdentitasPajak = new IdentitasObjekPajak
+                {
+                    NamaObjekPajak = "The Westin Surabaya",
+                    AlamatLengkap = "Puncak Indah Lontar No. 2",
+                    Kecamatan_Kelurahan = "Sambikerep - Lontar",
+                    NOP = "35.78.011.010.901.0007",
+                    Telepon = "58208788",
+                    TanggalBuka = new DateTime(2020, 12, 1),
+                    JenisObjekPajak = "Hotel Bintang Lima"
+                };
 
+                Perizinan = new DataPerizinan
+                {
+                    NomorIMB = "503/IMB/0192/2015",
+                    TanggalIMB = new DateTime(2015, 3, 15),
+                    NomorSITU_NIB = "8129381273981237",
+                    NomorIzinOperasional = "503/HO/093/2016"
+                };
+
+                Pendapatan = new Pendapatan
+                {
+                    Okupansi = "85% per bulan",
+                    RataTarifKamar = 750000m,
+                    PendapatanKotor = 1250000000m,
+                    JumlahTransaksi = "+3.500 transaksi"
+                };
+
+                FasilitasPendukung = new SaranaPendukung
+                {
+                    JumlahKaryawan = 58,
+                    MetodePenjualan = "Offline",
+                    MetodePembayaran = "Hibrid"
+                };
             }
         }
         public class Show
         {
-            public List<DataRealisasiOp> DataRealisasiOpList { get; set; } = new();
-            public Show()
-            {
-                
-            }
-            public Show(string keyword)
-            {
-                DataRealisasiOpList = Method.GetDataRealisasiOpList(keyword);
-            }
+
         }
         public class Detail
         {
-            public List<RealisasiBulanan> DataRealisasiBulananList { get; set; } = new();
-            public Detail()
-            {
-                
-            }
-            public Detail(string nop)
-            {
-                DataRealisasiBulananList = Method.GetDetailByNOP(nop);
-            }
+
         }
         public class Method
         {
-            public static List<DataRealisasiOp> GetDataRealisasiOpList(string keyword)
-            {
-                var allData = GetAllData();
 
-                if (string.IsNullOrWhiteSpace(keyword))
-                    return allData;
-
-                return allData
-                    .Where(d => d.Nama != null && d.Nama.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-
-            public static List<RealisasiBulanan> GetDetailByNOP(string nop)
-            {
-                var allDetail = GetAllDetail();
-                return allDetail.Where(x => x.NOP == nop).ToList();
-            }
-
-            // Internal dummy data
-            private static List<DataRealisasiOp> GetAllData()
-            {
-                return new List<DataRealisasiOp>
-                {
-                    new() { No = 1, Wilayah = "01", NOP = "35.78.170.005.902.00066", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "RAJAWALI NO.47", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 2, Wilayah = "01", NOP = "35.78.100.002.902.00172", StatusNOP = "Buka", Nama = "MC. DONALDS KIOS", Alamat = "BUBUTAN 1-7 (BG JUNCTION LT.GL DAN LT.LL)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 3, Wilayah = "01", NOP = "35.78.160.001.902.05140", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "MALL PASAR ATUM", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 4, Wilayah = "01", NOP = "35.78.170.005.902.01044", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "JL. TAMAN JAYENGRONO (JMP)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 5, Wilayah = "02", NOP = "35.78.050.005.902.00124", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "DR. IR. H. SOEKARNO NO.218", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" }
-                };
-            }
-
-            private static List<RealisasiBulanan> GetAllDetail()
-            {
-                return new List<RealisasiBulanan>
-                {
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jan", Nominal = 186020436 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Feb", Nominal = 152000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mar", Nominal = 173000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Apr", Nominal = 165000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mei", Nominal = 178000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jun", Nominal = 181000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jul", Nominal = 190000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Agt", Nominal = 200000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Sep", Nominal = 210000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Okt", Nominal = 220000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Nov", Nominal = 230000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Des", Nominal = 240000000 },
-
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Jan", Nominal = 30222959 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Feb", Nominal = 25000000 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Mar", Nominal = 27000000 },
-
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Jan", Nominal = 134483411 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Feb", Nominal = 140000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Mar", Nominal = 150000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Des", Nominal = 155000000 }
-                };
-            }
         }
-        public class DataRealisasiOp
+        public class IdentitasObjekPajak
         {
-            public int No { get; set; }
-            public string Wilayah { get; set; } = null!;
-            public string NOP { get; set; } = null!;
-            public string StatusNOP { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string Alamat { get; set; } = null!;
-            public string JenisOp { get; set; } = null!;
-            public string JenisPenarikan { get; set; } = null!;
+            public string NamaObjekPajak { get; set; }
+            public string AlamatLengkap { get; set; }
+            public string Kecamatan_Kelurahan { get; set; } // Kecamatan - Kelurahan
+            public string NOP { get; set; } // Nomor Objek Pajak
+            public string Telepon { get; set; }
+            public DateTime TanggalBuka { get; set; }
+            public string JenisObjekPajak { get; set; }
         }
 
-        public class RealisasiBulanan
+        // Class untuk bagian "Data Perizinan"
+        public class DataPerizinan
         {
-            public string NOP { get; set; } = null!;
-            public string Bulan { get; set; } = null!;
-            public decimal Nominal { get; set; }
+            public string NomorIMB { get; set; } // Nomor IMB
+            public DateTime TanggalIMB { get; set; } // Tanggal IMB
+            public string NomorSITU_NIB { get; set; } // Nomor SITU/NIB
+            public string NomorIzinOperasional { get; set; } // Nomor Izin Operasional
+        }
+
+        // Class untuk bagian "Pendapatan"
+        public class Pendapatan
+        {
+            public string Okupansi { get; set; } // Okupansi (misal: "85% per bulan")
+            public decimal RataTarifKamar { get; set; } // Rata Tarif Kamar
+            public decimal PendapatanKotor { get; set; } // Pendapatan Kotor
+            public string JumlahTransaksi { get; set; } // Jumlah Transaksi (misal: "+3.500 transaksi")
+        }
+
+        // Class untuk bagian "Sarana Pendukung"
+        public class SaranaPendukung
+        {
+            public int JumlahKaryawan { get; set; }
+            public string MetodePembayaran { get; set; }
+            public string MetodePenjualan { get; set; }
         }
     }
 }
