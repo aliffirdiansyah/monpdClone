@@ -14,14 +14,14 @@ namespace MonPDReborn.Controllers.Pencarian
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         public PencarianOPController(ILogger<PencarianOPController> logger)
         {
-            URLView = string.Concat("../Pencarian/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
         {
             try
             {
-                var model = new Models.Pencarian.PencarianOP.Index();
+                var model = new Models.DataOP.PencarianOPVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception)
@@ -33,7 +33,7 @@ namespace MonPDReborn.Controllers.Pencarian
         {
             try
             {
-                var model = new Models.Pencarian.PencarianOP.Show(keyword);
+                var model = new Models.DataOP.PencarianOPVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -46,7 +46,7 @@ namespace MonPDReborn.Controllers.Pencarian
         {
             try
             {
-                var model = new Models.Pencarian.PencarianOP.Detail(nop);
+                var model = new Models.DataOP.PencarianOPVM.Detail(nop);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
