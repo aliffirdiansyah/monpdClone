@@ -104,7 +104,7 @@
                     $("#loader").hide();
                     if (response.Status === undefined) {
                         $("#staticBackdropLargeScrollable .modal-title").html("Detail OP");
-                        $("#staticBackdropLargeScrollable .modal-body").html(data);
+                        $("#staticBackdropLargeScrollable .modal-body").html(response);
                         $("#staticBackdropLargeScrollable").modal('show');
                     } else {
                         Swal.fire({

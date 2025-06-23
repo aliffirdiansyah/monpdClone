@@ -97,6 +97,10 @@
 
         public class ViewModel
         {
+            public class X
+            {
+
+            }
             public class Dashboard
             {
                 public decimal TotalTarget { get; set; }
@@ -166,10 +170,21 @@
             public class SeriesPajakDaerah
             {
                 public string JenisPajak { get; set; } = "";
-                public int Tahun { get; set; }
-                public decimal Target { get; set; }
-                public decimal Realisasi { get; set; }
-                public decimal Persentase { get; set; }
+                public decimal Target1 { get; set; }
+                public decimal Target2 { get; set; }
+                public decimal Target3 { get; set; }
+                public decimal Target4 { get; set; }
+                public decimal Target5 { get; set; }
+                public decimal Realisasi1 { get; set; }
+                public decimal Realisasi2 { get; set; }
+                public decimal Realisasi3 { get; set; }
+                public decimal Realisasi4 { get; set; }
+                public decimal Realisasi5 { get; set; }
+                public decimal Persentase1 { get; set; }
+                public decimal Persentase2 { get; set; }
+                public decimal Persentase3 { get; set; }
+                public decimal Persentase4 { get; set; }
+                public decimal Persentase5 { get; set; }
             }
             public class JumlahObjekPajakTahunan
             {
@@ -338,52 +353,42 @@
                 {
                     new ViewModel.SeriesPajakDaerah
                     {
-                        JenisPajak = "Hotel",
-                        Tahun = 2023,
-                        Target = 200000000,
-                        Realisasi = 180000000,
-                        Persentase = 90
+                        JenisPajak = "Pajak Restoran",
+                        Target1 = 80000000,
+                        Target2 = 100000000,
+                        Target3 = 110000000,
+                        Target4 = 130000000,
+                        Target5 = 150000000,
+                        Realisasi1 = 70000000,
+                        Realisasi2 = 90000000,
+                        Realisasi3 = 100000000,
+                        Realisasi4 = 110000000,
+                        Realisasi5 = 120000000,
+                        Persentase1 = 70000000m / 80000000m * 100,
+                        Persentase2 = 90000000m / 100000000m * 100,
+                        Persentase3 = 100000000m / 110000000m * 100,
+                        Persentase4 = 110000000m / 130000000m * 100,
+                        Persentase5 = 120000000m / 150000000m * 100
                     },
                     new ViewModel.SeriesPajakDaerah
                     {
-                        JenisPajak = "Hotel",
-                        Tahun = 2024,
-                        Target = 220000000,
-                        Realisasi = 200000000,
-                        Persentase = 90.91m
+                        JenisPajak = "Pajak Hotel",
+                        Target1 = 80000000,
+                        Target2 = 100000000,
+                        Target3 = 110000000,
+                        Target4 = 130000000,
+                        Target5 = 150000000,
+                        Realisasi1 = 70000000,
+                        Realisasi2 = 90000000,
+                        Realisasi3 = 100000000,
+                        Realisasi4 = 110000000,
+                        Realisasi5 = 120000000,
+                        Persentase1 = 70000000m / 80000000m * 100,
+                        Persentase2 = 90000000m / 100000000m * 100,
+                        Persentase3 = 100000000m / 110000000m * 100,
+                        Persentase4 = 110000000m / 130000000m * 100,
+                        Persentase5 = 120000000m / 150000000m * 100
                     },
-                    new ViewModel.SeriesPajakDaerah
-                    {
-                        JenisPajak = "Restoran",
-                        Tahun = 2023,
-                        Target = 250000000,
-                        Realisasi = 230000000,
-                        Persentase = 92
-                    },
-                    new ViewModel.SeriesPajakDaerah
-                    {
-                        JenisPajak = "Restoran",
-                        Tahun = 2024,
-                        Target = 270000000,
-                        Realisasi = 260000000,
-                        Persentase = 96.3m
-                    },
-                    new ViewModel.SeriesPajakDaerah
-                    {
-                        JenisPajak = "Parkir",
-                        Tahun = 2023,
-                        Target = 50000000,
-                        Realisasi = 40000000,
-                        Persentase = 80
-                    },
-                    new ViewModel.SeriesPajakDaerah
-                    {
-                        JenisPajak = "Parkir",
-                        Tahun = 2024,
-                        Target = 60000000,
-                        Realisasi = 55000000,
-                        Persentase = 91.67m
-                    }
                 };
             }
             public static List<ViewModel.JumlahObjekPajakTahunan> GetJumlahObjekPajakTahunanData()
