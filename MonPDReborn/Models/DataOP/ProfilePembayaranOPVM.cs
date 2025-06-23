@@ -1,117 +1,148 @@
-﻿namespace MonPDReborn.Models.DataOP
+﻿using System;
+using System.Collections.Generic;
+using System.Linq; // diperlukan untuk .Select()
+
+namespace MonPDReborn.Models.DataOP
 {
     public class ProfilePembayaranOPVM
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
+            public IdentitasObjekPajak IdentitasPajak { get; set; }
+
+            public MasaPajak MasaPajakData { get; set; } // PASTIKAN PUBLIC
+
+            public MasaBayar MasaBayarData { get; set; } // PASTIKAN PUBLIC
+
             public Index()
             {
+                IdentitasPajak = new IdentitasObjekPajak
+                {
+                    NOP = "35.78.120.120.0001.0",
+                    NamaObjekPajak = "Hotel Adam",
+                    AlamatLengkap = "Jl. Ada",
+                    Kecamatan_Kelurahan = "Ada - Ada"
+                };
 
+                var dataRealisasiBulanan = new List<DataRealisasiPajak>
+                {
+                    new DataRealisasiPajak { Bulan = "Januari", TglSSPD = new DateTime(2025, 1, 15), Realisasi = 1000000m },
+                    new DataRealisasiPajak { Bulan = "Februari", TglSSPD = new DateTime(2025, 2, 15), Realisasi = 1200000m },
+                    new DataRealisasiPajak { Bulan = "Maret", TglSSPD = new DateTime(2025, 3, 15), Realisasi = 1300000m },
+                    new DataRealisasiPajak { Bulan = "April", TglSSPD = new DateTime(2025, 4, 15), Realisasi = 1250000m },
+                    new DataRealisasiPajak { Bulan = "Mei", TglSSPD = new DateTime(2025, 5, 15), Realisasi = 1400000m },
+                    new DataRealisasiPajak { Bulan = "Juni", TglSSPD = new DateTime(2025, 6, 15), Realisasi = 1100000m },
+                    new DataRealisasiPajak { Bulan = "Juli", TglSSPD = new DateTime(2025, 7, 15), Realisasi = 1500000m },
+                    new DataRealisasiPajak { Bulan = "Agustus", TglSSPD = new DateTime(2025, 8, 15), Realisasi = 1600000m },
+                    new DataRealisasiPajak { Bulan = "September", TglSSPD = new DateTime(2025, 9, 15), Realisasi = 1700000m },
+                    new DataRealisasiPajak { Bulan = "Oktober", TglSSPD = new DateTime(2025, 10, 15), Realisasi = 1800000m },
+                    new DataRealisasiPajak { Bulan = "November", TglSSPD = new DateTime(2025, 11, 15), Realisasi = 1900000m },
+                    new DataRealisasiPajak { Bulan = "Desember", TglSSPD = new DateTime(2025, 12, 15), Realisasi = 2000000m }
+                };
+
+
+                MasaPajakData = new MasaPajak
+                {
+                    Tahun = 2025,
+                    DataRealisasi = dataRealisasiBulanan.Select(d => new DataRealisasiPajak
+                    {
+                        Bulan = d.Bulan,
+                        TglSSPD = d.TglSSPD,
+                        Realisasi = d.Realisasi
+                    }).ToList(),
+                    Total = dataRealisasiBulanan.Sum(d => d.Realisasi)
+                };
+
+
+                var dataRealisasiBayar = new List<DataRealisasiPajak>
+                {
+                    new DataRealisasiPajak { Bulan = "Januari", TglSSPD = new DateTime(2025, 2, 10), Realisasi = 950000m },
+                    new DataRealisasiPajak { Bulan = "Februari", TglSSPD = new DateTime(2025, 3, 12), Realisasi = 1150000m },
+                    new DataRealisasiPajak { Bulan = "Maret", TglSSPD = new DateTime(2025, 4, 9), Realisasi = 1280000m },
+                    new DataRealisasiPajak { Bulan = "April", TglSSPD = new DateTime(2025, 5, 15), Realisasi = 1225000m },
+                    new DataRealisasiPajak { Bulan = "Mei", TglSSPD = new DateTime(2025, 6, 17), Realisasi = 1380000m },
+                    new DataRealisasiPajak { Bulan = "Juni", TglSSPD = new DateTime(2025, 7, 10), Realisasi = 1050000m },
+                    new DataRealisasiPajak { Bulan = "Juli", TglSSPD = new DateTime(2025, 8, 13), Realisasi = 1450000m },
+                    new DataRealisasiPajak { Bulan = "Agustus", TglSSPD = new DateTime(2025, 9, 11), Realisasi = 1580000m },
+                    new DataRealisasiPajak { Bulan = "September", TglSSPD = new DateTime(2025, 10, 14), Realisasi = 1650000m },
+                    new DataRealisasiPajak { Bulan = "Oktober", TglSSPD = new DateTime(2025, 11, 10), Realisasi = 1750000m },
+                    new DataRealisasiPajak { Bulan = "November", TglSSPD = new DateTime(2025, 12, 9), Realisasi = 1850000m },
+                    new DataRealisasiPajak { Bulan = "Desember", TglSSPD = new DateTime(2026, 1, 10), Realisasi = 1950000m }
+                };
+
+                MasaBayarData = new MasaBayar
+                {
+                    Tahun = 2025,
+                    DataRealisasi = dataRealisasiBayar.Select(d => new DataRealisasiPajak
+                    {
+                        Bulan = d.Bulan,
+                        TglSSPD = d.TglSSPD,
+                        Realisasi = d.Realisasi
+                    }).ToList(),
+                    Total = dataRealisasiBayar.Sum(d => d.Realisasi)
+                };
             }
         }
+
+
         public class Show
         {
-            public List<DataRealisasiOp> DataRealisasiOpList { get; set; } = new();
-            public Show()
-            {
-                
-            }
-            public Show(string keyword)
-            {
-                DataRealisasiOpList = Method.GetDataRealisasiOpList(keyword);
-            }
+            // Tambahkan properti atau method jika diperlukan
         }
+
         public class Detail
         {
-            public List<RealisasiBulanan> DataRealisasiBulananList { get; set; } = new();
-            public Detail()
-            {
-                
-            }
-            public Detail(string nop)
-            {
-                DataRealisasiBulananList = Method.GetDetailByNOP(nop);
-            }
+            // Tambahkan properti atau method jika diperlukan
         }
+
         public class Method
         {
-            public static List<DataRealisasiOp> GetDataRealisasiOpList(string keyword)
-            {
-                var allData = GetAllData();
-
-                if (string.IsNullOrWhiteSpace(keyword))
-                    return allData;
-
-                return allData
-                    .Where(d => d.Nama != null && d.Nama.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-
-            public static List<RealisasiBulanan> GetDetailByNOP(string nop)
-            {
-                var allDetail = GetAllDetail();
-                return allDetail.Where(x => x.NOP == nop).ToList();
-            }
-
-            // Internal dummy data
-            private static List<DataRealisasiOp> GetAllData()
-            {
-                return new List<DataRealisasiOp>
-                {
-                    new() { No = 1, Wilayah = "01", NOP = "35.78.170.005.902.00066", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "RAJAWALI NO.47", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 2, Wilayah = "01", NOP = "35.78.100.002.902.00172", StatusNOP = "Buka", Nama = "MC. DONALDS KIOS", Alamat = "BUBUTAN 1-7 (BG JUNCTION LT.GL DAN LT.LL)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 3, Wilayah = "01", NOP = "35.78.160.001.902.05140", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "MALL PASAR ATUM", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 4, Wilayah = "01", NOP = "35.78.170.005.902.01044", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "JL. TAMAN JAYENGRONO (JMP)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 5, Wilayah = "02", NOP = "35.78.050.005.902.00124", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "DR. IR. H. SOEKARNO NO.218", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" }
-                };
-            }
-
-            private static List<RealisasiBulanan> GetAllDetail()
-            {
-                return new List<RealisasiBulanan>
-                {
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jan", Nominal = 186020436 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Feb", Nominal = 152000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mar", Nominal = 173000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Apr", Nominal = 165000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mei", Nominal = 178000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jun", Nominal = 181000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jul", Nominal = 190000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Agt", Nominal = 200000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Sep", Nominal = 210000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Okt", Nominal = 220000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Nov", Nominal = 230000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Des", Nominal = 240000000 },
-
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Jan", Nominal = 30222959 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Feb", Nominal = 25000000 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Mar", Nominal = 27000000 },
-
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Jan", Nominal = 134483411 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Feb", Nominal = 140000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Mar", Nominal = 150000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Des", Nominal = 155000000 }
-                };
-            }
-        }
-        public class DataRealisasiOp
-        {
-            public int No { get; set; }
-            public string Wilayah { get; set; } = null!;
-            public string NOP { get; set; } = null!;
-            public string StatusNOP { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string Alamat { get; set; } = null!;
-            public string JenisOp { get; set; } = null!;
-            public string JenisPenarikan { get; set; } = null!;
+            // Tambahkan properti atau method jika diperlukan
         }
 
-        public class RealisasiBulanan
+        // Kelas identitas objek pajak
+        public class IdentitasObjekPajak
         {
-            public string NOP { get; set; } = null!;
-            public string Bulan { get; set; } = null!;
-            public decimal Nominal { get; set; }
+            public string NOP { get; set; }
+            public string NamaObjekPajak { get; set; }
+            public string AlamatLengkap { get; set; }
+            public string Kecamatan_Kelurahan { get; set; }
+
+            // Bisa ditambahkan jika perlu:
+            // public string Telp { get; set; }
+            // public DateTime TanggalBuka { get; set; }
+            // public string JenisObjekPajak { get; set; }
+        }
+
+        public class MasaPajak
+        {
+            public int Tahun { get; set; }
+            public List<DataRealisasiPajak> DataRealisasi { get; set; }
+            public decimal Total { get; set; }
+
+            public MasaPajak()
+            {
+                DataRealisasi = new List<DataRealisasiPajak>();
+            }
+        }
+
+        public class MasaBayar
+        {
+            public int Tahun { get; set; }
+            public List<DataRealisasiPajak> DataRealisasi { get; set; }
+            public decimal Total { get; set; }
+
+            public MasaBayar()
+            {
+                DataRealisasi = new List<DataRealisasiPajak>();
+            }
+        }
+
+        public class DataRealisasiPajak
+        {
+            public string Bulan { get; set; } // "Januari", "Februari", dst
+            public DateTime? TglSSPD { get; set; } // null jika belum dibayar
+            public decimal Realisasi { get; set; } // nominal
         }
     }
 }
