@@ -1,6 +1,6 @@
 ﻿namespace MonPDReborn.Models.DataOP
 {
-    public class PProfilOPVM
+    public class ProfilePembayaranOPVM
     {
         public class Index
         {

@@ -22,7 +22,7 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 var model = new Models.DataOP.ProfileSpasialOPVM.Index();
-                return PartialView($"{URLView}{actionName}", model);
+                return View($"{URLView}{actionName}", model);
             }
             catch (Exception)
             {
