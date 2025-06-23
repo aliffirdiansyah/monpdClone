@@ -1,0 +1,34 @@
+﻿@model MonPDReborn.Models.DataOP.PelaporanOPVM.Show
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PelaporanOPVM.HasilPelaporan>()
+        .ID("gridHasilPelaporan")
+        .DataSource(Model.DaftarHasil)
+        .KeyExpr("NOP")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.No).Caption("No");
+            columns.AddFor(m => m.Wilayah).Caption("Wilayah");
+            columns.AddFor(m => m.NOP).Caption("NOP");
+            columns.AddFor(m => m.Nama).Caption("Nama OP");
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+            columns.AddFor(m => m.Tahun).Caption("Tahun");
+            columns.AddFor(m => m.Bulan).Caption("Bulan");
+            columns.AddFor(m => m.Status).Caption("Status");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.MasaBelumLapor).Caption("Masa Belum Lapor");
+            columns.AddFor(m => m.Kepatuhan).Caption("Tingkat Kepatuhan (%)");
+        })
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        )
+</div>
