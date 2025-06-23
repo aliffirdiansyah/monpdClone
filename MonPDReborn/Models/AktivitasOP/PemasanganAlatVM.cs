@@ -1,6 +1,6 @@
-﻿namespace MonPDReborn.Models.PemasanganAlat
+﻿namespace MonPDReborn.Models.Aktivitas
 {
-    public class PemasanganAlat
+    public class PemasanganAlatVM
     {
         public class Index
         {

@@ -1,6 +1,6 @@
-﻿namespace MonPDReborn.Models.Pemeriksaan
+﻿namespace MonPDReborn.Models.Aktivitas
 {
-    public class PemeriksaanPajak
+    public class PemeriksaanPajakVM
     {
         public class Index
         {

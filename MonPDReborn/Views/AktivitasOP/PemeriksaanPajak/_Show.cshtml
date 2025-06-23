@@ -1,7 +1,8 @@
-﻿@model MonPDReborn.Models.Pemeriksaan.PemeriksaanPajak.Show
+﻿@using MonPDReborn.Models.Aktivitas
+@model PemeriksaanPajakVM.Show
 
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Pemeriksaan.PemeriksaanPajak.DataPemeriksaan>()
+    @(Html.DevExtreme().DataGrid<PemeriksaanPajakVM.DataPemeriksaan>()
         .ID("gridPemeriksaanPajak")
         .DataSource(Model.DataPemeriksaanList)
         .KeyExpr("JenisPajak")

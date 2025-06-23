@@ -1,4 +1,5 @@
-﻿@model MonPDReborn.Models.Pemeriksaan.PemeriksaanPajak.Index
+﻿@using MonPDReborn.Models.Aktivitas
+@model PemeriksaanPajakVM.Index
 
 @{
     ViewData["Title"] = "Pemeriksaan Pajak";
@@ -84,7 +85,7 @@
         // Fungsi untuk memuat data rekap pemeriksaan
         function loadShow() {
             $.ajax({
-                url: '@Url.Action("Show", "PemeriksaanPajak")',
+                url: '@Url.Action("Show", "PemeriksaanPajakVM")',
                 type: 'GET',
                 success: function (result) {
                     $('#Show').html(result);
@@ -98,7 +99,7 @@
         // Fungsi untuk memuat data detail pemeriksaan
         function loadDetail(keyword) {
             $.ajax({
-                url: '@Url.Action("Detail", "PemeriksaanPajak")',
+                url: '@Url.Action("Detail", "PemeriksaanPajakVM")',
                 type: 'GET',
                 data: { jenisPajak: keyword },
                 success: function (result) {

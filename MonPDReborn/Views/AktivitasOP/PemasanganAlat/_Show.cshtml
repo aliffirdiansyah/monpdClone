@@ -1,7 +1,8 @@
-﻿@model MonPDReborn.Models.PemasanganAlat.PemasanganAlat.Show
+﻿@using MonPDReborn.Models.Aktivitas
+@model PemasanganAlatVM.Show
 
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PemasanganAlat.PemasanganAlat.DataPemasanganAlat>()
+    @(Html.DevExtreme().DataGrid<PemasanganAlatVM.DataPemasanganAlat>()
         .ID("pemasanganAlatGrid")
         .DataSource(Model.DataPemasanganAlatList)
         .ShowBorders(true)

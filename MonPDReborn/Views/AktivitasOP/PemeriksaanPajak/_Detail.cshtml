@@ -1,7 +1,8 @@
-﻿@model MonPDReborn.Models.Pemeriksaan.PemeriksaanPajak.Detail
+﻿@using MonPDReborn.Models.Aktivitas
+@model PemeriksaanPajakVM.Detail
 
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Pemeriksaan.PemeriksaanPajak.DataDetailPemeriksaan>()
+    @(Html.DevExtreme().DataGrid<PemeriksaanPajakVM.DataDetailPemeriksaan>()
     .ID("detailGrid_" + Guid.NewGuid()) // Untuk menghindari duplikat ID
     .DataSource(Model.DataDetailList)
     .ShowBorders(true)

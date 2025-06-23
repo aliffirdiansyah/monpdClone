@@ -1,6 +1,6 @@
-﻿namespace MonPDReborn.Models.PendataanObjek
+﻿namespace MonPDReborn.Models.Aktivitas
 {
-    public class PendataanObjek
+    public class PendataanObjekPajakVM
     {
         public class Index
         {
