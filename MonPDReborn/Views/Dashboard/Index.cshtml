@@ -4,30 +4,8 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<style>
-    .dx-datagrid-headers .dx-header-row > td {
-        font-weight: bold;
-        color: black;
-    }
-</style>
-
-
 <div class="row">
-    <div class="col-lg-9">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title fs-16 mb-0">
-                    📊 STATISTIC
-                </h4>
-
-            </div><!-- end card header -->
-
-            <div class="card-body">
-                <div id="line_chart_datalabel" data-colors='["--vz-danger", "--vz-success"]' class="apex-charts" dir="ltr"></div>
-            </div><!-- end card-body -->
-        </div><!-- end card -->
-    </div>
-    <div class="col-lg-3">
+    <div class="col-lg-4">
         <div class="card card-animate">
             <div class="card-body">
                 <div class="d-flex">
@@ -41,6 +19,8 @@
                 </div>
             </div>
         </div><!--end card-->
+    </div><!--end card-->
+    <div class="col-lg-4">
         <div class="card card-animate">
             <div class="card-body">
                 <div class="d-flex">
@@ -54,6 +34,8 @@
                 </div>
             </div>
         </div><!--end card-->
+    </div><!--end card-->
+    <div class="col-lg-4">
         <div class="card card-animate bg-soft-success">
             <div class="card-body">
                 <div class="d-flex">
@@ -67,10 +49,25 @@
                 </div>
             </div>
         </div><!--end card-->
-    </div>
+    </div><!--end card-->
 </div>
 
-<hr />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title fs-16 mb-0">
+                    📊 STATISTIC
+                </h4>
+
+            </div><!-- end card header -->
+
+            <div class="card-body">
+                <div id="line_chart_datalabel" data-colors='["--vz-danger", "--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div>
+</div>
 
 <div class="row">
     <div class="col-lg-12">
@@ -96,7 +93,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiHotel)</span> / <span class="text-danger">@(Model.Data.TargetHotel )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiHotel.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetHotel.ToString("n0"))</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
@@ -128,7 +125,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiHiburan)</span> / <span class="text-danger">@(Model.Data.TargetHiburan )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiHiburan.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetHiburan.ToString("n0"))</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
@@ -160,7 +157,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiParkir)</span> / <span class="text-danger">@(Model.Data.TargetParkir )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiParkir.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetParkir.ToString("n0"))</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
@@ -192,7 +189,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiMamin)</span> / <span class="text-danger">@(Model.Data.TargetMamin )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiMamin.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetMamin.ToString("n0"))</span>
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
                                         Detail
@@ -224,7 +221,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiListrik)</span> / <span class="text-danger">@(Model.Data.TargetListrik )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiListrik.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetListrik.ToString("n0"))</span>
 
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
@@ -257,7 +254,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiAbt)</span> / <span class="text-danger">@(Model.Data.TargetAbt )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiAbt.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetAbt.ToString("n0"))</span>
 
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
@@ -290,7 +287,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiPbb)</span> / <span class="text-danger">@(Model.Data.TargetPbb )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiPbb.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetPbb.ToString("n0"))</span>
 
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
@@ -314,7 +311,7 @@
                                         REKLAME
                                     </p>
                                 </div>
-                                 <div class="flex-shrink-0">
+                                <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
                                         @(Model.Data.PersentaseReklame) %
                                     </h5>
@@ -323,7 +320,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiReklame)</span> / <span class="text-danger">@(Model.Data.TargetReklame )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiReklame.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetReklame.ToString("n0"))</span>
 
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
@@ -348,7 +345,7 @@
                                         BPHTB
                                     </p>
                                 </div>
-                                 <div class="flex-shrink-0">
+                                <div class="flex-shrink-0">
                                     <h5 class="text-success fs-14 mb-0">
                                         @(Model.Data.PersentaseBphtb) %
                                     </h5>
@@ -357,7 +354,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiBphtb)</span> / <span class="text-danger">@(Model.Data.TargetBphtb )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiBphtb.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetBphtb.ToString("n0"))</span>
 
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
@@ -391,7 +388,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiOpsenPkb)</span> / <span class="text-danger">@(Model.Data.TargetOpsenPkb )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiOpsenPkb.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetOpsenPkb.ToString("n0"))</span>
 
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
@@ -425,7 +422,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-16 fw-bold ff-secondary mb-4">
-                                        <span class="text-success">@(Model.Data.RealisasiOpsenBbnkb)</span> / <span class="text-danger">@(Model.Data.TargetOpsenBbnkb )</span>
+                                        <span class="text-success">@(Model.Data.RealisasiOpsenBbnkb.ToString("n0"))</span> / <span class="text-danger">@(Model.Data.TargetOpsenBbnkb.ToString("n0"))</span>
 
                                     </h4>
                                     <a href="" class="fs-12 text-decoration-underline">
@@ -444,6 +441,8 @@
         </div>
     </div>
 </div>
+
+<hr />
 
 <div class="row">
     <div class="col-lg-12">
@@ -485,7 +484,7 @@
                 </div>
                 <div class="flex-shrink-0 mb-0">
                     <button class="btn btn-sm btn-info">
-                    <i class="ri-file-list-3-line align-middle"></i>
+                        <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
@@ -534,7 +533,7 @@
                 </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
-                    <i class="ri-file-list-3-line align-middle"></i>
+                        <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
@@ -586,7 +585,7 @@
                 </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
-                    <i class="ri-file-list-3-line align-middle"></i>
+                        <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
@@ -614,7 +613,7 @@
                 </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
-                    <i class="ri-file-list-3-line align-middle"></i>
+                        <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
@@ -642,7 +641,7 @@
                 </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
-                    <i class="ri-file-list-3-line align-middle"></i>
+                        <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
@@ -670,7 +669,7 @@
                 </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
-                    <i class="ri-file-list-3-line align-middle"></i>
+                        <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
@@ -695,7 +694,7 @@
                 </div>
                 <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-info">
-                    <i class="ri-file-list-3-line align-middle"></i>
+                        <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
                 </div>
@@ -765,7 +764,7 @@
         var linechartDatalabelColors = getChartColorsArray("line_chart_datalabel");
         var options = {
             chart: {
-                height: 280,
+                height: 500,
                 type: 'line',
                 zoom: {
                     enabled: false

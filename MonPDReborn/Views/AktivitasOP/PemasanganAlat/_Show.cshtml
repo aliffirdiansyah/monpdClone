@@ -1,0 +1,48 @@
+﻿@using MonPDReborn.Models.Aktivitas
+@model PemasanganAlatVM.Show
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<PemasanganAlatVM.DataPemasanganAlat>()
+        .ID("pemasanganAlatGrid")
+        .DataSource(Model.DataPemasanganAlatList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.No).Caption("No").Width(50);
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+
+            columns.Add().Caption("2021").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Terpasang2021).Caption("Terpasang");
+                subColumns.AddFor(m => m.BelumTerpasang2021).Caption("Belum Terpasang");
+            });
+
+            columns.Add().Caption("2022").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Terpasang2022).Caption("Terpasang");
+                subColumns.AddFor(m => m.BelumTerpasang2022).Caption("Belum Terpasang");
+            });
+
+            columns.Add().Caption("2023").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Terpasang2023).Caption("Terpasang");
+                subColumns.AddFor(m => m.BelumTerpasang2023).Caption("Belum Terpasang");
+            });
+
+            columns.Add().Caption("2024").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Terpasang2024).Caption("Terpasang");
+                subColumns.AddFor(m => m.BelumTerpasang2024).Caption("Belum Terpasang");
+            });
+        })
+        )
+
+</div>
