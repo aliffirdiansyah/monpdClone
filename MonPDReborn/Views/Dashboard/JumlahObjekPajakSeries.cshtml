@@ -28,7 +28,7 @@
             .KeyExpr("ID")
             .Columns(columns =>
             {
-                columns.AddFor(x => x.JenisPajak).DataType(GridColumnDataType.Number).Caption("JENIS PAJAK");
+                columns.AddFor(x => x.JenisPajak).DataType(GridColumnDataType.Number).Caption("JENIS PAJAK").Fixed(true).FixedPosition(HorizontalEdge.Left);
                 columns.AddFor(x => x.Jumlah1).DataType(GridColumnDataType.Number).Caption(tahun1);
                 columns.AddFor(x => x.Jumlah2).DataType(GridColumnDataType.Number).Caption(tahun2);
                 columns.AddFor(x => x.Jumlah3).DataType(GridColumnDataType.Number).Caption(tahun3);

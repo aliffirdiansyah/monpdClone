@@ -18,7 +18,8 @@
             .KeyExpr("ID")
             .Columns(columns =>
             {
-                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK");
+                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Fixed(true)
+            .FixedPosition(HorizontalEdge.Left);
                 columns.AddFor(x => x.JmlOp).DataType(GridColumnDataType.Number).Caption("JML OP");
                 columns.AddFor(x => x.JmlTerpasangTS).DataType(GridColumnDataType.Number).Caption("JML OP TERPASANG TS");
                 columns.AddFor(x => x.JmlTerpasangTB).DataType(GridColumnDataType.Number).Caption("JML OP TERPASANG TB");

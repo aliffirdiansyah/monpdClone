@@ -21,8 +21,8 @@
         .Columns(columns =>
         {
             columns.AddFor(x => x.JenisPajak)
-            .DataType(GridColumnDataType.Number)
-            .Caption("JENIS PAJAK");
+            .Caption("JENIS PAJAK").Fixed(true)
+            .FixedPosition(HorizontalEdge.Left);
             columns.AddFor(x => x.JmlOpAwal)
             .DataType(GridColumnDataType.Number)
             .Caption("JML OP AWAL");
