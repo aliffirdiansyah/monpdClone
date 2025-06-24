@@ -109,7 +109,20 @@
                 </div>
             </div>
             <div class="card-body">
-                <div id=""></div>
+                <div id="Show"></div>
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailModalLabel">Detail Pelaporan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body" id="detailModalContent">
+                                <!-- Konten _Detail.cshtml akan dimuat di sini -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -117,29 +130,43 @@
 
 @section Scripts {
     <script>
-        function onTerapkanClick() {
-            const form = $("#filterForm").dxForm("instance");
-            const values = form.option("formData");
-
+        $(document).ready(function () {
+            
+            // Panggil action Show di controller PelaporanOP
             $.ajax({
-                url: '@Url.Action("Show", "PelaporanOPVM")', // ganti sesuai nama Controller
-                type: 'POST',
-                data: values,
-                success: function (response) {
-                    $("#Show").html(response);
-                    $("#Show").closest(".card").show(); // tampilkan card hasil pencarian
+                url: '@Url.Action("Show", "PelaporanOP")',
+                type: 'GET',
+                success: function (result) {
+                    $('#Show').html(result); // tampilkan hasil ke div id="Show"
                 },
-                error: function () {
-                    alert("Gagal memuat data hasil pelaporan.");
+                error: function (xhr, status, error) {
+                    console.error("Gagal memuat data _Show:", error);
+                    $('#Show').html('<div class="text-danger">Gagal memuat data.</div>');
                 }
             });
-        }
+        });
+        function onDetailClick(e) {
+            const nop = e.row.data.NOP;
 
-        function onResetClick() {
-            const form = $("#filterForm").dxForm("instance");
-            form.resetValues();
-            $("#Show").closest(".card").hide();
+            if (!nop) {
+                alert("NOP tidak ditemukan.");
+                return;
+            }
+
+            $.ajax({
+                url: '/PelaporanOP/Detail',
+                type: 'GET',
+                data: { nop: nop },
+                success: function (response) {
+                    $('#detailModalContent').html(response);
+                    $('#detailModal').modal('show');
+                },
+                error: function () {
+                    alert("Gagal memuat detail.");
+                }
+            });
+
+            e.event.preventDefault(); // mencegah reload halaman
         }
     </script>
 }
-
