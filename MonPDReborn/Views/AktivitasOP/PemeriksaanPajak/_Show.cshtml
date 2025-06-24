@@ -10,39 +10,51 @@
         .ShowColumnLines(true)
         .ColumnAutoWidth(true)
         .HeaderFilter(h => h.Visible(true))
+
+        .FilterRow(f => f
+        .Visible(true)       // Tampilkan filter row
+        .ApplyFilter(GridApplyFilterMode.Auto) // Filter otomatis saat ketik
+        )
         .Columns(columns =>
         {
-            columns.AddFor(m => m.JenisPajak).Caption("JENIS PAJAK");
+            columns.AddFor(m => m.JenisPajak)
+            .Caption("JENIS PAJAK")
+            .Fixed(true);
 
-            columns.Add().Caption("JUMLAH OP YANG DIPERIKSA").Columns(sub =>
+            columns.Add()
+            .Caption("JUMLAH OP YANG DIPERIKSA")
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub =>
             {
-                sub.Add().DataField("JumlahOP2023").Caption("2023");
-                sub.Add().DataField("JumlahOP2024").Caption("2024");
-                sub.Add().DataField("JumlahOP2025").Caption("2025");
+                sub.Add().DataField("JumlahOP2023").Caption("2023").Alignment(HorizontalAlignment.Center);
+                sub.Add().DataField("JumlahOP2024").Caption("2024").Alignment(HorizontalAlignment.Center);
+                sub.Add().DataField("JumlahOP2025").Caption("2025").Alignment(HorizontalAlignment.Center);
             });
 
-            columns.Add().Caption("JUMLAH KURANG BAYAR").Columns(sub =>
+            columns.Add()
+            .Caption("JUMLAH KURANG BAYAR")
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub =>
             {
-                sub.Add().Caption("2023").Columns(kb2023 =>
+                sub.Add().Caption("2023").Alignment(HorizontalAlignment.Center).Columns(kb2023 =>
             {
-                kb2023.Add().DataField("Pokok2023").Caption("POKOK").Format("#,##0");
-                kb2023.Add().DataField("Sanksi2023").Caption("SANKSI").Format("#,##0");
-                kb2023.Add().DataField("Total2023").Caption("TOTAL").Format("#,##0");
+                kb2023.Add().DataField("Pokok2023").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2023.Add().DataField("Sanksi2023").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2023.Add().DataField("Total2023").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0");
             });
-                sub.Add().Caption("2024").Columns(kb2024 =>
+                sub.Add().Caption("2024").Alignment(HorizontalAlignment.Center).Columns(kb2024 =>
             {
-                kb2024.Add().DataField("Pokok2024").Caption("POKOK").Format("#,##0");
-                kb2024.Add().DataField("Sanksi2024").Caption("SANKSI").Format("#,##0");
-                kb2024.Add().DataField("Total2024").Caption("TOTAL").Format("#,##0");
+                kb2024.Add().DataField("Pokok2024").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2024.Add().DataField("Sanksi2024").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2024.Add().DataField("Total2024").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0");
             });
-                sub.Add().Caption("2025").Columns(kb2025 =>
+                sub.Add().Caption("2025").Alignment(HorizontalAlignment.Center).Columns(kb2025 =>
             {
-                kb2025.Add().DataField("Pokok2025").Caption("POKOK").Format("#,##0");
-                kb2025.Add().DataField("Sanksi2025").Caption("SANKSI").Format("#,##0");
-                kb2025.Add().DataField("Total2025").Caption("TOTAL").Format("#,##0");
+                kb2025.Add().DataField("Pokok2025").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2025.Add().DataField("Sanksi2025").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2025.Add().DataField("Total2025").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0");
             });
             });
         })
         )
 </div>
-

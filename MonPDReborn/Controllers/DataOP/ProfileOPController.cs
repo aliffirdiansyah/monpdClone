@@ -21,6 +21,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
+                ViewData["Title"] = controllerName;
                 var model = new Models.DataOP.ProfileOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
@@ -29,6 +30,6 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        
+
     }
 }

@@ -7,22 +7,28 @@
     .DataSource(Model.DataDetailList)
     .ShowBorders(true)
     .ShowColumnLines(true)
+    .FilterRow(f => f
+        .Visible(true)       // Tampilkan filter row
+        .ApplyFilter(GridApplyFilterMode.Auto) // Filter otomatis saat ketik
+        )
+    .Paging(p => p.PageSize(2))
+    .Pager(p => p.Visible(true))
     .ColumnAutoWidth(true)
     .Columns(columns => {
-        columns.Add().DataField("JenisPajak").Caption("Jenis Pajak");
-        columns.Add().DataField("NOP");
-        columns.Add().DataField("WajibPajak").Caption("Wajib Pajak");
-        columns.Add().DataField("Alamat");
-        columns.Add().DataField("UPTB");
-        columns.Add().DataField("NoSP").Caption("No SP");
-        columns.Add().DataField("TglST").Caption("Tgl ST").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
-        columns.Add().DataField("Tahun");
-        columns.Add().DataField("JumlahKB").Caption("Jumlah KB").Format(Format.Currency);
-        columns.Add().DataField("Keterangan");
-        columns.Add().DataField("LHP");
-        columns.Add().DataField("TglLHP").Caption("Tgl LHP").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
-        columns.Add().DataField("TglBayar").Caption("Tgl Bayar").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
-        columns.Add().DataField("Tim");
+        columns.Add().DataField("JenisPajak").Caption("Jenis Pajak").Alignment(HorizontalAlignment.Center).Fixed(true);
+        columns.Add().DataField("NOP").Alignment(HorizontalAlignment.Center).Fixed(true);
+        columns.Add().DataField("WajibPajak").Caption("Wajib Pajak").Alignment(HorizontalAlignment.Center);
+        columns.Add().DataField("Alamat").Alignment(HorizontalAlignment.Center);
+        columns.Add().DataField("UPTB").Alignment(HorizontalAlignment.Center);
+        columns.Add().DataField("NoSP").Caption("No SP").Alignment(HorizontalAlignment.Center);
+        columns.Add().DataField("TglST").Caption("Tgl ST").Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
+        columns.Add().DataField("Tahun").Alignment(HorizontalAlignment.Center);
+        columns.Add().DataField("JumlahKB").Caption("Jumlah KB").Alignment(HorizontalAlignment.Center).Format(Format.Currency);
+        columns.Add().DataField("Keterangan").Alignment(HorizontalAlignment.Center);
+        columns.Add().DataField("LHP").Alignment(HorizontalAlignment.Center);
+        columns.Add().DataField("TglLHP").Caption("Tgl LHP").Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
+        columns.Add().DataField("TglBayar").Caption("Tgl Bayar").Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
+        columns.Add().DataField("Tim").Alignment(HorizontalAlignment.Center);
     })
 )
 </div>
