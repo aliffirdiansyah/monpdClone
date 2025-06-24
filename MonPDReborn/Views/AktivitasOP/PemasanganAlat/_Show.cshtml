@@ -43,6 +43,43 @@
                 subColumns.AddFor(m => m.BelumTerpasang2024).Caption("Belum Terpasang");
             });
         })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Terpasang2021)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total: {0}");
+
+                items.AddFor(m => m.BelumTerpasang2021)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Terpasang2022)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.BelumTerpasang2022)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Terpasang2023)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.BelumTerpasang2023)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Terpasang2024)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.BelumTerpasang2024)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+            });
+        })
         )
 
 </div>

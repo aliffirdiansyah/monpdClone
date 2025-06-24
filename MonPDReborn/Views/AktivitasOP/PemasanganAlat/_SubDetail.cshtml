@@ -1,0 +1,59 @@
+﻿@model List<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.SubDetailKategori>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">⚠️ Tidak ada data sub-detail ditemukan untuk jenis pajak: <strong>@ViewBag.JenisPajak</strong></div>
+}
+
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.SubDetailKategori>()
+    .ID("SubDetailGrid_" + Model.FirstOrDefault()?.JenisPajak?.Replace(" ", "_"))
+    .DataSource(Model)
+    .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Kategori).Caption("Kategori");
+        columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP");
+        columns.AddFor(m => m.TerpasangTS).Caption("TS");
+        columns.AddFor(m => m.TerpasangTB).Caption("TB");
+        columns.AddFor(m => m.TerpasangSB).Caption("SB");
+        columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b =>
+            {
+                b.Add()
+            .Text("Detail")
+            .Icon("search")
+            .OnClick("showSubDetailModal");
+            });
+    })
+    
+    .Summary(summary =>
+    {
+        summary.TotalItems(items =>
+        {
+            items.AddFor(m => m.JumlahOP)
+                 .SummaryType(SummaryType.Sum)
+                 .DisplayFormat("Total: {0}");
+
+            items.AddFor(m => m.TerpasangTS)
+                 .SummaryType(SummaryType.Sum)
+                 .DisplayFormat("{0}");
+
+            items.AddFor(m => m.TerpasangTB)
+                 .SummaryType(SummaryType.Sum)
+                 .DisplayFormat("{0}");
+
+            items.AddFor(m => m.TerpasangSB)
+                 .SummaryType(SummaryType.Sum)
+                 .DisplayFormat("{0}");
+        });
+    })
+)

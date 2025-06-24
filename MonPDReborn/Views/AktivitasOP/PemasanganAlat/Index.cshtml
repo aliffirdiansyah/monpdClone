@@ -42,6 +42,19 @@
             </div>
             <div class="card-body">
                 <div id="Detail"></div>
+                <div class="modal fade" id="subDetailModal" tabindex="-1" role="dialog" aria-labelledby="subDetailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="subDetailModalLabel">Detail OP per Kategori</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="subDetailModalContainer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -50,7 +63,7 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            loadShow();      // Panggil data rekap jumlah
+            loadShow("");      // Panggil data rekap jumlah
             loadDetail("");  // Panggil semua data detail saat pertama load
         });
 
@@ -80,6 +93,51 @@
                 }
             });
         }
+
+        function subDetailTemplate(container, options) {
+            var jenisPajak = options.data?.JenisPajak;
+            console.log("subDetailTemplate - JenisPajak:", jenisPajak);
+
+            var innerContainer = $("<div>").addClass("p-2").text("Memuat data...");
+            container.append(innerContainer);
+
+            if (!jenisPajak) {
+                innerContainer.html('<div class="text-danger">Jenis Pajak tidak ditemukan.</div>');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SubDetail", "PemasanganAlat")',
+                type: 'GET',
+                data: { jenisPajak: jenisPajak },
+                success: function (result) {
+                    innerContainer.html(result);
+                },
+                error: function () {
+                    innerContainer.html('<div class="text-danger">Gagal memuat data sub-detail.</div>');
+                }
+            });
+        }
+
+                function showSubDetailModal(e) {
+            const kategori = e.row.data.Kategori;
+
+            $.ajax({
+                url: '/PemasanganAlat/SubDetailModal',
+                type: 'GET',
+                data: { kategori: kategori },
+                success: function (result) {
+                    $("#subDetailModalContainer").html(result);
+
+                    const $modal = $("#subDetailModal");
+                    $modal.modal("show");
+                },
+                error: function () {
+                    alert("Gagal memuat data detail.");
+                }
+            });
+        }
+
     </script>
 }
 
