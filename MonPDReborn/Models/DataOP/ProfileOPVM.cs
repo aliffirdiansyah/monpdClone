@@ -8,6 +8,9 @@
             public DataPerizinan Perizinan { get; set; }
             public Pendapatan Pendapatan { get; set; }
             public SaranaPendukung FasilitasPendukung { get; set; }
+            public DetailBanquet BanquetDetail {  get; set; }
+            public List<DetailFasilitas> FasilitasDetail { get; set; }
+            public List<DetailKamar> KamarDetail { get; set; }
             public Index()
             {
                 IdentitasPajak = new IdentitasObjekPajak
@@ -43,6 +46,35 @@
                     MetodePenjualan = "Offline",
                     MetodePembayaran = "Hibrid"
                 };
+
+                BanquetDetail = new DetailBanquet
+                {
+                    Nama = "Ruang Serbaguna A",
+                    Jumlah = 3,
+                    JenisBanquet = 1, // Misal: 1 = Kecil, 2 = Sedang, 3 = Besar
+                    Kapasitas = 100,
+                    HargaSewa = 2500000,
+                    HargaPaket = 3500000,
+                    Okupansi = 85
+                };
+
+                FasilitasDetail = new List<DetailFasilitas>
+                {
+                    new DetailFasilitas { Nama = "Ruang Rapat", Jumlah = 3, Kapasitas = 50 },
+                    new DetailFasilitas { Nama = "Ballroom", Jumlah = 1, Kapasitas = 500 },
+                    new DetailFasilitas { Nama = "Kolam Renang", Jumlah = 1, Kapasitas = 100 },
+                    new DetailFasilitas { Nama = "Restoran", Jumlah = 2, Kapasitas = 120 },
+                    new DetailFasilitas { Nama = "Gym", Jumlah = 1, Kapasitas = 40 }
+                };
+
+                KamarDetail = new List<DetailKamar>
+                {
+                    new DetailKamar { Kamar = "Standard", Jumlah = 20, Tarif = 350000 },
+                    new DetailKamar { Kamar = "Deluxe", Jumlah = 15, Tarif = 500000 },
+                    new DetailKamar { Kamar = "Executive", Jumlah = 10, Tarif = 750000 },
+                    new DetailKamar { Kamar = "Suite", Jumlah = 5, Tarif = 1200000 }
+                };
+
             }
         }
         public class Show
@@ -92,6 +124,31 @@
             public int JumlahKaryawan { get; set; }
             public string MetodePembayaran { get; set; }
             public string MetodePenjualan { get; set; }
+        }
+
+        public class DetailBanquet
+        {
+            public string Nama { get; set; }
+            public int Jumlah { get; set; }
+            public int JenisBanquet { get; set; }
+            public int Kapasitas { get; set; }
+            public int HargaSewa { get; set; }
+            public int HargaPaket { get; set; }
+            public int Okupansi { get; set; }
+        }
+
+        public class DetailFasilitas
+        {
+            public string Nama { get; set; }
+            public int Jumlah { get; set; }
+            public int Kapasitas { get; set; }
+        }
+
+        public class DetailKamar
+        {
+            public string Kamar { get; set; }
+            public int Jumlah { get; set; }
+            public int Tarif { get; set; }
         }
     }
 }

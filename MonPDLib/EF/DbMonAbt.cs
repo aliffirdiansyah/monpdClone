@@ -93,7 +93,7 @@ public partial class DbMonAbt
     public string Akun { get; set; } = null!;
 
     [Column("NAMA_AKUN")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaAkun { get; set; } = null!;
 
@@ -103,7 +103,7 @@ public partial class DbMonAbt
     public string Jenis { get; set; } = null!;
 
     [Column("NAMA_JENIS")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaJenis { get; set; } = null!;
 
@@ -113,7 +113,7 @@ public partial class DbMonAbt
     public string Objek { get; set; } = null!;
 
     [Column("NAMA_OBJEK")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaObjek { get; set; } = null!;
 
@@ -123,7 +123,7 @@ public partial class DbMonAbt
     public string Rincian { get; set; } = null!;
 
     [Column("NAMA_RINCIAN")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaRincian { get; set; } = null!;
 
@@ -133,7 +133,7 @@ public partial class DbMonAbt
     public string SubRincian { get; set; } = null!;
 
     [Column("NAMA_SUB_RINCIAN")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaSubRincian { get; set; } = null!;
 
@@ -305,4 +305,34 @@ public partial class DbMonAbt
     [StringLength(100)]
     [Unicode(false)]
     public string UpdBy { get; set; } = null!;
+
+    [Column("KELOMPOK")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? Kelompok { get; set; }
+
+    [Column("KELOMPOK_NAMA")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string? KelompokNama { get; set; }
+
+    [Column("KELOMPOK_KETETAPAN")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? KelompokKetetapan { get; set; }
+
+    [Column("KELOMPOK_BAYAR")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? KelompokBayar { get; set; }
+
+    [Column("KELOMPOK_SANKSI_BAYAR")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? KelompokSanksiBayar { get; set; }
+
+    [Column("KELOMPOK_KENAIKAN_BAYAR")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? KelompokKenaikanBayar { get; set; }
 }
