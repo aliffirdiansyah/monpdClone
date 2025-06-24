@@ -22,8 +22,9 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                var model = new PendataanObjekPajakVM.Index();
-                return PartialView($"{URLView}Index", model);
+                ViewData["Title"] = controllerName;
+                var model = new Models.AktivitasOP.PendataanObjekPajakVM.Index();
+                return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception ex)
             {

@@ -21,6 +21,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
+                ViewData["Title"] = controllerName;
                 var model = new Models.AktivitasOP.PemeriksaanPajakVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }

@@ -21,8 +21,9 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
         {
             try
             {
+                ViewData["Title"] = controllerName;
                 var model = new Models.MonitoringGlobal.MonitoringTahunanVM.Index();
-                return PartialView($"{URLView}{actionName}", model);
+                return View($"{URLView}{actionName}", model);
             }
             catch (Exception)
             {
