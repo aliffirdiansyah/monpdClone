@@ -158,8 +158,9 @@
                 type: 'GET',
                 data: { nop: nop },
                 success: function (response) {
-                    $('#detailModalContent').html(response);
-                    $('#detailModal').modal('show');
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail PELAPORAN");
+                    $("#staticBackdropLargeScrollable .modal-body").html(response);
+                    $("#staticBackdropLargeScrollable").modal('show');
                 },
                 error: function () {
                     alert("Gagal memuat detail.");
