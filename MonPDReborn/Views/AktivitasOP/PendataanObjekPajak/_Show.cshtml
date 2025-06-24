@@ -8,6 +8,7 @@
         .ShowBorders(true)
         .ShowRowLines(true)
         .ColumnAutoWidth(true)
+        .ShowColumnLines(true)
 
         // ✅ ENABLE FILTERING PER KOLOM
         .FilterRow(f => f
@@ -18,19 +19,25 @@
         .Columns(columns => {
             columns.AddFor(m => m.Tahun)
                    .Caption("Tahun Pelaksanaan")
-                   .Alignment(HorizontalAlignment.Center);
+                   .Alignment(HorizontalAlignment.Center)
+                   .Fixed(true);
             columns.AddFor(m => m.JenisPajak)
-                   .Caption("Jenis Pajak");
+                   .Caption("Jenis Pajak")
+                   .Alignment(HorizontalAlignment.Center);
             columns.AddFor(m => m.JumlahOp)
-                   .Caption("Jumlah OP");
+                   .Caption("Jumlah OP")
+                   .Alignment(HorizontalAlignment.Center);
             columns.AddFor(m => m.Potensi)
                    .Caption("Perhitungan Pengedookan")
+                   .Alignment(HorizontalAlignment.Center)
                    .Format("currency");
             columns.AddFor(m => m.TotalRealisasi)
                    .Caption("Total Realisasi")
+                   .Alignment(HorizontalAlignment.Center)
                    .Format("currency");
             columns.AddFor(m => m.Selisih)
                    .Caption("Selisih")
+                   .Alignment(HorizontalAlignment.Center)
                    .Format("currency");
 
             // 🔽 Kolom untuk tombol Detail
