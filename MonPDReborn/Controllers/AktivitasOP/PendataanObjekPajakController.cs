@@ -11,7 +11,8 @@ namespace MonPDReborn.Controllers.Aktivitas
 
         private string URLView => $"../AktivitasOP/{nameof(PendataanObjekPajakController).Replace("Controller", "")}/";
 
-        private string ActionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
+        private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
+        private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         public PendataanObjekPajakController(ILogger<PendataanObjekPajakController> logger)
         {
