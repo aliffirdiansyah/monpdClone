@@ -65,6 +65,11 @@
                         <i class="ti ti-photo-plus fs-5 me-2"></i> Gallery
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-detail-tab" data-bs-toggle="pill" data-bs-target="#pills-detail" type="button" role="tab" aria-controls="pills-detail" aria-selected="false">
+                        <i class="ti ti-photo-plus fs-5 me-2"></i> Detail
+                    </button>
+                </li>
             </ul>
         </div>
     </div>
@@ -210,6 +215,114 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card overflow-hidden hover-img">
                     <img src="~/assets/images/comingsoon.png" class="card-img-top object-fit-cover" alt="...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Tab -->
+    <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="pills-detail-tab">
+        <div class="card mb-4">
+            <div class="card bg-info-subtle border-0 mb-0">
+                <div class="card-body px-4 py-3">
+                    <h4 class="fw-semibold mb-0">Detail</h4>
+                </div>
+            </div>
+            <div class="card-body px-0 py-3">
+                <div class="row">
+                    <!-- Detail Banquet -->
+                    <div class="col-lg-12 mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Detail Banquet</h5>
+                            <table class="table table-bordered">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Jumlah</th>
+                                        <th>Jenis</th>
+                                        <th>Kapasitas</th>
+                                        <th>Harga Sewa</th>
+                                        <th>Harga Paket</th>
+                                        <th>Okupansi (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Model.BanquetDetail.Nama</td>
+                                        <td class="text-center">@Model.BanquetDetail.Jumlah</td>
+                                        <td class="text-center">
+                                            @{
+                                                var jenis = Model.BanquetDetail.JenisBanquet switch
+                                                {
+                                                    1 => "Kecil",
+                                                    2 => "Sedang",
+                                                    3 => "Besar",
+                                                    _ => "Lainnya"
+                                                };
+                                            }
+                                            @jenis
+                                        </td>
+                                        <td class="text-center">@Model.BanquetDetail.Kapasitas</td>
+                                        <td class="text-end">@Model.BanquetDetail.HargaSewa.ToString("C0")</td>
+                                        <td class="text-end">@Model.BanquetDetail.HargaPaket.ToString("C0")</td>
+                                        <td class="text-center">@Model.BanquetDetail.Okupansi</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Detail Fasilitas -->
+                    <div class="col-lg-12 mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Detail Fasilitas</h5>
+                            <table class="table table-bordered">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <td>Nama</td>
+                                        <td>Jumlah</td>
+                                        <td>Kapasitas</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var fasilitas in Model.FasilitasDetail)
+                                    {
+                                        <tr>
+                                            <td>@fasilitas.Nama</td>
+                                            <td class="text-center">@fasilitas.Jumlah</td>
+                                            <td class="text-center">@fasilitas.Kapasitas</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Detail Kamar -->
+                    <div class="col-lg-12 mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Detail Kamar</h5>
+                            <table class="table table-bordered">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th>Tipe Kamar</th>
+                                        <th>Jumlah</th>
+                                        <th>Tarif per Malam</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var kamar in Model.KamarDetail)
+                                    {
+                                        <tr>
+                                            <td>@kamar.Kamar</td>
+                                            <td class="text-center">@kamar.Jumlah</td>
+                                            <td class="text-end">@kamar.Tarif.ToString("C0")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

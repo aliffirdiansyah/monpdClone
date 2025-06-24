@@ -1,5 +1,6 @@
 ﻿@using MonPDReborn.Models.AktivitasOP
 @model PendataanObjekPajakVM.Index
+
 @{
     ViewData["Title"] = "Pendataan Objek";
     Layout = "_Layout";
@@ -17,6 +18,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex">
@@ -31,6 +33,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex">
@@ -50,11 +53,10 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            loadShow();       // Tampilkan data rekap saat pertama kali halaman dibuka
-            loadDetail("");   // Tampilkan semua data detail saat awal
+            loadShow(); // Load data rekap
         });
 
-        // Fungsi untuk memuat partial _Show.cshtml
+        // Muat partial _Show.cshtml
         function loadShow() {
             $.ajax({
                 url: '@Url.Action("Show", "PendataanObjekPajak")',
@@ -68,12 +70,17 @@
             });
         }
 
-        // Fungsi untuk memuat partial _Detail.cshtml
-        function loadDetail(keyword) {
+        // Muat partial _Detail.cshtml berdasarkan jenis pajak dan tahun
+        function loadDetail(jenisPajak, tahun) {
+            $('#Detail').html('<div class="text-center p-3">Memuat data detail...</div>');
+
             $.ajax({
                 url: '@Url.Action("Detail", "PendataanObjekPajak")',
                 type: 'GET',
-                data: { jenisPajak: keyword },
+                data: {
+                    jenisPajak: jenisPajak,
+                    tahun: tahun
+                },
                 success: function (result) {
                     $('#Detail').html(result);
                 },
@@ -83,11 +90,9 @@
             });
         }
 
-        // ✅ Jika kamu ingin menambahkan dropdown untuk filter jenis pajak:
-        // contoh pemanggilan:
-        // <select id="filterJenisPajak" onchange="onJenisPajakChanged(this.value)">
-        function onJenisPajakChanged(jenis) {
-            loadDetail(jenis);
+        // Contoh: bisa digunakan jika ingin memfilter via dropdown
+        function onJenisPajakChanged(jenis, tahun) {
+            loadDetail(jenis, tahun);
         }
     </script>
 }
