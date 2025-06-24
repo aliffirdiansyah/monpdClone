@@ -6,6 +6,9 @@
     .ID("gridLaporanHarian")
     .DataSource(Model.TahunanPajakList)
     .ShowBorders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ShowColumnHeaders(true)
     .ColumnAutoWidth(true)
     .Paging(p => p.PageSize(20))
     .Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 50 }).ShowInfo(true))
@@ -14,10 +17,10 @@
     {
         columns.AddFor(c => c.JenisPajak).Caption("JENIS PAJAK");
 
-        columns.AddFor(c => c.AkpTahun).Caption("AKP 1 TAHUN");
-        columns.AddFor(c => c.RealisasiHariAccrual).Caption("AKP 1 TAHUN");
-        columns.AddFor(c => c.RealisasiSDHariAccrual).Caption("AKP 1 TAHUN");
-        columns.AddFor(c => c.PersenAccrual).Caption("AKP 1 TAHUN");
+        columns.AddFor(c => c.AkpTahun).Caption("AKP 1 TAHUN").Format("#,###");
+        columns.AddFor(c => c.RealisasiHariAccrual).Caption("REALISASI HARI").Format("#,###");
+        columns.AddFor(c => c.RealisasiSDHariAccrual).Caption("REALISASI SAMPAI DENGAN").Format("#,###");
+        columns.AddFor(c => c.PersenAccrual).Caption("PERSENTASE").Format(Format.Percent);
 
     })
     )
