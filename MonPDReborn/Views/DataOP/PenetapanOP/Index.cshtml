@@ -1,13 +1,13 @@
 ﻿@using DevExtreme.AspNet.Mvc
 @using DevExtreme.AspNet.Mvc.Builders
-@using Microsoft.AspNetCore.Html
 
 @{
     ViewBag.Title = "Dashboard Penetapan Pajak";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // opsional jika kamu pakai layout
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid p-3">
+
     <!-- Filter -->
     <div class="card p-3 mb-4 shadow-sm">
         <h5><i class="dx-icon-filter"></i> Filter Data</h5>
@@ -82,12 +82,12 @@
         @(Html.DevExtreme().Chart()
             .ID("chartPenetapan")
             .DataSource(new[] {
-                new { Bulan = "Jan", PBB = 800, Reklame = 600, AirTanah = 400 },
-                new { Bulan = "Feb", PBB = 700, Reklame = 500, AirTanah = 300 },
-                new { Bulan = "Mar", PBB = 900, Reklame = 550, AirTanah = 350 },
-                new { Bulan = "Apr", PBB = 1000, Reklame = 700, AirTanah = 500 },
-                new { Bulan = "Mei", PBB = 950, Reklame = 600, AirTanah = 450 },
-                new { Bulan = "Jun", PBB = 1050, Reklame = 650, AirTanah = 500 }
+                new { Bulan = "Jan", PBB = 0.8, Reklame = 0.6, AirTanah = 0.4 },
+                new { Bulan = "Feb", PBB = 0.7, Reklame = 0.5, AirTanah = 0.3 },
+                new { Bulan = "Mar", PBB = 0.9, Reklame = 0.55, AirTanah = 0.35 },
+                new { Bulan = "Apr", PBB = 1.0, Reklame = 0.7, AirTanah = 0.5 },
+                new { Bulan = "Mei", PBB = 0.95, Reklame = 0.6, AirTanah = 0.45 },
+                new { Bulan = "Jun", PBB = 1.05, Reklame = 0.65, AirTanah = 0.5 }
             })
             .CommonSeriesSettings(s => s
                 .ArgumentField("Bulan")
@@ -99,6 +99,9 @@
                 s.Add().ValueField("AirTanah").Name("Air Tanah");
             })
             .ArgumentAxis(a => a.Label(l => l.RotationAngle(45)))
+            .ValueAxis(v => {
+                v.Add().Label(l => l.Format("percent"));
+            })
             .Legend(l => l
                 .VerticalAlignment(VerticalEdge.Top)
                 .HorizontalAlignment(HorizontalAlignment.Right)
@@ -126,13 +129,15 @@
                 columns.Add().DataField("Alamat").Caption("Alamat Objek Pajak");
                 columns.Add().DataField("Nilai").Caption("Nilai Penetapan (Rp)").Format(Format.Currency);
                 columns.Add().DataField("Masa").Caption("Masa Pajak");
+
+                // BADGE TEMPLATE - Status
                 columns.Add().DataField("Status").Caption("Status").CellTemplate(@<text>
-                    @{
-                        var status = (string)ViewContext.ViewData["Status"];
-                        var badgeClass = status == "Lunas" ? "badge bg-success" : "badge bg-danger";
-                    }
-                    <span class="@badgeClass">@status</span>
+                    <span class='<%=
+                        data.Status === "Lunas" ? "badge bg-success" : "badge bg-danger"
+                    %>'><%= data.Status %></span>
                 </text>);
+
+                // Aksi
                 columns.Add().Caption("Aksi").CellTemplate(@<text>
                     <button class="btn btn-sm btn-outline-info"><i class="dx-icon-eye"></i></button>
                 </text>);
