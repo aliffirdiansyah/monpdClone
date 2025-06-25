@@ -30,7 +30,7 @@
                         AkpTahun = 10000000,
                         RealisasiHariAccrual = 1000000,
                         RealisasiSDHariAccrual = 5000000,
-                        PersenAccrual = 0.205
+                        PersenAccrual = 20.32
                     },
                     new MonitoringTahunanViewModels.TahunanPajak
                     {
@@ -38,7 +38,7 @@
                         AkpTahun = 13000000,
                         RealisasiHariAccrual = 2000000,
                         RealisasiSDHariAccrual = 8000000,
-                        PersenAccrual = 0.26
+                        PersenAccrual = 26.55
                     }
                 };
             }
