@@ -7,15 +7,21 @@
         .DataSource(Model.DetailPemasanganAlatList)
         .KeyExpr("JenisPajak")
         .ShowBorders(true)
-        .ColumnAutoWidth(true)
-        .ShowRowLines(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
         .Columns(columns =>
         {
-            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
-            columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP");
-            columns.AddFor(m => m.TerpasangTS).Caption("TS");
-            columns.AddFor(m => m.TerpasangTB).Caption("TB");
-            columns.AddFor(m => m.TerpasangSB).Caption("SB");
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB").Alignment(HorizontalAlignment.Center);
         })
         
         
@@ -23,9 +29,13 @@
             {
                 summary.TotalItems(items =>
                 {
+                    items.AddFor(m => m.JenisPajak)
+                         .SummaryType(SummaryType.Sum)
+                         .DisplayFormat("Total");
+
                     items.AddFor(m => m.JumlahOP)
                          .SummaryType(SummaryType.Sum)
-                         .DisplayFormat("Total: {0}");
+                         .DisplayFormat("{0}");
 
                     items.AddFor(m => m.TerpasangTS)
                          .SummaryType(SummaryType.Sum)

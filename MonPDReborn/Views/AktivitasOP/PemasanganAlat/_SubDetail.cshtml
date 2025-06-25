@@ -21,9 +21,9 @@
     {
         columns.AddFor(m => m.Kategori).Caption("Kategori");
         columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP");
-        columns.AddFor(m => m.TerpasangTS).Caption("TS");
-        columns.AddFor(m => m.TerpasangTB).Caption("TB");
-        columns.AddFor(m => m.TerpasangSB).Caption("SB");
+        columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS");
+        columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB");
+        columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB");
         columns.Add()
             .Type(GridCommandColumnType.Buttons)
             .Buttons(b =>
@@ -39,9 +39,13 @@
     {
         summary.TotalItems(items =>
         {
+            items.AddFor(m => m.Kategori)
+                 .SummaryType(SummaryType.Sum)
+                 .DisplayFormat("Total");
+
             items.AddFor(m => m.JumlahOP)
                  .SummaryType(SummaryType.Sum)
-                 .DisplayFormat("Total: {0}");
+                 .DisplayFormat("{0}");
 
             items.AddFor(m => m.TerpasangTS)
                  .SummaryType(SummaryType.Sum)

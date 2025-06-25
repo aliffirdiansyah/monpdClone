@@ -16,68 +16,72 @@
         )
         .Columns(columns =>
         {
-            columns.AddFor(m => m.No).Caption("No").Width(50);
-            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+            columns.AddFor(m => m.No).Caption("No").Width(50).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Alignment(HorizontalAlignment.Center);
 
             columns.Add().Caption("2021").Columns(subColumns =>
             {
                 subColumns.AddFor(m => m.Terpasang2021).Caption("Terpasang");
                 subColumns.AddFor(m => m.BelumTerpasang2021).Caption("Belum Terpasang");
-            });
+            }).Alignment(HorizontalAlignment.Center);
 
             columns.Add().Caption("2022").Columns(subColumns =>
             {
                 subColumns.AddFor(m => m.Terpasang2022).Caption("Terpasang");
                 subColumns.AddFor(m => m.BelumTerpasang2022).Caption("Belum Terpasang");
-            });
+            }).Alignment(HorizontalAlignment.Center);
 
             columns.Add().Caption("2023").Columns(subColumns =>
             {
                 subColumns.AddFor(m => m.Terpasang2023).Caption("Terpasang");
                 subColumns.AddFor(m => m.BelumTerpasang2023).Caption("Belum Terpasang");
-            });
+            }).Alignment(HorizontalAlignment.Center);
 
             columns.Add().Caption("2024").Columns(subColumns =>
             {
                 subColumns.AddFor(m => m.Terpasang2024).Caption("Terpasang");
                 subColumns.AddFor(m => m.BelumTerpasang2024).Caption("Belum Terpasang");
-            });
+            }).Alignment(HorizontalAlignment.Center);
         })
         .Summary(summary =>
         {
             summary.TotalItems(items =>
             {
+                items.AddFor(m => m.JenisPajak)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total");
+               
                 items.AddFor(m => m.Terpasang2021)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("Total: {0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
 
                 items.AddFor(m => m.BelumTerpasang2021)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("{0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Terpasang2022)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("{0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
 
                 items.AddFor(m => m.BelumTerpasang2022)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("{0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Terpasang2023)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("{0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
 
                 items.AddFor(m => m.BelumTerpasang2023)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("{0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Terpasang2024)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("{0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
 
                 items.AddFor(m => m.BelumTerpasang2024)
-            .SummaryType(SummaryType.Sum)
-            .DisplayFormat("{0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}");
             });
         })
         )
