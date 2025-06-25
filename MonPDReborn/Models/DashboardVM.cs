@@ -286,8 +286,8 @@
                     TotalRealisasi = 850000000,
                     TotalPersentase = 85,
 
-                    TargetHotel = 99999999999999,
-                    RealisasiHotel = 99999999999999,
+                    TargetHotel = 9999999999999,
+                    RealisasiHotel = 9999999999999,
                     PersentaseHotel = 90,
 
                     TargetHiburan = 150000000,
