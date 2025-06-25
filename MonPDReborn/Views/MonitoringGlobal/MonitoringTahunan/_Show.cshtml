@@ -20,7 +20,7 @@
         columns.AddFor(c => c.AkpTahun).Caption("AKP 1 TAHUN").Format("#,###");
         columns.AddFor(c => c.RealisasiHariAccrual).Caption("REALISASI HARI").Format("#,###");
         columns.AddFor(c => c.RealisasiSDHariAccrual).Caption("REALISASI SAMPAI DENGAN").Format("#,###");
-        columns.AddFor(c => c.PersenAccrual).Caption("PERSENTASE").Format(Format.Percent);
+        columns.AddFor(c => c.PersenAccrual).Caption("PERSENTASE").Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"));
 
     })
     )
