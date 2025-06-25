@@ -1,32 +1,60 @@
-﻿@model PemasanganAlatVM.Detail
+﻿@model MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.Detail
 
-@using DevExtreme.AspNet.Mvc
-@using MonPDReborn.Models.AktivitasOP
-@using Newtonsoft.Json
 
 <div class="table-responsive">
-    @{
-        Html.DevExtreme().DataGrid()
-        .ID("DetailGrid")
-        .DataSource(new JS("masterData"))
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.DetailPemasanganAlat>()
+        .ID("detailGrid")
+        .DataSource(Model.DetailPemasanganAlatList)
         .KeyExpr("JenisPajak")
         .ShowBorders(true)
-        .ShowRowLines(true)
-        .ColumnAutoWidth(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
         .Columns(columns =>
         {
-            columns.Add().DataField("JenisPajak").Caption("Jenis Pajak");
-            columns.Add().DataField("JumlahOP");
-            columns.Add().DataField("TerpasangTS");
-            columns.Add().DataField("TerpasangTB");
-            columns.Add().DataField("TerpasangSB");
-            columns.Add().DataField("TotalTerpasang");
-            columns.Add().DataField("BelumTerpasang");
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB").Alignment(HorizontalAlignment.Center);
         })
+        
+        
+        .Summary(summary =>
+            {
+                summary.TotalItems(items =>
+                {
+                    items.AddFor(m => m.JenisPajak)
+                         .SummaryType(SummaryType.Sum)
+                         .DisplayFormat("Total");
+
+                    items.AddFor(m => m.JumlahOP)
+                         .SummaryType(SummaryType.Sum)
+                         .DisplayFormat("{0}");
+
+                    items.AddFor(m => m.TerpasangTS)
+                         .SummaryType(SummaryType.Sum)
+                         .DisplayFormat("{0}");
+
+                    items.AddFor(m => m.TerpasangTB)
+                         .SummaryType(SummaryType.Sum)
+                         .DisplayFormat("{0}");
+
+                    items.AddFor(m => m.TerpasangSB)
+                         .SummaryType(SummaryType.Sum)
+                         .DisplayFormat("{0}");
+                });
+            })
         .MasterDetail(md => md
         .Enabled(true)
-        .Template(new JS("detailTemplate"))
+        .Template(new JS("subDetailTemplate"))
         )
-        .Render();
-    }
+    )
 </div>
+
+

@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MonPDReborn.Controllers.DataOP
+namespace MonPDReborn.Controllers.MonitoringGlobal
 {
-    public class ProfileSpasialOPController : Controller
+    public class MonitoringTahunanController : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<ProfileSpasialOPController> _logger;
+        private readonly ILogger<MonitoringTahunanController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
-        public ProfileSpasialOPController(ILogger<ProfileSpasialOPController> logger)
+        public MonitoringTahunanController(ILogger<MonitoringTahunanController> logger)
         {
-            URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../MonitoringGlobal/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
@@ -22,7 +22,7 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.DataOP.ProfileSpasialOPVM.Index();
+                var model = new Models.MonitoringGlobal.MonitoringTahunanVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
             catch (Exception)
@@ -30,24 +30,11 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Show(string keyword)
+        public IActionResult Show(DateTime tglCutOff)
         {
             try
             {
-                var model = new Models.DataOP.ProfileSpasialOPVM.Show(keyword);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-        public IActionResult Detail(string nop)
-        {
-            try
-            {
-                var model = new Models.DataOP.ProfileSpasialOPVM.Detail(nop);
+                var model = new Models.MonitoringGlobal.MonitoringTahunanVM.Show(tglCutOff);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)

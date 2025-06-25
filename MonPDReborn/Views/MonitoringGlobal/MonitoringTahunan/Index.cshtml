@@ -1,0 +1,78 @@
+﻿@model MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.Index
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="card-title mb-0">LAPORAN TAHUNAN PAJAK DAERAH KOTA SURABAYA</h4>
+    </div>
+    <div class="card-body">
+        <div class="row g-3 align-items-center mb-3">
+            <div class="col-md-2">
+                <label class="form-label">Tanggal CutOff</label>
+            </div>
+            <div class="col-md-3">
+                @(Html.DevExtreme().DateBoxFor(x => x.TanggalCutOff)
+                    .Value(DateTime.Today)
+                    .DisplayFormat("dd/MM/yyyy")
+                    .Type(DateBoxType.Date)
+                    )
+            </div>
+            <div class="col-md-2">
+                <button type="button" onclick="fnShow()" class="btn btn-primary w-100">
+                    <i class="ri-search-line me-1"></i> Cari
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center">
+    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div id="card-Show" class="card" style="display:none">
+    <div class="card-header d-flex">
+        <div class="flex-grow-1">
+            <h4 class="card-title"></h4>
+        </div>
+        <div class="flex-shrink-0"></div>
+    </div>
+    <div class="card-body">
+        <div id="Show"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function fnShow() {
+            var tglCutOff = $("#TanggalCutOff").val();
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: tglCutOff ,
+                beforeSend: function () {
+                    $("#card-Show").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    if(response.Status === undefined){
+                        $("#card-Show").show();
+                        $("#Show").html(response);
+                    } else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+    </script>
+}

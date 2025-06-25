@@ -1,0 +1,40 @@
+﻿@using static MonPDReborn.Models.MonitoringGlobal.MonitoringBulananVM.MonitoringBulananViewModels
+@model MonPDReborn.Models.MonitoringGlobal.MonitoringBulananVM.Show
+
+
+@(Html.DevExtreme().DataGrid<BulananPajak>()
+    .ID("gridAkumulasiAkp")
+    .DataSource(Model.BulananPajakList)
+    .ShowBorders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .RowAlternationEnabled(true)
+    .ColumnAutoWidth(true)
+    .Paging(p => p.Enabled(false))
+    .HeaderFilter(h => h.Visible(false))
+    .SearchPanel(sp => sp.Visible(false))
+    .Columns(columns =>
+    {
+        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+
+        columns.AddFor(c => c.AkpTarget).Caption("Target")
+            .Format(Format.FixedPoint)
+            .Alignment(HorizontalAlignment.Right)
+            .CssClass("fs-2");
+
+        columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+            .Format(Format.FixedPoint)
+            .Alignment(HorizontalAlignment.Right)
+            .CssClass("fs-2");
+
+        columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+            .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+            .Alignment(HorizontalAlignment.Right)
+            .CssClass("fs-2");
+
+        columns.AddFor(c => c.Selisih).Caption("Selisih")
+            .Format(Format.FixedPoint)
+            .Alignment(HorizontalAlignment.Right)
+            .CssClass("fs-2");
+    })
+)

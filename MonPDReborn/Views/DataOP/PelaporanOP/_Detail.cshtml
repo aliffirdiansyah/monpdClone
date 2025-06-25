@@ -1,0 +1,37 @@
+﻿@model MonPDReborn.Models.DataOP.PelaporanOPVM.Detail
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PelaporanOPVM.StatusPelaporanBulanan>()
+            .ID("DetailGrid")
+            .DataSource(Model.DaftarRealisasi)
+            .KeyExpr("Id")
+            .ShowBorders(true)
+            .ShowRowLines(true)
+            .ColumnAutoWidth(true)
+            .Columns(columns => {
+                columns.AddFor(m => m.Bulan).Caption("Bulan");
+
+                columns.AddFor(m => m.Status)
+                    .Caption("Status Lapor");
+                //  .CellTemplate("statusCellTemplate"); // gunakan JS function di bawah
+
+                columns.AddFor(m => m.Nilai)
+                    .Caption("Nilai")
+                    .Format(Format.Currency)
+                    .Format(f => f.Currency("IDR"));
+
+                columns.AddFor(m => m.TanggalLapor)
+                    .Caption("Tanggal Lapor");
+            })
+            .Summary(s => {
+                    s.TotalItems(items => {
+                        items.AddFor(m => m.Nilai)
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("Total: {0}")
+                    .ValueFormat(v => v.Type(Format.Currency).Currency("IDR"));
+                });
+            })
+  )
+</div>
+

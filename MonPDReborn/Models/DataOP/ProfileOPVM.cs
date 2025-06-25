@@ -6,8 +6,11 @@
         {
             public IdentitasObjekPajak IdentitasPajak { get; set; }
             public DataPerizinan Perizinan { get; set; }
-            public Pendapatan Pendapatan { get; set; }
-            public SaranaPendukung FasilitasPendukung { get; set; }
+            public DetailHotel.Pendapatan Pendapatan { get; set; }
+            public DetailHotel.SaranaPendukung FasilitasPendukung { get; set; }
+            public DetailHotel.DetailBanquet BanquetDetail { get; set; }
+            public List<DetailHotel.DetailFasilitas> FasilitasDetail { get; set; }
+            public List<DetailHotel.DetailKamar> KamarDetail { get; set; }
             public Index()
             {
                 IdentitasPajak = new IdentitasObjekPajak
@@ -29,7 +32,7 @@
                     NomorIzinOperasional = "503/HO/093/2016"
                 };
 
-                Pendapatan = new Pendapatan
+                Pendapatan = new DetailHotel.Pendapatan
                 {
                     Okupansi = "85% per bulan",
                     RataTarifKamar = 750000m,
@@ -37,12 +40,41 @@
                     JumlahTransaksi = "+3.500 transaksi"
                 };
 
-                FasilitasPendukung = new SaranaPendukung
+                FasilitasPendukung = new DetailHotel.SaranaPendukung
                 {
                     JumlahKaryawan = 58,
                     MetodePenjualan = "Offline",
                     MetodePembayaran = "Hibrid"
                 };
+
+                BanquetDetail = new DetailHotel.DetailBanquet
+                {
+                    Nama = "Ruang Serbaguna A",
+                    Jumlah = 3,
+                    JenisBanquet = 1, // Misal: 1 = Kecil, 2 = Sedang, 3 = Besar
+                    Kapasitas = 100,
+                    HargaSewa = 2500000,
+                    HargaPaket = 3500000,
+                    Okupansi = 85
+                };
+
+                FasilitasDetail = new List<DetailHotel.DetailFasilitas>
+                {
+                    new DetailHotel.DetailFasilitas { Nama = "Ruang Rapat", Jumlah = 3, Kapasitas = 50 },
+                    new DetailHotel.DetailFasilitas { Nama = "Ballroom", Jumlah = 1, Kapasitas = 500 },
+                    new DetailHotel.DetailFasilitas { Nama = "Kolam Renang", Jumlah = 1, Kapasitas = 100 },
+                    new DetailHotel.DetailFasilitas { Nama = "Restoran", Jumlah = 2, Kapasitas = 120 },
+                    new DetailHotel.DetailFasilitas { Nama = "Gym", Jumlah = 1, Kapasitas = 40 }
+                };
+
+                KamarDetail = new List<DetailHotel.DetailKamar>
+                {
+                    new DetailHotel.DetailKamar { Kamar = "Standard", Jumlah = 20, Tarif = 350000 },
+                    new DetailHotel.DetailKamar { Kamar = "Deluxe", Jumlah = 15, Tarif = 500000 },
+                    new DetailHotel.DetailKamar { Kamar = "Executive", Jumlah = 10, Tarif = 750000 },
+                    new DetailHotel.DetailKamar { Kamar = "Suite", Jumlah = 5, Tarif = 1200000 }
+                };
+
             }
         }
         public class Show
@@ -76,22 +108,49 @@
             public string NomorSITU_NIB { get; set; } // Nomor SITU/NIB
             public string NomorIzinOperasional { get; set; } // Nomor Izin Operasional
         }
-
-        // Class untuk bagian "Pendapatan"
-        public class Pendapatan
+        public class DetailHotel
         {
-            public string Okupansi { get; set; } // Okupansi (misal: "85% per bulan")
-            public decimal RataTarifKamar { get; set; } // Rata Tarif Kamar
-            public decimal PendapatanKotor { get; set; } // Pendapatan Kotor
-            public string JumlahTransaksi { get; set; } // Jumlah Transaksi (misal: "+3.500 transaksi")
-        }
+            // Class untuk bagian "Pendapatan"
+            public class Pendapatan
+            {
+                public string Okupansi { get; set; } // Okupansi (misal: "85% per bulan")
+                public decimal RataTarifKamar { get; set; } // Rata Tarif Kamar
+                public decimal PendapatanKotor { get; set; } // Pendapatan Kotor
+                public string JumlahTransaksi { get; set; } // Jumlah Transaksi (misal: "+3.500 transaksi")
+            }
 
-        // Class untuk bagian "Sarana Pendukung"
-        public class SaranaPendukung
-        {
-            public int JumlahKaryawan { get; set; }
-            public string MetodePembayaran { get; set; }
-            public string MetodePenjualan { get; set; }
+            // Class untuk bagian "Sarana Pendukung"
+            public class SaranaPendukung
+            {
+                public int JumlahKaryawan { get; set; }
+                public string MetodePembayaran { get; set; }
+                public string MetodePenjualan { get; set; }
+            }
+
+            public class DetailBanquet
+            {
+                public string Nama { get; set; }
+                public int Jumlah { get; set; }
+                public int JenisBanquet { get; set; }
+                public int Kapasitas { get; set; }
+                public int HargaSewa { get; set; }
+                public int HargaPaket { get; set; }
+                public int Okupansi { get; set; }
+            }
+
+            public class DetailFasilitas
+            {
+                public string Nama { get; set; }
+                public int Jumlah { get; set; }
+                public int Kapasitas { get; set; }
+            }
+
+            public class DetailKamar
+            {
+                public string Kamar { get; set; }
+                public int Jumlah { get; set; }
+                public int Tarif { get; set; }
+            }
         }
     }
 }

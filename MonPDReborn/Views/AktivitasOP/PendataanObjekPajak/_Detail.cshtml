@@ -7,15 +7,20 @@
     .DataSource(Model.DataDetailList)
     .ShowBorders(true)
     .ShowRowLines(true)
+    .ShowColumnLines(true)
+    .FilterRow(f => f
+        .Visible(true)       // Tampilkan filter row
+        .ApplyFilter(GridApplyFilterMode.Auto) // Filter otomatis saat ketik
+        )
     .ColumnAutoWidth(true)
     .Columns(columns => {
-        columns.AddFor(m => m.NOP).Caption("NOP");
-        columns.AddFor(m => m.ObjekPajak).Caption("Objek Pajak");
-        columns.AddFor(m => m.Alamat).Caption("Alamat");
-        columns.AddFor(m => m.Omzet).Caption("Omzet").Format("currency");
-        columns.AddFor(m => m.PajakBulanan).Caption("Pajak Bulanan").Format("currency");
-        columns.AddFor(m => m.AvgRealisasi).Caption("Rata-Rata Realisasi").Format("currency");
-        columns.AddFor(m => m.Selisih).Caption("Selisih").Format("currency");
+        columns.AddFor(m => m.NOP).Caption("NOP").Alignment(HorizontalAlignment.Center).Fixed(true);
+        columns.AddFor(m => m.ObjekPajak).Caption("Objek Pajak").Alignment(HorizontalAlignment.Center);
+        columns.AddFor(m => m.Alamat).Caption("Alamat").Alignment(HorizontalAlignment.Center);
+        columns.AddFor(m => m.Omzet).Caption("Omzet").Format("currency").Alignment(HorizontalAlignment.Center);
+        columns.AddFor(m => m.PajakBulanan).Caption("Pajak Bulanan").Format("currency").Alignment(HorizontalAlignment.Center);
+        columns.AddFor(m => m.AvgRealisasi).Caption("Rata-Rata Realisasi").Format("currency").Alignment(HorizontalAlignment.Center);
+        columns.AddFor(m => m.Selisih).Caption("Selisih").Format("currency").Alignment(HorizontalAlignment.Center);
     })
 )
 </div>

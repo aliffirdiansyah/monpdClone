@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Models.AktivitasOP;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
@@ -21,6 +22,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
+                ViewData["Title"] = controllerName;
                 var model = new Models.AktivitasOP.PemasanganAlatVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
@@ -42,11 +44,11 @@ namespace MonPDReborn.Controllers.Aktivitas
                 throw;
             }
         }
-        public IActionResult Detail(string nop)
+        public IActionResult Detail(string JenisPajak)
         {
             try
             {
-                var model = new Models.AktivitasOP.PemasanganAlatVM.Detail(nop);
+                var model = new Models.AktivitasOP.PemasanganAlatVM.Detail(JenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -55,5 +57,36 @@ namespace MonPDReborn.Controllers.Aktivitas
                 throw;
             }
         }
+
+        public IActionResult SubDetail(string jenisPajak)
+        {
+            ViewBag.JenisPajak = jenisPajak;
+
+            var subData = PemasanganAlatVM.Method.GetSubDetailData()
+                .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return PartialView("../AktivitasOP/PemasanganAlat/_SubDetail", subData);
+        }
+
+        public IActionResult SubDetailModal(string kategori)
+        {
+            try
+            {
+                var data = PemasanganAlatVM.Method.GetSubDetailModalData()
+                    .Where(x => x.Kategori.Equals(kategori, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailModal", data);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "ERROR: " + ex.Message);
+            }
+        }
+
+
+
+
     }
 }

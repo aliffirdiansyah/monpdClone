@@ -21,6 +21,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
+                ViewData["Title"] = controllerName;
                 var model = new Models.DataOP.ProfilePotensiOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
