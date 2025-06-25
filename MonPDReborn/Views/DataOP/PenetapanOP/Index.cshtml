@@ -1,5 +1,142 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using DevExtreme.AspNet.Mvc
+@using DevExtreme.AspNet.Mvc.Builders
+@using Microsoft.AspNetCore.Html
+
 @{
+    ViewBag.Title = "Dashboard Penetapan Pajak";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // opsional jika kamu pakai layout
 }
+
+<div class="container-fluid p-3">
+    <!-- Filter -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <h5><i class="dx-icon-filter"></i> Filter Data</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <select class="form-control">
+                    <option selected>Pajak Bumi dan Bangunan (PBB)</option>
+                    <option>Reklame</option>
+                    <option>Air Tanah</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" class="form-control" value="2025" placeholder="Tahun" />
+            </div>
+            <div class="col-md-3">
+                <select class="form-control">
+                    <option selected>Juni</option>
+                    <option>Januari</option>
+                    <option>Februari</option>
+                    <option>Maret</option>
+                    <option>April</option>
+                    <option>Mei</option>
+                    <option>Juli</option>
+                    <option>Agustus</option>
+                    <option>September</option>
+                    <option>Oktober</option>
+                    <option>November</option>
+                    <option>Desember</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100"><i class="dx-icon-search"></i> Terapkan Filter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow-sm p-3">
+                <h6>Total Penetapan</h6>
+                <h4>Rp 12.458.750.000</h4>
+                <small>+8.2% dari bulan lalu</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow-sm p-3">
+                <h6>Jumlah SKPD/SPPT</h6>
+                <h4>3.245</h4>
+                <small>+12.5% dari bulan lalu</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white shadow-sm p-3" style="background-color:#9b59b6">
+                <h6>Jumlah Objek Pajak</h6>
+                <h4>2.876</h4>
+                <small>-5.3% dari bulan lalu</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white shadow-sm p-3">
+                <h6>Belum Dibayar</h6>
+                <h4>Rp 4.235.680.000</h4>
+                <small>34% dari total penetapan</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <h5><i class="dx-icon-chart-bar"></i> Tren Penetapan Pajak</h5>
+        @(Html.DevExtreme().Chart()
+            .ID("chartPenetapan")
+            .DataSource(new[] {
+                new { Bulan = "Jan", PBB = 800, Reklame = 600, AirTanah = 400 },
+                new { Bulan = "Feb", PBB = 700, Reklame = 500, AirTanah = 300 },
+                new { Bulan = "Mar", PBB = 900, Reklame = 550, AirTanah = 350 },
+                new { Bulan = "Apr", PBB = 1000, Reklame = 700, AirTanah = 500 },
+                new { Bulan = "Mei", PBB = 950, Reklame = 600, AirTanah = 450 },
+                new { Bulan = "Jun", PBB = 1050, Reklame = 650, AirTanah = 500 }
+            })
+            .CommonSeriesSettings(s => s
+                .ArgumentField("Bulan")
+                .Type(SeriesType.Bar)
+            )
+            .Series(s => {
+                s.Add().ValueField("Reklame").Name("Reklame");
+                s.Add().ValueField("PBB").Name("PBB");
+                s.Add().ValueField("AirTanah").Name("Air Tanah");
+            })
+            .ArgumentAxis(a => a.Label(l => l.RotationAngle(45)))
+            .Legend(l => l
+                .VerticalAlignment(VerticalEdge.Top)
+                .HorizontalAlignment(HorizontalAlignment.Right)
+            )
+            .Export(e => e.Enabled(true))
+        )
+    </div>
+
+    <!-- DataGrid -->
+    <div class="card p-3 shadow-sm">
+        <h5><i class="dx-icon-list"></i> Rincian Penetapan Pajak</h5>
+        @(Html.DevExtreme().DataGrid()
+            .ID("gridPenetapan")
+            .DataSource(new[] {
+                new { Nomor = 1, NomorPenetapan = "SPPT-2025-00002", Nama = "Budi Santoso", Alamat = "Jl. Pahlawan No. 45", Nilai = 1875000, Masa = "2025", Status = "Belum Lunas" },
+                new { Nomor = 2, NomorPenetapan = "SKPD-REK-2025-00125", Nama = "PT Maju Jaya", Alamat = "Jl. Sudirman No. 78", Nilai = 8750000, Masa = "01/01/2025 - 31/12/2025", Status = "Lunas" }
+            })
+            .ShowBorders(true)
+            .ColumnAutoWidth(true)
+            .SearchPanel(sp => sp.Visible(true).Placeholder("Cari data..."))
+            .Columns(columns => {
+                columns.Add().DataField("Nomor").Caption("No");
+                columns.Add().DataField("NomorPenetapan").Caption("Nomor Penetapan");
+                columns.Add().DataField("Nama").Caption("Nama Wajib Pajak");
+                columns.Add().DataField("Alamat").Caption("Alamat Objek Pajak");
+                columns.Add().DataField("Nilai").Caption("Nilai Penetapan (Rp)").Format(Format.Currency);
+                columns.Add().DataField("Masa").Caption("Masa Pajak");
+                columns.Add().DataField("Status").Caption("Status").CellTemplate(@<text>
+                    @{
+                        var status = (string)ViewContext.ViewData["Status"];
+                        var badgeClass = status == "Lunas" ? "badge bg-success" : "badge bg-danger";
+                    }
+                    <span class="@badgeClass">@status</span>
+                </text>);
+                columns.Add().Caption("Aksi").CellTemplate(@<text>
+                    <button class="btn btn-sm btn-outline-info"><i class="dx-icon-eye"></i></button>
+                </text>);
+            })
+        )
+    </div>
+</div>
