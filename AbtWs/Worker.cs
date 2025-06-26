@@ -22,29 +22,19 @@ namespace AbtWs
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
+                //var now = DateTime.Now;
 
-                // Hitung waktu untuk 00:00 esok hari
-                var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                var delay = nextRunTime - now;
+                //// Hitung waktu untuk 00:00 esok hari
+                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
+                //var delay = nextRunTime - now;
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                _logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
+                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
 
-                // Tunggu hingga waktu eksekusi
-                await Task.Delay(delay, stoppingToken);
+                //// Tunggu hingga waktu eksekusi
+                //await Task.Delay(delay, stoppingToken);
 
-                // Eksekusi tugas
-                try
-                {
-                    await DoWorkFullScanAsync(stoppingToken);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error occurred while executing task.");
-                }
-
-                // GUNAKAN KETIKA EKSEKUSI TUGAS MANUAL
+                //// Eksekusi tugas
                 //try
                 //{
                 //    await DoWorkFullScanAsync(stoppingToken);
@@ -54,7 +44,15 @@ namespace AbtWs
                 //    _logger.LogError(ex, "Error occurred while executing task.");
                 //}
 
-
+                //// GUNAKAN KETIKA EKSEKUSI TUGAS MANUAL
+                try
+                {
+                    await DoWorkFullScanAsync(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while executing task.");
+                }
             }
         }
 
@@ -132,10 +130,6 @@ namespace AbtWs
                     var result = await _contSbyTax.Set<DbOpAbt>().FromSqlRaw(sql).ToListAsync(); //822
                     for (var i = tahunAmbil; i <= tglServer.Year; i++)
                     {
-                        if(i == 2024)
-                        {
-                            var a = 1;
-                        }
                         var source = await _contMonPd.DbOpAbts.Where(x => x.TahunBuku == i).ToListAsync();
                         foreach (var item in result)
                         {
@@ -244,6 +238,7 @@ namespace AbtWs
                                     }
                                     _contMonPd.DbOpAbts.Add(newRow);
                                 }
+                                Console.WriteLine($"DB_OP: {i} - {item.Nop}");
                                 _contMonPd.SaveChanges();
                             }
                         }
@@ -253,7 +248,6 @@ namespace AbtWs
 
 
             // do fill ketetapan
-
             var _contSbyTaxOld = DBClass.GetSurabayaTaxContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
@@ -262,9 +256,6 @@ namespace AbtWs
                 {
                     foreach (var op in opList)
                     {
-                        //if (op.TglMulaiBukaOp <= new DateTime(thn, bln, DateTime.DaysInMonth(thn, bln)))
-                        //{                            
-                        //}
                         bool isOPTutup = false;
                         DateTime tglPenetapan = new DateTime(thn, bln, 1);
                         if (op.TglOpTutup.HasValue)
@@ -355,6 +346,8 @@ namespace AbtWs
                                 UpdDate = DateTime.Now,
                                 UpdBy = "JOB"
                             });
+
+                            Console.WriteLine($"DB_MON_ABT {thn}-{bln}-{item.NOP}-{item.SEQ}");
                             _contMonPd.SaveChanges();
                         }
                     }
@@ -410,8 +403,6 @@ namespace AbtWs
 		                                    A.TAHUN = :TAHUN AND 
 		                                    A.MASA = :MASA AND 
 		                                    A.SEQ_KETETAPAN = :SEQ";
-
-                        Console.WriteLine($"{thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
 
                         var pembayaranSspdList = await _contBima.Set<SSPD>()
                             .FromSqlRaw(sql, new[] {
@@ -479,6 +470,7 @@ namespace AbtWs
                                 string RINCIAN_POKOK_BAYAR = rincianBayar;
                                 string SUB_RINCIAN_POKOK_BAYAR = subrincianBayar;
 
+                                op.TglBayarPokok = TGL_BAYAR_POKOK;
                                 op.NominalPokokBayar = NOMINAL_POKOK_BAYAR;
                                 op.AkunPokokBayar = AKUN_POKOK_BAYAR;
                                 op.JenisPokokBayar = JENIS_POKOK_BAYAR;
@@ -487,10 +479,10 @@ namespace AbtWs
                                 op.SubRincianPokokBayar = SUB_RINCIAN_POKOK_BAYAR;
                             }
 
-                            if(nominalSanksiBayar > 0 || nominalPokokBayar > 0 || nominalLainnya > 0 || nominalAdministrasi > 0)
+                            if(nominalSanksiBayar > 0 || nominalLainnya > 0 || nominalAdministrasi > 0)
                             {
                                 DateTime TGL_BAYAR_SANKSI = tanggalBayarTerakhir;
-                                decimal NOMINAL_SANKSI_BAYAR = (nominalSanksiBayar + nominalPokokBayar + nominalLainnya + nominalAdministrasi);
+                                decimal NOMINAL_SANKSI_BAYAR = (nominalSanksiBayar + nominalLainnya + nominalAdministrasi);
                                 string AKUN_SANKSI_BAYAR = akunSanksi;
                                 string KELOMPOK_SANKSI_BAYAR = kelompokSanksi;
                                 string JENIS_SANKSI_BAYAR = jenisSanksi;
@@ -498,6 +490,7 @@ namespace AbtWs
                                 string RINCIAN_SANKSI_BAYAR = rincianSanksi;
                                 string SUB_RINCIAN_SANKSI_BAYAR = subrincianSanksi;
 
+                                op.TglBayarSanksi = TGL_BAYAR_SANKSI;
                                 op.NominalSanksiBayar = NOMINAL_SANKSI_BAYAR;
                                 op.AkunSanksiBayar = AKUN_SANKSI_BAYAR;
                                 op.KelompokSanksiBayar = KELOMPOK_SANKSI_BAYAR;
@@ -506,7 +499,7 @@ namespace AbtWs
                                 op.RincianSanksiBayar = RINCIAN_SANKSI_BAYAR;
                                 op.SubRincianSanksiBayar = SUB_RINCIAN_SANKSI_BAYAR;
                             }
-
+                            Console.WriteLine($"DB_MON_ABT (SSPD): {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
                             _contMonPd.SaveChanges();
                         }
                     }

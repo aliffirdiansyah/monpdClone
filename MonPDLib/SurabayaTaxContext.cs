@@ -20,8 +20,9 @@ namespace MonPDLib
         {
         }
 
-        public DbSet<DbOpAbt> OpAbt { get; set; }
-        public DbSet<OPSkpdAbt> OPSkpdAbt { get; set; }
+        public DbSet<DbOpAbt> DbOpAbts { get; set; }
+        public DbSet<DbOpHotel> DbOpHotels { get; set; }
+        public DbSet<OPSkpdAbt> OPSkpdAbts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

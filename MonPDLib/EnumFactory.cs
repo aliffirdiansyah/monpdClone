@@ -15,7 +15,12 @@ namespace MonPDLib
             [Description("DBOPABT")]
             DBOPABT = 1,
             [Description("DBMONABT")]
-            DBMONABT = 2
+            DBMONABT = 2,
+
+            [Description("DBOPHOTEL")]
+            DBOPHOTEL = 3,
+            [Description("DBMONHOTEL")]
+            DBMONHOTEL = 4
         }    
         
     }

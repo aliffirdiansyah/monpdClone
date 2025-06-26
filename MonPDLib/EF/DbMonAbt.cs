@@ -204,27 +204,27 @@ public partial class DbMonAbt
     public decimal? NominalPokokBayar { get; set; }
 
     [Column("AKUN_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunPokokBayar { get; set; }
 
     [Column("JENIS_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisPokokBayar { get; set; }
 
     [Column("OBJEK_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekPokokBayar { get; set; }
 
     [Column("RINCIAN_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianPokokBayar { get; set; }
 
     [Column("SUB_RINCIAN_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianPokokBayar { get; set; }
 
@@ -235,27 +235,27 @@ public partial class DbMonAbt
     public decimal? NominalSanksiBayar { get; set; }
 
     [Column("AKUN_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunSanksiBayar { get; set; }
 
     [Column("JENIS_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisSanksiBayar { get; set; }
 
     [Column("OBJEK_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekSanksiBayar { get; set; }
 
     [Column("RINCIAN_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianSanksiBayar { get; set; }
 
     [Column("SUB_RINCIAN_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianSanksiBayar { get; set; }
 
@@ -266,27 +266,27 @@ public partial class DbMonAbt
     public decimal? NominalSanksiKenaikanBayar { get; set; }
 
     [Column("AKUN_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunKenaikanBayar { get; set; }
 
     [Column("JENIS_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisKenaikanBayar { get; set; }
 
     [Column("OBJEK_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekKenaikanBayar { get; set; }
 
     [Column("RINCIAN_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianKenaikanBayar { get; set; }
 
     [Column("SUB_RINCIAN_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianKenaikanBayar { get; set; }
 
