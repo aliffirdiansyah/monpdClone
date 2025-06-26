@@ -11,9 +11,29 @@
             <div class="card-header d-flex">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-0">
-                        Profil Potensi
+                        Dashboard Potensi Pajak
                     </h4>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <h4 class="fs-16 fw-semibold">Total Potensi Tahun 2025</h4>
+                <p class="fs-14">Potensi : @ViewBag.Potensi</p>
+                <p class="fs-14">Realisasi : @ViewBag.RealisasiTotal</p>
+                <p class="fs-14">Capaian : @ViewBag.Capaian</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card card-animate">
+            <div class="card-body">
+                <h4 class="fs-16 fw-semibold">Total Potensi Tahun 2025</h4>
+                <p class="fs-14">Total : @ViewBag.TotalOP</p>
+                <p class="fs-14">Realisasi : @ViewBag.RealisasiOP</p>
+                <p class="fs-14">Terealisasi : @ViewBag.CapaianOP</p>
             </div>
         </div>
     </div>
@@ -27,43 +47,7 @@
                 </div>
             </div>
             <div class="card-body">
-                @{
-                    Html.DevExtreme().DataGrid()
-                    .ID("gridPotensi")
-                    .DataSource(new JS("masterData"))
-                    .KeyExpr("JenisPajak")
-                    .ShowBorders(true)
-                    .ShowRowLines(true)
-                    .ColumnAutoWidth(true)
-                    .Columns(columns =>
-                    {
-                    columns.Add().DataField("JenisPajak").Caption("JENIS PAJAK").Fixed(true).FixedPosition(HorizontalEdge.Left).Width(200).Alignment(HorizontalAlignment.Center);
-
-                        columns.Add().Caption("2024").Alignment(HorizontalAlignment.Center).Columns(col =>
-                                    {
-                        col.Add().DataField("Target2024").Caption("TARGET").Format("#,##0").Alignment(HorizontalAlignment.Center);
-                        col.Add().DataField("Realisasi2024").Caption("REALISASI").Format("#,##0").Alignment(HorizontalAlignment.Center);
-                        col.Add().DataField("Selisih2024").Caption("SELISIH").Format("#,##0").Alignment(HorizontalAlignment.Center);
-                        col.Add().DataField("Capaian2024").Caption("CAPAIAN").Format("percent").Alignment(HorizontalAlignment.Center);
-                    });
-
-                        columns.Add().Caption("2025").Alignment(HorizontalAlignment.Center).Columns(col =>
-                                    {
-                        col.Add().DataField("Target2025").Caption("TARGET").Format("#,##0").Alignment(HorizontalAlignment.Center);
-                        col.Add().DataField("Realisasi2025").Caption("REALISASI").Format("#,##0").Alignment(HorizontalAlignment.Center);
-                        col.Add().DataField("Selisih2025").Caption("SELISIH").Format("#,##0").Alignment(HorizontalAlignment.Center);
-                        col.Add().DataField("Capaian2025").Caption("CAPAIAN").Format("percent").Alignment(HorizontalAlignment.Center);
-                    });
-
-                        columns.Add().DataField("TotalPotensi").Caption("TOTAL POTENSI").Format("#,##0").Alignment(HorizontalAlignment.Center);
-                    })
-                    .MasterDetail(md => md
-                    .Enabled(true)
-                    .Template(new JS("detailPotensiTemplate"))
-                    )
-                    .Paging(p => p.PageSize(10))
-                    .Render();
-                }
+                <div id="Show"></div>
             </div>
         </div>
     </div>
@@ -71,85 +55,27 @@
 
 @section Scripts {
     <script>
-        const masterData = [
-            {
-                JenisPajak: "HOTEL",
-                Kategori: [
-                   
-                ]
-            },
-            {
-                JenisPajak: "RESTORAN",
-                Kategori: [
-                    
-                ]
-            },
-            {
-                JenisPajak: "HIBURAN",
-                Kategori:[
-
-                ]
-            },
-            {
-                JenisPajak: "REKLAME",
-                Kategori:[
-
-                ]
-            },
-            {
-                JenisPajak: "PPJ",
-                Kategori: [
-
-                ]
-            },
-            {
-                JenisPajak: "PARKIR",
-                Kategori: [
-
-                ]
-            },
-            {
-                JenisPajak: "AIR TANAH",
-                Kategori: [
-
-                ]
-            }
-        ];
-
-        function detailPotensiTemplate(detail) {
-            const kategori = detail.data.Kategori || [];
-
-                return $("<div>").dxDataGrid({
-            dataSource: detail.data.Kategori,
-            showBorders: true,
-            columnAutoWidth: true,
-            columns: [
-                { dataField: "Kategori", caption: "KATEGORI PAJAK", fixed: true },
-
-                {
-                    caption: "2024",
-                    alignment: "center",
-                    columns: [
-                        { dataField: "Target2024", caption: "TARGET", format: "#,##0", alignment: "right" },
-                        { dataField: "Realisasi2024", caption: "REALISASI", format: "#,##0", alignment: "right" },
-                        { dataField: "Selisih2024", caption: "SELISIH", format: "#,##0", alignment: "right" },
-                        { dataField: "Capaian2024", caption: "CAPAIAN", format: "percent", alignment: "right" }
-                    ]
-                },
-                {
-                    caption: "2025",
-                    alignment: "center",
-                    columns: [
-                        { dataField: "Target2025", caption: "TARGET", format: "#,##0", alignment: "right" },
-                        { dataField: "Realisasi2025", caption: "REALISASI", format: "#,##0", alignment: "right" },
-                        { dataField: "Selisih2025", caption: "SELISIH", format: "#,##0", alignment: "right" },
-                        { dataField: "Capaian2025", caption: "CAPAIAN", format: "percent", alignment: "right" }
-                    ]
-                },
-
-                { dataField: "TotalPotensi", caption: "TOTAL POTENSI", format: "#,##0", alignment: "right" }
-            ]
+        $(document).ready(function () {
+            loadShow("");      // Panggil data rekap jumlah
+           // loadDetail("");  // Panggil semua data detail saat pertama load
         });
+
+        function loadShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "ProfilePotensiOP")',
+                type: 'GET',
+                success: function (result) {
+                    $('#Show').html(result);
+                },
+                error: function () {
+                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data Show.</div>');
+                }
+            });
+        }
+
+        function onDetailClick() {
+            var url = '@Url.Action("DetailHotel", "ProfilePotensiOP")';
+            window.open(url, '_blank'); // membuka di tab baru
         }
     </script>
 }
