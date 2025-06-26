@@ -40,4 +40,7 @@
   <ItemGroup>
     <Folder Include="Views\DataWP\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MonPDLib\MonPDLib.csproj" />
+  </ItemGroup>
 </Project>

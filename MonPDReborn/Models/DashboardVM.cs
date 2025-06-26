@@ -1,4 +1,6 @@
-﻿namespace MonPDReborn.Models
+﻿using MonPDLib;
+
+namespace MonPDReborn.Models
 {
     public class DashboardVM
     {
@@ -280,89 +282,196 @@
         {
             public static ViewModel.Dashboard GetDashboardData()
             {
+                var context = DBClass.GetContext();
+
+                // Target
+                var dataTargetMamin = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataTargetHotel = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataTargetHiburan = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataTargetParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataTargetListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataTargetReklame = 0;
+                var dataTargetPbb = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataTargetBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == DateTime.Now.Year).Sum(x => x.Pokok) ?? 0;
+                var dataTargetAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataTargetOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == DateTime.Now.Year).Sum(x => x.JmlPokok);
+                var dataTargetOpsenBbnkb = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == DateTime.Now.Year).Sum(x => x.JmlPokok);
+
+                // Realisasi
+                var dataRealisasiMamin = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiHotel = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiHiburan = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiReklame = 0m;
+                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == DateTime.Now.Year).Sum(x => x.Pokok) ?? 0;
+                var dataRealisasiAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == DateTime.Now.Year).Sum(x => x.JmlPokok);
+                var dataRealisasiOpsenBbnkb = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == DateTime.Now.Year).Sum(x => x.JmlPokok);
+
+                // Total keseluruhan
+                decimal TotalTarget = dataTargetMamin + dataTargetHotel + dataTargetHiburan + dataTargetParkir + dataTargetListrik + dataTargetReklame
+                                    + dataTargetPbb + dataTargetBphtb + dataTargetAbt + dataTargetOpsenPkb + dataTargetOpsenBbnkb;
+
+                decimal TotalRealisasi = dataRealisasiMamin + dataRealisasiHotel + dataRealisasiHiburan + dataRealisasiParkir + dataRealisasiListrik + dataRealisasiReklame
+                                       + dataRealisasiPbb + dataRealisasiBphtb + dataRealisasiAbt + dataRealisasiOpsenPkb + dataRealisasiOpsenBbnkb;
+
+                decimal TotalPersentase = TotalTarget != 0 ? (TotalRealisasi / TotalTarget) * 100 : 0;
+
+                // Hasil akhir ViewModel
                 var result = new ViewModel.Dashboard
                 {
-                    TotalTarget = 1000000000,
-                    TotalRealisasi = 850000000,
-                    TotalPersentase = 85,
+                    TotalTarget = TotalTarget,
+                    TotalRealisasi = TotalRealisasi,
+                    TotalPersentase = Math.Round(TotalPersentase, 2),
 
-                    TargetHotel = 200000000,
-                    RealisasiHotel = 180000000,
-                    PersentaseHotel = 90,
+                    TargetHotel = dataTargetHotel,
+                    RealisasiHotel = dataRealisasiHotel,
+                    PersentaseHotel = dataTargetHotel != 0 ? Math.Round((dataRealisasiHotel / dataTargetHotel) * 100, 2) : 0,
 
-                    TargetHiburan = 150000000,
-                    RealisasiHiburan = 120000000,
-                    PersentaseHiburan = 80,
+                    TargetHiburan = dataTargetHiburan,
+                    RealisasiHiburan = dataRealisasiHiburan,
+                    PersentaseHiburan = dataTargetHiburan != 0 ? Math.Round((dataRealisasiHiburan / dataTargetHiburan) * 100, 2) : 0,
 
-                    TargetParkir = 50000000,
-                    RealisasiParkir = 40000000,
-                    PersentaseParkir = 80,
+                    TargetParkir = dataTargetParkir,
+                    RealisasiParkir = dataRealisasiParkir,
+                    PersentaseParkir = dataTargetParkir != 0 ? Math.Round((dataRealisasiParkir / dataTargetParkir) * 100, 2) : 0,
 
-                    TargetMamin = 250000000,
-                    RealisasiMamin = 230000000,
-                    PersentaseMamin = 92,
+                    TargetMamin = dataTargetMamin,
+                    RealisasiMamin = dataRealisasiMamin,
+                    PersentaseMamin = dataTargetMamin != 0 ? Math.Round((dataRealisasiMamin / dataTargetMamin) * 100, 2) : 0,
 
-                    TargetListrik = 50000000,
-                    RealisasiListrik = 45000000,
-                    PersentaseListrik = 90,
+                    TargetListrik = dataTargetListrik,
+                    RealisasiListrik = dataRealisasiListrik,
+                    PersentaseListrik = dataTargetListrik != 0 ? Math.Round((dataRealisasiListrik / dataTargetListrik) * 100, 2) : 0,
 
-                    TargetAbt = 30000000,
-                    RealisasiAbt = 25000000,
-                    PersentaseAbt = 83.33m,
+                    TargetAbt = dataTargetAbt,
+                    RealisasiAbt = dataRealisasiAbt,
+                    PersentaseAbt = dataTargetAbt != 0 ? Math.Round((dataRealisasiAbt / dataTargetAbt) * 100, 2) : 0,
 
-                    TargetPbb = 100000000,
-                    RealisasiPbb = 85000000,
-                    PersentasePbb = 85,
+                    TargetPbb = dataTargetPbb,
+                    RealisasiPbb = dataRealisasiPbb,
+                    PersentasePbb = dataTargetPbb != 0 ? Math.Round((dataRealisasiPbb / dataTargetPbb) * 100, 2) : 0,
 
-                    TargetReklame = 40000000,
-                    RealisasiReklame = 30000000,
-                    PersentaseReklame = 75,
+                    TargetBphtb = dataTargetBphtb,
+                    RealisasiBphtb = dataRealisasiBphtb,
+                    PersentaseBphtb = dataTargetBphtb != 0 ? Math.Round((dataRealisasiBphtb / dataTargetBphtb) * 100, 2) : 0,
 
-                    TargetBphtb = 50000000,
-                    RealisasiBphtb = 47000000,
-                    PersentaseBphtb = 94,
+                    TargetOpsenPkb = dataTargetOpsenPkb,
+                    RealisasiOpsenPkb = dataRealisasiOpsenPkb,
+                    PersentaseOpsenPkb = dataTargetOpsenPkb != 0 ? Math.Round((dataRealisasiOpsenPkb / dataTargetOpsenPkb) * 100, 2) : 0,
 
-                    TargetOpsenPkb = 30000000,
-                    RealisasiOpsenPkb = 28000000,
-                    PersentaseOpsenPkb = 93.33m,
+                    TargetOpsenBbnkb = dataTargetOpsenBbnkb,
+                    RealisasiOpsenBbnkb = dataRealisasiOpsenBbnkb,
+                    PersentaseOpsenBbnkb = dataTargetOpsenBbnkb != 0 ? Math.Round((dataRealisasiOpsenBbnkb / dataTargetOpsenBbnkb) * 100, 2) : 0,
 
-                    TargetOpsenBbnkb = 20000000,
-                    RealisasiOpsenBbnkb = 18000000,
-                    PersentaseOpsenBbnkb = 90
+                    //Optional: Uncomment if you want to include Reklame later
+                    TargetReklame = dataTargetReklame,
+                    RealisasiReklame = dataRealisasiReklame,
+                    PersentaseReklame = dataTargetReklame != 0 ? Math.Round((dataRealisasiReklame / dataTargetReklame) * 100, 2) : 0,
                 };
 
                 return result;
             }
             public static ViewModel.DashboardChart GetDashboardChartData()
             {
-                var result = new ViewModel.DashboardChart
-                {
-                    Target1 = 100000000,
-                    Target2 = 100000000,
-                    Target3 = 100000000,
-                    Target4 = 100000000,
-                    Target5 = 100000000,
-                    Target6 = 100000000,
-                    Target7 = 100000000,
-                    Target8 = 100000000,
-                    Target9 = 100000000,
-                    Target10 = 100000000,
-                    Target11 = 100000000,
-                    Target12 = 100000000,
+                var context = DBClass.GetContext();
+                int currentYear = DateTime.Now.Year;
+                decimal monthlyTarget = 100_000_000;
 
-                    Realisasi1 = 85000000,
-                    Realisasi2 = 82000000,
-                    Realisasi3 = 90000000,
-                    Realisasi4 = 88000000,
-                    Realisasi5 = 80000000,
-                    Realisasi6 = 95000000,
-                    Realisasi7 = 91000000,
-                    Realisasi8 = 87000000,
-                    Realisasi9 = 83000000,
-                    Realisasi10 = 89000000,
-                    Realisasi11 = 92000000,
-                    Realisasi12 = 90000000
-                };
+                var monthlyRealisasi = new decimal[12];
+
+                // Mamin
+                var resto = context.DbMonRestos
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayarPokok.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+
+                // Hotel
+                var hotel = context.DbMonHotels
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayarPokok.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+
+                // Hiburan
+                var hiburan = context.DbMonHiburans
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayarPokok.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+
+                // Parkir
+                var parkir = context.DbMonParkirs
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayarPokok.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+
+                // Listrik (PPJ)
+                var ppj = context.DbMonPpjs
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayarPokok.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+
+                // PBB
+                var pbb = context.DbMonPbbs
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayarPokok.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+
+                // BPHTB
+                var bphtb = context.DbMonBphtbs
+                    .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayar.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.Pokok ?? 0) });
+
+                // ABT
+                var abt = context.DbMonAbts
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayarPokok.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+
+                // Opsen PKB
+                var opsenPkb = context.DbMonOpsenPkbs
+                    .Where(x => x.TglSspd.Year == currentYear)
+                    .GroupBy(x => x.TglSspd.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.JmlPokok) });
+
+                // Opsen BBNKB
+                var opsenBbnkb = context.DbMonOpsenBbnkbs
+                    .Where(x => x.TglSspd.Year == currentYear)
+                    .GroupBy(x => x.TglSspd.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.JmlPokok) });
+
+                // Gabungkan semua data pajak ke monthlyRealisasi
+                void Tambah(IEnumerable<dynamic> data)
+                {
+                    foreach (var d in data)
+                    {
+                        int idx = d.Month - 1;
+                        if (idx >= 0 && idx < 12)
+                            monthlyRealisasi[idx] += d.Total;
+                    }
+                }
+
+                Tambah(resto);
+                Tambah(hotel);
+                Tambah(hiburan);
+                Tambah(parkir);
+                Tambah(ppj);
+                Tambah(pbb);
+                Tambah(bphtb);
+                Tambah(abt);
+                Tambah(opsenPkb);
+                Tambah(opsenBbnkb);
+                // Tidak ada data reklame, jadi tidak dimasukkan
+
+                // Bangun ViewModel
+                var result = new ViewModel.DashboardChart();
+                for (int i = 0; i < 12; i++)
+                {
+                    typeof(ViewModel.DashboardChart).GetProperty($"Target{i + 1}")?.SetValue(result, monthlyTarget);
+                    typeof(ViewModel.DashboardChart).GetProperty($"Realisasi{i + 1}")?.SetValue(result, monthlyRealisasi[i]);
+                }
 
                 return result;
             }
