@@ -19,6 +19,13 @@ namespace MonPDReborn.Controllers.DataOP
         }
         public IActionResult Index()
         {
+            ViewBag.Potensi = 54500000;
+            ViewBag.RealisasiTotal = 45000000;
+            ViewBag.Capaian = 82;
+            ViewBag.TotalOP = 50;
+            ViewBag.RealisasiOP = 45;
+            ViewBag.CapaianOP = 98;
+
             try
             {
                 ViewData["Title"] = controllerName;
@@ -43,18 +50,25 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Detail(string nop)
+        public IActionResult DetailHotel()
         {
-            try
-            {
-                var model = new Models.DataOP.ProfilePotensiOPVM.Detail(nop);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (Exception)
-            {
+            return View("/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml");
 
-                throw;
-            }
         }
+
+        /*  public IActionResult Detail(string nop)
+           {
+               try
+               {
+                   var model = new Models.DataOP.ProfilePotensiOPVM.Detail(nop);
+                   return PartialView($"{URLView}_{actionName}", model);
+               }
+               catch (Exception)
+               {
+
+                   throw;
+               }
+           }*/
+
     }
 }

@@ -1,40 +1,203 @@
 ﻿@using static MonPDReborn.Models.MonitoringGlobal.MonitoringBulananVM.MonitoringBulananViewModels
 @model MonPDReborn.Models.MonitoringGlobal.MonitoringBulananVM.Show
 
+@{
+    int tahunSekarang = DateTime.Now.Year;
+}
 
-@(Html.DevExtreme().DataGrid<BulananPajak>()
-    .ID("gridAkumulasiAkp")
-    .DataSource(Model.BulananPajakList)
-    .ShowBorders(true)
-    .ShowColumnLines(true)
-    .ShowRowLines(true)
-    .RowAlternationEnabled(true)
-    .ColumnAutoWidth(true)
-    .Paging(p => p.Enabled(false))
-    .HeaderFilter(h => h.Visible(false))
-    .SearchPanel(sp => sp.Visible(false))
-    .Columns(columns =>
-    {
-        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+<div class="card">
+    <div class="card-header">
+        <h3>
+            <span class="badge bg-primary-subtle text-primary badge-border">REALISASI PAJAK >PAJAK</span>
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- KIRI -->
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-start mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                        .ID("selectTahunNow")
+                        .DataSource(new[] { tahunSekarang })
+                        .Value(tahunSekarang)
+                        .Width(120)
+                        )
+                </div>
+                @(Html.DevExtreme().DataGrid<BulananPajak>()
+                    .ID("gridAkumulasiAkpNow")
+                    .DataSource(Model.BulananPajakList)
+                    .ShowBorders(true)
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    .RowAlternationEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .Paging(p => p.Enabled(false))
+                    .HeaderFilter(h => h.Visible(false))
+                    .SearchPanel(sp => sp.Visible(false))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
 
-        columns.AddFor(c => c.AkpTarget).Caption("Target")
-            .Format(Format.FixedPoint)
-            .Alignment(HorizontalAlignment.Right)
-            .CssClass("fs-2");
+                        columns.AddFor(c => c.AkpTarget).Caption("Target")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
 
-        columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-            .Format(Format.FixedPoint)
-            .Alignment(HorizontalAlignment.Right)
-            .CssClass("fs-2");
+                        columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
 
-        columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
-            .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
-            .Alignment(HorizontalAlignment.Right)
-            .CssClass("fs-2");
+                        columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                        .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                        .Alignment(HorizontalAlignment.Right);
 
-        columns.AddFor(c => c.Selisih).Caption("Selisih")
-            .Format(Format.FixedPoint)
-            .Alignment(HorizontalAlignment.Right)
-            .CssClass("fs-2");
-    })
-)
+                        columns.AddFor(c => c.Selisih).Caption("Selisih")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+                    })
+                    )
+            </div>
+
+            <!-- KANAN -->
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-end mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                        .ID("selectTahunOld")
+                        .DataSource(new[] { 2024, 2023, 2022, 2021, 2020 })
+                        .Value(2024)
+                        .Width(120)
+                        .Placeholder("Pilih Tahun")
+                        )
+                </div>
+                @(Html.DevExtreme().DataGrid<BulananPajak>()
+                    .ID("gridAkumulasiAkpTahun")
+                    .DataSource(Model.BulananPajakList)
+                    .ShowBorders(true)
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    .RowAlternationEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .Paging(p => p.Enabled(false))
+                    .HeaderFilter(h => h.Visible(false))
+                    .SearchPanel(sp => sp.Visible(false))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+
+                        columns.AddFor(c => c.AkpTarget).Caption("Target")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                        .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Selisih).Caption("Selisih")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+                    })
+                    )
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        <h3><span class="badge bg-primary-subtle text-primary badge-border">AKUMULASU PAJAK >PAJAK</span></h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-start mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                        .ID("selectTahunAkm")
+                        .DataSource(new[] { tahunSekarang })
+                        .Value(tahunSekarang)
+                        .Width(120)
+                        )
+                </div>
+                @(Html.DevExtreme().DataGrid<BulananPajak>()
+                    .ID("gridAkumulasiAkpNowAkm")
+                    .DataSource(Model.BulananPajakList)
+                    .ShowBorders(true)
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    .RowAlternationEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .Paging(p => p.Enabled(false))
+                    .HeaderFilter(h => h.Visible(false))
+                    .SearchPanel(sp => sp.Visible(false))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+
+                        columns.AddFor(c => c.AkpTarget).Caption("Target")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                        .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Selisih).Caption("Selisih")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+                    })
+                    )
+            </div>
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-end mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                        .ID("selectTahunAkmOld")
+                        .DataSource(new[] { 2024, 2023, 2022, 2021, 2020 })
+                        .Value(2024)
+                        .Width(120)
+                        .Placeholder("Pilih Tahun")
+                        )
+                </div>
+                @(Html.DevExtreme().DataGrid<BulananPajak>()
+                    .ID("gridAkumulasiAkpTahunAkm")
+                    .DataSource(Model.BulananPajakList)
+                    .ShowBorders(true)
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    .RowAlternationEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .Paging(p => p.Enabled(false))
+                    .HeaderFilter(h => h.Visible(false))
+                    .SearchPanel(sp => sp.Visible(false))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+
+                        columns.AddFor(c => c.AkpTarget).Caption("Target")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                        .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                        .Alignment(HorizontalAlignment.Right);
+
+                        columns.AddFor(c => c.Selisih).Caption("Selisih")
+                        .Format(Format.FixedPoint)
+                        .Alignment(HorizontalAlignment.Right);
+                    })
+                    )
+            </div>
+        </div>
+    </div>
+</div>
+

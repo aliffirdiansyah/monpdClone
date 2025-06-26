@@ -12,17 +12,17 @@
         }
         public class Show
         {
-            public List<DataRealisasiOp> DataRealisasiOpList { get; set; } = new();
+            public List<DataPotensi> DataPotensiList { get; set; } = new();
             public Show()
             {
                 
             }
             public Show(string keyword)
             {
-                DataRealisasiOpList = Method.GetDataRealisasiOpList(keyword);
+                DataPotensiList = Method.GetDataPotensiList(keyword);
             }
         }
-        public class Detail
+     /*   public class Detail
         {
             public List<RealisasiBulanan> DataRealisasiBulananList { get; set; } = new();
             public Detail()
@@ -33,10 +33,10 @@
             {
                 DataRealisasiBulananList = Method.GetDetailByNOP(nop);
             }
-        }
+        }*/
         public class Method
         {
-            public static List<DataRealisasiOp> GetDataRealisasiOpList(string keyword)
+            public static List<DataPotensi> GetDataPotensiList(string keyword)
             {
                 var allData = GetAllData();
 
@@ -44,74 +44,65 @@
                     return allData;
 
                 return allData
-                    .Where(d => d.Nama != null && d.Nama.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                    .Where(d => d.NOP != null && d.NOP.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
 
-            public static List<RealisasiBulanan> GetDetailByNOP(string nop)
+        /*    public static List<RealisasiBulanan> GetDetailByNOP(string nop)
             {
                 var allDetail = GetAllDetail();
                 return allDetail.Where(x => x.NOP == nop).ToList();
-            }
+            }*/
 
             // Internal dummy data
-            private static List<DataRealisasiOp> GetAllData()
+            private static List<DataPotensi> GetAllData()
             {
-                return new List<DataRealisasiOp>
+                return new List<DataPotensi>
                 {
-                    new() { No = 1, Wilayah = "01", NOP = "35.78.170.005.902.00066", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "RAJAWALI NO.47", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 2, Wilayah = "01", NOP = "35.78.100.002.902.00172", StatusNOP = "Buka", Nama = "MC. DONALDS KIOS", Alamat = "BUBUTAN 1-7 (BG JUNCTION LT.GL DAN LT.LL)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 3, Wilayah = "01", NOP = "35.78.160.001.902.05140", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "MALL PASAR ATUM", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 4, Wilayah = "01", NOP = "35.78.170.005.902.01044", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "JL. TAMAN JAYENGRONO (JMP)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 5, Wilayah = "02", NOP = "35.78.050.005.902.00124", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "DR. IR. H. SOEKARNO NO.218", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" }
+                     new() {NOP = "32.76.050.123", NamaWP = "PT ABC Sejahtera", Alamat = "Jl. Merdeka", JenisPajak = "PBB", MasaPajak = "Januari", Potensi = 12500000, Realisasi = 10000000, Tahun = 2024},
+                     new() {NOP = "32.76.050.124", NamaWP = "CV Mitra Usaha", Alamat = "Jl. Sudirman", JenisPajak = "Hotel", MasaPajak = "Februari", Potensi = 15000000, Realisasi = 12000000, Tahun = 2024},
+                     new() {NOP = "32.76.050.125", NamaWP = "PT Maju Mundur", Alamat = "Jl. Gatot Subroto", JenisPajak = "Restoran", MasaPajak = "Maret", Potensi = 10000000, Realisasi = 8000000, Tahun = 2024},
+                     new() {NOP = "32.76.050.126", NamaWP = "Toko Sumber Rejeki", Alamat = "Jl. Gajah Mada", JenisPajak = "Reklame", MasaPajak = "April", Potensi = 5000000, Realisasi = 4500000, Tahun = 2024},
+                     new() {NOP = "32.76.050.127", NamaWP = "PT Sinar Terang", Alamat = "Jl. Imam Bonjol", JenisPajak = "PPJ", MasaPajak = "Mei", Potensi = 13000000, Realisasi = 13000000, Tahun = 2024},
+                     new() {NOP = "32.76.050.128", NamaWP = "Bengkel Jaya Motor", Alamat = "Jl. Pahlawan", JenisPajak = "Parkir", MasaPajak = "Juni", Potensi = 6000000, Realisasi = 5000000, Tahun = 2024},
+                     new() {NOP = "32.76.050.129", NamaWP = "Apotek Sehat Sentosa", Alamat = "Jl. Kalimantan", JenisPajak = "PBB", MasaPajak = "Juli", Potensi = 3000000, Realisasi = 3000000, Tahun = 2024},
+                     new() {NOP = "32.76.050.130", NamaWP = "Kafe Kopi Nusantara", Alamat = "Jl. Sumatra", JenisPajak = "Restoran", MasaPajak = "Agustus", Potensi = 8500000, Realisasi = 6000000, Tahun = 2024},
+                     new() {NOP = "32.76.050.131", NamaWP = "PT Transport Abadi", Alamat = "Jl. Diponegoro", JenisPajak = "Parkir", MasaPajak = "September", Potensi = 9000000, Realisasi = 7500000, Tahun = 2024},
+                     new() {NOP = "32.76.050.132", NamaWP = "Mall Surya", Alamat = "Jl. Basuki Rahmat", JenisPajak = "Hotel", MasaPajak = "Oktober", Potensi = 20000000, Realisasi = 18000000, Tahun = 2024}
                 };
             }
 
-            private static List<RealisasiBulanan> GetAllDetail()
+            public static List<DataIndex> GetDataIndexData()
             {
-                return new List<RealisasiBulanan>
+                return new List<DataIndex>
                 {
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jan", Nominal = 186020436 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Feb", Nominal = 152000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mar", Nominal = 173000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Apr", Nominal = 165000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mei", Nominal = 178000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jun", Nominal = 181000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jul", Nominal = 190000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Agt", Nominal = 200000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Sep", Nominal = 210000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Okt", Nominal = 220000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Nov", Nominal = 230000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Des", Nominal = 240000000 },
-
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Jan", Nominal = 30222959 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Feb", Nominal = 25000000 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Mar", Nominal = 27000000 },
-
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Jan", Nominal = 134483411 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Feb", Nominal = 140000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Mar", Nominal = 150000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Des", Nominal = 155000000 }
+                    new() {Potensi = 54500000, RealisasiTotal = 45000000, Capaian = 82, TotalOP = 50, RealisasiOP = 45, capaianOP = 98}
                 };
             }
+            
         }
-        public class DataRealisasiOp
+        
+        public class DataPotensi
         {
-            public int No { get; set; }
-            public string Wilayah { get; set; } = null!;
             public string NOP { get; set; } = null!;
-            public string StatusNOP { get; set; } = null!;
-            public string Nama { get; set; } = null!;
+            public string NamaWP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
-            public string JenisOp { get; set; } = null!;
-            public string JenisPenarikan { get; set; } = null!;
+            public string JenisPajak { get; set; } = null!;
+            public string MasaPajak { get; set; } = null!;
+            public int Potensi { get; set; }
+
+            public int Realisasi { get; set; }
+            public int Tahun { get; set; }
         }
 
-        public class RealisasiBulanan
+        public class DataIndex
         {
-            public string NOP { get; set; } = null!;
-            public string Bulan { get; set; } = null!;
-            public decimal Nominal { get; set; }
+            public int Potensi { get; set; }
+            public int RealisasiTotal { get; set; }
+            public int Capaian { get; set; }
+            public int TotalOP { get; set; }
+            public int RealisasiOP { get; set; }
+            public int capaianOP { get; set; }
         }
     }
 }
