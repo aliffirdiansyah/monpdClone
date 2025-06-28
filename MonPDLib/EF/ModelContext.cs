@@ -429,7 +429,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpAbt>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("DB_OP_ABT_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_ABT_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");

@@ -30,12 +30,12 @@ namespace MonPDReborn.Controllers
             catch (ArgumentException ex)
             {
                 TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
-                return RedirectToAction("Index", "Home", new { em = ex.Message });
+                return RedirectToAction("Index", "Dashboard", new { em = ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
-                return RedirectToAction("Index", "Home", new { em = response.InternalServerErrorMessage });
+                return RedirectToAction("Index", "Dashboard", new { em = response.InternalServerErrorMessage });
             }
         }
         public IActionResult SeriesPajakDaerah()
