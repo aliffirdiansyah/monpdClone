@@ -50,9 +50,9 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult DetailHotel()
+        public IActionResult DetailGym()
         {
-            return View("/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml");
+            return View("/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml");
 
         }
 
