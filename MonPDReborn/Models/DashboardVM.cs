@@ -475,7 +475,7 @@ namespace MonPDReborn.Models
 
                 return result;
             }
-            public static List<ViewModel.SeriesPajakDaerah> GetSeriesPajakDaerahData()
+            public static List<ViewModel.SeriesPajakDaerah> GetSeriesPajakDaerahData(int g)
             {
                 return new List<ViewModel.SeriesPajakDaerah>
                 {
@@ -518,6 +518,411 @@ namespace MonPDReborn.Models
                         Persentase5 = Math.Round(120000000m / 150000000m * 100, 2)
                     },
                 };
+            }
+            public static List<ViewModel.SeriesPajakDaerah> GetSeriesPajakDaerahData()
+            {
+
+                var context = DBClass.GetContext();
+                var currentYear = DateTime.Now.Year;
+
+                List<ViewModel.SeriesPajakDaerah> result = new();
+                //#region DataUtama
+                //var targetResto = context.DbMonRestos.Sum(x => x.NominalPokokBayar) ?? 0;
+                //var realisasiResto = context.DbMonRestos.Sum(x => x.NominalPokokBayar) ?? 0; ;
+
+                //var targetHotel = context.DbMonHotels.Sum(x => x.NominalPokokBayar) ?? 0;
+                //var realisasiHotel = context.DbMonHotels.Sum(x => x.NominalPokokBayar) ?? 0; ;
+
+                //var targetHiburan = context.DbMonHiburans.Sum(x => x.NominalPokokBayar) ?? 0;
+                //var realisasiHiburan = context.DbMonHiburans.Sum(x => x.NominalPokokBayar) ?? 0;
+
+                //var targetParkir = context.DbMonParkirs.Sum(x => x.NominalPokokBayar) ?? 0;
+                //var realisasiParkir = context.DbMonParkirs.Sum(x => x.NominalPokokBayar) ?? 0;
+
+                //var targetListrik = context.DbMonPpjs.Sum(x => x.NominalPokokBayar) ?? 0;
+                //var realisasiListrik = context.DbMonPpjs.Sum(x => x.NominalPokokBayar) ?? 0;
+
+                //var targetPbb = context.DbMonPbbs.Sum(x => x.NominalPokokBayar) ?? 0;
+                //var realisasiPbb = context.DbMonPbbs.Sum(x => x.NominalPokokBayar) ?? 0;
+
+                //var targetBphtb = context.DbMonBphtbs.Sum(x => x.Pokok) ?? 0;
+                //var realisasiBphtb = context.DbMonBphtbs.Sum(x => x.Pokok) ?? 0;
+
+                //var targetAbt = context.DbMonAbts.Sum(x => x.NominalPokokBayar) ?? 0;
+                //var realisasiAbt = context.DbMonAbts.Sum(x => x.NominalPokokBayar) ?? 0;
+
+                //var targetOpsenPkb = context.DbMonOpsenPkbs.Sum(x => x.JmlPokok);
+                //var realisasiOpsenPkb = context.DbMonOpsenPkbs.Sum(x => x.JmlPokok);
+
+                //var targetOpsenBbnkb = context.DbMonOpsenBbnkbs.Sum(x => x.JmlPokok);
+                //var realisasiOpsenBbnkb = context.DbMonOpsenBbnkbs.Sum(x => x.JmlPokok);
+                //#endregion
+
+                #region Now
+                var targetRestoNow = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiRestoNow = targetRestoNow;
+
+                var targetHotelNow = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHotelNow = targetHotelNow;
+
+                var targetHiburanNow = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHiburanNow = targetHiburanNow;
+
+                var targetParkirNow = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiParkirNow = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetListrikNow = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikNow = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetPbbNow = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbNow = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                
+                var targetBphtbNow = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.Pokok) ?? 0;
+                var realisasiBphtbNow = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.Pokok) ?? 0;
+
+                var targetAbtNow = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiAbtNow = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetOpsenPkbNow = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
+                var realisasiOpsenPkbNow = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
+
+                var targetOpsenBbnkbNow = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
+                var realisasiOpsenBbnkbNow = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
+                #endregion
+                
+                #region Mines1
+                var targetRestoMines1 = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiRestoMines1 = targetRestoMines1;
+
+                var targetHotelMines1 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHotelMines1 = targetHotelMines1;
+
+                var targetHiburanMines1 = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHiburanMines1 = targetHiburanMines1;
+
+                var targetParkirMines1 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiParkirMines1 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetListrikMines1 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikMines1 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetPbbMines1 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbMines1 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                
+                var targetBphtbMines1 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-1).Sum(x => x.Pokok) ?? 0;
+                var realisasiBphtbMines1 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-1).Sum(x => x.Pokok) ?? 0;
+
+                var targetAbtMines1 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiAbtMines1 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-1).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetOpsenPkbMines1 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-1).Sum(x => x.JmlPokok);
+                var realisasiOpsenPkbMines1 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-1).Sum(x => x.JmlPokok);
+
+                var targetOpsenBbnkbMines1 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-1).Sum(x => x.JmlPokok);
+                var realisasiOpsenBbnkbMines1 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-1).Sum(x => x.JmlPokok);
+                #endregion
+                
+                #region Mines2
+                var targetRestoMines2 = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiRestoMines2 = targetRestoMines2;
+
+                var targetHotelMines2 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHotelMines2 = targetHotelMines2;
+
+                var targetHiburanMines2 = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHiburanMines2 = targetHiburanMines2;
+
+                var targetParkirMines2 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiParkirMines2 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetListrikMines2 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikMines2 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetPbbMines2 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbMines2 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                
+                var targetBphtbMines2 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-2).Sum(x => x.Pokok) ?? 0;
+                var realisasiBphtbMines2 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-2).Sum(x => x.Pokok) ?? 0;
+
+                var targetAbtMines2 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiAbtMines2 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-2).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetOpsenPkbMines2 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-2).Sum(x => x.JmlPokok);
+                var realisasiOpsenPkbMines2 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-2).Sum(x => x.JmlPokok);
+
+                var targetOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-2).Sum(x => x.JmlPokok);
+                var realisasiOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-2).Sum(x => x.JmlPokok);
+                #endregion
+                
+                
+                #region Mines3
+                var targetRestoMines3 = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiRestoMines3 = targetRestoMines3;
+
+                var targetHotelMines3 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHotelMines3 = targetHotelMines3;
+
+                var targetHiburanMines3 = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHiburanMines3 = targetHiburanMines3;
+
+                var targetParkirMines3 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiParkirMines3 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetListrikMines3 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikMines3 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetPbbMines3 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbMines3 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                
+                var targetBphtbMines3 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-3).Sum(x => x.Pokok) ?? 0;
+                var realisasiBphtbMines3 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-3).Sum(x => x.Pokok) ?? 0;
+
+                var targetAbtMines3 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiAbtMines3 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetOpsenPkbMines3 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-3).Sum(x => x.JmlPokok);
+                var realisasiOpsenPkbMines3 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-3).Sum(x => x.JmlPokok);
+
+                var targetOpsenBbnkbMines3 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-3).Sum(x => x.JmlPokok);
+                var realisasiOpsenBbnkbMines3 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-3).Sum(x => x.JmlPokok);
+                #endregion
+
+                #region Mines4
+                var targetRestoMines4 = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiRestoMines4 = targetRestoMines4;
+
+                var targetHotelMines4 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHotelMines4 = targetHotelMines4;
+
+                var targetHiburanMines4 = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHiburanMines4 = targetHiburanMines4;
+
+                var targetParkirMines4 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiParkirMines4 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetListrikMines4 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikMines4 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetPbbMines4 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbMines4 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                
+                var targetBphtbMines4 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-4).Sum(x => x.Pokok) ?? 0;
+                var realisasiBphtbMines4 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear-4).Sum(x => x.Pokok) ?? 0;
+
+                var targetAbtMines4 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiAbtMines4 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear-4).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetOpsenPkbMines4 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-4).Sum(x => x.JmlPokok);
+                var realisasiOpsenPkbMines4 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear-4).Sum(x => x.JmlPokok);
+
+                var targetOpsenBbnkbMines4 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-4).Sum(x => x.JmlPokok);
+                var realisasiOpsenBbnkbMines4 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-4).Sum(x => x.JmlPokok);
+                #endregion
+
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Pajak Makanan Minuman",
+                    Target5 = targetRestoNow,
+                    Realisasi5 = realisasiRestoNow,
+                    Persentase5 = targetRestoNow != 0 ? Math.Round(realisasiRestoNow / targetRestoNow * 100, 2) : 0,
+                    Target4 = targetRestoMines1,
+                    Realisasi4 = realisasiRestoMines1,
+                    Persentase4 = targetRestoMines1 != 0 ? Math.Round(realisasiRestoMines1 / targetRestoMines1 * 100, 2) : 0,
+                    Target3= targetRestoMines2,
+                    Realisasi3= realisasiRestoMines2,
+                    Persentase3= targetRestoMines2 != 0 ? Math.Round(realisasiRestoMines2 / targetRestoMines2 * 100, 2) : 0,
+                    Target2 = targetRestoMines3,
+                    Realisasi2 = realisasiRestoMines3,
+                    Persentase2 = targetRestoMines3 != 0 ? Math.Round(realisasiRestoMines3 / targetRestoMines3 * 100, 2) : 0,
+                    Target1 = targetRestoMines4,
+                    Realisasi1 = realisasiRestoMines4,
+                    Persentase1 = targetRestoMines4 != 0 ? Math.Round(realisasiRestoMines4 / targetRestoMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Pajak Hotel",
+                    Target5 = targetHotelNow,
+                    Realisasi5 = realisasiHotelNow,
+                    Persentase5 = targetHotelNow != 0 ? Math.Round(realisasiHotelNow / targetHotelNow * 100, 2) : 0,
+                    Target4 = targetHotelMines1,
+                    Realisasi4 = realisasiHotelMines1,
+                    Persentase4 = targetHotelMines1 != 0 ? Math.Round(realisasiHotelMines1 / targetHotelMines1 * 100, 2) : 0,
+                    Target3 = targetHotelMines2,
+                    Realisasi3 = realisasiHotelMines2,
+                    Persentase3 = targetHotelMines2 != 0 ? Math.Round(realisasiHotelMines2 / targetHotelMines2 * 100, 2) : 0,
+                    Target2 = targetHotelMines3,
+                    Realisasi2 = realisasiHotelMines3,
+                    Persentase2 = targetHotelMines3 != 0 ? Math.Round(realisasiHotelMines3 / targetHotelMines3 * 100, 2) : 0,
+                    Target1 = targetHotelMines4,
+                    Realisasi1 = realisasiHotelMines4,
+                    Persentase1 = targetHotelMines4 != 0 ? Math.Round(realisasiHotelMines4 / targetHotelMines4 * 100, 2) : 0,
+                });
+
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Pajak Hiburan",
+                    Target5 = targetHiburanNow,
+                    Realisasi5 = realisasiHiburanNow,
+                    Persentase5 = targetHiburanNow != 0 ? Math.Round(realisasiHiburanNow / targetHiburanNow * 100, 2) : 0,
+                    Target4 = targetHiburanMines1,
+                    Realisasi4 = realisasiHiburanMines1,
+                    Persentase4 = targetHiburanMines1 != 0 ? Math.Round(realisasiHiburanMines1 / targetHiburanMines1 * 100, 2) : 0,
+                    Target3 = targetHiburanMines2,
+                    Realisasi3 = realisasiHiburanMines2,
+                    Persentase3 = targetHiburanMines2 != 0 ? Math.Round(realisasiHiburanMines2 / targetHiburanMines2 * 100, 2) : 0,
+                    Target2 = targetHiburanMines3,
+                    Realisasi2 = realisasiHiburanMines3,
+                    Persentase2 = targetHiburanMines3 != 0 ? Math.Round(realisasiHiburanMines3 / targetHiburanMines3 * 100, 2) : 0,
+                    Target1 = targetHiburanMines4,
+                    Realisasi1 = realisasiHiburanMines4,
+                    Persentase1 = targetHiburanMines4 != 0 ? Math.Round(realisasiHiburanMines4 / targetHiburanMines4 * 100, 2) : 0,
+                });
+
+                
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Pajak Parkir",
+                    Target5 = targetParkirNow,
+                    Realisasi5 = realisasiParkirNow,
+                    Persentase5 = targetParkirNow != 0 ? Math.Round(realisasiParkirNow / targetParkirNow * 100, 2) : 0,
+                    Target4 = targetParkirMines1,
+                    Realisasi4 = realisasiParkirMines1,
+                    Persentase4 = targetParkirMines1 != 0 ? Math.Round(realisasiParkirMines1 / targetParkirMines1 * 100, 2) : 0,
+                    Target3 = targetParkirMines2,
+                    Realisasi3 = realisasiParkirMines2,
+                    Persentase3 = targetParkirMines2 != 0 ? Math.Round(realisasiParkirMines2 / targetParkirMines2 * 100, 2) : 0,
+                    Target2 = targetParkirMines3,
+                    Realisasi2 = realisasiParkirMines3,
+                    Persentase2 = targetParkirMines3 != 0 ? Math.Round(realisasiParkirMines3 / targetParkirMines3 * 100, 2) : 0,
+                    Target1 = targetParkirMines4,
+                    Realisasi1 = realisasiParkirMines4,
+                    Persentase1 = targetParkirMines4 != 0 ? Math.Round(realisasiParkirMines4 / targetParkirMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Pajak Jasa Listrik",
+                    Target5 = targetListrikNow,
+                    Realisasi5 = realisasiListrikNow,
+                    Persentase5 = targetListrikNow != 0 ? Math.Round(realisasiListrikNow / targetListrikNow * 100, 2) : 0,
+                    Target4 = targetListrikMines1,
+                    Realisasi4 = realisasiListrikMines1,
+                    Persentase4 = targetListrikMines1 != 0 ? Math.Round(realisasiListrikMines1 / targetListrikMines1 * 100, 2) : 0,
+                    Target3 = targetListrikMines2,
+                    Realisasi3 = realisasiListrikMines2,
+                    Persentase3 = targetListrikMines2 != 0 ? Math.Round(realisasiListrikMines2 / targetListrikMines2 * 100, 2) : 0,
+                    Target2 = targetListrikMines3,
+                    Realisasi2 = realisasiListrikMines3,
+                    Persentase2 = targetListrikMines3 != 0 ? Math.Round(realisasiListrikMines3 / targetListrikMines3 * 100, 2) : 0,
+                    Target1 = targetListrikMines4,
+                    Realisasi1 = realisasiListrikMines4,
+                    Persentase1 = targetListrikMines4 != 0 ? Math.Round(realisasiListrikMines4 / targetListrikMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"PBB",
+                    Target5 = targetPbbNow,
+                    Realisasi5 = realisasiPbbNow,
+                    Persentase5 = targetPbbNow != 0 ? Math.Round(realisasiPbbNow / targetPbbNow * 100, 2) : 0,
+                    Target4 = targetPbbMines1,
+                    Realisasi4 = realisasiPbbMines1,
+                    Persentase4 = targetPbbMines1 != 0 ? Math.Round(realisasiPbbMines1 / targetPbbMines1 * 100, 2) : 0,
+                    Target3 = targetPbbMines2,
+                    Realisasi3 = realisasiPbbMines2,
+                    Persentase3 = targetPbbMines2 != 0 ? Math.Round(realisasiPbbMines2 / targetPbbMines2 * 100, 2) : 0,
+                    Target2 = targetPbbMines3,
+                    Realisasi2 = realisasiPbbMines3,
+                    Persentase2 = targetPbbMines3 != 0 ? Math.Round(realisasiPbbMines3 / targetPbbMines3 * 100, 2) : 0,
+                    Target1 = targetPbbMines4,
+                    Realisasi1 = realisasiPbbMines4,
+                    Persentase1 = targetPbbMines4 != 0 ? Math.Round(realisasiPbbMines4 / targetPbbMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"BPHTB",
+                    Target5 = targetBphtbNow,
+                    Realisasi5 = realisasiBphtbNow,
+                    Persentase5 = targetBphtbNow != 0 ? Math.Round(realisasiBphtbNow / targetBphtbNow * 100, 2) : 0,
+                    Target4 = targetBphtbMines1,
+                    Realisasi4 = realisasiBphtbMines1,
+                    Persentase4 = targetBphtbMines1 != 0 ? Math.Round(realisasiBphtbMines1 / targetBphtbMines1 * 100, 2) : 0,
+                    Target3 = targetBphtbMines2,
+                    Realisasi3 = realisasiBphtbMines2,
+                    Persentase3 = targetBphtbMines2 != 0 ? Math.Round(realisasiBphtbMines2 / targetBphtbMines2 * 100, 2) : 0,
+                    Target2 = targetBphtbMines3,
+                    Realisasi2 = realisasiBphtbMines3,
+                    Persentase2 = targetBphtbMines3 != 0 ? Math.Round(realisasiBphtbMines3 / targetBphtbMines3 * 100, 2) : 0,
+                    Target1 = targetBphtbMines4,
+                    Realisasi1 = realisasiBphtbMines4,
+                    Persentase1 = targetBphtbMines4 != 0 ? Math.Round(realisasiBphtbMines4 / targetBphtbMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Pajak Air Tanah",
+                    Target5 = targetAbtNow,
+                    Realisasi5 = realisasiAbtNow,
+                    Persentase5 = targetAbtNow != 0 ? Math.Round(realisasiAbtNow / targetAbtNow * 100, 2) : 0,
+                    Target4 = targetAbtMines1,
+                    Realisasi4 = realisasiAbtMines1,
+                    Persentase4 = targetAbtMines1 != 0 ? Math.Round(realisasiAbtMines1 / targetAbtMines1 * 100, 2) : 0,
+                    Target3 = targetAbtMines2,
+                    Realisasi3 = realisasiAbtMines2,
+                    Persentase3 = targetAbtMines2 != 0 ? Math.Round(realisasiAbtMines2 / targetAbtMines2 * 100, 2) : 0,
+                    Target2 = targetAbtMines3,
+                    Realisasi2 = realisasiAbtMines3,
+                    Persentase2 = targetAbtMines3 != 0 ? Math.Round(realisasiAbtMines3 / targetAbtMines3 * 100, 2) : 0,
+                    Target1 = targetAbtMines4,
+                    Realisasi1 = realisasiAbtMines4,
+                    Persentase1 = targetAbtMines4 != 0 ? Math.Round(realisasiAbtMines4 / targetAbtMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Opsen PKB",
+                    Target5 = targetOpsenPkbNow,
+                    Realisasi5 = realisasiOpsenPkbNow,
+                    Persentase5 = targetOpsenPkbNow != 0 ? Math.Round(realisasiOpsenPkbNow / targetOpsenPkbNow * 100, 2) : 0,
+                    Target4 = targetOpsenPkbMines1,
+                    Realisasi4 = realisasiOpsenPkbMines1,
+                    Persentase4 = targetOpsenPkbMines1 != 0 ? Math.Round(realisasiOpsenPkbMines1 / targetOpsenPkbMines1 * 100, 2) : 0,
+                    Target3 = targetOpsenPkbMines2,
+                    Realisasi3 = realisasiOpsenPkbMines2,
+                    Persentase3 = targetOpsenPkbMines2 != 0 ? Math.Round(realisasiOpsenPkbMines2 / targetOpsenPkbMines2 * 100, 2) : 0,
+                    Target2 = targetOpsenPkbMines3,
+                    Realisasi2 = realisasiOpsenPkbMines3,
+                    Persentase2 = targetOpsenPkbMines3 != 0 ? Math.Round(realisasiOpsenPkbMines3 / targetOpsenPkbMines3 * 100, 2) : 0,
+                    Target1 = targetOpsenPkbMines4,
+                    Realisasi1 = realisasiOpsenPkbMines4,
+                    Persentase1 = targetOpsenPkbMines4 != 0 ? Math.Round(realisasiOpsenPkbMines4 / targetOpsenPkbMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Opsen BBNKB",
+                    Target5 = targetOpsenBbnkbNow,
+                    Realisasi5 = realisasiOpsenBbnkbNow,
+                    Persentase5 = targetOpsenBbnkbNow != 0 ? Math.Round(realisasiOpsenBbnkbNow / targetOpsenBbnkbNow * 100, 2) : 0,
+                    Target4 = targetOpsenBbnkbMines1,
+                    Realisasi4 = realisasiOpsenBbnkbMines1,
+                    Persentase4 = targetOpsenBbnkbMines1 != 0 ? Math.Round(realisasiOpsenBbnkbMines1 / targetOpsenBbnkbMines1 * 100, 2) : 0,
+                    Target3 = targetOpsenBbnkbMines2,
+                    Realisasi3 = realisasiOpsenBbnkbMines2,
+                    Persentase3 = targetOpsenBbnkbMines2 != 0 ? Math.Round(realisasiOpsenBbnkbMines2 / targetOpsenBbnkbMines2 * 100, 2) : 0,
+                    Target2 = targetOpsenBbnkbMines3,
+                    Realisasi2 = realisasiOpsenBbnkbMines3,
+                    Persentase2 = targetOpsenBbnkbMines3 != 0 ? Math.Round(realisasiOpsenBbnkbMines3 / targetOpsenBbnkbMines3 * 100, 2) : 0,
+                    Target1 = targetOpsenBbnkbMines4,
+                    Realisasi1 = realisasiOpsenBbnkbMines4,
+                    Persentase1 = targetOpsenBbnkbMines4 != 0 ? Math.Round(realisasiOpsenBbnkbMines4 / targetOpsenBbnkbMines4 * 100, 2) : 0,
+                });
+
+                return result;
             }
             public static List<ViewModel.JumlahObjekPajakTahunan> GetJumlahObjekPajakTahunanData()
             {
