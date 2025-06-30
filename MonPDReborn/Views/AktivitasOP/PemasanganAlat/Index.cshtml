@@ -94,6 +94,12 @@
             });
         }
 
+        function onDetailClick(id, jenis) {
+            console.log("Detail clicked:", id, jenis);
+            // Tambahkan aksi lain seperti buka modal, load data, dll.
+        }
+
+
         function subDetailTemplate(container, options) {
             var jenisPajak = options.data?.JenisPajak;
             console.log("subDetailTemplate - JenisPajak:", jenisPajak);

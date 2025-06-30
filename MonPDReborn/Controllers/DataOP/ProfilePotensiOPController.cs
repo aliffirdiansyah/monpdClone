@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Models.DataOP;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -50,25 +51,53 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult DetailGym()
-        {
-            return View("/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml");
+        /*   public IActionResult DetailMassage()
+           {
+               return View("/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml");
 
+           }*/
+
+        public IActionResult Detail(string nop, string jenisPajak)
+        {
+            var detailModel = new ProfilePotensiOPVM.Detail(nop, jenisPajak);
+
+            // Ambil entri pertama (kalau hanya satu data per NOP)
+            var firstData = detailModel.DataRealisasiBulananList.FirstOrDefault();
+
+            if (firstData == null)
+                return NotFound();
+
+            // Isi ViewBag
+            ViewBag.NamaWP = firstData.NamaWP;
+            ViewBag.Alamat = firstData.Alamat;
+            ViewBag.NOP = firstData.NOP;
+            ViewBag.Kapasitas = firstData.Kapasitas;
+            ViewBag.PerHari = firstData.Perhari;
+            ViewBag.PerTahun = firstData.Pertahun;
+            ViewBag.PerBulan = firstData.Perbulan;
+
+            // Routing ke view berdasarkan jenis pajak
+            switch (jenisPajak.ToLower())
+            {
+                case "hotel":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", detailModel);
+                case "parkir":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", detailModel);
+                case "restoran":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", detailModel);
+                case "massage":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
+                case "gym":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
+                case "bioskop":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", detailModel);
+                // Tambahkan jenis pajak lain sesuai kebutuhan
+                default:
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", detailModel);
+            }
         }
 
-        /*  public IActionResult Detail(string nop)
-           {
-               try
-               {
-                   var model = new Models.DataOP.ProfilePotensiOPVM.Detail(nop);
-                   return PartialView($"{URLView}_{actionName}", model);
-               }
-               catch (Exception)
-               {
 
-                   throw;
-               }
-           }*/
 
     }
 }

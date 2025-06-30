@@ -1,0 +1,767 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.Detail
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card border border-secondary border-2">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="d-flex p-3">
+                            <div class="flex-shrink-0">
+                                <div class="avatar-md me-3">
+                                    <span class="avatar-title bg-soft-secondary rounded-circle fs-1">
+                                        <i class="ri-parking-line text-secondary"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <h4 class="fs-16 fw-semibold">
+                                    @ViewBag.NamaWP
+                                </h4>
+                                <p class="fs-16 lh-base">
+                                    @ViewBag.Alamat
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="d-flex p-3">
+                            <h3 class="fs-16 fw-semibold">
+                                Potensi Pajak
+                            </h3>
+                        </div>
+                        <div class="d-flex p-3 py-0">
+                            <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-16 fw-semibold">Rp @ViewBag.Perbulan</p>
+                            </div>
+                        </div>
+                        <div class="d-flex p-3 py-0">
+                            <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-16 fw-semibold">Rp @ViewBag.Pertahun</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="d-flex p-3">
+                            <div class="flex-shrink-0 ms-3">
+                                <p class="fs-14 text-muted mb-1">NOP</p>
+                                <p class="fs-14 fw-semibold mb-3">@ViewBag.NOP</p>
+                            </div>
+                            <div class="flex-shrink-0 ms-5">
+                                <p class="fs-14 text-muted mb-1">Total Kapasitas</p>
+                                <p class="fs-14 fw-semibold mb-3">@ViewBag.Kapasitas Kendaraan</p>
+                            </div>
+                            <div class="flex-shrink-0 ms-3">
+                                <p class="fs-14 text-muted mb-1">Turnover</p>
+                                <p class="fs-14 fw-semibold mb-3">0,00 Hari Kerja | 0,00 Akhir Pekan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Kapasitas Parkir dan Tarif
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex p-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="avatar-sm me-3">
+                                            <span class="avatar-title bg-soft-secondary rounded-circle">
+                                                <i class="ri-e-bike-fill text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-grow-1 align-items-center">
+                                        <div>
+                                            <h4 class="fs-14 fw-semibold mb-1">Sepeda Motor</h4>
+                                            <p class="fs-14 lh-base mb-0">Kapasitas : 0 Unit</p>
+                                        </div>
+                                        <div class="ms-auto my-auto">
+                                            <p class="fs-14 fw-semibold mb-0">Rp 0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="avatar-sm me-3">
+                                            <span class="avatar-title bg-soft-secondary rounded-circle">
+                                                <i class="ri-car-fill text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-grow-1 align-items-center">
+                                        <div>
+                                            <h4 class="fs-14 fw-semibold mb-1">Mobil</h4>
+                                            <p class="fs-14 lh-base mb-0">Kapasitas : 0 Unit</p>
+                                        </div>
+                                        <div class="ms-auto my-auto">
+                                            <p class="fs-14 fw-semibold mb-0">Rp 0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-light bg-opacity-25">
+                                <h4 class="fs-16 fw-semibold mb-3">
+                                    Distribusi Kapasitas
+                                </h4>
+                                <!-- Multiple Bars -->
+                                <div class="progress mb-4" style="height:20px">
+                                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+                                </div>
+                                <div class="d-flex">
+                                    <h6 class="px-4 fs-6"><span class="badge bg-primary">60%</span> = Motor</h6>
+                                    <div class="flex-shrink-0">
+                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Mobil</h6>
+                                    </div>
+                                </div>
+                                <br />
+                                <h4 class="fs-14 fw-semibold mb-3 text-center mb-1">
+                                    Total Kapasitas 0 Kendaraan
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="avatar-md ri-information-line text-secondary fs-3"></i>
+                                    </div>
+                                    <div class="flex-grow-1 px-3 mt-2">
+                                        <h4 class="fs-16 fw-semibold mb-1">
+                                            Informasi Turnover
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p class="fs-14 text-muted mb-1">
+                                    Turnover parkir menunjukan tingkat pergantian kendaraan yang parkir. Tempat parkir memiliki turnover 0,00 pada hari kerja dan 0,00 pada akhir pekan. Turnover tersebut menunjukan aktivitas parkir yang lebih tinggi pada akhir pekan.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Detail Kendaraan Terparkir
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-soft-secondary bg-opacity-25">
+                                <div class="text-center">
+                                    <h3 class="fs-18 fw-semibold mb-1">
+                                        0
+                                    </h3>
+                                    <h4 class="fs-14">
+                                        Kendaraan terparkir Hari Kerja
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card border border-warning border-2">
+                            <div class="card-body bg-soft-warning bg-opacity-25">
+                                <div class="text-center">
+                                    <h3 class="fs-18 fw-semibold mb-1">
+                                        0
+                                    </h3>
+                                    <h4 class="fs-14">
+                                        Kendaraan Terparkir Akhir Pekan
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th>Jenis Kendaraan</th>
+                                            <th>Kapasitas</th>
+                                            <th>Terparkir (Hari Kerja)</th>
+                                            <th>Terparkir (Akhir Pekan)</th>
+                                            <th>Tarif</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Motor</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>Rp 0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mobil</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>Rp 0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title fs-14 mb-0">
+                                        Sepeda Motor
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">0 Unit</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Terparkir Hari Kerja</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Terparkir Akhir Pekan</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Tarif</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">Rp 0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title fs-14 mb-0">
+                                        Mobil
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">0 Unit</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Terparkir Hari Kerja</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Terparkir Akhir Pekan</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Tarif</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">Rp 0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Detail Omzet
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="avatar-sm me-3 mb-2">
+                                    <span class="avatar-title bg-soft-secondary rounded-circle">
+                                        <i class="ri-e-bike-fill text-secondary" style="font-size: 16px;"></i>
+                                    </span>
+                                </div>
+                                <h4 class="fs-14 fw-semibold mb-2">
+                                    Rp 0
+                                </h4>
+                                <p class="fs-12 text-muted mb-1">
+                                    Omzet Sepeda Motor
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="avatar-sm me-3 mb-2">
+                                    <span class="avatar-title bg-soft-secondary rounded-circle">
+                                        <i class="ri-car-fill text-secondary" style="font-size: 16px;"></i>
+                                    </span>
+                                </div>
+                                <h4 class="fs-14 fw-semibold mb-2">
+                                    Rp 0
+                                </h4>
+                                <p class="fs-12 text-muted mb-1">
+                                    Omzet Mobil
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-soft-secondary bg-opacity-25">
+                                <div class="p-1">
+                                    <h4 class="fs-16 fw-semibold mb-4">
+                                        Total Omzet Bulanan
+                                    </h4>
+                                    <h4 class="fs-16 fw-semibold mb-1">
+                                        Rp 0
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-1">Total pendapatan dari parkir</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="fs-16 fw-semibold mb-3">
+                                    Distribusi Omzet Bulanan
+                                </h4>
+                                <!-- Multiple Bars -->
+                                <div class="progress mb-4" style="height:20px">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+                                </div>
+                                <div class="d-flex">
+                                    <h6 class="px-4 fs-6"><span class="badge bg-primary">60%</span> = Sepeda Motor</h6>
+                                    <div class="flex-shrink-0">
+                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Mobil</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-light bg-opacity-25">
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Perhitungan Omzet Sepeda Motor :
+                                </h4>
+                                <p class="fs-14 text-muted mb-1">
+                                    (Motor Terparkir Hari Kerja x Tarif Motor x 22 Hari) + (Motor Terparkir Akhir Pekan x Tarif Motor x 8 Hari)
+                                </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    (0 x Rp 0 x 22) + (0 x Rp 0 x 8) = Rp 0
+                                </p>
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Perhitungan Omzet Mobil :
+                                </h4>
+                                <p class="fs-14 text-muted mb-1">
+                                    (Mobil Terparkir Hari Kerja x Tarif Mobil x 22 Hari) + (Mobil Terparkir Akhir Pekan x Tarif Mobil x 8 Hari)
+                                </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    (0 x Rp 0 x 22) + (0 x Rp 0 x 8) = Rp 0
+                                </p>
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Total Omzet Bulanan :
+                                </h4>
+                                <p class="fs-14 text-muted mb-1">
+                                    Omzet Sepeda Motor + Omzet Mobil
+                                </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    Rp 0 + Rp 0 = Rp 0
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Perhitungan Potensi Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-light bg-opacity-25">
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Rumus Perhitungan Potensi Pajak per Bulan :
+                                </h4>
+                                <p class="fs-14 text-muted mb-1">
+                                    Total Omzet Bulanan x Tarif Pajak
+                                </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    Rp 0 x 10% = Rp 0
+                                </p>
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Rumus Perhitungan Potensi Pajak per Tahun :
+                                </h4>
+                                <p class="fs-14 text-muted mb-1">
+                                    Potensi Pajak per Bulan x 12
+                                </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    Rp 0 x 12 = Rp 0
+                                </p>
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Total Potensi Pajak per Tahun : Rp 0
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="fs-16 fw-semibold mb-3">
+                                    Distribusi Omzet Bulanan
+                                </h4>
+                                <!-- Multiple Bars -->
+                                <div class="progress mb-4" style="height:20px">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+                                </div>
+                                <div class="d-flex">
+                                    <h6 class="px-4 fs-6"><span class="badge bg-primary">60%</span> = Sepeda Motor</h6>
+                                    <div class="flex-shrink-0">
+                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Mobil</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-soft-secondary bg-opacity-25">
+                                <div class="p-1">
+                                    <h4 class="fs-16 fw-semibold mb-4">
+                                        Omzet Bulanan
+                                    </h4>
+                                    <h4 class="fs-16 fw-semibold mb-1">
+                                        Rp 0
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-2">Total pendapatan dari membership</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Ringkasan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">NOP</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">00.00.000.000.000.00000</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Nama Usaha</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Parkir</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Alamat</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Jalan</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Total Kapasitas</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">0 Kendaraan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Potensi Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-secondary bg-opacity-25">
+                                <h4 class="card-title fs-14 mb-4">
+                                    Potensi Pajak per Bulan
+                                </h4>
+                                <h4 class="card-title fs-18 mb-0">
+                                    Rp 0
+                                </h4>
+                                <p class="fs-12">10% dari omzet bulanan</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card border border-secondary border-2">
+                            <div class="card-body bg-secondary bg-opacity-25">
+                                <h4 class="card-title fs-14 mb-4">
+                                    Potensi Pajak per Tahun
+                                </h4>
+                                <h4 class="card-title fs-18 mb-0">
+                                    Rp 0
+                                </h4>
+                                <p class="fs-12">Proyeksi untuk 12 bulan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Visualisasi Parkir
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="fs-14 fw-semibold mb-2">
+                    Sepeda Motor
+                </h4>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Hari Kerja)</p>
+                    </div>
+                </div>
+
+                <div class="progress mb-2" style="height:20px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
+                </div>
+
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Akhir Pekan)</p>
+                    </div>
+                </div>
+
+                <div class="progress" style="height:20px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
+                </div>
+
+                <br />
+                <h4 class="fs-14 fw-semibold mb-2">
+                    Mobil
+                </h4>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Hari Kerja)</p>
+                    </div>
+                </div>
+
+                <div class="progress mb-2" style="height:20px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
+                </div>
+
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Akhir Pekan)</p>
+                    </div>
+                </div>
+
+                <div class="progress" style="height:20px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
+                </div>
+
+                <br />
+                <h4 class="fs-14 mb-2 text-center">
+                    Total Kendaraan Terparkir per Hari
+                </h4>
+                <h4 class="fs-16 fw-semibold mb-2 text-center">
+                    0 Unit (Hari Kerja) | 0 Unit (Akhir Pekan)
+                </h4>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Parameter Perhitungan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Turnover Hari Kerja</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">0,00 Kali</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">0,00 Kali</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Hari Kerja per Bulan</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">22 Hari</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Akhir Pekan per Bulan</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">8 Hari</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">10%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-secondary">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Rumus Lengkap Perhitungan Potensi Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = (((Motor Terparkir Hari Kerja x Tarif Motor X 22 Hari) + (Motor Terparkir Akhir Pekan x Tarif Motor x 8 Hari)) + ((Mobil Terparkir Hari Kerja x Tarif Mobil x 22 Hari) + (Mobil Terparkir Akhir Pekan x Tarif Mobil x 8 Hari)) x Tarif Pajak) x 12
+                </h4>
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = (((k x m X 22 Hari) + (l x m x 8 Hari)) + ((p x r x 22 Hari) + (q x r x 8 Hari)) x Tarif Pajak) x 12
+                </h4>
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = (((0 x 0 X 22 Hari) + (0 x 0 x 8 Hari)) + ((0 x 0 x 22 Hari) + (0 x 0 x 8 Hari)) x 10%) x 12
+                </h4>
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = (((0 + 0) + (0 + 0)) x 10%) x 12
+                </h4>
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = ((0 + 0) x 10%) x 12
+                </h4>
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = (0 x 10%) x 12
+                </h4>
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = 0 x 12
+                </h4>
+                <h4 class="fs-14 fw-semibold mb-2">
+                    P = Rp 0
+                </h4>
+            </div>
+        </div>
+
+    </div>
+
+</div>
