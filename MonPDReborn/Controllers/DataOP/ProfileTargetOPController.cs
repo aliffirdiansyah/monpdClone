@@ -43,7 +43,7 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Detail(string nop)
+      /*  public IActionResult Detail(string nop)
         {
             try
             {
@@ -55,6 +55,6 @@ namespace MonPDReborn.Controllers.DataOP
 
                 throw;
             }
-        }
+        }*/
     }
 }

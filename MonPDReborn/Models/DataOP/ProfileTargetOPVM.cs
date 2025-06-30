@@ -12,17 +12,17 @@
         }
         public class Show
         {
-            public List<DataRealisasiOp> DataRealisasiOpList { get; set; } = new();
+            public List<TargetSeluruh> DataTargetSeluruhList { get; set; } = new();
             public Show()
             {
                 
             }
             public Show(string keyword)
             {
-                DataRealisasiOpList = Method.GetDataRealisasiOpList(keyword);
+                DataTargetSeluruhList = Method.GetDataRealisasiOpList(keyword);
             }
         }
-        public class Detail
+       /* public class Detail
         {
             public List<RealisasiBulanan> DataRealisasiBulananList { get; set; } = new();
             public Detail()
@@ -33,10 +33,10 @@
             {
                 DataRealisasiBulananList = Method.GetDetailByNOP(nop);
             }
-        }
+        }*/
         public class Method
         {
-            public static List<DataRealisasiOp> GetDataRealisasiOpList(string keyword)
+            public static List<TargetSeluruh> GetDataRealisasiOpList(string keyword)
             {
                 var allData = GetAllData();
 
@@ -44,30 +44,33 @@
                     return allData;
 
                 return allData
-                    .Where(d => d.Nama != null && d.Nama.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                    .Where(d => d.JenisPajak != null && d.JenisPajak.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
 
-            public static List<RealisasiBulanan> GetDetailByNOP(string nop)
+          /*  public static List<RealisasiBulanan> GetDetailByNOP(string nop)
             {
                 var allDetail = GetAllDetail();
                 return allDetail.Where(x => x.NOP == nop).ToList();
-            }
+            }*/
 
             // Internal dummy data
-            private static List<DataRealisasiOp> GetAllData()
+            private static List<TargetSeluruh> GetAllData()
             {
-                return new List<DataRealisasiOp>
+                return new List<TargetSeluruh>
                 {
-                    new() { No = 1, Wilayah = "01", NOP = "35.78.170.005.902.00066", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "RAJAWALI NO.47", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 2, Wilayah = "01", NOP = "35.78.100.002.902.00172", StatusNOP = "Buka", Nama = "MC. DONALDS KIOS", Alamat = "BUBUTAN 1-7 (BG JUNCTION LT.GL DAN LT.LL)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 3, Wilayah = "01", NOP = "35.78.160.001.902.05140", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "MALL PASAR ATUM", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 4, Wilayah = "01", NOP = "35.78.170.005.902.01044", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "JL. TAMAN JAYENGRONO (JMP)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 5, Wilayah = "02", NOP = "35.78.050.005.902.00124", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "DR. IR. H. SOEKARNO NO.218", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" }
+                    new() { JenisPajak = "Hotel", Wilayah = "UPTB 1", Target = 500_000_000, Keterangan = "Target Q1 Hotel Wilayah Timur", Tanggal = new DateTime(2025, 1, 15) },
+                    new() { JenisPajak = "Hotel", Wilayah = "UPTB 2", Target = 420_000_000, Keterangan = "Target Q1 Hotel Wilayah Barat", Tanggal = new DateTime(2025, 1, 15) },
+                    new() { JenisPajak = "Restoran", Wilayah = "UPTB 3", Target = 600_000_000, Keterangan = "Target Q1 Restoran Wilayah Timur", Tanggal = new DateTime(2025, 1, 20) },
+                    new() { JenisPajak = "Restoran", Wilayah = "UPTB 4", Target = 550_000_000, Keterangan = "Target Q1 Restoran Wilayah Barat", Tanggal = new DateTime(2025, 1, 20) },
+                    new() { JenisPajak = "Parkir", Wilayah = "UPTB 5", Target = 300_000_000, Keterangan = "Target Q1 Parkir Wilayah Utara", Tanggal = new DateTime(2025, 2, 1) },
+                    new() { JenisPajak = "Hiburan", Wilayah = "UPTB 2", Target = 700_000_000, Keterangan = "Target Q1 Hiburan Wilayah Selatan", Tanggal = new DateTime(2025, 2, 5) },
+                    new() { JenisPajak = "PBB", Wilayah = "UPTB 1", Target = 2_000_000_000, Keterangan = "Target Tahunan PBB", Tanggal = new DateTime(2025, 1, 1) },
+                    new() { JenisPajak = "BPHTB", Wilayah = "UPTB 4", Target = 1_500_000_000, Keterangan = "Target Tahunan BPHTB Wilayah Pusat", Tanggal = new DateTime(2025, 1, 10) },
                 };
             }
 
-            private static List<RealisasiBulanan> GetAllDetail()
+          /*  private static List<RealisasiBulanan> GetAllDetail()
             {
                 return new List<RealisasiBulanan>
                 {
@@ -93,25 +96,22 @@
                     new() { NOP = "35.78.050.005.902.00124", Bulan = "Mar", Nominal = 150000000 },
                     new() { NOP = "35.78.050.005.902.00124", Bulan = "Des", Nominal = 155000000 }
                 };
-            }
+            }*/
         }
-        public class DataRealisasiOp
+        public class TargetSeluruh
         {
-            public int No { get; set; }
+            public string JenisPajak { get; set; } = null!;
             public string Wilayah { get; set; } = null!;
-            public string NOP { get; set; } = null!;
-            public string StatusNOP { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string Alamat { get; set; } = null!;
-            public string JenisOp { get; set; } = null!;
-            public string JenisPenarikan { get; set; } = null!;
+            public decimal Target { get; set; }
+            public string Keterangan { get; set; } = null!;
+            public DateTime Tanggal { get; set; }
         }
 
-        public class RealisasiBulanan
+     /*   public class RealisasiBulanan
         {
             public string NOP { get; set; } = null!;
             public string Bulan { get; set; } = null!;
             public decimal Nominal { get; set; }
-        }
+        }*/
     }
 }
