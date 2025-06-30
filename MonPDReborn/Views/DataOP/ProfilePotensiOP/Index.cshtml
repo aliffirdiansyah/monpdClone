@@ -73,10 +73,15 @@
             });
         }
 
-        function onDetailClick() {
-            var url = '@Url.Action("DetailGym", "ProfilePotensiOP")';
-            window.open(url, '_blank'); // membuka di tab baru
+        function onDetailClick(e) {
+            const data = e.row?.data;
+            if (!data || !data.NOP || !data.JenisPajak) return;
+
+            const url = `/ProfilePotensiOP/Detail?nop=${encodeURIComponent(data.NOP)}&jenisPajak=${encodeURIComponent(data.JenisPajak)}`;
+            window.open(url, '_blank');
         }
+
+
     </script>
 }
 

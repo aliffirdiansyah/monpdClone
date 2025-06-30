@@ -1,4 +1,10 @@
-﻿<div class="row">
+﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.Detail
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
 
     <div class="col-lg-12">
         <div class="card border border-success border-2">
@@ -9,13 +15,13 @@
                             <div class="flex-shrink-0">
                                 <div class="avatar-md me-3">
                                     <span class="avatar-title bg-soft-success rounded-circle fs-1">
-                                        <i class="ri-boxing-line text-success"></i>
+                                        <i class="ri-open-arm-fill text-success"></i>
                                     </span>
                                 </div>
                             </div>
-                            <div>
+                            <div class="mt-2">
                                 <h4 class="fs-16 fw-semibold">
-                                    Gym Athletes
+                                    Massage
                                 </h4>
                                 <p class="fs-16 lh-base">
                                     Jalan
@@ -49,12 +55,12 @@
                                 <p class="fs-14 fw-semibold mb-3">00.00.000.000.00000</p>
                             </div>
                             <div class="flex-shrink-0 ms-5">
-                                <p class="fs-14 text-muted mb-1">Kapasitas Pengunjung</p>
-                                <p class="fs-14 fw-semibold mb-3">0 Orang</p>
+                                <p class="fs-14 text-muted mb-1">Kapasitas Pengunkung</p>
+                                <p class="fs-14 fw-semibold mb-3">0 Pengunjung</p>
                             </div>
                             <div class="flex-shrink-0 ms-3">
-                                <p class="fs-14 text-muted mb-1">Membership Bulanan</p>
-                                <p class="fs-14 fw-semibold mb-3">0 Orang</p>
+                                <p class="fs-14 text-muted mb-1">Harga Tiket</p>
+                                <p class="fs-14 fw-semibold mb-3">Rp 0</p>
                             </div>
                         </div>
                     </div>
@@ -64,12 +70,12 @@
     </div>
 
     <div class="col-lg-8">
-        
+
         <div class="card">
             <div class="card-header d-flex bg-soft-success">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-0">
-                        Detail Kunjungan & Membership
+                        Detail Kunjungan
                     </h4>
                 </div>
             </div>
@@ -78,13 +84,13 @@
 
                     <div class="col-lg-6">
                         <div class="card border border-success border-2">
-                            <div class="card-body">
+                            <div class="card-body bg-soft-success bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-semibold mb-1">
-                                        0
+                                        0,00
                                     </h3>
-                                    <h4 class="fs-14 text-muted">
-                                        Rata-rata Pengunjung Hari Kerja
+                                    <h4 class="fs-14">
+                                        Rata-rata Kunjungan Hari Kerja
                                     </h4>
                                 </div>
                             </div>
@@ -93,13 +99,13 @@
 
                     <div class="col-lg-6">
                         <div class="card border border-warning border-2">
-                            <div class="card-body">
+                            <div class="card-body bg-soft-warning bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-semibold mb-1">
-                                        0
+                                        0,00
                                     </h3>
-                                    <h4 class="fs-14 text-muted">
-                                        Rata-rata Pengunjung Akhir Pekan
+                                    <h4 class="fs-14">
+                                        Rata-rata Kunjungan Akhir Pekan
                                     </h4>
                                 </div>
                             </div>
@@ -109,43 +115,28 @@
                     <div class="col-lg-6">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="fs-14 fw-semibold mb-2">
-                                    Visualisasi Member Aktif
-                                </h4>
-                                <!-- Multiple Bars -->
-                                <div class="progress" style="height:30px">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100">Hari Kerja (73%)</div>
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 27%" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100">Akhir Pekan (27%)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
+                                <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Kapasitas Pengunjung</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">0 Orang</p>
+                                        <p class="fs-14 fw-semibold">0 Orang</p>
                                     </div>
                                 </div>
-                                <div class="d-flex">
+                                <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Turnover Hari Kerja</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">0,00 Kali</p>
+                                        <p class="fs-14 fw-semibold">0,00 Kali</p>
                                     </div>
                                 </div>
-                                <div class="d-flex">
+                                <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">0,00 Kali</p>
+                                        <p class="fs-14 fw-semibold">0,00 Kali</p>
                                     </div>
                                 </div>
-                                <div class="d-flex">
+                                <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">0 Orang</p>
+                                        <p class="fs-14 fw-semibold">0 Orang</p>
                                     </div>
                                 </div>
                             </div>
@@ -154,9 +145,9 @@
 
                     <div class="col-lg-12">
                         <div class="card border border-success border-2">
-                            <div class="card-body">
-                                <h4 class="fs-14 fw-semibold mb-2">
-                                    Perhitungan Rata-rata Kunjungan Hari Kerja:
+                            <div class="card-body bg-light bg-opacity-25">
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Perhitungan Rata-rata Kunjungan Hari Kerja :
                                 </h4>
                                 <p class="fs-14 text-muted mb-1">
                                     Kapasitas Pengunjung x Turnover Hari Kerja
@@ -164,27 +155,28 @@
                                 <p class="fs-14 text-muted mb-2">
                                     0 x 0,00 = 0 Pengunjung
                                 </p>
-                                <h4 class="fs-14 fw-semibold mb-1">
+                                <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Rata-rata Kunjungan Akhir Pekan :
                                 </h4>
                                 <p class="fs-14 text-muted mb-1">
                                     Kapasitas Pengunjung x Turnover Akhir Pekan
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
+                                <p class="fs-14 text-muted mb-1">
                                     0 x 0,00 = 0 Pengunjung
                                 </p>
-                                <h4 class="fs-14 fw-semibold mb-1">
+                                <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Rata-rata Member Bulanan :
                                 </h4>
                                 <p class="fs-14 text-muted mb-1">
-                                    ((Rata-rata Kunjungan Hari Kerja x 22 Hari) + (Rata-rata Kunjungan Akhir Pekan x 8 Hari))/12
+                                    ((Rata-rata Kunjungan Hari kerja x 22 Hari) + (Rata-rata Kunjungan Akhir Pekan x 8 Hari))/12
                                 </p>
-                                <p class="fs-14 text-muted mb-1">
-                                    ((0 x 22) + (0 x 8))/12 = 0 Member
+                                <p class="fs-14 text-muted mb-2">
+                                    ((0,0 x 22) + (0,0 x 8))/12 = 0 Member
                                 </p>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -203,26 +195,20 @@
                     <div class="col-lg-6">
                         <div class="card">
                             <div class="card-body">
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Harga Membership Bulanan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Orang</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
+                                <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Harga Tiket Masuk Hari Kerja</p>
                                     <div class="flex-shrink-0">
                                         <p class="fs-14 fw-semibold">Rp 0</p>
                                     </div>
                                 </div>
-                                <div class="d-flex">
+                                <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Harga Tiket Masuk Akhir Pekan</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-14 fw-semibold">Rp 0</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Harga Member Bulanan</p>
                                     <div class="flex-shrink-0">
                                         <p class="fs-14 fw-semibold">Rp 0</p>
                                     </div>
@@ -233,7 +219,7 @@
 
                     <div class="col-lg-6">
                         <div class="card border border-success border-2">
-                            <div class="card-body">
+                            <div class="card-body bg-soft-success bg-opacity-25">
                                 <div class="p-1">
                                     <h4 class="fs-16 fw-semibold mb-4">
                                         Omzet Bulanan
@@ -241,29 +227,29 @@
                                     <h4 class="fs-16 fw-semibold mb-1">
                                         Rp 0
                                     </h4>
-                                    <p class="fs-14 text-muted mb-1">Total pendapatan dari membership</p>
+                                    <p class="fs-14 text-muted mb-2">Total pendapatan dari layanan</p>
                                 </div>
-                                <br />
                             </div>
                         </div>
                     </div>
 
                     <div class="col-lg-12">
-                        <div class="card border border-success border-2">
+                        <div class="card">
                             <div class="card-body">
+                                <h4 class="fs-16 fw-semibold mb-3">
+                                    Distribusi Omzet Bulanan
+                                </h4>
+                                <!-- Multiple Bars -->
+                                <div class="progress mb-4" style="height:20px">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+                                </div>
                                 <div class="d-flex">
+                                    <h6 class="px-4 fs-6"><span class="badge bg-primary">60%</span> = Hari Kerja</h6>
                                     <div class="flex-shrink-0">
-                                        <i class="avatar-md ri-information-line text-success fs-3"></i>
-                                    </div>
-                                    <div class="flex-grow-1 px-3 mt-2">
-                                        <h4 class="fs-16 fw-semibold mb-1">
-                                            Informasi Omzet
-                                        </h4>
+                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Akhir Pekan</h6>
                                     </div>
                                 </div>
-                                <p class="fs-14 text-muted mb-1">
-                                    Sebagai pusat kebugaran, Omzet Gym dihitung berdasarkan pendapatan dari membership bulanan, bukan dari penjualan tiket harian.
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -271,14 +257,32 @@
                     <div class="col-lg-12">
                         <div class="card border border-success border-2">
                             <div class="card-body bg-light bg-opacity-25">
-                                <h4 class="fs-16 fw-semibold mb-1">
-                                    Perhitungan Omzet Bulanan :
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Perhitungan Omzet Hari Kerja :
                                 </h4>
                                 <p class="fs-14 text-muted mb-1">
-                                    Harga Membership Bulanan x Rata-rata Member Bulanan
+                                    Harga Tiket Hari Kerja x Rata-rata Kunjungan Hari Kerja x 22 Hari
                                 </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    Rp 0 x 0 x 22 = Rp 0
+                                </p>
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Perhitungan Omzet Akhir Pekan :
+                                </h4>
                                 <p class="fs-14 text-muted mb-1">
-                                    Rp 0 x 0  = Rp 0
+                                    Harga Tiket Akhir Pekan x Rata-rata Kunjungan Akhir Pekan x 8 Hari
+                                </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    Rp 0 x 0 x 8 = Rp 0
+                                </p>
+                                <h4 class="fs-16 fw-semibold mb-2">
+                                    Total Omzet Bulanan :
+                                </h4>
+                                <p class="fs-14 text-muted mb-1">
+                                    Omzet Hari Kerja + Omzet Akhir Pekan
+                                </p>
+                                <p class="fs-14 text-muted mb-2">
+                                    Rp 0 + Rp 0 = Rp 0
                                 </p>
                             </div>
                         </div>
@@ -300,48 +304,64 @@
                 <div class="row">
 
                     <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
+                        <div class="card border border-warning border-2">
+                            <div class="card-body bg-soft-warning bg-opacity-25">
+                                <p class="fs-14 mb-2 text-center">
+                                    Tarif Pajak Hiburan Khusus
+                                </p>
+                                <h4 class="fs-18 fw-semibold mb-2 text-center">
+                                    50%
+                                </h4>
+                                <p class="fs-14 mb-2 text-center">
+                                    Berlaku untuk kategori usaha ini
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="card border border-success border-2">
+                            <div class="card-body bg-light bg-opacity-25">
                                 <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak Per Bulan :
+                                    Rumus Perhitungan Potensi Pajak per Bulan
                                 </h4>
                                 <p class="fs-14 text-muted mb-1">
                                     Omzet Bulanan x Tarif Pajak
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 x 10% = Rp 0
+                                <p class="fs-14 text-muted mb-1">
+                                    Rp 0 x 50% = Rp 0
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak Per Tahun :
+                                    Rumus Perhitungan Potensi Pajak per Tahun
                                 </h4>
                                 <p class="fs-14 text-muted mb-1">
-                                    Potensi Pajak Per Bulan x 12
+                                    Potensi Pajak per Bulan x 12
                                 </p>
                                 <p class="fs-14 text-muted mb-2">
                                     Rp 0 x 12 = Rp 0
                                 </p>
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Total Potensi Pajak Per Tahun : Rp 0
+                                <h4 class="fs-16 fw-semibold">
+                                    Total Potensi Pajak per Tahun : Rp 0
                                 </h4>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-lg-6">
-                        <div class="card">
+                        <div class="card border border-success border-2">
                             <div class="card-body">
                                 <h4 class="fs-16 fw-semibold mb-3">
                                     Distribusi Omzet Bulanan
                                 </h4>
                                 <!-- Multiple Bars -->
-                                <div class="progress mb-3" style="height:20px">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 93%" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100">93%</div>
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 7%" aria-valuenow="7" aria-valuemin="0" aria-valuemax="100">7%</div>
+                                <div class="progress mb-4" style="height:20px">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
                                 </div>
-                                <div class="d-flex mb-5">
-                                    <h6 class="px-4"><span class="badge bg-primary">93%</span> = Hari Kerja</h6>
+                                <div class="d-flex">
+                                    <h6 class="px-4 fs-6"><span class="badge bg-success">60%</span> = Hari Kerja</h6>
                                     <div class="flex-shrink-0">
-                                        <h6><span class="badge bg-secondary">7%</span> = Akhir Pekan</h6>
+                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Akhir Pekan</h6>
                                     </div>
                                 </div>
                             </div>
@@ -350,23 +370,23 @@
 
                     <div class="col-lg-6">
                         <div class="card border border-success border-2">
-                            <div class="card-body">
-                                <h4 class="fs-18 fw-semibold mb-2">
+                            <div class="card-body bg-soft-success bg-opacity-25">
+                                <h4 class="card-title fs-14 mb-4">
                                     Potensi Pajak per Bulan
                                 </h4>
-                                <h4 class="fs-18 fw-semibold mb-2">
-                                    0
+                                <h4 class="card-title fs-18 mb-3">
+                                    Rp 0
                                 </h4>
                                 <div class="d-flex">
                                     <p class="fs-14 text-muted flex-grow-1">Hari Kerja</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp 0</p>
+                                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
                                     </div>
                                 </div>
                                 <div class="d-flex">
                                     <p class="fs-14 text-muted flex-grow-1">Akhir Pekan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp 0</p>
+                                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
                                     </div>
                                 </div>
                             </div>
@@ -398,7 +418,7 @@
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Nama Usaha</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Gym</p>
+                        <p class="fs-14 fw-semibold mb-1">Massage</p>
                     </div>
                 </div>
                 <div class="d-flex">
@@ -428,27 +448,27 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card border border-success border-2">
-                            <div class="card-body">
+                            <div class="card-body bg-success bg-opacity-25">
                                 <h4 class="card-title fs-14 mb-4">
                                     Potensi Pajak per Bulan
                                 </h4>
                                 <h4 class="card-title fs-18 mb-0">
                                     Rp 0
                                 </h4>
-                                <p class="fs-12 text-muted">10% dari omzet bulanan</p>
+                                <p class="fs-12">50% dari omzet bulanan</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <div class="card border border-danger border-2">
-                            <div class="card-body">
+                        <div class="card border border-success border-2">
+                            <div class="card-body bg-success bg-opacity-25">
                                 <h4 class="card-title fs-14 mb-4">
                                     Potensi Pajak per Tahun
                                 </h4>
                                 <h4 class="card-title fs-18 mb-0">
                                     Rp 0
                                 </h4>
-                                <p class="fs-12 text-muted">Proyeksi untuk 12 bulan</p>
+                                <p class="fs-12">Proyeksi untuk 12 bulan</p>
                             </div>
                         </div>
                     </div>
@@ -466,64 +486,38 @@
             </div>
             <div class="card-body">
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 Hari/Bulan)</p>
+                    <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 hari/bulan)</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Tiket</p>
+                        <p class="fs-14 fw-semibold mb-1">0 Kunjungan</p>
                     </div>
                 </div>
 
-                <div class="progress" style="height:20px">
+                <div class="progress mb-2" style="height:20px">
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
                 </div>
 
                 <br />
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 Hari/Bulan)</p>
+                    <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 hari/bulan)</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Tiket</p>
+                        <p class="fs-14 fw-semibold mb-1">0 Kunjungan</p>
                     </div>
                 </div>
 
-                <div class="progress" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">90%</div>
+                <div class="progress mb-2" style="height:20px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
                 </div>
 
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-success">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Detail Membership
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Harga Membership</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Rata-rata Member</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Orang</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Omzet Bulanan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">10%</p>
-                    </div>
-                </div>
+                <br />
+                <h4 class="fs-14 mb-2 text-center">
+                    Total Kunjungan per Bulan
+                </h4>
+                <h4 class="fs-16 fw-semibold mb-2 text-center">
+                    0 Kunjungan
+                </h4>
+                <h4 class="fs-14 text-muted mb-1 text-center">
+                    Rata-rata 0,0 Kunjungan per Hari
+                </h4>
             </div>
         </div>
 
@@ -537,9 +531,15 @@
             </div>
             <div class="card-body">
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kapasitas Pengunjung</p>
+                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Hari Kerja</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Orang</p>
+                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Akhir Pekan</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
                     </div>
                 </div>
                 <div class="d-flex">
@@ -569,7 +569,40 @@
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">10%</p>
+                        <p class="fs-14 fw-semibold mb-1">50%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex bg-soft-success">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Catatan Khusus
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card border border-warning border-2">
+                            <div class="card-body bg-soft-warning bg-opacity-25">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="avatar-md ri-alert-fill text-warning fs-3"></i>
+                                    </div>
+                                    <div class="flex-grow-1 px-3 mt-2">
+                                        <h4 class="fs-16 fw-semibold mb-1">
+                                            Tarif Pajak Khusus
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p class="fs-14 text-muted mb-1">
+                                    Usaha ini dikenakan tarif pajak hiburan khusus sebesar 50% sesuai dengan Peraturan Daerah tentang Pajak Hiburan
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -578,32 +611,30 @@
     </div>
 
     <div class="col-lg-12">
+
         <div class="card">
             <div class="card-header d-flex bg-soft-success">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-0">
-                        Rumus Perhitungan Potensi Pajak
+                        Rumus Lengkap Perhitungan Potensi Pajak
                     </h4>
                 </div>
             </div>
             <div class="card-body">
                 <h4 class="fs-14 fw-semibold mb-2">
-                    P = (Harga Membership Bulanan x (((Kapasitas Pengunjung x Turnover Hari Kerja x 22) + (Kapasitas Pengunjung x Turnover Akhir Pekan x 8))/12) x Tarif Pajak) x 12
+                    P = (((Harga Tiket Masuk Hari Kerja x Kapasitas Pengunjung x Turnover Hari Kerja x 22 Hari) + (Harga Tiket Masuk Akhir Pekan x Kapasitas Pengunjung x Turnover Akhir Pekan x 8 Hari)) x Tarif Pajak) x 12
                 </h4>
                 <h4 class="fs-14 fw-semibold mb-2">
-                    P = (h x (((e x i x 22) + (e x j x 8))/12) x Tarif Pajak) x 12
+                    P = (((f x e x i x 22) + (g x e x j x 8)) x Tarif Pajak) x 12
                 </h4>
                 <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x (((0 x 0,00 x 22) + (0 x 0 x 8))/12) x 0,1) x 12
+                    P = (((0 x 0 x 0,0 x 22) + (0 x 0 x 0,0 x 8)) x 0,5) x 12
                 </h4>
                 <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x (((0) + (0))/12) x 0,1) x 12
+                    P = ((0 + 0) x 0,5) x 12
                 </h4>
                 <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x (0/12) x 0,1) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x 0 x 0,1) x 12
+                    P = (0 x 0,5) x 12
                 </h4>
                 <h4 class="fs-14 fw-semibold mb-2">
                     P = 0 x 12
@@ -613,5 +644,7 @@
                 </h4>
             </div>
         </div>
+
     </div>
+
 </div>
