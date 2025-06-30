@@ -1,56 +1,294 @@
-﻿@using Microsoft.AspNetCore.Html
-@{
-    ViewBag.Title = "Dashboard Pajak Daerah";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-@functions {
-    public class PajakCardVM
-    {
-        public string Nama { get; set; }
-        public long Realisasi { get; set; }
-        public long Target { get; set; }
-        public double Persen { get; set; }
-        public string Warna { get; set; }
-    }
-}
+﻿@model MonPDReborn.Models.DataOP.ProfileTargetOPVM.Index
 
 @{
-    var data = new List<PajakCardVM> {
-        new PajakCardVM { Nama = "HOTEL", Realisasi = 157488112804, Target = 405688598057, Persen = 38.82, Warna = "bg-primary" },
-        new PajakCardVM { Nama = "Restoran", Realisasi = 350297388845, Target = 736275239787, Persen = 47.58, Warna = "bg-warning" },
-        new PajakCardVM { Nama = "Parkir", Realisasi = 26088243125, Target = 62125343640, Persen = 41.99, Warna = "bg-success" },
-        new PajakCardVM { Nama = "Hiburan", Realisasi = 42251035335, Target = 102064401727, Persen = 41.40, Warna = "bg-info" },
-        new PajakCardVM { Nama = "PPJ", Realisasi = 334208226980, Target = 766551662201, Persen = 43.60, Warna = "bg-primary" },
-        new PajakCardVM { Nama = "PBB", Realisasi = 1124097071321, Target = 1738731114918, Persen = 64.65, Warna = "bg-warning" },
-        new PajakCardVM { Nama = "BPHTB", Realisasi = 500107235224, Target = 1645077374811, Persen = 30.40, Warna = "bg-success" },
-        new PajakCardVM { Nama = "Reklame", Realisasi = 62899164675, Target = 178291170763, Persen = 35.28, Warna = "bg-info" },
-        new PajakCardVM { Nama = "AirTanah", Realisasi = 748379710, Target = 1435906440, Persen = 52.12, Warna = "bg-primary" },
-        new PajakCardVM { Nama = "OPSEN PKB", Realisasi = 313030965302, Target = 1046318203819, Persen = 29.92, Warna = "bg-warning" },
-        new PajakCardVM { Nama = "OPSEN BBNKB", Realisasi = 157562052248, Target = 625192983163, Persen = 25.20, Warna = "bg-success" },
-        new PajakCardVM { Nama = "Total Pajak Daerah", Realisasi = 3068777875569, Target = 7307751999326, Persen = 41.99, Warna = "bg-success text-white" }
-    };
+    ViewData["Title"] = "Profile Target";
+    Layout = "_Layout";
 }
 
-<div class="container-fluid p-3">
-    <div class="row">
-        @foreach (var item in data)
-        {
-            <div class="col-md-4 col-lg-3 mb-3">
-                <div class="card shadow-sm">
-                    <div class="card-body d-flex">
-                        <div class="me-3">
-                            <div class="rounded p-2 text-white fw-bold text-center @item.Warna" style="min-width:60px">
-                                @item.Persen.ToString("0.00") %
-                            </div>
-                        </div>
-                        <div>
-                            <div class="fw-semibold">@item.Nama</div>
-                            <div class="small text-muted">@String.Format("{0:N0}", item.Realisasi) / @String.Format("{0:N0}", item.Target)</div>
-                        </div>
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div>
+                    <h4 class="card-title fs-16 mb-1">
+                        Dashboard Target Pajak Daerah
+                    </h4>
+                    <p class="fs-14 text-muted">Monitoring dan Analisis Target Penerimaan Pajak</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Badge -->
+                    <span class="badge bg-primary d-flex align-items-center px-3 py-2">
+                        <i class="ri-calendar-fill me-1"></i> Tahun
+                    </span>
+
+                    <!-- Dropdown Button -->
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-primary dropdown-toggle px-3 py-2" type="button" id="dropdownYearBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                            2020
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownYearBtn">
+                            <li><a class="dropdown-item" href="#">2020</a></li>
+                            <li><a class="dropdown-item" href="#">2021</a></li>
+                            <li><a class="dropdown-item" href="#">2022</a></li>
+                            <li><a class="dropdown-item" href="#">2023</a></li>
+                            <li><a class="dropdown-item" href="#">2024</a></li>
+                            <li><a class="dropdown-item" href="#">2025</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        }
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm p-3">
+            <h4 class="fs-14 text-muted mb-3">Total Target Pajak</h4>
+            <h4 class="fs-16 fw-bold mb-1">Rp 000.000.000.000</h4>
+            <small>+0.0% dari tahun lalu</small>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm p-3">
+            <h4 class="fs-14 text-muted mb-3">Jenis Pajak Tertinggi</h4>
+            <h4 class="fs-16 fw-bold mb-1">Jenis Pajak</h4>
+            <small>Rp 000.000.000.000</small>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm p-3">
+            <h4 class="fs-14 text-muted mb-3">Wilayah Target Tertinggi</h4>
+            <h4 class="fs-16 fw-bold mb-1">Wilayah</h4>
+            <small>Rp 000.000.000.000</small>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm p-3">
+            <h4 class="fs-14 text-muted mb-3">Bulan Target Tertinggi</h4>
+            <h4 class="fs-16 fw-bold mb-1">Bulan</h4>
+            <small>Rp 000.000.000.000</small>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Distribusi Target per Jenis Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="simple_pie_chart" class="apex-charts" style="height:382px" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Distribusi Target per Wilayah (UPTB)
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-body">
+                    <div id="column_distributed" data-colors='["--vz-primary", "--vz-success", "--vz-warning", "--vz-danger", "--vz-dark"]' class="apex-charts" style="height:350px" dir="ltr"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Distribusi Target per Bulan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="line_chart_datalabel" data-colors='["--vz-primary"]' class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Total Detail Target Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="Show"></div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+@section Scripts{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var options = {
+                chart: {
+                    type: 'pie',
+                    height: 382
+                },
+                series: [44, 55, 41, 17, 15, 23, 12, 30], // Data total per jenis pajak
+                labels: ['Hotel', 'Restoran', 'Hiburan', 'Parkir', 'PBB', 'BPHTB', 'Reklame', 'PPJ'],
+                colors: [
+                    '#556ee6', // Hotel
+                    '#34c38f', // Restoran
+                    '#f1b44c', // Hiburan
+                    '#f46a6a', // Parkir
+                    '#50a5f1', // PBB
+                    '#6f42c1', // BPHTB
+                    '#fd7e14', // Reklame
+                    '#c05780'  // PPJ-K
+                ],
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return "Rp " + val.toLocaleString("id-ID");
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#simple_pie_chart"), options);
+            chart.render();
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var el = document.querySelector("#column_distributed");
+            var rawColors = el.getAttribute("data-colors");
+
+            // Ambil nilai CSS variable dan ubah jadi array warna HEX
+            var colors = JSON.parse(rawColors).map(function (varName) {
+                return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+            });
+
+            var options = {
+                chart: {
+                    height: 350,
+                    type: 'bar'
+                },
+                plotOptions: {
+                    bar: {
+                        distributed: true,
+                        borderRadius: 4,
+                        columnWidth: '60%'
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                series: [{
+                    data: [150, 250, 180, 300, 120] // Ganti dengan nilai real
+                }],
+                xaxis: {
+                    categories: ['UPTB 1', 'UPTB 2', 'UPTB 3', 'UPTB 4', 'UPTB 5'],
+                    labels: {
+                        style: {
+                            colors: colors,
+                            fontSize: '14px'
+                        }
+                    }
+                },
+                colors: colors,
+                legend: {
+                    show: false
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return 'Rp ' + val.toLocaleString('id-ID');
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(el, options);
+            chart.render();
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const el = document.querySelector("#line_chart_datalabel");
+            const rawColors = el.getAttribute("data-colors");
+            const colors = JSON.parse(rawColors).map(color =>
+                getComputedStyle(document.documentElement).getPropertyValue(color).trim()
+            );
+
+            const options = {
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    zoom: { enabled: false }
+                },
+                dataLabels: {
+                    enabled: true
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                series: [{
+                    name: "Target Pajak Bulanan",
+                    data: [400, 430, 470, 540, 580, 690, 690, 710, 760, 800, 850, 900]
+                }],
+                colors: colors,
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return 'Rp ' + val.toLocaleString('id-ID');
+                        }
+                    }
+                },
+                legend: {
+                    show: 'true',
+                    position: 'top',
+                    horizontalAlign: 'right'
+                }
+            };
+
+            const chart = new ApexCharts(el, options);
+            chart.render();
+        });
+
+        // Saat halaman selesai dimuat
+        $(document).ready(function () {
+            loadShow("");       // Load rekap awal
+        });
+
+        // Fungsi untuk memuat data rekap pemeriksaan
+        function loadShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "ProfileTargetOP")',
+                type: 'GET',
+                success: function (result) {
+                    $('#Show').html(result);
+                },
+                error: function () {
+                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data rekap.</div>');
+                }
+            });
+        }
+    </script>
+}
