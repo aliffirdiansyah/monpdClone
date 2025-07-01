@@ -689,7 +689,7 @@ namespace MonPDReborn.Models
                 var realisasiOpsenBbnkbMines4 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 4).Sum(x => x.JmlPokok);
                 #endregion
 
-
+                #region Ngisi Data
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
@@ -712,7 +712,7 @@ namespace MonPDReborn.Models
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
-                    JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),,
+                    JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                     Target5 = targetHotelNow,
                     Realisasi5 = realisasiHotelNow,
                     Persentase5 = targetHotelNow != 0 ? Math.Round(realisasiHotelNow / targetHotelNow * 100, 2) : 0,
@@ -911,6 +911,7 @@ namespace MonPDReborn.Models
                     Realisasi1 = realisasiOpsenBbnkbMines4,
                     Persentase1 = targetOpsenBbnkbMines4 != 0 ? Math.Round(realisasiOpsenBbnkbMines4 / targetOpsenBbnkbMines4 * 100, 2) : 0,
                 });
+                #endregion
 
                 return result;
             }
@@ -919,6 +920,7 @@ namespace MonPDReborn.Models
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
 
+                #region Method
                 var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == currentYear);
                 var OpRestoTutup = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == currentYear);
                 var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 1);
@@ -957,6 +959,7 @@ namespace MonPDReborn.Models
 
                 var OpOpsenBbnkbNow = 0;
                 var OpOpsenBbnkbAwal = 0;
+                #endregion
 
                 return new List<ViewModel.JumlahObjekPajakTahunan>
                 {
@@ -970,7 +973,7 @@ namespace MonPDReborn.Models
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
-                        JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),,
+                        JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                         JmlOpAwal = OpHotelAwal,
                         JmlOpTutupPermanen = OpHotelTutup,
                         JmlOpBaru = OpHotelNow - OpHotelAwal,
@@ -1135,7 +1138,7 @@ namespace MonPDReborn.Models
 
                 result.Add(new ViewModel.JumlahObjekPajakSeries()
                 {
-                    JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),,
+                    JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                     Jumlah1 = OpHotelMines4,
                     Jumlah2 = OpHotelMines3,
                     Jumlah3 = OpHotelMines2,
