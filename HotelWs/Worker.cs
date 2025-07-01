@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
+using System.Security.Policy;
 
 namespace HotelWs
 {
@@ -69,46 +70,53 @@ namespace HotelWs
                 using (var _contSbyTax = DBClass.GetSurabayaTaxContext())
                 {
                     var sql = @"
-                        SELECT  A.NOP,
-                                C.NPWPD_NO NPWPD,
-                                C.NAMA NPWPD_NAMA,
-                                C.ALAMAT NPWPD_ALAMAT,
-                                A.PAJAK_ID ,
-                                'PAJAK JASA PERHOTELAN' PAJAK_NAMA,
-                                A.NAMA NAMA_OP,
-                                A.ALAMAT ALAMAT_OP,
-                                A.ALAMAT_NO ALAMAT_OP_NO,
-                                A.RT ALAMAT_OP_RT,
-                                A.RW ALAMAT_OP_RW,
-                                A.TELP,
-                                A.KD_LURAH ALAMAT_OP_KD_LURAH,
-                                A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
-                                TGL_OP_TUTUP,
-                                TGL_MULAI_BUKA_OP,
-                                0 METODE_PENJUALAN,
-                                B.BUKTI_BAYAR METODE_PEMBAYARAN,
-                                B.JUMLAH_KARYAWAN,
-                                D.ID  KATEGORI_ID,
-                                D.NAMA KATEGORI_NAMA,
-                                sysdate INS_dATE, 
-                                'JOB' INS_BY,
-                                TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-                                '-'  AKUN  ,
-                                '-'  NAMA_AKUN         ,
-                                '-'  KELOMPOK      ,
-                                '-'  NAMA_KELOMPOK     ,
-                                '-'  JENIS             ,
-                                '-'  NAMA_JENIS        ,
-                                '-'  OBJEK            ,
-                                '-'  NAMA_OBJEK       ,
-                                '-'  RINCIAN         ,
-                                '-'  NAMA_RINCIAN     ,
-                                '-'  SUB_RINCIAN      ,
-                                '-'  NAMA_SUB_RINCIAN    
-                        FROM OBJEK_PAJAK A
-                        JOIN OBJEK_PAJAK_HOTEL B ON A.NOP = B.NOP
-                        JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
-                        JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI";
+                    SELECT  A.NOP,
+        C.NPWPD_NO NPWPD,
+        C.NAMA NPWPD_NAMA,
+        C.ALAMAT NPWPD_ALAMAT,
+        A.PAJAK_ID ,
+        'PAJAK JASA PERHOTELAN' PAJAK_NAMA,
+        A.NAMA NAMA_OP,
+        A.ALAMAT ALAMAT_OP,
+        A.ALAMAT_NO ALAMAT_OP_NO,
+        A.RT ALAMAT_OP_RT,
+        A.RW ALAMAT_OP_RW,
+        A.TELP,
+        A.KD_LURAH ALAMAT_OP_KD_LURAH,
+        A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
+        TGL_OP_TUTUP,
+        TGL_MULAI_BUKA_OP,
+        0 METODE_PENJUALAN,
+        B.BUKTI_BAYAR METODE_PEMBAYARAN,
+        B.JUMLAH_KARYAWAN,
+        D.ID  KATEGORI_ID,
+        D.NAMA KATEGORI_NAMA,
+        sysdate INS_dATE, 
+        'JOB' INS_BY,
+        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+        CASE 
+			WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
+		ELSE 0
+		END AS IS_TUTUP,
+		'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,
+        '-'  AKUN  ,
+        '-'  NAMA_AKUN         ,
+        '-'  KELOMPOK      ,
+        '-'  NAMA_KELOMPOK     ,
+        '-'  JENIS             ,
+        '-'  NAMA_JENIS        ,
+        '-'  OBJEK            ,
+        '-'  NAMA_OBJEK       ,
+        '-'  RINCIAN         ,
+        '-'  NAMA_RINCIAN     ,
+        '-'  SUB_RINCIAN      ,
+        '-'  NAMA_SUB_RINCIAN    
+FROM OBJEK_PAJAK A
+JOIN OBJEK_PAJAK_HOTEL B ON A.NOP = B.NOP
+JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
+JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
+LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT    
+                    ";
 
                     var result = await _contSbyTax.Set<DbOpHotel>().FromSqlRaw(sql).ToListAsync();
                     for (var i = tahunAmbil; i <= tglServer.Year; i++)
@@ -183,6 +191,8 @@ namespace HotelWs
                                     newRow.JumlahKaryawan = item.JumlahKaryawan;
                                     newRow.InsDate = item.InsDate;
                                     newRow.InsBy = item.InsBy;
+                                    newRow.IsTutup = item.IsTutup;
+                                    newRow.WilayahPajak = item.WilayahPajak;
 
                                     newRow.TahunBuku = i;
                                     var dbakun = GetDbAkun(i, idPajak, (int)item.KategoriId);
@@ -302,124 +312,124 @@ WHERE 	NAMA_PAJAK_DAERAH ='HOTEL' AND
                 var distinctNop = result.Select(x => x.Nop).ToList();
                 var dataExisting = _contMonPd.DbOpHotels.Where(x => distinctNop.Contains(x.Nop)).ToList();
 
-                foreach (var ite in result)
+
+                for (var i = tahunAmbil; i <= tglServer.Year; i++)
                 {
-                    var isExist = dataExisting.Where(x => x.Nop == ite.Nop).Any();
-                    if (!isExist)
+                    var source = await _contMonPd.DbOpHotels.Where(x => x.TahunBuku == i).ToListAsync();
+                    foreach (var item in result)
                     {
-                        for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                        var isExist = dataExisting.Where(x => x.Nop == item.Nop).Any();
+                        if (!isExist)
                         {
-                            var source = await _contMonPd.DbOpHotels.Where(x => x.TahunBuku == i).ToListAsync();
-                            foreach (var item in result)
+                            if (item.TglMulaiBukaOp.Year <= i)
                             {
-                                if (item.TglMulaiBukaOp.Year <= i)
+                                var sourceRow = source.SingleOrDefault(x => x.Nop == item.Nop);
+                                if (sourceRow != null)
                                 {
-                                    var sourceRow = source.SingleOrDefault(x => x.Nop == item.Nop);
-                                    if (sourceRow != null)
+                                    sourceRow.TglOpTutup = item.TglOpTutup;
+                                    sourceRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
+
+                                    var dbakun = GetDbAkun(i, idPajak, (int)item.KategoriId);
+                                    if (dbakun != null)
                                     {
-
-                                        sourceRow.TglOpTutup = item.TglOpTutup;
-                                        sourceRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
-
-                                        var dbakun = GetDbAkun(i, idPajak, (int)item.KategoriId);
-                                        if (dbakun != null)
-                                        {
-                                            sourceRow.Akun = dbakun.Akun;
-                                            sourceRow.NamaAkun = dbakun.NamaAkun;
-                                            sourceRow.Kelompok = dbakun.Kelompok;
-                                            sourceRow.NamaKelompok = dbakun.NamaKelompok;
-                                            sourceRow.Jenis = dbakun.Jenis;
-                                            sourceRow.NamaJenis = dbakun.NamaJenis;
-                                            sourceRow.Objek = dbakun.Objek;
-                                            sourceRow.NamaObjek = dbakun.NamaObjek;
-                                            sourceRow.Rincian = dbakun.Rincian;
-                                            sourceRow.NamaRincian = dbakun.NamaRincian;
-                                            sourceRow.SubRincian = dbakun.SubRincian;
-                                            sourceRow.NamaSubRincian = dbakun.NamaSubRincian;
-                                        }
-                                        else
-                                        {
-                                            sourceRow.Akun = item.Akun;
-                                            sourceRow.NamaAkun = item.NamaAkun;
-                                            sourceRow.Kelompok = item.Kelompok;
-                                            sourceRow.NamaKelompok = item.NamaKelompok;
-                                            sourceRow.Jenis = item.Jenis;
-                                            sourceRow.NamaJenis = item.NamaJenis;
-                                            sourceRow.Objek = item.Objek;
-                                            sourceRow.NamaObjek = item.NamaObjek;
-                                            sourceRow.Rincian = item.Rincian;
-                                            sourceRow.NamaRincian = item.NamaRincian;
-                                            sourceRow.SubRincian = item.SubRincian;
-                                            sourceRow.NamaSubRincian = item.NamaSubRincian;
-                                        }
+                                        sourceRow.Akun = dbakun.Akun;
+                                        sourceRow.NamaAkun = dbakun.NamaAkun;
+                                        sourceRow.Kelompok = dbakun.Kelompok;
+                                        sourceRow.NamaKelompok = dbakun.NamaKelompok;
+                                        sourceRow.Jenis = dbakun.Jenis;
+                                        sourceRow.NamaJenis = dbakun.NamaJenis;
+                                        sourceRow.Objek = dbakun.Objek;
+                                        sourceRow.NamaObjek = dbakun.NamaObjek;
+                                        sourceRow.Rincian = dbakun.Rincian;
+                                        sourceRow.NamaRincian = dbakun.NamaRincian;
+                                        sourceRow.SubRincian = dbakun.SubRincian;
+                                        sourceRow.NamaSubRincian = dbakun.NamaSubRincian;
                                     }
                                     else
                                     {
-                                        var newRow = new MonPDLib.EF.DbOpHotel();
-                                        newRow.Nop = item.Nop;
-                                        newRow.Npwpd = item.Npwpd;
-                                        newRow.NpwpdNama = item.NpwpdNama;
-                                        newRow.NpwpdAlamat = item.NpwpdAlamat;
-                                        newRow.PajakId = item.PajakId;
-                                        newRow.PajakNama = item.PajakNama;
-                                        newRow.NamaOp = item.NamaOp;
-                                        newRow.AlamatOp = item.AlamatOp;
-                                        newRow.AlamatOpNo = item.AlamatOpNo;
-                                        newRow.AlamatOpRt = item.AlamatOpRt;
-                                        newRow.AlamatOpRw = item.AlamatOpRw;
-                                        newRow.Telp = item.Telp;
-                                        newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
-                                        newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
-                                        newRow.TglOpTutup = item.TglOpTutup;
-                                        newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
-                                        newRow.KategoriId = item.KategoriId;
-                                        newRow.KategoriNama = item.KategoriNama;
-                                        newRow.MetodePembayaran = item.MetodePembayaran;
-                                        newRow.MetodePenjualan = item.MetodePenjualan;
-                                        newRow.JumlahKaryawan = item.JumlahKaryawan;
-                                        newRow.InsDate = item.InsDate;
-                                        newRow.InsBy = item.InsBy;
-
-                                        newRow.TahunBuku = i;
-                                        var dbakun = GetDbAkun(i, idPajak, (int)item.KategoriId);
-                                        if (dbakun != null)
-                                        {
-                                            newRow.Akun = dbakun.Akun;
-                                            newRow.NamaAkun = dbakun.NamaAkun;
-                                            newRow.Kelompok = dbakun.Kelompok;
-                                            newRow.NamaKelompok = dbakun.NamaKelompok;
-                                            newRow.Jenis = dbakun.Jenis;
-                                            newRow.NamaJenis = dbakun.NamaJenis;
-                                            newRow.Objek = dbakun.Objek;
-                                            newRow.NamaObjek = dbakun.NamaObjek;
-                                            newRow.Rincian = dbakun.Rincian;
-                                            newRow.NamaRincian = dbakun.NamaRincian;
-                                            newRow.SubRincian = dbakun.SubRincian;
-                                            newRow.NamaSubRincian = dbakun.NamaSubRincian;
-                                        }
-                                        else
-                                        {
-                                            newRow.Akun = item.Akun;
-                                            newRow.NamaAkun = item.NamaAkun;
-                                            newRow.Kelompok = item.Kelompok;
-                                            newRow.NamaKelompok = item.NamaKelompok;
-                                            newRow.Jenis = item.Jenis;
-                                            newRow.NamaJenis = item.NamaJenis;
-                                            newRow.Objek = item.Objek;
-                                            newRow.NamaObjek = item.NamaObjek;
-                                            newRow.Rincian = item.Rincian;
-                                            newRow.NamaRincian = item.NamaRincian;
-                                            newRow.SubRincian = item.SubRincian;
-                                            newRow.NamaSubRincian = item.NamaSubRincian;
-                                        }
-                                        _contMonPd.DbOpHotels.Add(newRow);
+                                        sourceRow.Akun = item.Akun;
+                                        sourceRow.NamaAkun = item.NamaAkun;
+                                        sourceRow.Kelompok = item.Kelompok;
+                                        sourceRow.NamaKelompok = item.NamaKelompok;
+                                        sourceRow.Jenis = item.Jenis;
+                                        sourceRow.NamaJenis = item.NamaJenis;
+                                        sourceRow.Objek = item.Objek;
+                                        sourceRow.NamaObjek = item.NamaObjek;
+                                        sourceRow.Rincian = item.Rincian;
+                                        sourceRow.NamaRincian = item.NamaRincian;
+                                        sourceRow.SubRincian = item.SubRincian;
+                                        sourceRow.NamaSubRincian = item.NamaSubRincian;
                                     }
-
-                                    Console.WriteLine($"DB_OP {item.Nop}");
-                                    _contMonPd.SaveChanges();
                                 }
+                                else
+                                {
+                                    var newRow = new MonPDLib.EF.DbOpHotel();
+                                    newRow.Nop = item.Nop;
+                                    newRow.Npwpd = item.Npwpd;
+                                    newRow.NpwpdNama = item.NpwpdNama;
+                                    newRow.NpwpdAlamat = item.NpwpdAlamat;
+                                    newRow.PajakId = item.PajakId;
+                                    newRow.PajakNama = item.PajakNama;
+                                    newRow.NamaOp = item.NamaOp;
+                                    newRow.AlamatOp = item.AlamatOp;
+                                    newRow.AlamatOpNo = item.AlamatOpNo;
+                                    newRow.AlamatOpRt = item.AlamatOpRt;
+                                    newRow.AlamatOpRw = item.AlamatOpRw;
+                                    newRow.Telp = item.Telp;
+                                    newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
+                                    newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
+                                    newRow.TglOpTutup = item.TglOpTutup;
+                                    newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
+                                    newRow.KategoriId = item.KategoriId;
+                                    newRow.KategoriNama = item.KategoriNama;
+                                    newRow.MetodePembayaran = item.MetodePembayaran;
+                                    newRow.MetodePenjualan = item.MetodePenjualan;
+                                    newRow.JumlahKaryawan = item.JumlahKaryawan;
+                                    newRow.InsDate = item.InsDate;
+                                    newRow.InsBy = item.InsBy;
+                                    newRow.IsTutup = item.IsTutup;
+                                    newRow.WilayahPajak = item.WilayahPajak;
+
+                                    newRow.TahunBuku = i;
+                                    var dbakun = GetDbAkun(i, idPajak, (int)item.KategoriId);
+                                    if (dbakun != null)
+                                    {
+                                        newRow.Akun = dbakun.Akun;
+                                        newRow.NamaAkun = dbakun.NamaAkun;
+                                        newRow.Kelompok = dbakun.Kelompok;
+                                        newRow.NamaKelompok = dbakun.NamaKelompok;
+                                        newRow.Jenis = dbakun.Jenis;
+                                        newRow.NamaJenis = dbakun.NamaJenis;
+                                        newRow.Objek = dbakun.Objek;
+                                        newRow.NamaObjek = dbakun.NamaObjek;
+                                        newRow.Rincian = dbakun.Rincian;
+                                        newRow.NamaRincian = dbakun.NamaRincian;
+                                        newRow.SubRincian = dbakun.SubRincian;
+                                        newRow.NamaSubRincian = dbakun.NamaSubRincian;
+                                    }
+                                    else
+                                    {
+                                        newRow.Akun = item.Akun;
+                                        newRow.NamaAkun = item.NamaAkun;
+                                        newRow.Kelompok = item.Kelompok;
+                                        newRow.NamaKelompok = item.NamaKelompok;
+                                        newRow.Jenis = item.Jenis;
+                                        newRow.NamaJenis = item.NamaJenis;
+                                        newRow.Objek = item.Objek;
+                                        newRow.NamaObjek = item.NamaObjek;
+                                        newRow.Rincian = item.Rincian;
+                                        newRow.NamaRincian = item.NamaRincian;
+                                        newRow.SubRincian = item.SubRincian;
+                                        newRow.NamaSubRincian = item.NamaSubRincian;
+                                    }
+                                    _contMonPd.DbOpHotels.Add(newRow);
+                                }
+
+                                Console.WriteLine($"DB_OP_HPP {item.Nop}");
+                                _contMonPd.SaveChanges();
                             }
                         }
+                        
                     }
                 }
             }
