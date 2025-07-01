@@ -32,9 +32,9 @@ namespace MonPDReborn.Models.DataOP
             {
 
             }
-            public Detail(string nop)
+            public Detail(string nop, EnumFactory.EPajak pajak)
             {
-                DataRealisasiBulananList = Method.GetRealisasiDetail(nop);
+                DataRealisasiBulananList = Method.GetRealisasiDetail(nop, pajak);
             }
         }
         public class Method

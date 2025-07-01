@@ -43,11 +43,11 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Detail(string nop)
+        public IActionResult Detail(string nop, int pajak)
         {
             try
             {
-                var model = new Models.DataOP.PencarianOPVM.Detail(nop);
+                var model = new Models.DataOP.PencarianOPVM.Detail(nop, (MonPDLib.General.EnumFactory.EPajak)pajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
