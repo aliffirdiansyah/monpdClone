@@ -181,4 +181,13 @@ public partial class DbOpParkir
     [StringLength(150)]
     [Unicode(false)]
     public string? NamaKelompok { get; set; }
+
+    [Column("WILAYAH_PAJAK")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? WilayahPajak { get; set; }
+
+    [Column("IS_TUTUP")]
+    [Precision(2)]
+    public byte? IsTutup { get; set; }
 }

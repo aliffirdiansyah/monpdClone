@@ -88,7 +88,7 @@ public partial class DbMonAbt
     public decimal TahunBuku { get; set; }
 
     [Column("AKUN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Akun { get; set; } = null!;
 
@@ -98,7 +98,7 @@ public partial class DbMonAbt
     public string NamaAkun { get; set; } = null!;
 
     [Column("JENIS")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Jenis { get; set; } = null!;
 
@@ -108,7 +108,7 @@ public partial class DbMonAbt
     public string NamaJenis { get; set; } = null!;
 
     [Column("OBJEK")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Objek { get; set; } = null!;
 
@@ -118,7 +118,7 @@ public partial class DbMonAbt
     public string NamaObjek { get; set; } = null!;
 
     [Column("RINCIAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Rincian { get; set; } = null!;
 
@@ -128,7 +128,7 @@ public partial class DbMonAbt
     public string NamaRincian { get; set; } = null!;
 
     [Column("SUB_RINCIAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string SubRincian { get; set; } = null!;
 
@@ -173,27 +173,27 @@ public partial class DbMonAbt
     public decimal? PengurangPokokKetetapan { get; set; }
 
     [Column("AKUN_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunKetetapan { get; set; }
 
     [Column("JENIS_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisKetetapan { get; set; }
 
     [Column("OBJEK_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekKetetapan { get; set; }
 
     [Column("RINCIAN_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianKetetapan { get; set; }
 
     [Column("SUB_RINCIAN_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianKetetapan { get; set; }
 
