@@ -197,6 +197,6 @@ public partial class DbOpResto
     public string? WilayahPajak { get; set; }
 
     [Column("IS_TUTUP")]
-    [Precision(2)]
-    public byte? IsTutup { get; set; }
+    [Precision(10)]
+    public int? IsTutup { get; set; }
 }
