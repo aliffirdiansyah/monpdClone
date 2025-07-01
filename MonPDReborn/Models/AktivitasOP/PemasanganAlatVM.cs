@@ -87,41 +87,51 @@
             {
                 return new List<SubDetailModal>
                 {
-                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "The Westin Surabaya", Alamat = "Jalan Menuju Kemenangan", NOP = "350001004005006", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "Shangri-La Hotel", Alamat = "Jl. Mayjend Sungkono", NOP = "350001004005007", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "JW Marriott", Alamat = "Jl. Embong Malang", NOP = "350001004005008", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "Vasa Hotel", Alamat = "Jl. HR Muhammad", NOP = "350001004005009", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "DoubleTree by Hilton", Alamat = "Jl. Tunjungan", NOP = "350001004005010", Tahun = 2024 },
+                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "The Westin Surabaya", Alamat = "Jalan Menuju Kemenangan", NOP = "350001004005006", TanggalPemasangan = new DateTime(2025, 1, 15), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "Raffles Jakarta", Alamat = "Jl. Prof. Dr. Satrio", NOP = "317501000000001", TanggalPemasangan = new DateTime(2025, 1, 20), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "The Ritz-Carlton Bali", Alamat = "Jl. Raya Nusa Dua", NOP = "510901000000002", TanggalPemasangan = new DateTime(2025, 1, 25), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = true, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Lima", NamaOP = "Four Seasons Jakarta", Alamat = "Jl. Gatot Subroto", NOP = "317501000000003", TanggalPemasangan = new DateTime(2025, 1, 28), JenisPajak = "Hotel" , IsTerpasangTS =true, IsTerpasangTB = true, IsTerpasangSB = false},
 
-                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Hotel Santika Premiere", Alamat = "Jl. Raya Gubeng", NOP = "350001004005011", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Grand Darmo Suite", Alamat = "Jl. Progo", NOP = "350001004005012", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Swiss-Belinn Tunjungan", Alamat = "Jl. Tunjungan", NOP = "350001004005013", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Quest Hotel Surabaya", Alamat = "Jl. Ronggolawe", NOP = "350001004005014", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Premier Place Hotel", Alamat = "Jl. Raya Juanda", NOP = "350001004005015", Tahun = 2024 },
+                    // Bintang Empat (6 data)
+                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Grand Mercure Bandung", Alamat = "Jl. Braga No. 99", NOP = "327301000000001", TanggalPemasangan = new DateTime(2025, 2, 10), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Novotel Solo", Alamat = "Jl. Slamet Riyadi", NOP = "337401000000002", TanggalPemasangan = new DateTime(2025, 2, 12), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Mercure Bali Legian", Alamat = "Jl. Legian", NOP = "510901000000003", TanggalPemasangan = new DateTime(2025, 2, 14), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Swiss-Belhotel Pondok Indah", Alamat = "Jakarta Selatan", NOP = "317502000000004", TanggalPemasangan = new DateTime(2025, 2, 16), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Holiday Inn Bandung", Alamat = "Jl. Ir. H. Juanda", NOP = "327302000000005", TanggalPemasangan = new DateTime(2025, 2, 18), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = true, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Empat", NamaOP = "Hotel Santika Premiere Yogyakarta", Alamat = "Jl. Jend. Sudirman", NOP = "347101000000006", TanggalPemasangan = new DateTime(2025, 2, 20), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = false, IsTerpasangSB = true },
 
-                    new() { Kategori = "Hotel Bintang Tiga", NamaOP = "POP! Hotel Gubeng", Alamat = "Jl. Bangka", NOP = "350001004005016", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Tiga", NamaOP = "Ibis Styles Surabaya", Alamat = "Jl. Jemursari", NOP = "350001004005017", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Tiga", NamaOP = "Hotel 88 Embong Kenongo", Alamat = "Jl. Embong Kenongo", NOP = "350001004005018", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Tiga", NamaOP = "Favehotel Rungkut", Alamat = "Jl. Raya Kalirungkut", NOP = "350001004005019", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Tiga", NamaOP = "Yello Hotel Jemursari", Alamat = "Jl. Raya Jemursari", NOP = "350001004005020", Tahun = 2024 },
+                    // Bintang Tiga (6 data)
+                    new() { Kategori = "Hotel Bintang Tiga", NamaOP = "Hotel Santika Malang", Alamat = "Jl. Letjen Sutoyo No. 79", NOP = "357901000000007", TanggalPemasangan = new DateTime(2025, 3, 5), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Bintang Tiga", NamaOP = "Whiz Hotel Cikini", Alamat = "Jl. Cikini Raya", NOP = "317503000000008", TanggalPemasangan = new DateTime(2025, 3, 7), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() {Kategori = "Hotel Bintang Tiga", NamaOP = "POP! Hotel Tebet", Alamat = "Jl. Prof. Dr. Soepomo", NOP = "317504000000009", TanggalPemasangan = new DateTime(2025, 3, 9), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Tiga", NamaOP = "Hotel Amaris Surabaya", Alamat = "Jl. Embong Malang", NOP = "357802000000010", TanggalPemasangan = new DateTime(2025, 3, 11), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Tiga", NamaOP = "Neo Malioboro Yogyakarta", Alamat = "Jl. Pasar Kembang", NOP = "347102000000011", TanggalPemasangan = new DateTime(2025, 3, 13), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = true, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Tiga", NamaOP = "Favehotel Braga", Alamat = "Jl. Braga", NOP = "327303000000012", TanggalPemasangan = new DateTime(2025, 3, 15), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = false, IsTerpasangSB = true},
 
-                    new() { Kategori = "Hotel Bintang Dua", NamaOP = "Hotel Bali Inn", Alamat = "Jl. Bali", NOP = "350001004005021", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Dua", NamaOP = "RedDoorz Near ITS", Alamat = "Jl. Teknik Kimia", NOP = "350001004005022", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Dua", NamaOP = "Hotel Nusantara", Alamat = "Jl. Diponegoro", NOP = "350001004005023", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Dua", NamaOP = "OYO 123", Alamat = "Jl. Raya Panjang Jiwo", NOP = "350001004005024", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Dua", NamaOP = "Hotel Royal Inn", Alamat = "Jl. Basuki Rahmat", NOP = "350001004005025", Tahun = 2024 },
+                    // Bintang Dua (6 data)
+                    new() {Kategori = "Hotel Bintang Dua", NamaOP = "Red Planet Jakarta", Alamat = "Jl. Pecenongan", NOP = "317505000000013", TanggalPemasangan = new DateTime(2025, 4, 1), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Dua", NamaOP = "Hotel Griyadi", Alamat = "Jl. Cikini", NOP = "317506000000014", TanggalPemasangan = new DateTime(2025, 4, 3), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Dua", NamaOP = "Hotel Nusa Indah", Alamat = "Jl. Juanda", NOP = "317507000000015", TanggalPemasangan = new DateTime(2025, 4, 5), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Dua", NamaOP = "Hotel New Idola", Alamat = "Jl. Pramuka", NOP = "317508000000016", TanggalPemasangan = new DateTime(2025, 4, 7), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Dua", NamaOP = "Hotel Cempaka", Alamat = "Jl. Cempaka Putih", NOP = "317509000000017", TanggalPemasangan = new DateTime(2025, 4, 9), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = true, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Dua", NamaOP = "Hotel Menteng 1", Alamat = "Jl. Matraman", NOP = "317510000000018", TanggalPemasangan = new DateTime(2025, 4, 11), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = false, IsTerpasangSB = true},
 
-                    new() { Kategori = "Hotel Bintang Satu", NamaOP = "Losmen Damai", Alamat = "Jl. Kalimantan", NOP = "350001004005026", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Satu", NamaOP = "Wisma Sari", Alamat = "Jl. Semolowaru", NOP = "350001004005027", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Satu", NamaOP = "Kost Harian Syariah", Alamat = "Jl. Nginden", NOP = "350001004005028", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Satu", NamaOP = "Pondok Jaya", Alamat = "Jl. Ketintang", NOP = "350001004005029", Tahun = 2024 },
-                    new() { Kategori = "Hotel Bintang Satu", NamaOP = "Wisma Sakura", Alamat = "Jl. Dharmawangsa", NOP = "350001004005030", Tahun = 2024 },
+                    // Bintang Satu (6 data)
+                    new() {Kategori = "Hotel Bintang Satu", NamaOP = "Hotel Alia", Alamat = "Jl. Cikini Raya", NOP = "317511000000019", TanggalPemasangan = new DateTime(2025, 4, 15), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Satu", NamaOP = "Hotel Mustika", Alamat = "Jl. Kebon Sirih", NOP = "317512000000020", TanggalPemasangan = new DateTime(2025, 4, 17), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() { Kategori = "Hotel Bintang Satu", NamaOP = "Hotel Monas", Alamat = "Jl. Merdeka", NOP = "317513000000021", TanggalPemasangan = new DateTime(2025, 4, 19), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() {Kategori = "Hotel Bintang Satu", NamaOP = "Hotel Rahayu", Alamat = "Jl. Pahlawan", NOP = "317514000000022", TanggalPemasangan = new DateTime(2025, 4, 21), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Satu", NamaOP = "Hotel Mawar", Alamat = "Jl. Mawar", NOP = "317515000000023", TanggalPemasangan = new DateTime(2025, 4, 23), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = true, IsTerpasangSB = false},
+                    new() {Kategori = "Hotel Bintang Satu", NamaOP = "Hotel Seruni", Alamat = "Jl. Bogor", NOP = "327304000000024", TanggalPemasangan = new DateTime(2025, 4, 25), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = false, IsTerpasangSB = true},
 
-                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Kost Eksklusif Merpati", Alamat = "Jl. Merpati", NOP = "350001004005031", Tahun = 2024 },
-                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Homestay Bunda", Alamat = "Jl. Manukan", NOP = "350001004005032", Tahun = 2024 },
-                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Wisma Rakyat", Alamat = "Jl. Pucang Anom", NOP = "350001004005033", Tahun = 2024 },
-                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Penginapan Asri", Alamat = "Jl. Simorejo", NOP = "350001004005034", Tahun = 2024 },
-                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Kost Harian Pagi Cerah", Alamat = "Jl. Raya Mulyosari", NOP = "350001004005035", Tahun = 2024 },
+                    // Non Bintang (6 data)
+                    new() {Kategori = "Hotel Non Bintang", NamaOP = "Wisma Sederhana", Alamat = "Jl. Kebon Jeruk No. 88", NOP = "317101000000005", TanggalPemasangan = new DateTime(2025, 4, 28), JenisPajak = "Hotel", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Penginapan Amanah", Alamat = "Jl. Menteng Raya", NOP = "317102000000026", TanggalPemasangan = new DateTime(2025, 4, 29), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Losmen Maju", Alamat = "Jl. Jatinegara", NOP = "317103000000027", TanggalPemasangan = new DateTime(2025, 5, 1), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Kost Harian Damai", Alamat = "Jl. Fatmawati", NOP = "317104000000028", TanggalPemasangan = new DateTime(2025, 5, 3), JenisPajak = "Hotel", IsTerpasangTS =true, IsTerpasangTB = false, IsTerpasangSB = false },
+                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Griya Tamu Cempaka", Alamat = "Jl. Cempaka", NOP = "317105000000029", TanggalPemasangan = new DateTime(2025, 5, 5), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = true, IsTerpasangSB = false},
+                    new() { Kategori = "Hotel Non Bintang", NamaOP = "Homestay Mawar", Alamat = "Jl. Karang Tengah", NOP = "317106000000030", TanggalPemasangan = new DateTime(2025, 5, 7), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = false, IsTerpasangSB = true },
+
 
                 };
             }
@@ -167,8 +177,13 @@
             public string NamaOP { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
-            public int Tahun { get; set; }
-            
+            public DateTime TanggalPemasangan { get; set; }
+            public string JenisPajak { get; set; } = null!;
+
+            public bool IsTerpasangTS { get; set; }
+            public bool IsTerpasangTB { get; set; }
+            public bool IsTerpasangSB { get; set; }
+
         }
 
     }
