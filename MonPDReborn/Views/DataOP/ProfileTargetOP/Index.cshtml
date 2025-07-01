@@ -42,7 +42,7 @@
     </div>
 
     <div class="col-lg-3">
-        <div class="card shadow-sm p-3">
+        <div class="card shadow-sm p-3 border border-success border-3">
             <h4 class="fs-14 text-muted mb-3">Total Target Pajak</h4>
             <h4 class="fs-16 fw-bold mb-1">Rp 000.000.000.000</h4>
             <small>+0.0% dari tahun lalu</small>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="col-lg-3">
-        <div class="card shadow-sm p-3">
+        <div class="card shadow-sm p-3 border border-warning border-3">
             <h4 class="fs-14 text-muted mb-3">Jenis Pajak Tertinggi</h4>
             <h4 class="fs-16 fw-bold mb-1">Jenis Pajak</h4>
             <small>Rp 000.000.000.000</small>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="col-lg-3">
-        <div class="card shadow-sm p-3">
+        <div class="card shadow-sm p-3 border border-secondary border-3">
             <h4 class="fs-14 text-muted mb-3">Wilayah Target Tertinggi</h4>
             <h4 class="fs-16 fw-bold mb-1">Wilayah</h4>
             <small>Rp 000.000.000.000</small>
@@ -66,7 +66,7 @@
     </div>
 
     <div class="col-lg-3">
-        <div class="card shadow-sm p-3">
+        <div class="card shadow-sm p-3 border border-danger border-3">
             <h4 class="fs-14 text-muted mb-3">Bulan Target Tertinggi</h4>
             <h4 class="fs-16 fw-bold mb-1">Bulan</h4>
             <small>Rp 000.000.000.000</small>
@@ -238,8 +238,15 @@
                 .then(data => {
                     const options = {
                         chart: { height: 350, type: 'line' },
-                        dataLabels: { enabled: true },
-                        stroke: { curve: 'smooth', width: 3 },
+                        dataLabels: { enabled: false }, // Nonaktifkan teks label
+                        markers: {
+                            size: 7,        // Ukuran titik
+                            strokeWidth: 4, // Garis luar marker
+                            hover: {
+                                sizeOffset: 3
+                            }
+                        },
+                        stroke: { curve: 'smooth', width: 4 },
                         series: data.series,
                         colors: colors,
                         xaxis: { categories: data.categories },
@@ -247,11 +254,11 @@
                             y: { formatter: val => 'Rp ' + val.toLocaleString('id-ID') }
                         },
                         legend: {
-                            show: true,
                             position: 'top',
                             horizontalAlign: 'right'
                         }
                     };
+
                     const chart = new ApexCharts(el, options);
                     chart.render();
                 });

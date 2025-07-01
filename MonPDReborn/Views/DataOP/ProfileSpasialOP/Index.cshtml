@@ -1,0 +1,111 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileSpasialOPVM.Index
+
+@{
+    ViewData["Title"] = "Profil Spasial";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Dashboard Profil Spasial
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3">Cari Nama OP:</h5>
+                <input type="text" class="form-control mb-3" placeholder="Masukkan Nama OP" id="filterNamaOP" />
+
+                <label class="mb-2">Pilih UPTB:</label>
+                <select class="form-select mb-3" id="filterUPTB">
+                    <option value="Semua">Semua Wilayah</option>
+                    <option value="UPTB 1">UPTB 1</option>
+                    <option value="UPTB 2">UPTB 2</option>
+                    <option value="UPTB 3">UPTB 3</option>
+                    <option value="UPTB 3">UPTB 4</option>
+                    <option value="UPTB 3">UPTB 5</option>
+                </select>
+
+                <label class="mb-2">Jenis Pajak:</label>
+                <div class="mb-3">
+                    <div><input type="checkbox" value="HOTEL" checked /> <span style="color: blue;">●</span> HOTEL</div>
+                    <div><input type="checkbox" value="RESTORAN" /> <span style="color: red;">●</span> RESTORAN</div>
+                    <div><input type="checkbox" value="HIBURAN" /> <span style="color: green;">●</span> HIBURAN</div>
+                    <div><input type="checkbox" value="PPJ" /> <span style="color: purple;">●</span> PPJ</div>
+                    <div><input type="checkbox" value="PARKIR" /> <span style="color: brown;">●</span> PARKIR</div>
+                </div>
+                <div class="mt-3 fw-bold">
+                    Jumlah Data yang Ditemukan: <span id="jumlahData">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <div id="map" style="height:600px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
+@section Scripts{
+    <script>
+        // FIXED: selector syntax
+        document.querySelectorAll('#filterNamaOP, #filterUPTB').forEach(el => {
+            el.addEventListener('change', filterData);
+        });
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', filterData);
+        });
+
+        function filterData() {
+            const nama = document.getElementById('filterNamaOP').value.toLowerCase();
+            const uptb = document.getElementById('filterUPTB').value;
+            const jenisPajak = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+
+            console.log({ nama, uptb, jenisPajak });
+        }
+
+        var map = L.map('map').setView([-7.250445, 112.768845], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var dataPajak = [
+            { nama: "Hotel Majapahit", jenis: "HOTEL", lat: -7.265, lng: 112.745, warna: "blue" },
+            { nama: "Restoran Sederhana", jenis: "RESTORAN", lat: -7.257, lng: 112.758, warna: "red" },
+            { nama: "Bioskop XXI", jenis: "HIBURAN", lat: -7.263, lng: 112.765, warna: "green" },
+            { nama: "Gedung PLN", jenis: "PPJ", lat: -7.268, lng: 112.755, warna: "purple" },
+            { nama: "Parkir Tunjungan", jenis: "PARKIR", lat: -7.252, lng: 112.770, warna: "brown" }
+        ];
+
+        dataPajak.forEach(function(item) {
+            L.circleMarker([item.lat, item.lng], {
+                radius: 8,
+                color: item.warna,
+                fillColor: item.warna,
+                fillOpacity: 0.8
+            })
+            .addTo(map)
+            .bindPopup(`<strong>${item.nama}</strong><br/>Jenis: ${item.jenis}`);
+        });
+
+    </script>
+}
