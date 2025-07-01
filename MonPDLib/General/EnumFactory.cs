@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MonPDReborn.Lib.General
+namespace MonPDLib.General
 {
     public class EnumFactory
     {
@@ -723,7 +723,11 @@ namespace MonPDReborn.Lib.General
             [Description("Pajak Bumi Bangunan")]
             PBB = 9,
             [Description("BPHTB")]
-            BPHTB = 12
+            BPHTB = 12,
+            [Description("Opsen PKB")]
+            OpsenPkb = 20,
+            [Description("Opsen BBNKB")]
+            OpsenBbnkb = 21
         }
 
         public enum EJenisFile
