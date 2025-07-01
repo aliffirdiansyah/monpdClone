@@ -182,4 +182,9 @@ public partial class DbOpListrik
     [Column("IS_TUTUP")]
     [Precision(10)]
     public int? IsTutup { get; set; }
+
+    [Column("KATEGORI_NAMA")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? KategoriNama { get; set; }
 }
