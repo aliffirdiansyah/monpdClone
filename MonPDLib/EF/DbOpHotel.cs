@@ -175,4 +175,13 @@ public partial class DbOpHotel
     [StringLength(150)]
     [Unicode(false)]
     public string? NamaKelompok { get; set; }
+
+    [Column("WILAYAH_PAJAK")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? WilayahPajak { get; set; }
+
+    [Column("IS_TUTUP")]
+    [Precision(10)]
+    public int? IsTutup { get; set; }
 }

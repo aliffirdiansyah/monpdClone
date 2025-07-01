@@ -165,4 +165,13 @@ public partial class DbOpPbb
     [StringLength(10)]
     [Unicode(false)]
     public string NamaSubRincian { get; set; } = null!;
+
+    [Column("WILAYAH_PAJAK")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? WilayahPajak { get; set; }
+
+    [Column("IS_TUTUP")]
+    [Precision(10)]
+    public int? IsTutup { get; set; }
 }

@@ -27,6 +27,7 @@ namespace MonPDLib
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DbOpAbt>().HasNoKey();
+            modelBuilder.Entity<DbOpHotel>().HasNoKey();
             modelBuilder.Entity<OPSkpdAbt>().HasNoKey();
         }
     }

@@ -82,7 +82,7 @@
         s.TotalItems(items => {
             items.AddFor(x => x.Target1)
                 .ValueFormat("#,##0")
-                .DisplayFormat("Total: {0}")
+                .DisplayFormat("{0}")
                 .SummaryType(SummaryType.Sum);
 
             items.AddFor(x => x.Realisasi1)
