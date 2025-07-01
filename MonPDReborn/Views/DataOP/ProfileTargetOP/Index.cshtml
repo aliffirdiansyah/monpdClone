@@ -233,43 +233,28 @@
                 getComputedStyle(document.documentElement).getPropertyValue(color).trim()
             );
 
-            const options = {
-                chart: {
-                    height: 350,
-                    type: 'line',
-                    zoom: { enabled: false }
-                },
-                dataLabels: {
-                    enabled: true
-                },
-                stroke: {
-                    curve: 'smooth',
-                    width: 3
-                },
-                series: [{
-                    name: "Target Pajak Bulanan",
-                    data: [400, 430, 470, 540, 580, 690, 690, 710, 760, 800, 850, 900]
-                }],
-                colors: colors,
-                xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return 'Rp ' + val.toLocaleString('id-ID');
+            fetch('@Url.Action("GetTargetChartData", "ProfileTargetOP")')
+                .then(res => res.json())
+                .then(data => {
+                    const options = {
+                        chart: { height: 350, type: 'line' },
+                        dataLabels: { enabled: true },
+                        stroke: { curve: 'smooth', width: 3 },
+                        series: data.series,
+                        colors: colors,
+                        xaxis: { categories: data.categories },
+                        tooltip: {
+                            y: { formatter: val => 'Rp ' + val.toLocaleString('id-ID') }
+                        },
+                        legend: {
+                            show: true,
+                            position: 'top',
+                            horizontalAlign: 'right'
                         }
-                    }
-                },
-                legend: {
-                    show: 'true',
-                    position: 'top',
-                    horizontalAlign: 'right'
-                }
-            };
-
-            const chart = new ApexCharts(el, options);
-            chart.render();
+                    };
+                    const chart = new ApexCharts(el, options);
+                    chart.render();
+                });
         });
 
         // Saat halaman selesai dimuat

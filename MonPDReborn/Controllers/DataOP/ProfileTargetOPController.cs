@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using static MonPDReborn.Models.DataOP.ProfileTargetOPVM;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -30,6 +31,44 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
+
+        public JsonResult GetTargetChartData()
+        {
+            var data = GetDummyTargetPajakBulanan();
+
+            var result = new
+            {
+                categories = data.Select(x => x.Bulan),
+                series = new[]
+                {
+                    new {
+                        name = "Target Pajak Bulanan",
+                        data = data.Select(x => x.Target)
+                    }
+                }
+            };
+
+            return new JsonResult(result); // atau: return Json(result);
+        }
+
+        public static List<TargetPajakBulanan> GetDummyTargetPajakBulanan()
+        {
+            return new List<TargetPajakBulanan>
+                {
+                    new() { Tahun = 2025, Bulan = "Jan", Target = 400_000_000 },
+                    new() { Tahun = 2025, Bulan = "Feb", Target = 430_000_000 },
+                    new() { Tahun = 2025, Bulan = "Mar", Target = 470_000_000 },
+                    new() { Tahun = 2025, Bulan = "Apr", Target = 540_000_000 },
+                    new() { Tahun = 2025, Bulan = "Mei", Target = 580_000_000 },
+                    new() { Tahun = 2025, Bulan = "Jun", Target = 690_000_000 },
+                    new() { Tahun = 2025, Bulan = "Jul", Target = 690_000_000 },
+                    new() { Tahun = 2025, Bulan = "Agu", Target = 710_000_000 },
+                    new() { Tahun = 2025, Bulan = "Sep", Target = 760_000_000 },
+                    new() { Tahun = 2025, Bulan = "Okt", Target = 800_000_000 },
+                    new() { Tahun = 2025, Bulan = "Nov", Target = 850_000_000 },
+                    new() { Tahun = 2025, Bulan = "Des", Target = 900_000_000 }
+                };
+        }
         public IActionResult Show(string keyword)
         {
             try
@@ -43,6 +82,8 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
+
+
       /*  public IActionResult Detail(string nop)
         {
             try

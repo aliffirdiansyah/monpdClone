@@ -70,34 +70,56 @@
                 };
             }
 
-          /*  private static List<RealisasiBulanan> GetAllDetail()
+            public static List<TargetPajakBulanan> GetDummyTargetPajakBulanan()
             {
-                return new List<RealisasiBulanan>
+                return new List<TargetPajakBulanan>
                 {
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jan", Nominal = 186020436 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Feb", Nominal = 152000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mar", Nominal = 173000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Apr", Nominal = 165000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Mei", Nominal = 178000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jun", Nominal = 181000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Jul", Nominal = 190000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Agt", Nominal = 200000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Sep", Nominal = 210000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Okt", Nominal = 220000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Nov", Nominal = 230000000 },
-                    new() { NOP = "35.78.170.005.902.00066", Bulan = "Des", Nominal = 240000000 },
-
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Jan", Nominal = 30222959 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Feb", Nominal = 25000000 },
-                    new() { NOP = "35.78.100.002.902.00172", Bulan = "Mar", Nominal = 27000000 },
-
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Jan", Nominal = 134483411 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Feb", Nominal = 140000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Mar", Nominal = 150000000 },
-                    new() { NOP = "35.78.050.005.902.00124", Bulan = "Des", Nominal = 155000000 }
+                    new() { Tahun = 2025, Bulan = "Jan", Target = 400_000_000 },
+                    new() { Tahun = 2025, Bulan = "Feb", Target = 430_000_000 },
+                    new() { Tahun = 2025, Bulan = "Mar", Target = 470_000_000 },
+                    new() { Tahun = 2025, Bulan = "Apr", Target = 540_000_000 },
+                    new() { Tahun = 2025, Bulan = "Mei", Target = 580_000_000 },
+                    new() { Tahun = 2025, Bulan = "Jun", Target = 690_000_000 },
+                    new() { Tahun = 2025, Bulan = "Jul", Target = 690_000_000 },
+                    new() { Tahun = 2025, Bulan = "Agu", Target = 710_000_000 },
+                    new() { Tahun = 2025, Bulan = "Sep", Target = 760_000_000 },
+                    new() { Tahun = 2025, Bulan = "Okt", Target = 800_000_000 },
+                    new() { Tahun = 2025, Bulan = "Nov", Target = 850_000_000 },
+                    new() { Tahun = 2025, Bulan = "Des", Target = 900_000_000 }
                 };
-            }*/
+            }
+
+
+            /*  private static List<RealisasiBulanan> GetAllDetail()
+              {
+                  return new List<RealisasiBulanan>
+                  {
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Jan", Nominal = 186020436 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Feb", Nominal = 152000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Mar", Nominal = 173000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Apr", Nominal = 165000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Mei", Nominal = 178000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Jun", Nominal = 181000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Jul", Nominal = 190000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Agt", Nominal = 200000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Sep", Nominal = 210000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Okt", Nominal = 220000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Nov", Nominal = 230000000 },
+                      new() { NOP = "35.78.170.005.902.00066", Bulan = "Des", Nominal = 240000000 },
+
+                      new() { NOP = "35.78.100.002.902.00172", Bulan = "Jan", Nominal = 30222959 },
+                      new() { NOP = "35.78.100.002.902.00172", Bulan = "Feb", Nominal = 25000000 },
+                      new() { NOP = "35.78.100.002.902.00172", Bulan = "Mar", Nominal = 27000000 },
+
+                      new() { NOP = "35.78.050.005.902.00124", Bulan = "Jan", Nominal = 134483411 },
+                      new() { NOP = "35.78.050.005.902.00124", Bulan = "Feb", Nominal = 140000000 },
+                      new() { NOP = "35.78.050.005.902.00124", Bulan = "Mar", Nominal = 150000000 },
+                      new() { NOP = "35.78.050.005.902.00124", Bulan = "Des", Nominal = 155000000 }
+                  };
+              }*/
         }
+
+
         public class TargetSeluruh
         {
             public string JenisPajak { get; set; } = null!;
@@ -107,11 +129,18 @@
             public DateTime Tanggal { get; set; }
         }
 
-     /*   public class RealisasiBulanan
+        public class TargetPajakBulanan
         {
-            public string NOP { get; set; } = null!;
-            public string Bulan { get; set; } = null!;
-            public decimal Nominal { get; set; }
-        }*/
+            public int Tahun { get; set; }          // Misal: 2025
+            public string Bulan { get; set; } = ""; // Misal: "Jan", "Feb", dst.
+            public decimal Target { get; set; }     // Misal: 400_000_000
+        }
+
+        /*   public class RealisasiBulanan
+           {
+               public string NOP { get; set; } = null!;
+               public string Bulan { get; set; } = null!;
+               public decimal Nominal { get; set; }
+           }*/
     }
 }
