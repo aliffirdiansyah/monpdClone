@@ -31,16 +31,19 @@
             .Caption("JML OP TUTUP SEMENTARA"); *@
             columns.AddFor(x => x.JmlOpTutupPermanen)
             .DataType(GridColumnDataType.Number)
-            .Caption("JML OP TUTUP PERMANEN");
+            .Caption("JML OP TUTUP");
             columns.AddFor(x => x.JmlOpBaru)
             .DataType(GridColumnDataType.Number)
             .Caption("JML OP BARU");
+            columns.AddFor(x => x.JmlOpAkhir)
+            .DataType(GridColumnDataType.Number)
+            .Caption("JML OP AKHIR");
         })
         .Summary(s => {
             s.TotalItems(items => {
                 items.AddFor(x => x.JmlOpAwal)
                     .ValueFormat("#,##0")
-                    .DisplayFormat("Total: {0}")
+                    .DisplayFormat("{0}")
                     .SummaryType(SummaryType.Sum);
             });
             @* s.TotalItems(items => {
@@ -57,6 +60,12 @@
             });
             s.TotalItems(items => {
                 items.AddFor(x => x.JmlOpBaru)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}")
+                    .SummaryType(SummaryType.Sum);
+            });
+            s.TotalItems(items => {
+                items.AddFor(x => x.JmlOpAkhir)
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}")
                     .SummaryType(SummaryType.Sum);

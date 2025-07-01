@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace MonPDReborn.Lib.General
+namespace MonPDLib.General
 {
     public static class Extension
     {

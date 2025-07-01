@@ -2,62 +2,111 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-warning">⚠️ Tidak ada data sub-detail ditemukan untuk jenis pajak: <strong>@ViewBag.JenisPajak</strong></div>
+    <div class="alert alert-warning">
+        ⚠️ Tidak ada data sub-detail ditemukan untuk jenis pajak:
+        <strong>@ViewBag.JenisPajak</strong>
+    </div>
 }
 
 @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.SubDetailKategori>()
     .ID("SubDetailGrid_" + Model.FirstOrDefault()?.JenisPajak?.Replace(" ", "_"))
     .DataSource(Model)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
     .ShowBorders(true)
-        .ShowColumnLines(true)
-        .RowAlternationEnabled(true)
-        .Paging(p => p.PageSize(10))
-        .Pager(p => p
+    .ShowColumnHeaders(true)
+    .RowAlternationEnabled(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
         .ShowPageSizeSelector(true)
         .AllowedPageSizes(new[] { 5, 10, 20 })
         .ShowInfo(true)
-        )
+    )
     .Columns(columns =>
     {
+        
         columns.AddFor(m => m.Kategori).Caption("Kategori");
-        columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP");
-        columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS");
-        columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB");
-        columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB");
+
         columns.Add()
-            .Type(GridCommandColumnType.Buttons)
-            .Buttons(b =>
-            {
-                b.Add()
-            .Text("Detail")
-            .Icon("search")
-            .OnClick("showSubDetailModal");
-            });
+            .Caption("Jumlah OP")
+            .CellTemplate(@<text>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span><%- data.JumlahOP %></span>
+                    <button class="btn btn-sm btn-outline-primary ms-2"
+                            onclick="onJumlahOPClick('<%- data.Kategori %>', <%- data.JumlahOP %>)">
+                        Detail
+                    </button>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.JumlahOP");
+
+        columns.Add()
+            .Caption("Terpasang TS")
+            .CellTemplate(@<text>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span><%- data.TerpasangTS %></span>
+                    <button class="btn btn-sm btn-outline-success ms-2"
+                            onclick="onTerpasangTSClick('<%- data.Kategori %>', <%- data.TerpasangTS %>)">
+                        Detail
+                    </button>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.TerpasangTS");
+
+        columns.Add()
+            .Caption("Terpasang TB")
+            .CellTemplate(@<text>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span><%- data.TerpasangTB %></span>
+                    <button class="btn btn-sm btn-outline-warning ms-2"
+                            onclick="onTerpasangTBClick('<%- data.Kategori %>', <%- data.TerpasangTB %>)">
+                        Detail
+                    </button>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.TerpasangTB");
+
+        columns.Add()
+            .Caption("Terpasang SB")
+            .CellTemplate(@<text>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span><%- data.TerpasangSB %></span>
+                    <button class="btn btn-sm btn-outline-danger ms-2"
+                            onclick="onTerpasangSBClick('<%- data.Kategori %>', <%- data.TerpasangSB %>)">
+                        Detail
+                    </button>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.TerpasangSB");
     })
-    
-    .Summary(summary =>
-    {
-        summary.TotalItems(items =>
+    .Summary(s => s
+        .TotalItems(items =>
         {
-            items.AddFor(m => m.Kategori)
-                 .SummaryType(SummaryType.Sum)
-                 .DisplayFormat("Total");
+            items.Add()
+                .Column("Kategori")
+                .SummaryType(SummaryType.Custom)
+                .DisplayFormat("Total")
+                .Alignment(HorizontalAlignment.Center);
 
-            items.AddFor(m => m.JumlahOP)
-                 .SummaryType(SummaryType.Sum)
-                 .DisplayFormat("{0}");
+            items.Add()
+                .Column("Jumlah OP")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
 
-            items.AddFor(m => m.TerpasangTS)
-                 .SummaryType(SummaryType.Sum)
-                 .DisplayFormat("{0}");
+            items.Add()
+                .Column("Terpasang TS")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
 
-            items.AddFor(m => m.TerpasangTB)
-                 .SummaryType(SummaryType.Sum)
-                 .DisplayFormat("{0}");
+            items.Add()
+                .Column("Terpasang TB")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
 
-            items.AddFor(m => m.TerpasangSB)
-                 .SummaryType(SummaryType.Sum)
-                 .DisplayFormat("{0}");
-        });
-    })
+            items.Add()
+                .Column("Terpasang SB")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+        })
+    )
 )

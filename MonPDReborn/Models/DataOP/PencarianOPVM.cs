@@ -1,4 +1,6 @@
-﻿namespace MonPDReborn.Models.DataOP
+﻿using MonPDLib;
+
+namespace MonPDReborn.Models.DataOP
 {
     public class PencarianOPVM
     {
@@ -15,7 +17,7 @@
             public List<DataRealisasiOp> DataRealisasiOpList { get; set; } = new();
             public Show()
             {
-                
+
             }
             public Show(string keyword)
             {
@@ -27,7 +29,7 @@
             public List<RealisasiBulanan> DataRealisasiBulananList { get; set; } = new();
             public Detail()
             {
-                
+
             }
             public Detail(string nop)
             {
@@ -36,38 +38,127 @@
         }
         public class Method
         {
-            public static List<DataRealisasiOp> GetDataRealisasiOpList(string keyword)
+            public static List<DataPencarianOp> GetDataRealisasiOpList(string keyword)
             {
-                var allData = GetAllData();
-
                 if (string.IsNullOrWhiteSpace(keyword))
-                    return allData;
+                {
+                    new ArgumentException("Keyword harus diisi");
+                }
+                if (keyword.Length <= 3)
+                {
+                    new ArgumentException("Keyword harus diisi minimal 3 ");
+                }
+                var ret = GetDataPencarian(keyword);
 
-                return allData
-                    .Where(d => d.Nama != null && d.Nama.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+
+                return ret;
             }
 
             public static List<RealisasiBulanan> GetDetailByNOP(string nop)
             {
-                var allDetail = GetAllDetail();
-                return allDetail.Where(x => x.NOP == nop).ToList();
+                var ret = GetRealisasiDetail(nop);
+                return ret;
             }
 
             // Internal dummy data
-            private static List<DataRealisasiOp> GetAllData()
+            private static List<DataPencarianOp> GetDataPencarian(string keyword)
             {
-                return new List<DataRealisasiOp>
-                {
-                    new() { No = 1, Wilayah = "01", NOP = "35.78.170.005.902.00066", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "RAJAWALI NO.47", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 2, Wilayah = "01", NOP = "35.78.100.002.902.00172", StatusNOP = "Buka", Nama = "MC. DONALDS KIOS", Alamat = "BUBUTAN 1-7 (BG JUNCTION LT.GL DAN LT.LL)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" },
-                    new() { No = 3, Wilayah = "01", NOP = "35.78.160.001.902.05140", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "MALL PASAR ATUM", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 4, Wilayah = "01", NOP = "35.78.170.005.902.01044", StatusNOP = "Tutup Permanen", Nama = "MC. DONALDS", Alamat = "JL. TAMAN JAYENGRONO (JMP)", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TIDAK TERPASANG" },
-                    new() { No = 5, Wilayah = "02", NOP = "35.78.050.005.902.00124", StatusNOP = "Buka", Nama = "MC. DONALDS", Alamat = "DR. IR. H. SOEKARNO NO.218", JenisOp = "RESTORAN (RESTORAN)", JenisPenarikan = "TS" }
-                };
+                var context = DBClass.GetContext();
+                var ret = new List<DataPencarianOp>();
+                var dataResto = context.DbOpRestos.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                        x => new DataPencarianOp
+                        {
+                            NOP = x.Nop,
+                            Nama = x.NamaOp,
+                            Alamat = x.AlamatOp,
+                            JenisOp = x.PajakNama,
+                            KategoriOp = x.KategoriNama,
+                            JenisPenarikan = "",
+                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
+                            Wilayah = x.WilayahPajak ?? ""
+                        }
+                    ).ToList();
+                ret.AddRange(dataResto);
+
+                var dataHotel = context.DbOpHotels.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                        x => new DataPencarianOp
+                        {
+                            NOP = x.Nop,
+                            Nama = x.NamaOp,
+                            Alamat = x.AlamatOp,
+                            JenisOp = x.PajakNama,
+                            KategoriOp = x.KategoriNama,
+                            JenisPenarikan = "",
+                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
+                            Wilayah = x.WilayahPajak ?? ""
+                        }
+                    ).ToList();
+                ret.AddRange(dataHotel);
+
+                var dataHiburan = context.DbOpHiburans.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                        x => new DataPencarianOp
+                        {
+                            NOP = x.Nop,
+                            Nama = x.NamaOp,
+                            Alamat = x.AlamatOp,
+                            JenisOp = x.PajakNama,
+                            KategoriOp = x.KategoriNama,
+                            JenisPenarikan = "",
+                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
+                            Wilayah = x.WilayahPajak ?? ""
+                        }
+                    ).ToList();
+                ret.AddRange(dataHiburan);
+
+                var dataParkir = context.DbOpParkirs.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                        x => new DataPencarianOp
+                        {
+                            NOP = x.Nop,
+                            Nama = x.NamaOp,
+                            Alamat = x.AlamatOp,
+                            JenisOp = x.PajakNama,
+                            KategoriOp = x.KategoriNama,
+                            JenisPenarikan = "",
+                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
+                            Wilayah = x.WilayahPajak ?? ""
+                        }
+                    ).ToList();
+                ret.AddRange(dataParkir);
+
+                var dataListrik = context.DbOpListriks.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                        x => new DataPencarianOp
+                        {
+                            NOP = x.Nop,
+                            Nama = x.NamaOp,
+                            Alamat = x.AlamatOp,
+                            JenisOp = x.PajakNama,
+                            KategoriOp = "PPJ",
+                            JenisPenarikan = "",
+                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
+                            Wilayah = x.WilayahPajak ?? ""
+                        }
+                    ).ToList();
+                ret.AddRange(dataListrik);
+
+                var dataReklame = context.DbOpReklames.Where(x => x.Nop == keyword || x.Nama.Contains(keyword)).Select(
+                        x => new DataPencarianOp
+                        {
+                            NOP = x.Nop,
+                            Nama = x.Nama,
+                            Alamat = x.Alamat,
+                            JenisOp = x.NamaJenis,
+                            JenisPenarikan = "",
+                            StatusNOP = "-",
+                            Wilayah = "-"
+                        }
+                    ).ToList();
+                ret.AddRange(dataReklame);
+
+
+                return ret;
             }
 
-            private static List<RealisasiBulanan> GetAllDetail()
+            private static List<RealisasiBulanan> GetRealisasiDetail(string nop)
             {
                 return new List<RealisasiBulanan>
                 {
@@ -95,15 +186,16 @@
                 };
             }
         }
-        public class DataRealisasiOp
+        public class DataPencarianOp
         {
-            public int No { get; set; }
+            //public int No { get; set; }
             public string Wilayah { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string StatusNOP { get; set; } = null!;
             public string Nama { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOp { get; set; } = null!;
+            public string KategoriOp { get; set; } = null!;
             public string JenisPenarikan { get; set; } = null!;
         }
 

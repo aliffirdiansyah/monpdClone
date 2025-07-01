@@ -66,24 +66,53 @@ namespace MonPDReborn.Controllers.Aktivitas
                 .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
+
             return PartialView("../AktivitasOP/PemasanganAlat/_SubDetail", subData);
         }
 
-        public IActionResult SubDetailModal(string kategori)
+        public IActionResult SubDetailModal(string kategori, string status)
         {
             try
             {
-                var data = PemasanganAlatVM.Method.GetSubDetailModalData()
-                    .Where(x => x.Kategori.Equals(kategori, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-                return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailModal", data);
+                var allData = PemasanganAlatVM.Method.GetSubDetailModalData();
 
+                // Filter utama berdasarkan kategori
+                var filteredData = allData
+                    .Where(x => x.Kategori != null && x.Kategori.Equals(kategori, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                // Filter tambahan berdasarkan status (dummy logic, bisa kamu sesuaikan)
+                if (!string.IsNullOrEmpty(status))
+                {
+                    switch (status)
+                    {
+                        case "JumlahOP":
+                            // Semua data kategori
+                            break;
+
+                        case "TerpasangTS":
+                            filteredData = filteredData.Where(x => x.IsTerpasangTS).ToList();
+                            break;
+
+                        case "TerpasangTB":
+                            filteredData = filteredData.Where(x => x.IsTerpasangTB).ToList();
+                            break;
+
+                        case "TerpasangSB":
+                            filteredData = filteredData.Where(x => x.IsTerpasangSB).ToList();
+                            break;
+                    }
+                }
+
+                return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailModal", filteredData);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "ERROR: " + ex.Message);
+                return Content("SERVER ERROR: " + ex.Message);
             }
         }
+
+
 
 
 

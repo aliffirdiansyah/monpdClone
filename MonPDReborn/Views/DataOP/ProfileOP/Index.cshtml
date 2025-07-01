@@ -30,7 +30,7 @@
 <div class="card position-relative overflow-hidden mb-4">
     <!-- Header Background Image -->
     <div class=" position-relative">
-        <img src="~/assets/images/comingsoon.png" alt="" class="img-fluid w-100" style="height: 500px; object-fit: cover;">
+        <img src="~/assets/images/comingsoon.png" alt="" class="img-fluid w-100" style="height: 200px; object-fit: cover;">
     </div>
 
     <!-- Profile Avatar & Info -->
@@ -40,8 +40,8 @@
                 <img src="~/assets/images/user-illustarator-1.png" alt="" class="rounded-circle avatar-xl border border-3 border-white shadow">
             </div>
             <div class="text-center">
-                <h5 class="mb-1">THE WESTIN SURABAYA</h5>
-                <p class="text-muted mb-0">Puncak Indah Lontar No. 2</p>
+                <h5 class="mb-1">@Model.IdentitasPajak.NamaObjekPajak</h5>
+                <p class="text-muted mb-0">@Model.IdentitasPajak.AlamatLengkap</p>
             </div>
         </div>
     </div>
@@ -58,11 +58,6 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
                         <i class="ti ti-map fs-5 me-2"></i> Lokasi
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-gallery-tab" data-bs-toggle="pill" data-bs-target="#pills-gallery" type="button" role="tab" aria-controls="pills-gallery" aria-selected="false">
-                        <i class="ti ti-photo-plus fs-5 me-2"></i> Gallery
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -178,44 +173,6 @@
             </div>
             <div class="card-body px-0 py-3">
                 <iframe src="https://www.google.com/maps/embed?pb=..." width="100%" height="400" style="border:0;" allowfullscreen loading="lazy"></iframe>
-            </div>
-        </div>
-    </div>
-
-    <!-- Gallery Tab -->
-    <div class="tab-pane fade" id="pills-gallery" role="tabpanel" aria-labelledby="pills-gallery-tab">
-        <div class="card mb-4">
-            <div class="card-body px-4 py-3">
-                <h4 class="fw-semibold mb-0">
-                    Gallery <span class="badge bg-secondary ms-2">5</span>
-                </h4>
-            </div>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-4">
-                <div class="card overflow-hidden hover-img">
-                    <img src="~/assets/images/comingsoon.png" class="card-img-top object-fit-cover" alt="...">
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card overflow-hidden hover-img">
-                    <img src="~/assets/images/comingsoon.png" class="card-img-top object-fit-cover" alt="...">
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card overflow-hidden hover-img">
-                    <img src="~/assets/images/comingsoon.png" class="card-img-top object-fit-cover" alt="...">
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card overflow-hidden hover-img">
-                    <img src="~/assets/images/comingsoon.png" class="card-img-top object-fit-cover" alt="...">
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card overflow-hidden hover-img">
-                    <img src="~/assets/images/comingsoon.png" class="card-img-top object-fit-cover" alt="...">
-                </div>
             </div>
         </div>
     </div>
