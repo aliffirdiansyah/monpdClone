@@ -20,15 +20,15 @@
         .KeyExpr("ID")
         .Columns(columns =>
         {
-            columns.AddFor(x => x.JenisPajak)
+            columns.AddFor(x => x.JenisPajak).CssClass("fw-bold")
             .Caption("JENIS PAJAK").Fixed(true)
             .FixedPosition(HorizontalEdge.Left);
             columns.AddFor(x => x.JmlOpAwal)
             .DataType(GridColumnDataType.Number)
             .Caption("JML OP AWAL");
-            columns.AddFor(x => x.JmlOpTutupSementara)
+            @* columns.AddFor(x => x.JmlOpTutupSementara)
             .DataType(GridColumnDataType.Number)
-            .Caption("JML OP TUTUP SEMENTARA");
+            .Caption("JML OP TUTUP SEMENTARA"); *@
             columns.AddFor(x => x.JmlOpTutupPermanen)
             .DataType(GridColumnDataType.Number)
             .Caption("JML OP TUTUP PERMANEN");
@@ -43,12 +43,12 @@
                     .DisplayFormat("Total: {0}")
                     .SummaryType(SummaryType.Sum);
             });
-            s.TotalItems(items => {
+            @* s.TotalItems(items => {
                 items.AddFor(x => x.JmlOpTutupSementara)
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}")
                     .SummaryType(SummaryType.Sum);
-            });
+            }); *@
             s.TotalItems(items => {
                 items.AddFor(x => x.JmlOpTutupPermanen)
                     .ValueFormat("#,##0")

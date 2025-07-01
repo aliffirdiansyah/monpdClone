@@ -526,37 +526,6 @@ namespace MonPDReborn.Models
                 var currentYear = DateTime.Now.Year;
 
                 List<ViewModel.SeriesPajakDaerah> result = new();
-                //#region DataUtama
-                //var targetResto = context.DbMonRestos.Sum(x => x.NominalPokokBayar) ?? 0;
-                //var realisasiResto = context.DbMonRestos.Sum(x => x.NominalPokokBayar) ?? 0; ;
-
-                //var targetHotel = context.DbMonHotels.Sum(x => x.NominalPokokBayar) ?? 0;
-                //var realisasiHotel = context.DbMonHotels.Sum(x => x.NominalPokokBayar) ?? 0; ;
-
-                //var targetHiburan = context.DbMonHiburans.Sum(x => x.NominalPokokBayar) ?? 0;
-                //var realisasiHiburan = context.DbMonHiburans.Sum(x => x.NominalPokokBayar) ?? 0;
-
-                //var targetParkir = context.DbMonParkirs.Sum(x => x.NominalPokokBayar) ?? 0;
-                //var realisasiParkir = context.DbMonParkirs.Sum(x => x.NominalPokokBayar) ?? 0;
-
-                //var targetListrik = context.DbMonPpjs.Sum(x => x.NominalPokokBayar) ?? 0;
-                //var realisasiListrik = context.DbMonPpjs.Sum(x => x.NominalPokokBayar) ?? 0;
-
-                //var targetPbb = context.DbMonPbbs.Sum(x => x.NominalPokokBayar) ?? 0;
-                //var realisasiPbb = context.DbMonPbbs.Sum(x => x.NominalPokokBayar) ?? 0;
-
-                //var targetBphtb = context.DbMonBphtbs.Sum(x => x.Pokok) ?? 0;
-                //var realisasiBphtb = context.DbMonBphtbs.Sum(x => x.Pokok) ?? 0;
-
-                //var targetAbt = context.DbMonAbts.Sum(x => x.NominalPokokBayar) ?? 0;
-                //var realisasiAbt = context.DbMonAbts.Sum(x => x.NominalPokokBayar) ?? 0;
-
-                //var targetOpsenPkb = context.DbMonOpsenPkbs.Sum(x => x.JmlPokok);
-                //var realisasiOpsenPkb = context.DbMonOpsenPkbs.Sum(x => x.JmlPokok);
-
-                //var targetOpsenBbnkb = context.DbMonOpsenBbnkbs.Sum(x => x.JmlPokok);
-                //var realisasiOpsenBbnkb = context.DbMonOpsenBbnkbs.Sum(x => x.JmlPokok);
-                //#endregion
 
                 #region Now
                 var targetRestoNow = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -653,7 +622,6 @@ namespace MonPDReborn.Models
                 var targetOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-2).Sum(x => x.JmlPokok);
                 var realisasiOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear-2).Sum(x => x.JmlPokok);
                 #endregion
-                
                 
                 #region Mines3
                 var targetRestoMines3 = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear-3).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -841,6 +809,27 @@ namespace MonPDReborn.Models
                     Realisasi1 = realisasiPbbMines4,
                     Persentase1 = targetPbbMines4 != 0 ? Math.Round(realisasiPbbMines4 / targetPbbMines4 * 100, 2) : 0,
                 });
+                
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = $"Reklame",
+                    Target5 = 0,
+                    Realisasi5 = 0,
+                    Persentase5 = 0,
+                    Target4 = 0,
+                    Realisasi4 = 0,
+                    Persentase4 = 0,
+                    Target3 = 0,
+                    Realisasi3 = 0,
+                    Persentase3 = 0,
+                    Target2 = 0,
+                    Realisasi2 = 0,
+                    Persentase2 = 0,
+                    Target1 = 0,
+                    Realisasi1 = 0,
+                    Persentase1 = 0,
+                });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
@@ -926,41 +915,117 @@ namespace MonPDReborn.Models
             }
             public static List<ViewModel.JumlahObjekPajakTahunan> GetJumlahObjekPajakTahunanData()
             {
+                var context = DBClass.GetContext();
+                var currentYear = DateTime.Now.Year;
+
+                var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == currentYear);
+                var OpRestoTutup = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue);
+                var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == currentYear-1);
+                
+                var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == currentYear);
+                var OpHotelTutup = context.DbOpHotels.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue);
+                var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == currentYear-1);
+                
+                var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear);
+                var OpHiburanTutup = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue);
+                var OpHiburanAwal = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear-1);
+                
+                var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear);
+                var OpParkirTutup = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue);
+                var OpParkirAwal = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear-1);
+                
+                var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == currentYear);
+                var OpListrikTutup = context.DbOpListriks.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue);
+                var OpListrikAwal = context.DbOpListriks.Count(x => x.TahunBuku == currentYear-1);
+                
+                var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == currentYear);
+                var OpAbtTutup = context.DbOpAbts.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue);
+                var OpAbtAwal = context.DbOpAbts.Count(x => x.TahunBuku == currentYear-1);
+                
+                var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear);
+                var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear-1);
+                
+                var OpBphtbNow = 0;
+                var OpBphtbAwal = 0;
+                
+                var OpOpsenPkbNow = 0;
+                var OpOpsenPkbAwal = 0;
+                
+                var OpOpsenBbnkbNow = 0;
+                var OpOpsenBbnkbAwal = 0;
+
                 return new List<ViewModel.JumlahObjekPajakTahunan>
                 {
                     new ViewModel.JumlahObjekPajakTahunan
                     {
-                        JenisPajak = "Hotel",
-                        JmlOpAwal = 120,
-                        JmlOpTutupSementara = 5,
-                        JmlOpTutupPermanen = 3,
-                        JmlOpBaru = 10
+                        JenisPajak = $"Pajak Makanan Minuman",
+                        JmlOpAwal = OpRestoAwal,
+                        JmlOpTutupPermanen = OpRestoTutup,
+                        JmlOpBaru = OpRestoNow - OpRestoAwal
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
-                        JenisPajak = "Restoran",
-                        JmlOpAwal = 250,
-                        JmlOpTutupSementara = 12,
-                        JmlOpTutupPermanen = 8,
-                        JmlOpBaru = 25
+                        JenisPajak = $"Pajak Hotel",
+                        JmlOpAwal = OpHotelAwal,
+                        JmlOpTutupPermanen = OpHotelTutup,
+                        JmlOpBaru = OpHotelNow - OpHotelAwal
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
-                        JenisPajak = "Parkir",
-                        JmlOpAwal = 80,
-                        JmlOpTutupSementara = 2,
-                        JmlOpTutupPermanen = 1,
-                        JmlOpBaru = 5
+                        JenisPajak = $"Pajak Hiburan",
+                        JmlOpAwal = OpHiburanAwal,
+                        JmlOpTutupPermanen = OpHiburanTutup,
+                        JmlOpBaru = OpHiburanNow - OpHiburanAwal
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
-                        JenisPajak = "Hiburan",
-                        JmlOpAwal = 60,
-                        JmlOpTutupSementara = 3,
-                        JmlOpTutupPermanen = 2,
-                        JmlOpBaru = 7
-                    }
-                    // Tambahkan jenis pajak lain jika diperlukan
+                        JenisPajak = $"Pajak Parkir",
+                        JmlOpAwal = OpParkirAwal,
+                        JmlOpTutupPermanen = OpParkirTutup,
+                        JmlOpBaru = OpParkirNow - OpParkirAwal
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = $"Pajak Jasa Listrik",
+                        JmlOpAwal = OpListrikAwal,
+                        JmlOpTutupPermanen = OpListrikTutup,
+                        JmlOpBaru = OpListrikNow - OpListrikAwal
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = $"PBB",
+                        JmlOpAwal = OpPbbAwal,
+                        JmlOpTutupPermanen = 0,
+                        JmlOpBaru = OpPbbNow - OpPbbAwal
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = $"BPHTB",
+                        JmlOpAwal = OpBphtbAwal,
+                        JmlOpTutupPermanen = 0,
+                        JmlOpBaru = OpBphtbNow - OpBphtbAwal
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = $"Pajak Air Tanah",
+                        JmlOpAwal = OpAbtAwal,
+                        JmlOpTutupPermanen = OpAbtTutup,
+                        JmlOpBaru = OpAbtNow - OpAbtAwal
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = $"Opsen PKB",
+                        JmlOpAwal = OpOpsenPkbAwal,
+                        JmlOpTutupPermanen = 0,
+                        JmlOpBaru = OpOpsenPkbNow - OpOpsenPkbAwal
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = $"Opsen BBNKB",
+                        JmlOpAwal = OpOpsenBbnkbAwal,
+                        JmlOpTutupPermanen = 0,
+                        JmlOpBaru = OpOpsenBbnkbNow - OpOpsenBbnkbAwal
+                    },
                 };
             }
             public static List<ViewModel.JumlahObjekPajakSeries> GetJumlahObjekPajakSeriesData()
