@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExpress.DataAccess.Native.Web;
+using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Lib.General;
+using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -12,6 +15,7 @@ namespace MonPDReborn.Controllers.DataOP
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
         public PencarianOPController(ILogger<PencarianOPController> logger)
         {
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
@@ -25,9 +29,17 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new Models.DataOP.PencarianOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                return Json(response);
             }
         }
         public IActionResult Show(string keyword)
@@ -37,23 +49,37 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new Models.DataOP.PencarianOPVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                return Json(response);
             }
         }
-        public IActionResult Detail(string nop)
+        public IActionResult Detail(string nop, int pajak)
         {
             try
             {
-                var model = new Models.DataOP.PencarianOPVM.Detail(nop);
+                var model = new Models.DataOP.PencarianOPVM.Detail(nop, (MonPDLib.General.EnumFactory.EPajak)pajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                return Json(response);
             }
         }
     }

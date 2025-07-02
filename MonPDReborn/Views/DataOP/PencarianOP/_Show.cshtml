@@ -3,9 +3,9 @@
 <div class="table-responsive">
     
 
-@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PencarianOPVM.DataRealisasiOp>()
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PencarianOPVM.DataPencarianOp>()
     .ID("gridRealisasiOP")
-    .DataSource(Model.DataRealisasiOpList)
+    .DataSource(Model.DataPencarianOpList)
     .KeyExpr("NOP")
     .ShowBorders(true)
     .ShowColumnHeaders(true)
@@ -23,6 +23,7 @@
         .AllowedPageSizes(new[] { 10, 20, 50 })
         .ShowInfo(true)
     )
+    .NoDataText("Objek Pajak Tidak Ditemukan")
     .Columns(columns => {
         @* columns.AddFor(m => m.No).Caption("No").Width(50); *@
         columns.AddFor(m => m.Wilayah).Caption("Wilayah");
