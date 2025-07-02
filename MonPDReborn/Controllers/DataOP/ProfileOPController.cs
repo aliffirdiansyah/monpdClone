@@ -16,6 +16,7 @@ namespace MonPDReborn.Controllers.DataOP
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
         public ProfileOPController(ILogger<ProfileOPController> logger)
         {
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
@@ -88,5 +89,26 @@ namespace MonPDReborn.Controllers.DataOP
 
 
 
+        public IActionResult Detail(string nop, int pajak)
+        {
+            ViewData["Title"] = "Profile Objek Pajak";
+            try
+            {
+                var model = new Models.DataOP.ProfileOPVM.Detail(nop, (EnumFactory.EPajak)pajak);
+                return View($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                return Json(response);
+            }
+        }
     }
 }

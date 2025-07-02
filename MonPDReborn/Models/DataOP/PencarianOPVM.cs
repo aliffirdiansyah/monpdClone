@@ -79,7 +79,7 @@ namespace MonPDReborn.Models.DataOP
                             JenisPenarikan = "",
                             StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
                             Wilayah = x.WilayahPajak ?? "",
-                            EnumPajak = (int)EnumFactory.EPajak.Hotel
+                            EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan
                         }
                     ).ToList();
                 ret.AddRange(dataHotel);
