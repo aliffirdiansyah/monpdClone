@@ -23,6 +23,18 @@ namespace MonPDLib
             public string SubRincian { get; set; } = null!;
             public string NamaSubRincian { get; set; } = null!;
         }
+        public class OPSkpdHotel
+        {
+            public string NOP { get; set; }
+            public int TAHUN { get; set; }
+            public int MASAPAJAK { get; set; }
+            public int SEQ { get; set; }
+            public int JENIS_KETETAPAN { get; set; }
+            public DateTime TGL_KETETAPAN { get; set; }
+            public DateTime? TGL_JATUH_TEMPO_BAYAR { get; set; }
+            public decimal NILAI_PENGURANG { get; set; }
+            public decimal POKOK { get; set; }
+        }
         public class OPSkpdAbt
         {
             public string NOP { get; set; }
@@ -63,6 +75,20 @@ namespace MonPDLib
             public string? REFF_PENGURANG { get; set; }
         }
 
+        public class SSPDPbjt
+        {
+            public string NOP { get; set; }
+            public int TAHUN_PAJAK { get; set; }
+            public int BULAN_PAJAK { get; set; }
+            public DateTime TRANSACTION_DATE { get; set; }
+            public decimal NOMINAL_POKOK { get; set; }
+            public decimal NOMINAL_SANKSI { get; set; }
+            public decimal NOMINAL_ADMINISTRASI { get; set; }
+            public decimal NOMINAL_LAINNYA { get; set; }
+            public decimal PENGURANG_POKOK { get; set; }
+            public decimal PENGURANG_SANSKSI { get; set; }
+            public decimal SEQ_KETETAPAN { get; set; }
+        }
         public class SSPD
         {
             public string ID_SSPD { get; set; } = string.Empty;
