@@ -52,7 +52,7 @@ namespace MonPDReborn.Models.DataOP
                 }
                 var context = DBClass.GetContext();
                 var ret = new List<DataPencarianOp>();
-                var dataResto = context.DbOpRestos.Where(x => (x.Nop == keyword) || (x.NamaOp.Contains(keyword) && x.TahunBuku == DateTime.Now.Year)).Select(
+                var dataResto = context.DbOpRestos.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -68,7 +68,7 @@ namespace MonPDReborn.Models.DataOP
                     ).ToList();
                 ret.AddRange(dataResto);
 
-                var dataHotel = context.DbOpHotels.Where(x => (x.Nop == keyword) || (x.NamaOp.Contains(keyword) && x.TahunBuku == DateTime.Now.Year)).Select(
+                var dataHotel = context.DbOpHotels.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -84,7 +84,7 @@ namespace MonPDReborn.Models.DataOP
                     ).ToList();
                 ret.AddRange(dataHotel);
 
-                var dataHiburan = context.DbOpHiburans.Where(x => (x.Nop == keyword) || (x.NamaOp.Contains(keyword) && x.TahunBuku == DateTime.Now.Year)).Select(
+                var dataHiburan = context.DbOpHiburans.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -100,7 +100,7 @@ namespace MonPDReborn.Models.DataOP
                     ).ToList();
                 ret.AddRange(dataHiburan);
 
-                var dataParkir = context.DbOpParkirs.Where(x => (x.Nop == keyword) || (x.NamaOp.Contains(keyword) && x.TahunBuku == DateTime.Now.Year)).Select(
+                var dataParkir = context.DbOpParkirs.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -116,7 +116,7 @@ namespace MonPDReborn.Models.DataOP
                     ).ToList();
                 ret.AddRange(dataParkir);
 
-                var dataListrik = context.DbOpListriks.Where(x => (x.Nop == keyword) || (x.NamaOp.Contains(keyword) && x.TahunBuku == DateTime.Now.Year)).Select(
+                var dataListrik = context.DbOpListriks.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -149,7 +149,7 @@ namespace MonPDReborn.Models.DataOP
                 ret.AddRange(dataReklame);
                 
 
-                var dataAbt = context.DbOpAbts.Where(x => (x.Nop == keyword) || (x.NamaOp.Contains(keyword) && x.TahunBuku == DateTime.Now.Year)).Select(
+                var dataAbt = context.DbOpAbts.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
