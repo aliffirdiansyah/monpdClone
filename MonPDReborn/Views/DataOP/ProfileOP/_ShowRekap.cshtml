@@ -1,0 +1,55 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapOP>()
+                .ID("RekapOPGrid")
+                .DataSource(Model.DataRekapOPList)
+                .ShowBorders(true)
+                .ShowRowLines(true)
+                .ShowColumnLines(true)
+                .ShowColumnHeaders(true)
+                .RowAlternationEnabled(true)
+                .Paging(p => p.PageSize(10))
+                .Pager(p => p
+                .ShowInfo(true)
+                .ShowPageSizeSelector(true)
+                .AllowedPageSizes(new[] { 5, 10, 20 })
+                )
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.OPAwal).Caption("OP Awal").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.TutupSementara).Caption("Tutup Sementara").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.TutupPermanen).Caption("Tutup Permanen").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.OPBaru).Caption("OP Baru").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.Buka).Caption("Buka").Alignment(HorizontalAlignment.Center);
+                })
+                .Summary(summary =>
+                {
+                    summary.TotalItems(items =>
+                    {
+                        items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Custom).DisplayFormat("Total").Alignment(HorizontalAlignment.Center);
+                        items.AddFor(m => m.OPAwal).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                        items.AddFor(m => m.TutupSementara).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                        items.AddFor(m => m.TutupPermanen).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                        items.AddFor(m => m.OPBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                        items.AddFor(m => m.Buka).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                    });
+                })
+                .MasterDetail(md =>
+                {
+                md.Enabled(true);
+                md.Template(
+                @<text>
+                    @{
+                        ViewData["JenisPajak"] = new JS("data.JenisPajak");
+                        ViewData["tahun"] = new JS("data.Tahun");
+                    }
+                @await Html.PartialAsync("/Views/DataOP/ProfileOP/_RekapDetail.cshtml")
+            </text>);
+                })
+       )
+</div>
+
+

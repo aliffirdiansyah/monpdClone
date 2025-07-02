@@ -1,4 +1,5 @@
-﻿using MonPDLib;
+﻿using DocumentFormat.OpenXml.Presentation;
+using MonPDLib;
 using MonPDLib.General;
 
 namespace MonPDReborn.Models.DataOP
@@ -51,7 +52,7 @@ namespace MonPDReborn.Models.DataOP
                 }
                 var context = DBClass.GetContext();
                 var ret = new List<DataPencarianOp>();
-                var dataResto = context.DbOpRestos.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                var dataResto = context.DbOpRestos.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -61,12 +62,13 @@ namespace MonPDReborn.Models.DataOP
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
                             StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? ""
+                            Wilayah = x.WilayahPajak ?? "",
+                            EnumPajak = (int)EnumFactory.EPajak.MakananMinuman
                         }
                     ).ToList();
                 ret.AddRange(dataResto);
 
-                var dataHotel = context.DbOpHotels.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                var dataHotel = context.DbOpHotels.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -76,12 +78,13 @@ namespace MonPDReborn.Models.DataOP
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
                             StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? ""
+                            Wilayah = x.WilayahPajak ?? "",
+                            EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan
                         }
                     ).ToList();
                 ret.AddRange(dataHotel);
 
-                var dataHiburan = context.DbOpHiburans.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                var dataHiburan = context.DbOpHiburans.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -91,12 +94,13 @@ namespace MonPDReborn.Models.DataOP
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
                             StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? ""
+                            Wilayah = x.WilayahPajak ?? "",
+                            EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan
                         }
                     ).ToList();
                 ret.AddRange(dataHiburan);
 
-                var dataParkir = context.DbOpParkirs.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                var dataParkir = context.DbOpParkirs.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -106,12 +110,13 @@ namespace MonPDReborn.Models.DataOP
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
                             StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? ""
+                            Wilayah = x.WilayahPajak ?? "",
+                            EnumPajak = (int)EnumFactory.EPajak.JasaParkir
                         }
                     ).ToList();
                 ret.AddRange(dataParkir);
 
-                var dataListrik = context.DbOpListriks.Where(x => x.Nop == keyword || x.NamaOp.Contains(keyword)).Select(
+                var dataListrik = context.DbOpListriks.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -121,7 +126,8 @@ namespace MonPDReborn.Models.DataOP
                             KategoriOp = x.KategoriNama??"",
                             JenisPenarikan = "",
                             StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? ""
+                            Wilayah = x.WilayahPajak ?? "",
+                            EnumPajak = (int)EnumFactory.EPajak.TenagaListrik
                         }
                     ).ToList();
                 ret.AddRange(dataListrik);
@@ -133,12 +139,31 @@ namespace MonPDReborn.Models.DataOP
                             Nama = x.Nama,
                             Alamat = x.Alamat,
                             JenisOp = x.NamaJenis,
+                            KategoriOp = "Reklame",
                             JenisPenarikan = "",
                             StatusNOP = "-",
-                            Wilayah = "-"
+                            Wilayah = "-",
+                            EnumPajak = (int)EnumFactory.EPajak.Reklame
                         }
                     ).ToList();
                 ret.AddRange(dataReklame);
+                
+
+                var dataAbt = context.DbOpAbts.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()) && x.TahunBuku == DateTime.Now.Year)).Select(
+                        x => new DataPencarianOp
+                        {
+                            NOP = x.Nop,
+                            Nama = x.NamaOp,
+                            Alamat = x.AlamatOp,
+                            JenisOp = x.PajakNama,
+                            KategoriOp = x.KategoriNama ?? "",
+                            JenisPenarikan = "",
+                            StatusNOP = "-",
+                            Wilayah = "-",
+                            EnumPajak = (int)EnumFactory.EPajak.AirTanah
+                        }
+                    ).ToList();
+                ret.AddRange(dataAbt);
 
 
                 return ret;
@@ -181,6 +206,7 @@ namespace MonPDReborn.Models.DataOP
             public string JenisOp { get; set; } = null!;
             public string KategoriOp { get; set; } = null!;
             public string JenisPenarikan { get; set; } = null!;
+            public int EnumPajak { get; set; }
         }
 
         public class RealisasiBulanan

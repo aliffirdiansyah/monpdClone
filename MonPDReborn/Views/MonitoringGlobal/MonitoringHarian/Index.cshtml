@@ -1,1 +1,103 @@
-﻿@model MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.Index
+﻿<h5 class="mt-5 fw-bold">Progress AKP - @Model.Bulan 2025 (@Model.JenisPajak)</h5>
+
+@{
+    ViewBag.Title = "Monitoring Harian";
+    var persentase = Model.Target == 0 ? 0 : ((Model.Realisasi / Model.Target) * 100);
+}
+
+<div class="card shadow-sm p-4 mb-4" style="background-color: #f0f6ff;">
+    <div class="row align-items-center">
+        <div class="col">
+            <h5 class="fw-bold mb-1">Laporan Harian Pajak Daerah Kota Surabaya</h5>
+            <div class="text-muted small">
+                Data per tanggal &bull; @Model.TanggalUpdate.ToString("dd MMMM yyyy HH:mm:ss")
+            </div>
+        </div>
+        <div class="col-auto">
+            <img src="https://cdn-icons-png.flaticon.com/512/726/726448.png" style="height:60px;" />
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        @(Html.DevExtreme().SelectBox()
+                .Items(new[] { "Juli", "Agustus", "September" })
+                .Value(Model.Bulan)
+                .Placeholder("Pilih Bulan")
+                )
+    </div>
+    <div class="col-md-3">
+        @(Html.DevExtreme().SelectBox()
+                .Items(new[] { "Semua Pajak", "Pajak Hotel", "Pajak Restoran" })
+                .Value(Model.JenisPajak)
+                .Placeholder("Pilih Jenis Pajak")
+                )
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary">
+            <i class="dx-icon-filter"></i> Terapkan Filter
+        </button>
+    </div>
+</div>
+
+<div class="card p-4" style="background-color: #eaf6ff;">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div>
+            <div class="fw-semibold text-dark">
+                Pendapatan Pajak - @Model.Bulan 2025 (@Model.JenisPajak)
+            </div>
+            <span class="badge bg-danger me-2">@persentase.ToString("0.00")% </span>
+            <span class="text-muted small">dari target Rp. @Model.Target.ToString("N0")</span>
+        </div>
+    </div>
+    <h2 class="fw-bold text-primary mt-3">
+        Rp. @Model.Realisasi.ToString("N0")
+    </h2>
+</div>
+
+<div class="row">
+    @{
+        var data = (List<MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.HarianPajak>)Model.ListHarian;
+
+        int kolom = 3;
+        int perKolom = (int)Math.Ceiling((double)data.Count / kolom);
+        var groupList = data
+        .Select((item, index) => new { item, index })
+        .GroupBy(x => x.index / perKolom)
+        .Select(g => g.Select(x => x.item).ToList())
+        .ToList();
+    }
+
+    @for (int i = 0; i < groupList.Count; i++)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white fw-semibold">
+                    Progress AKP - @Model.Bulan 2025 (@Model.JenisPajak)
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>[Tanggal] Hari</th>
+                                <th>Target</th>
+                                <th>Realisasi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in groupList[i])
+                            {
+                                <tr>
+                                    <td>[ @item.Tanggal ] @item.Hari</td>
+                                    <td>@item.Target.ToString("N0")</td>
+                                    <td>@item.Realisasi.ToString("N0")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

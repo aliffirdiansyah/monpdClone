@@ -87,8 +87,17 @@
                 }
             });
         }
+        // function onDetailClick(e) {
+        //     fnDetail(e.row.data.NOP);
+        // }
+
         function onDetailClick(e) {
-            fnDetail(e.row.data.NOP);
+            var nop = e.row.data.NOP;
+            var pajak = e.row.data.EnumPajak;
+            var url = '@Url.Action("Detail", "ProfileOP")'
+                        + '?nop=' + nop
+                        + '&pajak=' + pajak;
+            window.open(url, '_blank');
         }
 
         function fnDetail(nop) {

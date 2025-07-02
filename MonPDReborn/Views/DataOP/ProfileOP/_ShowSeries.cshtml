@@ -1,0 +1,45 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowSeries
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesOP>()
+        .ID("SeriesOPGrid")
+        .DataSource(Model.DataSeriesOPList)
+        .ShowBorders(true)
+        .ShowRowLines(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowInfo(true)
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Tahun2021).Caption("Tahun 2021").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Tahun2022).Caption("Tahun 2022").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Tahun2023).Caption("Tahun 2023").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Tahun2024).Caption("Tahun 2024").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Tahun2025).Caption("Tahun 2025").Alignment(HorizontalAlignment.Center);
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Custom).DisplayFormat("Total").Alignment(HorizontalAlignment.Center);
+                items.AddFor(m => m.Tahun2021).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                items.AddFor(m => m.Tahun2022).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                items.AddFor(m => m.Tahun2023).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                items.AddFor(m => m.Tahun2024).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+                items.AddFor(m => m.Tahun2025).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
+            });
+        })
+       /* .MasterDetail(md => md
+        .Enabled(true)
+        .Template(new JS("subSeriesTemplate"))
+        )*/
+        )
+</div>

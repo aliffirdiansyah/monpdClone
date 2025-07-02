@@ -23,6 +23,7 @@
         .AllowedPageSizes(new[] { 10, 20, 50 })
         .ShowInfo(true)
     )
+    .NoDataText("Objek Pajak Tidak Ditemukan")
     .Columns(columns => {
         @* columns.AddFor(m => m.No).Caption("No").Width(50); *@
         columns.AddFor(m => m.Wilayah).Caption("Wilayah");
