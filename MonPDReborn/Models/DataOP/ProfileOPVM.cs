@@ -1,4 +1,5 @@
 ﻿using MonPDLib;
+using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
 using static MonPDReborn.Models.DataOP.ProfilePembayaranOPVM;
 
 namespace MonPDReborn.Models.DataOP
@@ -16,11 +17,13 @@ namespace MonPDReborn.Models.DataOP
 
             public ShowRekap() { }
 
-            public ShowRekap(string keyword)
+            public ShowRekap(string keyword, int tahun)
             {
-                DataRekapOPList = Method.GetDataRekapOPList(keyword);
+                DataRekapOPList = Method.GetDataRekapOPList(keyword, tahun);
             }
         }
+
+
 
         public class ShowSeries
         {
@@ -49,16 +52,25 @@ namespace MonPDReborn.Models.DataOP
 
         public class Method
         {
-            public static List<RekapOP> GetDataRekapOPList(string keyword)
+            public static List<RekapOP> GetDataRekapOPList(string keyword, int tahun)
             {
-                var allData = GetAllData();
-                if (string.IsNullOrWhiteSpace(keyword))
-                    return allData;
-
-                return allData
-                    .Where(d => d.JenisPajak != null && d.JenisPajak.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                var allData = GetAllData()
+                    .Where(d => d.Tahun == tahun) // ✅ FILTER tahun
                     .ToList();
+
+                if (!string.IsNullOrWhiteSpace(keyword))
+                {
+                    allData = allData
+                        .Where(d => d.JenisPajak != null && d.JenisPajak.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+
+                return allData;
             }
+
+
+
+
 
             public static List<SeriesOP> GetDataSeriesOPList(string keyword)
             {
@@ -75,9 +87,12 @@ namespace MonPDReborn.Models.DataOP
             {
                 return new List<RekapOP>
                 {
-                    new(){JenisPajak = "Pajak Hotel", OPAwal = 60, TutupSementara = 0, TutupPermanen = 2, OPBaru = 18, Buka = 76},
-                    new(){JenisPajak = "Pajak Restoran", OPAwal = 80, TutupSementara = 2, TutupPermanen = 3, OPBaru = 15, Buka = 90},
-                    new(){JenisPajak = "Pajak Parkir", OPAwal = 25, TutupSementara = 1, TutupPermanen = 0, OPBaru = 4, Buka = 28},
+                    new(){JenisPajak = "Pajak Hotel",Tahun = 2025, OPAwal = 60, TutupSementara = 0, TutupPermanen = 2, OPBaru = 18, Buka = 76},
+                    new(){JenisPajak = "Pajak Restoran",Tahun = 2025, OPAwal = 80, TutupSementara = 2, TutupPermanen = 3, OPBaru = 15, Buka = 90},
+                    new(){JenisPajak = "Pajak Parkir", Tahun = 2025, OPAwal = 25, TutupSementara = 1, TutupPermanen = 0, OPBaru = 4, Buka = 28},
+                    new(){JenisPajak = "Pajak Hotel",Tahun = 2024, OPAwal = 20, TutupSementara = 0, TutupPermanen = 2, OPBaru = 18, Buka = 76},
+                    new(){JenisPajak = "Pajak Restoran",Tahun = 2024, OPAwal = 10, TutupSementara = 2, TutupPermanen = 3, OPBaru = 15, Buka = 90},
+                    new(){JenisPajak = "Pajak Parkir", Tahun = 2024, OPAwal = 14, TutupSementara = 1, TutupPermanen = 0, OPBaru = 4, Buka = 28},
                 };
             }
 
@@ -85,12 +100,25 @@ namespace MonPDReborn.Models.DataOP
             {
                 return new List<SeriesOP>
                 {
-                    new() { JenisPajak = "PAJAK HOTEL", Tahun2021 = 50, Tahun2022 = 57, Tahun2023 = 52, Tahun2024 = 59, Tahun2025 = 60 },
-                    new() { JenisPajak = "PAJAK RESTORAN", Tahun2021 = 70, Tahun2022 = 75, Tahun2023 = 80, Tahun2024 = 85, Tahun2025 = 90 },
-                    new() { JenisPajak = "PAJAK PARKIR", Tahun2021 = 20, Tahun2022 = 22, Tahun2023 = 24, Tahun2024 = 26, Tahun2025 = 28 },
+                    new() { JenisPajak = "Pajak Hotel", Tahun2021 = 50, Tahun2022 = 57, Tahun2023 = 52, Tahun2024 = 59, Tahun2025 = 60 },
+                    new() { JenisPajak = "Pajak Restoran", Tahun2021 = 70, Tahun2022 = 75, Tahun2023 = 80, Tahun2024 = 85, Tahun2025 = 90 },
+                    new() { JenisPajak = "Pajak Parkir", Tahun2021 = 20, Tahun2022 = 22, Tahun2023 = 24, Tahun2024 = 26, Tahun2025 = 28 },
                 };
             }
 
+            public static List<RekapDetail> GetRekapDetailData(int JenisPajak, int Tahun)
+            {
+                return new List<RekapDetail>
+                {
+                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Lima", OPAwal = 20, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 8 },
+                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Empat", OPAwal = 15, TutupSementara = 5, TutupPermanen = 8, OPBaru = 4, Buka = 6 },
+                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Tiga", OPAwal = 25, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 4 },
+                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Dua", OPAwal = 10, TutupSementara = 2, TutupPermanen = 2, OPBaru = 7, Buka = 9 },
+                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Satu", OPAwal = 30, TutupSementara = 4, TutupPermanen = 3, OPBaru = 7, Buka = 10 },
+                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Non Bintang", OPAwal = 40, TutupSementara = 8, TutupPermanen = 5, OPBaru = 8, Buka = 15 },
+
+                };
+            }
             /*  public static List<DetailPemasanganAlat> GetDetailData(string jenisPajak)
               {
                   return new List<DetailPemasanganAlat>
@@ -288,6 +316,8 @@ namespace MonPDReborn.Models.DataOP
         public class RekapOP
         {
             public string JenisPajak { get; set; } = null!;
+            public int Tahun { get; set; }             // ✅ Tambahan field tahun
+
             public int OPAwal { get; set; }
             public int TutupSementara { get; set; }
             public int TutupPermanen { get; set; }
@@ -305,6 +335,19 @@ namespace MonPDReborn.Models.DataOP
             public int Tahun2024 { get; set; }
             public int Tahun2025 { get; set; }
         }
+
+        public class RekapDetail
+        {
+            public string JenisPajak { get; set; } = null!;
+            public string Kategori { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int OPAwal { get; set; }
+            public int TutupSementara { get; set; }
+            public int TutupPermanen { get; set; }
+            public int OPBaru { get; set; }
+            public int Buka { get; set; }
+        }
+
         public class IdentitasObjekPajak
         {
             public string NamaObjekPajak { get; set; }

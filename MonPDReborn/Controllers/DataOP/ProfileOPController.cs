@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Models.AktivitasOP;
+using MonPDReborn.Models.DataOP;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -30,20 +34,23 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-
-        public IActionResult ShowRekap(string keyword)
+        public IActionResult ShowRekap(string keyword, int? tahun)
         {
+            int finalTahun = tahun ?? DateTime.Now.Year;
+
             try
             {
-                var model = new Models.DataOP.ProfileOPVM.ShowRekap(keyword);
+                var model = new MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap(keyword, finalTahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return Content("⚠️ Server Error: " + ex.Message + "\nStackTrace: " + ex.StackTrace);
             }
         }
+
+
+
 
         public IActionResult ShowSeries(string keyword)
         {
@@ -57,6 +64,29 @@ namespace MonPDReborn.Controllers.DataOP
                 return Content("Error: " + ex.Message);
             }
         }
+
+        [HttpGet]
+        public object GetRekapDetailData(DataSourceLoadOptions load_options, int JenisPajak, int Tahun)
+        {
+            var data = Models.DataOP.ProfileOPVM.Method.GetRekapDetailData(JenisPajak, Tahun);
+            return DataSourceLoader.Load(data, load_options);
+        }
+        /* public IActionResult RekapDetail(string jenisPajak, int? tahun)
+         {
+             ViewBag.JenisPajak = jenisPajak;
+             int finalTahun = tahun ?? DateTime.Now.Year;
+
+             var subData = ProfileOPVM.Method.GetRekapDetailData()
+                 .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase)
+                          && x.Tahun == finalTahun)
+                 .ToList();
+
+             return PartialView("../DataOP/ProfileOP/_RekapDetail", subData);
+         }*/
+
+
+
+
 
     }
 }

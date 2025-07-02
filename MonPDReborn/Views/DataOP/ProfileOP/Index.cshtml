@@ -17,177 +17,236 @@
                 </div>
             </div>
             <div class="card-body">
-                <ul class="nav nav-pills justify-content-start profile-tab rounded-0" id="profile-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-rekap" type="button" role="tab" aria-controls="pills-rekap" aria-selected="true">
-                            <i class="ti ti-user-circle fs-5 me-2"></i>Rekap Jumlah OP
-                        </button>
+                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#op-rekap" role="tab" aria-selected="false">
+                            Rekap Jumlah OP
+                        </a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-series" type="button" role="tab" aria-controls="pills-series" aria-selected="false">
-                            <i class="ti ti-map fs-5 me-2"></i>Series Jumlah OP
-                        </button>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" aria-selected="false" onclick="fnShowSeries()">
+                            Series Jumlah OP
+                        </a>
                     </li>
                 </ul>
+                <div class="tab-content text-muted">
+                    <div class="tab-pane active" id="op-rekap" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-ShowRekap" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">Rekap Jumlah Objek Pajak</h4>
+
+                            <div class="dropdown">
+                                <select id="ddlTahun" class="form-select form-select-sm w-auto">
+                                    <option selected disabled>Pilih Tahun</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+
+                            <div class="col-lg-4">
+                                <div class="card border border-danger border-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="fs-14 text-muted mb-3">Total Objek Pajak</h4>
+                                                <h4 class="fs-16 fw-bold mb-0">0</h4>
+                                            </div>
+                                            <i class="ri-group-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card border border-danger border-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="fs-14 text-muted mb-3">Pertumbuhan</h4>
+                                                <h4 class="fs-16 fw-bold mb-0">0</h4>
+                                            </div>
+                                            <i class="ri-funds-box-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card border border-danger border-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="fs-14 text-muted mb-3">Penutupan</h4>
+                                                <h4 class="fs-16 fw-bold mb-0">0</h4>
+                                            </div>
+                                            <i class="ri-close-circle-fill  fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="ShowRekap"></div>
+                        
+                    </div>
+
+                    <div class="tab-pane" id="op-series" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-ShowSeries" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fs-16 mb-3">
+                                Series Jumlah Objek Pajak
+                            </h4>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-lg-4">
+                                <div class="card border border-danger border-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="fs-14 text-muted mb-3">Total Objek Pajak Tahun Ini</h4>
+                                                <h4 class="fs-16 fw-bold mb-0">0</h4>
+                                            </div>
+                                            <i class="ri-group-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card border border-danger border-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="fs-14 text-muted mb-3">Pertumbuhan Objek Pajak Tahun Ini</h4>
+                                                <h4 class="fs-16 fw-bold mb-0">+ 0</h4>
+                                            </div>
+                                            <i class="ri-funds-box-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card border border-danger border-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="fs-14 text-muted mb-3">Kenaikan Tertinggi</h4>
+                                                <h4 class="fs-16 fw-bold mb-0">Pajak</h4>
+                                            </div>
+                                            <i class="ri-trophy-fill  fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div id="ShowSeries"></div>
+                        
+                    </div>
+                </div>
+         
             </div>
         </div>
     </div>
 
-    <div class="col-lg-12 tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-rekap" role="tabpanel" aria-labelledby="pills-rekap-tab">
-            <div class="card">
-                <div class="card-header d-flex">
-                    <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
-                            Rekap Jumlah Objek Pajak
-                        </h4>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-
-                        <div class="col-lg-4">
-                            <div class="card border border-danger border-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="fs-14 text-muted mb-3">Total Objek Pajak</h4>
-                                            <h4 class="fs-16 fw-bold mb-0">0</h4>
-                                        </div>
-                                        <i class="ri-group-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="card border border-danger border-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="fs-14 text-muted mb-3">Pertumbuhan</h4>
-                                            <h4 class="fs-16 fw-bold mb-0">0</h4>
-                                        </div>
-                                        <i class="ri-funds-box-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="card border border-danger border-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="fs-14 text-muted mb-3">Penutupan</h4>
-                                            <h4 class="fs-16 fw-bold mb-0">0</h4>
-                                        </div>
-                                        <i class="ri-close-circle-fill  fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div id="Show" class="mb-5"></div>
-                    
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="pills-series" role="tabpanel" aria-labelledby="pills-series-tab">
-            <div class="card">
-                <div class="card-header d-flex">
-                    <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
-                            Series Jumlah Objek Pajak
-                        </h4>
-                    </div>
-                </div>
-                <div class="card-body">
-
-                    <div class="row">
-
-                        <div class="col-lg-4">
-                            <div class="card border border-danger border-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="fs-14 text-muted mb-3">Total Objek Pajak Tahun Ini</h4>
-                                            <h4 class="fs-16 fw-bold mb-0">0</h4>
-                                        </div>
-                                        <i class="ri-group-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="card border border-danger border-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="fs-14 text-muted mb-3">Pertumbuhan Objek Pajak Tahun Ini</h4>
-                                            <h4 class="fs-16 fw-bold mb-0">+ 0</h4>
-                                        </div>
-                                        <i class="ri-funds-box-fill fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="card border border-danger border-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="fs-14 text-muted mb-3">Kenaikan Tertinggi</h4>
-                                            <h4 class="fs-16 fw-bold mb-0">Pajak</h4>
-                                        </div>
-                                        <i class="ri-trophy-fill  fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div id="ShowSeries"></div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
 </div>
 
 @section Scripts{
     <script>
-        $(document).ready(function () {
-            loadShowRekap("");      // Panggil data rekap jumlah
-            loadShowSeries("");
+        $('#ddlTahun').on('change', function () {
+            var tahun = $(this).val();
+            fnShowRekap("", tahun); // Kirim tahun dan kosongkan keyword jika tidak dipakai
         });
 
-        function loadShowRekap() {
-            console.log("Memuat ShowRekap...");
+        $(document).ready(function () {
+            var tahun = $('#ddlTahun').val(); // ambil default tahun saat page load
+            fnShowRekap("", tahun);
+            fnShowSeries();
+        });
+
+        function fnShowRekap(keyword, tahun)
+        {
             $.ajax({
-                url: '@Url.Action("ShowRekap", "ProfileOP")',
+                url: '@(Url.Action("ShowRekap"))',
                 type: 'GET',
-                success: function (result) {
-                    console.log("Sukses load:", result);
-                    $('#Show').html(result);
+                data: {
+                    keyword: keyword || "",   // aman walau undefined/null
+                    tahun: tahun || new Date().getFullYear()  // fallback
+                },
+                beforeSend: function () {
+                    $('#loading2-ShowRekap').show();
+                    $('#ShowRekap').hide();
+                },
+                success: function (response) {
+                    $('#loading2-ShowRekap').hide();
+                    $('#ShowRekap').show().html(response);
                 },
                 error: function (xhr) {
-                    console.error("Gagal:", xhr.responseText);
-                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data Show.</div>');
+                    $('#loading2-ShowRekap').hide();
+                    $('#ShowRekap').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
                 }
             });
         }
 
-        function subRekapTemplate(container, options) {
-            var jenisPajak = options.data?.JenisPajak;
-            console.log("subRekapTemplate - JenisPajak:", jenisPajak);
 
-            var innerContainer = $("<div>").addClass("p-2").text("Memuat data...");
+
+        function fnShowSeries()
+        {
+            $.ajax({
+              url: '@(Url.Action("ShowSeries"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-ShowSeries').show();
+                 $('#ShowSeries').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-ShowSeries').hide();
+                        $('#ShowSeries').show();
+                        $('#ShowSeries').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-ShowSeries').hide();
+                 $('#ShowSeries').hide();
+                 $('#ShowSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+       /*  function fnRekapDetail(container, options) {
+            var jenisPajak = options.data?.JenisPajak;
+
+            var innerContainer = $("<div>").addClass("p-2").html('<div id="loading2-RekapDetail">Memuat data...</div><div id="RekapDetail" style="display:none;"></div>');
             container.append(innerContainer);
 
             if (!jenisPajak) {
@@ -196,58 +255,31 @@
             }
 
             $.ajax({
-                url: '@Url.Action("SubDetail", "PemasanganAlat")',
+                url: '@Url.Action("RekapDetail", "ProfileOP")',
                 type: 'GET',
                 data: { jenisPajak: jenisPajak },
-                success: function (result) {
-                    innerContainer.html(result);
+                beforeSend: function () {
+                    innerContainer.find('#loading2-RekapDetail').show();
+                    innerContainer.find('#RekapDetail').hide();
                 },
-                error: function () {
-                    innerContainer.html('<div class="text-danger">Gagal memuat data sub-detail.</div>');
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        innerContainer.find('#loading2-RekapDetail').hide();
+                        innerContainer.find('#RekapDetail').show().html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    innerContainer.find('#loading2-RekapDetail').hide();
+                    innerContainer.find('#RekapDetail').hide().html('<p class="text-danger">Terjadi kesalahan saat memuat data sub-detail.</p>');
                 }
             });
-        }
+        }*/
 
-        function loadShowSeries() {
-            console.log("Memuat ShowSeries...");
-            $.ajax({
-                url: '@Url.Action("ShowSeries", "ProfileOP")',
-                type: 'GET',
-                success: function (result) {
-                    console.log("Sukses load:", result);
-                    $('#ShowSeries').html(result);
-                },
-                error: function (xhr) {
-                    console.error("Gagal:", xhr.responseText);
-                    $('#ShowSeries').html('<div class="alert alert-danger">Gagal memuat data Show.</div>');
-                }
-            });
-        }
-
-
-        function subSeriesTemplate(container, options) {
-            var jenisPajak = options.data?.JenisPajak;
-            console.log("subRekapTemplate - JenisPajak:", jenisPajak);
-
-            var innerContainer = $("<div>").addClass("p-2").text("Memuat data...");
-            container.append(innerContainer);
-
-            if (!jenisPajak) {
-                innerContainer.html('<div class="text-danger">Jenis Pajak tidak ditemukan.</div>');
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("SubDetail", "PemasanganAlat")',
-                type: 'GET',
-                data: { jenisPajak: jenisPajak },
-                success: function (result) {
-                    innerContainer.html(result);
-                },
-                error: function () {
-                    innerContainer.html('<div class="text-danger">Gagal memuat data sub-detail.</div>');
-                }
-            });
-        }
     </script>
 }
