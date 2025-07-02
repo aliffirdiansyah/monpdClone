@@ -124,12 +124,12 @@ namespace MonPDReborn.Models.DataOP
                                 MetodePembayaran = opResto.MetodePembayaran,
                                 MetodePenjualan = opResto.MetodePenjualan
                             };
-                            ret.RestoRow.OperasionalRestoDetailList = context.DbOpRestoOperasionals
-                                .Where(x => x.Nop == nop)
-                                .Select(x => new DetailResto.DetailOperasional
-                                {
-                                    //isi data operasional resto jika ada
-                                }).ToList();
+                            //ret.RestoRow.OperasionalRestoDetailList = context.DbOpRestoOperasionals
+                            //    .Where(x => x.Nop == nop)
+                            //    .Select(x => new DetailResto.DetailOperasional
+                            //    {
+                            //        //isi data operasional resto jika ada
+                            //    }).ToList();
 
                         }
                         break;
