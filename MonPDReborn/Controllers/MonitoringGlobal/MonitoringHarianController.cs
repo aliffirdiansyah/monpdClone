@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDReborn.Lib.General;
+using MonPDReborn.Models.MonitoringGlobal;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.MonitoringGlobal

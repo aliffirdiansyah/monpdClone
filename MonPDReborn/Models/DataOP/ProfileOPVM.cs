@@ -37,12 +37,14 @@ namespace MonPDReborn.Models.DataOP
         public class Detail
         {
             public DataDetailOP DataDetail { get; set; } = new();
+            public EnumFactory.EPajak Pajak { get; set; }
             public Detail()
             {
 
             }
             public Detail(string nop, EnumFactory.EPajak pajak)
             {
+                Pajak = pajak;
                 DataDetail = Method.GetDetailObjekPajak(nop, pajak);
             }
         }
@@ -360,6 +362,9 @@ namespace MonPDReborn.Models.DataOP
             }
             public class DetailOperasional
             {
+                public string Hari {  get; set; }
+                public DateTime JamBuka { get; set; }
+                public DateTime JamTutup { get; set; }
 
             }
             public class DetailFasilitas
@@ -370,7 +375,9 @@ namespace MonPDReborn.Models.DataOP
             }
             public class DetailKapasitas
             {
-
+                public int JumlahKursi {  get; set; }
+                public int JumlahMeja {  get; set; }
+                public int KapasitasRuangan {  get; set; }
             }
         }
         //DETAIL ABT
