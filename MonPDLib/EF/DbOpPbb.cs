@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
+[PrimaryKey("Nop", "TahunBuku")]
 [Table("DB_OP_PBB")]
 public partial class DbOpPbb
 {
@@ -113,6 +114,7 @@ public partial class DbOpPbb
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
 
+    [Key]
     [Column("TAHUN_BUKU", TypeName = "NUMBER")]
     public decimal TahunBuku { get; set; }
 

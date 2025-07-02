@@ -12,6 +12,7 @@ namespace MonPDLib
         public static string Hpp = "";
         public static string Phrh = "";
         public static string Bima = "";
+        public static string MonitoringDb = "";
 
         public static ModelContext GetContext()
         {         
@@ -46,6 +47,13 @@ namespace MonPDLib
             var optionsBuilder = new DbContextOptionsBuilder<BimaContext>();
             optionsBuilder.UseOracle(Bima, opt => opt.UseOracleSQLCompatibility("11"));
             return new BimaContext(optionsBuilder.Options);
+        }
+
+        public static MonitoringDbContext GetMonitoringDbContext()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<MonitoringDbContext>();
+            optionsBuilder.UseOracle(MonitoringDb, opt => opt.UseOracleSQLCompatibility("11"));
+            return new MonitoringDbContext(optionsBuilder.Options);
         }
     }
 }

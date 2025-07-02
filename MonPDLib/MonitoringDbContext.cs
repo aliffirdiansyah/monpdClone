@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MonPDLib.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,23 +9,26 @@ using static MonPDLib.Helper;
 
 namespace MonPDLib
 {
-    public class PhrhContext : DbContext
+    public class MonitoringDbContext : DbContext
     {
-        public PhrhContext()
+        public MonitoringDbContext()
         {
         }
 
-        public PhrhContext(DbContextOptions<PhrhContext> options)
+        public MonitoringDbContext(DbContextOptions<MonitoringDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<SSPDPbjt> SSPD { get; set; }
+        public DbSet<DbOpHotel> DbOpHotels { get; set; }
+        public DbSet<OPSkpdHotel> OPSkpdHotels { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<SSPDPbjt>().HasNoKey();
+            modelBuilder.Entity<DbOpHotel>().HasNoKey();
+
+            modelBuilder.Entity<OPSkpdHotel>().HasNoKey();
         }
     }
 }

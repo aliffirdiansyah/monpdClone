@@ -27,6 +27,11 @@ namespace MonPDLib.General
             [Description("Lainnya")]
             Lainnya = 1,
         }
+        public enum EJobName
+        {
+            DBOPABT,
+            DBOPHOTEL 
+        }
         public enum EStatePemeriksaanSkpdKbJabatan
         {
             [Description("Tidak ada pemeriksaan jabatan")]
