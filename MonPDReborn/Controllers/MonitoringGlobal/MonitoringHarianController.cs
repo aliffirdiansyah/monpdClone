@@ -20,12 +20,38 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
             URLView = string.Concat("../MonitoringGlobal/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
+
         public IActionResult Index()
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.MonitoringGlobal.MonitoringHarianVM.Index();
+
+                var hari = new[] { "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu" };
+                var listHarian = new List<MonitoringHarianVM.HarianPajak>();
+
+                var random = new Random(); // Create a single Random instance to avoid issues with repeated instantiation
+                for (int i = 1; i <= 31; i++)
+                {
+                    listHarian.Add(new MonitoringHarianVM.HarianPajak
+                    {
+                        Tanggal = i,
+                        Hari = hari[(i - 1) % 7],
+                        Target = random.Next(100000000, 500000000) * 100L, // Adjusted to use int range and scale up
+                        Realisasi = (i == 1 ? 3_821_305_874 : 0)
+                    });
+                }
+
+                var model = new MonitoringHarianVM.Index
+                {
+                    Bulan = "Juli",
+                    JenisPajak = "Semua Pajak",
+                    TanggalUpdate = DateTime.Now,
+                    Target = 769_810_788_820,
+                    Realisasi = 3_821_305_874,
+                    ListHarian = listHarian
+                };
+
                 return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -41,18 +67,5 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
                 return Json(response);
             }
         }
-        //public IActionResult Show(DateTime tglCutOff)
-        //{
-        //    //try
-        //    //{
-        //    //    var model = new Models.MonitoringGlobal.MonitoringHarianVM.Show(tglCutOff);
-        //    //    return PartialView($"{URLView}_{actionName}", model);
-        //    //}
-        //    //catch (Exception)
-        //    //{
-
-        //    //    throw;
-        //    //}
-        //}
     }
 }
