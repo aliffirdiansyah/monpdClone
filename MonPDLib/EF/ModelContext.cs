@@ -442,7 +442,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpHiburan>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("DB_OP_HIBURAN_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_HIBURAN_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
@@ -452,7 +452,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpHotel>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("DB_OP_HOTEL_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_HOTEL_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
@@ -462,7 +462,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpListrik>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("DB_OP_LISTRIK_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_LISTRIK_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
@@ -471,7 +471,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpParkir>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("DB_OP_PARKIR_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_PARKIR_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
@@ -481,7 +481,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpPbb>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("DB_OP_PBB_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_PBB_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
@@ -498,7 +498,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpResto>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("DB_OP_RESTO_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_RESTO_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB' ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
