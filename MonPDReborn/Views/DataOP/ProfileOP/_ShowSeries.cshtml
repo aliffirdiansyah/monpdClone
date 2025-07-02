@@ -37,9 +37,16 @@
                 items.AddFor(m => m.Tahun2025).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
             });
         })
-       /* .MasterDetail(md => md
-        .Enabled(true)
-        .Template(new JS("subSeriesTemplate"))
-        )*/
+        .MasterDetail(md =>
+        {
+        md.Enabled(true);
+        md.Template(
+        @<text>
+            @{
+                ViewData["JenisPajak"] = new JS("data.EnumPajak");
+            }
+        @await Html.PartialAsync("/Views/DataOP/ProfileOP/_SeriesDetail.cshtml")
+    </text>);
+        })
         )
 </div>

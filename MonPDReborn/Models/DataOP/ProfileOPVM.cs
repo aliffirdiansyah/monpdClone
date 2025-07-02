@@ -89,12 +89,12 @@ namespace MonPDReborn.Models.DataOP
             {
                 return new List<RekapOP>
                 {
-                    new(){JenisPajak = "Pajak Hotel",Tahun = 2025, OPAwal = 60, TutupSementara = 0, TutupPermanen = 2, OPBaru = 18, Buka = 76},
-                    new(){JenisPajak = "Pajak Restoran",Tahun = 2025, OPAwal = 80, TutupSementara = 2, TutupPermanen = 3, OPBaru = 15, Buka = 90},
-                    new(){JenisPajak = "Pajak Parkir", Tahun = 2025, OPAwal = 25, TutupSementara = 1, TutupPermanen = 0, OPBaru = 4, Buka = 28},
-                    new(){JenisPajak = "Pajak Hotel",Tahun = 2024, OPAwal = 20, TutupSementara = 0, TutupPermanen = 2, OPBaru = 18, Buka = 76},
-                    new(){JenisPajak = "Pajak Restoran",Tahun = 2024, OPAwal = 10, TutupSementara = 2, TutupPermanen = 3, OPBaru = 15, Buka = 90},
-                    new(){JenisPajak = "Pajak Parkir", Tahun = 2024, OPAwal = 14, TutupSementara = 1, TutupPermanen = 0, OPBaru = 4, Buka = 28},
+                    new(){EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan, JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),Tahun = 2025, OPAwal = 60, TutupSementara = 0, TutupPermanen = 2, OPBaru = 18, Buka = 76},
+                    new(){EnumPajak = (int)EnumFactory.EPajak.MakananMinuman, JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),Tahun = 2025, OPAwal = 80, TutupSementara = 2, TutupPermanen = 3, OPBaru = 15, Buka = 90},
+                    new(){EnumPajak = (int)EnumFactory.EPajak.JasaParkir, JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(), Tahun = 2025, OPAwal = 25, TutupSementara = 1, TutupPermanen = 0, OPBaru = 4, Buka = 28},
+                    new(){EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan, JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),Tahun = 2024, OPAwal = 20, TutupSementara = 0, TutupPermanen = 2, OPBaru = 18, Buka = 76},
+                    new(){EnumPajak = (int)EnumFactory.EPajak.MakananMinuman, JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),Tahun = 2024, OPAwal = 10, TutupSementara = 2, TutupPermanen = 3, OPBaru = 15, Buka = 90},
+                    new(){EnumPajak = (int)EnumFactory.EPajak.JasaParkir, JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(), Tahun = 2024, OPAwal = 14, TutupSementara = 1, TutupPermanen = 0, OPBaru = 4, Buka = 28},
                 };
             }
 
@@ -102,24 +102,99 @@ namespace MonPDReborn.Models.DataOP
             {
                 return new List<SeriesOP>
                 {
-                    new() { JenisPajak = "Pajak Hotel", Tahun2021 = 50, Tahun2022 = 57, Tahun2023 = 52, Tahun2024 = 59, Tahun2025 = 60 },
-                    new() { JenisPajak = "Pajak Restoran", Tahun2021 = 70, Tahun2022 = 75, Tahun2023 = 80, Tahun2024 = 85, Tahun2025 = 90 },
-                    new() { JenisPajak = "Pajak Parkir", Tahun2021 = 20, Tahun2022 = 22, Tahun2023 = 24, Tahun2024 = 26, Tahun2025 = 28 },
+                    new() {EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan, JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(), Tahun2021 = 50, Tahun2022 = 57, Tahun2023 = 52, Tahun2024 = 59, Tahun2025 = 60 },
+                    new() {EnumPajak = (int)EnumFactory.EPajak.MakananMinuman, JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(), Tahun2021 = 70, Tahun2022 = 75, Tahun2023 = 80, Tahun2024 = 85, Tahun2025 = 90 },
+                    new() {EnumPajak = (int)EnumFactory.EPajak.JasaParkir, JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(), Tahun2021 = 20, Tahun2022 = 22, Tahun2023 = 24, Tahun2024 = 26, Tahun2025 = 28 },
                 };
             }
 
-            public static List<RekapDetail> GetRekapDetailData(int JenisPajak, int Tahun)
+            public static List<RekapDetail> GetRekapDetailData(EnumFactory.EPajak JenisPajak, int tahun)
             {
-                return new List<RekapDetail>
+                var ret = new List<RekapDetail>();
+                switch (JenisPajak)
                 {
-                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Lima", OPAwal = 20, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 8 },
-                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Empat", OPAwal = 15, TutupSementara = 5, TutupPermanen = 8, OPBaru = 4, Buka = 6 },
-                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Tiga", OPAwal = 25, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 4 },
-                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Dua", OPAwal = 10, TutupSementara = 2, TutupPermanen = 2, OPBaru = 7, Buka = 9 },
-                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Bintang Satu", OPAwal = 30, TutupSementara = 4, TutupPermanen = 3, OPBaru = 7, Buka = 10 },
-                    new RekapDetail { JenisPajak = "Pajak Hotel",Tahun = 2025, Kategori = "Hotel Non Bintang", OPAwal = 40, TutupSementara = 8, TutupPermanen = 5, OPBaru = 8, Buka = 15 },
-
+                    case EnumFactory.EPajak.MakananMinuman:
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        ret = new List<RekapDetail>
+                        {
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Lima", OPAwal = 20, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 8 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Empat", OPAwal = 15, TutupSementara = 5, TutupPermanen = 8, OPBaru = 4, Buka = 6 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Tiga", OPAwal = 25, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 4 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Dua", OPAwal = 10, TutupSementara = 2, TutupPermanen = 2, OPBaru = 7, Buka = 9 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Satu", OPAwal = 30, TutupSementara = 4, TutupPermanen = 3, OPBaru = 7, Buka = 10 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Non Bintang", OPAwal = 40, TutupSementara = 8, TutupPermanen = 5, OPBaru = 8, Buka = 15 },
+                        };
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
+                    default:
+                        break;
                 };
+                
+                return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
+
+            }
+
+            public static List<SeriesDetail> GetSeriesDetailData(EnumFactory.EPajak JenisPajak)
+            {
+                var ret = new List<SeriesDetail>();
+                switch (JenisPajak)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        ret = new List<SeriesDetail>
+                        {
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Lima", OPAwal = 20, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 8 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Empat", OPAwal = 15, TutupSementara = 5, TutupPermanen = 8, OPBaru = 4, Buka = 6 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Tiga", OPAwal = 25, TutupSementara = 0, TutupPermanen = 1, OPBaru = 5, Buka = 4 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Dua", OPAwal = 10, TutupSementara = 2, TutupPermanen = 2, OPBaru = 7, Buka = 9 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Satu", OPAwal = 30, TutupSementara = 4, TutupPermanen = 3, OPBaru = 7, Buka = 10 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Non Bintang", OPAwal = 40, TutupSementara = 8, TutupPermanen = 5, OPBaru = 8, Buka = 15 },
+                        };
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
+                    default:
+                        break;
+                }
+                ;
+
+                return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
+
             }
 
             //get Data OP
@@ -270,6 +345,8 @@ namespace MonPDReborn.Models.DataOP
 
         public class RekapOP
         {
+            public int EnumPajak { get; set; }
+
             public string JenisPajak { get; set; } = null!;
             public int Tahun { get; set; }             // ✅ Tambahan field tahun
 
@@ -283,6 +360,7 @@ namespace MonPDReborn.Models.DataOP
 
         public class SeriesOP
         {
+            public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public int Tahun2021 { get; set; }
             public int Tahun2022 { get; set; }
@@ -302,9 +380,24 @@ namespace MonPDReborn.Models.DataOP
 
         public class RekapDetail
         {
+            public int EnumPajak { get; set; }
+
             public string JenisPajak { get; set; } = null!;
             public string Kategori { get; set; } = null!;
             public int Tahun { get; set; }
+            public int OPAwal { get; set; }
+            public int TutupSementara { get; set; }
+            public int TutupPermanen { get; set; }
+            public int OPBaru { get; set; }
+            public int Buka { get; set; }
+        }
+
+        public class SeriesDetail
+        {
+            public int EnumPajak { get; set; }
+
+            public string JenisPajak { get; set; } = null!;
+            public string Kategori { get; set; } = null!;
             public int OPAwal { get; set; }
             public int TutupSementara { get; set; }
             public int TutupPermanen { get; set; }

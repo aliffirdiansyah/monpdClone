@@ -70,27 +70,18 @@ namespace MonPDReborn.Controllers.DataOP
         }
 
         [HttpGet]
-        public object GetRekapDetailData(DataSourceLoadOptions load_options, int JenisPajak, int Tahun)
+        public object GetRekapDetailData(DataSourceLoadOptions load_options, int JenisPajak, int tahun)
         {
-            var data = Models.DataOP.ProfileOPVM.Method.GetRekapDetailData(JenisPajak, Tahun);
+            var data = Models.DataOP.ProfileOPVM.Method.GetRekapDetailData((EnumFactory.EPajak)JenisPajak, tahun);
             return DataSourceLoader.Load(data, load_options);
         }
-        /* public IActionResult RekapDetail(string jenisPajak, int? tahun)
-         {
-             ViewBag.JenisPajak = jenisPajak;
-             int finalTahun = tahun ?? DateTime.Now.Year;
 
-             var subData = ProfileOPVM.Method.GetRekapDetailData()
-                 .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase)
-                          && x.Tahun == finalTahun)
-                 .ToList();
-
-             return PartialView("../DataOP/ProfileOP/_RekapDetail", subData);
-         }*/
-
-
-
-
+        [HttpGet]
+        public object GetSeriesDetailData(DataSourceLoadOptions load_options, int JenisPajak)
+        {
+            var data = Models.DataOP.ProfileOPVM.Method.GetSeriesDetailData((EnumFactory.EPajak)JenisPajak);
+            return DataSourceLoader.Load(data, load_options);
+        }
 
         public IActionResult Detail(string nop, int pajak)
         {
