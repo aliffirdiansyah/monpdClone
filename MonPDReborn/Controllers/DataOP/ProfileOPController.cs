@@ -22,12 +22,39 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.DataOP.ProfileOPVM.Index("88");
+                var model = new Models.DataOP.ProfileOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public IActionResult ShowRekap(string keyword)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfileOPVM.ShowRekap(keyword);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IActionResult ShowSeries(string keyword)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfileOPVM.ShowSeries(keyword);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (Exception ex)
+            {
+                return Content("Error: " + ex.Message);
             }
         }
 
