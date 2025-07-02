@@ -1,13 +1,12 @@
-﻿
-@(Html.DevExtreme().DataGrid<MonPDReborn>()
-    .ID(@string.Concat("RekapDetailGrid_",@(ViewData["JenisPajak"].ToString()),"_",@(ViewData["Tahun"].ToString()))
-    DataSource(d => d.Mvc()
+﻿@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetail>()
+    .ID(string.Concat("RekapDetailGrid_", ViewData["JenisPajak"].ToString(), "_", ViewData["Tahun"].ToString()))
+    .DataSource(d => d.Mvc()
     .LoadAction("GetAkunKelompok")
     .Key("Kategori")
     .LoadParams(new
     {
-    JenisPajak = ViewData["JenisPajak"],
-    Tahun = ViewData["Tahun"]
+        JenisPajak = ViewData["JenisPajak"],
+        Tahun = ViewData["Tahun"]
     })
     )
     .ShowColumnLines(true)
@@ -43,4 +42,5 @@
             items.AddFor(m => m.Buka).SummaryType(SummaryType.Sum).DisplayFormat("{0}").Alignment(HorizontalAlignment.Center);
         });
     })
+)
 )
