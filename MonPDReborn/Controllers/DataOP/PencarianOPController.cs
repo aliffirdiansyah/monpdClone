@@ -38,7 +38,7 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
         }
@@ -58,7 +58,7 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
         }
@@ -78,7 +78,7 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
         }
