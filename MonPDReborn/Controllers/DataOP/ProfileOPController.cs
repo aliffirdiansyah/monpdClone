@@ -33,9 +33,17 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new Models.DataOP.ProfileOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
         public IActionResult ShowRekap(string keyword, int? tahun)
@@ -47,9 +55,17 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap(keyword, finalTahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
             catch (Exception ex)
             {
-                return Content("⚠️ Server Error: " + ex.Message + "\nStackTrace: " + ex.StackTrace);
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
@@ -63,9 +79,17 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new Models.DataOP.ProfileOPVM.ShowSeries(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
             catch (Exception ex)
             {
-                return Content("Error: " + ex.Message);
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
@@ -82,6 +106,60 @@ namespace MonPDReborn.Controllers.DataOP
             var data = Models.DataOP.ProfileOPVM.Method.GetSeriesDetailData((EnumFactory.EPajak)JenisPajak);
             return DataSourceLoader.Load(data, load_options);
         }
+
+
+
+
+        public IActionResult RekapMaster(int enumPajak, string kategori, string status)
+        {
+            try
+            {
+                var jenisPajak = (EnumFactory.EPajak)enumPajak;
+                var allData = Models.DataOP.ProfileOPVM.Method.GetRekapMasterData(jenisPajak);
+
+                var filtered = allData
+                    .Where(x =>
+                        !string.IsNullOrEmpty(x.Kategori_Nama) &&
+                        !string.IsNullOrEmpty(x.Status) &&
+                        x.Kategori_Nama.Equals(kategori, StringComparison.OrdinalIgnoreCase) &&
+                        x.Status.Equals(status, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                return Json(filtered);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ ERROR: " + ex.Message);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        public IActionResult SeriesMaster(int enumPajak, string kategori, string status)
+        {
+            try
+            {
+                var jenisPajak = (EnumFactory.EPajak)enumPajak;
+                var allData = Models.DataOP.ProfileOPVM.Method.GetSeriesMasterData(jenisPajak);
+
+                var filtered = allData
+                    .Where(x =>
+                        !string.IsNullOrEmpty(x.Kategori_Nama) &&
+                        !string.IsNullOrEmpty(x.Status) &&
+                        x.Kategori_Nama.Equals(kategori, StringComparison.OrdinalIgnoreCase) &&
+                        x.Status.Equals(status, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                return Json(filtered);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ ERROR: " + ex.Message);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+
 
         public IActionResult Detail(string nop, int pajak)
         {

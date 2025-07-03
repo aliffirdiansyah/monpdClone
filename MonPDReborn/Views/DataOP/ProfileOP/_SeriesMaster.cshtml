@@ -1,0 +1,23 @@
+﻿@(Html.DevExtreme().DataGrid<object>()
+    .ID("SeriesGrid")
+    .DataSource(new JS("[]")) // Awalnya kosong
+    .ShowBorders(true)
+    .ColumnAutoWidth(true)
+    .Columns(columns =>
+    {
+        columns.Add().DataField("NOP").Caption("NOP");
+        columns.Add().DataField("NamaOP").Caption("Nama OP");
+        columns.Add().DataField("Alamat").Caption("Alamat");
+        columns.Add().DataField("JenisOP").Caption("Jenis OP");
+        columns.Add().DataField("Wilayah").Caption("Wilayah");
+        columns.Add()
+               .Type(GridCommandColumnType.Buttons)
+               .Buttons(b =>
+               {
+                   b.Add()
+                   .Text("Detail")
+                   .Icon("search")
+                   .OnClick("onDetailSeries");
+               });
+    })
+)

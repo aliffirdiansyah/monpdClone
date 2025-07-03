@@ -1,9 +1,4 @@
-﻿@{
-    var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
-}
-
-@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesDetail>()
-    .ID($"RekapDetailGrid_{ViewData["JenisPajak"]}_{uniqueId}")
+﻿@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesDetail>()
     .DataSource(d => d.Mvc()
     .LoadAction("GetSeriesDetailData")
     .Key("Kategori")
@@ -17,6 +12,7 @@
     .ShowBorders(true)
     .ShowColumnHeaders(true)
     .RowAlternationEnabled(true)
+    .ColumnAutoWidth(true)
     .Paging(p => p.PageSize(10))
     .Pager(p => p
         .ShowPageSizeSelector(true)
@@ -27,22 +23,124 @@
     {
 
         columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
-        columns.AddFor(m => m.OPAwal).Caption("OP Awal");
-        columns.AddFor(m => m.TutupSementara).Caption("Tutup Sementara");
-        columns.AddFor(m => m.TutupPermanen).Caption("Tutup Permanen");
-        columns.AddFor(m => m.OPBaru).Caption("OP Baru");
-        columns.AddFor(m => m.Buka).Caption("Buka");
+        columns.Add()
+            .DataField("Tahun2021")
+            .Caption("2021")
+            .CellTemplate(@<text>
+                               <div style="display: flex; align-items: center; justify-content: space-between;">
+                                   <button class="btn btn-sm btn-outline-primary me-2"
+                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2021')"
+                                           title="Lihat Detail">
+                                       <i class="ri-search-line"></i>
+                                   </button>
+                                   <span><%- data.Tahun2021 %></span>
+                               </div>
+                           </text>)
+            .CalculateCellValue("data => data.Tahun2021");
+
+        columns.Add()
+            .DataField("Tahun2022")
+            .Caption("2022")
+            .CellTemplate(@<text>
+                               <div style="display: flex; align-items: center; justify-content: space-between;">
+                                   <button class="btn btn-sm btn-outline-secondary me-2"
+                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2022')"
+                                           title="Lihat Detail">
+                                       <i class="ri-search-line"></i>
+                                   </button>
+                                   <span><%- data.Tahun2022 %></span>
+                               </div>
+                           </text>)
+            .CalculateCellValue("data => data.Tahun2022");
+
+        columns.Add()
+            .DataField("Tahun2023")
+            .Caption("2023")
+            .CellTemplate(@<text>
+                               <div style="display: flex; align-items: center; justify-content: space-between;">
+                                   <button class="btn btn-sm btn-outline-danger me-2"
+                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2023')"
+                                           title="Lihat Detail">
+                                       <i class="ri-search-line"></i>
+                                   </button>
+                                   <span><%- data.Tahun2023 %></span>
+                               </div>
+                           </text>)
+            .CalculateCellValue("data => data.Tahun2023");
+
+        columns.Add()
+            .DataField("Tahun2024")
+            .Caption("2024")
+            .CellTemplate(@<text>
+                               <div style="display: flex; align-items: center; justify-content: space-between;">
+                                   <button class="btn btn-sm btn-outline-success me-2"
+                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2024')"
+                                           title="Lihat Detail">
+                                       <i class="ri-search-line"></i>
+                                   </button>
+                                   <span><%- data.Tahun2024 %></span>
+                               </div>
+                           </text>)
+            .CalculateCellValue("data => data.Tahun2024");
+
+
+        columns.Add()
+            .DataField("Tahun2025")
+            .Caption("2025")
+            .CellTemplate(@<text>
+                               <div style="display: flex; align-items: center; justify-content: space-between;">
+                                   <button class="btn btn-sm btn-outline-info me-2"
+                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2025')"
+                                           title="Lihat Detail">
+                                       <i class="ri-search-line"></i>
+                                   </button>
+                                   <span><%- data.Tahun2025 %></span>
+                               </div>
+                           </text>)
+            .CalculateCellValue("data => data.Tahun2025");
+
+
     })
-    .Summary(summary =>
+    .Summary(s =>
     {
-        summary.TotalItems(items =>
+        s.TotalItems(items =>
         {
-            items.AddFor(m => m.Kategori).SummaryType(SummaryType.Custom).DisplayFormat("Total");
-            items.AddFor(m => m.OPAwal).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.TutupSementara).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.TutupPermanen).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.OPBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.Buka).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            items.Add()
+                .Column("Kategori")
+                .SummaryType(SummaryType.Custom)
+                .DisplayFormat("Total")
+                .Alignment(HorizontalAlignment.Center);
+
+            items.Add()
+                .Column("Tahun2021")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("Tahun2022")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("Tahun2023")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("Tahun2024")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("Tahhun2025")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
         });
     })
 )
