@@ -23,6 +23,8 @@
         .AllowedPageSizes(new[] { 10, 20, 50 })
         .ShowInfo(true)
     )
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
     .NoDataText("Objek Pajak Tidak Ditemukan")
     .Columns(columns => {
         @* columns.AddFor(m => m.No).Caption("No").Width(50); *@

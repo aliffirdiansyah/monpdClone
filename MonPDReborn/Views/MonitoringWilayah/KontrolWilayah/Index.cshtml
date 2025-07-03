@@ -1,0 +1,411 @@
+﻿@model MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.Index
+
+@{
+    ViewBag.Title = "Dashboard Penetapan Pajak";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row align-items-center mb-3">
+        <div class="col-md-6">
+            <h4 class="fw-bold mb-0">Dashboard Monitoring Pajak Daerah</h4>
+            <p class="text-muted mb-0">Monitoring realisasi pajak per wilayah dan jenis pajak</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="text-muted mb-1">Periode: <strong>Januari - Desember 2023</strong></div>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="selectUPTB" class="form-label">UPTB</label>
+                        <select class="form-select" id="selectUPTB">
+                            <option selected>Semua UPTB</option>
+                            <option>UPTB 1</option>
+                            <option>UPTB 2</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="selectJenisPajak" class="form-label">Jenis Pajak</label>
+                        <select class="form-select" id="selectJenisPajak">
+                            <option selected>Semua Jenis Pajak</option>
+                            <option>Hotel</option>
+                            <option>Restoran</option>
+                            <option>Parkir</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="selectTahun" class="form-label">Tahun</label>
+                        <select class="form-select" id="selectTahun">
+                            <option>2022</option>
+                            <option selected>2023</option>
+                            <option>2024</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="selectBulan" class="form-label">Bulan</label>
+                        <select class="form-select" id="selectBulan">
+                            <option selected>Semua Bulan</option>
+                            <option>Januari</option>
+                            <option>Februari</option>
+                            <option>Maret</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <label class="form-label invisible">.</label>
+                        <button type="button" class="btn btn-success w-100">
+                            <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistik Kartu -->
+    <div class="row text-center">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3 rounded-3 h-100">
+                <div class="fs-1 text-primary"><i class="bx bx-target-lock"></i></div>
+                <div class="text-uppercase small fw-bold">Total Target</div>
+                <div class="fs-4 fw-semibold">Rp 125,7 M</div>
+                <small class="text-muted">Target pajak daerah</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3 rounded-3 h-100">
+                <div class="fs-1 text-success"><i class="bx bx-bar-chart-alt-2"></i></div>
+                <div class="text-uppercase small fw-bold">Total Realisasi</div>
+                <div class="fs-4 fw-semibold">Rp 98,2 M</div>
+                <small class="text-muted"><span class="text-success fw-bold">↑ 78,12%</span> dari target</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3 rounded-3 h-100">
+                <div class="fs-1 text-warning"><i class="bx bx-calendar"></i></div>
+                <div class="text-uppercase small fw-bold">Pencapaian Harian</div>
+                <div class="fs-4 fw-semibold">Rp 325,4 Jt</div>
+                <small class="text-muted"><span class="text-warning fw-bold">↓ 5,2%</span> dari hari sebelumnya</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3 rounded-3 h-100">
+                <div class="fs-1 text-info"><i class="bx bx-user-check"></i></div>
+                <div class="text-uppercase small fw-bold">Jumlah Wajib Pajak</div>
+                <div class="fs-4 fw-semibold">4.587</div>
+                <small class="text-muted"><span class="text-info fw-bold">+127</span> dari bulan sebelumnya</small>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <!-- Tabel Realisasi per UPTB -->
+        <div class=" col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Realisasi Pajak per UPTB</h6>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            Urutkan
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="sortGrid('pencapaian', 'desc')">Pencapaian (Tertinggi)</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="sortGrid('pencapaian', 'asc')">Pencapaian (Terendah)</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="sortGrid('target', 'desc')">Target (Tertinggi)</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="sortGrid('target', 'asc')">Target (Terendah)</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="gridUPTB"></div>
+                </div>
+            </div>
+        </div>
+        <div class=" col-lg-6">
+            <!-- Tabel Realisasi Pajak per Jenis -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Realisasi Pajak per Jenis</h6>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            Urutkan
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="sortGridJenis('pencapaian', 'desc')">Pencapaian (Tertinggi)</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="sortGridJenis('pencapaian', 'asc')">Pencapaian (Terendah)</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="gridJenisPajak"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Tabel Realisasi Pajak Harian -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Realisasi Pajak Harian</h6>
+        </div>
+        <div class="card-body">
+            <div id="gridHarian"></div>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <!-- DevExtreme core -->
+    <script src="https://cdn.jsdelivr.net/npm/devextreme@24.1.3/dist/js/dx.all.js"></script>
+
+    <script>
+        const dataUPTB = [
+            { nama: "UPTB 1", lokasi: "Kota Utara", target: 35200000000, realisasi: 30800000000, pencapaian: 87.5, tren: 4.2, status: "up" },
+            { nama: "UPTB 2", lokasi: "Kota Selatan", target: 28500000000, realisasi: 22100000000, pencapaian: 77.5, tren: 2.8, status: "up" },
+            { nama: "UPTB 3", lokasi: "Kota Timur", target: 22800000000, realisasi: 16500000000, pencapaian: 72.4, tren: 0.3, status: "neutral" },
+            { nama: "UPTB 4", lokasi: "Kota Barat", target: 19700000000, realisasi: 15800000000, pencapaian: 80.2, tren: 3.5, status: "up" },
+            { nama: "UPTB 5", lokasi: "Kabupaten", target: 19500000000, realisasi: 13000000000, pencapaian: 66.7, tren: 1.8, status: "down" }
+        ];
+
+        const dataJenis = [
+            { jenis: "Pajak Hotel", wajibPajak: 1245, target: 33500000000, realisasi: 28500000000, pencapaian: 85.2, tren: 3.8, status: "up" },
+            { jenis: "Pajak Restoran", wajibPajak: 1876, target: 39600000000, realisasi: 32700000000, pencapaian: 82.5, tren: 4.2, status: "up" },
+            { jenis: "Pajak Hiburan", wajibPajak: 587, target: 21200000000, realisasi: 15300000000, pencapaian: 72.8, tren: 1.5, status: "up" },
+            { jenis: "Pajak Parkir", wajibPajak: 324, target: 10900000000, realisasi: 8200000000, pencapaian: 75.3, tren: 0.2, status: "neutral" },
+            { jenis: "Pajak Reklame", wajibPajak: 555, target: 19800000000, realisasi: 13500000000, pencapaian: 68.2, tren: -2.1, status: "down" }
+        ];
+
+        const dataHarian = [
+            { tanggal: "15/12/2023", hari: "Jumat", uptb: "UPTB 1", jenis: "Pajak Hotel", target: 125500000, realisasi: 118200000, pencapaian: 94.2 },
+            { tanggal: "14/12/2023", hari: "Kamis", uptb: "UPTB 1", jenis: "Pajak Hotel", target: 125500000, realisasi: 110500000, pencapaian: 88.0 },
+            { tanggal: "13/12/2023", hari: "Rabu", uptb: "UPTB 1", jenis: "Pajak Hotel", target: 125500000, realisasi: 105800000, pencapaian: 84.3 },
+            { tanggal: "12/12/2023", hari: "Selasa", uptb: "UPTB 1", jenis: "Pajak Hotel", target: 125500000, realisasi: 98200000, pencapaian: 78.2 },
+            { tanggal: "11/12/2023", hari: "Senin", uptb: "UPTB 1", jenis: "Pajak Hotel", target: 125500000, realisasi: 92500000, pencapaian: 73.7 },
+            { tanggal: "10/12/2023", hari: "Minggu", uptb: "UPTB 1", jenis: "Pajak Hotel", target: 125500000, realisasi: 135800000, pencapaian: 108.2 },
+            { tanggal: "09/12/2023", hari: "Sabtu", uptb: "UPTB 1", jenis: "Pajak Hotel", target: 125500000, realisasi: 132200000, pencapaian: 105.3 }
+        ];
+
+        function sortGrid(field, order) {
+            const grid = $("#gridUPTB").dxDataGrid("instance");
+            grid.clearSorting();
+            grid.columnOption(field, "sortOrder", order);
+        }
+
+        function sortGridJenis(field, order) {
+            const grid = $("#gridJenisPajak").dxDataGrid("instance");
+            grid.clearSorting();
+            grid.columnOption(field, "sortOrder", order);
+        }
+
+        function searchHarian() {
+            const keyword = $("#searchDaily").val().toLowerCase();
+            const grid = $("#gridHarian").dxDataGrid("instance");
+            grid.searchByText(keyword);
+        }
+
+        $(function () {
+            $("#gridUPTB").dxDataGrid({
+                dataSource: dataUPTB,
+                showBorders: true,
+                rowAlternationEnabled: true,
+                columnAutoWidth: true,
+                columns: [
+                    {
+                        caption: "UPTB",
+                        cellTemplate: function (container, options) {
+                            container.append(`
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="bg-primary bg-opacity-10 text-primary p-2 rounded-circle">
+                                            <i class="bx bx-map"></i>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">${options.data.nama}</div>
+                                        <small class="text-muted">${options.data.lokasi}</small>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    },
+                    {
+                        dataField: "target",
+                        caption: "Target",
+                        format: { type: "currency", precision: 0 },
+                        sortOrder: null
+                    },
+                    {
+                        dataField: "realisasi",
+                        caption: "Realisasi",
+                        format: { type: "currency", precision: 0 },
+                        sortOrder: null
+                    },
+                    {
+                        caption: "Pencapaian",
+                        sortIndex: 0,
+                        dataField: "pencapaian",
+                        allowSorting: true,
+                        cellTemplate: function (container, options) {
+                            const val = options.data.pencapaian;
+                            const color = val >= 80 ? "bg-success" : val >= 70 ? "bg-warning" : "bg-danger";
+                            container.append(`
+                                <div class="d-flex align-items-center w-100">
+                                    <div class="me-2 fw-semibold">${val}%</div>
+                                    <div class="progress w-100" style="height:6px;">
+                                        <div class="progress-bar ${color}" style="width:${val}%"></div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    },
+                    {
+                        caption: "Tren",
+                        cellTemplate: function (container, options) {
+                            const status = options.data.status;
+                            const tren = options.data.tren;
+                            let color = "text-secondary";
+                            let icon = "bx-minus";
+                            if (status === "up") {
+                                color = "text-success";
+                                icon = "bx-up-arrow";
+                            } else if (status === "down") {
+                                color = "text-danger";
+                                icon = "bx-down-arrow";
+                            }
+                            container.append(`
+                                <span class="fw-semibold ${color}">
+                                    <i class="bx ${icon}"></i> ${tren}%
+                                </span>
+                            `);
+                        }
+                    }
+                ]
+            });
+            $("#gridJenisPajak").dxDataGrid({
+            dataSource: dataJenis,
+            showBorders: true,
+            rowAlternationEnabled: true,
+            columnAutoWidth: true,
+            columns: [
+                {
+                    caption: "Jenis Pajak",
+                    cellTemplate: function (container, options) {
+                        const icon = {
+                            "Pajak Hotel": "bx-building",
+                            "Pajak Restoran": "bx-coffee",
+                            "Pajak Hiburan": "bx-music",
+                            "Pajak Parkir": "bx-car",
+                            "Pajak Reklame": "bx-movie"
+                        }[options.data.jenis] || "bx-bar-chart";
+
+                        container.append(`
+                            <div class="d-flex align-items-center">
+                                <div class="me-2">
+                                    <span class="bg-primary bg-opacity-10 text-primary p-2 rounded-circle">
+                                        <i class="bx ${icon}"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${options.data.jenis}</div>
+                                    <small class="text-muted">${options.data.wajibPajak} wajib pajak</small>
+                                </div>
+                            </div>
+                        `);
+                    }
+                },
+                { dataField: "target", caption: "Target", format: { type: "currency", precision: 0 } },
+                { dataField: "realisasi", caption: "Realisasi", format: { type: "currency", precision: 0 } },
+                {
+                    dataField: "pencapaian",
+                    caption: "Pencapaian",
+                    cellTemplate: function (container, options) {
+                        const val = options.data.pencapaian;
+                        const color = val >= 80 ? "bg-success" : val >= 70 ? "bg-warning" : "bg-danger";
+                        container.append(`
+                            <div class="d-flex align-items-center w-100">
+                                <div class="me-2 fw-semibold">${val}%</div>
+                                <div class="progress w-100" style="height:6px;">
+                                    <div class="progress-bar ${color}" style="width:${val}%"></div>
+                                </div>
+                            </div>
+                        `);
+                    }
+                },
+                {
+                    caption: "Tren",
+                    cellTemplate: function (container, options) {
+                        const status = options.data.status;
+                        const tren = options.data.tren;
+                        let color = "text-secondary", icon = "bx-minus";
+                        if (status === "up") { color = "text-success"; icon = "bx-up-arrow"; }
+                        else if (status === "down") { color = "text-danger"; icon = "bx-down-arrow"; }
+                        container.append(`
+                            <span class="fw-semibold ${color}">
+                                <i class="bx ${icon}"></i> ${tren}%
+                            </span>
+                        `);
+                    }
+                }
+            ]
+        });
+            $("#gridHarian").dxDataGrid({
+            dataSource: dataHarian,
+            keyExpr: "tanggal",
+            showBorders: true,
+            rowAlternationEnabled: true,
+            columnAutoWidth: true,
+            searchPanel: {
+                visible: true,
+                placeholder: "Cari tanggal, UPTB, jenis pajak...",
+                width: 300
+            },
+            paging: {
+                pageSize: 5
+            },
+            pager: {
+                showPageSizeSelector: true,
+                allowedPageSizes: [5, 10, 20],
+                showInfo: true
+            },
+            columns: [
+                { dataField: "tanggal", caption: "Tanggal" },
+                { dataField: "hari", caption: "Hari" },
+                { dataField: "uptb", caption: "UPTB" },
+                { dataField: "jenis", caption: "Jenis Pajak" },
+                {
+                    dataField: "target", caption: "Target",
+                    format: { type: "currency", precision: 0 }
+                },
+                {
+                    dataField: "realisasi", caption: "Realisasi",
+                    format: { type: "currency", precision: 0 }
+                },
+                {
+                    dataField: "pencapaian", caption: "Pencapaian (%)",
+                    cellTemplate: function (container, options) {
+                        const val = options.data.pencapaian;
+                        const color = val >= 90 ? "bg-success" :
+                                        val >= 70 ? "bg-warning" : "bg-danger";
+                        container.append(`
+                            <div class="d-flex align-items-center w-100">
+                                <div class="me-2 fw-semibold">${val}%</div>
+                                <div class="progress w-100" style="height:6px;">
+                                    <div class="progress-bar ${color}" style="width:${Math.min(val, 100)}%"></div>
+                                </div>
+                            </div>
+                        `);
+                    }
+                }
+            ]
+        });
+        });
+    </script>
+}

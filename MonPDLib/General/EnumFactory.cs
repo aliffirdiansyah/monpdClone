@@ -30,7 +30,9 @@ namespace MonPDLib.General
         public enum EJobName
         {
             DBOPABT,
-            DBOPHOTEL 
+            DBOPHOTEL, 
+            DBOPRESTORAN, 
+            DBOPPARKIR, 
         }
         public enum EStatePemeriksaanSkpdKbJabatan
         {

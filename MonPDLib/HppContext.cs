@@ -21,11 +21,15 @@ namespace MonPDLib
         }
 
         public DbSet<DbOpHotel> DbOpHotels { get; set; }
+        public DbSet<DbOpResto> DbOpRestos { get; set; }
+        public DbSet<DbOpParkir> DbOpParkirs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<DbOpHotel>().HasNoKey();
+            modelBuilder.Entity<DbOpParkir>().HasNoKey();
+            modelBuilder.Entity<DbOpResto>().HasNoKey();
         }
     }
 }
