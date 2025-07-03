@@ -46,9 +46,9 @@ namespace MonPDReborn.Models.DataOP
                 {
                     throw new ArgumentException("Keyword harus diisi");
                 }
-                if (keyword.Length <= 3)
+                if (keyword.Length < 3)
                 {
-                    throw new ArgumentException("Keyword harus diisi minimal 3 ");
+                    throw new ArgumentException("Keyword harus diisi minimal 3");
                 }
                 var context = DBClass.GetContext();
                 var ret = new List<DataPencarianOp>();

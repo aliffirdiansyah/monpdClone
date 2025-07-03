@@ -1,24 +1,23 @@
-﻿using DevExpress.DataAccess.Native.Web;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 
-namespace MonPDReborn.Controllers.DataOP
+namespace MonPDReborn.Controllers.AktivitasWP
 {
-    public class PencarianOPController : Controller
+    public class PenagihanController : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<PencarianOPController> _logger;
+        private readonly ILogger<PenagihanController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         ResponseBase response = new ResponseBase();
-        public PencarianOPController(ILogger<PencarianOPController> logger)
+        public PenagihanController(ILogger<PenagihanController> logger)
         {
-            URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../AktivitasWP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
@@ -26,7 +25,7 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.DataOP.PencarianOPVM.Index();
+                var model = new Models.AktivitasWP.PenagihanVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -42,31 +41,11 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
-        public IActionResult Show(string keyword)
+        public IActionResult Show(DateTime tglCutOff)
         {
             try
             {
-                var model = new Models.DataOP.PencarianOPVM.Show(keyword);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-        public IActionResult Detail(string nop, int pajak)
-        {
-            try
-            {
-                var model = new Models.DataOP.PencarianOPVM.Detail(nop, (MonPDLib.General.EnumFactory.EPajak)pajak);
+                var model = new Models.AktivitasWP.PenagihanVM.Show();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

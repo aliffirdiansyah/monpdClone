@@ -1,5 +1,48 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
 }
+
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesDetail>()
+    .ID($"RekapDetailGrid_{ViewData["JenisPajak"]}_{uniqueId}")
+    .DataSource(d => d.Mvc()
+    .LoadAction("GetSeriesDetailData")
+    .Key("Kategori")
+    .LoadParams(new
+    {
+        JenisPajak = ViewData["JenisPajak"],
+    })
+    )
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .RowAlternationEnabled(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+    )
+    .Columns(columns =>
+    {
+
+        columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
+        columns.AddFor(m => m.OPAwal).Caption("OP Awal");
+        columns.AddFor(m => m.TutupSementara).Caption("Tutup Sementara");
+        columns.AddFor(m => m.TutupPermanen).Caption("Tutup Permanen");
+        columns.AddFor(m => m.OPBaru).Caption("OP Baru");
+        columns.AddFor(m => m.Buka).Caption("Buka");
+    })
+    .Summary(summary =>
+    {
+        summary.TotalItems(items =>
+        {
+            items.AddFor(m => m.Kategori).SummaryType(SummaryType.Custom).DisplayFormat("Total");
+            items.AddFor(m => m.OPAwal).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            items.AddFor(m => m.TutupSementara).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            items.AddFor(m => m.TutupPermanen).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            items.AddFor(m => m.OPBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            items.AddFor(m => m.Buka).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+        });
+    })
+)

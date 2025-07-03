@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] | PENDATAAN PBJT</title>
+    <title>@ViewData["Title"] | MONPD </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -293,6 +293,62 @@
 
     <!-- App js -->
     <script src="~/assets/js/app.js"></script>
+
+    <script src="~/exportjs/jspdf.umd.min.js"></script>
+
+    <script src="~/exportjs/polyfill.min.js"></script>
+    <script src="~/exportjs/exceljs.min.js"></script>
+    <script src="~/exportjs/filesaver.min.js"></script>
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+    </script>
+    <script>
+        function exportGrid(e) {
+            if (e.format === "xlsx") {
+                exportToExcel(e);
+            } else if (e.format === "pdf") {
+                exportToPDF(e);
+            }
+        }
+
+        // Export ke Excel
+        function exportToExcel(e) {
+            var workbook = new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet('@ViewData["Title"]');
+
+            DevExpress.excelExporter.exportDataGrid({
+                component: e.component,
+                worksheet: worksheet,
+                autoFilterEnabled: true
+            }).then(function () {
+                workbook.xlsx.writeBuffer().then(function (buffer) {
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), '@ViewData["Title"]' + '.xlsx');
+                });
+            });
+
+            e.cancel = true;
+        }
+
+        // Export ke PDF
+        function exportToPDF(e) {
+            var doc = new jsPDF({
+                orientation: 'landscape',  // Mode landscape
+                unit: 'mm',                // Gunakan milimeter sebagai satuan
+                format: [330, 210]         // Ukuran kertas F4 (330mm × 210mm)
+            });
+
+            DevExpress.pdfExporter.exportDataGrid({
+                jsPDFDocument: doc,
+                component: e.component,
+                indent: 5,
+            }).then(function () {
+                doc.save('@ViewData["Title"]' + ".pdf");
+            });
+
+            e.cancel = true;
+        }
+
+    </script>
 
     @RenderSection("Scripts", required: false)
 </body>

@@ -5,18 +5,18 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.MonitoringGlobal
 {
-    public class MonitoringHarianController : Controller
+    public class MonitoringWilayah : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<MonitoringHarianController> _logger;
+        private readonly ILogger<MonitoringWilayah> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         public ResponseBase response = new ResponseBase();
-        public MonitoringHarianController(ILogger<MonitoringHarianController> logger)
+        public MonitoringWilayah(ILogger<MonitoringWilayah> logger)
         {
             URLView = string.Concat("../MonitoringGlobal/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;

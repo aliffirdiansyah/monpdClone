@@ -3,7 +3,7 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="index.html" class="logo logo-dark">
+        <a href="/" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="~/assets/images/logo-surabaya.png" alt="" height="22">
             </span>
@@ -12,7 +12,7 @@
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="index.html" class="logo logo-light">
+        <a href="/" class="logo logo-light">
             <span class="logo-sm">
                 <img src="~/assets/images/logo-surabaya.png" alt="" height="22">
             </span>
@@ -143,6 +143,11 @@
                     <div id="sidebarMonitoringWilayah" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolWilayah")" data-key="t-KontrolWilayah">
+                                    Kontrol Wilayah
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Index","KontrolHarianWilayah")" data-key="t-kontrolHarianWilayah">
                                     Kontrol Harian Wilayah
                                 </a>
@@ -207,17 +212,17 @@
                     <div id="sidebarAktivitasWP" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PenghimbauanWP")" data-key="t-penghimbauan">
+                                <a class="nav-link" href="@Url.Action("Index","Penghimbauan")" data-key="t-penghimbauan">
                                     Penghimbauan
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PenegiranWP")" data-key="t-peneguran">
+                                <a class="nav-link" href="@Url.Action("Index","Penegiran")" data-key="t-peneguran">
                                     Peneguran
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","PenagihanWP")" data-key="t-penagihan">
+                                <a class="nav-link" href="@Url.Action("Index","Penagihan")" data-key="t-penagihan">
                                     Penagihan
                                 </a>
                             </li>
