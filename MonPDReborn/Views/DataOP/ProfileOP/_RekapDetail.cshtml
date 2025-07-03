@@ -1,9 +1,6 @@
-﻿@{
-    var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
-}
+﻿
 
 @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetail>()
-    .ID($"RekapDetailGrid_{ViewData["JenisPajak"]}_{ViewData["tahun"]}_{uniqueId}")
     .DataSource(d => d.Mvc()
     .LoadAction("GetRekapDetailData")
     .Key("Kategori")

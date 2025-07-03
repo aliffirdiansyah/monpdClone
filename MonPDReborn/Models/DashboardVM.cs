@@ -1,5 +1,6 @@
 ﻿using MonPDLib;
 using MonPDLib.General;
+using System.Web.Mvc;
 
 namespace MonPDReborn.Models
 {
@@ -12,7 +13,7 @@ namespace MonPDReborn.Models
             public Index()
             {
                 Data = Method.GetDashboardData();
-                ChartData = Method.GetDashboardChartData();
+                //ChartData = Method.GetDashboardChartData();
             }
         }
         public class SeriesPajakDaerah
