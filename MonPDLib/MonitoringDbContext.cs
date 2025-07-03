@@ -22,6 +22,8 @@ namespace MonPDLib
 
         public DbSet<DbOpHotel> DbOpHotels { get; set; }
         public DbSet<OPSkpdHotel> OPSkpdHotels { get; set; }
+        public DbSet<OPSkpdResto> OPSkpdRestos { get; set; }
+        public DbSet<OPSkpdParkir> OPSkpdParkirs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -29,6 +31,10 @@ namespace MonPDLib
             modelBuilder.Entity<DbOpHotel>().HasNoKey();
 
             modelBuilder.Entity<OPSkpdHotel>().HasNoKey();
+
+            modelBuilder.Entity<OPSkpdResto>().HasNoKey();
+
+            modelBuilder.Entity<OPSkpdParkir>().HasNoKey();
         }
     }
 }

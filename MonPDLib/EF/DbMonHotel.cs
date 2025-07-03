@@ -85,7 +85,7 @@ public partial class DbMonHotel
     public string Akun { get; set; } = null!;
 
     [Column("NAMA_AKUN")]
-    [StringLength(100)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaAkun { get; set; } = null!;
 
@@ -95,7 +95,7 @@ public partial class DbMonHotel
     public string Jenis { get; set; } = null!;
 
     [Column("NAMA_JENIS")]
-    [StringLength(100)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaJenis { get; set; } = null!;
 
@@ -105,7 +105,7 @@ public partial class DbMonHotel
     public string Objek { get; set; } = null!;
 
     [Column("NAMA_OBJEK")]
-    [StringLength(100)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaObjek { get; set; } = null!;
 
@@ -115,7 +115,7 @@ public partial class DbMonHotel
     public string Rincian { get; set; } = null!;
 
     [Column("NAMA_RINCIAN")]
-    [StringLength(100)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaRincian { get; set; } = null!;
 
@@ -125,7 +125,7 @@ public partial class DbMonHotel
     public string SubRincian { get; set; } = null!;
 
     [Column("NAMA_SUB_RINCIAN")]
-    [StringLength(100)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaSubRincian { get; set; } = null!;
 
@@ -324,7 +324,7 @@ public partial class DbMonHotel
     public string? Kelompok { get; set; }
 
     [Column("NAMA_KELOMPOK")]
-    [StringLength(100)]
+    [StringLength(150)]
     [Unicode(false)]
     public string? NamaKelompok { get; set; }
 }

@@ -90,52 +90,52 @@ public partial class DbMonPbb
     public decimal TahunBuku { get; set; }
 
     [Column("AKUN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Akun { get; set; } = null!;
 
     [Column("NAMA_AKUN")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaAkun { get; set; } = null!;
 
     [Column("JENIS")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Jenis { get; set; } = null!;
 
     [Column("NAMA_JENIS")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaJenis { get; set; } = null!;
 
     [Column("OBJEK")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Objek { get; set; } = null!;
 
     [Column("NAMA_OBJEK")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaObjek { get; set; } = null!;
 
     [Column("RINCIAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string Rincian { get; set; } = null!;
 
     [Column("NAMA_RINCIAN")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaRincian { get; set; } = null!;
 
     [Column("SUB_RINCIAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string SubRincian { get; set; } = null!;
 
     [Column("NAMA_SUB_RINCIAN")]
-    [StringLength(10)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NamaSubRincian { get; set; } = null!;
 
@@ -175,27 +175,27 @@ public partial class DbMonPbb
     public decimal? PengurangPokokKetetapan { get; set; }
 
     [Column("AKUN_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunKetetapan { get; set; }
 
     [Column("JENIS_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisKetetapan { get; set; }
 
     [Column("OBJEK_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekKetetapan { get; set; }
 
     [Column("RINCIAN_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianKetetapan { get; set; }
 
     [Column("SUB_RINCIAN_KETETAPAN")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianKetetapan { get; set; }
 
@@ -206,27 +206,27 @@ public partial class DbMonPbb
     public decimal? NominalPokokBayar { get; set; }
 
     [Column("AKUN_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunPokokBayar { get; set; }
 
     [Column("JENIS_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisPokokBayar { get; set; }
 
     [Column("OBJEK_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekPokokBayar { get; set; }
 
     [Column("RINCIAN_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianPokokBayar { get; set; }
 
     [Column("SUB_RINCIAN_POKOK_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianPokokBayar { get; set; }
 
@@ -237,27 +237,27 @@ public partial class DbMonPbb
     public decimal? NominalSanksiBayar { get; set; }
 
     [Column("AKUN_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunSanksiBayar { get; set; }
 
     [Column("JENIS_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisSanksiBayar { get; set; }
 
     [Column("OBJEK_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekSanksiBayar { get; set; }
 
     [Column("RINCIAN_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianSanksiBayar { get; set; }
 
     [Column("SUB_RINCIAN_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianSanksiBayar { get; set; }
 
@@ -268,27 +268,27 @@ public partial class DbMonPbb
     public decimal? NominalSanksiKenaikanBayar { get; set; }
 
     [Column("AKUN_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? AkunKenaikanBayar { get; set; }
 
     [Column("JENIS_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisKenaikanBayar { get; set; }
 
     [Column("OBJEK_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? ObjekKenaikanBayar { get; set; }
 
     [Column("RINCIAN_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianKenaikanBayar { get; set; }
 
     [Column("SUB_RINCIAN_KENAIKAN_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? SubRincianKenaikanBayar { get; set; }
 
@@ -307,4 +307,34 @@ public partial class DbMonPbb
     [StringLength(100)]
     [Unicode(false)]
     public string UpdBy { get; set; } = null!;
+
+    [Column("KELOMPOK")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? Kelompok { get; set; }
+
+    [Column("NAMA_KELOMPOK")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string? NamaKelompok { get; set; }
+
+    [Column("KELOMPOK_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokKetetapan { get; set; }
+
+    [Column("KELOMPOK_POKOK_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokPokokBayar { get; set; }
+
+    [Column("KELOMPOK_SANKSI_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokSanksiBayar { get; set; }
+
+    [Column("KELOMPOK_KENAIKAN_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokKenaikanBayar { get; set; }
 }

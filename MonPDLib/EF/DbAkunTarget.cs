@@ -54,7 +54,7 @@ public partial class DbAkunTarget
     public string Rincian { get; set; } = null!;
 
     [Column("NAMA_RINCIAN")]
-    [StringLength(100)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaRincian { get; set; } = null!;
 
@@ -65,7 +65,7 @@ public partial class DbAkunTarget
     public string SubRincian { get; set; } = null!;
 
     [Column("NAMA_SUB_RINCIAN")]
-    [StringLength(100)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaSubRincian { get; set; } = null!;
 
