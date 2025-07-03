@@ -282,7 +282,26 @@
 
 </div>
 
-<hr />
+@* <hr />
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title fs-16 mb-0">
+                    📊 PENDAPATAN PERBULAN
+                </h4>
+
+            </div><!-- end card header -->
+
+            <div class="card-body">
+                <div id="line_chart_datalabel" data-colors='["--vz-danger", "--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div>
+</div>
+
+<hr /> *@
 
 <div class="row">
     <div class="col-lg-12">
@@ -298,6 +317,10 @@
                     <button class="btn btn-sm btn-info">
                         <i class="ri-file-list-3-line align-middle"></i>
                         Detail
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="fnSeriesPajakDaerah()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
                     </button>
                 </div>
             </div>
@@ -326,6 +349,10 @@
                     <button class="btn btn-sm btn-info">
                         <i class="ri-file-list-3-line align-middle"></i>
                         Detail
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="fnJumlahObjekPajakTahunan()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
                     </button>
                 </div>
             </div>
@@ -484,6 +511,10 @@
                         <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="fnDataKontrolPotensiOp()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
+                    </button>
                 </div>
             </div>
             <div class="card-body">
@@ -511,6 +542,10 @@
                     <button class="btn btn-sm btn-info">
                         <i class="ri-file-list-3-line align-middle"></i>
                         Detail
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="fnDataPiutang()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
                     </button>
                 </div>
             </div>

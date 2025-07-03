@@ -24,9 +24,11 @@
             .AllowColumnResizing(true)
             .DataSource(Model.Data)
             .KeyExpr("ID")
+            .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+            .OnExporting("exportGrid")
             .Columns(columns =>
             {
-                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center);
+                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Left);
                 columns.AddFor(x => x.NominalPiutang1).Caption(tahun1).Alignment(HorizontalAlignment.Center);
                 columns.AddFor(x => x.NominalPiutang2).Caption(tahun2).Alignment(HorizontalAlignment.Center);
                 columns.AddFor(x => x.NominalPiutang3).Caption(tahun3).Alignment(HorizontalAlignment.Center);

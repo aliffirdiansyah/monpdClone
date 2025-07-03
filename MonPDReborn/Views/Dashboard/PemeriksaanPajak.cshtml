@@ -23,6 +23,8 @@
     .AllowColumnResizing(true)
     .DataSource(Model.Data)
     .KeyExpr("ID")
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
     .Columns(columns =>
     {
         columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Center).Fixed(true)

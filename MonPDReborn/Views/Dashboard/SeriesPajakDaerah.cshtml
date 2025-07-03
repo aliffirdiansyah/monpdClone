@@ -25,6 +25,8 @@
     .AllowColumnResizing(true)
     .DataSource(Model.Data)
     .KeyExpr("ID")
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
     .Columns(columns =>
     {
         columns.AddFor(x => x.JenisPajak).CssClass("fw-bold")
@@ -83,50 +85,34 @@
             function(options) {
                 if (options.summaryProcess === "start") {
                     options.totalValue = {
-                        target1: 0, realisasi1: 0,
-                        target2: 0, realisasi2: 0,
-                        target3: 0, realisasi3: 0,
-                        target4: 0, realisasi4: 0,
-                        target5: 0, realisasi5: 0
+                        t1: 0, r1: 0,
+                        t2: 0, r2: 0,
+                        t3: 0, r3: 0,
+                        t4: 0, r4: 0,
+                        t5: 0, r5: 0
                     };
                 }
-
                 if (options.summaryProcess === "calculate") {
                     const v = options.value;
-                    console.log("Data row:", v);
-
-                    options.totalValue.target1 += v.target1 || 0;
-                    options.totalValue.realisasi1 += v.realisasi1 || 0;
-
-                    options.totalValue.target2 += v.target2 || 0;
-                    options.totalValue.realisasi2 += v.realisasi2 || 0;
-
-                    options.totalValue.target3 += v.target3 || 0;
-                    options.totalValue.realisasi3 += v.realisasi3 || 0;
-
-                    options.totalValue.target4 += v.target4 || 0;
-                    options.totalValue.realisasi4 += v.realisasi4 || 0;
-
-                    options.totalValue.target5 += v.target5 || 0;
-                    options.totalValue.realisasi5 += v.realisasi5 || 0;
+                    console.log(v)
+                    options.totalValue.t1 += v.target1 || 0;
+                    options.totalValue.r1 += v.realisasi1 || 0;
+                    options.totalValue.t2 += v.target2 || 0;
+                    options.totalValue.r2 += v.realisasi2 || 0;
+                    options.totalValue.t3 += v.target3 || 0;
+                    options.totalValue.r3 += v.realisasi3 || 0;
+                    options.totalValue.t4 += v.target4 || 0;
+                    options.totalValue.r4 += v.realisasi4 || 0;
+                    options.totalValue.t5 += v.target5 || 0;
+                    options.totalValue.r5 += v.realisasi5 || 0;
                 }
-
-                // Hitung persen sesuai nama summary-nya
                 if (options.summaryProcess === "finalize") {
                     const t = options.totalValue;
-                    console.log(options.name)
-                    console.log(t)
-                    if (options.name === "Persen1") {
-                        options.totalValue = t.target1 > 0 ? parseFloat((t.realisasi1 / t.target1 * 100).toFixed(2)) : 0;
-                    } else if (options.name === "Persen2") {
-                        options.totalValue = t.target2 > 0 ? parseFloat((t.realisasi2 / t.target2 * 100).toFixed(2)) : 0;
-                    } else if (options.name === "Persen3") {
-                        options.totalValue = t.target3 > 0 ? parseFloat((t.realisasi3 / t.target3 * 100).toFixed(2)) : 0;
-                    } else if (options.name === "Persen4") {
-                        options.totalValue = t.target4 > 0 ? parseFloat((t.realisasi4 / t.target4 * 100).toFixed(2)) : 0;
-                    } else if (options.name === "Persen5") {
-                        options.totalValue = t.target5 > 0 ? parseFloat((t.realisasi5 / t.target5 * 100).toFixed(2)) : 0;
-                    }
+                    if (options.name === "Persen1") options.totalValue = t.t1 > 0 ? (t.r1 / t.t1 * 100).toFixed(2) : 0;
+                    if (options.name === "Persen2") options.totalValue = t.t2 > 0 ? (t.r2 / t.t2 * 100).toFixed(2) : 0;
+                    if (options.name === "Persen3") options.totalValue = t.t3 > 0 ? (t.r3 / t.t3 * 100).toFixed(2) : 0;
+                    if (options.name === "Persen4") options.totalValue = t.t4 > 0 ? (t.r4 / t.t4 * 100).toFixed(2) : 0;
+                    if (options.name === "Persen5") options.totalValue = t.t5 > 0 ? (t.r5 / t.t5 * 100).toFixed(2) : 0;
                 }
             }
         </text>);
