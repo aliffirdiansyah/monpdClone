@@ -1,11 +1,11 @@
 ﻿@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesDetail>()
-    .DataSource(d => d.Mvc()
-    .LoadAction("GetSeriesDetailData")
-    .Key("Kategori")
-    .LoadParams(new
-    {
-        JenisPajak = ViewData["JenisPajak"],
-    })
+    .DataSource(m => m.Mvc()
+        .LoadAction("GetSeriesDetailData")
+        .Key("Kategori")
+        .LoadParams(new
+        {
+            JenisPajak = ViewData["JenisPajak"],
+        })
     )
     .ShowColumnLines(true)
     .ShowRowLines(true)
@@ -21,19 +21,21 @@
     )
     .Columns(columns =>
     {
+        columns.AddFor(m => m.Kategori)
+            .Caption("Kategori")
+            .CssClass("fw-bold").CssClass("fw-bold");
 
-        columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
         columns.Add()
             .DataField("Tahun2021")
             .Caption("2021")
             .CellTemplate(@<text>
                                <div style="display: flex; align-items: center; justify-content: space-between;">
                                    <button class="btn btn-sm btn-outline-primary me-2"
-                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2021')"
+                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2021')"
                                            title="Lihat Detail">
                                        <i class="ri-search-line"></i>
                                    </button>
-                                   <span><%- data.Tahun2021 %></span>
+                                   <span><%- value %></span>
                                </div>
                            </text>)
             .CalculateCellValue("data => data.Tahun2021");
@@ -43,12 +45,12 @@
             .Caption("2022")
             .CellTemplate(@<text>
                                <div style="display: flex; align-items: center; justify-content: space-between;">
-                                   <button class="btn btn-sm btn-outline-secondary me-2"
-                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2022')"
+                                   <button class="btn btn-sm btn-outline-primary me-2"
+                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2022')"
                                            title="Lihat Detail">
                                        <i class="ri-search-line"></i>
                                    </button>
-                                   <span><%- data.Tahun2022 %></span>
+                                   <span><%- value %></span>
                                </div>
                            </text>)
             .CalculateCellValue("data => data.Tahun2022");
@@ -59,11 +61,11 @@
             .CellTemplate(@<text>
                                <div style="display: flex; align-items: center; justify-content: space-between;">
                                    <button class="btn btn-sm btn-outline-danger me-2"
-                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2023')"
+                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2023')"
                                            title="Lihat Detail">
                                        <i class="ri-search-line"></i>
                                    </button>
-                                   <span><%- data.Tahun2023 %></span>
+                                   <span><%- value %></span>
                                </div>
                            </text>)
             .CalculateCellValue("data => data.Tahun2023");
@@ -74,15 +76,14 @@
             .CellTemplate(@<text>
                                <div style="display: flex; align-items: center; justify-content: space-between;">
                                    <button class="btn btn-sm btn-outline-success me-2"
-                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2024')"
+                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2024')"
                                            title="Lihat Detail">
                                        <i class="ri-search-line"></i>
                                    </button>
-                                   <span><%- data.Tahun2024 %></span>
+                                   <span><%- value %></span>
                                </div>
                            </text>)
             .CalculateCellValue("data => data.Tahun2024");
-
 
         columns.Add()
             .DataField("Tahun2025")
@@ -90,16 +91,14 @@
             .CellTemplate(@<text>
                                <div style="display: flex; align-items: center; justify-content: space-between;">
                                    <button class="btn btn-sm btn-outline-info me-2"
-                                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2025')"
+                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2025')"
                                            title="Lihat Detail">
                                        <i class="ri-search-line"></i>
                                    </button>
-                                   <span><%- data.Tahun2025 %></span>
+                                   <span><%- value %></span>
                                </div>
                            </text>)
             .CalculateCellValue("data => data.Tahun2025");
-
-
     })
     .Summary(s =>
     {
@@ -136,11 +135,10 @@
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("Tahhun2025")
+                .Column("Tahun2025")
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
-
         });
     })
 )

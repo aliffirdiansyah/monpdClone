@@ -1,6 +1,4 @@
-﻿
-
-@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetail>()
+﻿@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetail>()
     .DataSource(d => d.Mvc()
     .LoadAction("GetRekapDetailData")
     .Key("Kategori")
@@ -36,7 +34,7 @@
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.OPAwal %></span>
+                    <span><%- value %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.OPAwal");

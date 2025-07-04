@@ -64,10 +64,7 @@
             </div>
         </div> 
     </div>
-</div>
 
-<!-- ✅ Detail RekapMaster di luar tab -->
-<div class="row">
     <div class="col-lg-12" id="detailWrapper" style="display: none;">
         <div class="card">
             <div class="card-body">
@@ -77,10 +74,7 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- ✅ Detail SeriesMaster di luar tab -->
-<div class="row">
     <div class="col-lg-12" id="detailWrapperSeries" style="display: none;">
         <div class="card">
             <div class="card-body">
@@ -90,7 +84,9 @@
             </div>
         </div>
     </div>
+
 </div>
+
 
 
 @section Scripts{
@@ -208,28 +204,27 @@
              window.open(url, '_blank');
          }
 
-        function onSeriesClick(enumPajak, kategori, status) {
+        function onSeriesClick(enumPajak, kategori) {
             $.ajax({
-                url: '@(Url.Action("SeriesMaster"))',
+                url: '/ProfileOP/SeriesMaster',
                 type: 'GET',
                 data: {
                     enumPajak: enumPajak,
-                    kategori: kategori,
-                    status: status
+                    kategori: kategori
                 },
                 success: function (data) {
-                    const grid = $("#SeriesGrid").dxDataGrid("instance"); // ✅ harus grid Series
+                    const grid = $("#SeriesGrid").dxDataGrid("instance"); // ✅ pastikan id nya SeriesGrid
                     grid.option("dataSource", data);
 
-                    $("#detailWrapperSeries").show(); // ✅ pastikan ini bagian Series
-                    $("#detailWrapper").hide();
-
+                    $("#detailWrapperSeries").show(); // ✅ tampilkan wrapper detail series
+                    $("#detailWrapper").hide();       // ✅ sembunyikan wrapper lama
                 },
-                error: function () {
-                    alert("❌ Gagal memuat data detail.");
+                error: function (xhr) {
+                    alert("❌ Gagal memuat data detail: " + xhr.statusText);
                 }
             });
         }
+
 
 
 

@@ -143,7 +143,7 @@ namespace MonPDReborn.Models.DataOP
                     default:
                         break;
                 };
-                
+
                 return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
 
             }
@@ -154,13 +154,24 @@ namespace MonPDReborn.Models.DataOP
                 switch (JenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
+                        ret = new List<SeriesDetail>
+                        {
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Cafe", Tahun2021 = 12, Tahun2022 = 4, Tahun2023 = 6, Tahun2024 = 7, Tahun2025 = 9 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", Tahun2021 = 18, Tahun2022 = 6, Tahun2023 = 9, Tahun2024 = 8, Tahun2025 = 10 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung", Tahun2021 = 25, Tahun2022 = 7, Tahun2023 = 10, Tahun2024 = 12, Tahun2025 = 15 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", Tahun2021 = 20, Tahun2022 = 5, Tahun2023 = 8, Tahun2024 = 9, Tahun2025 = 11 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kedai", Tahun2021 = 28, Tahun2022 = 8, Tahun2023 = 12, Tahun2024 = 13, Tahun2025 = 16 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung Makan", Tahun2021 = 35, Tahun2022 = 10, Tahun2023 = 15, Tahun2024 = 16, Tahun2025 = 20 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kafe & Kedai", Tahun2021 = 22, Tahun2022 = 6, Tahun2023 = 11, Tahun2024 = 12, Tahun2025 = 14 },
+                        };
+
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         ret = new List<SeriesDetail>
                         {
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Lima", Tahun2021 = 10, Tahun2022 = 0, Tahun2023 = 1, Tahun2024 = 5, Tahun2025 = 8 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Lima", Tahun2021 = 50, Tahun2022 = 57, Tahun2023 = 52, Tahun2024 = 59, Tahun2025 = 60 },
                             new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Empat", Tahun2021 = 15, Tahun2022 = 5, Tahun2023 = 8, Tahun2024 = 4, Tahun2025 = 6 },
                             new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Tiga", Tahun2021 = 25, Tahun2022 = 0, Tahun2023 = 1, Tahun2024 = 5, Tahun2025 = 4 },
                             new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Dua", Tahun2021 = 10, Tahun2022 = 2, Tahun2023 = 2, Tahun2024 = 7, Tahun2025 = 9 },
@@ -312,7 +323,6 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = "Jl. Braga No. 10, Bandung",
                                 JenisOP = "Hotel Mewah",
                                 Wilayah = "Kecamatan Sumur Bandung",
-                                Status = "OPAwal"
                             },
                             new()
                             {
@@ -324,7 +334,6 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = "Jl. Asia Afrika No. 25, Bandung",
                                 JenisOP = "Hotel Mewah",
                                 Wilayah = "Kecamatan Lengkong",
-                                Status = "TutupSementara"
                             },
                             new()
                             {
@@ -336,7 +345,6 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = "Jl. Dago No. 120, Bandung",
                                 JenisOP = "Hotel Bisnis",
                                 Wilayah = "Kecamatan Coblong",
-                                Status = "TutupPermanen"
                             },
                             new()
                             {
@@ -348,7 +356,6 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = "Jl. Ciumbuleuit No. 88, Bandung",
                                 JenisOP = "Hotel Budget",
                                 Wilayah = "Kecamatan Cidadap",
-                                Status = "OPBaru"
                             },
                             new()
                             {
@@ -360,7 +367,6 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = "Jl. Setiabudi No. 55, Bandung",
                                 JenisOP = "Hotel Budget",
                                 Wilayah = "Kecamatan Sukasari",
-                                Status = "Buka"
                             }
                         };
                         break;
@@ -390,149 +396,149 @@ namespace MonPDReborn.Models.DataOP
             }
 
             //get Data OP
-            public static DataDetailOP GetDetailObjekPajak(string nop, EnumFactory.EPajak pajak)
-            {
-                var context = DBClass.GetContext();
-                var ret = new DataDetailOP();
-                switch (pajak)
-                {
-                    case EnumFactory.EPajak.MakananMinuman:
-                        var opResto = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop);
-                        if (opResto != null)
-                        {
-                            ret.IdentitasPajak.WilayahPajak = opResto.WilayahPajak ?? "";
-                            ret.IdentitasPajak.NpwpdNo = opResto.Npwpd;
-                            ret.IdentitasPajak.NamaNpwpd = opResto.NpwpdNama;
-                            ret.IdentitasPajak.NOP = opResto.Nop;
-                            ret.IdentitasPajak.NamaObjekPajak = opResto.NamaOp;
-                            ret.IdentitasPajak.AlamatLengkap = opResto.AlamatOp;
-                            ret.IdentitasPajak.Telepon = opResto.Telp;
-                            ret.IdentitasPajak.TanggalBuka = opResto.TglMulaiBukaOp;
-                            ret.IdentitasPajak.EnumPajak = pajak;
-                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
-                            ret.IdentitasPajak.KategoriPajak = opResto.KategoriNama;
-                            //isi data resto
-                            ret.RestoRow.PendapatanRow = new DetailResto.Pendapatan
-                            {
-                                //isi data pendapatan jika ada
-                            };
-                            ret.RestoRow.SaranaRestoPendukungRow = new DetailResto.SaranaPendukung
-                            {
-                                JumlahKaryawan = (int)opResto.JumlahKaryawan,
-                                MetodePembayaran = opResto.MetodePembayaran,
-                                MetodePenjualan = opResto.MetodePenjualan
-                            };
-                        }
-                        break;
+              public static DataDetailOP GetDetailObjekPajak(string nop, EnumFactory.EPajak pajak)
+              {
+                  var context = DBClass.GetContext();
+                  var ret = new DataDetailOP();
+                  switch (pajak)
+                  {
+                      case EnumFactory.EPajak.MakananMinuman:
+                          var opResto = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop);
+                          if (opResto != null)
+                          {
+                              ret.IdentitasPajak.WilayahPajak = opResto.WilayahPajak ?? "";
+                              ret.IdentitasPajak.NpwpdNo = opResto.Npwpd;
+                              ret.IdentitasPajak.NamaNpwpd = opResto.NpwpdNama;
+                              ret.IdentitasPajak.NOP = opResto.Nop;
+                              ret.IdentitasPajak.NamaObjekPajak = opResto.NamaOp;
+                              ret.IdentitasPajak.AlamatLengkap = opResto.AlamatOp;
+                              ret.IdentitasPajak.Telepon = opResto.Telp;
+                              ret.IdentitasPajak.TanggalBuka = opResto.TglMulaiBukaOp;
+                              ret.IdentitasPajak.EnumPajak = pajak;
+                              ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                              ret.IdentitasPajak.KategoriPajak = opResto.KategoriNama;
+                              //isi data resto
+                              ret.RestoRow.PendapatanRow = new DetailResto.Pendapatan
+                              {
+                                  //isi data pendapatan jika ada
+                              };
+                              ret.RestoRow.SaranaRestoPendukungRow = new DetailResto.SaranaPendukung
+                              {
+                                  JumlahKaryawan = (int)opResto.JumlahKaryawan,
+                                  MetodePembayaran = opResto.MetodePembayaran,
+                                  MetodePenjualan = opResto.MetodePenjualan
+                              };
+                          }
+                          break;
 
-                    case EnumFactory.EPajak.TenagaListrik:
-                        var opListrik = context.DbOpListriks.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.TenagaListrik:
+                          var opListrik = context.DbOpListriks.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    case EnumFactory.EPajak.JasaPerhotelan:
-                        var opHotel = context.DbOpHotels.FirstOrDefault(x => x.Nop == nop);
-                        if (opHotel != null)
-                        {
-                            ret.IdentitasPajak.WilayahPajak = opHotel.WilayahPajak ?? "";
-                            ret.IdentitasPajak.NpwpdNo = opHotel.Npwpd;
-                            ret.IdentitasPajak.NamaNpwpd = opHotel.NpwpdNama;
-                            ret.IdentitasPajak.NOP = opHotel.Nop;
-                            ret.IdentitasPajak.NamaObjekPajak = opHotel.NamaOp;
-                            ret.IdentitasPajak.AlamatLengkap = opHotel.AlamatOp;
-                            ret.IdentitasPajak.Telepon = opHotel.Telp;
-                            ret.IdentitasPajak.TanggalBuka = opHotel.TglMulaiBukaOp;
-                            ret.IdentitasPajak.EnumPajak = pajak;
-                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
-                            ret.IdentitasPajak.KategoriPajak = opHotel.KategoriNama;
-                            //isi data hotel
-                            ret.HotelRow.PendapatanRow = new DetailHotel.Pendapatan
-                            {
-                                //isi data pendapatan jika ada
-                            };
-                            ret.HotelRow.SaranaHotelPendukungRow = new DetailHotel.SaranaPendukung
-                            {
-                                JumlahKaryawan = (int)opHotel.JumlahKaryawan,
-                                MetodePembayaran = opHotel.MetodePembayaran,
-                                MetodePenjualan = opHotel.MetodePenjualan
-                            };
-                            //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
-                            //    .Where(x => x.Nop == nop)
-                            //    .Select(x => new DetailHotel.DetailBanquet
-                            //    {
-                            //        Nama = x.NamaBanquet,
-                            //        Jumlah = (int)x.JumlahBanquet,
-                            //        JenisBanquet = (int)x.JenisBanquet,
-                            //        Kapasitas = (int)x.KapasitasBanquet,
-                            //        HargaSewa = (int)x.HargaSewaBanquet,
-                            //        HargaPaket = (int)x.HargaPaketBanquet,
-                            //        Okupansi = (int)x.OkupansiBanquet
-                            //    }).ToList();
-                        }
-                        break;
+                      case EnumFactory.EPajak.JasaPerhotelan:
+                          var opHotel = context.DbOpHotels.FirstOrDefault(x => x.Nop == nop);
+                          if (opHotel != null)
+                          {
+                              ret.IdentitasPajak.WilayahPajak = opHotel.WilayahPajak ?? "";
+                              ret.IdentitasPajak.NpwpdNo = opHotel.Npwpd;
+                              ret.IdentitasPajak.NamaNpwpd = opHotel.NpwpdNama;
+                              ret.IdentitasPajak.NOP = opHotel.Nop;
+                              ret.IdentitasPajak.NamaObjekPajak = opHotel.NamaOp;
+                              ret.IdentitasPajak.AlamatLengkap = opHotel.AlamatOp;
+                              ret.IdentitasPajak.Telepon = opHotel.Telp;
+                              ret.IdentitasPajak.TanggalBuka = opHotel.TglMulaiBukaOp;
+                              ret.IdentitasPajak.EnumPajak = pajak;
+                              ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                              ret.IdentitasPajak.KategoriPajak = opHotel.KategoriNama;
+                              //isi data hotel
+                              ret.HotelRow.PendapatanRow = new DetailHotel.Pendapatan
+                              {
+                                  //isi data pendapatan jika ada
+                              };
+                              ret.HotelRow.SaranaHotelPendukungRow = new DetailHotel.SaranaPendukung
+                              {
+                                  JumlahKaryawan = (int)opHotel.JumlahKaryawan,
+                                  MetodePembayaran = opHotel.MetodePembayaran,
+                                  MetodePenjualan = opHotel.MetodePenjualan
+                              };
+                              //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
+                              //    .Where(x => x.Nop == nop)
+                              //    .Select(x => new DetailHotel.DetailBanquet
+                              //    {
+                              //        Nama = x.NamaBanquet,
+                              //        Jumlah = (int)x.JumlahBanquet,
+                              //        JenisBanquet = (int)x.JenisBanquet,
+                              //        Kapasitas = (int)x.KapasitasBanquet,
+                              //        HargaSewa = (int)x.HargaSewaBanquet,
+                              //        HargaPaket = (int)x.HargaPaketBanquet,
+                              //        Okupansi = (int)x.OkupansiBanquet
+                              //    }).ToList();
+                          }
+                          break;
 
-                    case EnumFactory.EPajak.JasaParkir:
-                        var opParkir = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.JasaParkir:
+                          var opParkir = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var opHiburan = context.DbOpHiburans.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.JasaKesenianHiburan:
+                          var opHiburan = context.DbOpHiburans.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    case EnumFactory.EPajak.AirTanah:
-                        var opAbt = context.DbOpAbts.FirstOrDefault(x => x.Nop == nop);
-                        if (opAbt != null)
-                        {
-                            ret.IdentitasPajak.WilayahPajak = opAbt.WilayahPajak ?? "";
-                            ret.IdentitasPajak.NpwpdNo = opAbt.Npwpd;
-                            ret.IdentitasPajak.NamaNpwpd = opAbt.NpwpdNama;
-                            ret.IdentitasPajak.NOP = opAbt.Nop;
-                            ret.IdentitasPajak.NamaObjekPajak = opAbt.NamaOp;
-                            ret.IdentitasPajak.AlamatLengkap = opAbt.AlamatOp;
-                            ret.IdentitasPajak.Telepon = opAbt.Telp;
-                            ret.IdentitasPajak.TanggalBuka = opAbt.TglMulaiBukaOp;
-                            ret.IdentitasPajak.EnumPajak = pajak;
-                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
-                            ret.IdentitasPajak.KategoriPajak = opAbt.KategoriNama;
+                      case EnumFactory.EPajak.AirTanah:
+                          var opAbt = context.DbOpAbts.FirstOrDefault(x => x.Nop == nop);
+                          if (opAbt != null)
+                          {
+                              ret.IdentitasPajak.WilayahPajak = opAbt.WilayahPajak ?? "";
+                              ret.IdentitasPajak.NpwpdNo = opAbt.Npwpd;
+                              ret.IdentitasPajak.NamaNpwpd = opAbt.NpwpdNama;
+                              ret.IdentitasPajak.NOP = opAbt.Nop;
+                              ret.IdentitasPajak.NamaObjekPajak = opAbt.NamaOp;
+                              ret.IdentitasPajak.AlamatLengkap = opAbt.AlamatOp;
+                              ret.IdentitasPajak.Telepon = opAbt.Telp;
+                              ret.IdentitasPajak.TanggalBuka = opAbt.TglMulaiBukaOp;
+                              ret.IdentitasPajak.EnumPajak = pajak;
+                              ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                              ret.IdentitasPajak.KategoriPajak = opAbt.KategoriNama;
 
-                            ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
-                            {
-                                //isi data pendapatan jika ada
-                            };
+                              ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
+                              {
+                                  //isi data pendapatan jika ada
+                              };
 
-                            ret.AbtRow.SaranaAbtPendukungRow = new DetailAbt.SaranaPendukung
-                            {
-                                KelompokNama = opAbt.NamaKelompok,
-                            };
+                              ret.AbtRow.SaranaAbtPendukungRow = new DetailAbt.SaranaPendukung
+                              {
+                                  KelompokNama = opAbt.NamaKelompok,
+                              };
 
-                        }
-                        break;
+                          }
+                          break;
 
-                    case EnumFactory.EPajak.Reklame:
-                        var opReklame = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.Reklame:
+                          var opReklame = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    case EnumFactory.EPajak.PBB:
-                        var opPbb = context.DbOpPbbs.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.PBB:
+                          var opPbb = context.DbOpPbbs.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    case EnumFactory.EPajak.BPHTB:
-                        // var opBphtb = context.DbOpBphtbs.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.BPHTB:
+                          // var opBphtb = context.DbOpBphtbs.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    case EnumFactory.EPajak.OpsenPkb:
-                        // var opOpsenPkb = context.DbOpOpsenPkb.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.OpsenPkb:
+                          // var opOpsenPkb = context.DbOpOpsenPkb.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    case EnumFactory.EPajak.OpsenBbnkb:
-                        // var opOpsenBbnkb = context.DbOpOpsenBbnkb.FirstOrDefault(x => x.Nop == nop);
-                        break;
+                      case EnumFactory.EPajak.OpsenBbnkb:
+                          // var opOpsenBbnkb = context.DbOpOpsenBbnkb.FirstOrDefault(x => x.Nop == nop);
+                          break;
 
-                    default:
-                        break;
-                }
+                      default:
+                          break;
+                  }
 
-                return ret;
-            }
+                  return ret;
+              }
         }
 
         public class RekapOP
@@ -621,7 +627,6 @@ namespace MonPDReborn.Models.DataOP
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
             public string Wilayah { get; set; } = null!;
-            public string Status { get; set; } = null!;
 
         }
 
