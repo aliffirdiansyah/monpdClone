@@ -31,6 +31,21 @@
                         <span></span>
                     </span>
                 </button>
+                <form class="app-search" onsubmit="return false;">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="pencarianOp" placeholder="Search OP..." autocomplete="off" id="search-options" value="">
+                        <span class="mdi mdi-magnify search-widget-icon"></span>
+                        <!-- Tombol cari -->
+                        <button type="button" class="btn btn-outline-primary" id="search-button">
+                            <i class="mdi mdi-magnify"></i>
+                        </button>
+
+                        <!-- Tombol clear -->
+                        <button type="button" class="btn btn-outline-danger d-none" id="search-close-options">
+                            <i class="mdi mdi-close-circle"></i>
+                        </button>
+                    </div>
+                </form>
 
                 <!-- App Search-->
             </div>

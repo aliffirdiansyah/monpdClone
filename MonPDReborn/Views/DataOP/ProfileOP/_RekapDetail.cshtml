@@ -1,6 +1,4 @@
-﻿
-
-@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetail>()
+﻿@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetail>()
     .DataSource(d => d.Mvc()
     .LoadAction("GetRekapDetailData")
     .Key("Kategori")
@@ -15,6 +13,7 @@
     .ShowBorders(true)
     .ShowColumnHeaders(true)
     .RowAlternationEnabled(true)
+    .ColumnAutoWidth(true)
     .Paging(p => p.PageSize(10))
     .Pager(p => p
         .ShowPageSizeSelector(true)
@@ -25,22 +24,109 @@
     {
 
         columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
-        columns.AddFor(m => m.OPAwal).Caption("OP Awal");
-        columns.AddFor(m => m.TutupSementara).Caption("Tutup Sementara");
-        columns.AddFor(m => m.TutupPermanen).Caption("Tutup Permanen");
-        columns.AddFor(m => m.OPBaru).Caption("OP Baru");
-        columns.AddFor(m => m.Buka).Caption("Buka");
+        columns.AddFor(m => m.OPAwal)
+            .DataField("OPAwal")
+            .Caption("OP Awal")
+            .CellTemplate(@<text>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button class="btn btn-sm btn-outline-primary me-2"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'OPAwal')"
+                            title="Lihat Detail">
+                        <i class="ri-search-line"></i>
+                    </button>
+                    <span><%- value %></span>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.OPAwal");
+
+        columns.AddFor(m => m.OPTutup)
+            .DataField("TutupSementara")
+            .Caption("Tutup Sementara")
+            .CellTemplate(@<text>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button class="btn btn-sm btn-outline-secondary me-2"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'TutupSementara')"
+                            title="Lihat Detail">
+                        <i class="ri-search-line"></i>
+                    </button>
+                    <span><%- data.TutupSementara %></span>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.TutupSementara");
+
+        columns.AddFor(m => m.OPBaru)
+            .DataField("OPBaru")
+            .Caption("OP Baru")
+            .CellTemplate(@<text>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button class="btn btn-sm btn-outline-success me-2"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'OPBaru')"
+                            title="Lihat Detail">
+                        <i class="ri-search-line"></i>
+                    </button>
+                    <span><%- data.OPBaru %></span>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.OPBaru");
+
+
+        columns.AddFor(m => m.OPAkhir)
+            .DataField("OPBuka")
+            .Caption("Buka")
+            .CellTemplate(@<text>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button class="btn btn-sm btn-outline-info me-2"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'OPBuka')"
+                            title="Lihat Detail">
+                        <i class="ri-search-line"></i>
+                    </button>
+                    <span><%- data.Buka %></span>
+                </div>
+            </text>)
+            .CalculateCellValue("data => data.Buka");
+
+
     })
-    .Summary(summary =>
+    .Summary(s =>
     {
-        summary.TotalItems(items =>
+        s.TotalItems(items =>
         {
-            items.AddFor(m => m.Kategori).SummaryType(SummaryType.Custom).DisplayFormat("Total");
-            items.AddFor(m => m.OPAwal).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.TutupSementara).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.TutupPermanen).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.OPBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-            items.AddFor(m => m.Buka).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            items.Add()
+                .Column("Kategori")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total")
+                .Alignment(HorizontalAlignment.Center);
+
+            items.Add()
+                .Column("OPAwal")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("TutupSementara")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("TutupPermanen")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("OPBaru")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("Buka")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
         });
     })
 )
