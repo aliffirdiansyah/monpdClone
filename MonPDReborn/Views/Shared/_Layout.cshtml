@@ -350,6 +350,45 @@
 
     </script>
 
+    <script>
+        $(document).ready(function () {
+            const $searchInput = $('#search-options');
+            const $searchClose = $('#search-close-options');
+            const $searchButton = $('#search-button');
+
+            function submitSearch() {
+                const keyword = $searchInput.val().trim();
+                if (keyword !== "") {
+                    const url = `/PencarianOP/Index?keyword=${encodeURIComponent(keyword)}`;
+                    window.location.href = url;
+                }
+            }
+
+            // Enter key
+            $searchInput.on('keypress', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    submitSearch();
+                }
+            });
+
+            // Klik tombol cari
+            $searchButton.on('click', function () {
+                submitSearch();
+            });
+
+            // Tombol clear input
+            $searchInput.on('input', function () {
+                $searchClose.toggleClass('d-none', !$searchInput.val().trim());
+            });
+
+            $searchClose.on('click', function () {
+                $searchInput.val('').focus();
+                $searchClose.addClass('d-none');
+            });
+        });
+    </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 

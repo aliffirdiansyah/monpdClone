@@ -13,6 +13,10 @@ namespace MonPDReborn.Models.DataOP
             {
 
             }
+            public Index(string keyword)
+            {
+                Keyword = keyword;
+            }
         }
         public class Show
         {

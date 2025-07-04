@@ -21,13 +21,22 @@ namespace MonPDReborn.Controllers.DataOP
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? keyword)
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.DataOP.PencarianOPVM.Index();
-                return View($"{URLView}{actionName}", model);
+                if (string.IsNullOrEmpty(keyword))
+                {
+                    var model = new Models.DataOP.PencarianOPVM.Index();
+                    return View($"{URLView}{actionName}", model);
+                }
+                else
+                {
+                    var model = new Models.DataOP.PencarianOPVM.Index(keyword);
+                    return View($"{URLView}{actionName}", model);
+                }
+                
             }
             catch (ArgumentException e)
             {
