@@ -33,6 +33,7 @@ namespace MonPDReborn.Models.DataOP
         public class Detail
         {
             public List<RealisasiBulanan> DataRealisasiBulananList { get; set; } = new();
+            public List<RealisasiBulanan> DataRealisasiBulananMines1List { get; set; } = new();
             public Detail()
             {
 
