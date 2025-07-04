@@ -252,7 +252,7 @@ public partial class DbMonParkir
     public string? ObjekSanksiBayar { get; set; }
 
     [Column("RINCIAN_SANKSI_BAYAR")]
-    [StringLength(10)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? RincianSanksiBayar { get; set; }
 
