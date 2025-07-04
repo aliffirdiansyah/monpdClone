@@ -1,4 +1,13 @@
-﻿@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesDetail>()
+﻿@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 4).ToString();
+    var tahun2 = (currentYear - 3).ToString();
+    var tahun3 = (currentYear - 2).ToString();
+    var tahun4 = (currentYear - 1).ToString();
+    var tahun5 = currentYear.ToString();
+}
+
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesDetail>()
     .DataSource(m => m.Mvc()
         .LoadAction("GetSeriesDetailData")
         .Key("Kategori")
@@ -25,79 +34,34 @@
             .Caption("Kategori")
             .CssClass("fw-bold").CssClass("fw-bold");
 
-        columns.Add()
-            .DataField("Tahun2021")
-            .Caption("2021")
-            .CellTemplate(@<text>
-                               <div style="display: flex; align-items: center; justify-content: space-between;">
-                                   <button class="btn btn-sm btn-outline-primary me-2"
-                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2021')"
-                                           title="Lihat Detail">
-                                       <i class="ri-search-line"></i>
-                                   </button>
-                                   <span><%- value %></span>
-                               </div>
-                           </text>)
+        columns.AddFor(m => m.TahunMines4)
+            .DataField("TahunMines4")
+            .Caption(tahun1)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
             .CalculateCellValue("data => data.Tahun2021");
 
-        columns.Add()
-            .DataField("Tahun2022")
-            .Caption("2022")
-            .CellTemplate(@<text>
-                               <div style="display: flex; align-items: center; justify-content: space-between;">
-                                   <button class="btn btn-sm btn-outline-primary me-2"
-                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2022')"
-                                           title="Lihat Detail">
-                                       <i class="ri-search-line"></i>
-                                   </button>
-                                   <span><%- value %></span>
-                               </div>
-                           </text>)
+        columns.AddFor(m => m.TahunMines3)
+            .DataField("TahunMines3")
+            .Caption(tahun2)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
             .CalculateCellValue("data => data.Tahun2022");
 
-        columns.Add()
-            .DataField("Tahun2023")
-            .Caption("2023")
-            .CellTemplate(@<text>
-                               <div style="display: flex; align-items: center; justify-content: space-between;">
-                                   <button class="btn btn-sm btn-outline-danger me-2"
-                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2023')"
-                                           title="Lihat Detail">
-                                       <i class="ri-search-line"></i>
-                                   </button>
-                                   <span><%- value %></span>
-                               </div>
-                           </text>)
+        columns.AddFor(m => m.TahunMines2)
+            .DataField("TahunMines2")
+            .Caption(tahun3)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
             .CalculateCellValue("data => data.Tahun2023");
 
-        columns.Add()
-            .DataField("Tahun2024")
-            .Caption("2024")
-            .CellTemplate(@<text>
-                               <div style="display: flex; align-items: center; justify-content: space-between;">
-                                   <button class="btn btn-sm btn-outline-success me-2"
-                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2024')"
-                                           title="Lihat Detail">
-                                       <i class="ri-search-line"></i>
-                                   </button>
-                                   <span><%- value %></span>
-                               </div>
-                           </text>)
+        columns.AddFor(m => m.TahunMines1)
+            .DataField("TahunMines1")
+            .Caption(tahun4)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
             .CalculateCellValue("data => data.Tahun2024");
 
-        columns.Add()
-            .DataField("Tahun2025")
-            .Caption("2025")
-            .CellTemplate(@<text>
-                               <div style="display: flex; align-items: center; justify-content: space-between;">
-                                   <button class="btn btn-sm btn-outline-info me-2"
-                                           onclick="onSeriesClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'Tahun2025')"
-                                           title="Lihat Detail">
-                                       <i class="ri-search-line"></i>
-                                   </button>
-                                   <span><%- value %></span>
-                               </div>
-                           </text>)
+        columns.AddFor(m => m.TahunNow)
+            .DataField("TahunNow")
+            .Caption(tahun5)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
             .CalculateCellValue("data => data.Tahun2025");
     })
     .Summary(s =>
@@ -106,7 +70,7 @@
         {
             items.Add()
                 .Column("Kategori")
-                .SummaryType(SummaryType.Custom)
+                .SummaryType(SummaryType.Sum)
                 .DisplayFormat("Total")
                 .Alignment(HorizontalAlignment.Center);
 

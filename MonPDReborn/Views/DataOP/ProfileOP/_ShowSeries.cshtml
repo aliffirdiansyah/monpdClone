@@ -80,7 +80,7 @@
         {
             summary.TotalItems(items =>
             {
-                items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Custom).DisplayFormat("Total");
+                items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Sum).DisplayFormat("Total");
                 items.AddFor(m => m.Tahun2021).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.Tahun2022).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.Tahun2023).SummaryType(SummaryType.Sum).DisplayFormat("{0}");

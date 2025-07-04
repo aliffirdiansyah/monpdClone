@@ -134,7 +134,7 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
-        public IActionResult SeriesMaster(int enumPajak, string kategori)
+        public IActionResult SeriesMaster(int enumPajak, string kategori, string tahun)
         {
             try
             {

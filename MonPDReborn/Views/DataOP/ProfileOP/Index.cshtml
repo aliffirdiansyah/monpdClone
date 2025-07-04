@@ -141,8 +141,27 @@
                 }
             });
         }
+        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+            const enumPajak = cellInfo.data.EnumPajak;
+            const kategori = cellInfo.data.Kategori;
+            const tahun = cellInfo.column.dataField;
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', 'Lihat Detail')
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    onSeriesClick(enumPajak, kategori, tahun);
+                });
 
+            const span = $('<span>').text(cellInfo.value);
 
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(button)
+                .append(span);
+
+            $(cellElement).append(wrapper);
+        }
 
         function fnShowSeries()
         {
@@ -193,7 +212,11 @@
                     $("#detailWrapperSeries").hide();
                 },
                 error: function () {
-                    alert("❌ Gagal memuat data Rekap.");
+                    swal.fire({
+                            icon: 'error',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: "❌ Gagal memuat data Rekap."
+                        })
                 }
             });
         }
@@ -204,13 +227,14 @@
              window.open(url, '_blank');
          }
 
-        function onSeriesClick(enumPajak, kategori) {
+        function onSeriesClick(enumPajak, kategori, tahun) {
             $.ajax({
                 url: '/ProfileOP/SeriesMaster',
                 type: 'GET',
                 data: {
                     enumPajak: enumPajak,
-                    kategori: kategori
+                    kategori: kategori,
+                    tahun: tahun
                 },
                 success: function (data) {
                     const grid = $("#SeriesGrid").dxDataGrid("instance"); // ✅ pastikan id nya SeriesGrid
@@ -220,7 +244,11 @@
                     $("#detailWrapper").hide();       // ✅ sembunyikan wrapper lama
                 },
                 error: function (xhr) {
-                    alert("❌ Gagal memuat data detail: " + xhr.statusText);
+                    swal.fire({
+                            icon: 'error',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: "❌ Gagal memuat data Series."
+                        })
                 }
             });
         }

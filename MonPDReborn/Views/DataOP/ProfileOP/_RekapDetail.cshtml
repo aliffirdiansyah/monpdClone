@@ -24,7 +24,7 @@
     {
 
         columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
-        columns.Add()
+        columns.AddFor(m => m.OPAwal)
             .DataField("OPAwal")
             .Caption("OP Awal")
             .CellTemplate(@<text>
@@ -39,7 +39,7 @@
             </text>)
             .CalculateCellValue("data => data.OPAwal");
 
-        columns.Add()
+        columns.AddFor(m => m.OPTutup)
             .DataField("TutupSementara")
             .Caption("Tutup Sementara")
             .CellTemplate(@<text>
@@ -54,22 +54,7 @@
             </text>)
             .CalculateCellValue("data => data.TutupSementara");
 
-        columns.Add()
-            .DataField("TutupPermanen")
-            .Caption("Tutup Permanen")
-            .CellTemplate(@<text>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <button class="btn btn-sm btn-outline-danger me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'TutupPermanen')"
-                            title="Lihat Detail">
-                        <i class="ri-search-line"></i>
-                    </button>
-                    <span><%- data.TutupPermanen %></span>
-                </div>
-            </text>)
-            .CalculateCellValue("data => data.TutupPermanen");
-
-        columns.Add()
+        columns.AddFor(m => m.OPBaru)
             .DataField("OPBaru")
             .Caption("OP Baru")
             .CellTemplate(@<text>
@@ -85,7 +70,7 @@
             .CalculateCellValue("data => data.OPBaru");
 
 
-        columns.Add()
+        columns.AddFor(m => m.OPAkhir)
             .DataField("OPBuka")
             .Caption("Buka")
             .CellTemplate(@<text>
@@ -108,7 +93,7 @@
         {
             items.Add()
                 .Column("Kategori")
-                .SummaryType(SummaryType.Custom)
+                .SummaryType(SummaryType.Sum)
                 .DisplayFormat("Total")
                 .Alignment(HorizontalAlignment.Center);
 
