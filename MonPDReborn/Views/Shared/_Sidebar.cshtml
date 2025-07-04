@@ -63,27 +63,21 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
                 <li class="nav-item">
-                    <a class="nav-link @(currentController == "PENDATAANOBJEKPAJAK" ? "active" : "")"
-                       href="@Url.Action("Index", "PendataanObjekPajak")"
-                       data-key="t-pendataanObjek">
-                        <i class="bx bx-folder-open me-1 align-middle"></i>
-                        Pengedokan Pajak 
+                    <a class="nav-link menu-link"
+                       href="@Url.Action("Index", "PendataanObjekPajak")" role="button">
+                        <i class="bx bx-folder-open me-1 align-middle"></i><span data-key="t-pendataanObjek">Pengedokan Pajak</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link @(currentController == "PEMERIKSAANPAJAK" ? "active" : "")"
-                       href="@Url.Action("Index", "PemeriksaanPajak")"
-                       data-key="t-pemeriksaanPajak">
-                        <i class="bx bx-search-alt-2 me-1 align-middle"></i>
-                        Pemeriksaan Pajak
+                    <a class="nav-link menu-link"
+                       href="@Url.Action("Index", "PemeriksaanPajak")" role="button">
+                        <i class="bx bx-search-alt-2 me-1 align-middle"></i><span data-key="t-pemeriksaanPajak">Pemeriksaan Pajak</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @(currentController == "PEMASANGANALAT" ? "active" : "")"
-                       href="@Url.Action("Index", "PemasanganAlat")"
-                       data-key="t-pemasanganAlat">
-                        <i class="bx bx-cog me-1 align-middle"></i>
-                        Alat Rekam Online
+                       href="@Url.Action("Index", "PemasanganAlat")" role="button">
+                        <i class="bx bx-cog me-1 align-middle"></i><span data-key="t-pemasanganAlat">Alat Rekam Online</span>
                     </a>
                 </li>
 
