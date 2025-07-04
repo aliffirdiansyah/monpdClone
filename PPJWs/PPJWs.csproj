@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-HiburanWs-b0460b69-157f-4374-b6ea-b0d17676fa82</UserSecretsId>
+    <UserSecretsId>dotnet-PPJWs-960b57c0-27ce-4b2c-8f13-fbf3f4740b31</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

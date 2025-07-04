@@ -1,5 +1,74 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
+<div class="row">
+    <!-- Chart: OP Buka dan Tutup -->
+    <div class="col-lg-4 p-3 bg-white bg-opacity-85 border rounded shadow-sm">
+        @(Html.DevExtreme().Chart()
+            .ID("objek-chart")
+            .CommonSeriesSettings(s => s
+                .ArgumentField("Bulan")
+                .Type(SeriesType.Line)
+            )
+            .Margin(m => m.Bottom(20))
+            .ArgumentAxis(a => a
+                .ValueMarginsEnabled(false)
+                .DiscreteAxisDivisionMode(DiscreteAxisDivisionMode.CrossLabels)
+                .Grid(g => g.Visible(true))
+            )
+            .Series(s => {
+                s.Add()
+                    .ValueField("OPBaru")
+                    .Name("OP Buka")
+                    .Color("#16db65"); // Hijau
+
+                s.Add()
+                    .ValueField("OPTutup")
+                    .Name("OP Tutup")
+                    .Color("#ef4444"); // Merah
+            })
+            .Legend(l => l
+                .VerticalAlignment(VerticalEdge.Bottom)
+                .HorizontalAlignment(HorizontalAlignment.Center)
+                .ItemTextPosition(Position.Bottom)
+            )
+            .Title(t => t
+                .Text("Perbandingan OP Buka dan Tutup")
+                .Subtitle(s => s.Text("Dalam 12 Bulan Terakhir"))
+            )
+            .Export(e => e.Enabled(true))
+            .Tooltip(t => t.Enabled(true))
+            .DataSource(new[] {
+                new { Bulan = "Jan", OPBaru = 12, OPTutup = 5 },
+                new { Bulan = "Feb", OPBaru = 15, OPTutup = 3 },
+                new { Bulan = "Mar", OPBaru = 10, OPTutup = 7 },
+                new { Bulan = "Apr", OPBaru = 8, OPTutup = 4 },
+                new { Bulan = "Mei", OPBaru = 20, OPTutup = 9 },
+                new { Bulan = "Jun", OPBaru = 18, OPTutup = 6 },
+                new { Bulan = "Jul", OPBaru = 14, OPTutup = 5 },
+                new { Bulan = "Agu", OPBaru = 19, OPTutup = 8 },
+                new { Bulan = "Sep", OPBaru = 17, OPTutup = 4 },
+                new { Bulan = "Okt", OPBaru = 13, OPTutup = 6 },
+                new { Bulan = "Nov", OPBaru = 11, OPTutup = 3 },
+                new { Bulan = "Des", OPBaru = 16, OPTutup = 7 }
+            })
+        )
+    </div>
+
+    <!-- Sidebar / Informasi Pendukung -->
+    <div class="col-lg-2">
+        <div class="p-3 mb-3 bg-white bg-opacity-85 rounded shadow-sm">
+            <h6 class="mb-2">Keterangan :</h6>
+            <ul class="mb-0">
+                <li><span class="badge bg-success">OP Buka</span> menunjukkan objek pajak baru yang terdaftar.</li>
+                <li><span class="badge bg-danger">OP Tutup</span> menunjukkan objek pajak yang tidak aktif atau tutup.</li>
+            </ul>
+        </div>
+
+        <div class="p-3 bg-warning text-white rounded shadow-sm">
+            <h6 class="mb-2 text-white">Catatan :</h6>
+            <p class="mb-0">Data bersifat akumulatif dan ditampilkan per bulan selama tahun berjalan.</p>
+        </div>
+    </div>
+</div>
+

@@ -242,7 +242,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                                 }
 
                                 _contMonPd.SaveChanges();
-                                Console.WriteLine($"DB_OP {i} {item.Nop}");
+                                Console.WriteLine($"{DateTime.Now} DB_OP {i} {item.Nop}");
                             }
                         }
                     }
@@ -307,8 +307,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                             '-'  SUB_RINCIAN      ,
                             '-'  NAMA_SUB_RINCIAN    
                         FROM VW_SIMPADA_OP_all_mon
-                        WHERE 	NAMA_PAJAK_DAERAH ='RESTORAN' AND 
-                                KATEGORI_PAJAK <> 'OBJEK TESTING'
+                        WHERE 	NAMA_PAJAK_DAERAH ='RESTORAN' AND KATEGORI_PAJAK NOT IN ('OBJEK TESTING', 'MAMIN')
                     ";
 
                     var result = await _contHpp.Set<DbOpResto>().FromSqlRaw(sql).ToListAsync();
@@ -435,7 +434,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                                     }
 
                                     _contMonPd.SaveChanges();
-                                    Console.WriteLine($"DB_OP_HPP {tahunAmbil} {item.Nop}");
+                                    Console.WriteLine($"{DateTime.Now} DB_OP_HPP {tahunAmbil} {item.Nop}");
                                 }
                             }
 
@@ -530,7 +529,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
             //                    new OracleParameter("tahun", thn),
             //                    new OracleParameter("bulan", bln)
             //                }).ToListAsync();
-            //            var dbAkunPokok = GetDbAkunPokok(thn, 6, (int)op.KategoriId);
+            //            var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)op.KategoriId);
             //            foreach (var item in ketetapanSbyTaxOld)
             //            {
             //                string nop = item.NOP;
@@ -609,30 +608,30 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                     Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
                     var sql = @"
                             SELECT 	REPLACE(NOP, '.','') NOP,
-	                          TAHUN,
-	                          MASAPAJAK,
-	                          1 SEQ,
-	                          1 JENIS_KETETAPAN,
-	                          TANGGALENTRY TGL_KETETAPAN,
-	                           NVL(TANGGALJATUHTEMPO, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_JATUH_TEMPO_BAYAR,
-	                          0 NILAI_PENGURANG,
-	                          NVL(PAJAK_TERUTANG, 0) POKOK
-	                        FROM (
-	                         select  NO_SPTPD, A.NPWPD, IDAYAT, 
-	                                 TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
-	                                 RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
-	                                 A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
-	                         from PHRH_USER.sptpd_new@LIHATHR A
-	                         JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
-	                         WHERE STATUS=0
-	                         UNION ALL
-	                         select KD_BILL,NPWPD,KODEREKENING,
-	                                 TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
-	                                 PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
-	                         from sptpd_payment@LIHATBONANG A
-	                         JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
-	                         where STATUS_HAPUS=0
-	                        ) A
+	                           TAHUN,
+	                           MASAPAJAK,
+	                           1 SEQ,
+	                           1 JENIS_KETETAPAN,
+	                           NVL(TANGGALENTRY, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_KETETAPAN,
+	                            NVL(TANGGALJATUHTEMPO, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_JATUH_TEMPO_BAYAR,
+	                           0 NILAI_PENGURANG,
+	                           NVL(PAJAK_TERUTANG, 0) POKOK
+	                         FROM (
+	                          select  NO_SPTPD, A.NPWPD, IDAYAT, 
+	                                  TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
+	                                  RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
+	                                  A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
+	                          from PHRH_USER.sptpd_new@LIHATHR A
+	                          JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
+	                          WHERE STATUS=0
+	                          UNION ALL
+	                          select KD_BILL,NPWPD,KODEREKENING,
+	                                  TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
+	                                  PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
+	                          from sptpd_payment@LIHATBONANG A
+	                          JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
+	                          where STATUS_HAPUS=0
+	                         ) A 
                             WHERE A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
                         ";
 
@@ -655,7 +654,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                             }
                         }
 
-                        var dbAkunPokok = GetDbAkunPokok(thn, 6, (int)op.KategoriId);
+                        var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)op.KategoriId);
                         foreach (var item in ketetapanSbyTaxOld.Where(x => x.NOP == op.Nop))
                         {
                             string nop = item.NOP;
@@ -718,7 +717,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
 
                             _contMonPd.SaveChanges();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"DB_MON_RESTORAN_MONITORINGDB {thn}-{bln}-{item.NOP}-{item.SEQ}");
+                            Console.WriteLine($"{DateTime.Now} DB_MON_RESTORAN_MONITORINGDB {thn}-{bln}-{item.NOP}-{item.SEQ}");
                             Console.ResetColor();
                         }
                     }
@@ -871,7 +870,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                                 op.SubRincianSanksiBayar = SUB_RINCIAN_SANKSI_BAYAR;
                             }
                             _contMonPd.SaveChanges();
-                            Console.WriteLine($"DB_MON_RESTORAN (SSPD): {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
+                            Console.WriteLine($"{DateTime.Now} DB_MON_RESTORAN (SSPD): {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
                         }
                     }
                 }
