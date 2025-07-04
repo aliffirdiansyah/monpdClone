@@ -59,7 +59,7 @@ namespace AbtWs
 
         private async Task DoWorkFullScanAsync(CancellationToken stoppingToken)
         {
-
+            int idPajak = 6;
             var tglServer = DateTime.Now;
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
@@ -282,7 +282,7 @@ namespace AbtWs
                                 new OracleParameter("tahun", thn),
                                 new OracleParameter("bulan", bln)
                             }).ToListAsync();
-                        var dbAkunPokok = GetDbAkunPokok(thn, 6, (int)op.KategoriId);
+                        var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)op.KategoriId);
                         foreach (var item in ketetapanSbyTaxOld)
                         {
                             string nop = item.NOP;

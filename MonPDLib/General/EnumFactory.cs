@@ -33,6 +33,8 @@ namespace MonPDLib.General
             DBOPHOTEL, 
             DBOPRESTORAN, 
             DBOPPARKIR, 
+            DBOPHIBURAN, 
+            DBOPLISTRIK, 
         }
         public enum EStatePemeriksaanSkpdKbJabatan
         {

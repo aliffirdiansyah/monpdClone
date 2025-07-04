@@ -22,7 +22,7 @@ public partial class DbOpResto
     public string Npwpd { get; set; } = null!;
 
     [Column("NPWPD_NAMA")]
-    [StringLength(100)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NpwpdNama { get; set; } = null!;
 
