@@ -38,31 +38,31 @@
             .DataField("TahunMines4")
             .Caption(tahun1)
             .CellTemplate(new JS("kategoriSeriesCellTemplate"))
-            .CalculateCellValue("data => data.Tahun2021");
+            .CalculateCellValue("data => data.TahunMines4");
 
         columns.AddFor(m => m.TahunMines3)
             .DataField("TahunMines3")
             .Caption(tahun2)
             .CellTemplate(new JS("kategoriSeriesCellTemplate"))
-            .CalculateCellValue("data => data.Tahun2022");
+            .CalculateCellValue("data => data.TahunMines3");
 
         columns.AddFor(m => m.TahunMines2)
             .DataField("TahunMines2")
             .Caption(tahun3)
             .CellTemplate(new JS("kategoriSeriesCellTemplate"))
-            .CalculateCellValue("data => data.Tahun2023");
+            .CalculateCellValue("data => data.TahunMines2");
 
         columns.AddFor(m => m.TahunMines1)
             .DataField("TahunMines1")
             .Caption(tahun4)
             .CellTemplate(new JS("kategoriSeriesCellTemplate"))
-            .CalculateCellValue("data => data.Tahun2024");
+            .CalculateCellValue("data => data.TahunMines1");
 
         columns.AddFor(m => m.TahunNow)
             .DataField("TahunNow")
             .Caption(tahun5)
             .CellTemplate(new JS("kategoriSeriesCellTemplate"))
-            .CalculateCellValue("data => data.Tahun2025");
+            .CalculateCellValue("data => data.TahunNow");
     })
     .Summary(s =>
     {
@@ -75,31 +75,31 @@
                 .Alignment(HorizontalAlignment.Center);
 
             items.Add()
-                .Column("Tahun2021")
+                .Column("TahunMines4")
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("Tahun2022")
+                .Column("TahunMines3")
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("Tahun2023")
+                .Column("TahunMines2")
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("Tahun2024")
+                .Column("TahunMines1")
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("Tahun2025")
+                .Column("TahunNow")
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);

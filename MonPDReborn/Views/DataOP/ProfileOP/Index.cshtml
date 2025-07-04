@@ -68,22 +68,46 @@
     <div class="col-lg-12" id="detailWrapper" style="display: none;">
         <div class="card">
             <div class="card-body">
-                <div id="detailContainer" class="mt-4">
+                <div class="text-end mt-3">
+                    <button id="btnCloseDetail" class="btn btn-outline-danger btn-sm">
+                        <i class="ri-close-line"></i> Tutup
+                    </button>
+                </div>
+                <div id="detailLoading" class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="detailContainer" class="mt-4" style="display: none;">
                     @Html.Partial("~/Views/DataOP/ProfileOP/_RekapMaster.cshtml")
                 </div>
             </div>
         </div>
     </div>
 
+
     <div class="col-lg-12" id="detailWrapperSeries" style="display: none;">
         <div class="card">
             <div class="card-body">
-                <div id="detailContainerSeries" class="mt-4">
+                <div class="text-end mt-3">
+                    <button id="btnCloseDetailSeries" class="btn btn-outline-danger btn-sm">
+                        <i class="ri-close-line"></i> Tutup
+                    </button>
+                </div>
+                <div id="detailLoadingSeries" class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="detailContainerSeries" class="mt-4" style="display: none;">
                     @Html.Partial("~/Views/DataOP/ProfileOP/_SeriesMaster.cshtml")
                 </div>
             </div>
         </div>
     </div>
+
 
 </div>
 
@@ -141,6 +165,7 @@
                 }
             });
         }
+
         function kategoriSeriesCellTemplate(cellElement, cellInfo) {
             const enumPajak = cellInfo.data.EnumPajak;
             const kategori = cellInfo.data.Kategori;
@@ -194,7 +219,13 @@
            });
         }
 
+                // 📌 Rekap Master
         function onDetailClick(enumPajak, kategori, status) {
+            // Tampilkan wrapper & spinner dulu
+            $("#detailWrapper").slideDown();
+            $("#detailContainer").hide();
+            $("#detailLoading").show();
+
             $.ajax({
                 url: '/ProfileOP/RekapMaster',
                 type: 'GET',
@@ -205,21 +236,82 @@
                 },
                 success: function (data) {
                     const grid = $("#detailGrid").dxDataGrid("instance");
+
                     grid.option("dataSource", data);
 
-                    // Tampilkan Rekap, Sembunyikan Series
-                    $("#detailWrapper").show();
+                    setTimeout(function () {
+                        $("#detailLoading").fadeOut(300, function () {
+                            $("#detailContainer").fadeIn(300);
+                        });
+                    }, 500);
+
+                    // Sembunyikan panel Series
                     $("#detailWrapperSeries").hide();
                 },
                 error: function () {
                     swal.fire({
-                            icon: 'error',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: "❌ Gagal memuat data Rekap."
-                        })
+                        icon: 'error',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: "❌ Gagal memuat data Rekap."
+                    });
+                    hideDetail();
                 }
             });
         }
+
+        function hideDetail() {
+            $("#detailWrapper").slideUp();
+        }
+
+        // 📌 Series Master
+        function onSeriesClick(enumPajak, kategori, tahun) {
+            $("#detailWrapperSeries").slideDown();
+            $("#detailContainerSeries").hide();
+            $("#detailLoadingSeries").show();
+
+            $.ajax({
+                url: '/ProfileOP/SeriesMaster',
+                type: 'GET',
+                data: {
+                    enumPajak: enumPajak,
+                    kategori: kategori,
+                    tahun: tahun
+                },
+                success: function (data) {
+                    const grid = $("#SeriesGrid").dxDataGrid("instance");
+
+                    grid.option("dataSource", data);
+
+                    setTimeout(function () {
+                        $("#detailLoadingSeries").fadeOut(300, function () {
+                            $("#detailContainerSeries").fadeIn(300);
+                        });
+                    }, 500);
+
+                    // Sembunyikan panel Rekap
+                    $("#detailWrapper").hide();
+                },
+                error: function () {
+                    swal.fire({
+                        icon: 'error',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: "❌ Gagal memuat data Series."
+                    });
+                    hideDetailSeries();
+                }
+            });
+        }
+
+        function hideDetailSeries() {
+            $("#detailWrapperSeries").slideUp();
+        }
+
+        $(document).ready(function () {
+            $("#btnCloseDetail").on("click", hideDetail);
+            $("#btnCloseDetailSeries").on("click", hideDetailSeries);
+        });
+
+
 
 
          function onDetail(e) {
@@ -227,7 +319,7 @@
              window.open(url, '_blank');
          }
 
-        function onSeriesClick(enumPajak, kategori, tahun) {
+      /*  function onSeriesClick(enumPajak, kategori, tahun) {
             $.ajax({
                 url: '/ProfileOP/SeriesMaster',
                 type: 'GET',
@@ -251,7 +343,7 @@
                         })
                 }
             });
-        }
+        }*/
 
 
 
