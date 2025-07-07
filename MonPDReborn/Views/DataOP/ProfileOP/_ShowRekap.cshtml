@@ -89,7 +89,7 @@
                 md.Template(
                 @<text>
                     @{
-                        ViewData["JenisPajak"] = new JS("data.EnumPajak");
+                        ViewData["JenisPajakRekap"] = new JS("data.EnumPajak");
                         ViewData["tahun"] = new JS("data.Tahun");
                     }
                 @await Html.PartialAsync("/Views/DataOP/ProfileOP/_RekapDetail.cshtml")

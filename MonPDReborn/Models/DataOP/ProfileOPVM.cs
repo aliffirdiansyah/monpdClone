@@ -105,6 +105,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
                         Tahun = tahun,
                         JmlOpAwal = OpRestoAwal,
                         JmlOpTutupPermanen = OpRestoTutup,
@@ -114,6 +115,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
                         Tahun = tahun,
                         JmlOpAwal = OpHotelAwal,
                         JmlOpTutupPermanen = OpHotelTutup,
@@ -123,6 +125,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                         Tahun = tahun,
                         JmlOpAwal = OpHiburanAwal,
                         JmlOpTutupPermanen = OpHiburanTutup,
@@ -132,6 +135,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                         Tahun = tahun,
                         JmlOpAwal = OpParkirAwal,
                         JmlOpTutupPermanen = OpParkirTutup,
@@ -141,6 +145,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
                         Tahun = tahun,
                         JmlOpAwal = OpListrikAwal,
                         JmlOpTutupPermanen = OpListrikTutup,
@@ -150,6 +155,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.PBB,
                         Tahun = tahun,
                         JmlOpAwal = OpPbbAwal,
                         JmlOpTutupPermanen = 0,
@@ -159,6 +165,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.BPHTB,
                         Tahun = tahun,
                         JmlOpAwal = OpBphtbAwal,
                         JmlOpTutupPermanen = 0,
@@ -168,6 +175,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.Reklame,
                         Tahun = tahun,
                         JmlOpAwal = OpReklameAwal,
                         JmlOpTutupPermanen = 0,
@@ -177,6 +185,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.AirTanah,
                         Tahun = tahun,
                         JmlOpAwal = OpAbtAwal,
                         JmlOpTutupPermanen = OpAbtTutup,
@@ -186,6 +195,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.OpsenPkb,
                         Tahun = tahun,
                         JmlOpAwal = OpOpsenPkbAwal,
                         JmlOpTutupPermanen = 0,
@@ -195,6 +205,7 @@ namespace MonPDReborn.Models.DataOP
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.OpsenBbnkb,
                         Tahun = tahun,
                         JmlOpAwal = OpOpsenBbnkbAwal,
                         JmlOpTutupPermanen = 0,
@@ -279,6 +290,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
                     Tahun2021 = OpRestoMines4,
                     Tahun2022 = OpRestoMines3,
                     Tahun2023 = OpRestoMines2,
@@ -289,6 +301,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
                     Tahun2021 = OpHotelMines4,
                     Tahun2022 = OpHotelMines3,
                     Tahun2023 = OpHotelMines2,
@@ -299,6 +312,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                     Tahun2021 = OpHiburanMines4,
                     Tahun2022 = OpHiburanMines3,
                     Tahun2023 = OpHiburanMines2,
@@ -309,6 +323,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                     Tahun2021 = OpParkirMines4,
                     Tahun2022 = OpParkirMines3,
                     Tahun2023 = OpParkirMines2,
@@ -319,6 +334,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
                     Tahun2021 = OpListrikMines4,
                     Tahun2022 = OpListrikMines3,
                     Tahun2023 = OpListrikMines2,
@@ -329,6 +345,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.PBB,
                     Tahun2021 = OpPbbMines4,
                     Tahun2022 = OpPbbMines3,
                     Tahun2023 = OpPbbMines2,
@@ -339,6 +356,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.BPHTB,
                     Tahun2021 = OpBphtbMines4,
                     Tahun2022 = OpBphtbMines3,
                     Tahun2023 = OpBphtbMines2,
@@ -349,6 +367,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.Reklame,
                     Tahun2021 = OpReklameMines4,
                     Tahun2022 = OpReklameMines3,
                     Tahun2023 = OpReklameMines2,
@@ -359,6 +378,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.AirTanah,
                     Tahun2021 = OpAbtMines4,
                     Tahun2022 = OpAbtMines3,
                     Tahun2023 = OpAbtMines2,
@@ -369,6 +389,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.OpsenPkb,
                     Tahun2021 = OpOpsenPkbMines4,
                     Tahun2022 = OpOpsenPkbMines3,
                     Tahun2023 = OpOpsenPkbMines2,
@@ -379,6 +400,7 @@ namespace MonPDReborn.Models.DataOP
                 result.Add(new SeriesOP()
                 {
                     JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
+                    EnumPajak = (int)EnumFactory.EPajak.OpsenBbnkb,
                     Tahun2021 = OpOpsenBbnkbMines4,
                     Tahun2022 = OpOpsenBbnkbMines3,
                     Tahun2023 = OpOpsenBbnkbMines2,
@@ -392,20 +414,152 @@ namespace MonPDReborn.Models.DataOP
 
             public static List<RekapDetail> GetRekapDetailData(EnumFactory.EPajak JenisPajak, int tahun)
             {
+                var context = DBClass.GetContext();
                 var ret = new List<RekapDetail>();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)JenisPajak)
+                    .Select(x => new { x.Id, x.Nama })
+                    .ToList();
+
                 switch (JenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
+                            var OpRestoTutup = context.DbOpRestos.Count(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglOpTutup.HasValue &&
+                                x.TglOpTutup.Value.Year == tahun &&
+                                x.KategoriId == kat.Id);
+                            var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+
+                            ret.Add(new RekapDetail
+                            {
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Tahun = tahun,
+                                Kategori = kat.Nama,
+                                JmlOpAwal = OpRestoAwal,
+                                JmlOpTutupPermanen = OpRestoTutup,
+                                JmlOpBaru = OpRestoNow - OpRestoAwal,
+                                JmlOpAkhir = OpRestoAwal - OpRestoTutup + (OpRestoNow - OpRestoAwal)
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
+                        //foreach (var kat in kategoriList)
+                        //{
+                        //    var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
+                        //    var OpListrikTutup = context.DbOpListriks.Count(x =>
+                        //        x.TahunBuku == tahun &&
+                        //        x.TglOpTutup.HasValue &&
+                        //        x.TglOpTutup.Value.Year == tahun &&
+                        //        x.KategoriId == kat.Id);
+                        //    var OpListrikAwal = context.DbOpListriks.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+
+                        //    ret.Add(new RekapDetail
+                        //    {
+                        //        JenisPajak = JenisPajak.GetDescription(),
+                        //        Tahun = tahun,
+                        //        Kategori = kat.Nama,
+                        //        JmlOpAwal = OpListrikAwal,
+                        //        JmlOpTutupPermanen = OpListrikTutup,
+                        //        JmlOpBaru = OpListrikNow - OpListrikAwal,
+                        //        JmlOpAkhir = OpListrikAwal - OpListrikTutup + (OpListrikNow - OpListrikAwal)
+                        //    });
+                        //}
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
+                            var OpHotelTutup = context.DbOpHotels.Count(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglOpTutup.HasValue &&
+                                x.TglOpTutup.Value.Year == tahun &&
+                                x.KategoriId == kat.Id);
+                            var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+
+                            ret.Add(new RekapDetail
+                            {
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Tahun = tahun,
+                                Kategori = kat.Nama,
+                                JmlOpAwal = OpHotelAwal,
+                                JmlOpTutupPermanen = OpHotelTutup,
+                                JmlOpBaru = OpHotelNow - OpHotelAwal,
+                                JmlOpAkhir = OpHotelAwal - OpHotelTutup + (OpHotelNow - OpHotelAwal)
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
+                            var OpParkirTutup = context.DbOpParkirs.Count(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglOpTutup.HasValue &&
+                                x.TglOpTutup.Value.Year == tahun &&
+                                x.KategoriId == kat.Id);
+                            var OpParkirAwal = context.DbOpParkirs.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+
+                            ret.Add(new RekapDetail
+                            {
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Tahun = tahun,
+                                Kategori = kat.Nama,
+                                JmlOpAwal = OpParkirAwal,
+                                JmlOpTutupPermanen = OpParkirTutup,
+                                JmlOpBaru = OpParkirNow - OpParkirAwal,
+                                JmlOpAkhir = OpParkirAwal - OpParkirTutup + (OpParkirNow - OpParkirAwal)
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
+                            var OpHiburanTutup = context.DbOpHiburans.Count(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglOpTutup.HasValue &&
+                                x.TglOpTutup.Value.Year == tahun &&
+                                x.KategoriId == kat.Id);
+                            var OpHiburanAwal = context.DbOpHiburans.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+
+                            ret.Add(new RekapDetail
+                            {
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Tahun = tahun,
+                                Kategori = kat.Nama,
+                                JmlOpAwal = OpHiburanAwal,
+                                JmlOpTutupPermanen = OpHiburanTutup,
+                                JmlOpBaru = OpHiburanNow - OpHiburanAwal,
+                                JmlOpAkhir = OpHiburanAwal - OpHiburanTutup + (OpHiburanNow - OpHiburanAwal)
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.AirTanah:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
+                            var OpAbtTutup = context.DbOpAbts.Count(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglOpTutup.HasValue &&
+                                x.TglOpTutup.Value.Year == tahun &&
+                                x.KategoriId == kat.Id);
+                            var OpAbtAwal = context.DbOpAbts.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+
+                            ret.Add(new RekapDetail
+                            {
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Tahun = tahun,
+                                Kategori = kat.Nama,
+                                JmlOpAwal = OpAbtAwal,
+                                JmlOpTutupPermanen = OpAbtTutup,
+                                JmlOpBaru = OpAbtNow - OpAbtAwal,
+                                JmlOpAkhir = OpAbtAwal - OpAbtTutup + (OpAbtNow - OpAbtAwal)
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.Reklame:
                         break;
