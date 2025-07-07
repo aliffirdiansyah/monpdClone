@@ -1,0 +1,508 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.ShowUpaya
+
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.UpayaPajak>()
+        .ID("upayaPajakGrid")
+        .DataSource(Model.DataUpayaPajakList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .AllowColumnResizing(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+
+            columns.AddFor(m => m.Kategori).Caption("Kategori").Fixed(true).FixedPosition(HorizontalEdge.Left);
+
+            columns.Add().Caption("Januari").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb1)
+                        .DataField("Himb1")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur1)
+                        .DataField("Tegur1")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil1)
+                        .DataField("Sil1")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak1)
+                        .DataField("Kejak1")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+                
+            });
+
+            columns.Add().Caption("Februari").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb2)
+                        .DataField("Himb2")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur2)
+                        .DataField("Tegur2")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil2)
+                        .DataField("Sil2")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak2)
+                        .DataField("Kejak2")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("Maret").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb3)
+                        .DataField("Himb3")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur3)
+                        .DataField("Tegur3")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil3)
+                        .DataField("Sil3")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak3)
+                        .DataField("Kejak3")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("April").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb4)
+                        .DataField("Himb4")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur4)
+                        .DataField("Tegur4")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil4)
+                        .DataField("Sil4")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak4)
+                        .DataField("Kejak4")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("Mei").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb5)
+                        .DataField("Himb5")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur5)
+                        .DataField("Tegur5")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil5)
+                        .DataField("Sil5")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak5)
+                        .DataField("Kejak5")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("Juni").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb6)
+                        .DataField("Himb6")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur6)
+                        .DataField("Tegur6")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil6)
+                        .DataField("Sil6")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak6)
+                        .DataField("Kejak6")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("Juli").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb7)
+                        .DataField("Himb7")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur7)
+                        .DataField("Tegur7")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil7)
+                        .DataField("Sil7")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak7)
+                        .DataField("Kejak7")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("Agustus").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb8)
+                        .DataField("Himb8")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur8)
+                        .DataField("Tegur8")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil8)
+                        .DataField("Sil8")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak8)
+                        .DataField("Kejak8")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("September").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb9)
+                        .DataField("Himb9")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur9)
+                        .DataField("Tegur9")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil9)
+                        .DataField("Sil9")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak9)
+                        .DataField("Kejak9")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("Oktober").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb10)
+                        .DataField("Himb10")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur10)
+                        .DataField("Tegur10")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil10)
+                        .DataField("Sil10")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak10)
+                        .DataField("Kejak10")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("November").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb11)
+                        .DataField("Himb11")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur11)
+                        .DataField("Tegur11")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil11)
+                        .DataField("Sil11")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak11)
+                        .DataField("Kejak11")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+            columns.Add().Caption("Desember").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Himb12)
+                        .DataField("Himb12")
+                        .Caption("HIMB")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Tegur12)
+                        .DataField("Tegur12")
+                        .Caption("TEGUR")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Sil12)
+                        .DataField("Sil12")
+                        .Caption("SIL")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+
+                subColumns.AddFor(m => m.Kejak12)
+                        .DataField("Kejak12")
+                        .Caption("KEJAK")
+                        .CellTemplate(new JS("upayaPajakCellTemplate"));
+            });
+
+
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Kategori)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+
+                items.AddFor(m => m.Himb1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Himb12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tegur12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sil12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Kejak12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+            });
+        })
+        )
+</div>
