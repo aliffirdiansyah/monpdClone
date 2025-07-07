@@ -400,15 +400,6 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.TenagaListrik:
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        ret = new List<RekapDetail>
-                        {
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Lima", OPAwal = 20, OPTutup = 1, OPBaru = 5, OPAkhir = 8 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Empat", OPAwal = 15, OPTutup = 8, OPBaru = 4, OPAkhir = 6 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Tiga", OPAwal = 25, OPTutup = 1, OPBaru = 5, OPAkhir = 4 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Dua", OPAwal = 10, OPTutup = 2, OPBaru = 7, OPAkhir = 9 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Bintang Satu", OPAwal = 30, OPTutup = 3, OPBaru = 7, OPAkhir = 10 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Tahun = tahun, Kategori = "Hotel Non Bintang", OPAwal = 40, OPTutup = 5, OPBaru = 8, OPAkhir = 15 },
-                        };
                         break;
                     case EnumFactory.EPajak.JasaParkir:
                         break;
@@ -895,10 +886,10 @@ namespace MonPDReborn.Models.DataOP
             public string JenisPajak { get; set; } = null!;
             public string Kategori { get; set; } = null!;
             public int Tahun { get; set; }
-            public int OPAwal { get; set; }
-            public int OPTutup { get; set; }
-            public int OPBaru { get; set; }
-            public int OPAkhir { get; set; }
+            public int JmlOpAwal { get; set; }
+            public int JmlOpTutupPermanen { get; set; }
+            public int JmlOpBaru { get; set; }
+            public int JmlOpAkhir { get; set; }
         }
 
         public class RekapMaster
