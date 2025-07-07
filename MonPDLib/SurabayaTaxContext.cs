@@ -24,21 +24,29 @@ namespace MonPDLib
         public DbSet<DbOpHotel> DbOpHotels { get; set; }
         public DbSet<DbOpResto> DbOpRestos { get; set; }
         public DbSet<DbOpParkir> DbOpParkirs { get; set; }
+        public DbSet<DbOpHiburan> DbOpHiburans { get; set; }
+        public DbSet<DbOpListrik> DbOpListriks { get; set; }
         public DbSet<OPSkpdAbt> OPSkpdAbts { get; set; }
         public DbSet<OPSkpdHotel> OPSkpdHotels { get; set; }
         public DbSet<OPSkpdResto> OPSkpdRestos { get; set; }
         public DbSet<OPSkpdParkir> OPSkpdParkirs { get; set; }
+        public DbSet<OPSkpdHiburan> OPSkpdHiburans { get; set; }
+        public DbSet<OPSkpdListrik> OPSkpdListriks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DbOpAbt>().HasNoKey();
             modelBuilder.Entity<DbOpHotel>().HasNoKey();
             modelBuilder.Entity<DbOpResto>().HasNoKey();
+            modelBuilder.Entity<DbOpHiburan>().HasNoKey();
             modelBuilder.Entity<DbOpParkir>().HasNoKey();
+            modelBuilder.Entity<DbOpListrik>().HasNoKey();
             modelBuilder.Entity<OPSkpdAbt>().HasNoKey();
             modelBuilder.Entity<OPSkpdHotel>().HasNoKey();
             modelBuilder.Entity<OPSkpdResto>().HasNoKey();
             modelBuilder.Entity<OPSkpdParkir>().HasNoKey();
+            modelBuilder.Entity<OPSkpdHiburan>().HasNoKey();
+            modelBuilder.Entity<OPSkpdListrik>().HasNoKey();
         }
     }
 }

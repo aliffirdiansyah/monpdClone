@@ -31,6 +31,21 @@
                         <span></span>
                     </span>
                 </button>
+                <form class="app-search" onsubmit="return false;">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="pencarianOp" placeholder="Search OP..." autocomplete="off" id="search-options" value="">
+                        <span class="mdi mdi-magnify search-widget-icon"></span>
+                        <!-- Tombol cari -->
+                        <button type="button" class="btn btn-outline-primary" id="search-button">
+                            <i class="mdi mdi-magnify"></i>
+                        </button>
+
+                        <!-- Tombol clear -->
+                        <button type="button" class="btn btn-outline-danger d-none" id="search-close-options">
+                            <i class="mdi mdi-close-circle"></i>
+                        </button>
+                    </div>
+                </form>
 
                 <!-- App Search-->
             </div>
@@ -44,12 +59,12 @@
                     </button>
                 </div>
 
-                <div class="ms-1 header-item d-none d-sm-flex">
+                @* <div class="ms-1 header-item d-none d-sm-flex">
                     <button type="button"
                             class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode shadow-none">
                         <i class='bx bx-moon fs-22'></i>
                     </button>
-                </div>
+                </div> *@
 
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown"

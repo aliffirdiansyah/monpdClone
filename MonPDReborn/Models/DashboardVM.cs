@@ -143,6 +143,21 @@ namespace MonPDReborn.Models
                 public decimal TargetOpsenBbnkb { get; set; }
                 public decimal RealisasiOpsenBbnkb { get; set; }
                 public decimal PersentaseOpsenBbnkb { get; set; }
+
+                //JumlahOP 
+                public decimal JumlahOpHotel { get; set; }
+                public decimal JumlahOpHiburan { get; set; }
+                public decimal JumlahOpParkir { get; set; }
+                public decimal JumlahOpMamin { get; set; }
+                public decimal JumlahOpListrik { get; set; }
+                public decimal JumlahOpAbt { get; set; }
+                public decimal JumlahOpPbb { get; set; }
+                public decimal JumlahOpReklame { get; set; }
+                public decimal JumlahOpBphtb { get; set; }
+                public decimal JumlahOpOpsenPkb { get; set; }
+                public decimal JumlahOpOpsenBbnkb { get; set; }
+                public decimal TotalJumlahOp { get; set; }
+
             }
             public class DashboardChart
             {
@@ -322,57 +337,109 @@ namespace MonPDReborn.Models
 
                 decimal TotalPersentase = TotalTarget != 0 ? (TotalRealisasi / TotalTarget) * 100 : 0;
 
+                #region Method Get Jumlah OP
+                var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == currentYear);
+                var OpRestoTutup = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == currentYear);
+                var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 1);
+
+                var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == currentYear);
+                var OpHotelTutup = context.DbOpHotels.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == currentYear);
+                var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 1);
+
+                var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear);
+                var OpHiburanTutup = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == currentYear);
+                var OpHiburanAwal = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 1);
+
+                var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear);
+                var OpParkirTutup = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == currentYear);
+                var OpParkirAwal = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 1);
+
+                var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == currentYear);
+                var OpListrikTutup = context.DbOpListriks.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == currentYear);
+                var OpListrikAwal = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 1);
+
+                var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == currentYear);
+                var OpAbtTutup = context.DbOpAbts.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == currentYear);
+                var OpAbtAwal = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 1);
+
+                var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear);
+                var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 1);
+
+                var OpBphtbNow = 0;
+                var OpBphtbAwal = 0;
+
+                var OpReklameNow = 0;
+                var OpReklameAwal = 0;
+
+                var OpOpsenPkbNow = 0;
+                var OpOpsenPkbAwal = 0;
+
+                var OpOpsenBbnkbNow = 0;
+                var OpOpsenBbnkbAwal = 0;
+                #endregion
+
                 // Hasil akhir ViewModel
                 var result = new ViewModel.Dashboard
                 {
                     TotalTarget = TotalTarget,
                     TotalRealisasi = TotalRealisasi,
                     TotalPersentase = Math.Round(TotalPersentase, 2),
-
-                    TargetHotel = dataTargetHotel,
-                    RealisasiHotel = dataRealisasiHotel,
-                    PersentaseHotel = dataTargetHotel != 0 ? Math.Round((dataRealisasiHotel / dataTargetHotel) * 100, 2) : 0,
-
-                    TargetHiburan = dataTargetHiburan,
-                    RealisasiHiburan = dataRealisasiHiburan,
-                    PersentaseHiburan = dataTargetHiburan != 0 ? Math.Round((dataRealisasiHiburan / dataTargetHiburan) * 100, 2) : 0,
-
-                    TargetParkir = dataTargetParkir,
-                    RealisasiParkir = dataRealisasiParkir,
-                    PersentaseParkir = dataTargetParkir != 0 ? Math.Round((dataRealisasiParkir / dataTargetParkir) * 100, 2) : 0,
+                    TotalJumlahOp = 0,
 
                     TargetMamin = dataTargetMamin,
                     RealisasiMamin = dataRealisasiMamin,
                     PersentaseMamin = dataTargetMamin != 0 ? Math.Round((dataRealisasiMamin / dataTargetMamin) * 100, 2) : 0,
+                    JumlahOpMamin = OpRestoAwal - OpRestoTutup + (OpRestoNow - OpRestoAwal),
+
+                    TargetHotel = dataTargetHotel,
+                    RealisasiHotel = dataRealisasiHotel,
+                    PersentaseHotel = dataTargetHotel != 0 ? Math.Round((dataRealisasiHotel / dataTargetHotel) * 100, 2) : 0,
+                    JumlahOpHotel = OpHotelAwal - OpHotelTutup + (OpHotelNow - OpHotelAwal),
+
+                    TargetHiburan = dataTargetHiburan,
+                    RealisasiHiburan = dataRealisasiHiburan,
+                    PersentaseHiburan = dataTargetHiburan != 0 ? Math.Round((dataRealisasiHiburan / dataTargetHiburan) * 100, 2) : 0,
+                    JumlahOpHiburan = OpHiburanAwal - OpHiburanTutup + (OpHiburanNow - OpHiburanAwal),
+
+                    TargetParkir = dataTargetParkir,
+                    RealisasiParkir = dataRealisasiParkir,
+                    PersentaseParkir = dataTargetParkir != 0 ? Math.Round((dataRealisasiParkir / dataTargetParkir) * 100, 2) : 0,
+                    JumlahOpParkir = OpParkirAwal - OpParkirTutup + (OpParkirNow - OpParkirAwal),
 
                     TargetListrik = dataTargetListrik,
                     RealisasiListrik = dataRealisasiListrik,
                     PersentaseListrik = dataTargetListrik != 0 ? Math.Round((dataRealisasiListrik / dataTargetListrik) * 100, 2) : 0,
-
-                    TargetAbt = dataTargetAbt,
-                    RealisasiAbt = dataRealisasiAbt,
-                    PersentaseAbt = dataTargetAbt != 0 ? Math.Round((dataRealisasiAbt / dataTargetAbt) * 100, 2) : 0,
+                    JumlahOpListrik = OpListrikAwal - OpListrikTutup + (OpListrikNow - OpListrikAwal),
 
                     TargetPbb = dataTargetPbb,
                     RealisasiPbb = dataRealisasiPbb,
                     PersentasePbb = dataTargetPbb != 0 ? Math.Round((dataRealisasiPbb / dataTargetPbb) * 100, 2) : 0,
+                    JumlahOpPbb = OpPbbAwal - 0,
 
                     TargetBphtb = dataTargetBphtb,
                     RealisasiBphtb = dataRealisasiBphtb,
                     PersentaseBphtb = dataTargetBphtb != 0 ? Math.Round((dataRealisasiBphtb / dataTargetBphtb) * 100, 2) : 0,
+                    JumlahOpBphtb = OpBphtbAwal - 0,
+
+                    TargetReklame = dataTargetReklame,
+                    RealisasiReklame = dataRealisasiReklame,
+                    PersentaseReklame = dataTargetReklame != 0 ? Math.Round((dataRealisasiReklame / dataTargetReklame) * 100, 2) : 0,
+                    JumlahOpReklame = OpReklameAwal - 0,
+
+                    TargetAbt = dataTargetAbt,
+                    RealisasiAbt = dataRealisasiAbt,
+                    PersentaseAbt = dataTargetAbt != 0 ? Math.Round((dataRealisasiAbt / dataTargetAbt) * 100, 2) : 0,
+                    JumlahOpAbt = OpAbtAwal - OpAbtTutup + (OpAbtNow - OpAbtAwal),
 
                     TargetOpsenPkb = dataTargetOpsenPkb,
                     RealisasiOpsenPkb = dataRealisasiOpsenPkb,
                     PersentaseOpsenPkb = dataTargetOpsenPkb != 0 ? Math.Round((dataRealisasiOpsenPkb / dataTargetOpsenPkb) * 100, 2) : 0,
+                    JumlahOpOpsenPkb = OpOpsenPkbAwal - 0,
 
                     TargetOpsenBbnkb = dataTargetOpsenBbnkb,
                     RealisasiOpsenBbnkb = dataRealisasiOpsenBbnkb,
                     PersentaseOpsenBbnkb = dataTargetOpsenBbnkb != 0 ? Math.Round((dataRealisasiOpsenBbnkb / dataTargetOpsenBbnkb) * 100, 2) : 0,
-
-                    //Optional: Uncomment if you want to include Reklame later
-                    TargetReklame = dataTargetReklame,
-                    RealisasiReklame = dataRealisasiReklame,
-                    PersentaseReklame = dataTargetReklame != 0 ? Math.Round((dataRealisasiReklame / dataTargetReklame) * 100, 2) : 0,
+                    JumlahOpOpsenBbnkb = OpOpsenBbnkbAwal - 0 + (OpOpsenBbnkbNow - OpOpsenBbnkbAwal)
                 };
 
                 return result;
@@ -477,50 +544,6 @@ namespace MonPDReborn.Models
                 }
 
                 return result;
-            }
-            public static List<ViewModel.SeriesPajakDaerah> GetSeriesPajakDaerahData(int g)
-            {
-                return new List<ViewModel.SeriesPajakDaerah>
-                {
-                    new ViewModel.SeriesPajakDaerah
-                    {
-                        JenisPajak = "Pajak Restoran",
-                        Target1 = 80000000,
-                        Target2 = 100000000,
-                        Target3 = 110000000,
-                        Target4 = 130000000,
-                        Target5 = 150000000,
-                        Realisasi1 = 70000000,
-                        Realisasi2 = 90000000,
-                        Realisasi3 = 100000000,
-                        Realisasi4 = 110000000,
-                        Realisasi5 = 120000000,
-                        Persentase1 = Math.Round(70000000m / 80000000m * 100, 2),
-                        Persentase2 = Math.Round(90000000m / 100000000m * 100, 2),
-                        Persentase3 = Math.Round(100000000m / 110000000m * 100, 2),
-                        Persentase4 = Math.Round(110000000m / 130000000m * 100, 2),
-                        Persentase5 = Math.Round(120000000m / 150000000m * 10, 2)
-                    },
-                    new ViewModel.SeriesPajakDaerah
-                    {
-                        JenisPajak = "Pajak Hotel",
-                        Target1 = 80000000,
-                        Target2 = 100000000,
-                        Target3 = 110000000,
-                        Target4 = 130000000,
-                        Target5 = 150000000,
-                        Realisasi1 = 70000000,
-                        Realisasi2 = 90000000,
-                        Realisasi3 = 100000000,
-                        Realisasi4 = 110000000,
-                        Realisasi5 = 120000000,
-                        Persentase1 = Math.Round(70000000m / 80000000m * 100, 2),
-                        Persentase2 = Math.Round(90000000m / 100000000m * 100, 2),
-                        Persentase3 = Math.Round(100000000m / 110000000m * 100, 2),
-                        Persentase4 = Math.Round(110000000m / 130000000m * 100, 2),
-                        Persentase5 = Math.Round(120000000m / 150000000m * 100, 2)
-                    },
-                };
             }
             public static List<ViewModel.SeriesPajakDaerah> GetSeriesPajakDaerahData()
             {
@@ -1065,8 +1088,7 @@ namespace MonPDReborn.Models
                         JmlOpAwal = OpOpsenBbnkbAwal,
                         JmlOpTutupPermanen = 0,
                         JmlOpBaru = OpOpsenBbnkbNow - OpOpsenBbnkbAwal,
-                        JmlOpAkhir = OpOpsenBbnkbAwal - 0
-                     + (OpOpsenBbnkbNow - OpOpsenBbnkbAwal)},
+                        JmlOpAkhir = OpOpsenBbnkbAwal - 0 + (OpOpsenBbnkbNow - OpOpsenBbnkbAwal)},
                 };
             }
             public static List<ViewModel.JumlahObjekPajakSeries> GetJumlahObjekPajakSeriesData()

@@ -4,323 +4,485 @@
     ViewData["Title"] = "Dashboard";
 }
 
-
-<div class="row">
-    <style>
-        .icon-top-right {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 24px;
-            height: 24px;
-        }
-
-        .card-stat-box {
-            min-width: 60px;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
-
-    <div class="row g-3">
-        <!-- Pajak Hotel -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/hotel.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-primary card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseHotel %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Pajak Hotel</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiHotel.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetHotel.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
+<div class="card border shadow-sm mb-4">
+    <div class="card-header bg-primary opacity-75 d-flex align-items-center">
+        <div class="flex-grow-1">
+            <h5 class="card-title fs-16 text-white mb-0">
+                <h5 class="card-title fs-16 text-white mb-0">
+                    <i class="mdi mdi-database align-middle me-1"></i> REALISASI PAJAK DAERAH
+                </h5>
+            </h5>
         </div>
-
-        <!-- Pajak Hiburan -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/hiburan.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-success card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseHiburan %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Pajak Hiburan</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiHiburan.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetHiburan.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pajak Parkir -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/parkir.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-danger card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseParkir %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Pajak Parkir</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiParkir.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetParkir.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pajak Makanan Minuman -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/restoran.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-secondary card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseMamin %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Pajak Makanan Minuman</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiMamin.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetMamin.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pajak Tenaga Listrik -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/listrik.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-primary card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseListrik %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Pajak Tenaga Listrik</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiListrik.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetListrik.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pajak Air Tanah -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/airtanah.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-success card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseAbt %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Pajak Air Tanah</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiAbt.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetAbt.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PBB -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/pbb.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-danger card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentasePbb %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">PBB</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiPbb.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetPbb.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Reklame -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/reklame.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-secondary card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseReklame %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Reklame</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiReklame.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetReklame.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BPHTB -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/bphtb.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-primary card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseBphtb %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">BPHTB</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiBphtb.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetBphtb.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Opsen PKB -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/penerangan.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-success card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseOpsenPkb %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Opsen PKB</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiOpsenPkb.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetOpsenPkb.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Opsen BBNKB -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/sarangwalet.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-danger card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.PersentaseOpsenBbnkb %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">Opsen BBNKB</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.RealisasiOpsenBbnkb.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TargetOpsenBbnkb.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TOTAL -->
-        <div class="col-lg-3">
-            <div class="card shadow-sm position-relative">
-                <img src="~/assets/images/icon/bayarpajak.png" class="icon-top-right" />
-                <div class="card-body d-flex">
-                    <div class="me-3">
-                        <div class="rounded bg-secondary card-stat-box">
-                            <h5 class="text-white fs-14 text-center mb-0">@Model.Data.TotalPersentase %</h5>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-uppercase fw-medium mt-3 mb-0">TOTAL</h5>
-                        <h5 class="fs-14 fw-semibold ff-secondary mt-1">
-                            <span class="text-success">@Model.Data.TotalRealisasi.ToString("n0")</span> /
-                            <span class="text-danger">@Model.Data.TotalTarget.ToString("n0")</span>
-                        </h5>
-                    </div>
-                </div>
-            </div>
+        <div class="flex-shrink-0 text-end">
+            <button class="btn btn-sm btn-outline-light" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
+                <i class="mdi mdi-refresh align-middle"></i> Refresh
+            </button>
         </div>
     </div>
+    <div class="card-body">
+        <div class="row g-1">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-primary border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+                            <!-- Persen di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-primary text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseHotel %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak Hotel</span>
+                                    <i class="bx bx-building fs-20"></i>
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiHotel.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetHotel.ToString("n0")</strong>
+                                    </span>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpHotel.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-info border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-info text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseMamin %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak Restoran</span>
+                                    <i class="bx bx-restaurant fs-20"></i>
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiMamin.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetMamin.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpMamin.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
 
 
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-danger border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
 
-</div>
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-danger text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseHiburan %
+                                </div>
+                            </div>
 
-@* <hr />
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak Hiburan</span>
+                                    <i class="bx bx-camera-movie fs-20"></i>
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiHiburan.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetHiburan.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpHiburan.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-success border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-success text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseListrik %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak PPJ</span>
+                                    <i class="bx bx-bulb fs-20"></i>
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiListrik.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetListrik.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpListrik.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-primary border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-primary text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseParkir %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak Parkir</span>
+                                    <i class="bx bx-stop-circle fs-20"></i> <!-- Ganti jika nanti bx-parking tersedia -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiParkir.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetParkir.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpParkir.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-info border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-info text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseReklame %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak Reklame</span>
+                                    <i class="bx bx-news fs-20"></i> <!-- Ikon cocok untuk reklame/banner/news -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiReklame.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetReklame.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpReklame.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-danger border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-danger text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseAbt %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak Air Tanah</span>
+                                    <i class="bx bx-water fs-20"></i> <!-- Ikon cocok -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiAbt.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetAbt.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpAbt.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-success border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-success text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentasePbb %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Pajak PBB</span>
+                                    <i class="bx bx-home fs-20"></i> <!-- Ikon rumah -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiPbb.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetPbb.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpPbb.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-primary border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-primary text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseBphtb %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">BPHTB</span>
+                                    <i class="bx bx-transfer-alt fs-20"></i> <!-- Ikon transfer hak -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiBphtb.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetBphtb.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpBphtb.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-info border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-info text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseOpsenPkb %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Opsen PKB</span>
+                                    <i class="bx bx-car fs-20"></i> <!-- Ikon mobil -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiOpsenPkb.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetOpsenPkb.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpOpsenPkb.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-danger border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-danger text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.PersentaseOpsenBbnkb %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Opsen BBNKB</span>
+                                    <i class="bx bx-transfer fs-20"></i> <!-- Ikon perpindahan kepemilikan kendaraan -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiOpsenBbnkb.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TargetOpsenBbnkb.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpOpsenBbnkb.ToString("n0") OP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-success bg-secondary border-0 shadow-sm text-white">
+                    <div class="card-body py-2 px-3">
+                        <div class="d-flex align-items-center">
+
+                            <!-- Persentase di kiri -->
+                            <div class="flex-shrink-0 me-3">
+                                <div class="bg-secondary text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                    @Model.Data.TotalPersentase %
+                                </div>
+                            </div>
+
+                            <!-- Keterangan di kanan -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-15 text-white">Total Semua Pajak</span>
+                                    <i class="bx bx-pie-chart-alt-2 fs-20"></i> <!-- Ikon total pie chart -->
+                                </div>
+                                <p class="card-text mb-1 fs-14 mt-1">
+                                    <span class="fs-14 d-block">
+                                        Realisasi : <strong class="text-white">Rp @Model.Data.TotalRealisasi.ToString("n0")</strong>
+                                    </span>
+                                    <span class="fs-14 d-block">
+                                        Target    : <strong class="text-white">Rp @Model.Data.TotalTarget.ToString("n0")</strong>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                        <span>
+                            <i class="bx bx-calendar-check me-1"></i>
+                            @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+ </div>
 
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title fs-16 mb-0">
-                    📊 PENDAPATAN PERBULAN
-                </h4>
-
-            </div><!-- end card header -->
-
-            <div class="card-body">
-                <div id="line_chart_datalabel" data-colors='["--vz-danger", "--vz-success"]' class="apex-charts" dir="ltr"></div>
-            </div><!-- end card-body -->
-        </div><!-- end card -->
-    </div>
-</div>
-
-<hr /> *@
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex">
+            <div class="card-header bg-primary opacity-75 d-flex">
                 <div class="flex-grow-1">
-                    <h5 class="card-title fs-16 mb-0">
-                        🧾 SERIES PAJAK DAERAH
+                    <h5 class="card-title text-white fs-16 mb-0">
+                        <i class="mdi mdi-file-chart align-middle me-1"></i> SERIES PAJAK DAERAH
                     </h5>
-
                 </div>
                 <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-info">
-                        <i class="ri-file-list-3-line align-middle"></i>
-                        Detail
-                    </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="fnSeriesPajakDaerah()">
-                        <i class="mdi mdi-refresh align-middle"></i>
-                        Refresh
+                    <button class="btn btn-sm btn-outline-light" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
+                        <i class="mdi mdi-refresh align-middle"></i> Refresh
                     </button>
                 </div>
             </div>
@@ -390,113 +552,6 @@
             </div>
         </div>
     </div>
-    @* <div class="col-lg-6"> *@
-    @*     <div class="card card-height-100"> *@
-    @*         <div class="card-header d-flex"> *@
-    @*             <div class="flex-grow-1"> *@
-    @*                 <h5 class="card-title"> *@
-    @*                     🧮 MONITORING PEMASANGAN ALAT REKAM ONLINE *@
-    @*                 </h5> *@
-    @*             </div> *@
-    @*             <div class="flex-shrink-0"> *@
-    @*                 <button class="btn btn-sm btn-info"> *@
-    @*                     <i class="ri-file-list-3-line align-middle"></i> *@
-    @*                     Detail *@
-    @*                 </button> *@
-    @*             </div> *@
-    @*         </div> *@
-    @*         <div class="card-body"> *@
-    @*             <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist"> *@
-    @*                 <li class="nav-item"> *@
-    @*                     <a class="nav-link active" data-bs-toggle="tab" href="#ts-detail" role="tab" aria-selected="false"> *@
-    @*                         DETAIL *@
-    @*                     </a> *@
-    @*                 </li> *@
-    @*                 <li class="nav-item"> *@
-    @*                     <a class="nav-link" data-bs-toggle="tab" href="#ts-series" role="tab" aria-selected="false" onclick="fnPemasanganAlatRekamSeries()"> *@
-    @*                         SERIES *@
-    @*                     </a> *@
-    @*                 </li> *@
-    @*             </ul> *@
-    @*             <div class="tab-content text-muted"> *@
-    @*                 <div class="tab-pane active" id="ts-detail" role="tabpanel"> *@
-    @*                     <div class="text-center"> *@
-    @*                         <div id="loading2-PemasanganAlatRekamDetail" class="spinner-border text-primary" style="display: none"> *@
-    @*                             <span class="visually-hidden">Loading...</span> *@
-    @*                         </div> *@
-    @*                     </div> *@
-    @*                     <div id="PemasanganAlatRekamDetail"></div> *@
-    @*                 </div> *@
-    @*                 <div class="tab-pane" id="ts-series" role="tabpanel"> *@
-    @*                     <div class="text-center"> *@
-    @*                         <div id="loading2-PemasanganAlatRekamSeries" class="spinner-border text-primary" style="display: none"> *@
-    @*                             <span class="visually-hidden">Loading...</span> *@
-    @*                         </div> *@
-    @*                     </div> *@
-    @*                     <div id="PemasanganAlatRekamSeries"></div> *@
-    @*                 </div> *@
-    @*             </div> *@
-    @*         </div> *@
-    @*     </div> *@
-    @* </div> *@
-</div>
-
-@* <div class="row">
-    <div class="col-lg-12">
-        <div class="card card-height-100">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h5 class="card-title">
-                        💰 PEMERIKSAAN PAJAK
-                    </h5>
-                </div>
-                <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-info">
-                        <i class="ri-file-list-3-line align-middle"></i>
-                        Detail
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <div id="loading2-PemeriksaanPajak" class="spinner-border text-primary" style="display: none">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div id="PemeriksaanPajak"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card card-height-100">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h5 class="card-title">
-                        📄PENGEDOKAN PAJAK
-                    </h5>
-                </div>
-                <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-info">
-                        <i class="ri-file-list-3-line align-middle"></i>
-                        Detail
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <div id="loading2-PengedokanPajak" class="spinner-border text-primary" style="display: none">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div id="PengedokanPajak"></div>
-            </div>
-        </div>
-    </div>
-</div> *@
-
 <div class="row">
     <div class="col-lg-12">
         <div class="card card-height-100">
@@ -559,31 +614,6 @@
             </div>
         </div>
     </div>
-    @* <div class="col-lg-6">
-        <div class="card card-height-100">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h5 class="card-title">
-                        🧾 MUTASI
-                    </h5>
-                </div>
-                <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-info">
-                        <i class="ri-file-list-3-line align-middle"></i>
-                        Detail
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <div id="loading2-DataMutasi" class="spinner-border text-primary" style="display: none">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div id="DataMutasi"></div>
-            </div>
-        </div>
-    </div> *@
 </div>
 
 @section Scripts {

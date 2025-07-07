@@ -1,5 +1,24 @@
 ﻿@{
-    var url = Url.Action().Replace("/", "") ?? "".Replace("/", "");
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString()?.ToUpper();
+
+    var aktivitasControllers = new[] { "PENDATAANOBJEKPAJAK", "PEMERIKSAANPAJAK", "PEMASANGANALAT" };
+    var dataOpControllers = new[] { "PENDATAANOBJEKPAJAK", "PEMERIKSAANPAJAK", "PEMASANGANALAT" };
+    var isAktivitasActive = aktivitasControllers.Contains(currentController);
+
+    var aktivitasActiveClass = isAktivitasActive ? "active" : "";
+    var aktivitasExpanded = isAktivitasActive ? "true" : "false";
+    var aktivitasShowClass = isAktivitasActive ? "show" : "";
+
+    var dataOPControllers = new[] {
+        "PROFILEOP", "PROFILEPEMBAYARANOP", "PROFILEPOTENSIOP",
+        "PROFILETARGETOP", "PROFILESPASIALOP", "PELAPORANOP",
+        "PENETAPANOP", "PENCARIANOP"
+    };
+    var isDataOPActive = dataOPControllers.Contains(currentController);
+
+    var dataOPActiveClass = isDataOPActive ? "active" : "";
+    var dataOPExpanded = isDataOPActive ? "true" : "false";
+    var dataOPShowClass = isDataOPActive ? "show" : "";
 }
 
 <!-- ========== App Menu ========== -->
@@ -44,72 +63,89 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link collapse" href="#sidebarAktivitas" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="#sidebarAktivitas">
-                        <i class="bx bx-run"></i><span data-key="t-aktivitas">Aktivitas</span>
+                    <a class="nav-link menu-link"
+                       href="@Url.Action("Index", "PendataanObjekPajak")" role="button">
+                        <i class="bx bx-folder-open me-1 align-middle"></i><span data-key="t-pendataanObjek">Pengedokan Pajak</span>
                     </a>
-                    <div id="sidebarAktivitas" class="menu-dropdown collapse">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PendataanObjekPajak".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-pendataanObjek" >
-                                    Pendataan Objek
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PemeriksaanPajak".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PemeriksaanPajak")" data-key="t-pemeriksaanPajak">
-                                    Pemerikasaan Pajak
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PemasanganAlat".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PemasanganAlat")" data-key="t-pemasanganAlat">
-                                    Pemasangan Alat
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link collapse" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="#sidebarData">
-                        <i class="bx bx-data"></i><span data-key="t-data">Data</span>
+                    <a class="nav-link menu-link"
+                       href="@Url.Action("Index", "PemeriksaanPajak")" role="button">
+                        <i class="bx bx-search-alt-2 me-1 align-middle"></i><span data-key="t-pemeriksaanPajak">Pemeriksaan Pajak</span>
                     </a>
-                    <div id="sidebarData" class="menu-dropdown collapse">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(currentController == "PEMASANGANALAT" ? "active" : "")"
+                       href="@Url.Action("Index", "PemasanganAlat")" role="button">
+                        <i class="bx bx-cog me-1 align-middle"></i><span data-key="t-pemasanganAlat">Alat Rekam Online</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link collapse @dataOPActiveClass"
+                       href="#sidebarData"
+                       data-bs-toggle="collapse"
+                       role="button"
+                       aria-expanded="@dataOPExpanded"
+                       aria-controls="sidebarData">
+                        <i class="bx bx-data"></i>
+                        <span data-key="t-data">Data</span>
+                    </a>
+                    <div id="sidebarData" class="menu-dropdown collapse @dataOPShowClass">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfileOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfileOP")" data-key="t-profilOp">
+                                <a class="nav-link @(currentController == "PROFILEOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "ProfileOP")"
+                                   data-key="t-profilOp">
                                     Profil OP
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfilePembayaranOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfilePembayaranOP")" data-key="t-profilPembayaran">
+                                <a class="nav-link @(currentController == "PROFILEPEMBAYARANOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "ProfilePembayaranOP")"
+                                   data-key="t-profilPembayaran">
                                     Profil Pembayaran
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfilePotensiOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfilePotensiOP")" data-key="t-profilPotensi">
+                                <a class="nav-link @(currentController == "PROFILEPOTENSIOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "ProfilePotensiOP")"
+                                   data-key="t-profilPotensi">
                                     Profil Potensi
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfileTargetOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfileTargetOP")" data-key="t-profilTarget">
+                                <a class="nav-link @(currentController == "PROFILETARGETOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "ProfileTargetOP")"
+                                   data-key="t-profilTarget">
                                     Profil Target
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfileSpasialOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfileSpasialOP")" data-key="t-profilSpasial">
+                                <a class="nav-link @(currentController == "PROFILESPASIALOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "ProfileSpasialOP")"
+                                   data-key="t-profilSpasial">
                                     Profil Spasial
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PelaporanOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PelaporanOP")" data-key="t-pelaporan">
+                                <a class="nav-link @(currentController == "PELAPORANOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "PelaporanOP")"
+                                   data-key="t-pelaporan">
                                     Pelaporan
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PenetapanOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PenetapanOP")" data-key="t-penetapan">
+                                <a class="nav-link @(currentController == "PENETAPANOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "PenetapanOP")"
+                                   data-key="t-penetapan">
                                     Penetapan
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PencarianOP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PencarianOP")" data-key="t-pencarian">
+                                <a class="nav-link @(currentController == "PENCARIANOP" ? "active" : "")"
+                                   href="@Url.Action("Index", "PencarianOP")"
+                                   data-key="t-pencarian">
                                     Pencarian
                                 </a>
                             </li>
@@ -118,22 +154,22 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link collapse" href="#sidebarMonitoring" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="#sidebarMonitoring">
-                        <i class="bx bx-globe"></i><span data-key="t-monitoring">Monitoring (Global)</span>
+                        <i class="bx bx-globe"></i><span data-key="t-monitoring">Monitoring Capaian</span>
                     </a>
                     <div id="sidebarMonitoring" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("MonitoringHarian".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","MonitoringHarian")" data-key="t-harian">
+                                <a class="nav-link" href="@Url.Action("Index","MonitoringHarian")" data-key="t-harian">
                                     Kontrol harian
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("MonitoringBulanan".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","MonitoringBulanan")" data-key="t-bulanan">
+                                <a class="nav-link" href="@Url.Action("Index","MonitoringBulanan")" data-key="t-bulanan">
                                     Kontrol Bulanan
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("MonitoringTahunan".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","MonitoringTahunan")" data-key="t-tahunan">
+                                <a class="nav-link" href="@Url.Action("Index","MonitoringTahunan")" data-key="t-tahunan">
                                     Kontrol Tahunan
                                 </a>
                             </li>
@@ -147,57 +183,8 @@
                     <div id="sidebarMonitoringWilayah" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("KontrolWilayah".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","KontrolWilayah")" data-key="t-KontrolWilayah">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolWilayah")" data-key="t-KontrolWilayah">
                                     Kontrol Wilayah
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("KontrolHarianWilayah".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","KontrolHarianWilayah")" data-key="t-kontrolHarianWilayah">
-                                    Kontrol Harian Wilayah
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("KontrolBulananWilayah".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","KontrolBulananWilayah")" data-key="t-kontrolBulananWilayah">
-                                    Kontrol Bulanan Wilayah
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("KontrolTahunanWilayah".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","KontrolTahunanWilayah")" data-key="t-kontrolTahunanWilayah">
-                                    Kontrol Tahunan Wilayah
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("KontrolPotensiBulananWilayah".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","KontrolPotensiBulananWilayah")" data-key="t-kontrolPotensiWilayah">
-                                    Kontrol Potensi Bulanan Wilayah
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link collapse" href="#sidebarMonitoringJenis" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="#sidebarMonitoringJenis">
-                        <i class="bx bx-bar-chart-alt"></i><span data-key="t-monitoringjenis">Monitoring Per Jenis Pajak</span>
-                    </a>
-                    <div id="sidebarMonitoringJenis" class="menu-dropdown collapse">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PendataanObjekPajak".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolHarianWilayahJenis">
-                                    Kontrol Harian Wilayah
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PendataanObjekPajak".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolBulananWilayahJenis">
-                                    Kontrol Bulanan Wilayah
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PendataanObjekPajak".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolTahunanWilayahJenis">
-                                    Kontrol Tahunan Wilayah
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("PendataanObjekPajak".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","PendataanObjekPajak")" data-key="t-kontrolPotensiWilayahJenis">
-                                    Kontrol Potensi Bulanan Wilayah
                                 </a>
                             </li>
                         </ul>
@@ -216,17 +203,17 @@
                     <div id="sidebarAktivitasWP" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("Penghimbauan".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","Penghimbauan")" data-key="t-penghimbauan">
+                                <a class="nav-link" href="@Url.Action("Index","Penghimbauan")" data-key="t-penghimbauan">
                                     Penghimbauan
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("Penegiran".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","Penegiran")" data-key="t-peneguran">
+                                <a class="nav-link" href="@Url.Action("Index","Penegiran")" data-key="t-peneguran">
                                     Peneguran
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("Penagihan".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","Penagihan")" data-key="t-penagihan">
+                                <a class="nav-link" href="@Url.Action("Index","Penagihan")" data-key="t-penagihan">
                                     Penagihan
                                 </a>
                             </li>
@@ -240,17 +227,17 @@
                     <div id="sidebarDataWP" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfileWP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfileWP")" data-key="t-profilWP">
+                                <a class="nav-link" href="@Url.Action("Index","ProfileWP")" data-key="t-profilWP">
                                     Profile WP
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfilePembayaranWP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfilePembayaranWP")" data-key="t-profilPembayaranWP">
+                                <a class="nav-link" href="@Url.Action("Index","ProfilePembayaranWP")" data-key="t-profilPembayaranWP">
                                     Profile Pembayaran
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("ProfilePiutangWP".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","ProfilePiutangWP")" data-key="t-profilPiutang">
+                                <a class="nav-link" href="@Url.Action("Index","ProfilePiutangWP")" data-key="t-profilPiutang">
                                     Profile Piutang
                                 </a>
                             </li>
@@ -264,7 +251,7 @@
                     <div id="sidebarMonitoringWP" class="menu-dropdown collapse">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link @(url.Trim().ToUpper().Contains("KontrolUpayaBulanan".Trim().ToUpper()) ? "active" : "")" href="@Url.Action("Index","KontrolUpayaBulanan")" data-key="t-upayaBulanan">
+                                <a class="nav-link" href="@Url.Action("Index","KontrolUpayaBulanan")" data-key="t-upayaBulanan">
                                     Kontrol Upaya Bulanan
                                 </a>
                         </ul>

@@ -18,22 +18,21 @@
     <div class="card-body">
         <form id="formPencarian" method="get" asp-action="Show" onsubmit="return false;">
             <div class="row mb-3 align-items-center">
-                <label class="col-lg-3 col-form-label">Pencarian</label>
                 <div class="col-lg-9">
                     @(Html.DevExtreme().TextBoxFor(x => x.Keyword)
-                        .Placeholder("Masukkan Objek Pajak")
-                        .Width("100%")
-                        )
+                            .Placeholder("Masukkan Keyword")
+                            .Width("100%")
+                            )
+                </div>
+                <div class="col-lg-3 text-end">
+                    <button type="button" class="btn btn-sm btn-primary btn-label waves-effect waves-light rounded-pill" onclick="fnShow()">
+                        <i class="ri-search-eye-line label-icon align-middle rounded-pill fs-16 me-2"></i> Cari
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 
-    <div class="card-footer text-end">
-        <button type="button" class="btn btn-sm btn-primary btn-label waves-effect waves-light rounded-pill" onclick="fnShow()">
-            <i class="ri-search-eye-line label-icon align-middle rounded-pill fs-16 me-2"></i> Cari
-        </button>
-    </div>
 </div>
 
 <div class="text-center">
@@ -55,6 +54,14 @@
 </div>
 
 @section Scripts {
+    @if (!string.IsNullOrEmpty(Model.Keyword))
+    {
+        <script>
+            $(document).ready(function () {
+                fnShow();
+            });
+        </script>
+    }
     <script>
         function fnShow() {
             var formData = $("#formPencarian").serialize();
