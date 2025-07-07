@@ -40,6 +40,7 @@ namespace RestoWs
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error occurred while executing task.");
+                    Console.WriteLine(ex.ToString());
                 }
             }
         }
@@ -73,56 +74,59 @@ namespace RestoWs
                 {
                     var sql = @"
                     SELECT  A.NOP,
-        C.NPWPD_NO NPWPD,
-        C.NAMA NPWPD_NAMA,
-        C.ALAMAT NPWPD_ALAMAT,
-        A.PAJAK_ID ,
-        'PAJAK JASA PERRESTORANAN' PAJAK_NAMA,
-        A.NAMA NAMA_OP,
-        A.ALAMAT ALAMAT_OP,
-        A.ALAMAT_NO ALAMAT_OP_NO,
-        A.RT ALAMAT_OP_RT,
-        A.RW ALAMAT_OP_RW,
-        A.TELP,
-        A.KD_LURAH ALAMAT_OP_KD_LURAH,
-        A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
-        TGL_OP_TUTUP,
-        TGL_MULAI_BUKA_OP,
-        0 METODE_PENJUALAN,
-        B.BUKTI_BAYAR METODE_PEMBAYARAN,
-        B.JUMLAH_KARYAWAN,
-        B.KAPASITAS_MEJA JUMLAH_MEJA,
-		B.KAPASITAS_KURSI JUMLAH_KURSI,
-		B.KAPASITAS_RUANGAN KAPASITAS_RUANGAN_ORANG,
-		B.MAKSIMAL_PRODUKSI_HARI MAKSIMAL_PRODUKSI_PORSI_HARI,
-		B.RATA_PENGUNJUNG_HARI RATA_TERJUAL_PORSI_HARI,
-        D.ID  KATEGORI_ID,
-        D.NAMA KATEGORI_NAMA,
-        sysdate INS_dATE, 
-        'JOB' INS_BY,
-        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-        CASE 
-			WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
-		ELSE 0
-		END AS IS_TUTUP,
-		'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,
-        '-'  AKUN  ,
-        '-'  NAMA_AKUN         ,
-        '-'  KELOMPOK      ,
-        '-'  NAMA_KELOMPOK     ,
-        '-'  JENIS             ,
-        '-'  NAMA_JENIS        ,
-        '-'  OBJEK            ,
-        '-'  NAMA_OBJEK       ,
-        '-'  RINCIAN         ,
-        '-'  NAMA_RINCIAN     ,
-        '-'  SUB_RINCIAN      ,
-        '-'  NAMA_SUB_RINCIAN    
-FROM OBJEK_PAJAK A
-JOIN OBJEK_PAJAK_RESTO B ON A.NOP = B.NOP
-JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
-JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
-LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT    
+                        C.NPWPD_NO NPWPD,
+                        C.NAMA NPWPD_NAMA,
+                        C.ALAMAT NPWPD_ALAMAT,
+                        A.PAJAK_ID ,
+                        'PAJAK JASA RESTORAN' PAJAK_NAMA,
+                        A.NAMA NAMA_OP,
+                        A.ALAMAT ALAMAT_OP,
+                        A.ALAMAT_NO ALAMAT_OP_NO,
+                        A.RT ALAMAT_OP_RT,
+                        A.RW ALAMAT_OP_RW,
+                        A.TELP,
+                        A.KD_LURAH ALAMAT_OP_KD_LURAH,
+                        A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
+                        TGL_OP_TUTUP,
+                        TGL_MULAI_BUKA_OP,
+                        0 METODE_PENJUALAN,
+                        B.BUKTI_BAYAR METODE_PEMBAYARAN,
+                        B.JUMLAH_KARYAWAN,
+                        B.KAPASITAS_MEJA JUMLAH_MEJA,
+                        B.KAPASITAS_KURSI JUMLAH_KURSI,
+                        B.KAPASITAS_RUANGAN KAPASITAS_RUANGAN_ORANG,
+                        B.MAKSIMAL_PRODUKSI_HARI MAKSIMAL_PRODUKSI_PORSI_HARI,
+                        B.RATA_PENGUNJUNG_HARI RATA_TERJUAL_PORSI_HARI,
+                        CASE 
+	                        WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
+                        ELSE 0
+                        END AS IS_TUTUP,
+                        CASE D.ID
+	                        WHEN 39 THEN 58
+	                        WHEN 40 THEN 9
+	                        ELSE 58
+                        END AS KATEGORI_ID,
+                        D.NAMA KATEGORI_NAMA,
+                        sysdate INS_dATE, 
+                        'JOB' INS_BY,
+                        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+                        'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,'-'  AKUN  ,
+                        '-'  NAMA_AKUN         ,
+                        '-'  KELOMPOK      ,
+                        '-'  NAMA_KELOMPOK     ,
+                        '-'  JENIS             ,
+                        '-'  NAMA_JENIS        ,
+                        '-'  OBJEK            ,
+                        '-'  NAMA_OBJEK       ,
+                        '-'  RINCIAN         ,
+                        '-'  NAMA_RINCIAN     ,
+                        '-'  SUB_RINCIAN      ,
+                        '-'  NAMA_SUB_RINCIAN
+                        FROM OBJEK_PAJAK A
+                        JOIN OBJEK_PAJAK_RESTO B ON A.NOP = B.NOP
+                        JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
+                        JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
+                        LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                     ";
 
                     var result = await _contSbyTax.Set<DbOpResto>().FromSqlRaw(sql).ToListAsync();
@@ -276,8 +280,9 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                             END AS IS_TUTUP,
                             NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA 0') WILAYAH_PAJAK,
                             CASE NAMA_AYAT_PAJAK
-                                WHEN 'KATERING' THEN 40
-                                ELSE 39
+                                WHEN 'KATERING' THEN 9
+                                WHEN 'RESTORAN' THEN 58
+		                        ELSE 58
                             END AS KATEGORI_ID,
                             CASE NAMA_AYAT_PAJAK
                                 WHEN 'KATERING' THEN 'KATERING'
@@ -287,10 +292,10 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                                 0 METODE_PEMBAYARAN,
                                 0 JUMLAH_KARYAWAN,
                                 0 JUMLAH_MEJA,
-		                        0 JUMLAH_KURSI,
-		                        0 KAPASITAS_RUANGAN_ORANG,
-		                        0 MAKSIMAL_PRODUKSI_PORSI_HARI,
-		                        0 RATA_TERJUAL_PORSI_HARI,
+                                0 JUMLAH_KURSI,
+                                0 KAPASITAS_RUANGAN_ORANG,
+                                0 MAKSIMAL_PRODUKSI_PORSI_HARI,
+                                0 RATA_TERJUAL_PORSI_HARI,
                             sysdate INS_dATE, 
                             'JOB' INS_BY,
                             TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
@@ -599,130 +604,131 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
             //}
 
             //FILL KETETAPAN MONITORING DB
-            var _contMonitoringDb = DBClass.GetMonitoringDbContext();
-            for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
-            {
-                var opList = _contMonPd.DbOpRestos.Where(x => x.TahunBuku == thn).ToList();
-                for (int bln = 1; bln <= 12; bln++)
-                {
-                    Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
-                    var sql = @"
-                            SELECT 	REPLACE(NOP, '.','') NOP,
-	                           TAHUN,
-	                           MASAPAJAK,
-	                           1 SEQ,
-	                           1 JENIS_KETETAPAN,
-	                           NVL(TANGGALENTRY, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_KETETAPAN,
-	                            NVL(TANGGALJATUHTEMPO, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_JATUH_TEMPO_BAYAR,
-	                           0 NILAI_PENGURANG,
-	                           NVL(PAJAK_TERUTANG, 0) POKOK
-	                         FROM (
-	                          select  NO_SPTPD, A.NPWPD, IDAYAT, 
-	                                  TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
-	                                  RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
-	                                  A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
-	                          from PHRH_USER.sptpd_new@LIHATHR A
-	                          JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
-	                          WHERE STATUS=0
-	                          UNION ALL
-	                          select KD_BILL,NPWPD,KODEREKENING,
-	                                  TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
-	                                  PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
-	                          from sptpd_payment@LIHATBONANG A
-	                          JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
-	                          where STATUS_HAPUS=0
-	                         ) A 
-                            WHERE A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
-                        ";
+            //var _contMonitoringDb = DBClass.GetMonitoringDbContext();
 
-                    var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdResto>()
-                        .FromSqlRaw(sql, new[] {
-                                new OracleParameter("tahun", thn),
-                                new OracleParameter("bulan", bln)
-                        })
-                        .ToListAsync();
-                    Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN MONITORING DB {thn}-{bln}");
-                    foreach (var op in opList)
-                    {
-                        bool isOPTutup = false;
-                        DateTime tglPenetapan = new DateTime(thn, bln, 1);
-                        if (op.TglOpTutup.HasValue)
-                        {
-                            if (op.TglOpTutup.Value.Date < tglPenetapan.Date)
-                            {
-                                isOPTutup = true;
-                            }
-                        }
+            //for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
+            //{
+            //    var opList = _contMonPd.DbOpRestos.Where(x => x.TahunBuku == thn).ToList();
+            //    for (int bln = 1; bln <= 12; bln++)
+            //    {
+            //        Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
+            //        var sql = @"
+            //                SELECT 	REPLACE(NOP, '.','') NOP,
+	           //                TAHUN,
+	           //                MASAPAJAK,
+	           //                1 SEQ,
+	           //                1 JENIS_KETETAPAN,
+	           //                NVL(TANGGALENTRY, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_KETETAPAN,
+	           //                 NVL(TANGGALJATUHTEMPO, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_JATUH_TEMPO_BAYAR,
+	           //                0 NILAI_PENGURANG,
+	           //                NVL(PAJAK_TERUTANG, 0) POKOK
+	           //              FROM (
+	           //               select  NO_SPTPD, A.NPWPD, IDAYAT, 
+	           //                       TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
+	           //                       RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
+	           //                       A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
+	           //               from PHRH_USER.sptpd_new@LIHATHR A
+	           //               JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
+	           //               WHERE STATUS=0
+	           //               UNION ALL
+	           //               select KD_BILL,NPWPD,KODEREKENING,
+	           //                       TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
+	           //                       PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
+	           //               from sptpd_payment@LIHATBONANG A
+	           //               JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='RESTORAN'
+	           //               where STATUS_HAPUS=0
+	           //              ) A 
+            //                WHERE A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
+            //            ";
 
-                        var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)op.KategoriId);
-                        foreach (var item in ketetapanSbyTaxOld.Where(x => x.NOP == op.Nop))
-                        {
-                            string nop = item.NOP;
-                            int tahunPajak = item.TAHUN;
-                            int masaPajak = item.MASAPAJAK;
-                            int seqPajak = item.SEQ;
-                            var rowMonResto = _contMonPd.DbMonRestos.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak && x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
+            //        var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdResto>()
+            //            .FromSqlRaw(sql, new[] {
+            //                    new OracleParameter("tahun", thn),
+            //                    new OracleParameter("bulan", bln)
+            //            })
+            //            .ToListAsync();
+            //        Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN MONITORING DB {thn}-{bln}");
+            //        foreach (var op in opList)
+            //        {
+            //            bool isOPTutup = false;
+            //            DateTime tglPenetapan = new DateTime(thn, bln, 1);
+            //            if (op.TglOpTutup.HasValue)
+            //            {
+            //                if (op.TglOpTutup.Value.Date < tglPenetapan.Date)
+            //                {
+            //                    isOPTutup = true;
+            //                }
+            //            }
 
-                            if (rowMonResto != null)
-                            {
-                                _contMonPd.DbMonRestos.Remove(rowMonResto);
-                            }
-                            _contMonPd.DbMonRestos.Add(new DbMonResto()
-                            {
-                                Nop = item.NOP,
-                                Npwpd = op.Npwpd,
-                                NpwpdNama = op.NpwpdNama,
-                                NpwpdAlamat = op.NpwpdAlamat,
-                                PajakId = op.PajakId,
-                                PajakNama = op.PajakNama,
-                                NamaOp = op.NamaOp,
-                                AlamatOp = op.AlamatOp,
-                                AlamatOpKdLurah = op.AlamatOpKdLurah,
-                                AlamatOpKdCamat = op.AlamatOpKdCamat,
-                                TglOpTutup = op.TglOpTutup,
-                                TglMulaiBukaOp = op.TglMulaiBukaOp,
-                                IsTutup = isOPTutup ? 1 : 0,
-                                KategoriId = op.KategoriId,
-                                KategoriNama = op.KategoriNama,
-                                TahunBuku = thn,
-                                Akun = op.Akun,
-                                NamaAkun = op.NamaAkun,
-                                Jenis = op.Jenis,
-                                NamaJenis = op.NamaJenis,
-                                Objek = op.Objek,
-                                NamaObjek = op.NamaObjek,
-                                Rincian = op.Rincian,
-                                NamaRincian = op.NamaRincian,
-                                SubRincian = op.SubRincian,
-                                NamaSubRincian = op.NamaSubRincian,
-                                TahunPajakKetetapan = item.TAHUN,
-                                MasaPajakKetetapan = item.MASAPAJAK,
-                                SeqPajakKetetapan = item.SEQ,
-                                KategoriKetetapan = item.JENIS_KETETAPAN.ToString(),
-                                TglKetetapan = item.TGL_KETETAPAN,
-                                TglJatuhTempoBayar = item.TGL_JATUH_TEMPO_BAYAR,
-                                PokokPajakKetetapan = item.POKOK - item.NILAI_PENGURANG,
-                                PengurangPokokKetetapan = item.NILAI_PENGURANG,
-                                AkunKetetapan = dbAkunPokok.Akun,
-                                KelompokKetetapan = dbAkunPokok.Kelompok,
-                                JenisKetetapan = dbAkunPokok.Jenis,
-                                ObjekKetetapan = dbAkunPokok.Objek,
-                                RincianKetetapan = dbAkunPokok.Rincian,
-                                SubRincianKetetapan = dbAkunPokok.SubRincian,
-                                InsDate = DateTime.Now,
-                                InsBy = "JOB",
-                                UpdDate = DateTime.Now,
-                                UpdBy = "JOB"
-                            });
+            //            var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)op.KategoriId);
+            //            foreach (var item in ketetapanSbyTaxOld.Where(x => x.NOP == op.Nop))
+            //            {
+            //                string nop = item.NOP;
+            //                int tahunPajak = item.TAHUN;
+            //                int masaPajak = item.MASAPAJAK;
+            //                int seqPajak = item.SEQ;
+            //                var rowMonResto = _contMonPd.DbMonRestos.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak && x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
 
-                            _contMonPd.SaveChanges();
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"{DateTime.Now} DB_MON_RESTORAN_MONITORINGDB {thn}-{bln}-{item.NOP}-{item.SEQ}");
-                            Console.ResetColor();
-                        }
-                    }
-                }
-            }
+            //                if (rowMonResto != null)
+            //                {
+            //                    _contMonPd.DbMonRestos.Remove(rowMonResto);
+            //                }
+            //                _contMonPd.DbMonRestos.Add(new DbMonResto()
+            //                {
+            //                    Nop = item.NOP,
+            //                    Npwpd = op.Npwpd,
+            //                    NpwpdNama = op.NpwpdNama,
+            //                    NpwpdAlamat = op.NpwpdAlamat,
+            //                    PajakId = op.PajakId,
+            //                    PajakNama = op.PajakNama,
+            //                    NamaOp = op.NamaOp,
+            //                    AlamatOp = op.AlamatOp,
+            //                    AlamatOpKdLurah = op.AlamatOpKdLurah,
+            //                    AlamatOpKdCamat = op.AlamatOpKdCamat,
+            //                    TglOpTutup = op.TglOpTutup,
+            //                    TglMulaiBukaOp = op.TglMulaiBukaOp,
+            //                    IsTutup = isOPTutup ? 1 : 0,
+            //                    KategoriId = op.KategoriId,
+            //                    KategoriNama = op.KategoriNama,
+            //                    TahunBuku = thn,
+            //                    Akun = op.Akun,
+            //                    NamaAkun = op.NamaAkun,
+            //                    Jenis = op.Jenis,
+            //                    NamaJenis = op.NamaJenis,
+            //                    Objek = op.Objek,
+            //                    NamaObjek = op.NamaObjek,
+            //                    Rincian = op.Rincian,
+            //                    NamaRincian = op.NamaRincian,
+            //                    SubRincian = op.SubRincian,
+            //                    NamaSubRincian = op.NamaSubRincian,
+            //                    TahunPajakKetetapan = item.TAHUN,
+            //                    MasaPajakKetetapan = item.MASAPAJAK,
+            //                    SeqPajakKetetapan = item.SEQ,
+            //                    KategoriKetetapan = item.JENIS_KETETAPAN.ToString(),
+            //                    TglKetetapan = item.TGL_KETETAPAN,
+            //                    TglJatuhTempoBayar = item.TGL_JATUH_TEMPO_BAYAR,
+            //                    PokokPajakKetetapan = item.POKOK - item.NILAI_PENGURANG,
+            //                    PengurangPokokKetetapan = item.NILAI_PENGURANG,
+            //                    AkunKetetapan = dbAkunPokok.Akun,
+            //                    KelompokKetetapan = dbAkunPokok.Kelompok,
+            //                    JenisKetetapan = dbAkunPokok.Jenis,
+            //                    ObjekKetetapan = dbAkunPokok.Objek,
+            //                    RincianKetetapan = dbAkunPokok.Rincian,
+            //                    SubRincianKetetapan = dbAkunPokok.SubRincian,
+            //                    InsDate = DateTime.Now,
+            //                    InsBy = "JOB",
+            //                    UpdDate = DateTime.Now,
+            //                    UpdBy = "JOB"
+            //                });
+
+            //                _contMonPd.SaveChanges();
+            //                Console.ForegroundColor = ConsoleColor.Green;
+            //                Console.WriteLine($"{DateTime.Now} DB_MON_RESTORAN_MONITORINGDB {thn}-{bln}-{item.NOP}-{item.SEQ}");
+            //                Console.ResetColor();
+            //            }
+            //        }
+            //    }
+            //}
 
             //PEMBAYARAN
             var _contBima = DBClass.GetBimaContext();

@@ -74,51 +74,60 @@ namespace HotelWs
                 {
                     var sql = @"
                     SELECT  A.NOP,
-        C.NPWPD_NO NPWPD,
-        C.NAMA NPWPD_NAMA,
-        C.ALAMAT NPWPD_ALAMAT,
-        A.PAJAK_ID ,
-        'PAJAK JASA PERHOTELAN' PAJAK_NAMA,
-        A.NAMA NAMA_OP,
-        A.ALAMAT ALAMAT_OP,
-        A.ALAMAT_NO ALAMAT_OP_NO,
-        A.RT ALAMAT_OP_RT,
-        A.RW ALAMAT_OP_RW,
-        A.TELP,
-        A.KD_LURAH ALAMAT_OP_KD_LURAH,
-        A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
-        TGL_OP_TUTUP,
-        TGL_MULAI_BUKA_OP,
-        0 METODE_PENJUALAN,
-        B.BUKTI_BAYAR METODE_PEMBAYARAN,
-        B.JUMLAH_KARYAWAN,
-        D.ID  KATEGORI_ID,
-        D.NAMA KATEGORI_NAMA,
-        sysdate INS_dATE, 
-        'JOB' INS_BY,
-        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-        CASE 
-			WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
-		ELSE 0
-		END AS IS_TUTUP,
-		'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,
-        '-'  AKUN  ,
-        '-'  NAMA_AKUN         ,
-        '-'  KELOMPOK      ,
-        '-'  NAMA_KELOMPOK     ,
-        '-'  JENIS             ,
-        '-'  NAMA_JENIS        ,
-        '-'  OBJEK            ,
-        '-'  NAMA_OBJEK       ,
-        '-'  RINCIAN         ,
-        '-'  NAMA_RINCIAN     ,
-        '-'  SUB_RINCIAN      ,
-        '-'  NAMA_SUB_RINCIAN    
-FROM OBJEK_PAJAK A
-JOIN OBJEK_PAJAK_HOTEL B ON A.NOP = B.NOP
-JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
-JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
-LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT    
+                            C.NPWPD_NO NPWPD,
+                            C.NAMA NPWPD_NAMA,
+                            C.ALAMAT NPWPD_ALAMAT,
+                            A.PAJAK_ID ,
+                            'PAJAK JASA PERHOTELAN' PAJAK_NAMA,
+                            A.NAMA NAMA_OP,
+                            A.ALAMAT ALAMAT_OP,
+                            A.ALAMAT_NO ALAMAT_OP_NO,
+                            A.RT ALAMAT_OP_RT,
+                            A.RW ALAMAT_OP_RW,
+                            A.TELP,
+                            A.KD_LURAH ALAMAT_OP_KD_LURAH,
+                            A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
+                            TGL_OP_TUTUP,
+                            TGL_MULAI_BUKA_OP,
+                            0 METODE_PENJUALAN,
+                            B.BUKTI_BAYAR METODE_PEMBAYARAN,
+                            B.JUMLAH_KARYAWAN,
+                             CASE D.ID
+		                         WHEN 49 THEN 19
+		                         WHEN 45 THEN 17
+		                         WHEN 48 THEN 18
+		                         WHEN 43 THEN 13
+		                         WHEN 47 THEN 16
+		                         WHEN 44 THEN 15
+		                         WHEN 46 THEN 14
+		                         ELSE 18
+		                     END AS KATEGORI_ID,
+                            D.NAMA KATEGORI_NAMA,
+                            sysdate INS_dATE, 
+                            'JOB' INS_BY,
+                            TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+                            CASE 
+			                    WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
+		                    ELSE 0
+		                    END AS IS_TUTUP,
+		                    'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,
+                            '-'  AKUN  ,
+                            '-'  NAMA_AKUN         ,
+                            '-'  KELOMPOK      ,
+                            '-'  NAMA_KELOMPOK     ,
+                            '-'  JENIS             ,
+                            '-'  NAMA_JENIS        ,
+                            '-'  OBJEK            ,
+                            '-'  NAMA_OBJEK       ,
+                            '-'  RINCIAN         ,
+                            '-'  NAMA_RINCIAN     ,
+                            '-'  SUB_RINCIAN      ,
+                            '-'  NAMA_SUB_RINCIAN    
+                    FROM OBJEK_PAJAK A
+                    JOIN OBJEK_PAJAK_HOTEL B ON A.NOP = B.NOP
+                    JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
+                    JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI AND D.AKTIF = 1
+                    LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT    
                     ";
 
                     var result = await _contSbyTax.Set<DbOpHotel>().FromSqlRaw(sql).ToListAsync();
