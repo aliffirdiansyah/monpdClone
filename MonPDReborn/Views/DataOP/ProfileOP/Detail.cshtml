@@ -282,7 +282,7 @@
                         allowfullscreen
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
-                        src="https://www.google.com/maps?q=@Uri.EscapeDataString(Model.DataDetail.IdentitasPajak.NamaObjekPajak)&output=embed">
+                        src="https://www.google.com/maps?q=@(Uri.EscapeDataString(Model.DataDetail.IdentitasPajak.NamaObjekPajak??""))&output=embed">
                 </iframe>
             </div>
         </div>
