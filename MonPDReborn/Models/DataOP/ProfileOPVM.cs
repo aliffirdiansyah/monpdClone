@@ -479,10 +479,38 @@ namespace MonPDReborn.Models.DataOP
 
                     case EnumFactory.EPajak.JasaParkir:
                         var opParkir = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop);
+                        if (opParkir != null)
+                        {
+                            ret.IdentitasPajak.WilayahPajak = opParkir.WilayahPajak ?? "";
+                            ret.IdentitasPajak.NpwpdNo = opParkir.Npwpd;
+                            ret.IdentitasPajak.NamaNpwpd = opParkir.NpwpdNama;
+                            ret.IdentitasPajak.NOP = opParkir.Nop;
+                            ret.IdentitasPajak.NamaObjekPajak = opParkir.NamaOp;
+                            ret.IdentitasPajak.AlamatLengkap = opParkir.AlamatOp;
+                            ret.IdentitasPajak.Telepon = opParkir.Telp;
+                            ret.IdentitasPajak.TanggalBuka = opParkir.TglMulaiBukaOp;
+                            ret.IdentitasPajak.EnumPajak = pajak;
+                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                            ret.IdentitasPajak.KategoriPajak = opParkir.KategoriNama;
+                        }
                         break;
 
                     case EnumFactory.EPajak.JasaKesenianHiburan:
                         var opHiburan = context.DbOpHiburans.FirstOrDefault(x => x.Nop == nop);
+                        if (opHiburan != null)
+                        {
+                            ret.IdentitasPajak.WilayahPajak = opHiburan.WilayahPajak ?? "";
+                            ret.IdentitasPajak.NpwpdNo = opHiburan.Npwpd;
+                            ret.IdentitasPajak.NamaNpwpd = opHiburan.NpwpdNama;
+                            ret.IdentitasPajak.NOP = opHiburan.Nop;
+                            ret.IdentitasPajak.NamaObjekPajak = opHiburan.NamaOp;
+                            ret.IdentitasPajak.AlamatLengkap = opHiburan.AlamatOp;
+                            ret.IdentitasPajak.Telepon = opHiburan.Telp;
+                            ret.IdentitasPajak.TanggalBuka = opHiburan.TglMulaiBukaOp;
+                            ret.IdentitasPajak.EnumPajak = pajak;
+                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                            ret.IdentitasPajak.KategoriPajak = opHiburan.KategoriNama;
+                        }
                         break;
 
                     case EnumFactory.EPajak.AirTanah:
