@@ -1,0 +1,327 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Show
+
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.KontrolPembayaran>()
+        .ID("kontrolRestoranGrid")
+        .DataSource(Model.DataKontrolPembayaranList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .AllowColumnResizing(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+
+            columns.AddFor(m => m.Kategori).Caption("Kategori").Fixed(true).FixedPosition(HorizontalEdge.Left);
+
+            columns.Add().Caption("Januari").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka1).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr1).Caption("BYR");
+                subColumns.AddFor(m => m.Nts1).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm1).Caption("BLM");
+            });
+
+            columns.Add().Caption("Februari").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka2).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr2).Caption("BYR");
+                subColumns.AddFor(m => m.Nts2).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm2).Caption("BLM");
+            });
+
+            columns.Add().Caption("Maret").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka3).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr3).Caption("BYR");
+                subColumns.AddFor(m => m.Nts3).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm3).Caption("BLM");
+            });
+
+            columns.Add().Caption("April").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka4).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr4).Caption("BYR");
+                subColumns.AddFor(m => m.Nts4).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm4).Caption("BLM");
+            });
+
+            columns.Add().Caption("Mei").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka5).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr5).Caption("BYR");
+                subColumns.AddFor(m => m.Nts5).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm5).Caption("BLM");
+            });
+
+            columns.Add().Caption("Juni").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka6).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr6).Caption("BYR");
+                subColumns.AddFor(m => m.Nts6).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm6).Caption("BLM");
+            });
+
+            columns.Add().Caption("Juli").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka7).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr7).Caption("BYR");
+                subColumns.AddFor(m => m.Nts7).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm7).Caption("BLM");
+            });
+
+            columns.Add().Caption("Agustus").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka8).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr8).Caption("BYR");
+                subColumns.AddFor(m => m.Nts8).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm8).Caption("BLM");
+            });
+
+            columns.Add().Caption("September").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka9).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr9).Caption("BYR");
+                subColumns.AddFor(m => m.Nts9).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm9).Caption("BLM");
+            });
+
+            columns.Add().Caption("Oktober").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka10).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr10).Caption("BYR");
+                subColumns.AddFor(m => m.Nts10).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm10).Caption("BLM");
+            });
+
+            columns.Add().Caption("November").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka11).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr11).Caption("BYR");
+                subColumns.AddFor(m => m.Nts11).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm11).Caption("BLM");
+            });
+
+            columns.Add().Caption("Desember").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.OPbuka12).Caption("OP Buka");
+                subColumns.AddFor(m => m.Byr12).Caption("BYR");
+                subColumns.AddFor(m => m.Nts12).Caption("N/TS");
+                subColumns.AddFor(m => m.Blm12).Caption("BLM");
+            });
+
+
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Kategori)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+
+                items.AddFor(m => m.OPbuka1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm1)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm2)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm3)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm4)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm5)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm6)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm7)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm8)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm9)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm10)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm11)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.OPbuka12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nts12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm12)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}");
+
+            });
+        })
+        )
+</div>

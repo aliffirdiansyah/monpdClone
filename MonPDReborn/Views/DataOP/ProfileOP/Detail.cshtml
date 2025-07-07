@@ -35,7 +35,7 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                    <button class="nav-link" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
                         <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
                     </button>
                 </li>
@@ -239,6 +239,35 @@
     </div>
 
     <!-- Lokasi Tab -->
+    <div class="tab-pane fade" id="pills-pembayaran" role="tabpanel" aria-labelledby="pills-pembayaran-tab">
+        <div class="card mb-4">
+            <div class="card bg-info-subtle border-0 mb-0">
+                <div class="card-header d-flex">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title fs-16 mb-0">
+                            🧾 PEMBAYARAN PAJAK @Model.Pajak.GetDescription() @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                        </h5>
+
+                    </div>
+                    <div class="flex-shrink-0">
+                        <button class="btn btn-sm btn-outline-info" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')">
+                            <i class="mdi mdi-refresh align-middle"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <div id="loading2-PembayaranPajak" class="spinner-border text-primary" style="display: none">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div id="PembayaranPajak"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Lokasi Tab -->
     <div class="tab-pane fade" id="pills-lokasi" role="tabpanel" aria-labelledby="pills-lokasi-tab">
         <div class="card mb-4">
             <div class="card bg-info-subtle border-0 mb-0">
@@ -253,7 +282,7 @@
                         allowfullscreen
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
-                        src="https://www.google.com/maps?q=@Uri.EscapeDataString(Model.DataDetail.IdentitasPajak.NamaObjekPajak)&output=embed">
+                        src="https://www.google.com/maps?q=@(Uri.EscapeDataString(Model.DataDetail.IdentitasPajak.NamaObjekPajak??""))&output=embed">
                 </iframe>
             </div>
         </div>
@@ -341,7 +370,7 @@
                                     </li>
                                 </ul>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
@@ -463,7 +492,7 @@
             break;
 
         case EnumFactory.EPajak.AirTanah:
-            
+
             break;
 
         case EnumFactory.EPajak.Reklame:
@@ -492,4 +521,41 @@
 
 
 </div>
+@section Scripts {
+    <script>
+        function fnPembayaranPajak(nop, pajak)
+        {
+            $.ajax({
+              url: '@(Url.Action("Detail", "PencarianOP"))',
+              data: {
+                    nop, pajak
+                },
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PembayaranPajak').show();
+                 $('#PembayaranPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PembayaranPajak').hide();
+                        $('#PembayaranPajak').show();
+                        $('#PembayaranPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PembayaranPajak').hide();
+                 $('#PembayaranPajak').hide();
+                 $('#PembayaranPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
 
+    </script>
+}

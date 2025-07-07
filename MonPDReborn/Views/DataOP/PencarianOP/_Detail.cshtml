@@ -1,42 +1,124 @@
 ﻿@model MonPDReborn.Models.DataOP.PencarianOPVM.Detail
 
-<div class="table-responsive">
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4><b>@DateTime.Now.Year</b></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PencarianOPVM.RealisasiBulanan>()
+                        .ID("gridRealisasiOPNow")
+                        .DataSource(Model.DataRealisasiBulananList)
+                        .KeyExpr("NOP")
+                        .ShowBorders(true)
+                        .ShowColumnHeaders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        // SearchPanel dihilangkan
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(h => h.Visible(true))
+                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(10))
+                        .Pager(p => p
+                        .ShowPageSizeSelector(true)
+                        .AllowedPageSizes(new[] { 10, 20, 50 })
+                        .ShowInfo(true)
+                        )
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.NOP)
+                            .Visible(false);
 
+                            columns.AddFor(m => m.Bulan)
+                            .Caption("Bulan")
+                            .Width(100);
 
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PencarianOPVM.RealisasiBulanan>()
-        .ID("gridRealisasiOP")
-        .DataSource(Model.DataRealisasiBulananList)
-        .KeyExpr("NOP")
-        .ShowBorders(true)
-        .ShowColumnHeaders(true)
-        .ShowColumnLines(true)
-        .ShowRowLines(true)
-        .AllowColumnResizing(true)
-        .ColumnAutoWidth(true)
-        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-        .FilterRow(f => f.Visible(true))
-        .HeaderFilter(h => h.Visible(true))
-        .Sorting(s => s.Mode(GridSortingMode.Multiple))
-        .Paging(p => p.PageSize(10))
-        .Pager(p => p
-        .ShowPageSizeSelector(true)
-        .AllowedPageSizes(new[] { 10, 20, 50 })
-        .ShowInfo(true)
-        )
-        .Columns(columns =>
-        {
-            columns.AddFor(m => m.NOP)
-            .Visible(false); // hidden karena sudah diketahui dari master
+                            columns.AddFor(m => m.Nominal)
+                            .Caption("Nominal")
+                            .Format("#,##0")
+                            .Alignment(HorizontalAlignment.Right);
+                        })
+                        .Summary(s => s.TotalItems(items =>
+                        {
 
-            columns.AddFor(m => m.Bulan)
-            .Caption("Bulan")
-            .Width(100);
+                            items.AddFor(m => m.Bulan)
+                            .SummaryType(SummaryType.Sum)
+                            .DisplayFormat("TOTAL")
+                            .Alignment(HorizontalAlignment.Right);
 
-            columns.AddFor(m => m.Nominal)
-            .Caption("Nominal")
-            .Format("#,##0")
-            .Alignment(HorizontalAlignment.Right);
-        })
-        )
+                            items.AddFor(m => m.Nominal)
+                            .SummaryType(SummaryType.Sum)
+                            .ValueFormat("#,##0")
+                            .DisplayFormat("{0}")
+                            .Alignment(HorizontalAlignment.Right);
+                        }))
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4><b>@(DateTime.Now.Year - 1)</b></h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PencarianOPVM.RealisasiBulanan>()
+                        .ID("gridRealisasiOPLast")
+                        .DataSource(Model.DataRealisasiBulananMines1List)
+                        .KeyExpr("NOP")
+                        .ShowBorders(true)
+                        .ShowColumnHeaders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        // SearchPanel dihilangkan
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(h => h.Visible(true))
+                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(10))
+                        .Pager(p => p
+                        .ShowPageSizeSelector(true)
+                        .AllowedPageSizes(new[] { 10, 20, 50 })
+                        .ShowInfo(true)
+                        )
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.NOP)
+                            .Visible(false);
+
+                            columns.AddFor(m => m.Bulan)
+                            .Caption("Bulan")
+                            .Width(100);
+
+                            columns.AddFor(m => m.Nominal)
+                            .Caption("Nominal")
+                            .Format("#,##0")
+                            .Alignment(HorizontalAlignment.Right);
+                        })
+                        .Summary(s => s.TotalItems(items =>
+                        {
+                            items.AddFor(m => m.Bulan)
+                            .SummaryType(SummaryType.Sum)
+                            .DisplayFormat("TOTAL")
+                            .Alignment(HorizontalAlignment.Right);
+
+                            items.AddFor(m => m.Nominal)
+                            .SummaryType(SummaryType.Sum)
+                            .ValueFormat("#,##0")
+                            .DisplayFormat("{0}")
+                            .Alignment(HorizontalAlignment.Right);
+                        }))
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

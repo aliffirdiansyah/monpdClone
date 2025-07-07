@@ -70,22 +70,22 @@
         .Columns(columns =>
         {
             columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").CssClass("fw-bold");
-            columns.AddFor(m => m.Tahun2021).Caption("2021");
-            columns.AddFor(m => m.Tahun2022).Caption("2022");
-            columns.AddFor(m => m.Tahun2023).Caption("2023");
-            columns.AddFor(m => m.Tahun2024).Caption("2024");
-            columns.AddFor(m => m.Tahun2025).Caption("2025");
+            columns.AddFor(m => m.Tahun2021).Caption("2021").Format("#,##0");
+            columns.AddFor(m => m.Tahun2022).Caption("2022").Format("#,##0");
+            columns.AddFor(m => m.Tahun2023).Caption("2023").Format("#,##0");
+            columns.AddFor(m => m.Tahun2024).Caption("2024").Format("#,##0");
+            columns.AddFor(m => m.Tahun2025).Caption("2025").Format("#,##0");
         })
         .Summary(summary =>
         {
             summary.TotalItems(items =>
             {
                 items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Sum).DisplayFormat("Total");
-                items.AddFor(m => m.Tahun2021).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Tahun2022).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Tahun2023).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Tahun2024).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Tahun2025).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Tahun2021).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2022).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2023).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2024).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2025).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
             });
         })
         .MasterDetail(md =>
