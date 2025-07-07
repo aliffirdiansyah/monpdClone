@@ -29,7 +29,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                ViewData["Title"] = controllerName;
+                ViewData["Title"] = "Dashboard Profil Objek Pajak";
                 var model = new Models.DataOP.ProfileOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

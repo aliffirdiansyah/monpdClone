@@ -4,8 +4,8 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="card border shadow-sm mb-4">
-    <div class="card-header bg-primary opacity-75 d-flex align-items-center">
+<div class="card border shadow-sm mb-4">    
+    <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
         <div class="flex-grow-1">
             <h5 class="card-title fs-16 text-white mb-0">
                 <h5 class="card-title fs-16 text-white mb-0">
@@ -39,18 +39,18 @@
                                     <i class="bx bx-building fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiHotel.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiHotel.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetHotel.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetHotel.ToString("n0")</strong>
                                     </span>
                                 </p>
 
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpHotel.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -75,11 +75,11 @@
                                     <i class="bx bx-restaurant fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiMamin.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiMamin.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetMamin.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetMamin.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -87,7 +87,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpMamin.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -113,11 +113,11 @@
                                     <i class="bx bx-camera-movie fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiHiburan.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiHiburan.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetHiburan.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetHiburan.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -125,7 +125,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpHiburan.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -150,11 +150,11 @@
                                     <i class="bx bx-bulb fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiListrik.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiListrik.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetListrik.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetListrik.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -162,7 +162,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpListrik.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -187,11 +187,11 @@
                                     <i class="bx bx-stop-circle fs-20"></i> <!-- Ganti jika nanti bx-parking tersedia -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiParkir.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiParkir.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetParkir.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetParkir.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -199,7 +199,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpParkir.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -224,11 +224,11 @@
                                     <i class="bx bx-news fs-20"></i> <!-- Ikon cocok untuk reklame/banner/news -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiReklame.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiReklame.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetReklame.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetReklame.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -236,7 +236,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpReklame.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -261,11 +261,11 @@
                                     <i class="bx bx-water fs-20"></i> <!-- Ikon cocok -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiAbt.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiAbt.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetAbt.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetAbt.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -273,7 +273,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpAbt.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -298,11 +298,11 @@
                                     <i class="bx bx-home fs-20"></i> <!-- Ikon rumah -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiPbb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiPbb.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetPbb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetPbb.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -310,7 +310,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpPbb.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -335,11 +335,11 @@
                                     <i class="bx bx-transfer-alt fs-20"></i> <!-- Ikon transfer hak -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiBphtb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiBphtb.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetBphtb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetBphtb.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -347,7 +347,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpBphtb.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -372,11 +372,11 @@
                                     <i class="bx bx-car fs-20"></i> <!-- Ikon mobil -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiOpsenPkb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiOpsenPkb.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetOpsenPkb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetOpsenPkb.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -384,7 +384,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpOpsenPkb.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -409,11 +409,11 @@
                                     <i class="bx bx-transfer fs-20"></i> <!-- Ikon perpindahan kepemilikan kendaraan -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.RealisasiOpsenBbnkb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiOpsenBbnkb.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TargetOpsenBbnkb.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetOpsenBbnkb.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -421,7 +421,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpOpsenBbnkb.ToString("n0") OP</span>
                     </div>
                 </div>
@@ -446,11 +446,11 @@
                                     <i class="bx bx-pie-chart-alt-2 fs-20"></i> <!-- Ikon total pie chart -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
-                                    <span class="fs-14 d-block">
-                                        Realisasi : <strong class="text-white">Rp @Model.Data.TotalRealisasi.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Real : <strong class="text-white">Rp @Model.Data.TotalRealisasi.ToString("n0")</strong>
                                     </span>
-                                    <span class="fs-14 d-block">
-                                        Target    : <strong class="text-white">Rp @Model.Data.TotalTarget.ToString("n0")</strong>
+                                    <span class="fs-12 d-block">
+                                        Trgt : <strong class="text-white">Rp @Model.Data.TotalTarget.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -458,7 +458,7 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white">
+                    <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-dark bg-light">
                         <span>
                             <i class="bx bx-calendar-check me-1"></i>
                             @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("id-ID"))
@@ -474,7 +474,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header bg-primary opacity-75 d-flex">
+            <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
                 <div class="flex-grow-1">
                     <h5 class="card-title text-white fs-16 mb-0">
                         <i class="mdi mdi-file-chart align-middle me-1"></i> SERIES PAJAK DAERAH
@@ -501,18 +501,18 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card card-height-100">
-            <div class="card-header d-flex">
+            <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
                 <div class="flex-grow-1 mb-0">
-                    <h5 class="card-title">
-                        🏢JUMLAH OBJEK PAJAK
+                    <h5 class="card-title text-white">
+                        <i class="mdi mdi-chart-bar align-middle me-1"></i>JUMLAH OBJEK PAJAK
                     </h5>
                 </div>
                 <div class="flex-shrink-0 mb-0">
-                    <button class="btn btn-sm btn-info">
+                    <button class="btn btn-sm btn-light">
                         <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="fnJumlahObjekPajakTahunan()">
+                    <button class="btn btn-sm btn-outline-light" onclick="fnJumlahObjekPajakTahunan()">
                         <i class="mdi mdi-refresh align-middle"></i>
                         Refresh
                     </button>
@@ -555,18 +555,20 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card card-height-100">
-            <div class="card-header d-flex">
+                <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
                 <div class="flex-grow-1">
                     <h5 class="card-title">
-                        🏛️ DATA KONTROL (POTENSI OP)
+                        <h5 class="card-title fs-16 text-white mb-0">
+                            <i class="mdi mdi-domain align-middle me-1"></i> DATA KONTROL (POTENSI OP)
+                        </h5>
                     </h5>
                 </div>
                 <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-info">
+                    <button class="btn btn-sm btn-light">
                         <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="fnDataKontrolPotensiOp()">
+                    <button class="btn btn-sm btn-outline-light" onclick="fnDataKontrolPotensiOp()">
                         <i class="mdi mdi-refresh align-middle"></i>
                         Refresh
                     </button>
@@ -587,18 +589,18 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card card-height-100">
-            <div class="card-header d-flex">
+            <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
                 <div class="flex-grow-1">
-                    <h5 class="card-title">
-                        💵 PIUTANG
+                    <h5 class="card-title fs-16 text-white mb-0">
+                        <i class="mdi mdi-cash-multiple align-middle me-1"></i> PIUTANG
                     </h5>
                 </div>
                 <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-info">
+                    <button class="btn btn-sm btn-light">
                         <i class="ri-file-list-3-line align-middle"></i>
                         Detail
                     </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="fnDataPiutang()">
+                    <button class="btn btn-sm btn-outline-light" onclick="fnDataPiutang()">
                         <i class="mdi mdi-refresh align-middle"></i>
                         Refresh
                     </button>

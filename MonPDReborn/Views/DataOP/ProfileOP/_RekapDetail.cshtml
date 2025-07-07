@@ -4,7 +4,7 @@
     .Key("Kategori")
     .LoadParams(new
     {
-        JenisPajak = ViewData["JenisPajak"],
+        JenisPajak = ViewData["JenisPajakRekap"],
         Tahun = ViewData["tahun"]
     })
     )
@@ -24,66 +24,66 @@
     {
 
         columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
-        columns.AddFor(m => m.OPAwal)
+        columns.AddFor(m => m.JmlOpAwal)
             .DataField("OPAwal")
             .Caption("OP Awal")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-primary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'OPAwal')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpAwal')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
                     <span><%- value %></span>
                 </div>
             </text>)
-            .CalculateCellValue("data => data.OPAwal");
+            .CalculateCellValue("data => data.JmlOpAwal");
 
-        columns.AddFor(m => m.OPTutup)
+        columns.AddFor(m => m.JmlOpTutupPermanen)
             .DataField("TutupSementara")
             .Caption("Tutup Sementara")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-secondary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'TutupSementara')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpTutupPermanen')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
                     <span><%- data.TutupSementara %></span>
                 </div>
             </text>)
-            .CalculateCellValue("data => data.TutupSementara");
+            .CalculateCellValue("data => data.JmlOpTutupPermanen");
 
-        columns.AddFor(m => m.OPBaru)
+        columns.AddFor(m => m.JmlOpBaru)
             .DataField("OPBaru")
             .Caption("OP Baru")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-success me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'OPBaru')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpBaru')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
                     <span><%- data.OPBaru %></span>
                 </div>
             </text>)
-            .CalculateCellValue("data => data.OPBaru");
+            .CalculateCellValue("data => data.JmlOpBaru");
 
 
-        columns.AddFor(m => m.OPAkhir)
+        columns.AddFor(m => m.JmlOpAkhir)
             .DataField("OPBuka")
             .Caption("Buka")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-info me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'OPBuka')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpAkhir')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
                     <span><%- data.Buka %></span>
                 </div>
             </text>)
-            .CalculateCellValue("data => data.Buka");
+            .CalculateCellValue("data => data.JmlOpAkhir");
 
 
     })
