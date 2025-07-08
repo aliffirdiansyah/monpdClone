@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -30,11 +31,11 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Show()
+        public IActionResult Show(int jenisPajak)
         {
             try
             {
-                var model = new Models.DataOP.PelaporanOPVM.Show();
+                var model = new Models.DataOP.PelaporanOPVM.Show((EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -43,11 +44,11 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Detail(string nop)
+        public IActionResult Detail(int jenisPajak, string nop)
         {
             try
             {
-                var model = new Models.DataOP.PelaporanOPVM.Detail(nop);
+                var model = new Models.DataOP.PelaporanOPVM.Detail((EnumFactory.EPajak)jenisPajak, nop);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
