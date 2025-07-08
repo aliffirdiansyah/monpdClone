@@ -1,4 +1,6 @@
-﻿namespace MonPDReborn.Models.AktivitasOP
+﻿using MonPDLib;
+
+namespace MonPDReborn.Models.AktivitasOP
 {
     public class PemeriksaanPajakVM
     {
@@ -65,23 +67,28 @@
 
             private static List<DataPemeriksaan> GetAllData()
             {
+                var ret = new List<DataPemeriksaan>();
+                var currentYear = DateTime.Now.Year;
+                var context = DBClass.GetContext();
+
+                var pemeriksaanRestoMines2 = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear - 2).ToList();
+                var pemeriksaanRestoMines1 = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear - 1).ToList();
+                var pemeriksaanRestoNow = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear).ToList();
+
                 return new List<DataPemeriksaan>
                 {
                     new()
                     {
                         JenisPajak = "Pajak Hotel",
-                        JumlahOP2023 = 10, JumlahOP2024 = 12, JumlahOP2025 = 15,
-                        Pokok2023 = 12000000, Sanksi2023 = 2000000,
-                        Pokok2024 = 15000000, Sanksi2024 = 2500000,
-                        Pokok2025 = 18000000, Sanksi2025 = 3000000
-                    },
-                    new()
-                    {
-                        JenisPajak = "Pajak Restoran",
-                        JumlahOP2023 = 8, JumlahOP2024 = 9, JumlahOP2025 = 11,
-                        Pokok2023 = 10000000, Sanksi2023 = 1500000,
-                        Pokok2024 = 13000000, Sanksi2024 = 1700000,
-                        Pokok2025 = 14000000, Sanksi2025 = 1900000
+                        JumlahOP2023 = 10,
+                        JumlahOP2024 = 12,
+                        JumlahOP2025 = 15,
+                        Pokok2023 = 12000000,
+                        Sanksi2023 = 2000000,
+                        Pokok2024 = 15000000,
+                        Sanksi2024 = 2500000,
+                        Pokok2025 = 18000000,
+                        Sanksi2025 = 3000000
                     }
                 };
             }
@@ -142,8 +149,8 @@
                     Tim = "Tim B"
                 }
             };
+            }
         }
-    }
 
         // ======= ENTITY UTAMA ==========
         public class DataPemeriksaan

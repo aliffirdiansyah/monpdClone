@@ -1,6 +1,8 @@
 ﻿
 
+using MonPDLib.General;
 using System.Globalization;
+using System.Web.Mvc;
 
 namespace MonPDReborn.Models.MonitoringWilayah
 {
@@ -8,43 +10,31 @@ namespace MonPDReborn.Models.MonitoringWilayah
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
+            public int SelectedPajak {  get; set; }
+            public int SelectedBulan {  get; set; }
+            public List<SelectListItem> JenisPajakList { get; set; } = new();
+            public List<SelectListItem> BulanList { get; set; } = new();
+            public Index()
+            {
+                JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
+                    .Cast<EnumFactory.EPajak>()
+                    .Select(x => new SelectListItem
+                    {
+                        Value = ((int)x).ToString(),
+                        Text = x.GetDescription()
+                    }).ToList();
+                for (int i = 1; i <= 12; i++)
+                {
+                    var namaBulan = new DateTime(1, i, 1).ToString("MMMM", new CultureInfo("id-ID"));
+                    BulanList.Add(new SelectListItem
+                    {
+                        Value = i.ToString(),
+                        Text = namaBulan
+                    });
+                }
+            }
 
         }
-
-
-        //public class Show
-        //{
-
-        //    public Show() { }
-
-        //    public Show(string keyword)
-        //    {
-        //    }
-        //}
-
-        //public class Show
-        //{
-        //    public List<RealisasiWilayah> RealisasiWilayahList { get; set; } = new();
-        //    public List<RealisasiJenis> RealisasiJenisList { get; set; } = new();
-        //    public Show() { }
-        //    public Show(string keyword)
-        //    {
-        //        RealisasiWilayahList = Method.GetDataRealisasiWilayahList(keyword);
-        //        RealisasiJenisList = Method.GetDataRealisasiJenisList(keyword);
-        //    }
-        //}
-
-        //public class Detail
-        //{
-        //    public List<DataHarian> DataHarianList { get; set; } = new();
-        //    public Detail() { }
-        //    public Detail(string keyword)
-        //    {
-        //        DataHarianList = Method.GetDataDataHarianList(keyword);
-        //    }
-        //}
-
         public class Show
         {
             public List<RealisasiWilayah> RealisasiWilayahList { get; set; } = new();
@@ -71,18 +61,6 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 DataHarianList = Method.GetDataDataHarianList(wilayah, tahun, bulan, jenisPajak);
             }
         }
-
-
-        //public class Detail
-        //{
-
-        //    public Detail() { }
-
-        //    public Detail(string jenisPajak)
-        //    {
-        //    }
-        //}
-
         public class Method
         {
             public static List<RealisasiWilayah> GetDataRealisasiWilayahList(string wilayah, int tahun, int bulan, string jenisPajak)
