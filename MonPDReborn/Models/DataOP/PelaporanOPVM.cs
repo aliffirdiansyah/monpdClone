@@ -1,4 +1,9 @@
-﻿namespace MonPDReborn.Models.DataOP
+﻿using Microsoft.EntityFrameworkCore;
+using MonPDLib;
+using MonPDLib.General;
+using System.Globalization;
+
+namespace MonPDReborn.Models.DataOP
 {
     public class PelaporanOPVM
     {
@@ -14,39 +19,29 @@
 
             public Show()
             {
-                DaftarHasil = Method.GetAllData();
+                DaftarHasil = Method.GetPalporanList();
             }
 
-            public Show(string? keyword)
-            {
-                var allData = Method.GetAllData();
-                DaftarHasil = string.IsNullOrWhiteSpace(keyword)
-                    ? allData
-                    : allData.Where(d => d.Nama.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
         }
 
-        // Detail per NOP, auto generate Januari–Desember
         public class Detail
         {
             public List<StatusPelaporanBulanan> DaftarRealisasi { get; set; } = new();
-
-            public int TotalNilai { get; set; } // ← Tambahan untuk total nominal
-
+            public int TotalNilai { get; set; }
             public Detail(string nop)
             {
-                var tahunSekarang = DateTime.Now.Year.ToString();
-                var data = Method.GetDetailByNOP(nop);
+                var currentYear = DateTime.Now.Year;
+                var data = Method.GetDetailListByNOP(nop, currentYear);
 
                 DaftarRealisasi = Enumerable.Range(1, 12).Select((bulanKe, index) =>
                 {
-                    var dataBulanIni = data.FirstOrDefault(x => x.BulanKe == bulanKe && x.Tahun == tahunSekarang);
+                    var dataBulanIni = data.FirstOrDefault(x => x.BulanKe == bulanKe);
                     return new StatusPelaporanBulanan
                     {
-                        Id = index + 1,
-                        Bulan = new DateTime(1, bulanKe, 1).ToString("MMMM"),
+                        Id = bulanKe,
+                        Bulan = new DateTime(1, bulanKe, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Status = dataBulanIni?.Status ?? "Belum Lapor",
-                        TanggalLapor = dataBulanIni?.TanggalLapor?.ToString("dd MMMM yyyy") ?? "-",
+                        TanggalLapor = dataBulanIni?.TanggalLapor?.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) ?? "-",
                         Nilai = dataBulanIni?.Nilai ?? 0
                     };
                 }).ToList();
@@ -55,8 +50,57 @@
                 TotalNilai = DaftarRealisasi.Sum(d => d.Nilai);
             }
         }
+        public static class Method
+        {
+            public static List<HasilPelaporan> GetPalporanList()
+            {
+                var ret = new List<HasilPelaporan>();
+                var currentYear = DateTime.Now.Year;
+                var context = DBClass.GetContext();
 
-        // Model Hasil Pelaporan (Index/Show)
+                var dataTerlaporResto = context.DbMonRestos
+                    .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
+                    .GroupBy(x => x.Nop)
+                    .Select(g => new
+                    {
+                        Nop = g.Key,
+                        Count = g.Count()
+                    })
+                    .ToDictionary(x => x.Nop, x => x.Count);
+                var laporResto = context.DbMonRestos
+                    .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
+                    .GroupBy(x => x.Nop)
+                    .Select(g => g.First()) // ambil salah satu data per NOP untuk ditampilkan
+                    .Select(x => new HasilPelaporan
+                    {
+                        
+                        NOP = x.Nop,
+                        Nama = x.NamaOp,
+                        JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                        Wilayah = "",
+                        Status = "", // isi sesuai kebutuhan
+                        PajakTerlapor = dataTerlaporResto.ContainsKey(x.Nop) ? dataTerlaporResto[x.Nop] : 0,
+                        MasaBelumLapor = 12 - (dataTerlaporResto.ContainsKey(x.Nop) ? dataTerlaporResto[x.Nop] : 0),
+                        PajakSeharusnya = 12,
+                        Alamat = x.AlamatOp
+                    }).ToList();
+                return ret;
+            }
+
+            public static List<RealisasiBulanan> GetDetailListByNOP(string nop, int tahun)
+            {
+                var ret = new List<RealisasiBulanan>();
+                //return new List<RealisasiBulanan>
+                //{
+                //    new() { NOP = "35.78.001.001.902.00001", BulanKe = 1, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 1, 15), Nilai = 45000000 },
+                //    new() { NOP = "35.78.001.001.902.00001", BulanKe = 3, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 3, 18), Nilai = 45000000 },
+                //    new() { NOP = "35.78.001.001.902.00001", BulanKe = 6, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 6, 10), Nilai = 45000000 },
+                //    new() { NOP = "35.78.001.001.902.00004", BulanKe = 1, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 1, 20), Nilai = 45000000 },
+                //};
+
+                return ret;
+            }
+        }
         public class HasilPelaporan
         {
             public int No { get; set; }
@@ -95,35 +139,5 @@
             public string? TanggalLapor { get; set; }
         }
 
-        // Static Method
-        public static class Method
-        {
-            public static List<HasilPelaporan> GetAllData()
-            {
-                return new List<HasilPelaporan>
-                {
-                    new() { No = 1, Wilayah = "01", NOP = "35.78.001.001.902.00001", Nama = "Hotel Indah", JenisPajak = "Pajak Hotel", Status = "Patuh", Alamat = "Jl. Raya Darmo", MasaBelumLapor = 0, PajakSeharusnya = 12, PajakTerlapor = 5},
-                    new() { No = 2, Wilayah = "01", NOP = "35.78.001.001.902.00002", Nama = "Restoran Sederhana", JenisPajak = "Pajak Restoran", Status = "Sebagian", Alamat = "Jl. Mayjen Sungkono", MasaBelumLapor = 1, PajakSeharusnya = 12, PajakTerlapor = 8},
-                    new() { No = 3, Wilayah = "02", NOP = "35.78.001.001.902.00003", Nama = "Hotel Surya", JenisPajak = "Pajak Hotel", Status = "Belum Lapor", Alamat = "Jl. Basuki Rahmat", MasaBelumLapor = 6, PajakSeharusnya = 12, PajakTerlapor = 6},
-                    new() { No = 4, Wilayah = "02", NOP = "35.78.001.001.902.00004", Nama = "Cafe Laris", JenisPajak = "Pajak Restoran", Status = "Patuh", Alamat = "Jl. Kusuma Bangsa", MasaBelumLapor = 0, PajakSeharusnya = 12, PajakTerlapor = 12},
-                };
-            }
-
-            public static List<RealisasiBulanan> GetDetailByNOP(string nop)
-            {
-                return GetAllDetail().Where(x => x.NOP == nop).ToList();
-            }
-
-            private static List<RealisasiBulanan> GetAllDetail()
-            {
-                return new List<RealisasiBulanan>
-                {
-                    new() { NOP = "35.78.001.001.902.00001", BulanKe = 1, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 1, 15), Nilai = 45000000 },
-                    new() { NOP = "35.78.001.001.902.00001", BulanKe = 3, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 3, 18), Nilai = 45000000 },
-                    new() { NOP = "35.78.001.001.902.00001", BulanKe = 6, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 6, 10), Nilai = 45000000 },
-                    new() { NOP = "35.78.001.001.902.00004", BulanKe = 1, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 1, 20), Nilai = 45000000 },
-                };
-            }
-        }
     }
 }
