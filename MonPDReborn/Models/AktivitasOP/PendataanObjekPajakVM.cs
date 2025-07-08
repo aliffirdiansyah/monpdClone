@@ -5,6 +5,9 @@
         public class Index
         {
             public string Keyword { get; set; } = string.Empty;
+            public int TotalOpDiperiksa { get; set; }
+            public decimal RataRataRealisasi { get; set; }
+            public decimal TotalRealisasi { get; set; }
         }
 
         public class Show
