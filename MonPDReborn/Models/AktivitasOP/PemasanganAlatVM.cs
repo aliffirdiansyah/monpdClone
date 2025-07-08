@@ -5,6 +5,9 @@
         public class Index
         {
             public string Keyword { get; set; } = null!;
+
+            public int TotalTerpasang { get; set; }
+            public int TotalBelumTerpasang { get; set; }
         }
 
         public class Show
