@@ -293,6 +293,11 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
 		ELSE NULL
 	END AS SUMBER_NAMA,
     CASE NAMA_JENIS_PAJAK
+		WHEN 'PPJ NON PLN' THEN 12
+		WHEN 'PPJ PLN' THEN 11
+		ELSE NULL
+	END AS KATEGORI_ID,
+    CASE NAMA_JENIS_PAJAK
 		WHEN 'PPJ NON PLN' THEN 'SUMBER LAIN'
 		WHEN 'PPJ PLN' THEN 'DIHASILKAN SENDIRI'
 		ELSE NULL
@@ -673,7 +678,6 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                             int masaPajak = item.MASAPAJAK;
                             int seqPajak = item.SEQ;
                             var rowMonListrik = _contMonPd.DbMonPpjs.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak && x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
-
                             if (rowMonListrik != null)
                             {
                                 _contMonPd.DbMonPpjs.Remove(rowMonListrik);
