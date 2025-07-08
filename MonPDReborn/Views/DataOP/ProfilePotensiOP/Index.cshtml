@@ -18,25 +18,57 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="card card-animate">
+        <div class="card shadow-sm border-0 card-animate">
             <div class="card-body">
-                <h4 class="fs-16 fw-semibold">Total Potensi Tahun 2025</h4>
-                <p class="fs-14">Potensi : @ViewBag.Potensi</p>
-                <p class="fs-14">Realisasi : @ViewBag.RealisasiTotal</p>
-                <p class="fs-14">Capaian : @ViewBag.Capaian</p>
+                <h5 class="fw-bold text-primary mb-3">
+                    <i class="ri-bar-chart-line"></i> Total Potensi Tahun 2025
+                </h5>
+
+                <div class="mb-2">
+                    <span class="text-muted">Potensi:</span>
+                    <span class="fw-semibold">@ViewBag.Potensi</span>
+                </div>
+
+                <div class="mb-2">
+                    <span class="text-muted">Realisasi:</span>
+                    <span class="fw-semibold">@ViewBag.RealisasiTotal</span>
+                </div>
+
+                <div>
+                    <span class="text-muted">Capaian:</span>
+                    <span class="fw-semibold">@ViewBag.Capaian</span>
+                </div>
+
             </div>
         </div>
     </div>
+
     <div class="col-lg-6">
-        <div class="card card-animate">
+        <div class="card shadow-sm border-0 card-animate">
             <div class="card-body">
-                <h4 class="fs-16 fw-semibold">Total Potensi Tahun 2025</h4>
-                <p class="fs-14">Total : @ViewBag.TotalOP</p>
-                <p class="fs-14">Realisasi : @ViewBag.RealisasiOP</p>
-                <p class="fs-14">Terealisasi : @ViewBag.CapaianOP</p>
+                <h5 class="fw-bold text-success mb-3">
+                    <i class="ri-building-2-line"></i> Total OP Tahun 2025
+                </h5>
+
+                <div class="mb-2">
+                    <span class="text-muted">Total OP:</span>
+                    <span class="fw-semibold">@ViewBag.TotalOP</span>
+                </div>
+
+                <div class="mb-2">
+                    <span class="text-muted">Realisasi OP:</span>
+                    <span class="fw-semibold">@ViewBag.RealisasiOP</span>
+                </div>
+
+                <div>
+                    <span class="text-muted">Terealisasi:</span>
+                    <span class="fw-semibold">@ViewBag.CapaianOP</span>
+                </div>
+
             </div>
         </div>
     </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex">
