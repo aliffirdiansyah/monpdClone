@@ -19,6 +19,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbAkunTarget> DbAkunTargets { get; set; }
 
+    public virtual DbSet<DbAkunTargetBulan> DbAkunTargetBulans { get; set; }
+
+    public virtual DbSet<DbAkunTargetBulanUptb> DbAkunTargetBulanUptbs { get; set; }
+
     public virtual DbSet<DbMonAbt> DbMonAbts { get; set; }
 
     public virtual DbSet<DbMonBphtb> DbMonBphtbs { get; set; }
@@ -36,6 +40,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbMonPbb> DbMonPbbs { get; set; }
 
     public virtual DbSet<DbMonPpj> DbMonPpjs { get; set; }
+
+    public virtual DbSet<DbMonReklame> DbMonReklames { get; set; }
 
     public virtual DbSet<DbMonResto> DbMonRestos { get; set; }
 
@@ -331,9 +337,36 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbAkunTarget>(entity =>
         {
-            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Jenis, e.Objek, e.Rincian, e.SubRincian }).HasName("DB_AKUN_TARGET_PK");
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian }).HasName("DB_AKUN_TARGET_PK");
 
             entity.Property(e => e.Target).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<DbAkunTargetBulan>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.Tgl, e.Bulan }).HasName("DB_AKUN_TARGET_BULAN_PK");
+
+            entity.Property(e => e.Tgl).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.Bulan).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.Target).HasDefaultValueSql("0                     ");
+
+            entity.HasOne(d => d.DbAkunTarget).WithMany(p => p.DbAkunTargetBulans)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DB_AKUN_TARGET_BULAN_R01");
+        });
+
+        modelBuilder.Entity<DbAkunTargetBulanUptb>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.Tgl, e.Bulan, e.Uptb }).HasName("DB_AKUN_TARGET_BULAN_UPTB_PK");
+
+            entity.Property(e => e.Tgl).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.Bulan).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.Uptb).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.Target).HasDefaultValueSql("0                     ");
+
+            entity.HasOne(d => d.DbAkunTargetBulan).WithMany(p => p.DbAkunTargetBulanUptbs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DB_AKUN_TARGET_BULAN_UPTB_R01");
         });
 
         modelBuilder.Entity<DbMonAbt>(entity =>
@@ -349,8 +382,9 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonBphtb>(entity =>
         {
-            entity.HasKey(e => e.Idsspd).HasName("DB_MON_BPHTB_PK");
+            entity.HasKey(e => new { e.Idsspd, e.Seq }).HasName("DB_MON_BPHTB_PK");
 
+            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
             entity.Property(e => e.RekonBy).IsFixedLength();
         });
 
@@ -414,6 +448,17 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonReklame>(entity =>
+        {
+            entity.HasKey(e => e.NoFormulir).HasName("DB_MON_REKLAME_PK");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+            entity.Property(e => e.KelasJalan).IsFixedLength();
+            entity.Property(e => e.KodeJenis).IsFixedLength();
+            entity.Property(e => e.KodeObyek).IsFixedLength();
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
         });
 
@@ -481,7 +526,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpPbb>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_PBB_PK");
+            entity.HasKey(e => e.Nop).HasName("DB_OP_PBB_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
@@ -489,7 +534,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpReklame>(entity =>
         {
-            entity.HasKey(e => e.NoFormulir).HasName("DB_OP_REKLAME_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.TahunBuku }).HasName("DB_OP_REKLAME_PK");
 
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();
@@ -1191,6 +1236,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
+        modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
 
         OnModelCreatingPartial(modelBuilder);
     }

@@ -52,7 +52,7 @@ namespace MonPDReborn.Controllers.DataOP
 
             try
             {
-                var model = new MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap(keyword, finalTahun);
+                var model = new MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap(finalTahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -110,20 +110,20 @@ namespace MonPDReborn.Controllers.DataOP
 
 
 
-        public IActionResult RekapMaster(int enumPajak, string kategori, string status)
+        public IActionResult RekapMaster(int enumPajak, int kategori, string status, int tahun)
         {
             try
             {
                 var jenisPajak = (EnumFactory.EPajak)enumPajak;
-                var allData = Models.DataOP.ProfileOPVM.Method.GetRekapMasterData(jenisPajak);
+                var filtered = Models.DataOP.ProfileOPVM.Method.GetRekapMasterData(jenisPajak, kategori, status, tahun);
 
-                var filtered = allData
-                    .Where(x =>
-                        !string.IsNullOrEmpty(x.Kategori_Nama) &&
-                        !string.IsNullOrEmpty(x.Status) &&
-                        x.Kategori_Nama.Equals(kategori, StringComparison.OrdinalIgnoreCase) &&
-                        x.Status.Equals(status, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                //var filtered = allData
+                //    .Where(x =>
+                //        !string.IsNullOrEmpty(x.Kategori_Nama) &&
+                //        !string.IsNullOrEmpty(x.Status) &&
+                //        x.Kategori_Nama.Equals(kategori, StringComparison.OrdinalIgnoreCase) &&
+                //        x.Status.Equals(status, StringComparison.OrdinalIgnoreCase))
+                //    .ToList();
 
                 return Json(filtered);
             }

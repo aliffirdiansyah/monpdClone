@@ -109,6 +109,7 @@ namespace AbtWs
                                 D.NAMA KATEGORI_NAMA,
                                 1 IS_METERAN_AIR, 0 JUMLAH_KARYAWAN,
                                 DECODE(TGL_OP_TUTUP,NULL,0,1) IS_TUTUP,
+                                'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
                                 sysdate INS_dATE, 'JOB' INS_BY,
                                 TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
                                 '-'  AKUN  ,
@@ -126,7 +127,9 @@ namespace AbtWs
                         FROM OBJEK_PAJAK A
                         JOIN OBJEK_PAJAK_ABT B ON A.NOP=B.NOP
                         JOIN NPWPD  C ON A.NPWPD=C.NPWPD_no
-                        JOIN M_KATEGORI_PAJAK D ON D.ID=A.KATEGORI";
+                        JOIN M_KATEGORI_PAJAK D ON D.ID=A.KATEGORI
+                        LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
+                    ";
 
                     var result = await _contSbyTax.Set<DbOpAbt>().FromSqlRaw(sql).ToListAsync(); //822
                     for (var i = tahunAmbil; i <= tglServer.Year; i++)
@@ -204,6 +207,7 @@ namespace AbtWs
                                     newRow.IsTutup = item.IsTutup;
                                     newRow.InsDate = item.InsDate;
                                     newRow.InsBy = item.InsBy;
+                                    newRow.WilayahPajak = item.WilayahPajak;
 
                                     newRow.TahunBuku = i;
                                     var dbakun = GetDbAkun(i, 6, (int)item.KategoriId);
@@ -506,7 +510,6 @@ namespace AbtWs
                     }
                 }
             }
-
         }
 
         private bool IsGetDBOp()
