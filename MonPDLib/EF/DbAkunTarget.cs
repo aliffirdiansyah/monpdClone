@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("TahunBuku", "Akun", "Jenis", "Objek", "Rincian", "SubRincian")]
+[PrimaryKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian")]
 [Table("DB_AKUN_TARGET")]
 public partial class DbAkunTarget
 {
@@ -75,13 +75,17 @@ public partial class DbAkunTarget
     [Column("PAJAK_ID", TypeName = "NUMBER")]
     public decimal PajakId { get; set; }
 
+    [Key]
     [Column("KELOMPOK")]
     [StringLength(20)]
     [Unicode(false)]
-    public string? Kelompok { get; set; }
+    public string Kelompok { get; set; } = null!;
 
     [Column("NAMA_KELOMPOK")]
     [StringLength(100)]
     [Unicode(false)]
     public string? NamaKelompok { get; set; }
+
+    [InverseProperty("DbAkunTarget")]
+    public virtual ICollection<DbAkunTargetBulan> DbAkunTargetBulans { get; set; } = new List<DbAkunTargetBulan>();
 }
