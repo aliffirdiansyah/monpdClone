@@ -437,6 +437,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.Add(new RekapDetail
                             {
                                 JenisPajak = JenisPajak.GetDescription(),
+                                EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpRestoAwal,
@@ -460,6 +461,7 @@ namespace MonPDReborn.Models.DataOP
                         //    ret.Add(new RekapDetail
                         //    {
                         //        JenisPajak = JenisPajak.GetDescription(),
+                        //        EnumPajak = (int)JenisPajak,
                         //        Tahun = tahun,
                         //        Kategori = kat.Nama,
                         //        JmlOpAwal = OpListrikAwal,
@@ -483,6 +485,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.Add(new RekapDetail
                             {
                                 JenisPajak = JenisPajak.GetDescription(),
+                                EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpHotelAwal,
@@ -506,6 +509,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.Add(new RekapDetail
                             {
                                 JenisPajak = JenisPajak.GetDescription(),
+                                EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpParkirAwal,
@@ -529,6 +533,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.Add(new RekapDetail
                             {
                                 JenisPajak = JenisPajak.GetDescription(),
+                                EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpHiburanAwal,
@@ -552,6 +557,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.Add(new RekapDetail
                             {
                                 JenisPajak = JenisPajak.GetDescription(),
+                                EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpAbtAwal,

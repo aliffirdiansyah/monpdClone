@@ -6,9 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("NoFormulir", "TahunBuku")]
-[Table("DB_OP_REKLAME")]
-public partial class DbOpReklame
+[Table("DB_MON_REKLAME")]
+public partial class DbMonReklame
 {
     [Key]
     [Column("NO_FORMULIR")]
@@ -69,10 +68,10 @@ public partial class DbOpReklame
     [Unicode(false)]
     public string? KodeJenis { get; set; }
 
-    [Column("NAMA_JENIS")]
+    [Column("NM_JENIS")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? NamaJenis { get; set; }
+    public string? NmJenis { get; set; }
 
     [Column("NO_WP")]
     [StringLength(20)]
@@ -368,7 +367,281 @@ public partial class DbOpReklame
     [Unicode(false)]
     public string? UserVer { get; set; }
 
-    [Key]
     [Column("TAHUN_BUKU", TypeName = "NUMBER")]
     public decimal TahunBuku { get; set; }
+
+    [Column("ID_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? IdKetetapan { get; set; }
+
+    [Column("TGLPENETAPAN", TypeName = "DATE")]
+    public DateTime? Tglpenetapan { get; set; }
+
+    [Column("TAHUN_PAJAK")]
+    [StringLength(4)]
+    [Unicode(false)]
+    public string? TahunPajak { get; set; }
+
+    [Column("BULAN_PAJAK")]
+    [StringLength(2)]
+    [Unicode(false)]
+    public string? BulanPajak { get; set; }
+
+    [Column("PAJAK_POKOK", TypeName = "NUMBER")]
+    public decimal? PajakPokok { get; set; }
+
+    [Column("JNS_KETETAPAN")]
+    [StringLength(16)]
+    [Unicode(false)]
+    public string? JnsKetetapan { get; set; }
+
+    [Column("TGL_JTEMPO_SKPD", TypeName = "DATE")]
+    public DateTime? TglJtempoSkpd { get; set; }
+
+    [Column("AKUN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string Akun { get; set; } = null!;
+
+    [Column("NAMA_AKUN")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string NamaAkun { get; set; } = null!;
+
+    [Column("KELOMPOK")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? Kelompok { get; set; }
+
+    [Column("NAMA_KELOMPOK")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string? NamaKelompok { get; set; }
+
+    [Column("JENIS")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string Jenis { get; set; } = null!;
+
+    [Column("NAMA_JENIS")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string NamaJenis { get; set; } = null!;
+
+    [Column("OBJEK")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string Objek { get; set; } = null!;
+
+    [Column("NAMA_OBJEK")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string NamaObjek { get; set; } = null!;
+
+    [Column("RINCIAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string Rincian { get; set; } = null!;
+
+    [Column("NAMA_RINCIAN")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string NamaRincian { get; set; } = null!;
+
+    [Column("SUB_RINCIAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string SubRincian { get; set; } = null!;
+
+    [Column("NAMA_SUB_RINCIAN")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string NamaSubRincian { get; set; } = null!;
+
+    [Column("TAHUN_PAJAK_KETETAPAN", TypeName = "NUMBER")]
+    public decimal TahunPajakKetetapan { get; set; }
+
+    [Column("MASA_PAJAK_KETETAPAN", TypeName = "NUMBER")]
+    public decimal MasaPajakKetetapan { get; set; }
+
+    [Column("SEQ_PAJAK_KETETAPAN", TypeName = "NUMBER")]
+    public decimal SeqPajakKetetapan { get; set; }
+
+    [Column("KATEGORI_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KategoriKetetapan { get; set; }
+
+    [Column("TGL_KETETAPAN", TypeName = "DATE")]
+    public DateTime? TglKetetapan { get; set; }
+
+    [Column("TGL_JATUH_TEMPO_BAYAR", TypeName = "DATE")]
+    public DateTime? TglJatuhTempoBayar { get; set; }
+
+    [Column("IS_LUNAS_KETETAPAN", TypeName = "NUMBER")]
+    public decimal? IsLunasKetetapan { get; set; }
+
+    [Column("TGL_LUNAS_KETETAPAN", TypeName = "DATE")]
+    public DateTime? TglLunasKetetapan { get; set; }
+
+    [Column("POKOK_PAJAK_KETETAPAN", TypeName = "NUMBER")]
+    public decimal? PokokPajakKetetapan { get; set; }
+
+    [Column("PENGURANG_POKOK_KETETAPAN", TypeName = "NUMBER")]
+    public decimal? PengurangPokokKetetapan { get; set; }
+
+    [Column("AKUN_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? AkunKetetapan { get; set; }
+
+    [Column("KELOMPOK_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokKetetapan { get; set; }
+
+    [Column("JENIS_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? JenisKetetapan { get; set; }
+
+    [Column("OBJEK_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? ObjekKetetapan { get; set; }
+
+    [Column("RINCIAN_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? RincianKetetapan { get; set; }
+
+    [Column("SUB_RINCIAN_KETETAPAN")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? SubRincianKetetapan { get; set; }
+
+    [Column("TGL_BAYAR_POKOK", TypeName = "DATE")]
+    public DateTime? TglBayarPokok { get; set; }
+
+    [Column("NOMINAL_POKOK_BAYAR", TypeName = "NUMBER")]
+    public decimal? NominalPokokBayar { get; set; }
+
+    [Column("AKUN_POKOK_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? AkunPokokBayar { get; set; }
+
+    [Column("KELOMPOK_POKOK_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokPokokBayar { get; set; }
+
+    [Column("JENIS_POKOK_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? JenisPokokBayar { get; set; }
+
+    [Column("OBJEK_POKOK_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? ObjekPokokBayar { get; set; }
+
+    [Column("RINCIAN_POKOK_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? RincianPokokBayar { get; set; }
+
+    [Column("SUB_RINCIAN_POKOK_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? SubRincianPokokBayar { get; set; }
+
+    [Column("TGL_BAYAR_SANKSI", TypeName = "DATE")]
+    public DateTime? TglBayarSanksi { get; set; }
+
+    [Column("NOMINAL_SANKSI_BAYAR", TypeName = "NUMBER")]
+    public decimal? NominalSanksiBayar { get; set; }
+
+    [Column("AKUN_SANKSI_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? AkunSanksiBayar { get; set; }
+
+    [Column("KELOMPOK_SANKSI_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokSanksiBayar { get; set; }
+
+    [Column("JENIS_SANKSI_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? JenisSanksiBayar { get; set; }
+
+    [Column("OBJEK_SANKSI_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? ObjekSanksiBayar { get; set; }
+
+    [Column("RINCIAN_SANKSI_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? RincianSanksiBayar { get; set; }
+
+    [Column("SUB_RINCIAN_SANKSI_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? SubRincianSanksiBayar { get; set; }
+
+    [Column("TGL_BAYAR_SANKSI_KENAIKAN", TypeName = "DATE")]
+    public DateTime? TglBayarSanksiKenaikan { get; set; }
+
+    [Column("NOMINAL_JAMBONG_BAYAR", TypeName = "NUMBER")]
+    public decimal? NominalJambongBayar { get; set; }
+
+    [Column("AKUN_JAMBONG_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? AkunJambongBayar { get; set; }
+
+    [Column("KELOMPOK_JAMBONG_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? KelompokJambongBayar { get; set; }
+
+    [Column("JENIS_JAMBONG_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? JenisJambongBayar { get; set; }
+
+    [Column("OBJEK_JAMBONG_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? ObjekJambongBayar { get; set; }
+
+    [Column("RINCIAN_JAMBONG_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? RincianJambongBayar { get; set; }
+
+    [Column("SUB_RINCIAN_JAMBONG_BAYAR")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? SubRincianJambongBayar { get; set; }
+
+    [Column("INS_DATE", TypeName = "DATE")]
+    public DateTime InsDate { get; set; }
+
+    [Column("INS_BY")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string InsBy { get; set; } = null!;
+
+    [Column("UPD_DATE", TypeName = "DATE")]
+    public DateTime UpdDate { get; set; }
+
+    [Column("UPD_BY")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string UpdBy { get; set; } = null!;
 }

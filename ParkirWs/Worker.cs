@@ -101,7 +101,7 @@ namespace ParkirWs
 			WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
 		ELSE 0
 		END AS IS_TUTUP,
-		'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,
+        'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
         '-'  AKUN  ,
         '-'  NAMA_AKUN         ,
         '-'  KELOMPOK      ,
@@ -266,7 +266,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
 	                            WHEN STATUS_OP_DESC <> 'BUKA' THEN 0  
 	                            ELSE 1 
 	                        END AS IS_TUTUP,
-	                        NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA 0') WILAYAH_PAJAK,
+	                        NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA ') WILAYAH_PAJAK,
 	                        34 KATEGORI_ID,
 	                        'PARKIR' KATEGORI_NAMA,
 	                            0 METODE_PEMBAYARAN,
