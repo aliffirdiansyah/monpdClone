@@ -15,7 +15,7 @@ namespace MonPDReborn.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Dashboard");
+            return View();
         }
 
         public IActionResult Privacy()

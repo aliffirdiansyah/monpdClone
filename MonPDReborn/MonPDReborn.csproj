@@ -5,6 +5,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Views\Dashboard\**" />
+    <Compile Remove="Views\DataOP\PencarianOP\**" />
+    <Compile Remove="Views\DataOP\ProfileOP\**" />
+    <Content Remove="Views\Dashboard\**" />
+    <Content Remove="Views\DataOP\PencarianOP\**" />
+    <Content Remove="Views\DataOP\ProfileOP\**" />
+    <EmbeddedResource Remove="Views\Dashboard\**" />
+    <EmbeddedResource Remove="Views\DataOP\PencarianOP\**" />
+    <EmbeddedResource Remove="Views\DataOP\ProfileOP\**" />
+    <None Remove="Views\Dashboard\**" />
+    <None Remove="Views\DataOP\PencarianOP\**" />
+    <None Remove="Views\DataOP\ProfileOP\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\DashboardController.cs" />
+    <Compile Remove="Controllers\DataOP\PencarianOPController.cs" />
+    <Compile Remove="Controllers\DataOP\ProfileOPController.cs" />
+    <Compile Remove="Models\DashboardVM.cs" />
+    <Compile Remove="Models\DataOP\PencarianOPVM.cs" />
+    <Compile Remove="Models\DataOP\ProfileOPVM.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Remove="Views\EvaluasiTarget\KontrolPembayaran\_ShowHotel.cshtml" />
     <Content Remove="Views\EvaluasiTarget\KontrolPembayaran\_ShowRestoran.cshtml" />
   </ItemGroup>
