@@ -365,8 +365,8 @@ namespace MonPDReborn.Models
                 var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear);
                 var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 1);
 
-                var OpBphtbNow = 0;
-                var OpBphtbAwal = 0;
+                var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == currentYear);
+                var OpBphtbAwal = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 1);
 
                 var OpReklameNow = 0;
                 var OpReklameAwal = 0;
@@ -574,7 +574,7 @@ namespace MonPDReborn.Models
 
                 var targetBphtbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
                 var realisasiBphtbNow = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.Pokok) ?? 0;
-                
+
                 var targetReklameNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
                 var realisasiReklameNow = 0;
 
