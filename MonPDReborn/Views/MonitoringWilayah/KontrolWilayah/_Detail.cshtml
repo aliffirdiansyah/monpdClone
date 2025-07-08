@@ -1,0 +1,58 @@
+﻿@model MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.Detail
+
+@(
+Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.DataHarian>()
+    .ID("harianGrid")
+    .DataSource(Model.DataHarianList)
+    .KeyExpr("Tanggal")
+    .ShowBorders(true)
+    .RowAlternationEnabled(true)
+    .ColumnAutoWidth(true)
+    .SearchPanel(sp => sp
+        .Visible(true)
+        .Placeholder("Cari tanggal, UPTB, jenis pajak...")
+        .Width(300)
+    )
+    .Paging(p => p.PageSize(5))
+    .Pager(pg => {
+        pg.ShowPageSizeSelector(true);
+        pg.AllowedPageSizes(new[] { 5, 10, 20 });
+        pg.ShowInfo(true);
+    })
+    .Columns(columns => {
+        columns.AddFor(m => m.Tanggal)
+            .Caption("Tanggal");
+
+        columns.AddFor(m => m.Hari)
+            .Caption("Hari");
+
+        columns.AddFor(m => m.Wilayah)
+            .Caption("Wilayah");
+
+        columns.AddFor(m => m.JenisPajak)
+            .Caption("Jenis Pajak");
+
+        columns.AddFor(m => m.Target)
+            .Caption("Target")
+            .Format(Format.Currency);
+
+        columns.AddFor(m => m.Realisasi)
+            .Caption("Realisasi")
+            .Format(Format.Currency);
+
+        columns.Add()
+            .Caption("Pencapaian (%)")
+            .CellTemplate(@<text>
+                <% 
+                    var val = data.Pencapaian;
+                    var color = val >= 90 ? "bg-success" : val >= 70 ? "bg-warning" : "bg-danger";
+                %>
+                <div class="d-flex align-items-center w-100">
+                    <div class="me-2 fw-semibold"><%= val %>%</div>
+                    <div class="progress w-100" style="height:6px;">
+                        <div class="progress-bar <%= color %>" style="width:<%= val %>%"></div>
+                    </div>
+                </div>
+            </text>);
+    })
+)
