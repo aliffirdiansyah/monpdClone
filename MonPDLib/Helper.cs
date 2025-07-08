@@ -59,6 +59,43 @@ namespace MonPDLib
             public decimal NILAI_PENGURANG { get; set; }
             public decimal POKOK { get; set; }
         }
+        public class OpSkpdBphtb
+        {
+            public string IDSSPD { get; set; }
+            public DateTime TGL_BAYAR { get; set; }
+            public DateTime TGL_DATA { get; set; }
+            public string AKUN { get; set; }
+            public string NAMA_AKUN { get; set; }
+            public string JENIS { get; set; }
+            public string NAMA_JENIS { get; set; }
+            public string OBJEK { get; set; }
+            public string NAMA_OBJEK { get; set; }
+            public string RINCIAN { get; set; }
+            public string NAMA_RINCIAN { get; set; }
+            public string SUB_RINCIAN { get; set; }
+            public string NAMA_SUB_RINCIAN { get; set; }
+            public string SPPT_NOP { get; set; }
+            public string NAMA_WP { get; set; }
+            public string ALAMAT { get; set; }
+            public int MASA { get; set; }
+            public int TAHUN { get; set; }
+            public decimal POKOK { get; set; }
+            public decimal SANKSI { get; set; }
+            public string NOMORDASARSETOR { get; set; }
+            public string TEMPATBAYAR { get; set; }
+            public string REFSETORAN { get; set; }
+            public DateTime REKON_DATE { get; set; }
+            public string REKON_BY { get; set; }
+            public string KD_PEROLEHAN { get; set; }
+            public int KD_BYR { get; set; }
+            public string KODE_NOTARIS { get; set; }
+            public string KD_PELAYANAN { get; set; }
+            public string PEROLEHAN { get; set; }
+            public string KD_CAMAT { get; set; }
+            public string KD_LURAH { get; set; }
+            public string KELOMPOK { get; set; }
+            public string NAMA_KELOMPOK { get; set; }
+        }
         public class OPSkpdHiburan
         {
             public string NOP { get; set; }
