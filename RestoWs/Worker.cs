@@ -112,7 +112,7 @@ namespace RestoWs
                         sysdate INS_dATE, 
                         'JOB' INS_BY,
                         TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-                        'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,'-'  AKUN  ,
+                        'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,'-'  AKUN  ,
                         '-'  NAMA_AKUN         ,
                         '-'  KELOMPOK      ,
                         '-'  NAMA_KELOMPOK     ,
@@ -280,7 +280,7 @@ namespace RestoWs
                                 WHEN STATUS_OP_DESC <> 'BUKA' THEN 0  
                                 ELSE 1 
                             END AS IS_TUTUP,
-                            NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA 0') WILAYAH_PAJAK,
+                            NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA ') WILAYAH_PAJAK,
                             CASE NAMA_AYAT_PAJAK
                                 WHEN 'KATERING' THEN 9
                                 WHEN 'RESTORAN' THEN 58

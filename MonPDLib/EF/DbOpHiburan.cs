@@ -65,7 +65,7 @@ public partial class DbOpHiburan
     public string AlamatOpRw { get; set; } = null!;
 
     [Column("TELP")]
-    [StringLength(30)]
+    [StringLength(50)]
     [Unicode(false)]
     public string? Telp { get; set; }
 

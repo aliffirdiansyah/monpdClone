@@ -23,24 +23,27 @@ namespace HotelWs
             {
                 //var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
                 //await Task.Delay(delay, stoppingToken);
 
-                // Eksekusi tugas
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
+
                 try
                 {
+                    // TODO: Taruh pekerjaanmu di sini
+                    _logger.LogInformation("Running daily task at: {time}", DateTimeOffset.Now);
+
+                    // Contoh pekerjaan:
                     await DoWorkFullScanAsync(stoppingToken);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error occurred while executing task.");
+                    _logger.LogError(ex, "Error during daily task.");
                 }
             }
         }
@@ -110,7 +113,7 @@ namespace HotelWs
 			                    WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
 		                    ELSE 0
 		                    END AS IS_TUTUP,
-		                    'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,
+		                    'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
                             '-'  AKUN  ,
                             '-'  NAMA_AKUN         ,
                             '-'  KELOMPOK      ,
@@ -126,7 +129,7 @@ namespace HotelWs
                     FROM OBJEK_PAJAK A
                     JOIN OBJEK_PAJAK_HOTEL B ON A.NOP = B.NOP
                     JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
-                    JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI AND D.AKTIF = 1
+                    JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
                     LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT    
                     ";
 
@@ -242,7 +245,9 @@ namespace HotelWs
                                 }
 
                                 _contMonPd.SaveChanges();
-                                Console.WriteLine($"DB_OP {i} {item.Nop}");
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine($"DB_OP_HOTEL {i} {item.Nop}");
+                                Console.ResetColor();
                             }
                         }
                     }
@@ -323,13 +328,14 @@ namespace HotelWs
                     var distinctNop = result.Select(x => x.Nop).ToList();
                     var dataExisting = _contMonPd.DbOpHotels.Where(x => distinctNop.Contains(x.Nop)).ToList();
 
-
                     for (var i = tahunAmbil; i <= tglServer.Year; i++)
                     {
+                        Console.WriteLine($"[PROCESS] DB_OP_HOTEL_HPP {i}");
                         var source = await _contMonPd.DbOpHotels.Where(x => x.TahunBuku == i).ToListAsync();
                         foreach (var item in result)
                         {
-                            var isExist = dataExisting.Where(x => x.Nop == item.Nop).Any();
+                            Console.WriteLine($"[PROCESS] DB_OP_HOTEL_HPP {item.Nop} {i}");
+                            var isExist = dataExisting.Where(x => x.Nop == item.Nop && x.TahunBuku == i).Any();
                             if (!isExist)
                             {
                                 if (item.TglMulaiBukaOp.Year <= i)
@@ -437,7 +443,9 @@ namespace HotelWs
                                     }
 
                                     _contMonPd.SaveChanges();
-                                    Console.WriteLine($"DB_OP_HPP {item.Nop}");
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine($"DB_OP_HOTEL_HPP {i} {item.Nop}");
+                                    Console.ResetColor();
                                 }
                             }
 
@@ -595,7 +603,9 @@ namespace HotelWs
                             });
 
                             _contMonPd.SaveChanges();
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"DB_MON_HOTEL {thn}-{bln}-{item.NOP}-{item.SEQ}");
+                            Console.ResetColor();
                         }
                     }
                 }
