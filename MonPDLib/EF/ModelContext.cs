@@ -382,8 +382,9 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonBphtb>(entity =>
         {
-            entity.HasKey(e => e.Idsspd).HasName("DB_MON_BPHTB_PK");
+            entity.HasKey(e => new { e.Idsspd, e.Seq }).HasName("DB_MON_BPHTB_PK");
 
+            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
             entity.Property(e => e.RekonBy).IsFixedLength();
         });
 
@@ -1235,6 +1236,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
+        modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
 
         OnModelCreatingPartial(modelBuilder);
     }

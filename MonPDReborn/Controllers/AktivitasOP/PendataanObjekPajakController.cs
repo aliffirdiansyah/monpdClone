@@ -24,7 +24,12 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.AktivitasOP.PendataanObjekPajakVM.Index();
+                var model = new Models.AktivitasOP.PendataanObjekPajakVM.Index()
+                {
+                    TotalOpDiperiksa = 15,
+                    RataRataRealisasi = 25500000m,
+                    TotalRealisasi = 382500000m
+                };
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception ex)

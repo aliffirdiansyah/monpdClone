@@ -23,7 +23,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.AktivitasOP.PemasanganAlatVM.Index();
+                var model = new Models.AktivitasOP.PemasanganAlatVM.Index()
+                {
+                    TotalTerpasang = 171,
+                    TotalBelumTerpasang = 25,
+                };
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (Exception)

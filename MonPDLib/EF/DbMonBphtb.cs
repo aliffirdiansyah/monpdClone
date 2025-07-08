@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
+[PrimaryKey("Idsspd", "Seq")]
 [Table("DB_MON_BPHTB")]
 public partial class DbMonBphtb
 {
@@ -163,4 +164,8 @@ public partial class DbMonBphtb
     [StringLength(150)]
     [Unicode(false)]
     public string? NamaKelompok { get; set; }
+
+    [Key]
+    [Column("SEQ", TypeName = "NUMBER")]
+    public decimal Seq { get; set; }
 }
