@@ -30,11 +30,11 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Show(string keyword)
+        public IActionResult Show()
         {
             try
             {
-                var model = new Models.DataOP.PelaporanOPVM.Show(keyword);
+                var model = new Models.DataOP.PelaporanOPVM.Show();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)

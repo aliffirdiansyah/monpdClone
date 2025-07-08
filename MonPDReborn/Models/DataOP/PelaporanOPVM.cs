@@ -66,24 +66,28 @@ namespace MonPDReborn.Models.DataOP
                         Nop = g.Key,
                         Count = g.Count()
                     })
-                    .ToDictionary(x => x.Nop, x => x.Count);
+                    .ToList(); // Ini dari DB ke List (in-memory)
+
                 var laporResto = context.DbMonRestos
                     .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
                     .GroupBy(x => x.Nop)
-                    .Select(g => g.First()) // ambil salah satu data per NOP untuk ditampilkan
+                    .Select(g => g.First()) // ambil salah satu data per NOP
+                    .ToList()               // ← penting! jadikan in-memory dulu
                     .Select(x => new HasilPelaporan
                     {
-                        
                         NOP = x.Nop,
                         Nama = x.NamaOp,
                         JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                         Wilayah = "",
-                        Status = "", // isi sesuai kebutuhan
-                        PajakTerlapor = dataTerlaporResto.ContainsKey(x.Nop) ? dataTerlaporResto[x.Nop] : 0,
-                        MasaBelumLapor = 12 - (dataTerlaporResto.ContainsKey(x.Nop) ? dataTerlaporResto[x.Nop] : 0),
+                        Status = "",
+                        PajakTerlapor = dataTerlaporResto.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0,
+                        MasaBelumLapor = 12 - (dataTerlaporResto.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0),
                         PajakSeharusnya = 12,
                         Alamat = x.AlamatOp
                     }).ToList();
+
+                ret.AddRange(laporResto);
+
                 return ret;
             }
 
