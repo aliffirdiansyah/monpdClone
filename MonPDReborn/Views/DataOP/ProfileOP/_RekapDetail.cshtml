@@ -24,7 +24,7 @@
     {
 
         columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
-        columns.AddFor(m => m.JmlOpAwal)
+        columns.AddFor(m => m.JmlOpAwal).Format("#,##0")
             .DataField("OPAwal")
             .Caption("OP Awal")
             .CellTemplate(@<text>
@@ -34,13 +34,13 @@
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- value %></span>
+                    <span><%- (value || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpAwal");
 
         columns.AddFor(m => m.JmlOpTutupPermanen)
-            .DataField("JmlOpTutupPermanen")
+            .DataField("JmlOpTutupPermanen").Format("#,##0")
             .Caption("OP Tutup")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -49,13 +49,13 @@
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.JmlOpTutupPermanen %></span>
+                    <span><%- (data.JmlOpTutupPermanen || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpTutupPermanen");
 
         columns.AddFor(m => m.JmlOpBaru)
-            .DataField("JmlOpBaru")
+            .DataField("JmlOpBaru").Format("#,##0")
             .Caption("OP Baru")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -64,14 +64,14 @@
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.JmlOpBaru %></span>
+                    <span><%- (data.JmlOpBaru || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpBaru");
 
 
         columns.AddFor(m => m.JmlOpAkhir)
-            .DataField("JmlOpAkhir")
+            .DataField("JmlOpAkhir").Format("#,##0")
             .Caption("OP Akhir")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -80,7 +80,7 @@
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.JmlOpAkhir %></span>
+                    <span><%- (data.JmlOpAkhir || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpAkhir");
