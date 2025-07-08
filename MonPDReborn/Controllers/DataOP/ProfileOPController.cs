@@ -52,7 +52,7 @@ namespace MonPDReborn.Controllers.DataOP
 
             try
             {
-                var model = new MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap(keyword, finalTahun);
+                var model = new MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap(finalTahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

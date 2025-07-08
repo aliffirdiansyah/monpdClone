@@ -20,9 +20,9 @@ namespace MonPDReborn.Models.DataOP
 
             public ShowRekap() { }
 
-            public ShowRekap(string keyword, int tahun)
+            public ShowRekap(int tahun)
             {
-                DataRekapOPList = Method.GetDataRekapOPList(keyword, tahun);
+                DataRekapOPList = Method.GetDataRekapOPList(tahun);
             }
         }
 
@@ -36,7 +36,7 @@ namespace MonPDReborn.Models.DataOP
 
             public ShowSeries(string keyword)
             {
-                DataSeriesOPList = Method.GetDataSeriesOPList(keyword);
+                DataSeriesOPList = Method.GetDataSeriesOPList();
             }
         }
         public class Detail
@@ -56,7 +56,7 @@ namespace MonPDReborn.Models.DataOP
 
         public class Method
         {
-            public static List<RekapOP> GetDataRekapOPList(string keyword, int tahun)
+            public static List<RekapOP> GetDataRekapOPList(int tahun)
             {
                 var context = DBClass.GetContext();
 
@@ -215,7 +215,7 @@ namespace MonPDReborn.Models.DataOP
                 };
             }
 
-            public static List<SeriesOP> GetDataSeriesOPList(string keyword)
+            public static List<SeriesOP> GetDataSeriesOPList()
             {
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
@@ -412,7 +412,7 @@ namespace MonPDReborn.Models.DataOP
                 return result;
             }
 
-
+            //REKAP OP
             public static List<RekapDetail> GetRekapDetailData(EnumFactory.EPajak JenisPajak, int tahun)
             {
                 var context = DBClass.GetContext();
@@ -589,66 +589,10 @@ namespace MonPDReborn.Models.DataOP
                 }
                 ;
 
-                return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
+                return ret; 
 
             }
-
-            public static List<SeriesDetail> GetSeriesDetailData(EnumFactory.EPajak JenisPajak)
-            {
-                var ret = new List<SeriesDetail>();
-                switch (JenisPajak)
-                {
-                    case EnumFactory.EPajak.MakananMinuman:
-                        ret = new List<SeriesDetail>
-                        {
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Cafe", TahunMines4 = 12, TahunMines3 = 4, TahunMines2 = 6, TahunMines1 = 7, TahunNow = 9 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", TahunMines4 = 18, TahunMines3 = 6, TahunMines2 = 9, TahunMines1 = 8, TahunNow = 10 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung", TahunMines4 = 25, TahunMines3 = 7, TahunMines2 = 10, TahunMines1 = 12, TahunNow = 15 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", TahunMines4 = 20, TahunMines3 = 5, TahunMines2 = 8, TahunMines1 = 9, TahunNow = 11 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kedai", TahunMines4 = 28, TahunMines3 = 8, TahunMines2 = 12, TahunMines1 = 13, TahunNow = 16 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung Makan", TahunMines4 = 35, TahunMines3 = 10, TahunMines2 = 15, TahunMines1 = 16, TahunNow = 20 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kafe & Kedai", TahunMines4 = 22, TahunMines3 = 6, TahunMines2 = 11, TahunMines1 = 12, TahunNow = 14 },
-                        };
-
-                        break;
-                    case EnumFactory.EPajak.TenagaListrik:
-                        break;
-                    case EnumFactory.EPajak.JasaPerhotelan:
-                        ret = new List<SeriesDetail>
-                        {
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Lima", TahunMines4 = 50, TahunMines3 = 57, TahunMines2 = 52, TahunMines1 = 59, TahunNow = 60 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Empat", TahunMines4 = 15, TahunMines3 = 5, TahunMines2 = 8, TahunMines1 = 4, TahunNow = 6 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Tiga", TahunMines4 = 25, TahunMines3 = 0, TahunMines2 = 1, TahunMines1 = 5, TahunNow = 4 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Dua", TahunMines4 = 10, TahunMines3 = 2, TahunMines2 = 2, TahunMines1 = 7, TahunNow = 9 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Satu", TahunMines4 = 30, TahunMines3 = 4, TahunMines2 = 3, TahunMines1 = 7, TahunNow = 10 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Non Bintang", TahunMines4 = 40, TahunMines3 = 8, TahunMines2 = 5, TahunMines1 = 8, TahunNow = 15 },
-                        };
-                        break;
-                    case EnumFactory.EPajak.JasaParkir:
-                        break;
-                    case EnumFactory.EPajak.JasaKesenianHiburan:
-                        break;
-                    case EnumFactory.EPajak.AirTanah:
-                        break;
-                    case EnumFactory.EPajak.Reklame:
-                        break;
-                    case EnumFactory.EPajak.PBB:
-                        break;
-                    case EnumFactory.EPajak.BPHTB:
-                        break;
-                    case EnumFactory.EPajak.OpsenPkb:
-                        break;
-                    case EnumFactory.EPajak.OpsenBbnkb:
-                        break;
-                    default:
-                        break;
-                }
-                ;
-
-                return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
-
-            }
-
+            
             public static List<RekapMaster> GetRekapMasterData(EnumFactory.EPajak JenisPajak, int kategori, string status, int tahun)
             {
                 var context = DBClass.GetContext();
@@ -1151,6 +1095,62 @@ namespace MonPDReborn.Models.DataOP
                 }
                 ;
 
+                return ret;
+            }
+
+            //SERIES DATA JUMLAH OP
+            public static List<SeriesDetail> GetSeriesDetailData(EnumFactory.EPajak JenisPajak)
+            {
+                var ret = new List<SeriesDetail>();
+                switch (JenisPajak)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        ret = new List<SeriesDetail>
+                        {
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Cafe", TahunMines4 = 12, TahunMines3 = 4, TahunMines2 = 6, TahunMines1 = 7, TahunNow = 9 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", TahunMines4 = 18, TahunMines3 = 6, TahunMines2 = 9, TahunMines1 = 8, TahunNow = 10 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung", TahunMines4 = 25, TahunMines3 = 7, TahunMines2 = 10, TahunMines1 = 12, TahunNow = 15 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", TahunMines4 = 20, TahunMines3 = 5, TahunMines2 = 8, TahunMines1 = 9, TahunNow = 11 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kedai", TahunMines4 = 28, TahunMines3 = 8, TahunMines2 = 12, TahunMines1 = 13, TahunNow = 16 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung Makan", TahunMines4 = 35, TahunMines3 = 10, TahunMines2 = 15, TahunMines1 = 16, TahunNow = 20 },
+                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kafe & Kedai", TahunMines4 = 22, TahunMines3 = 6, TahunMines2 = 11, TahunMines1 = 12, TahunNow = 14 },
+                        };
+
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        ret = new List<SeriesDetail>
+                        {
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Lima", TahunMines4 = 50, TahunMines3 = 57, TahunMines2 = 52, TahunMines1 = 59, TahunNow = 60 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Empat", TahunMines4 = 15, TahunMines3 = 5, TahunMines2 = 8, TahunMines1 = 4, TahunNow = 6 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Tiga", TahunMines4 = 25, TahunMines3 = 0, TahunMines2 = 1, TahunMines1 = 5, TahunNow = 4 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Dua", TahunMines4 = 10, TahunMines3 = 2, TahunMines2 = 2, TahunMines1 = 7, TahunNow = 9 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Satu", TahunMines4 = 30, TahunMines3 = 4, TahunMines2 = 3, TahunMines1 = 7, TahunNow = 10 },
+                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Non Bintang", TahunMines4 = 40, TahunMines3 = 8, TahunMines2 = 5, TahunMines1 = 8, TahunNow = 15 },
+                        };
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
+                    default:
+                        break;
+                }
+                ;
+
                 return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
 
             }
@@ -1244,7 +1244,7 @@ namespace MonPDReborn.Models.DataOP
                 }
                 ;
 
-                return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
+                return ret; 
 
             }
 
