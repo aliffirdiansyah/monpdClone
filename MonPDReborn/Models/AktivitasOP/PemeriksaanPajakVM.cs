@@ -5,6 +5,10 @@
         public class Index
         {
             public string Keyword { get; set; } = null!;
+
+            public int TotalOpDiperiksa { get; set; }
+            public decimal RataRataKurangBayar { get; set; }
+            public decimal TotalKurangBayar { get; set; }
             public Index() { }
         }
 
