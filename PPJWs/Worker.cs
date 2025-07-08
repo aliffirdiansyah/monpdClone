@@ -102,6 +102,10 @@ namespace PPJWs
         	ELSE '-'
         END AS PERUNTUKAN_NAMA,
         CASE SUMBER
+        	WHEN 0 THEN 11
+        	ELSE 12
+        END AS KATEGORI_ID,
+        CASE SUMBER
         	WHEN 0 THEN 'SENDIRI'
         	ELSE 'SUMBER LAIN'
         END AS KATEGORI_NAMA,
@@ -113,7 +117,7 @@ namespace PPJWs
 			WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
 		ELSE 0
 		END AS IS_TUTUP,
-		'SURABAYA 0' || UPTB_ID AS WILAYAH_PAJAK,
+		'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
         '-'  AKUN  ,
         '-'  NAMA_AKUN         ,
         '-'  KELOMPOK      ,
@@ -276,7 +280,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
         WHEN STATUS_OP_DESC <> 'BUKA' THEN 0  
         ELSE 1 
     END AS IS_TUTUP,
-    NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA 0') WILAYAH_PAJAK,
+    NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA ') WILAYAH_PAJAK,
     NAMA_AYAT_PAJAK,
     CASE NAMA_JENIS_PAJAK
 		WHEN 'PPJ NON PLN' THEN 12
@@ -288,6 +292,11 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
 		WHEN 'PPJ PLN' THEN 'DIHASILKAN SENDIRI'
 		ELSE NULL
 	END AS SUMBER_NAMA,
+    CASE NAMA_JENIS_PAJAK
+		WHEN 'PPJ NON PLN' THEN 12
+		WHEN 'PPJ PLN' THEN 11
+		ELSE NULL
+	END AS KATEGORI_ID,
     CASE NAMA_JENIS_PAJAK
 		WHEN 'PPJ NON PLN' THEN 'SUMBER LAIN'
 		WHEN 'PPJ PLN' THEN 'DIHASILKAN SENDIRI'
@@ -669,7 +678,6 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                             int masaPajak = item.MASAPAJAK;
                             int seqPajak = item.SEQ;
                             var rowMonListrik = _contMonPd.DbMonPpjs.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak && x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
-
                             if (rowMonListrik != null)
                             {
                                 _contMonPd.DbMonPpjs.Remove(rowMonListrik);

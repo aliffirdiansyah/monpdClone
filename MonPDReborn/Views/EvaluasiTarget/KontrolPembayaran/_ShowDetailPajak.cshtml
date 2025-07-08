@@ -1,0 +1,44 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.ShowDetailPajak
+
+<div class="card-header d-flex">
+    <div class="flex-grow-1">
+        <h4 class="card-title fs-16 mb-0">
+            Detail Kontrol Pembayaran Pajak : @Model.Kategori
+        </h4>
+    </div>
+</div>
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailPajak>()
+        .ID("detailPajakGrid")
+        .DataSource(Model.DataDetailList)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NOP).Caption("NOP");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            columns.AddFor(m => m.Wilayah).Caption("Wilayah");
+            columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+        })
+        
+        )
+</div>

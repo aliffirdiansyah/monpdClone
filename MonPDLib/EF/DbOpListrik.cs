@@ -189,4 +189,7 @@ public partial class DbOpListrik
     [StringLength(50)]
     [Unicode(false)]
     public string? KategoriNama { get; set; }
+
+    [Column("KATEGORI_ID", TypeName = "NUMBER(38)")]
+    public decimal? KategoriId { get; set; }
 }

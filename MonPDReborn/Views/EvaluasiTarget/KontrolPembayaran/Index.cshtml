@@ -18,49 +18,49 @@
             </div>
             <div class="card-body">
                 
-                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" id= "jenisPajakTabs"role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active jenis-pajak-tab" href="javascript:void(0);" data-jenis="Hotel" onclick="loadShow('Hotel', 2025)">
+                        <a class="nav-link active jenis-pajak-tab" href="#" data-jenis="Hotel" >
                             Hotel
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="Restoran" onclick="loadShow('Restoran', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Restoran" >
                             Restoran
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="Parkir" onclick="loadShow('Parkir', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Parkir" >
                             Parkir
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="Hiburan" onclick="loadShow('Hiburan', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Hiburan" >
                             Hiburan
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="PPJ" onclick="loadShow('PPJ', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PPJ" >
                             PPJ
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="PBB" onclick="loadShow('PBB', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PBB" >
                             PBB
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="BPHTB" onclick="loadShow('BPHTB', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="BPHTB" >
                             BPHTB
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="Reklame" onclick="loadShow('Reklame', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Reklame" >
                             Reklame
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="javascript:void(0);" data-jenis="AirTanah" onclick="loadShow('AirTanah', 2025)">
+                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="AirTanah" >
                             Air Tanah
                         </a>
                     </li>
@@ -68,294 +68,346 @@
 
                 <div class="tab-content text-muted">
 
-                    <div class="tab-pane active show" id="Hotel" role="tabpanel">
-
+                    <div class="tab-pane active show" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="card-title fs-16 mb-0">
                                 Kontrol Pembayaran Pajak
                             </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-Hotel" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-Hotel" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-Hotel" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-Hotel"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-Hotel" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-Hotel" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-Hotel"></div>
+                        <div id="kontrolPotensiSpinner-Hotel" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="Restoran" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-Restoran" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-Restoran" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-Restoran" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-Restoran"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-Restoran" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-Restoran" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-Restoran"></div>
+                        <div id="kontrolPotensiSpinner-Restoran" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="Parkir" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-Parkir" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-Parkir" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-Parkir" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-Parkir"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-Parkir" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-Parkir" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-Parkir"></div>
+                        <div id="kontrolPotensiSpinner-Parkir" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="Hiburan" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-Hiburan" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-Hiburan" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-Hiburan" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-Hiburan"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-Hiburan" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-Hiburan" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-Hiburan"></div>
+                        <div id="kontrolPotensiSpinner-Hiburan" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="PPJ" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-PPJ" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-PPJ" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-PPJ" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-PPJ"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-PPJ" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-PPJ" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-PPJ"></div>
+                        <div id="kontrolPotensiSpinner-PPJ" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="PBB" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-PBB" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-PBB" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-PBB" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-PBB"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-PBB" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-PBB" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-PBB"></div>
+                        <div id="kontrolPotensiSpinner-PBB" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="BPHTB" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-BPHTB" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-BPHTB" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-BPHTB" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-BPHTB"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-BPHTB" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-BPHTB" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-BPHTB"></div>
+                        <div id="kontrolPotensiSpinner-BPHTB" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="Reklame" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-Reklame" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-Reklame" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-Reklame" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-Reklame"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-Reklame" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-Reklame" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-Reklame"></div>
+                        <div id="kontrolPotensiSpinner-Reklame" style="display:none">Loading potensi…</div>
                     </div>
 
-                    <div class="tab-pane" id="AirTanah" role="tabpanel">
-
+                    <div class="tab-pane" id="kontenTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title fs-16 mb-0">
+                                Kontrol Pembayaran Pajak
+                            </h4>
 
-                            <div class="tahun-tab">
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2021">2021</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2022">2022</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2023">2023</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link me-1" data-tahun="2024">2024</a>
-                                <a href="#" class="btn btn-md btn-outline-primary tahun-link active" data-tahun="2025">2025</a>
+                            <div class="btn-group mb-3" role="group" id="tahunGroup">
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2021">2021</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2022">2022</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2023">2023</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link" data-tahun="2024">2024</button>
+                                <button type="button" class="btn btn-outline-primary tahun-link active" data-tahun="2025">2025</button>
                             </div>
-
-
                         </div>
 
-                        <div class="loading-spinner text-center my-4" id="kontrolPembayaranSpinner-AirTanah" style="display:none">
-                            <div class="spinner-border"></div>
-                        </div>
+                        <div id="kontrolPembayaranContainer-AirTanah" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-AirTanah" style="display:none">Loading pembayaran…</div>
 
-                        <div id="kontrolPembayaranContainer-AirTanah"></div>
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Upaya Pajak
+                        </h4>
+
+                        <div id="kontrolUpayaContainer-AirTanah" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-AirTanah" style="display:none">Loading upaya…</div>
+
+                        <h4 class="card-title fs-16 mb-1">
+                            Kontrol Potensi Pajak
+                        </h4>
+
+                        <div id="kontrolPotensiContainer-AirTanah"></div>
+                        <div id="kontrolPotensiSpinner-AirTanah" style="display:none">Loading potensi…</div>
                     </div>
-
+                   
                 </div>
                 
+                <div class="modal fade" id="modalDetailPajak" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex">
+                                <div class="flex-grow-1">
+                                    <h4 class="modal-title fs-16 mb-0">
+                                        Data OP Pembayaran Pajak
+                                    </h4>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center p-3">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="modalDetailUpaya" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex">
+                                <div class="flex-grow-1">
+                                    <h4 class="modal-title fs-16 mb-0">
+                                        Data OP Upaya Pembayaran Pajak
+                                    </h4>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center p-3">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
 </div>
-@* 
-@section Scripts{
-    <script>
-                $(document).ready(function () {
-            // Hotel
-            loadShowHotel(2025);
-            $('#tahunTabs a').on('click', function (e) {
-                e.preventDefault();
-                const tahun = $(this).data('tahun');
-                $('#tahunTabs a').removeClass('active');
-                $(this).addClass('active');
-                loadShowHotel(tahun);
-            });
-
-            // Restoran
-            loadShowRestoran(2025);
-            $('#tahunTabsRestoran a').on('click', function (e) {
-                e.preventDefault();
-                const tahun = $(this).data('tahun');
-                $('#tahunTabsRestoran a').removeClass('active');
-                $(this).addClass('active');
-                loadShowRestoran(tahun);
-            });
-        });
-
-
-        function loadShowHotel(tahun) {
-            $.ajax({
-                url: '@Url.Action("ShowHotel", "KontrolPembayaran")',
-                type: 'GET',
-                data: { tahun: tahun },
-                beforeSend: function () {
-                    $('#loading2-ShowHotel').show();
-                    $('#kontrolPembayaranContainer').hide();
-                },
-                success: function (result) {
-                    $('#loading2-ShowHotel').hide();
-                    $('#kontrolPembayaranContainer').html(result).fadeIn();
-                },
-                error: function () {
-                    $('#loading2-ShowHotel').hide();
-                    $('#kontrolPembayaranContainer').html('<div class="alert alert-danger">Gagal memuat data Hotel.</div>').fadeIn();
-                }
-            });
-        }
-
-        function loadShowRestoran(tahun) {
-            $.ajax({
-                url: '@Url.Action("ShowRestoran", "KontrolPembayaran")',
-                type: 'GET',
-                data: { tahun: tahun },
-                beforeSend: function () {
-                    $('#loading2-ShowRestoran').show();
-                    $('#kontrolRestoranContainer').hide();
-                },
-                success: function (response) {
-                    $('#loading2-ShowRestoran').hide();
-
-                    if (response.Status === undefined) {
-                        $('#kontrolRestoranContainer').html(response).fadeIn();
-                    } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Peringatan',
-                            text: response.Message
-                        });
-                    }
-                },
-                error: function () {
-                    $('#loading2-ShowRestoran').hide();
-                    $('#kontrolRestoranContainer').html(
-                        '<div class="alert alert-danger">Gagal memuat data Restoran.</div>'
-                    ).fadeIn();
-                }
-            });
-        }
-
-    </script>
-
-} *@
 
 @section Scripts {
     <script>
@@ -366,28 +418,40 @@
             currentJenis = jenisPajak;
             currentTahun = tahun;
 
+            const jenisKey = jenisPajak.toUpperCase();
+
             const container = $(`#kontrolPembayaranContainer-${jenisPajak}`);
             const spinner = $(`#kontrolPembayaranSpinner-${jenisPajak}`);
 
-            console.log(`LoadShow untuk ${jenisPajak} tahun ${tahun}`);
+            const upayaContainer = $(`#kontrolUpayaContainer-${jenisPajak}`);
+            const upayaSpinner = $(`#kontrolUpayaSpinner-${jenisPajak}`);
+
+            const potensiContainer = $(`#kontrolPotensiContainer-${jenisPajak}`);
+            const potensiSpinner = $(`#kontrolPotensiSpinner-${jenisPajak}`);
+
+            console.log(`loadShow untuk ${jenisPajak} tahun ${tahun}`);
 
             // Tab tombol
             $('.jenis-pajak-tab').removeClass('active');
             $(`.jenis-pajak-tab[data-jenis="${jenisPajak}"]`).addClass('active');
 
-            // Tab konten
-            // $('.tab-pane').removeClass('active show');
-            // $(`#${jenisPajak}`).addClass('active show');
-
+            // Konten Show
             container.hide();
             spinner.show();
 
+            // Konten Upaya
+            upayaContainer.hide();
+            upayaSpinner.show();
+
+            // Konten Potensi
+            potensiContainer.hide();
+            potensiSpinner.show();
+
+            // Panggil Show
             $.ajax({
                 url: '/KontrolPembayaran/Show',
                 data: { jenisPajak, tahun },
                 success: function (html) {
-                        console.log(`AJAX success untuk ${jenisPajak} ${tahun}:`, html);
-
                     spinner.hide();
                     container.html(html).show();
 
@@ -399,31 +463,211 @@
                 },
                 error: function () {
                     spinner.hide();
-                    container.html('<div class="text-danger">Gagal memuat data.</div>').show();
+                    container.html('<div class="text-danger">Gagal memuat data pajak.</div>').show();
+                }
+            });
+
+            // Panggil ShowUpaya
+            $.ajax({
+                url: '/KontrolPembayaran/ShowUpaya',
+                data: { jenisPajak, tahun },
+                success: function (html) {
+                    upayaSpinner.hide();
+                    upayaContainer.html(html).show();
+
+                    requestAnimationFrame(() => {
+                        upayaContainer.find("script").each(function () {
+                            $.globalEval(this.text || this.textContent || this.innerHTML || '');
+                        });
+                    });
+                },
+                error: function () {
+                    upayaSpinner.hide();
+                    upayaContainer.html('<div class="text-danger">Gagal memuat data upaya.</div>').show();
+                }
+            });
+
+            // Panggil Potensi
+            $.ajax({
+                url: '/KontrolPembayaran/ShowPotensi',
+                data: { jenisPajak, tahun },
+                success: function (html) {
+                    potensiSpinner.hide();
+                    potensiContainer.html(html).show();
+
+                    requestAnimationFrame(() => {
+                        potensiContainer.find("script").each(function () {
+                            $.globalEval(this.text || this.textContent || this.innerHTML || '');
+                        });
+                    });
+                },
+                error: function () {
+                    potensiSpinner.hide();
+                    potensiContainer.html('<div class="text-danger">Gagal memuat data potensi.</div>').show();
                 }
             });
         }
 
 
-        $(document).ready(function () {
+                $(document).ready(function () {
             loadShow(currentJenis, currentTahun);
 
-            $('.tahun-link').on('click', function (e) {
+            // Tahun
+            $('#tahunGroup').on('click', '.tahun-link', function (e) {
                 e.preventDefault();
-                $('.tahun-link').removeClass('active');
+
+                $('#tahunGroup .tahun-link').removeClass('active');
                 $(this).addClass('active');
 
                 const tahunDipilih = $(this).data('tahun');
                 loadShow(currentJenis, tahunDipilih);
             });
 
-            $('.jenis-pajak-tab').on('click', function () {
-                const jenis = $(this).data('jenis');
-                loadShow(jenis, currentTahun);
+            // Jenis Pajak
+            $('#jenisPajakTabs').on('click', '.jenis-pajak-tab', function (e) {
+                e.preventDefault();
+
+                $('#jenisPajakTabs .jenis-pajak-tab').removeClass('active');
+                $(this).addClass('active');
+
+                const jenisDipilih = $(this).data('jenis');
+                loadShow(jenisDipilih, currentTahun);
             });
         });
 
+    </script>
 
+    <script>
+
+        function showPajakCellTemplate(cellElement, cellInfo) {
+            const JenisPajak = cellInfo.data.JenisPajak;
+            const kategori = cellInfo.data.Kategori;
+            const tahun = 2025; // atau ambil dari cellInfo.data.Tahun kalau ada
+
+            // Tentukan status berdasar kolom
+            let status = '';
+            const caption = cellInfo.column.caption?.toUpperCase();
+
+            if (caption.includes('BYR')) {
+                status = 'BYR';
+            } else if (caption.includes('N/TS')) {
+                status = 'NTS';
+            } else if (caption.includes('BLM')) {
+                status = 'BLM';
+            }
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${status}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    // kirim parameter dengan status yang benar
+                    onPajakClick(JenisPajak, kategori, tahun, status);
+                });
+
+            const span = $('<span>').text(cellInfo.value);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(button)
+                .append(span);
+
+            $(cellElement).append(wrapper);
+        }
+
+
+
+        function upayaPajakCellTemplate(cellElement, cellInfo) {
+            const JenisPajak = cellInfo.data.JenisPajak;
+            const kategori = cellInfo.data.Kategori;
+            const tahun = 2025; // atau ambil dari cellInfo.data.Tahun kalau tersedia
+
+            // Tentukan status berdasar kolom
+            let status = '';
+            const caption = cellInfo.column.caption?.toUpperCase();
+
+            if (caption.includes('HIMB')) {
+                status = 'HIMB';
+            } else if (caption.includes('TEGUR')) {
+                status = 'TEGUR';
+            } else if (caption.includes('SIL')) {
+                status = 'SIL';
+            } else if (caption.includes('KEJAK')) {
+                status = 'KEJAK';
+            }
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${status}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    onUpayaClick(JenisPajak, kategori, tahun, status);
+                });
+
+            const span = $('<span>').text(cellInfo.value);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(button)
+                .append(span);
+
+            $(cellElement).append(wrapper);
+        }
+
+
+        function onPajakClick(jenisPajak, kategori, tahun, status) {
+            showDetailPajak(jenisPajak, kategori, tahun, status);
+        }
+
+        function onUpayaClick(jenisPajak, kategori, tahun, status) {
+            showDetailUpaya(jenisPajak, kategori, tahun, status);
+        }
+
+        function showDetailPajak(jenisPajak, kategori, tahun, status) {
+            $.ajax({
+                url: '/KontrolPembayaran/ShowDetailPajak',
+                type: 'GET',
+                data: {
+                    jenisPajak: jenisPajak,
+                    kategori: kategori,
+                    tahun: tahun,
+                    status: status
+                },
+                beforeSend: function () {
+                    $('#modalDetailPajak .modal-body').html('<div class="text-center p-3">Loading…</div>');
+                    $('#modalDetailPajak').modal('show');
+                },
+                success: function (html) {
+                    $('#modalDetailPajak .modal-body').html(html);
+                },
+                error: function () {
+                    $('#modalDetailPajak .modal-body').html('<div class="text-danger">⚠ Gagal memuat data</div>');
+                }
+            });
+        }
+
+        function showDetailUpaya(jenisPajak, kategori, tahun, status) {
+            $.ajax({
+                url: '/KontrolPembayaran/ShowDetailUpaya',
+                type: 'GET',
+                data: {
+                    jenisPajak: jenisPajak,
+                    kategori: kategori,
+                    tahun: tahun,
+                    status: status
+                },
+                beforeSend: function () {
+                    $('#modalDetailUpaya .modal-body').html('<div class="text-center p-3">Loading…</div>');
+                    $('#modalDetailUpaya').modal('show');
+                },
+                success: function (html) {
+                    $('#modalDetailUpaya .modal-body').html(html);
+                },
+                error: function () {
+                    $('#modalDetailUpaya .modal-body').html('<div class="text-danger">⚠ Gagal memuat data</div>');
+                }
+            });
+        }
     </script>
 }
 
