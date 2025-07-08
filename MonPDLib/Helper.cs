@@ -59,6 +59,18 @@ namespace MonPDLib
             public decimal NILAI_PENGURANG { get; set; }
             public decimal POKOK { get; set; }
         }
+        public class OPSkpdPbb
+        {
+            public string NOP { get; set; }
+            public int TAHUN { get; set; }
+            public int MASAPAJAK { get; set; }
+            public int SEQ { get; set; }
+            public int JENIS_KETETAPAN { get; set; }
+            public DateTime TGL_KETETAPAN { get; set; }
+            public DateTime? TGL_JATUH_TEMPO_BAYAR { get; set; }
+            public decimal NILAI_PENGURANG { get; set; }
+            public decimal POKOK { get; set; }
+        }
         public class OpSkpdBphtb
         {
             public string IDSSPD { get; set; }
