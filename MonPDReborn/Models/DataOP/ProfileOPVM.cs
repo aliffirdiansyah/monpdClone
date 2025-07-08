@@ -1216,6 +1216,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpRestoMines4,
                                 TahunMines3 = OpRestoMines3,
                                 TahunMines2 = OpRestoMines2,
@@ -1239,6 +1240,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpListrikMines4,
                                 TahunMines3 = OpListrikMines3,
                                 TahunMines2 = OpListrikMines2,
@@ -1262,6 +1264,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpHotelMines4,
                                 TahunMines3 = OpHotelMines3,
                                 TahunMines2 = OpHotelMines2,
@@ -1285,6 +1288,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpParkirMines4,
                                 TahunMines3 = OpParkirMines3,
                                 TahunMines2 = OpParkirMines2,
@@ -1308,6 +1312,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpHiburanMines4,
                                 TahunMines3 = OpHiburanMines3,
                                 TahunMines2 = OpHiburanMines2,
@@ -1331,6 +1336,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpAbtMines4,
                                 TahunMines3 = OpAbtMines3,
                                 TahunMines2 = OpAbtMines2,
@@ -1357,6 +1363,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpPbbMines4,
                                 TahunMines3 = OpPbbMines3,
                                 TahunMines2 = OpPbbMines2,
@@ -1380,6 +1387,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
                                 TahunMines4 = OpBphtbMines4,
                                 TahunMines3 = OpBphtbMines3,
                                 TahunMines2 = OpBphtbMines2,
@@ -2284,6 +2292,7 @@ namespace MonPDReborn.Models.DataOP
         {
             public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
+            public int KategoriId { get; set; } 
             public string Kategori { get; set; } = null!;
             public int TahunMines4 { get; set; }
             public int TahunMines3 { get; set; }
