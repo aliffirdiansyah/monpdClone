@@ -11,7 +11,10 @@ namespace MonPDReborn.Models.DataOP
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
+            public Index()
+            {
+                
+            }
         }
 
         public class ShowRekap
