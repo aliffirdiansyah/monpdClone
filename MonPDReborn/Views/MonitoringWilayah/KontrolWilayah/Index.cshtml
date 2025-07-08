@@ -38,14 +38,10 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <select class="form-select rounded-pill mb-3" aria-label="Default select example">
-                            <option selected>Semua Jenis Pajak</option>
-                            <option value="Pajakhotel">Pajak Hotel</option>
-                            <option value="Pajakrestoran">Pajak Restoran</option>
-                            <option value="Pajakhiburan">Pajak Hiburan</option>
-                            <option value="Pajakparkir">Pajak Parkir</option>
-                            <option value="Pajakreklame">Pajak Reklame</option>
-                        </select>
+                        @Html.DropDownListFor(model => model.SelectedPajak,
+                                 new SelectList(Model.JenisPajakList, "Value", "Text"),
+                                 "Semua Jenis Pajak",
+                                 new { @class = "form-select rounded-pill mb-3", @aria_label = "Default select example" })
                     </div>
 
                     <div class="col-lg-2">
@@ -59,17 +55,10 @@
                     </div>
 
                     <div class="col-lg-2">
-                        <select class="form-select rounded-pill mb-3" aria-label="Default select example">
-                            <option selected>Semua Bulan</option>
-                            <option value="1">Januari</option>
-                            <option value="2">Februari</option>
-                            <option value="3">Maret</option>
-                            <option value="4">April</option>
-                            <option value="5">Mei</option>
-                            <option value="6">Juni</option>
-                            <option value="7">Juli</option>
-
-                        </select>
+                        @Html.DropDownListFor(model => model.SelectedBulan,
+                                 new SelectList(Model.BulanList, "Value", "Text"),
+                                 "Semua Bulan",
+                                 new { @class = "form-select rounded-pill mb-3" })
                     </div>
 
                     <div class="col-lg-2">
