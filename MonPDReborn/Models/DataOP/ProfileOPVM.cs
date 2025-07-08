@@ -3,6 +3,7 @@ using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
 using MonPDLib.General;
 using static MonPDReborn.Models.DataOP.ProfilePembayaranOPVM;
 using static MonPDReborn.Models.DashboardVM;
+using MonPDLib.EF;
 
 namespace MonPDReborn.Models.DataOP
 {
@@ -439,6 +440,7 @@ namespace MonPDReborn.Models.DataOP
                                 JenisPajak = JenisPajak.GetDescription(),
                                 EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
+                                KategoriId = (int)kat.Id,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpRestoAwal,
                                 JmlOpTutupPermanen = OpRestoTutup,
@@ -463,6 +465,7 @@ namespace MonPDReborn.Models.DataOP
                         //        JenisPajak = JenisPajak.GetDescription(),
                         //        EnumPajak = (int)JenisPajak,
                         //        Tahun = tahun,
+                        //        KategoriId = (int)kat.Id,
                         //        Kategori = kat.Nama,
                         //        JmlOpAwal = OpListrikAwal,
                         //        JmlOpTutupPermanen = OpListrikTutup,
@@ -487,6 +490,7 @@ namespace MonPDReborn.Models.DataOP
                                 JenisPajak = JenisPajak.GetDescription(),
                                 EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
+                                KategoriId = (int)kat.Id,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpHotelAwal,
                                 JmlOpTutupPermanen = OpHotelTutup,
@@ -511,6 +515,7 @@ namespace MonPDReborn.Models.DataOP
                                 JenisPajak = JenisPajak.GetDescription(),
                                 EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
+                                KategoriId = (int)kat.Id,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpParkirAwal,
                                 JmlOpTutupPermanen = OpParkirTutup,
@@ -535,6 +540,7 @@ namespace MonPDReborn.Models.DataOP
                                 JenisPajak = JenisPajak.GetDescription(),
                                 EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
+                                KategoriId = (int)kat.Id,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpHiburanAwal,
                                 JmlOpTutupPermanen = OpHiburanTutup,
@@ -559,6 +565,7 @@ namespace MonPDReborn.Models.DataOP
                                 JenisPajak = JenisPajak.GetDescription(),
                                 EnumPajak = (int)JenisPajak,
                                 Tahun = tahun,
+                                KategoriId = (int)kat.Id,
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpAbtAwal,
                                 JmlOpTutupPermanen = OpAbtTutup,
@@ -642,78 +649,184 @@ namespace MonPDReborn.Models.DataOP
 
             }
 
-            public static List<RekapMaster> GetRekapMasterData(EnumFactory.EPajak JenisPajak)
+            public static List<RekapMaster> GetRekapMasterData(EnumFactory.EPajak JenisPajak, int kategori, string status, int tahun)
             {
+                var context = DBClass.GetContext();
                 var ret = new List<RekapMaster>();
+
                 switch (JenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
+                        var OpRestoTutup = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
+                        var OpRestoAwal = context.DbOpRestos.Where(x => x.TahunBuku == tahun - 1 && x.KategoriId == kategori).ToList();
+                        var OpRestoNow = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori).ToList();
+
+                        if (status == "JmlOpAwal")
+                        {
+                            ret = OpRestoAwal.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-",
+                                Status = "OP Awal"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpTutupPermanen")
+                        {
+                            ret = OpRestoTutup.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-",
+                                Status = "OP Tutup"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpBaru")
+                        {
+                            var opRestoBaru = OpRestoNow.Where(x => !(OpRestoAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
+                            ret = opRestoBaru.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-",
+                                Status = "OP Baru"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpAkhir")
+                        {
+                            var a = OpRestoAwal.Where(x => !(OpRestoTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
+                                .Select(x => new RekapMaster()
+                                {
+                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    Kategori_Id = (int)x.KategoriId,
+                                    Kategori_Nama = x.KategoriNama,
+                                    NOP = x.Nop,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    JenisOP = "-",
+                                    Wilayah = x.WilayahPajak ?? "-",
+                                    Status = "Op Akhir"
+                                }).ToList();
+
+                            var b = OpRestoNow.Where(x => !(OpRestoAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
+                                .Select(x => new RekapMaster()
+                                {
+                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    Kategori_Id = (int)x.KategoriId,
+                                    Kategori_Nama = x.KategoriNama,
+                                    NOP = x.Nop,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    JenisOP = "-",
+                                    Wilayah = x.WilayahPajak ?? "-",
+                                    Status = "Op Akhir"
+                                }).ToList();
+
+                            ret.AddRange(a);
+                            ret.AddRange(b);
+                        }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        ret = new List<RekapMaster>
+                        var OpHotelTutup = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
+                        var OpHotelAwal = context.DbOpHotels.Where(x => x.TahunBuku == tahun - 1 && x.KategoriId == kategori).ToList();
+                        var OpHotelNow = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori).ToList();
+
+                        if (status == "JmlOpAwal")
                         {
-                            new() {
-                                EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 101,
-                                Kategori_Nama = "Hotel Bintang Lima",
-                                NOP = "32.71.040.001.123-4567.0",
-                                NamaOP = "Hotel Mewah Raya",
-                                Alamat = "Jl. Asia Afrika No. 1, Bandung",
-                                JenisOP = "Bangunan Komersial",
-                                Wilayah = "Kecamatan Sumur Bandung",
-                                Status = "OPAwal"
-                            },
-                            new ()
+                            ret = OpHotelAwal.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 101,
-                                Kategori_Nama = "Hotel Bintang Lima",
-                                NOP = "32.71.040.001.234-5678.0",
-                                NamaOP = "Hotel Elegan Sejahtera",
-                                Alamat = "Jl. Merdeka No. 100, Bandung",
-                                JenisOP = "Bangunan Komersial",
-                                Wilayah = "Kecamatan Cicendo",
-                                Status = "TutupSementara"
-                            },
-                            new ()
+                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-",
+                                Status = "OP Awal"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpTutupPermanen")
+                        {
+                            ret = OpHotelTutup.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 102,
-                                Kategori_Nama = "Hotel Bintang Empat",
-                                NOP = "32.71.040.002.345-6789.0",
-                                NamaOP = "Hotel Harmoni Indah",
-                                Alamat = "Jl. Setiabudi No. 88, Bandung",
-                                JenisOP = "Bangunan Komersial",
-                                Wilayah = "Kecamatan Cidadap",
-                                Status = "TutupPermanen"
-                            },
-                            new ()
+                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-",
+                                Status = "OP Tutup"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpBaru")
+                        {
+                            var opHotelBaru = OpHotelNow.Where(x => !(OpHotelAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
+                            ret = opHotelBaru.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 103,
-                                Kategori_Nama = "Hotel Melati",
-                                NOP = "32.71.040.003.456-7890.0",
-                                NamaOP = "Hotel Bumi Asri",
-                                Alamat = "Jl. Cihampelas No. 22, Bandung",
-                                JenisOP = "Bangunan Komersial",
-                                Wilayah = "Kecamatan Coblong",
-                                Status = "OPBaru"
-                            },
-                            new ()
-                            {
-                                EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 103,
-                                Kategori_Nama = "Hotel Melati",
-                                NOP = "32.71.040.003.567-8901.0",
-                                NamaOP = "Hotel Citra Lestari",
-                                Alamat = "Jl. Pasteur No. 5, Bandung",
-                                JenisOP = "Bangunan Komersial",
-                                Wilayah = "Kecamatan Sukajadi",
-                                Status = "Buka"
-                            }
-                        };
+                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-",
+                                Status = "OP Baru"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpAkhir")
+                        {
+                            var a = OpHotelAwal.Where(x => !(OpHotelTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
+                                .Select(x => new RekapMaster()
+                                {
+                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    Kategori_Id = (int)x.KategoriId,
+                                    Kategori_Nama = x.KategoriNama,
+                                    NOP = x.Nop,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    JenisOP = "-",
+                                    Wilayah = x.WilayahPajak ?? "-",
+                                    Status = "Op Akhir"
+                                }).ToList();
+
+                            var b = OpHotelNow.Where(x => !(OpHotelAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
+                                .Select(x => new RekapMaster()
+                                {
+                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    Kategori_Id = (int)x.KategoriId,
+                                    Kategori_Nama = x.KategoriNama,
+                                    NOP = x.Nop,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    JenisOP = "-",
+                                    Wilayah = x.WilayahPajak ?? "-",
+                                    Status = "Op Akhir"
+                                }).ToList();
+
+                            ret.AddRange(a);
+                            ret.AddRange(b);
+                        }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
                         break;
@@ -1044,6 +1157,7 @@ namespace MonPDReborn.Models.DataOP
             public int EnumPajak { get; set; }
 
             public string JenisPajak { get; set; } = null!;
+            public int KategoriId { get; set; }
             public string Kategori { get; set; } = null!;
             public int Tahun { get; set; }
             public int JmlOpAwal { get; set; }

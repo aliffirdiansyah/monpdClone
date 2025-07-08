@@ -30,7 +30,7 @@
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-primary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpAwal')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAwal', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
@@ -40,47 +40,47 @@
             .CalculateCellValue("data => data.JmlOpAwal");
 
         columns.AddFor(m => m.JmlOpTutupPermanen)
-            .DataField("TutupSementara")
-            .Caption("Tutup Sementara")
+            .DataField("JmlOpTutupPermanen")
+            .Caption("OP Tutup")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-secondary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpTutupPermanen')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpTutupPermanen', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.TutupSementara %></span>
+                    <span><%- data.JmlOpTutupPermanen %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpTutupPermanen");
 
         columns.AddFor(m => m.JmlOpBaru)
-            .DataField("OPBaru")
+            .DataField("JmlOpBaru")
             .Caption("OP Baru")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-success me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpBaru')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpBaru', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.OPBaru %></span>
+                    <span><%- data.JmlOpBaru %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpBaru");
 
 
         columns.AddFor(m => m.JmlOpAkhir)
-            .DataField("OPBuka")
-            .Caption("Buka")
+            .DataField("JmlOpAkhir")
+            .Caption("OP Akhir")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-info me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpAkhir')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAkhir', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.Buka %></span>
+                    <span><%- data.JmlOpAkhir %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpAkhir");

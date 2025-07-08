@@ -219,9 +219,16 @@
               }
            });
         }
-
-                // 📌 Rekap Master
-        function onDetailClick(enumPajak, kategori, status) {
+        function onDetail(e) {
+            var nop = e.row.data.NOP;
+            var pajak = e.row.data.EnumPajak;
+            var url = '@Url.Action("Detail", "ProfileOP")'
+                        + '?nop=' + nop
+                        + '&pajak=' + pajak;
+            window.open(url, '_blank');
+        }
+        // 📌 Rekap Master
+        function onDetailClick(enumPajak, kategori, status, tahun) {
             // Tampilkan wrapper & spinner dulu
             $("#detailWrapper").slideDown();
             $("#detailContainer").hide();
@@ -233,7 +240,8 @@
                 data: {
                     enumPajak: enumPajak,
                     kategori: kategori,
-                    status: status
+                    status: status,
+                    tahun:tahun
                 },
                 success: function (data) {
                     const grid = $("#detailGrid").dxDataGrid("instance");
@@ -312,13 +320,6 @@
             $("#btnCloseDetailSeries").on("click", hideDetailSeries);
         });
 
-
-
-
-         function onDetail(e) {
-             
-             window.open(url, '_blank');
-         }
 
       /*  function onSeriesClick(enumPajak, kategori, tahun) {
             $.ajax({
