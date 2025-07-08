@@ -1,0 +1,31 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.ShowDetailUpaya
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailUpaya>()
+        .ID("detailUpayaGrid")
+        .DataSource(Model.DataDetailUpayaList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .AllowColumnResizing(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NOP).Caption("NOP");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.JenisPenagihan).Caption("Jenis Penagihan");
+            
+        })
+
+        )
+</div>

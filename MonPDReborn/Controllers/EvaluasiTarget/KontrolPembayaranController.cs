@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 
 namespace MonPDReborn.Controllers.EvaluasiTarget
 {
@@ -42,68 +43,16 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
-        //public IActionResult ShowHotel(string keyword = "", int tahun = 2025)
-        //{
-        //    try
-        //    {
-        //        var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowHotel
-        //        {
-        //            Tahun = tahun,
-        //            DataHotelList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataHotelList(keyword, tahun)
-        //        };
-        //        return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowHotel.cshtml", model);
-        //    }
-        //    catch (ArgumentException e)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-        //        return Json(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = "⚠ Server Error: Internal Server Error";
-        //        return Json(response);
-        //    }
-        //}
-
-        //public IActionResult ShowRestoran(string keyword = "", int tahun = 2025)
-        //{
-        //    try
-        //    {
-        //        var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowRestoran
-        //        {
-        //            Tahun = tahun,
-        //            DataRestoranList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataRestoranList(keyword, tahun)
-        //        };
-        //        return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowRestoran.cshtml", model);
-        //    }
-        //    catch (ArgumentException e)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-        //        return Json(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = "⚠ Server Error: Internal Server Error";
-        //        return Json(response);
-        //    }
-        //}
-
         public IActionResult Show(string jenisPajak = "Hotel", int tahun = 2025)
         {
             try
             {
-                Console.WriteLine($"[Show] JenisPajak: {jenisPajak}, Tahun: {tahun}");
 
                 var model = new Models.EvaluasiTarget.KontrolPembayaranVM.Show
                 {
                     Tahun = tahun,
                     DataKontrolPembayaranList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataKontolPembayaranList(jenisPajak, tahun)
                 };
-                Console.WriteLine($"Jumlah data: {model.DataKontrolPembayaranList.Count}");
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_Show.cshtml", model);
             }
@@ -121,5 +70,117 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
+        public IActionResult ShowUpaya(string jenisPajak = "Hotel", int tahun = 2025)
+        {
+            try
+            {
+
+                var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowUpaya
+                {
+                    Tahun = tahun,
+                    DataUpayaPajakList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataUpayaPajakList(jenisPajak, tahun)
+                };
+
+                return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowUpaya.cshtml", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult ShowPotensi(string jenisPajak = "Hotel", int tahun = 2025)
+        {
+            try
+            {
+
+                var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowPotensi
+                {
+                    Tahun = tahun,
+                    DataPotensiList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataPotensiList(jenisPajak, tahun)
+                };
+
+                return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowPotensi.cshtml", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult ShowDetailPajak(string jenisPajak, string kategori, int tahun = 2025, string status = "")
+        {
+            try
+            {
+                //var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowDetailPajak
+                //{
+                //    Tahun = tahun,
+                //    JenisPajak = jenisPajak,
+                //    Kategori = kategori,
+                //    Status = status,
+                //    DataDetailList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataDetailPajakList(jenisPajak, kategori, tahun, status)
+                //};
+                var model = new ShowDetailPajak(jenisPajak, kategori, tahun, status);
+
+                return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailPajak.cshtml", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult ShowDetailUpaya(string jenisPajak, string kategori, int tahun = 2025, string status = "")
+        {
+            try
+            {
+                //var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowDetailUpaya
+                //{
+                //    Tahun = tahun,
+                //    JenisPajak = jenisPajak,
+                //    Kategori = kategori,
+                //    Status = status,
+                //    DataDetailList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataDetailPajakList(jenisPajak, kategori, tahun, status)
+                //};
+                var model = new ShowDetailUpaya(jenisPajak, kategori, tahun, status);
+
+                return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailUpaya.cshtml", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }

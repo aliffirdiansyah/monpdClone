@@ -1,0 +1,32 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.ShowDetailPajak
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailPajak>()
+        .ID("detailPajakGrid")
+        .DataSource(Model.DataDetailList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .AllowColumnResizing(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NOP).Caption("NOP");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.Realisasi).Caption("Realisasi");
+            columns.AddFor(m => m.Wilayah).Caption("Wilayah");
+            columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+        })
+        
+        )
+</div>
