@@ -24,63 +24,63 @@
     {
 
         columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
-        columns.AddFor(m => m.JmlOpAwal)
+        columns.AddFor(m => m.JmlOpAwal).Format("#,##0")
             .DataField("OPAwal")
             .Caption("OP Awal")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-primary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpAwal')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAwal', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- value %></span>
+                    <span><%- (value || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpAwal");
 
         columns.AddFor(m => m.JmlOpTutupPermanen)
-            .DataField("TutupSementara")
-            .Caption("Tutup Sementara")
+            .DataField("JmlOpTutupPermanen").Format("#,##0")
+            .Caption("OP Tutup")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-secondary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpTutupPermanen')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpTutupPermanen', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.TutupSementara %></span>
+                    <span><%- (data.JmlOpTutupPermanen || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpTutupPermanen");
 
         columns.AddFor(m => m.JmlOpBaru)
-            .DataField("OPBaru")
+            .DataField("JmlOpBaru").Format("#,##0")
             .Caption("OP Baru")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-success me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpBaru')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpBaru', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.OPBaru %></span>
+                    <span><%- (data.JmlOpBaru || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpBaru");
 
 
         columns.AddFor(m => m.JmlOpAkhir)
-            .DataField("OPBuka")
-            .Caption("Buka")
+            .DataField("JmlOpAkhir").Format("#,##0")
+            .Caption("OP Akhir")
             .CellTemplate(@<text>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <button class="btn btn-sm btn-outline-info me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.Kategori %>', 'JmlOpAkhir')"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAkhir', '<%- data.Tahun %>')"
                             title="Lihat Detail">
                         <i class="ri-search-line"></i>
                     </button>
-                    <span><%- data.Buka %></span>
+                    <span><%- (data.JmlOpAkhir || 0).toLocaleString('id-ID') %></span>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpAkhir");
