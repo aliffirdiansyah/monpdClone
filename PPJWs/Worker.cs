@@ -102,6 +102,10 @@ namespace PPJWs
         	ELSE '-'
         END AS PERUNTUKAN_NAMA,
         CASE SUMBER
+        	WHEN 0 THEN 11
+        	ELSE 12
+        END AS KATEGORI_ID,
+        CASE SUMBER
         	WHEN 0 THEN 'SENDIRI'
         	ELSE 'SUMBER LAIN'
         END AS KATEGORI_NAMA,
