@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 using static MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM;
@@ -33,11 +34,11 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
                 throw;
             }
         }
-        public IActionResult Show(string wilayah, int tahun, int bulan, string jenisPajak)
+        public IActionResult Show(int wilayah, int tahun, int bulan, int jenisPajak)
         {
             try
             {
-                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Show(wilayah, tahun, bulan, jenisPajak);
+                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Show((EnumFactory.EUPTB)wilayah, tahun, bulan, (EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
@@ -46,11 +47,11 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
             }
         }
 
-        public IActionResult Detail(string wilayah, int tahun, int bulan, string jenisPajak)
+        public IActionResult Detail(int wilayah, int tahun, int bulan, int jenisPajak)
         {
             try
             {
-                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Detail(wilayah, tahun, bulan, jenisPajak);
+                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Detail((EnumFactory.EUPTB)wilayah, tahun, bulan, (EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)
