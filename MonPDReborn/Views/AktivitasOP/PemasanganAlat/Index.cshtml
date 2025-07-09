@@ -6,6 +6,47 @@
     Layout = "_Layout";
 }
 <div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Dashboard Alat Rekam Online
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Total Alat Rekam Terpasang</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalTerpasang</h4>
+                    </div>
+                    <i class=" ri-cloud-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Total Alat Rekam Belum Terpasang</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalBelumTerpasang</h4>
+                    </div>
+                    <i class="ri-cloud-off-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
@@ -19,10 +60,16 @@
                 </button>
             </div>
             <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <div id="Show"></div>
             </div>
         </div>
     </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
@@ -36,6 +83,11 @@
                 </button>
             </div>
             <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Detail" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <div id="Detail"></div>
                 <div class="modal fade" id="subDetailModal" tabindex="-1" role="dialog" aria-labelledby="subDetailModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl" role="document">
@@ -57,6 +109,7 @@
             </div>
         </div>
     </div>
+    
 </div>
 
 @section Scripts {
@@ -70,28 +123,45 @@
             $.ajax({
                 url: '@Url.Action("Show", "PemasanganAlat")',
                 type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
                 success: function (result) {
-                    $('#Show').html(result);
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
                 },
                 error: function () {
-                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data Show.</div>');
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
                 }
             });
         }
+
 
         function loadDetail(jenisPajak) {
             $.ajax({
                 url: '@Url.Action("Detail", "PemasanganAlat")',
                 type: 'GET',
                 data: { jenisPajak: jenisPajak },
+                beforeSend: function () {
+                    // Tampilkan spinner & sembunyikan konten
+                    $('#loading2-Detail').show();
+                    $('#Detail').hide();
+                },
                 success: function (result) {
-                    $('#Detail').html(result);
+                    $('#loading2-Detail').hide();
+                    $('#Detail').html(result).show();
                 },
                 error: function () {
-                    $('#Detail').html('<div class="alert alert-danger">Gagal memuat data Detail.</div>');
+                    $('#loading2-Detail').hide();
+                    $('#Detail').html('<div class="alert alert-danger">❌ Gagal memuat data Detail.</div>').show();
                 }
             });
         }
+
 
         function onDetailClick(id, jenis) {
             console.log("Detail clicked:", id, jenis);
@@ -103,13 +173,24 @@
             var jenisPajak = options.data?.JenisPajak;
             console.log("subDetailTemplate - JenisPajak:", jenisPajak);
 
-            var innerContainer = $("<div>").addClass("p-2").text("Memuat data...");
+            // Buat inner container
+            var innerContainer = $("<div>").addClass("p-2");
             container.append(innerContainer);
 
             if (!jenisPajak) {
                 innerContainer.html('<div class="text-danger">Jenis Pajak tidak ditemukan.</div>');
                 return;
             }
+
+            // Loading spinner
+            innerContainer.html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2 text-muted">Memuat data sub-detail...</div>
+                </div>
+            `);
 
             $.ajax({
                 url: '@Url.Action("SubDetail", "PemasanganAlat")',
@@ -119,10 +200,11 @@
                     innerContainer.html(result);
                 },
                 error: function () {
-                    innerContainer.html('<div class="text-danger">Gagal memuat data sub-detail.</div>');
+                    innerContainer.html('<div class="text-danger">❌ Gagal memuat data sub-detail.</div>');
                 }
             });
         }
+
 
         /*function showSubDetailModal(e) {
             const kategori = e.row.data.Kategori;

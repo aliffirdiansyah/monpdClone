@@ -7,6 +7,61 @@
 }
 
 <div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Dashboard Pemeriksaan Pajak
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Total OP Yang DIperiksa Tahun Ini</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalOpDiperiksa</h4>
+                    </div>
+                    <i class="ri-search-eye-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Rata-Rata Kurang Bayar Tahun Ini</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.RataRataKurangBayar</h4>
+                    </div>
+                    <i class="ri-bar-chart-box-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Total Kurang Bayar Tahun Ini</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalKurangBayar</h4>
+                    </div>
+                    <i class=" ri-money-dollar-box-line  fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
@@ -22,10 +77,16 @@
                 </div>
             </div>
             <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <div id="Show"></div>
             </div>
         </div>
     </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
@@ -41,36 +102,16 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="col-4">
-                    @{
-                        Html.DevExtreme().SelectBox()
-                        .ID("jenisPajakSelect")
-                        .DataSource(new[] {
-                                        new { value = "hotel", text = "Hotel" },
-                                        new { value = "restoran", text = "Restoran" },
-                                        new { value = "reklame", text = "Reklame" },
-                                        new { value = "hiburan", text = "Hiburan" },
-                                        new { value = "parkir", text = "Parkir" },
-                                        new { value = "ppj", text = "PPJ" },
-                                        new { value = "pbb", text = "PBB" },
-                                        new { value = "bphtb", text = "BPHTB" },
-                                        new { value = "airtanah", text = "Air Tanah" },
-                                        new { value = "opsenpkb", text = "OPSEN PKB" },
-                                        new { value = "opsenbbnkb", text = "OPSEN BBNKB" }
-                        })
-                        .ValueExpr("value")
-                        .DisplayExpr("text")
-                        .Placeholder("Pilih Jenis Pajak")
-                        .OnValueChanged("onJenisPajakChanged")
-                        .Width("100%")
-                        .Render();
-                    }
+                <div class="text-center">
+                    <div id="loading2-Detail" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
-                <br />
                 <div id="Detail"></div>
             </div>
         </div>
     </div>
+    
 </div>
 
 @section Scripts {
@@ -86,14 +127,27 @@
             $.ajax({
                 url: '@Url.Action("Show", "PemeriksaanPajak")',
                 type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
                 success: function (result) {
-                    $('#Show').html(result);
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
                 },
                 error: function () {
-                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data rekap.</div>');
+                    $('#loading2-Show').hide();
+                    $('#Show').html(`
+                        <div class="alert alert-danger">
+                            ❌ Gagal memuat data rekap.
+                        </div>
+                    `).show();
                 }
             });
         }
+
 
         // Fungsi untuk memuat data detail pemeriksaan
         function loadDetail(keyword) {
@@ -101,14 +155,27 @@
                 url: '@Url.Action("Detail", "PemeriksaanPajak")',
                 type: 'GET',
                 data: { jenisPajak: keyword },
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Detail').show();
+                    $('#Detail').hide();
+                },
                 success: function (result) {
-                    $('#Detail').html(result);
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Detail').hide();
+                    $('#Detail').html(result).show();
                 },
                 error: function () {
-                    $('#Detail').html('<div class="alert alert-danger">Gagal memuat data detail.</div>');
+                    $('#loading2-Detail').hide();
+                    $('#Detail').html(`
+                        <div class="alert alert-danger">
+                            ❌ Gagal memuat data detail.
+                        </div>
+                    `).show();
                 }
             });
         }
+
 
         // Event ketika select box berubah
        /* function onJenisPajakChanged(e) {

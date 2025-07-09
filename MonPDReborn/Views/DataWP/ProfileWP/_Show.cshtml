@@ -1,0 +1,49 @@
+﻿@model MonPDReborn.Models.DataWP.ProfileWPVM.Show
+
+<div class="table-responsive">
+    @(
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfileWPVM.RekapWP>()
+        .ID("rekapWPGrid")
+        .DataSource(Model.DataRekapWPList)
+        .KeyExpr("NPWPD")
+        .ShowBorders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Columns(columns => {
+
+            columns.AddFor(m => m.NPWPD)
+                .Caption("NPWPD")
+                .CellTemplate(@<text>
+                    <strong><%= data.NPWPD %></strong>
+                </text>);
+
+            columns.AddFor(m => m.Nama)
+                .Caption("Nama");
+
+            columns.AddFor(m => m.JenisSubjek)
+                .Caption("Jenis Subjek");
+
+            columns.AddFor(m => m.Kontak)
+                .Caption("Kontak");
+
+            columns.Add()
+                .Caption("Status")
+                .CellTemplate(@<text>
+                    <%
+                        var status = data.Status;
+                        var color = status == "Aktif" ? "badge bg-success" : "badge bg-danger";
+                    %>
+                    <span class="<%= color %>"><%= status %></span>
+                </text>);
+
+            @* columns.Add()
+                .Caption("Aksi")
+                .CellTemplate(@<text>
+                    <a href="@Url.Action("Detail", "ProfileWP", new { id = "<%= data.NPWPD %>" })"
+                       class="btn btn-sm btn-outline-primary">
+                        <i class="bx bx-show"></i>
+                    </a>
+                </text>); *@
+        })
+)
+</div>

@@ -13,7 +13,7 @@ namespace MonPDReborn.Models.DataOP
         {
             public Index()
             {
-                
+
             }
         }
 
@@ -91,8 +91,8 @@ namespace MonPDReborn.Models.DataOP
                 var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == tahun);
                 var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == tahun - 1);
 
-                var OpBphtbNow = 0;
-                var OpBphtbAwal = 0;
+                var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == tahun);
+                var OpBphtbAwal = context.DbMonBphtbs.Count(x => x.Tahun == tahun - 1);
 
                 var OpReklameNow = 0;
                 var OpReklameAwal = 0;
@@ -217,7 +217,6 @@ namespace MonPDReborn.Models.DataOP
                         JmlOpAkhir = OpOpsenBbnkbAwal - 0 + (OpOpsenBbnkbNow - OpOpsenBbnkbAwal)},
                 };
             }
-
             public static List<SeriesOP> GetDataSeriesOPList()
             {
                 var context = DBClass.GetContext();
@@ -265,11 +264,12 @@ namespace MonPDReborn.Models.DataOP
                 var OpPbbMines3 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 3);
                 var OpPbbMines4 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 4);
 
-                var OpBphtbNow = 0;
-                var OpBphtbMines1 = 0;
-                var OpBphtbMines2 = 0;
-                var OpBphtbMines3 = 0;
-                var OpBphtbMines4 = 0;
+
+                var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == currentYear);
+                var OpBphtbMines1 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 1);
+                var OpBphtbMines2 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 2);
+                var OpBphtbMines3 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 3);
+                var OpBphtbMines4 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 4);
 
                 var OpReklameNow = 0;
                 var OpReklameMines1 = 0;
@@ -415,7 +415,7 @@ namespace MonPDReborn.Models.DataOP
                 return result;
             }
 
-            //REKAP OP
+            #region REKAP DATA JUMLAH OP
             public static List<RekapDetail> GetRekapDetailData(EnumFactory.EPajak JenisPajak, int tahun)
             {
                 var context = DBClass.GetContext();
@@ -580,6 +580,25 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
+
+                            var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+
+                            ret.Add(new RekapDetail
+                            {
+                                JenisPajak = JenisPajak.GetDescription(),
+                                EnumPajak = (int)JenisPajak,
+                                Tahun = tahun,
+                                KategoriId = (int)kat.Id,
+                                Kategori = kat.Nama,
+                                JmlOpAwal = OpPbbAwal,
+                                JmlOpTutupPermanen = 0,
+                                JmlOpBaru = OpPbbNow - OpPbbAwal,
+                                JmlOpAkhir = OpPbbAwal - 0 + (OpPbbNow - OpPbbAwal)
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         break;
@@ -592,10 +611,9 @@ namespace MonPDReborn.Models.DataOP
                 }
                 ;
 
-                return ret; 
+                return ret;
 
             }
-            
             public static List<RekapMaster> GetRekapMasterData(EnumFactory.EPajak JenisPajak, int kategori, string status, int tahun)
             {
                 var context = DBClass.GetContext();
@@ -612,7 +630,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpRestoAwal.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -626,7 +644,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpRestoTutup.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -641,7 +659,7 @@ namespace MonPDReborn.Models.DataOP
                             var opRestoBaru = OpRestoNow.Where(x => !(OpRestoAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
                             ret = opRestoBaru.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -656,7 +674,7 @@ namespace MonPDReborn.Models.DataOP
                             var a = OpRestoAwal.Where(x => !(OpRestoTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -669,7 +687,7 @@ namespace MonPDReborn.Models.DataOP
                             var b = OpRestoNow.Where(x => !(OpRestoAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -692,7 +710,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpListrikAwal.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -706,7 +724,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpListrikTutup.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -721,7 +739,7 @@ namespace MonPDReborn.Models.DataOP
                             var opListrikBaru = OpListrikNow.Where(x => !(OpListrikAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
                             ret = opListrikBaru.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -736,7 +754,7 @@ namespace MonPDReborn.Models.DataOP
                             var a = OpListrikAwal.Where(x => !(OpListrikTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -749,7 +767,7 @@ namespace MonPDReborn.Models.DataOP
                             var b = OpListrikNow.Where(x => !(OpListrikAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -772,7 +790,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpHotelAwal.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -786,7 +804,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpHotelTutup.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -801,7 +819,7 @@ namespace MonPDReborn.Models.DataOP
                             var opHotelBaru = OpHotelNow.Where(x => !(OpHotelAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
                             ret = opHotelBaru.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -816,7 +834,7 @@ namespace MonPDReborn.Models.DataOP
                             var a = OpHotelAwal.Where(x => !(OpHotelTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -829,7 +847,7 @@ namespace MonPDReborn.Models.DataOP
                             var b = OpHotelNow.Where(x => !(OpHotelAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -852,7 +870,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpParkirAwal.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -866,7 +884,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpParkirTutup.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -881,7 +899,7 @@ namespace MonPDReborn.Models.DataOP
                             var opParkirBaru = OpParkirNow.Where(x => !(OpParkirAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
                             ret = opParkirBaru.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -896,7 +914,7 @@ namespace MonPDReborn.Models.DataOP
                             var a = OpParkirAwal.Where(x => !(OpParkirTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -909,7 +927,7 @@ namespace MonPDReborn.Models.DataOP
                             var b = OpParkirNow.Where(x => !(OpParkirAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -932,7 +950,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpHiburanAwal.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -946,7 +964,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpHiburanTutup.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -961,7 +979,7 @@ namespace MonPDReborn.Models.DataOP
                             var opHiburanBaru = OpHiburanNow.Where(x => !(OpHiburanAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
                             ret = opHiburanBaru.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -976,7 +994,7 @@ namespace MonPDReborn.Models.DataOP
                             var a = OpHiburanAwal.Where(x => !(OpHiburanTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -989,7 +1007,7 @@ namespace MonPDReborn.Models.DataOP
                             var b = OpHiburanNow.Where(x => !(OpHiburanAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -1012,7 +1030,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpAbtAwal.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -1026,7 +1044,7 @@ namespace MonPDReborn.Models.DataOP
                         {
                             ret = OpAbtTutup.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -1041,7 +1059,7 @@ namespace MonPDReborn.Models.DataOP
                             var opAbtBaru = OpAbtNow.Where(x => !(OpAbtAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
                             ret = opAbtBaru.Select(x => new RekapMaster()
                             {
-                                EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
@@ -1056,7 +1074,7 @@ namespace MonPDReborn.Models.DataOP
                             var a = OpAbtAwal.Where(x => !(OpAbtTutup.Select(x => x.Nop).ToList()).Contains(x.Nop))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -1069,7 +1087,7 @@ namespace MonPDReborn.Models.DataOP
                             var b = OpAbtNow.Where(x => !(OpAbtAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
                                 .Select(x => new RekapMaster()
                                 {
-                                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                    EnumPajak = (int)JenisPajak,
                                     Kategori_Id = (int)x.KategoriId,
                                     Kategori_Nama = x.KategoriNama,
                                     NOP = x.Nop,
@@ -1086,6 +1104,74 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
+
+                        var OpPbbAwal = context.DbOpPbbs.Where(x => x.TahunBuku == tahun - 1 && x.KategoriId == kategori).ToList();
+                        var OpPbbNow = context.DbOpPbbs.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori).ToList();
+
+                        if (status == "JmlOpAwal")
+                        {
+                            ret = OpPbbAwal.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpTutupPermanen")
+                        {
+                            //
+                        }
+                        else if (status == "JmlOpBaru")
+                        {
+                            var opPbbBaru = OpPbbNow.Where(x => !(OpPbbAwal.Select(z => z.Nop).ToList()).Contains(x.Nop)).ToList();
+                            ret = opPbbBaru.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpAkhir")
+                        {
+                            var a = OpPbbAwal
+                                .Select(x => new RekapMaster()
+                                {
+                                    EnumPajak = (int)JenisPajak,
+                                    Kategori_Id = (int)x.KategoriId,
+                                    Kategori_Nama = x.KategoriNama,
+                                    NOP = x.Nop,
+                                    NamaOP = x.WpNama,
+                                    Alamat = x.AlamatOp,
+                                    JenisOP = "-",
+                                    Wilayah = x.WilayahPajak ?? "-"
+                                }).ToList();
+
+                            var b = OpPbbNow.Where(x => !(OpPbbAwal.Select(x => x.Nop).ToList().Contains(x.Nop)))
+                                .Select(x => new RekapMaster()
+                                {
+                                    EnumPajak = (int)JenisPajak,
+                                    Kategori_Id = (int)x.KategoriId,
+                                    Kategori_Nama = x.KategoriNama,
+                                    NOP = x.Nop,
+                                    NamaOP = x.WpNama,
+                                    Alamat = x.AlamatOp,
+                                    JenisOP = "-",
+                                    Wilayah = x.WilayahPajak ?? "-"
+                                }).ToList();
+
+                            ret.AddRange(a);
+                            ret.AddRange(b);
+                        }
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         break;
@@ -1100,50 +1186,215 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
+            #endregion
 
-            //SERIES DATA JUMLAH OP
+            #region SERIES DATA JUMLAH OP
             public static List<SeriesDetail> GetSeriesDetailData(EnumFactory.EPajak JenisPajak)
             {
                 var ret = new List<SeriesDetail>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)JenisPajak)
+                    .Select(x => new { x.Id, x.Nama })
+                    .ToList();
+                var currentYear = DateTime.Now.Year;
+
                 switch (JenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        ret = new List<SeriesDetail>
+                        foreach (var kat in kategoriList)
                         {
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Cafe", TahunMines4 = 12, TahunMines3 = 4, TahunMines2 = 6, TahunMines1 = 7, TahunNow = 9 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", TahunMines4 = 18, TahunMines3 = 6, TahunMines2 = 9, TahunMines1 = 8, TahunNow = 10 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung", TahunMines4 = 25, TahunMines3 = 7, TahunMines2 = 10, TahunMines1 = 12, TahunNow = 15 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Resto", TahunMines4 = 20, TahunMines3 = 5, TahunMines2 = 8, TahunMines1 = 9, TahunNow = 11 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kedai", TahunMines4 = 28, TahunMines3 = 8, TahunMines2 = 12, TahunMines1 = 13, TahunNow = 16 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Warung Makan", TahunMines4 = 35, TahunMines3 = 10, TahunMines2 = 15, TahunMines1 = 16, TahunNow = 20 },
-                            new() { EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(), Kategori = "Kafe & Kedai", TahunMines4 = 22, TahunMines3 = 6, TahunMines2 = 11, TahunMines1 = 12, TahunNow = 14 },
-                        };
+                            var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && x.KategoriId == kat.Id);
+                            var OpRestoMines1 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kat.Id);
+                            var OpRestoMines2 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kat.Id);
+                            var OpRestoMines3 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kat.Id);
+                            var OpRestoMines4 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kat.Id);
 
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpRestoMines4,
+                                TahunMines3 = OpRestoMines3,
+                                TahunMines2 = OpRestoMines2,
+                                TahunMines1 = OpRestoMines1,
+                                TahunNow = OpRestoNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == currentYear && x.KategoriId == kat.Id);
+                            var OpListrikMines1 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kat.Id);
+                            var OpListrikMines2 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kat.Id);
+                            var OpListrikMines3 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kat.Id);
+                            var OpListrikMines4 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kat.Id);
+
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpListrikMines4,
+                                TahunMines3 = OpListrikMines3,
+                                TahunMines2 = OpListrikMines2,
+                                TahunMines1 = OpListrikMines1,
+                                TahunNow = OpListrikNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        ret = new List<SeriesDetail>
+                        foreach (var kat in kategoriList)
                         {
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Lima", TahunMines4 = 50, TahunMines3 = 57, TahunMines2 = 52, TahunMines1 = 59, TahunNow = 60 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Empat", TahunMines4 = 15, TahunMines3 = 5, TahunMines2 = 8, TahunMines1 = 4, TahunNow = 6 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Tiga", TahunMines4 = 25, TahunMines3 = 0, TahunMines2 = 1, TahunMines1 = 5, TahunNow = 4 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Dua", TahunMines4 = 10, TahunMines3 = 2, TahunMines2 = 2, TahunMines1 = 7, TahunNow = 9 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Bintang Satu", TahunMines4 = 30, TahunMines3 = 4, TahunMines2 = 3, TahunMines1 = 7, TahunNow = 10 },
-                            new() {EnumPajak = (int)JenisPajak, JenisPajak = JenisPajak.GetDescription(),  Kategori = "Hotel Non Bintang", TahunMines4 = 40, TahunMines3 = 8, TahunMines2 = 5, TahunMines1 = 8, TahunNow = 15 },
-                        };
+                            var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == currentYear && x.KategoriId == kat.Id);
+                            var OpHotelMines1 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kat.Id);
+                            var OpHotelMines2 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kat.Id);
+                            var OpHotelMines3 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kat.Id);
+                            var OpHotelMines4 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kat.Id);
+
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpHotelMines4,
+                                TahunMines3 = OpHotelMines3,
+                                TahunMines2 = OpHotelMines2,
+                                TahunMines1 = OpHotelMines1,
+                                TahunNow = OpHotelNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear && x.KategoriId == kat.Id);
+                            var OpParkirMines1 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kat.Id);
+                            var OpParkirMines2 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kat.Id);
+                            var OpParkirMines3 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kat.Id);
+                            var OpParkirMines4 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kat.Id);
+
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpParkirMines4,
+                                TahunMines3 = OpParkirMines3,
+                                TahunMines2 = OpParkirMines2,
+                                TahunMines1 = OpParkirMines1,
+                                TahunNow = OpParkirNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear && x.KategoriId == kat.Id);
+                            var OpHiburanMines1 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kat.Id);
+                            var OpHiburanMines2 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kat.Id);
+                            var OpHiburanMines3 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kat.Id);
+                            var OpHiburanMines4 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kat.Id);
+
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpHiburanMines4,
+                                TahunMines3 = OpHiburanMines3,
+                                TahunMines2 = OpHiburanMines2,
+                                TahunMines1 = OpHiburanMines1,
+                                TahunNow = OpHiburanNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.AirTanah:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == currentYear && x.KategoriId == kat.Id);
+                            var OpAbtMines1 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kat.Id);
+                            var OpAbtMines2 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kat.Id);
+                            var OpAbtMines3 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kat.Id);
+                            var OpAbtMines4 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kat.Id);
+
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpAbtMines4,
+                                TahunMines3 = OpAbtMines3,
+                                TahunMines2 = OpAbtMines2,
+                                TahunMines1 = OpAbtMines1,
+                                TahunNow = OpAbtNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.Reklame:
+
                         break;
                     case EnumFactory.EPajak.PBB:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear && x.KategoriId == kat.Id);
+                            var OpPbbMines1 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kat.Id);
+                            var OpPbbMines2 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kat.Id);
+                            var OpPbbMines3 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kat.Id);
+                            var OpPbbMines4 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kat.Id);
+
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpPbbMines4,
+                                TahunMines3 = OpPbbMines3,
+                                TahunMines2 = OpPbbMines2,
+                                TahunMines1 = OpPbbMines1,
+                                TahunNow = OpPbbNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.BPHTB:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == currentYear);
+                            var OpBphtbMines1 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 1);
+                            var OpBphtbMines2 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 2);
+                            var OpBphtbMines3 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 3);
+                            var OpBphtbMines4 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 4);
+
+
+                            ret.Add(new SeriesDetail
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Kategori = kat.Nama,
+                                KategoriId = (int)kat.Id,
+                                TahunMines4 = OpBphtbMines4,
+                                TahunMines3 = OpBphtbMines3,
+                                TahunMines2 = OpBphtbMines2,
+                                TahunMines1 = OpBphtbMines1,
+                                TahunNow = OpBphtbNow,
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         break;
@@ -1154,89 +1405,642 @@ namespace MonPDReborn.Models.DataOP
                 }
                 ;
 
-                return ret; // ✅ Tambahkan ini agar semua jalur selalu mengembalikan nilai
+                return ret;
 
             }
-
-            public static List<SeriesMaster> GetSeriesMasterData(EnumFactory.EPajak JenisPajak)
+            public static List<SeriesMaster> GetSeriesMasterData(EnumFactory.EPajak JenisPajak, int kategori, string tahunHuruf)
             {
                 var ret = new List<SeriesMaster>();
+                var context = DBClass.GetContext();
+                var currentYear = DateTime.Now.Year;
+
                 switch (JenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
+                        var OpRestoNow = context.DbOpRestos.Where(x => x.TahunBuku == currentYear && x.KategoriId == kategori).ToList();
+                        var OpRestoMines1 = context.DbOpRestos.Where(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kategori).ToList();
+                        var OpRestoMines2 = context.DbOpRestos.Where(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kategori).ToList();
+                        var OpRestoMines3 = context.DbOpRestos.Where(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kategori).ToList();
+                        var OpRestoMines4 = context.DbOpRestos.Where(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kategori).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
+                        {
+                            ret = OpRestoMines4.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpRestoMines3.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpRestoMines2.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpRestoMines1.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpRestoNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
+                        var OpListrikNow = context.DbOpListriks.Where(x => x.TahunBuku == currentYear && x.KategoriId == kategori).ToList();
+                        var OpListrikMines1 = context.DbOpListriks.Where(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kategori).ToList();
+                        var OpListrikMines2 = context.DbOpListriks.Where(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kategori).ToList();
+                        var OpListrikMines3 = context.DbOpListriks.Where(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kategori).ToList();
+                        var OpListrikMines4 = context.DbOpListriks.Where(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kategori).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
+                        {
+                            ret = OpListrikMines4.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpListrikMines3.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpListrikMines2.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpListrikMines1.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpListrikNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        ret = new List<SeriesMaster>
+                        var OpHotelNow = context.DbOpHotels.Where(x => x.TahunBuku == currentYear && x.KategoriId == kategori).ToList();
+                        var OpHotelMines1 = context.DbOpHotels.Where(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kategori).ToList();
+                        var OpHotelMines2 = context.DbOpHotels.Where(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kategori).ToList();
+                        var OpHotelMines3 = context.DbOpHotels.Where(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kategori).ToList();
+                        var OpHotelMines4 = context.DbOpHotels.Where(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kategori).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
                         {
-                            new() {
-                                EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 201,
-                                Kategori_Nama = "Hotel Bintang Lima",
-                                NOP = "32.71.050.001.100-2000.0",
-                                NamaOP = "Grand Royal Hotel",
-                                Alamat = "Jl. Braga No. 10, Bandung",
-                                JenisOP = "Hotel Mewah",
-                                Wilayah = "Kecamatan Sumur Bandung",
-                            },
-                            new()
+                            ret = OpHotelMines4.Select(x => new SeriesMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 201,
-                                Kategori_Nama = "Hotel Bintang Lima",
-                                NOP = "32.71.050.001.101-2001.0",
-                                NamaOP = "Majestic Palace Hotel",
-                                Alamat = "Jl. Asia Afrika No. 25, Bandung",
-                                JenisOP = "Hotel Mewah",
-                                Wilayah = "Kecamatan Lengkong",
-                            },
-                            new()
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpHotelMines3.Select(x => new SeriesMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 202,
-                                Kategori_Nama = "Hotel Bintang Empat",
-                                NOP = "32.71.050.002.102-2002.0",
-                                NamaOP = "Dago Hills Hotel",
-                                Alamat = "Jl. Dago No. 120, Bandung",
-                                JenisOP = "Hotel Bisnis",
-                                Wilayah = "Kecamatan Coblong",
-                            },
-                            new()
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpHotelMines2.Select(x => new SeriesMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 203,
-                                Kategori_Nama = "Hotel Bintang Tiga",
-                                NOP = "32.71.050.003.103-2003.0",
-                                NamaOP = "Hotel Bahagia",
-                                Alamat = "Jl. Ciumbuleuit No. 88, Bandung",
-                                JenisOP = "Hotel Budget",
-                                Wilayah = "Kecamatan Cidadap",
-                            },
-                            new()
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpHotelMines1.Select(x => new SeriesMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = 203,
-                                Kategori_Nama = "Hotel Bintang Tiga",
-                                NOP = "32.71.050.003.104-2004.0",
-                                NamaOP = "Hotel Sunset View",
-                                Alamat = "Jl. Setiabudi No. 55, Bandung",
-                                JenisOP = "Hotel Budget",
-                                Wilayah = "Kecamatan Sukasari",
-                            }
-                        };
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpHotelNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
+                        var OpParkirNow = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear && x.KategoriId == kategori).ToList();
+                        var OpParkirMines1 = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kategori).ToList();
+                        var OpParkirMines2 = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kategori).ToList();
+                        var OpParkirMines3 = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kategori).ToList();
+                        var OpParkirMines4 = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kategori).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
+                        {
+                            ret = OpParkirMines4.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpParkirMines3.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpParkirMines2.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpParkirMines1.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpParkirNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var OpHiburanNow = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear && x.KategoriId == kategori).ToList();
+                        var OpHiburanMines1 = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kategori).ToList();
+                        var OpHiburanMines2 = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kategori).ToList();
+                        var OpHiburanMines3 = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kategori).ToList();
+                        var OpHiburanMines4 = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kategori).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
+                        {
+                            ret = OpHiburanMines4.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpHiburanMines3.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpHiburanMines2.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpHiburanMines1.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpHiburanNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.AirTanah:
+                        var OpAbtNow = context.DbOpAbts.Where(x => x.TahunBuku == currentYear && x.KategoriId == kategori).ToList();
+                        var OpAbtMines1 = context.DbOpAbts.Where(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kategori).ToList();
+                        var OpAbtMines2 = context.DbOpAbts.Where(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kategori).ToList();
+                        var OpAbtMines3 = context.DbOpAbts.Where(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kategori).ToList();
+                        var OpAbtMines4 = context.DbOpAbts.Where(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kategori).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
+                        {
+                            ret = OpAbtMines4.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpAbtMines3.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpAbtMines2.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpAbtMines1.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpAbtNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
+                        var OpPbbNow = context.DbOpPbbs.Where(x => x.TahunBuku == currentYear && x.KategoriId == kategori).ToList();
+                        var OpPbbMines1 = context.DbOpPbbs.Where(x => x.TahunBuku == currentYear - 1 && x.KategoriId == kategori).ToList();
+                        var OpPbbMines2 = context.DbOpPbbs.Where(x => x.TahunBuku == currentYear - 2 && x.KategoriId == kategori).ToList();
+                        var OpPbbMines3 = context.DbOpPbbs.Where(x => x.TahunBuku == currentYear - 3 && x.KategoriId == kategori).ToList();
+                        var OpPbbMines4 = context.DbOpPbbs.Where(x => x.TahunBuku == currentYear - 4 && x.KategoriId == kategori).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
+                        {
+                            ret = OpPbbMines4.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpPbbMines3.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpPbbMines2.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpPbbMines1.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpPbbNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "-",
+                                Wilayah = x.WilayahPajak ?? "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.BPHTB:
+                        var OpBphtbNow = context.DbMonBphtbs.Where(x => x.Tahun == currentYear).ToList();
+                        var OpBphtbMines1 = context.DbMonBphtbs.Where(x => x.Tahun == currentYear - 1).ToList();
+                        var OpBphtbMines2 = context.DbMonBphtbs.Where(x => x.Tahun == currentYear - 2).ToList();
+                        var OpBphtbMines3 = context.DbMonBphtbs.Where(x => x.Tahun == currentYear - 3).ToList();
+                        var OpBphtbMines4 = context.DbMonBphtbs.Where(x => x.Tahun == currentYear - 4).ToList();
+
+                        if (tahunHuruf == "TahunMines4")
+                        {
+                            ret = OpBphtbMines4.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)112,
+                                Kategori_Nama = "BPHTB",
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines3")
+                        {
+                            ret = OpBphtbMines3.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)112,
+                                Kategori_Nama = "BPHTB",
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines2")
+                        {
+                            ret = OpBphtbMines2.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)112,
+                                Kategori_Nama = "BPHTB",
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunMines1")
+                        {
+                            ret = OpBphtbMines1.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)112,
+                                Kategori_Nama = "BPHTB",
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
+                        else if (tahunHuruf == "TahunNow")
+                        {
+                            ret = OpBphtbNow.Select(x => new SeriesMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)112,
+                                Kategori_Nama = "BPHTB",
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         break;
@@ -1247,11 +2051,11 @@ namespace MonPDReborn.Models.DataOP
                 }
                 ;
 
-                return ret; 
+                return ret;
 
             }
+            #endregion
 
-            //get Data OP
             public static DataDetailOP GetDetailObjekPajak(string nop, EnumFactory.EPajak pajak)
             {
                 var context = DBClass.GetContext();
@@ -1487,8 +2291,8 @@ namespace MonPDReborn.Models.DataOP
         public class SeriesDetail
         {
             public int EnumPajak { get; set; }
-
             public string JenisPajak { get; set; } = null!;
+            public int KategoriId { get; set; } 
             public string Kategori { get; set; } = null!;
             public int TahunMines4 { get; set; }
             public int TahunMines3 { get; set; }
