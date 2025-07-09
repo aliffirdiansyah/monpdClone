@@ -61,7 +61,7 @@
             @(
                 Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.RealisasiWilayah>()
                     .ID("wilayahGrid")
-                    .DataSource(Model.RealisasiWilayahList)
+                    .DataSource(Model.RealisasiWilayahList.OrderBy(x => x.Wilayah))
                     .KeyExpr("Wilayah")
                     .ShowBorders(true)
                     .ShowColumnHeaders(true)
@@ -145,7 +145,7 @@
                     @(
                         Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.RealisasiJenis>()
                             .ID("jenisGrid")
-                            .DataSource(Model.RealisasiJenisList)
+                            .DataSource(Model.RealisasiJenisList.OrderBy(x => x.Wilayah))
                             .KeyExpr("JenisPajak")
                             .ShowBorders(true)
                             .ShowColumnHeaders(true)
