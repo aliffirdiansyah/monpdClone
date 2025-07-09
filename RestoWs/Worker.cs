@@ -20,17 +20,17 @@ namespace RestoWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
+                //var now = DateTime.Now;
 
-                var nextRun = now.AddDays(1); // besok jam 00:00
-                var delay = nextRun - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 try
                 {
@@ -43,6 +43,25 @@ namespace RestoWs
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error during daily task.");
+                    MailHelper.SendMail(
+                    false,
+                    "ERROR RESTO WS",
+                    $@"
+                            Terjadi exception pada sistem:
+
+                            Pesan Error       : {ex.Message}
+                            Tipe Exception    : {ex.GetType().FullName}
+                            Source            : {ex.Source}
+                            Method            : {ex.TargetSite}
+                            Stack Trace       :
+                            {ex.StackTrace}
+
+                            Inner Exception   :
+                            {ex.InnerException?.Message}
+                            {ex.InnerException?.StackTrace}
+                            ",
+                        null
+                    );
                 }
             }
         }
@@ -1020,6 +1039,13 @@ namespace RestoWs
                     }
                 }
             }
+
+            MailHelper.SendMail(
+            false,
+            "DONE RESTO WS",
+            $@"RESTO WS FINISHED",
+            null
+            );
         }
 
         private bool IsGetDBOp()

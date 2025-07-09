@@ -33,6 +33,9 @@ namespace PbbWs
                 //// Tunggu hingga waktu eksekusi
                 //await Task.Delay(delay, stoppingToken);
 
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
+
                 // Eksekusi tugas
                 try
                 {
@@ -41,6 +44,25 @@ namespace PbbWs
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error occurred while executing task.");
+                    MailHelper.SendMail(
+                    false,
+                    "ERROR PBB WS",
+                    $@"
+                            Terjadi exception pada sistem:
+
+                            Pesan Error       : {ex.Message}
+                            Tipe Exception    : {ex.GetType().FullName}
+                            Source            : {ex.Source}
+                            Method            : {ex.TargetSite}
+                            Stack Trace       :
+                            {ex.StackTrace}
+
+                            Inner Exception   :
+                            {ex.InnerException?.Message}
+                            {ex.InnerException?.StackTrace}
+                            ",
+                        null
+                    );
                 }
             }
         }
@@ -538,6 +560,13 @@ namespace PbbWs
                 }
 
             }
+
+            MailHelper.SendMail(
+            false,
+            "DONE PBB WS",
+            $@"PBB WS FINISHED",
+            null
+            );
         }
 
         private bool IsGetDBOp()
