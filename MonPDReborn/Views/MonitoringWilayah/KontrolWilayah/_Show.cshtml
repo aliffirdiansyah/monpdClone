@@ -64,6 +64,9 @@
                     .DataSource(Model.RealisasiWilayahList)
                     .KeyExpr("Wilayah")
                     .ShowBorders(true)
+                    .ShowColumnHeaders(true)
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
                     .RowAlternationEnabled(true)
                     .ColumnAutoWidth(true)
                     .Columns(columns => {
@@ -84,13 +87,11 @@
                             </text>);
 
                         columns.AddFor(m => m.Target)
-                            .Caption("Target")
-                            .Format(Format.Currency)
+                            .Caption("Target").Format("#,##0")
                             .HeaderCellTemplate(@<text><div class="fw-bold">Target</div></text>);
 
                         columns.AddFor(m => m.Realisasi)
-                            .Caption("Realisasi")
-                            .Format(Format.Currency)
+                            .Caption("Realisasi").Format("#,##0")
                             .HeaderCellTemplate(@<text><div class="fw-bold">Realisasi</div></text>);
 
                         columns.Add()
@@ -108,7 +109,7 @@
                                 </div>
                             </text>);
 
-                        columns.Add()
+                        @* columns.Add()
                             .Caption("Tren")
                             .CellTemplate(@<text>
                                 <% 
@@ -122,7 +123,7 @@
                                 <span class="fw-semibold <%= color %>">
                                     <i class="bx <%= icon %>"></i> <%= tren %>%
                                 </span>
-                            </text>);
+                            </text>); *@
                     })
         )
                 </div>
@@ -147,6 +148,9 @@
                             .DataSource(Model.RealisasiJenisList)
                             .KeyExpr("JenisPajak")
                             .ShowBorders(true)
+                            .ShowColumnHeaders(true)
+                            .ShowColumnLines(true)
+                            .ShowRowLines(true)
                             .RowAlternationEnabled(true)
                             .ColumnAutoWidth(true)
                             .Columns(columns => {
@@ -159,13 +163,11 @@
 
                                 // Target
                                 columns.AddFor(m => m.Target)
-                                    .Caption("Target")
-                                    .Format(Format.Currency);
+                                    .Caption("Target").Format("#,##0");
 
                                 // Realisasi
                                 columns.AddFor(m => m.Realisasi)
-                                    .Caption("Realisasi")
-                                    .Format(Format.Currency);
+                                    .Caption("Realisasi").Format("#,##0");
 
                                 // Pencapaian
                                 columns.Add()
@@ -183,7 +185,7 @@
                                         </div>
                                     </text>);
 
-                                // Tren
+                                @* // Tren
                                 columns.Add()
                                     .Caption("Tren")
                                     .CellTemplate(@<text>
@@ -196,7 +198,7 @@
                                         <span class="fw-semibold <%= color %>">
                                             <i class="bx <%= icon %>"></i> <%= data.Tren %>%
                                         </span>
-                                    </text>);
+                                    </text>); *@
                             })
                         )
                 </div>

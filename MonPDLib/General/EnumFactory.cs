@@ -758,11 +758,22 @@ namespace MonPDLib.General
 
         public enum EUPTB
         {
-            NON_UPTB = 0,
+            [Description("Semua UPTB")]
+            SEMUA = 0,
+
+            [Description("UPTB 1")]
             UPTB1 = 1,
+
+            [Description("UPTB 2")]
             UPTB2 = 2,
+
+            [Description("UPTB 3")]
             UPTB3 = 3,
+
+            [Description("UPTB 4")]
             UPTB4 = 4,
+
+            [Description("UPTB 5")]
             UPTB5 = 5,
         }
         public enum EBidang
