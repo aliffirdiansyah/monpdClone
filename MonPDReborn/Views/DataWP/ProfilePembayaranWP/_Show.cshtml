@@ -1,0 +1,52 @@
+﻿@model MonPDReborn.Models.DataWP.ProfilePembayaranWPVM.Show
+
+<div class="table-responsive">
+    @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfilePembayaranWPVM.PembayaranWP>()
+            .ID("PembayaranWPGrid")
+            .DataSource(Model.DataPembayaranWPList)
+            .KeyExpr("NPWPD")
+            .ShowBorders(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .Columns(columns =>
+            {
+
+                columns.AddFor(m => m.NPWPD)
+                    .Caption("NPWPD")
+                            .CellTemplate(@<text>
+                        <strong><%= data.NPWPD %></strong>
+                    </text>);
+
+                columns.AddFor(m => m.NamaWP)
+                   .Caption("Nama WP");
+
+                columns.AddFor(m => m.Ketetapan)
+                    .Caption("Ketetapan");
+
+                columns.AddFor(m => m.Terbayar)
+                    .Caption("Terbayar");
+
+                columns.Add()
+                    .Caption("Status")
+                    .CellTemplate(@<text>
+                        <%
+                        var status = data.Status;
+                        var color = status == "Lunas" ? "badge bg-success" :
+                                    status == "Sebagian" ? "badge bg-warning" :
+                                    "badge bg-danger";
+                        %>
+                        <span class="<%= color %>"><%= status %></span>
+                    </text>);
+
+                columns.Add()
+                    .Caption("Aksi")
+                    .CellTemplate(@<text>
+                        <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
+                                data-npwpd="<%= data.NPWPD %>">
+                            <i class="bx bx-show"></i>
+                        </button>
+                    </text>);
+            })
+        )
+</div>

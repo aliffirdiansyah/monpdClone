@@ -1,5 +1,167 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model MonPDReborn.Models.DataWP.ProfilePembayaranWPVM.Index
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Profil Pembayaran Wajib Pajak
+                    </h4>
+                    <p class="text-muted mb-0">Analisis Kepatuhan dan Perilaku Pembayaran Pajak Daerah</p>
+                </div>
+                <div class="text-muted mb-1">Periode: <strong>Januari - Desember 2023</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-success-subtle p-2 me-2">
+                        <i class="bi bi-person-plus text-success fs-4"></i>
+                    </div>
+                    <div class="text-start">
+                        <h4 class="mb-0 fw-bold">@Model.Data.TotalWP.ToString("N0")</h4>
+                        <small class="text-muted">Total Wajib Pajak</small>
+                    </div>
+                </div>
+                <span class="badge bg-light-success text-success fw-semibold">
+                    ↑ @Model.Data.PresentaseWP.ToString("F1")% dari bulan lalu
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-success-subtle p-2 me-2">
+                        <i class="bi bi-person-plus text-success fs-4"></i>
+                    </div>
+                    <div class="text-start">
+                        <h4 class="mb-0 fw-bold">@Model.Data.PersentaseKepatuhan.ToString("F1")%</h4>
+                        <small class="text-muted">Tingkat Kepatuhan</small>
+                    </div>
+                </div>
+                <span class="badge bg-light-success text-info fw-semibold">
+                    Target: @Model.Data.TargetKepatuhan.ToString("F1")%
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-success-subtle p-2 me-2">
+                        <i class="bi bi-person-plus text-success fs-4"></i>
+                    </div>
+                    <div class="text-start">
+                        <h4 class="mb-0 fw-bold">Rp @Model.Data.Tunggakan.ToString("F1")M</h4>
+                        <small class="text-muted">Total Tunggakan</small>
+                    </div>
+                </div>
+                <span class="badge bg-light-success text-danger fw-semibold">
+                    @Model.Data.WPMenunggak WP menunggak
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Rekap Wajib Pajak Daerah
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            fnShow("");      // Panggil data rekap jumlah
+           // loadDetail("");  // Panggil semua data detail saat pertama load
+        });
+
+        function fnShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "ProfilePembayaranWP")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
+
+         function aksiTemplate(cellElement, cellInfo) {
+            const npwpd = cellInfo.data.NPWPD;
+
+            $('<button>')
+                .attr('type', 'button')
+                .attr('data-npwpd', npwpd)
+                .addClass('btn btn-sm btn-outline-primary btn-detail')
+                .html('<i class="bx bx-show"></i>')
+                .appendTo(cellElement);
+        }
+
+        // Klik detail
+        $(document).on('click', '.btn-detail', function () {
+            const npwpd = $(this).data('npwpd');
+            const url = '@Url.Action("Detail", "ProfilePembayaranWP")' + '?npwpd=' + encodeURIComponent(npwpd);
+
+            $('#detailModalContent').html(`
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary"></div>
+                </div>
+            `);
+
+            $('#detailModal').modal('show');
+
+            $.get(url, function (data) {
+                $('#detailModalContent').html(data);
+            });
+        });
+    </script>
 }
