@@ -61,6 +61,9 @@ public partial class DbAkunTargetBulan
     [Column("TARGET", TypeName = "NUMBER")]
     public decimal Target { get; set; }
 
+    [Column("PAJAK_ID", TypeName = "NUMBER(38)")]
+    public decimal? PajakId { get; set; }
+
     [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
     [InverseProperty("DbAkunTargetBulans")]
     public virtual DbAkunTarget DbAkunTarget { get; set; } = null!;
