@@ -20,17 +20,20 @@ namespace HiburanWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                // Hitung waktu untuk 00:00 esok hari
+                var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
+                var delay = nextRunTime - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
+                _logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
 
-                //// Tunggu hingga waktu eksekusi
-                //await Task.Delay(delay, stoppingToken);
+                // Tunggu hingga waktu eksekusi
+                await Task.Delay(delay, stoppingToken);
+
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 // Eksekusi tugas
                 try
@@ -40,6 +43,25 @@ namespace HiburanWs
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error occurred while executing task.");
+                    MailHelper.SendMail(
+                    false,
+                    "ERROR HIBURAN WS",
+                    $@"
+                            Terjadi exception pada sistem:
+
+                            Pesan Error       : {ex.Message}
+                            Tipe Exception    : {ex.GetType().FullName}
+                            Source            : {ex.Source}
+                            Method            : {ex.TargetSite}
+                            Stack Trace       :
+                            {ex.StackTrace}
+
+                            Inner Exception   :
+                            {ex.InnerException?.Message}
+                            {ex.InnerException?.StackTrace}
+                            ",
+                        null
+                    );
                 }
             }
         }
@@ -1114,6 +1136,14 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                     }
                 }
             }
+
+
+            MailHelper.SendMail(
+            false,
+            "DONE HIBURAN WS",
+            $@"HIBURAN WS FINISHED",
+            null
+            );
         }
 
         private bool IsGetDBOp()

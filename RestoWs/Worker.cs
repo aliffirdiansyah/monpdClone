@@ -43,6 +43,25 @@ namespace RestoWs
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error during daily task.");
+                    MailHelper.SendMail(
+                    false,
+                    "ERROR RESTO WS",
+                    $@"
+                            Terjadi exception pada sistem:
+
+                            Pesan Error       : {ex.Message}
+                            Tipe Exception    : {ex.GetType().FullName}
+                            Source            : {ex.Source}
+                            Method            : {ex.TargetSite}
+                            Stack Trace       :
+                            {ex.StackTrace}
+
+                            Inner Exception   :
+                            {ex.InnerException?.Message}
+                            {ex.InnerException?.StackTrace}
+                            ",
+                        null
+                    );
                 }
             }
         }
