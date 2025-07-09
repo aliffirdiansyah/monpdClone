@@ -1381,98 +1381,200 @@ namespace MonPDReborn.Models.MonitoringWilayah
                            })
                            .ToList();
 
-                        // Gabungkan semua NOP + Wilayah + PajakId dari OP
                         var dataWilayahGabungan = new List<(string Nop, string Wilayah, decimal PajakId)>();
 
                         dataWilayahGabungan.AddRange(
                             context.DbOpRestos
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => (x.Nop, Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .ToList()
+                        );
 
                         dataWilayahGabungan.AddRange(
                             context.DbOpHotels
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => (x.Nop, Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .ToList()
+                        );
 
                         dataWilayahGabungan.AddRange(
                             context.DbOpParkirs
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => (x.Nop, Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .ToList()
+                        );
 
                         dataWilayahGabungan.AddRange(
                             context.DbOpListriks
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => (x.Nop, Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, x.PajakId))
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .ToList()
+                        );
 
                         dataWilayahGabungan.AddRange(
                             context.DbOpHiburans
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => (x.Nop, Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .ToList()
+                        );
 
                         dataWilayahGabungan.AddRange(
                             context.DbOpAbts
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => (x.Nop, Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .ToList()
+                        );
 
                         dataWilayahGabungan.AddRange(
                             context.DbOpPbbs
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => (x.Nop, Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, x.PajakId)
-                                .ToList());
-
+                                .Select(x => new {
+                                    x.Nop,
+                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    PajakId = 9m // PBB
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .ToList()
+                        );
                         // Gabungkan data realisasi
                         var dataRealisasiGabungan = new List<(string Nop, DateTime? TglBayarPokok, decimal NominalPokokBayar, decimal PajakId)>();
 
                         dataRealisasiGabungan.AddRange(
                             context.DbMonRestos
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    x.TglBayarPokok,
+                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         dataRealisasiGabungan.AddRange(
                             context.DbMonHotels
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    x.TglBayarPokok,
+                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         dataRealisasiGabungan.AddRange(
                             context.DbMonParkirs
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    x.TglBayarPokok,
+                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         dataRealisasiGabungan.AddRange(
                             context.DbMonPpjs
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    x.TglBayarPokok,
+                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         dataRealisasiGabungan.AddRange(
                             context.DbMonHiburans
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    x.TglBayarPokok,
+                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         dataRealisasiGabungan.AddRange(
                             context.DbMonAbts
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    x.TglBayarPokok,
+                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         dataRealisasiGabungan.AddRange(
                             context.DbMonPbbs
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0, x.PajakId)
-                                .ToList());
+                                .Select(x => new {
+                                    x.Nop,
+                                    x.TglBayarPokok,
+                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                    x.PajakId
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
-                        // Proses hasil
-                        var ret = new List<RealisasiJenis>();
+                        
 
                         foreach (var item in dataTargetWilayah)
                         {
