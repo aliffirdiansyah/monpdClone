@@ -117,44 +117,45 @@ namespace MonPDReborn.Models.DataOP
                         ret.AddRange(laporResto);
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        //var dataTerlaporListrik = context.DbMonListriks
-                        //.Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
-                        //.GroupBy(x => x.Nop)
-                        //.Select(g => new
-                        //{
-                        //    Nop = g.Key,
-                        //    Count = g.Count()
-                        //})
-                        //.ToList();
+                        var dataTerlaporListrik = context.DbMonPpjs
+                        .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
+                        .GroupBy(x => x.Nop)
+                        .Select(g => new
+                        {
+                            Nop = g.Key,
+                            Count = g.Count()
+                        })
+                        .ToList();
 
-                        //var getWilayahListrik = context.DbOpListriks
-                        //    .Select(x => new
-                        //    {
-                        //        Nop = x.Nop,
-                        //        Wilayah = x.WilayahPajak
-                        //    })
-                        //    .ToList();
+                        var getWilayahListrik = context.DbOpListriks
+                            .Select(x => new
+                            {
+                                Nop = x.Nop,
+                                Wilayah = x.WilayahPajak
+                            })
+                            .ToList();
 
-                        //var laporListrik = context.DbMonLisriks
-                        //    .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
-                        //    .GroupBy(x => x.Nop)
-                        //    .Select(g => g.First())
-                        //    .ToList()
-                        //    .Select(x => new HasilPelaporan
-                        //    {
-                        //        NOP = x.Nop,
-                        //        Nama = x.NamaOp,
-                        //        
-                        // EnumPajak = (int)JenisPajak,JenisPajak = JenisPajak.GetDescription(),
-                        //        Wilayah = getWilayahListrik.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
-                        //        Status = "",
-                        //        PajakTerlapor = dataTerlaporListrik.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0,
-                        //        MasaBelumLapor = 12 - (dataTerlaporListrik.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0),
-                        //        PajakSeharusnya = 12,
-                        //        Alamat = x.AlamatOp
-                        //    }).ToList();
+                        var laporListrik = context.DbMonPpjs
+                            .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
+                            .GroupBy(x => x.Nop)
+                            .Select(g => g.First())
+                            .ToList()
+                            .Select(x => new HasilPelaporan
+                            {
+                                NOP = x.Nop,
+                                Nama = x.NamaOp,
 
-                        //ret.AddRange(laporListrik);
+                                EnumPajak = (int)JenisPajak,
+                                JenisPajak = JenisPajak.GetDescription(),
+                                Wilayah = getWilayahListrik.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
+                                Status = "",
+                                PajakTerlapor = dataTerlaporListrik.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0,
+                                MasaBelumLapor = 12 - (dataTerlaporListrik.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0),
+                                PajakSeharusnya = 12,
+                                Alamat = x.AlamatOp
+                            }).ToList();
+
+                        ret.AddRange(laporListrik);
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var dataTerlaporHotel = context.DbMonHotels
@@ -395,18 +396,18 @@ namespace MonPDReborn.Models.DataOP
                             }).ToList();
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        //var dataListrik = context.DbMonListriks
-                        //    .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
-                        //    .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
-                        //    .Select(g => new RealisasiBulanan
-                        //    {
-                        //        NOP = g.Key.Nop,
-                        //        BulanKe = g.Key.BulanKe,
-                        //        Tahun = (int)g.Key.Tahun,
-                        //        Status = "Sudah Lapor",
-                        //        TanggalLapor = g.Max(x => x.TglKetetapan),
-                        //        Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
-                        //    }).ToList();
+                        var dataListrik = context.DbMonPpjs
+                            .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
+                            .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
+                            .Select(g => new RealisasiBulanan
+                            {
+                                NOP = g.Key.Nop,
+                                BulanKe = g.Key.BulanKe,
+                                Tahun = (int)g.Key.Tahun,
+                                Status = "Sudah Lapor",
+                                TanggalLapor = g.Max(x => x.TglKetetapan),
+                                Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
+                            }).ToList();
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var dataHotel = context.DbMonHotels
