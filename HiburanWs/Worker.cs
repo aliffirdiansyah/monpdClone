@@ -32,6 +32,9 @@ namespace HiburanWs
                 //// Tunggu hingga waktu eksekusi
                 //await Task.Delay(delay, stoppingToken);
 
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
+
                 // Eksekusi tugas
                 try
                 {
@@ -40,6 +43,25 @@ namespace HiburanWs
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error occurred while executing task.");
+                    MailHelper.SendMail(
+                    false,
+                    "ERROR HIBURAN WS",
+                    $@"
+                            Terjadi exception pada sistem:
+
+                            Pesan Error       : {ex.Message}
+                            Tipe Exception    : {ex.GetType().FullName}
+                            Source            : {ex.Source}
+                            Method            : {ex.TargetSite}
+                            Stack Trace       :
+                            {ex.StackTrace}
+
+                            Inner Exception   :
+                            {ex.InnerException?.Message}
+                            {ex.InnerException?.StackTrace}
+                            ",
+                        null
+                    );
                 }
             }
         }
@@ -1114,6 +1136,14 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                     }
                 }
             }
+
+
+            MailHelper.SendMail(
+            false,
+            "DONE HIBURAN WS",
+            $@"HIBURAN WS FINISHED",
+            null
+            );
         }
 
         private bool IsGetDBOp()

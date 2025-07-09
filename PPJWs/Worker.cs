@@ -32,6 +32,9 @@ namespace PPJWs
                 //// Tunggu hingga waktu eksekusi
                 //await Task.Delay(delay, stoppingToken);
 
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
+
                 // Eksekusi tugas
                 try
                 {
@@ -40,6 +43,25 @@ namespace PPJWs
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error occurred while executing task.");
+                    MailHelper.SendMail(
+                    false,
+                    "ERROR PPJ WS",
+                    $@"
+                            Terjadi exception pada sistem:
+
+                            Pesan Error       : {ex.Message}
+                            Tipe Exception    : {ex.GetType().FullName}
+                            Source            : {ex.Source}
+                            Method            : {ex.TargetSite}
+                            Stack Trace       :
+                            {ex.StackTrace}
+
+                            Inner Exception   :
+                            {ex.InnerException?.Message}
+                            {ex.InnerException?.StackTrace}
+                            ",
+                        null
+                    );
                 }
             }
         }
@@ -1024,6 +1046,14 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                     }
                 }
             }
+
+
+            MailHelper.SendMail(
+            false,
+            "DONE PPJ WS",
+            $@"PPJ WS FINISHED",
+            null
+            );
         }
 
         private bool IsGetDBOp()
