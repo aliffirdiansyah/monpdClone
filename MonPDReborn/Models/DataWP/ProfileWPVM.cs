@@ -1,5 +1,6 @@
 ﻿using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
 using static MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM;
+using static MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM;
 
 namespace MonPDReborn.Models.DataWP
 {
@@ -25,14 +26,16 @@ namespace MonPDReborn.Models.DataWP
         }
         public class Detail
         {
-            public Detail()
+            public List<ProfilWP> DataWPList { get; set; } = new();
+
+            public Detail() { }
+
+            public Detail(string NPWPD)
             {
-                
-            }
-            public Detail(string nop)
-            {
+                DataWPList = Method.GetFilteredDataProfilWP(NPWPD);
             }
         }
+
         public class Method
         {
             public static List<RekapWP> GetFilteredData()
@@ -49,6 +52,27 @@ namespace MonPDReborn.Models.DataWP
                     new RekapWP {NPWPD = "01.01.0003", Nama = "Taman Hiburan Anak", JenisSubjek = "Orang Pribadi", Kontak = "08122223333", Status = "Non Aktif"}
                 };
             }
+
+            public static List<ProfilWP> GetFilteredDataProfilWP(string npwpd)
+            {
+                return GetAllDataProfilWP()
+                    .Where(x => x.NPWPD.Equals(npwpd, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+
+            private static List<ProfilWP> GetAllDataProfilWP()
+            {
+                return new List<ProfilWP>
+                {
+                    new ProfilWP {NPWPD = "01.01.0001", Nama = "Hotel Mawar", JenisSubjek = "Badan Usaha", NIB = "1234567890", Status = "Aktif", TanggalDaftar = new DateTime(2018, 5, 12), AlamatDom = "Jl. Mawar No. 1, Jakarta", AlamatUsaha = "Jl. Mawar Raya No. 2, Jakarta", Kontak = "08123456789", Email = "info@hotelmawar.com"},
+                    new ProfilWP {NPWPD = "01.01.0002", Nama = "Restoran Sederhana", JenisSubjek = "Badan Usaha", NIB = "9876543210", Status = "Aktif", TanggalDaftar = new DateTime(2020, 1, 20), AlamatDom = "Jl. Sederhana No. 5, Bandung", AlamatUsaha = "Jl. Sederhana Raya No. 10, Bandung", Kontak = "08129876543", Email = "contact@restoransederhana.co.id"},
+                    new ProfilWP {NPWPD = "01.01.0003", Nama = "Taman Hiburan Anak", JenisSubjek = "Orang Pribadi", NIB = "1122334455", Status = "Non Aktif", TanggalDaftar = new DateTime(2015, 7, 15), AlamatDom = "Jl. Kenanga No. 8, Surabaya", AlamatUsaha = "Jl. Kenanga Raya No. 12, Surabaya", Kontak = "08122223333", Email = "owner@tamankidsplay.id"}
+                };
+
+            }
+
+            
             public static Dashboard GetDashboardData()
             {
                 return new Dashboard
