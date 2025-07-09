@@ -1,10 +1,10 @@
-﻿@model MonPDReborn.Models.DataWP.ProfileWPVM.Show
+﻿@model MonPDReborn.Models.DataWP.ProfilePiutangWPVM.ShowRekap
 
 <div class="table-responsive">
     @(
-    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfileWPVM.RekapWP>()
-        .ID("rekapWPGrid")
-        .DataSource(Model.DataRekapWPList)
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfilePiutangWPVM.RekapPiutangWP>()
+        .ID("rekapPiutangWPGrid")
+        .DataSource(Model.DataRekapPiutangWPList)
         .KeyExpr("NPWPD")
         .ShowBorders(true)
         .ShowColumnLines(true)
@@ -31,24 +31,14 @@
                     <strong><%= data.NPWPD %></strong>
                 </text>);
 
-            columns.AddFor(m => m.Nama)
-                .Caption("Nama");
+            columns.AddFor(m => m.NamaWP)
+                .Caption("Nama WP");
 
-            columns.AddFor(m => m.JenisSubjek)
-                .Caption("Jenis Subjek");
+            columns.AddFor(m => m.Piutang)
+                .Caption("Piutang");
 
-            columns.AddFor(m => m.Kontak)
-                .Caption("Kontak");
-
-            columns.Add()
-                .Caption("Status")
-                .CellTemplate(@<text>
-                    <%
-                        var status = data.Status;
-                        var color = status == "Aktif" ? "badge bg-success" : "badge bg-danger";
-                    %>
-                    <span class="<%= color %>"><%= status %></span>
-                </text>);
+            columns.AddFor(m => m.Status)
+                .Caption("Status");
 
            columns.Add()
                 .Caption("Aksi")
@@ -61,3 +51,4 @@
         })
 )
 </div>
+

@@ -27,12 +27,12 @@ public partial class DbMonOpsenBbnkb
     public string IdAyatPajak { get; set; } = null!;
 
     [Column("BULAN_PAJAK_SSPD")]
-    [Precision(2)]
-    public byte BulanPajakSspd { get; set; }
+    [Precision(10)]
+    public int BulanPajakSspd { get; set; }
 
     [Column("TAHUN_PAJAK_SSPD")]
-    [Precision(4)]
-    public byte TahunPajakSspd { get; set; }
+    [Precision(10)]
+    public int TahunPajakSspd { get; set; }
 
     [Column("JML_POKOK", TypeName = "NUMBER(18,2)")]
     public decimal JmlPokok { get; set; }
