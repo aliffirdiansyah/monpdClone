@@ -41,11 +41,52 @@ namespace MonPDReborn.Controllers.DataWP
                 return Json(response);
             }
         }
-        public IActionResult Show(DateTime tglCutOff)
+        public IActionResult ShowRekap()
         {
             try
             {
-                var model = new Models.DataWP.ProfilePiutangWPVM.Show();
+                var model = new Models.DataWP.ProfilePiutangWPVM.ShowRekap();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult ShowRiwayat()
+        {
+            try
+            {
+                var model = new Models.DataWP.ProfilePiutangWPVM.ShowRiwayat();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult Detail(string NPWPD)
+        {
+            try
+            {
+                var model = new Models.DataWP.ProfilePiutangWPVM.Detail(NPWPD);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -63,3 +104,4 @@ namespace MonPDReborn.Controllers.DataWP
         }
     }
 }
+    

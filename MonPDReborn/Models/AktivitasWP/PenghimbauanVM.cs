@@ -5,9 +5,10 @@
         public class Index
         {
             public string Keyword { get; set; } = null!;
+            public Dashboard Data { get; set; } = new Dashboard();
             public Index()
             {
-
+                Data = Method.GetDashboardData();
             }
         }
         public class Show
@@ -32,6 +33,24 @@
         }
         public class Method
         {
+            public static Dashboard GetDashboardData()
+            {
+                return new Dashboard
+                {
+                    TotalPenghimbauan = 1274,
+                    PenghimbauanAktif = 156,
+                    PenghimbauanSelesai = 103,
+                    TingkatKepatuhan = 11.7,
+                };
+            }
+        }
+
+        public class Dashboard
+        {
+            public int TotalPenghimbauan { get; set; }       
+            public double PenghimbauanAktif { get; set; }     
+            public double PenghimbauanSelesai { get; set; }   
+            public double TingkatKepatuhan { get; set; }   
 
         }
     }

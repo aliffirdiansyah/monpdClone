@@ -1,10 +1,10 @@
-﻿@model MonPDReborn.Models.DataWP.ProfileWPVM.Show
+﻿@model MonPDReborn.Models.DataWP.ProfilePiutangWPVM.ShowRiwayat
 
 <div class="table-responsive">
     @(
-    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfileWPVM.RekapWP>()
-        .ID("rekapWPGrid")
-        .DataSource(Model.DataRekapWPList)
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfilePiutangWPVM.RiwayatPiutangWP>()
+        .ID("riwayatPiutangWPGrid")
+        .DataSource(Model.DataRiwayatPiutangWPList)
         .KeyExpr("NPWPD")
         .ShowBorders(true)
         .ShowColumnLines(true)
@@ -31,32 +31,39 @@
                     <strong><%= data.NPWPD %></strong>
                 </text>);
 
-            columns.AddFor(m => m.Nama)
-                .Caption("Nama");
+            columns.AddFor(m => m.NamaWP)
+                .Caption("Nama WP");
 
-            columns.AddFor(m => m.JenisSubjek)
-                .Caption("Jenis Subjek");
+            columns.AddFor(m => m.Teguran1)
+                .Caption("Teguran I");
 
-            columns.AddFor(m => m.Kontak)
-                .Caption("Kontak");
+            columns.AddFor(m => m.Teguran2)
+                .Caption("Teguran II");
+
+            columns.AddFor(m => m.SuratPaksa)
+                .Caption("Surat Paksa");
 
             columns.Add()
                 .Caption("Status")
                 .CellTemplate(@<text>
                     <%
                         var status = data.Status;
-                        var color = status == "Aktif" ? "badge bg-success" : "badge bg-danger";
+                        var color = "badge bg-secondary"; // default
+
+                        if (status == "Proses Sita")
+                        {
+                            color = "badge bg-danger";
+                        }
+                        else if (status == "Negosiasi")
+                        {
+                            color = "badge bg-warning";
+                        }
+                        else if (status == "Menunggu")
+                        {
+                            color = "badge bg-secondary";
+                        }
                     %>
                     <span class="<%= color %>"><%= status %></span>
-                </text>);
-
-           columns.Add()
-                .Caption("Aksi")
-                .CellTemplate(@<text>
-                    <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
-                            data-npwpd="<%= data.NPWPD %>">
-                        <i class=" ri-search-line "></i>
-                    </button>
                 </text>);
         })
 )
