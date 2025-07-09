@@ -20,17 +20,22 @@
         <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-success-subtle p-2 me-2">
-                        <i class="bi bi-person-plus text-success fs-4"></i>
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-team-fill text-primary fs-1"></i>
                     </div>
                     <div class="text-start">
-                        <h4 class="mb-0 fw-bold">@Model.Data.TotalWP.ToString("N0")</h4>
+                        <h3 class="mb-0 fw-bold">@Model.Data.TotalWP.ToString("N0")</h3>
                         <small class="text-muted">Total Wajib Pajak</small>
+
+                        <h3>
+                            <span class="badge bg-light-success text-success fw-semibold">
+                                ↑ @Model.Data.PresentaseWP.ToString("F1")% dari bulan lalu
+                            </span>
+                        </h3>
                     </div>
                 </div>
-                <span class="badge bg-light-success text-success fw-semibold">
-                    ↑ @Model.Data.PresentaseWP.ToString("F1")% dari bulan lalu
-                </span>
+                
+                
             </div>
         </div>
     </div>
@@ -39,17 +44,20 @@
         <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-success-subtle p-2 me-2">
-                        <i class="bi bi-person-plus text-success fs-4"></i>
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-team-fill text-primary fs-1"></i>
                     </div>
                     <div class="text-start">
-                        <h4 class="mb-0 fw-bold">@Model.Data.PersentaseKepatuhan.ToString("F1")%</h4>
+                        <h3 class="mb-0 fw-bold">@Model.Data.PersentaseKepatuhan.ToString("F1")%</h3>
                         <small class="text-muted">Tingkat Kepatuhan</small>
+                        <h3>
+                            <span class="badge bg-light-success text-info fw-semibold">
+                                Target: @Model.Data.TargetKepatuhan.ToString("F1")%
+                            </span>
+                        </h3>
                     </div>
                 </div>
-                <span class="badge bg-light-success text-info fw-semibold">
-                    Target: @Model.Data.TargetKepatuhan.ToString("F1")%
-                </span>
+                
             </div>
         </div>
     </div>
@@ -58,17 +66,21 @@
         <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-success-subtle p-2 me-2">
-                        <i class="bi bi-person-plus text-success fs-4"></i>
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-team-fill text-primary fs-1"></i>
                     </div>
                     <div class="text-start">
-                        <h4 class="mb-0 fw-bold">Rp @Model.Data.Tunggakan.ToString("F1")M</h4>
+                        <h3 class="mb-0 fw-bold">Rp @Model.Data.Tunggakan.ToString("F1")M</h3>
                         <small class="text-muted">Total Tunggakan</small>
+                        <h3>
+                            <span class="badge bg-light-success text-danger fw-semibold">
+                                @Model.Data.WPMenunggak WP menunggak
+                            </span>
+                        </h3>
                     </div>
                 </div>
-                <span class="badge bg-light-success text-danger fw-semibold">
-                    @Model.Data.WPMenunggak WP menunggak
-                </span>
+                
+                
             </div>
         </div>
     </div>

@@ -10,128 +10,151 @@
 </div>
 
 <div class="modal-body">
-    @foreach (var profil in Model.DataWPList)
-    {
-        <div class="mb-3">
-
-            <div class="row g-3 mb-1">
-                <div class="col-md-6">
-                    <div class="card h-80">
-                        <div class="card-header bg-primary text-white d-flex align-items-center">
-                            <i class="ri-profile-fill fs-4 me-2"></i>
-                            <h5 class="mb-0 text-white">Informasi Wajib Pajak</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="form-label text-muted fw-bold">NPWPD</span>
-                                <span class="fw-semibold">@profil.NPWPD</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <label class="form-label text-muted fw-bold">Nama Wajib Pajak</label>
-                                <div class="fw-semibold">@profil.NamaWP</div>
-                            </div>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <label class="form-label text-muted fw-bold">Status Keseluruhan</label>
-                                <div>
-                                    @if (profil.Status == "Aktif")
-                                    {
-                                        <span class="badge bg-success px-3 py-2">Aktif</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger px-3 py-2">@profil.Status</span>
-                                    }
-                                </div>
-                            </div>
-
-                        </div>
+    <div class="mb-1">
+        <div class="row g-3 mb-1">
+            <div class="col-md-6">
+                <div class="card h-80">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="ri-profile-fill fs-4 me-2"></i>
+                        <h5 class="mb-0 text-white">Informasi Wajib Pajak</h5>
                     </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card h-80">
-                        <div class="card-header bg-info text-white d-flex align-items-center">
-                            <i class="ri-building-4-line fs-4 me-2"></i>
-                            <h5 class="mb-0 text-white">Ringkasan Pembayaran</h5>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="form-label text-muted fw-bold">NPWPD</span>
+                            <span class="fw-semibold">@Model.DataWPList.FirstOrDefault()?.NPWPD</span>
                         </div>
-                        <div class="card-body">
 
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="form-label text-muted fw-bold">NPWPD</span>
-                                <span class="fw-semibold">@profil.NPWPD</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="form-label text-muted fw-bold">Total Ketetapan</span>
-                                <span class="fw-semibold">@profil.NPWPD</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="form-label text-muted fw-bold">Total Terbayar</span>
-                                <span class="fw-semibold">@profil.NPWPD</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="form-label text-muted fw-bold">Total Tunggakan</span>
-                                <span class="fw-semibold">@profil.NPWPD</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="form-label text-muted fw-bold">Tingkat Kepatuhan</span>
-                                <span class="fw-semibold">@profil.NPWPD</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="form-label text-muted fw-bold">Progress Pembayaran</span>
-                                <span class="fw-semibold">@profil.NPWPD</span>
-                            </div>
-
+                        <div class="d-flex justify-content-between mb-2">
+                            <label class="form-label text-muted fw-bold">Nama Wajib Pajak</label>
+                            <div class="fw-semibold">@Model.DataWPList.FirstOrDefault()?.NamaWP</div>
                         </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <label class="form-label text-muted fw-bold">Status Keseluruhan</label>
+                            <div class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Status</div>
+                        </div>
+
                     </div>
                 </div>
             </div>
 
-            <div class="row g-3 mb-3">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header bg-secondary text-white d-flex align-items-center">
-                            <i class="ri-map-pin-2-line fs-4 me-2"></i>
-                            <h5 class="mb-0 text-white">Detail Tunggakan per Jenis Pajak & Tahun Buku</h5>
+            <div class="col-md-6">
+                <div class="card h-80">
+                    <div class="card-header bg-info text-white d-flex align-items-center">
+                        <i class="ri-building-4-line fs-4 me-2"></i>
+                        <h5 class="mb-0 text-white">Ringkasan Pembayaran</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="form-label text-muted fw-bold">NPWPD</span>
+                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.NPWPD</span>
                         </div>
-                        <div class="card-body fw-semibold">
-                            @profil.AlamatDom
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="form-label text-muted fw-bold">Total Ketetapan</span>
+                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Ketetapan</span>
                         </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="form-label text-muted fw-bold">Total Terbayar</span>
+                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Terbayar</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="form-label text-muted fw-bold">Total Tunggakan</span>
+                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Tunggakan</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="form-label text-muted fw-bold">Tingkat Kepatuhan</span>
+                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Kepatuhan</span>
+                        </div>
+
                     </div>
                 </div>
             </div>
-
-            <div class="row g-3">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card h-100 bg-warning border-warning">
-                            <div class="card-body">
-                                <p class="mb-0">
-                                    Data Wajib Pajak ini belum diverifikasi oleh petugas lapangan. Mohon lakukan validasi data terlebih dahulu.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card h-100 bg-success border-success">
-
-                            <div class="card-body">
-                                <p class="mb-0">
-                                    Lakukan pemeriksaan objek pajak untuk validasi data dan potensi penerimaan pajak.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
-    }
+
+        <div class="row g-3 mb-1">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white d-flex align-items-center">
+                        <i class="ri-map-pin-2-line fs-4 me-2"></i>
+                        <h5 class="mb-0 text-white">Detail Tunggakan per Jenis Pajak & Tahun Buku</h5>
+                    </div>
+                    <div class="card-body fw-semibold">
+                        <div class="table-responsive">
+                            @(
+                                    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfilePembayaranWPVM.DetailPembayaranWP>()
+                                    .ID("DetailPembayaranWPGrid")
+                                    .DataSource(Model.DetailPembayaranWPList)
+                                    .KeyExpr("NPWPD")
+                                    .ShowBorders(true)
+                                    .RowAlternationEnabled(true)
+                                    .ColumnAutoWidth(true)
+                                    .Columns(columns =>
+                                    {
+
+                                        columns.AddFor(m => m.JenisPajak)
+                                    .Caption("Jenis Pajak");
+
+
+                                        columns.AddFor(m => m.TahunBuku)
+                                    .Caption("Tahun Buku");
+
+                                        columns.AddFor(m => m.Ketetapan)
+                                    .Caption("Ketetapan");
+
+                                        columns.AddFor(m => m.Terbayar)
+                                    .Caption("Terbayar");
+
+                                        columns.AddFor(m => m.Tunggakan)
+                                    .Caption("Tunggakan");
+
+                                        columns.Add()
+                                    .Caption("Status")
+                                    .CellTemplate(@<text>
+                                        <%
+                                        var status = data.Status;
+                                        var color = status == "Lunas" ? "badge bg-success" :
+                                        status == "Sebagian" ? "badge bg-warning" :
+                                        "badge bg-danger";
+                                        %>
+                                        <span class="<%= color %>"><%= status %></span>
+                                    </text>);
+                                    })
+                                )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card h-100 bg-warning border-warning">
+                        <div class="card-body">
+                            <p class="mb-0">
+                                Data Wajib Pajak ini belum diverifikasi oleh petugas lapangan. Mohon lakukan validasi data terlebih dahulu.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 bg-success border-success">
+
+                        <div class="card-body">
+                            <p class="mb-0">
+                                Lakukan pemeriksaan objek pajak untuk validasi data dan potensi penerimaan pajak.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
