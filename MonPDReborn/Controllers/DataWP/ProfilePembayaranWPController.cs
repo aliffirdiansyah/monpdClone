@@ -61,5 +61,26 @@ namespace MonPDReborn.Controllers.DataWP
                 return Json(response);
             }
         }
+
+        public IActionResult Detail(string NPWPD)
+        {
+            try
+            {
+                var model = new Models.DataWP.ProfilePembayaranWPVM.Detail(NPWPD);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }
