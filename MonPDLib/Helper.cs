@@ -71,6 +71,48 @@ namespace MonPDLib
             public decimal NILAI_PENGURANG { get; set; }
             public decimal POKOK { get; set; }
         }
+        public class OpOpsenSkpdPkb
+        {
+            public string ID_SSPD { get; set; } = null!;
+            public DateTime TGL_SSPD { get; set; }
+            public DateTime SSPD_TGL_ENTRY { get; set; }
+            public string ID_AYAT_PAJAK { get; set; } = null!;
+            public int BULAN_PAJAK_SSPD { get; set; }
+            public int TAHUN_PAJAK_SSPD { get; set; }
+            public decimal JML_POKOK { get; set; }
+            public decimal? JML_DENDA { get; set; }
+            public string? REFF_DASAR_SETORAN { get; set; }
+            public string? TEMPAT_BAYAR { get; set; }
+            public string? SETORAN_BERDASARKAN { get; set; }
+            public DateTime? REKON_DATE { get; set; }
+            public string? REKON_BY { get; set; }
+            public string? DASAR_SETORAN { get; set; }
+            public string? NAMA_JENIS_PAJAK { get; set; }
+            public string? DESCRIPTION { get; set; }
+            public string? SAMSAT_ASAL { get; set; }
+            public string? JENIS_BAYAR { get; set; }
+        }
+        public class OpOpsenSkpdBbnkb
+        {
+            public string ID_SSPD { get; set; } = null!;
+            public DateTime TGL_SSPD { get; set; }
+            public DateTime SSPD_TGL_ENTRY { get; set; }
+            public string ID_AYAT_PAJAK { get; set; } = null!;
+            public int BULAN_PAJAK_SSPD { get; set; }
+            public int TAHUN_PAJAK_SSPD { get; set; }
+            public decimal JML_POKOK { get; set; }
+            public decimal? JML_DENDA { get; set; }
+            public string? REFF_DASAR_SETORAN { get; set; }
+            public string? TEMPAT_BAYAR { get; set; }
+            public string? SETORAN_BERDASARKAN { get; set; }
+            public DateTime? REKON_DATE { get; set; }
+            public string? REKON_BY { get; set; }
+            public string? DASAR_SETORAN { get; set; }
+            public string? NAMA_JENIS_PAJAK { get; set; }
+            public string? DESCRIPTION { get; set; }
+            public string? SAMSAT_ASAL { get; set; }
+            public string? JENIS_BAYAR { get; set; }
+        }
         public class OpSkpdBphtb
         {
             public string IDSSPD { get; set; }
