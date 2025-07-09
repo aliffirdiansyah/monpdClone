@@ -49,4 +49,7 @@ public partial class TPemeriksaan
     [StringLength(250)]
     [Unicode(false)]
     public string Ket { get; set; } = null!;
+
+    [Column("PAJAK_ID", TypeName = "NUMBER(38)")]
+    public decimal PajakId { get; set; }
 }

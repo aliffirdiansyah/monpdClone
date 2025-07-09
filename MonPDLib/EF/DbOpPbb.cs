@@ -11,7 +11,7 @@ public partial class DbOpPbb
 {
     [Key]
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(100)]
     [Unicode(false)]
     public string Nop { get; set; } = null!;
 
@@ -24,32 +24,32 @@ public partial class DbOpPbb
     public string KategoriNama { get; set; } = null!;
 
     [Column("ALAMAT_OP")]
-    [StringLength(50)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? AlamatOp { get; set; }
 
     [Column("ALAMAT_OP_NO")]
-    [StringLength(30)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? AlamatOpNo { get; set; }
 
     [Column("ALAMAT_OP_RT")]
-    [StringLength(4)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? AlamatOpRt { get; set; }
 
     [Column("ALAMAT_OP_RW")]
-    [StringLength(4)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? AlamatOpRw { get; set; }
 
     [Column("ALAMAT_KD_CAMAT")]
-    [StringLength(3)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? AlamatKdCamat { get; set; }
 
     [Column("ALAMAT_KD_LURAH")]
-    [StringLength(3)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? AlamatKdLurah { get; set; }
 
@@ -93,12 +93,12 @@ public partial class DbOpPbb
     public string? WpNpwp { get; set; }
 
     [Column("WP_RT")]
-    [StringLength(4)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? WpRt { get; set; }
 
     [Column("WP_RW")]
-    [StringLength(4)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? WpRw { get; set; }
 
