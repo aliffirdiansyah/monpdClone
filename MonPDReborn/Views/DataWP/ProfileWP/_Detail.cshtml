@@ -1,0 +1,88 @@
+﻿@model MonPDReborn.Models.DataWP.ProfileWPVM.Detail
+
+<div class="modal-header">
+    <h5 class="modal-title d-flex align-items-center">
+        <i class="ri-building-3-fill fs-4 me-2"></i>
+        <span>Detail Profil Wajib Pajak</span>
+    </h5>
+
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+@foreach (var profil in Model.DataWPList)
+{
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="ri-profile-fill fs-3 me-2"></i>
+            <h4 class="mb-0 text-white">Identitas Dasar</h4>
+        </div>
+    
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">NPWPD</label>
+                    <div class="fw-semibold">@profil.NPWPD</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">Nama Wajib Pajak</label>
+                    <div class="fw-semibold">@profil.Nama</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">Jenis Subjek Pajak</label>
+                    <div class="fw-semibold">@profil.JenisSubjek</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">NIB</label>
+                    <div class="fw-semibold">@profil.NIB</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">Status</label>
+                    <div>
+                        @if (profil.Status == "Aktif")
+                        {
+                            <span class="badge bg-success px-3 py-2">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger px-3 py-2">@profil.Status</span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">Tanggal Daftar</label>
+                    <div class="fw-semibold">@profil.TanggalDaftar.ToString("dd MMMM yyyy")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white d-flex align-items-center">
+            <i class="ri-map-pin-fill fs-3 me-2"></i>
+            <h4 class="mb-0 text-white">Alamat dan Kontak</h4>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label text-muted fw-bold">Alamat Domisili</label>
+                    <div class="fw-semibold">@profil.AlamatDom</div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label text-muted fw-bold">Alamat Usaha</label>
+                    <div class="fw-semibold">@profil.AlamatUsaha</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">Nomor Telepon</label>
+                    <div class="fw-semibold">@profil.Kontak</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted fw-bold">Email</label>
+                    <div class="fw-semibold">@profil.Email</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+</div>

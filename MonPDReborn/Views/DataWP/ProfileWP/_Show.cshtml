@@ -36,14 +36,14 @@
                     <span class="<%= color %>"><%= status %></span>
                 </text>);
 
-            @* columns.Add()
+           columns.Add()
                 .Caption("Aksi")
                 .CellTemplate(@<text>
-                    <a href="@Url.Action("Detail", "ProfileWP", new { id = "<%= data.NPWPD %>" })"
-                       class="btn btn-sm btn-outline-primary">
+                    <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
+                            data-npwpd="<%= data.NPWPD %>">
                         <i class="bx bx-show"></i>
-                    </a>
-                </text>); *@
+                    </button>
+                </text>);
         })
 )
 </div>
