@@ -30,7 +30,7 @@
                 {
                     TotalTarget = 500000000,
                     TotalRealisasi = 435750000.50,
-                    RataRataPencapaian = 87.15
+                    Pencapaian = 87.15
                 };
             }
 
@@ -108,7 +108,7 @@
         {
             public int TotalTarget { get; set; }
             public double TotalRealisasi { get; set; }
-            public double RataRataPencapaian { get; set; }
+            public double Pencapaian { get; set; }
 
         }
 
