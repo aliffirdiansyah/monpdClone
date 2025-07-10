@@ -3,7 +3,7 @@
 <div class="table-responsive">
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasWP.PenghimbauanVM.PenghimbauanWP>()
-            .ID("PembayaranWPGrid")
+            .ID("PenghimbauanWPGrid")
             .DataSource(Model.DataPenghimbauanWPList)
             .KeyExpr("NPWPD")
             .ShowBorders(true)
@@ -39,14 +39,7 @@
                         <span class="<%= color %>"><%= status %></span>
                     </text>);
 
-                columns.Add()
-                    .Caption("Aksi")
-                    .CellTemplate(@<text>
-                        <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
-                                data-npwpd="<%= data.NPWPD %>">
-                            <i class="bx bx-show"></i>
-                        </button>
-                    </text>);
+                
             })
         )
 </div>
