@@ -35,7 +35,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var model = new Models.DataOP.PelaporanOPVM.Show((EnumFactory.EPajak)jenisPajak);
+                var model = new Models.DataOP.PelaporanOPVM.Show(jenisPajak == 0 ? (EnumFactory.EPajak?)null : (EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception)

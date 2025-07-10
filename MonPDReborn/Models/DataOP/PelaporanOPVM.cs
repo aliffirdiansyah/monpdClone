@@ -13,6 +13,7 @@ namespace MonPDReborn.Models.DataOP
         public class Index
         {
             public int SelectedPajak { get; set; }
+            public Dashboard Data { get; set; } = new Dashboard();
             public List<SelectListItem> JenisPajakList { get; set; }
             public Index()
             {
@@ -24,6 +25,7 @@ namespace MonPDReborn.Models.DataOP
                         Value = ((int)x).ToString(),
                         Text = x.GetDescription()
                     }).ToList();
+                Data = Method.GetDashboardData();
             }
 
         }
@@ -33,7 +35,7 @@ namespace MonPDReborn.Models.DataOP
         {
             public List<HasilPelaporan> DaftarHasil { get; set; } = new();
 
-            public Show(EnumFactory.EPajak JenisPajak)
+            public Show(EnumFactory.EPajak? JenisPajak)
             {
                 DaftarHasil = Method.GetPalporanList(JenisPajak);
             }
@@ -68,7 +70,7 @@ namespace MonPDReborn.Models.DataOP
         }
         public static class Method
         {
-            public static List<HasilPelaporan> GetPalporanList(EnumFactory.EPajak JenisPajak)
+            public static List<HasilPelaporan> GetPalporanList(EnumFactory.EPajak? JenisPajak)
             {
                 var ret = new List<HasilPelaporan>();
                 var currentYear = DateTime.Now.Year;
@@ -489,6 +491,17 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
+
+            public static Dashboard GetDashboard()
+            {
+                return new Dashboard
+                {
+                    TotalWP = 150,                
+                    NilaiLaporan = 1_250_000_000, 
+                    MasaPajakTerlapor = 120,      
+                    MasaPajakBlmLapor = 30        
+                }
+            }
         }
         public class HasilPelaporan
         {
@@ -527,6 +540,23 @@ namespace MonPDReborn.Models.DataOP
             public decimal Nilai { get; set; }
             public decimal TotalNilai { get; set; }
             public string? TanggalLapor { get; set; }
+        }
+
+        public class Dashboard
+        {
+            public int TotalWP { get; set; }
+            public decimal NilaiLaporan { get; set; }
+            public int MasaPajakTerlapor { get; set; }
+            public int MasaPajakBlmLapor { get; set; }
+            public decimal TingkatKepatuhan
+            {
+                get
+                {
+                    int totalMasa = MasaPajakTerlapor + MasaPajakBlmLapor;
+                    if (totalMasa == 0) return 0; // hindari pembagian 0
+                    return Math.Round((decimal)MasaPajakTerlapor / totalMasa * 100, 2);
+                }
+            }
         }
 
     }
