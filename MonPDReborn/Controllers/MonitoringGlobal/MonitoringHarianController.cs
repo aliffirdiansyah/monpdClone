@@ -1,6 +1,7 @@
 ﻿using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models.MonitoringGlobal;
 using static MonPDReborn.Lib.General.ResponseBase;
@@ -46,11 +47,11 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
             }
         }
 
-        public IActionResult Show(DateTime tglCutOff)
+        public IActionResult Show(int jenisPajak, int bulan, int tahun)
         {
             try
             {
-                var model = new Models.MonitoringGlobal.MonitoringHarianVM.Show();
+                var model = new Models.MonitoringGlobal.MonitoringHarianVM.Show((EnumFactory.EPajak)jenisPajak, bulan, tahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -68,10 +69,10 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
         }
 
         [HttpGet]
-        public IActionResult GetMonitoringData(int tahun, int bulan, string jenisPajak, DataSourceLoadOptions loadOptions)
+        public IActionResult GetMonitoringData(int jenisPajak, int tahun, int bulan, DataSourceLoadOptions loadOptions)
         {
             // Panggil method dari ViewModel dengan meneruskan parameter filter
-            var filteredData = MonitoringHarianVM.Method.GetFilteredData(tahun, bulan, jenisPajak);
+            var filteredData = MonitoringHarianVM.Method.GetMonitoringHarianList((EnumFactory.EPajak)jenisPajak, tahun, bulan);
 
             // Proses data menggunakan DevExtreme loader dan kembalikan sebagai JSON
             var result = DataSourceLoader.Load(filteredData, loadOptions);

@@ -1,5 +1,62 @@
 ﻿@model MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.Show
 
+<div class="col-lg-4">
+    <div class="card shadow-sm rounded-xl p-3 text-center">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                    <i class="  ri-focus-3-line text-primary fs-1"></i>
+                </div>
+                <div class="text-start">
+                    <h3 class="mb-0 fw-bold">@Model.Data.TotalTarget.ToString("C")</h3>
+                    <small class="text-muted">Total Target</small>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-4">
+    <div class="card shadow-sm rounded-xl p-3 text-center">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                    <i class="ri-money-dollar-box-line text-warning fs-1"></i>
+                </div>
+                <div class="text-start">
+                    <h3 class="mb-0 fw-bold">@Model.Data.TotalRealisasi.ToString("C")</h3>
+                    <small class="text-muted">Total Realisasi</small>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-4">
+    <div class="card shadow-sm rounded-xl p-3 text-center">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                    <i class="ri-bar-chart-2-line text-success fs-1"></i>
+                </div>
+                <div class="text-start">
+                    <h3 class="mb-0 fw-bold">@Model.Data.Pencapaian.ToString("N2")%</h3>
+                    <small class="text-muted">Pencapaian</small>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
 <div class="table-responsive">
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.MonitoringHarian>()
