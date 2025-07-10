@@ -5,50 +5,185 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="table-responsive shadow-sm border rounded bg-white">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-dark text-center">
-            <tr>
-                <th>Jenis Pajak</th>
-                <th>Target</th>
-                <th>Realisasi</th>
-                <th>Prediksi</th>
-                <th>Potensi</th>
-                <th>Pencapaian</th>
-                <th>Tren</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody class="text-center">
-            <tr>
-                <td class="text-start">Pajak Hotel</td>
-                <td>Rp1.000.000.000</td>
-                <td>Rp800.000.000</td>
-                <td class="text-warning">Rp950.000.000</td>
-                <td class="text-success">Rp1.200.000.000</td>
-                <td>
-                    <div class="progress" style="height: 20px;">
-                        <div class="progress-bar bg-info fw-bold" style="width: 80%">80%</div>
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Rekap Pajak
+                    </h4>
+                    <p class="text-muted mb-0">Monitoring dan Analisis Pendapatan Pajak Daerah</p>
+                </div>
+                <div class="text-muted mb-1">Periode: <strong>Januari - Desember 2023</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="  ri-focus-3-line text-primary fs-1"></i>
                     </div>
-                </td>
-                <td><span class="text-success fw-bold">🔼 Naik</span></td>
-                <td><button class="btn btn-sm btn-primary">Detail</button></td>
-            </tr>
-            <tr>
-                <td class="text-start">Pajak Restoran</td>
-                <td>Rp1.200.000.000</td>
-                <td>Rp700.000.000</td>
-                <td class="text-warning">Rp850.000.000</td>
-                <td class="text-success">Rp1.300.000.000</td>
-                <td>
-                    <div class="progress" style="height: 20px;">
-                        <div class="progress-bar bg-danger fw-bold" style="width: 58%">58%</div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.TotalTarget.ToString("C")</h3>
+                        <small class="text-muted">Total Target</small>
+
+                        
                     </div>
-                </td>
-                <td><span class="text-danger fw-bold">🔽 Turun</span></td>
-                <td><button class="btn btn-sm btn-primary">Detail</button></td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-money-dollar-box-line text-warning fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.TotalRealisasi.ToString("C")</h3>
+                        <small class="text-muted">Total Realisasi</small>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-bar-chart-2-line text-success fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.RataRataPencapaian.ToString("N2")%</h3>
+                        <small class="text-muted">Rata-Rata Pencapaian</small>
+                        
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Filter Prediksi
+                    </h4>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+
+                    <div class="col-lg col-md-6">
+                        <input type="date" id="tanggalAwal" class="form-control rounded-pill" aria-label="Tanggal Awal">
+                    </div>
+
+                    <div class="col-lg col-md-6">
+                        <input type="date" class="form-control rounded-pill" aria-label="Tanggal Akhir">
+                    </div>
+
+                    <div class="col-lg col-md-6">
+                        <button type="button" class="btn btn-success rounded-pill w-100">
+                            <i class="ri-filter-3-line me-1"></i> Terapkan
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Rekap Pajak Daerah
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            fnShow("");      // Panggil data rekap jumlah
+           // loadDetail("");  // Panggil semua data detail saat pertama load
+        });
+
+        function fnShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "KontrolPrediksi")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
+
+            document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+            const dd = String(today.getDate()).padStart(2, '0');
+
+            const formattedToday = `${yyyy}-${mm}-${dd}`;
+
+            // Atur nilai input tanggal awal ke hari ini
+            document.getElementById('tanggalAwal').value = formattedToday;
+        });
+
+    </script>
+}
 

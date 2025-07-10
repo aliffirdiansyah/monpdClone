@@ -1,0 +1,49 @@
+﻿@model MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM.Show
+
+<div class="table-responsive">
+    @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM.KontrolPrediksi>()
+            .ID("KontrolPrediksiGrid")
+            .DataSource(Model.DataKontrolPrediksiList)
+            .KeyExpr("JenisPajak")
+            .ShowBorders(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .Columns(columns =>
+            {
+
+                columns.AddFor(m => m.JenisPajak)
+                    .Caption("Jenis Pajak");
+
+                columns.AddFor(m => m.Target)
+                   .Caption("Target");
+
+                columns.AddFor(m => m.RealisasiBulanLalu)
+                    .Caption("Realisasi Bulan Lalu");
+
+                columns.AddFor(m => m.RealisasiBulanIni)
+                    .Caption("Realisasi Bulan Ini");
+
+                columns.AddFor(m => m.Prediksi)
+                    .Caption("Prediksi Bulan Ini");
+
+                columns.AddFor(m => m.Jumlah)
+                    .Caption("Jumlah");
+                columns.Add()
+                    .Caption("%")
+            .CellTemplate(@<text>
+        <%
+        var val = data.Persentase;
+        var color = val >= 90 ? "bg-success" : val >= 70 ? "bg-warning" : "bg-danger";
+        %>
+        <div class="d-flex align-items-center w-100">
+            <div class="me-2 fw-semibold"><%= val %>%</div>
+            <div class="progress w-100" style="height:6px;">
+                <div class="progress-bar <%= color %>" style="width:<%= val %>%"></div>
+            </div>
+        </div>
+    </text>);
+
+            })
+        )
+</div>
