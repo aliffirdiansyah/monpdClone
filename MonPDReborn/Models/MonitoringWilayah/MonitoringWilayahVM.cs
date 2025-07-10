@@ -61,6 +61,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
         {
             public List<RealisasiWilayah> RealisasiWilayahList { get; set; } = new();
             public List<RealisasiJenis> RealisasiJenisList { get; set; } = new();
+            public decimal TotalTarget { get; set; } = 0;
+            public decimal TotalRealisasi { get; set; } = 0;
+            public decimal PersenTotal { get; set; } = 0;
+            public decimal TotalPencapaianHarian { get; set; } = 0;
+            public decimal TotalWajibPajak { get; set; } = 0;
 
             public Show() { }
 
@@ -69,6 +74,18 @@ namespace MonPDReborn.Models.MonitoringWilayah
             {
                 RealisasiWilayahList = Method.GetDataRealisasiWilayahList(wilayah, tahun, bulan, jenisPajak);
                 RealisasiJenisList = Method.GetDataRealisasiJenisList(wilayah, tahun, bulan, jenisPajak);
+
+                TotalTarget = RealisasiWilayahList.Sum(x => x.Target);
+                TotalRealisasi = RealisasiWilayahList.Sum(x => x.Realisasi);
+                if (TotalTarget > 0)
+                {
+                    PersenTotal = Math.Round((TotalRealisasi / TotalTarget) * 100, 2);
+                }
+                else
+                {
+                    PersenTotal = 0;
+                }
+                TotalWajibPajak = RealisasiJenisList.Sum(x => x.JmlWP);
             }
         }
 
@@ -1029,29 +1046,57 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        // Hitung realisasi berdasarkan UPTB
-                        foreach (var item in dataTargetWilayah)
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
-                            var daftarNop = dataWilayahGabungan
-                                .Where(x => Convert.ToInt32(x.Wilayah) == item.Uptb)
-                                .Select(x => x.Nop)
-                                .ToList();
-
-                            var totalRealisasi = dataRealisasiGabungan
-                                .Where(x => daftarNop.Contains(x.Nop) && x.TglBayarPokok.Value.Month == bulan)
-                                .Sum(x => x.NominalPokokBayar);
-
-                            ret.Add(new RealisasiWilayah
+                            foreach (var item in dataTargetWilayah)
                             {
-                                Wilayah = $"UPTB {item.Uptb}",
-                                Tahun = tahun,
-                                Bulan = bulan,
-                                Lokasi = $"UPTB {item.Uptb}",
-                                Target = item.TotalTarget,
-                                Realisasi = totalRealisasi,
-                                Tren = 0,
-                                Status = ""
-                            });
+                                var daftarNop = dataWilayahGabungan
+                                    .Where(x => Convert.ToInt32(x.Wilayah) == item.Uptb)
+                                    .Select(x => x.Nop)
+                                    .ToList();
+
+                                var totalRealisasi = dataRealisasiGabungan
+                                    .Where(x => daftarNop.Contains(x.Nop) && x.TglBayarPokok.Value.Month == bulan)
+                                    .Sum(x => x.NominalPokokBayar);
+
+                                ret.Add(new RealisasiWilayah
+                                {
+                                    Wilayah = $"UPTB {item.Uptb}",
+                                    Tahun = tahun,
+                                    Bulan = bulan,
+                                    Lokasi = $"UPTB {item.Uptb}",
+                                    Target = item.TotalTarget,
+                                    Realisasi = totalRealisasi,
+                                    Tren = 0,
+                                    Status = ""
+                                });
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item in dataTargetWilayah.Where(x => x.Uptb == (int)wilayah))
+                            {
+                                var daftarNop = dataWilayahGabungan
+                                    .Where(x => Convert.ToInt32(x.Wilayah) == item.Uptb)
+                                    .Select(x => x.Nop)
+                                    .ToList();
+
+                                var totalRealisasi = dataRealisasiGabungan
+                                    .Where(x => daftarNop.Contains(x.Nop) && x.TglBayarPokok.Value.Month == bulan)
+                                    .Sum(x => x.NominalPokokBayar);
+
+                                ret.Add(new RealisasiWilayah
+                                {
+                                    Wilayah = $"UPTB {item.Uptb}",
+                                    Tahun = tahun,
+                                    Bulan = bulan,
+                                    Lokasi = $"UPTB {item.Uptb}",
+                                    Target = item.TotalTarget,
+                                    Realisasi = totalRealisasi,
+                                    Tren = 0,
+                                    Status = ""
+                                });
+                            }
                         }
 
                         break;
@@ -1386,7 +1431,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataWilayahGabungan.AddRange(
                             context.DbOpRestos
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                     x.PajakId
@@ -1399,7 +1445,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataWilayahGabungan.AddRange(
                             context.DbOpHotels
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                     x.PajakId
@@ -1412,7 +1459,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataWilayahGabungan.AddRange(
                             context.DbOpParkirs
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                     x.PajakId
@@ -1425,7 +1473,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataWilayahGabungan.AddRange(
                             context.DbOpListriks
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                     x.PajakId
@@ -1438,7 +1487,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataWilayahGabungan.AddRange(
                             context.DbOpHiburans
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                     x.PajakId
@@ -1451,7 +1501,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataWilayahGabungan.AddRange(
                             context.DbOpAbts
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                     x.PajakId
@@ -1464,7 +1515,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataWilayahGabungan.AddRange(
                             context.DbOpPbbs
                                 .Where(x => x.TahunBuku == tahun)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                     PajakId = 9m // PBB
@@ -1479,7 +1531,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataRealisasiGabungan.AddRange(
                             context.DbMonRestos
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     x.TglBayarPokok,
                                     NominalPokokBayar = x.NominalPokokBayar ?? 0,
@@ -1493,7 +1546,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataRealisasiGabungan.AddRange(
                             context.DbMonHotels
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     x.TglBayarPokok,
                                     NominalPokokBayar = x.NominalPokokBayar ?? 0,
@@ -1507,7 +1561,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataRealisasiGabungan.AddRange(
                             context.DbMonParkirs
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     x.TglBayarPokok,
                                     NominalPokokBayar = x.NominalPokokBayar ?? 0,
@@ -1521,7 +1576,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataRealisasiGabungan.AddRange(
                             context.DbMonPpjs
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     x.TglBayarPokok,
                                     NominalPokokBayar = x.NominalPokokBayar ?? 0,
@@ -1535,7 +1591,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataRealisasiGabungan.AddRange(
                             context.DbMonHiburans
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     x.TglBayarPokok,
                                     NominalPokokBayar = x.NominalPokokBayar ?? 0,
@@ -1549,7 +1606,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataRealisasiGabungan.AddRange(
                             context.DbMonAbts
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     x.TglBayarPokok,
                                     NominalPokokBayar = x.NominalPokokBayar ?? 0,
@@ -1563,7 +1621,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         dataRealisasiGabungan.AddRange(
                             context.DbMonPbbs
                                 .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new {
+                                .Select(x => new
+                                {
                                     x.Nop,
                                     x.TglBayarPokok,
                                     NominalPokokBayar = x.NominalPokokBayar ?? 0,
@@ -1574,7 +1633,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        
+
 
                         foreach (var item in dataTargetWilayah)
                         {
@@ -1593,6 +1652,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             ret.Add(new RealisasiJenis
                             {
                                 Wilayah = item.Uptb.ToString(),
+                                EnumWilayah = (int)item.Uptb,
                                 Tahun = tahun,
                                 Bulan = bulan,
                                 JenisPajak = jenisPajakDesc,
@@ -1603,9 +1663,40 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Status = "Normal" // Ganti dengan logika status jika ada
                             });
                         }
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            ret = ret
+                                .GroupBy(x => new { x.JenisPajak })
+                                .Select(x => new RealisasiJenis
+                                {
+                                    JenisPajak = x.Key.JenisPajak,
+                                    JmlWP = x.Sum(q => q.JmlWP),
+                                    Target = x.Sum(q => q.Target),
+                                    Realisasi = x.Sum(q => q.Realisasi)
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = ret
+                                .Where(x => x.EnumWilayah == (int)wilayah)
+                                .GroupBy(x => new { x.JenisPajak })
+                                .Select(x => new RealisasiJenis
+                                {
+                                    JenisPajak = x.Key.JenisPajak,
+                                    JmlWP = x.Sum(q => q.JmlWP),
+                                    Target = x.Sum(q => q.Target),
+                                    Realisasi = x.Sum(q => q.Realisasi)
+                                })
+                                .ToList();
+                        }
                         break;
 
                 }
+
+
+
+
                 return ret;
 
             }
@@ -1647,6 +1738,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
         public class RealisasiJenis
         {
             public string Wilayah { get; set; } = null!;
+            public int EnumWilayah { get; set; }
             public int Tahun { get; set; }
             public int Bulan { get; set; }
 
