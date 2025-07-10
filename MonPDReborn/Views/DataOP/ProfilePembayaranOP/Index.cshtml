@@ -228,6 +228,28 @@
 
         }
 
+              $(document).on("change", "#tahunKiri", function () {
+            changeTahun('kiri', $(this).val());
+        });
+
+        $(document).on("change", "#tahunKanan", function () {
+            changeTahun('kanan', $(this).val());
+        });
+
+        function changeTahun(side, tahun) {
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+            const tahunKiri = (side === 'kiri') ? tahun : $('#tahunKiri').val();
+            const tahunKanan = (side === 'kanan') ? tahun : $('#tahunKanan').val();
+
+            $("#detailContainer").load('/ProfilePembayaranOP/Detail', {
+                nop: nop,
+                jenisPajak: jenisPajak,
+                tahunKiri: tahunKiri,
+                tahunKanan: tahunKanan
+            });
+        }
+
 
     </script>
 }
