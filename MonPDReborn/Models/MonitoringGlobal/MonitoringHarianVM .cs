@@ -66,7 +66,7 @@
             }
 
 
-            private static List<MonitoringHarian> GetAllDataMonitoringHarian()
+            public static List<MonitoringHarian> GetAllDataMonitoringHarian()
             {
                 return new List<MonitoringHarian>
                 {

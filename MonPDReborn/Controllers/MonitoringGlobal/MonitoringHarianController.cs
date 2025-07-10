@@ -32,9 +32,17 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
                 var model = new Models.MonitoringGlobal.MonitoringHarianVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
