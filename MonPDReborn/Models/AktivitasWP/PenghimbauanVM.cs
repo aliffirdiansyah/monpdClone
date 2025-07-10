@@ -1,4 +1,6 @@
-﻿namespace MonPDReborn.Models.AktivitasWP
+﻿using static MonPDReborn.Models.DataWP.ProfilePembayaranWPVM;
+
+namespace MonPDReborn.Models.AktivitasWP
 {
     public class PenghimbauanVM
     {
@@ -13,12 +15,12 @@
         }
         public class Show
         {
+            public List<PenghimbauanWP> DataPenghimbauanWPList { get; set; } = new();
+
+
             public Show()
             {
-                
-            }
-            public Show(string keyword)
-            {
+                DataPenghimbauanWPList = Method.GetFilteredData();
             }
         }
         public class Detail
@@ -43,6 +45,22 @@
                     TingkatKepatuhan = 11.7,
                 };
             }
+
+            public static List<PenghimbauanWP> GetFilteredData()
+            {
+                return GetAllDataPenghimbauanWP();
+            }
+
+            private static List<PenghimbauanWP> GetAllDataPenghimbauanWP()
+            {
+                return new List<PenghimbauanWP>
+                {
+                    new PenghimbauanWP {NPWPD = "01.01.0001", NamaWP = "Hotel Mawar", Ketetapan = "Rp 20.000.000", Terbayar = "Rp 20.000.000", Status = "Lunas"},
+                    new PenghimbauanWP {NPWPD = "01.01.0002", NamaWP = "PT. ABC", Ketetapan = "Rp 15.300.000", Terbayar = "Rp 12.000.000", Status = "Sebagian"},
+                    new PenghimbauanWP {NPWPD = "01.01.0003", NamaWP = "Karaoke Galaxy", Ketetapan = "Rp 7.800.000", Terbayar = "Rp 7.800.000", Status = "Tunggak"},
+
+                };
+            }
         }
 
         public class Dashboard
@@ -52,6 +70,15 @@
             public double PenghimbauanSelesai { get; set; }   
             public double TingkatKepatuhan { get; set; }   
 
+        }
+
+        public class PenghimbauanWP
+        {
+            public string NPWPD { get; set; } = null!;
+            public string NamaWP { get; set; } = null!;
+            public string Ketetapan { get; set; } = null!;
+            public string Terbayar { get; set; } = null!;
+            public string Status { get; set; } = null!;
         }
     }
 }
