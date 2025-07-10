@@ -325,7 +325,7 @@ namespace MonPDReborn.Models.DataOP
                                 })
                             .ToList();
                         ret.Tahun = tahun;
-                        for (int bln = 1; bln < 12; bln++)
+                        for (int bln = 1; bln <= 12; bln++)
                         {
                             var rest = dataResto.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
@@ -352,7 +352,7 @@ namespace MonPDReborn.Models.DataOP
                                 })
                             .ToList();
                         ret.Tahun = tahun;
-                        for (int bln = 1; bln < 12; bln++)
+                        for (int bln = 1; bln <= 12; bln++)
                         {
                             var rest = dataListrik.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
@@ -379,7 +379,7 @@ namespace MonPDReborn.Models.DataOP
                                 })
                             .ToList();
                         ret.Tahun = tahun;
-                        for (int bln = 1; bln < 12; bln++)
+                        for (int bln = 1; bln <= 12; bln++)
                         {
                             var rest = dataHotel.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
@@ -406,7 +406,7 @@ namespace MonPDReborn.Models.DataOP
                                 })
                             .ToList();
                         ret.Tahun = tahun;
-                        for (int bln = 1; bln < 12; bln++)
+                        for (int bln = 1; bln <= 12; bln++)
                         {
                             var rest = dataParkir.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
@@ -433,7 +433,7 @@ namespace MonPDReborn.Models.DataOP
                                 })
                             .ToList();
                         ret.Tahun = tahun;
-                        for (int bln = 1; bln < 12; bln++)
+                        for (int bln = 1; bln <= 12; bln++)
                         {
                             var rest = dataHiburan.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
@@ -460,7 +460,7 @@ namespace MonPDReborn.Models.DataOP
                                 })
                             .ToList();
                         ret.Tahun = tahun;
-                        for (int bln = 1; bln < 12; bln++)
+                        for (int bln = 1; bln <= 12; bln++)
                         {
                             var rest = dataAbt.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
@@ -490,7 +490,7 @@ namespace MonPDReborn.Models.DataOP
                                 })
                             .ToList();
                         ret.Tahun = tahun;
-                        for (int bln = 1; bln < 12; bln++)
+                        for (int bln = 1; bln <= 12; bln++)
                         {
                             var rest = dataPbb.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;

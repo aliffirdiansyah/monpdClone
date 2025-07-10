@@ -82,6 +82,8 @@ namespace MonPDReborn.Controllers.DataOP
 
             try
             {
+                Console.WriteLine($"NOP={nop}, JenisPajak={jenisPajak}, TahunKiri={tahunKiri}, TahunKanan={tahunKanan}");
+
                 if (string.IsNullOrWhiteSpace(nop))
                 {
                     response.Status = StatusEnum.Error;
