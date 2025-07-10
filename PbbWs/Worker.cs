@@ -95,53 +95,54 @@ namespace PbbWs
                 {
                     var sql = @"
                         SELECT 	A.T_PROP_KD||A.T_DATI2_KD||A.T_KEC_KD||A.T_KEL_KD||A.D_NOP_BLK||A.D_NOP_URUT||A.D_NOP_JNS NOP,
-		                        57 KATEGORI_ID,
-		                        'PBB' KATEGORI_NAMA,
-		                        D_OP_JLN || ' NO. ' || D_OP_JLNO || ' RT/RW ' || TRIM(D_OP_RT) || '/' || TRIM(D_OP_RW) ALAMAT_OP,
-		                        A.D_OP_JLNO ALAMAT_OP_NO,
-		                        A.D_OP_JLNO ALAMAT_OP_JLN,
-		                        A.D_OP_RT ALAMAT_OP_RT,
-		                        A.D_OP_RW ALAMAT_OP_RW,
-		                        A.KD_CAMAT ALAMAT_KD_CAMAT,
-		                        A.KD_LURAH ALAMAT_KD_LURAH,
-		                        A.D_TNH_LUAS,
-		                        A.D_WP_JLN ALAMAT_WP,
-		                        A.D_WP_JLNO ALAMAT_WP_NO,
-		                        A.D_WP_KEL ALAMAT_WP_KEL,
-		                        A.D_WP_KOTA ALAMAT_WP_KOTA,
+                                57 KATEGORI_ID,
+                                'PBB' KATEGORI_NAMA,
+                                D_OP_JLN || ' NO. ' || D_OP_JLNO || ' RT/RW ' || TRIM(D_OP_RT) || '/' || TRIM(D_OP_RW) ALAMAT_OP,
+                                A.D_OP_JLNO ALAMAT_OP_NO,
+                                A.D_OP_JLNO ALAMAT_OP_JLN,
+                                A.D_OP_RT ALAMAT_OP_RT,
+                                A.D_OP_RW ALAMAT_OP_RW,
+                                A.KD_CAMAT ALAMAT_KD_CAMAT,
+                                A.KD_LURAH ALAMAT_KD_LURAH,
+                                A.D_TNH_LUAS,
+                                A.D_WP_JLN ALAMAT_WP,
+                                A.D_WP_JLNO ALAMAT_WP_NO,
+                                A.D_WP_KEL ALAMAT_WP_KEL,
+                                A.D_WP_KOTA ALAMAT_WP_KOTA,
                                 b.subjek_pajak_id WP_KTP,
-		                        d_wp_nama wp_nama,
-		                        NPWP wp_npwp,
-		                        d_wp_rt wp_rt,
-		                        d_wp_rw wp_rw,
+                                d_wp_nama wp_nama,
+                                NVL(NPWP ,'-') wp_npwp,
+                                d_wp_rt wp_rt,
+                                d_wp_rw wp_rw,
                                 A.STATUSAKTIF STATUS,
                                 A.STATUSAKTIF IS_TUTUP,
                                 D_TNH_LUAS LUAS_TANAH,
-                                '000' WILAYAH_PAJAK,
-		                        sysdate INS_dATE, 
-		                        'JOB' INS_BY,
-		                        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-		                        '-'  AKUN  ,
-		                        '-'  NAMA_AKUN         ,
-		                        '-'  KELOMPOK      ,
-		                        '-'  NAMA_KELOMPOK     ,
-		                        '-'  JENIS             ,
-		                        '-'  NAMA_JENIS        ,
-		                        '-'  OBJEK            ,
-		                        '-'  NAMA_OBJEK       ,
-		                        '-'  RINCIAN         ,
-		                        '-'  NAMA_RINCIAN     ,
-		                        '-'  SUB_RINCIAN      ,
-		                        '-'  NAMA_SUB_RINCIAN
+                                'SURABAYA ' || NVL(D.UPTD, 0) WILAYAH_PAJAK,
+                                sysdate INS_dATE, 
+                                'JOB' INS_BY,
+                                TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+                                '-'  AKUN  ,
+                                '-'  NAMA_AKUN         ,
+                                '-'  KELOMPOK      ,
+                                '-'  NAMA_KELOMPOK     ,
+                                '-'  JENIS             ,
+                                '-'  NAMA_JENIS        ,
+                                '-'  OBJEK            ,
+                                '-'  NAMA_OBJEK       ,
+                                '-'  RINCIAN         ,
+                                '-'  NAMA_RINCIAN     ,
+                                '-'  SUB_RINCIAN      ,
+                                '-'  NAMA_SUB_RINCIAN
                         FROM DATAOP@LIHATGATOTKACA A
                         left join DAT_OBJEK_PBB b on T_PROP_KD=b.KD_PROPINSI
-	                         AND T_DATI2_KD=b.KD_DATI2
-	                         AND T_KEC_KD=b.KD_KECAMATAN
-	                         AND T_KEL_KD=b.KD_KELURAHAN
-	                         AND D_NOP_BLK=b.KD_BLOK
-	                         AND D_NOP_URUT=b.NO_URUT
-	                         AND D_NOP_JNS=b.KD_JNS_OP
+                             AND T_DATI2_KD=b.KD_DATI2
+                             AND T_KEC_KD=b.KD_KECAMATAN
+                             AND T_KEL_KD=b.KD_KELURAHAN
+                             AND D_NOP_BLK=b.KD_BLOK
+                             AND D_NOP_URUT=b.NO_URUT
+                             AND D_NOP_JNS=b.KD_JNS_OP
                         left join dat_subjek_pbb c on b.subjek_pajak_id=c.subjek_pajak_id
+                        LEFT JOIN M_WILAYAH D ON A.KD_CAMAT=D.KD_KEC AND A.KD_LURAH=D.KD_KEL
                     ";
 
                     var result = await _contMonitoringDb.Set<DbOpPbb>().FromSqlRaw(sql).ToListAsync();
