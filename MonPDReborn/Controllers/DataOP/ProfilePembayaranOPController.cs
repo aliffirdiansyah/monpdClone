@@ -17,12 +17,12 @@ namespace MonPDReborn.Controllers.DataOP
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
-        public IActionResult Index()
+        public IActionResult Index(string keyword)
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.DataOP.ProfilePembayaranOPVM.Index();
+                var model = new Models.DataOP.ProfilePembayaranOPVM.Index(keyword);
                 return View($"{URLView}{actionName}", model);
             }
             catch (Exception)
