@@ -8,28 +8,29 @@
     var tahun3 = (currentYear - 1).ToString();
     var tahun4 = currentYear.ToString();
 }
-
-@(
-    Html.DevExtreme().DataGrid<ViewModel.DataMutasi>()
-            .ID("dg-Mutasi")
-            .ShowBorders(true)
-            .ShowColumnHeaders(true)
-            .ShowColumnLines(true)
-            .ShowRowLines(true)
-            .ColumnAutoWidth(true)
-            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-            .FilterRow(f => f.Visible(true))
-            .HeaderFilter(h => h.Visible(true))
-            .Sorting(s => s.Mode(GridSortingMode.Multiple))
-            .AllowColumnResizing(true)
-            .DataSource(Model.Data)
-            .KeyExpr("ID")
-            .Columns(columns =>
-            {
-                columns.AddFor(x => x.Keterangan).Caption("MUTASI").Alignment(HorizontalAlignment.Center);
-                columns.AddFor(x => x.NominalMutasi1).Caption(tahun1).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
-                columns.AddFor(x => x.NominalMutasi2).Caption(tahun2).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
-                columns.AddFor(x => x.NominalMutasi3).Caption(tahun3).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
-                columns.AddFor(x => x.NominalMutasi4).Caption(tahun4).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
-            })
-)
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<ViewModel.DataMutasi>()
+        .ID("dg-Mutasi")
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .AllowColumnResizing(true)
+        .DataSource(Model.Data)
+        .KeyExpr("ID")
+        .Columns(columns =>
+        {
+            columns.AddFor(x => x.Keterangan).Caption("MUTASI").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(x => x.NominalMutasi1).Caption(tahun1).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
+            columns.AddFor(x => x.NominalMutasi2).Caption(tahun2).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
+            columns.AddFor(x => x.NominalMutasi3).Caption(tahun3).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
+            columns.AddFor(x => x.NominalMutasi4).Caption(tahun4).Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Number).Format("#,##0");
+        })
+        )
+</div>

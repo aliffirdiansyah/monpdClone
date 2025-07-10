@@ -9,29 +9,33 @@
     var tahun4 = currentYear.ToString();
 }
 
-@(
-    Html.DevExtreme().DataGrid<ViewModel.DataPiutang>()
-            .ID("dg-Piutang")
-            .ShowBorders(true)
-            .ShowColumnHeaders(true)
-            .ShowColumnLines(true)
-            .ShowRowLines(true)
-            .ColumnAutoWidth(true)
-            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-            .FilterRow(f => f.Visible(true))
-            .HeaderFilter(h => h.Visible(true))
-            .Sorting(s => s.Mode(GridSortingMode.Multiple))
-            .AllowColumnResizing(true)
-            .DataSource(Model.Data)
-            .KeyExpr("ID")
-            .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
-            .OnExporting("exportGrid")
-            .Columns(columns =>
-            {
-                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Left);
-                columns.AddFor(x => x.NominalPiutang1).Caption(tahun1).Alignment(HorizontalAlignment.Center);
-                columns.AddFor(x => x.NominalPiutang2).Caption(tahun2).Alignment(HorizontalAlignment.Center);
-                columns.AddFor(x => x.NominalPiutang3).Caption(tahun3).Alignment(HorizontalAlignment.Center);
-                columns.AddFor(x => x.NominalPiutang4).Caption(tahun4).Alignment(HorizontalAlignment.Center);
-            })
-)
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<ViewModel.DataPiutang>()
+        .ID("dg-Piutang")
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .AllowColumnResizing(true)
+        .DataSource(Model.Data)
+        .KeyExpr("ID")
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Left);
+            columns.AddFor(x => x.NominalPiutang1).Caption(tahun1).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(x => x.NominalPiutang2).Caption(tahun2).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(x => x.NominalPiutang3).Caption(tahun3).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(x => x.NominalPiutang4).Caption(tahun4).Alignment(HorizontalAlignment.Center);
+        })
+        )
+</div>
+
+

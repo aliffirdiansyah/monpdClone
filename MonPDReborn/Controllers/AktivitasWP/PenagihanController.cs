@@ -41,11 +41,32 @@ namespace MonPDReborn.Controllers.AktivitasWP
                 return Json(response);
             }
         }
-        public IActionResult Show(string JenisPajak)
+        public IActionResult Show(string jenisPajak)
         {
             try
             {
-                var model = new Models.AktivitasWP.PenagihanVM.Show();
+                var model = new Models.AktivitasWP.PenagihanVM.Show(jenisPajak);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult Detail(string NPWPD)
+        {
+            try
+            {
+                var model = new Models.AktivitasWP.PenagihanVM.Detail(NPWPD);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
