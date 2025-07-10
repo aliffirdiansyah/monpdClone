@@ -100,6 +100,17 @@
             </div>
             <div class="card-body">
                 <div id="Show"></div>
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -136,5 +147,38 @@
                 });
             }
         });
+
+        function onDetailClick(cellElement, cellInfo) {
+            const npwpd = cellInfo.data.NPWPD;
+
+            $('<button>')
+                .attr('type', 'button')
+                .attr('data-npwpd', npwpd)
+                .addClass('btn btn-sm btn-outline-primary btn-detail')
+                .html('<i class="bx bx-show"></i>')
+                .appendTo(cellElement);
+        }
+
+        // Klik detail
+        $(document).on('click', '.btn-detail', function () {
+            const npwpd = $(this).data('npwpd');
+            const url = '@Url.Action("Detail", "Penagihan")' + '?npwpd=' + encodeURIComponent(npwpd);
+
+            $('#detailModalContent').html(`
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary"></div>
+                </div>
+            `);
+
+            $('#detailModal').modal('show');
+
+            $.get(url, function (data) {
+                $('#detailModalContent').html(data);
+            });
+        });
+
+        // function onDetailClick(){
+
+        // }
     </script>
 }
