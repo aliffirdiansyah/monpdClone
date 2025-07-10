@@ -18,8 +18,19 @@
 
         </select>
         <div>
-            <!-- tampilkan tabel kiri -->
-            @Html.Partial("~/Views/DataOP/ProfilePembayaranOP/_Tabel.cshtml", Model.DataRealisasiKiri)
+            @(Html.DevExtreme().DataGrid()
+                .DataSource(d => d.Mvc()
+                    .Controller("ProfilePembayaranOP")
+                    .LoadAction("GetDataTahunanPembayaranList")
+                )
+                .Columns(columns => {
+                    columns.AddFor("Bulan").Caption("Bulan");
+                    columns.AddFor("TglSSPD").Caption("Tanggal SSPD").DataType(GridColumnDataType.Date);
+                    columns.AddFor("Realisasi").Caption("Realisasi").Format(Format.FixedPoint);
+                })
+                .ShowBorders(true)
+            )
+
         </div>
     </div>
     <div class="col-md-6">

@@ -219,10 +219,13 @@
                 return;
             }
 
-            $("#detailContainer").load('/ProfilePembayaranOP/Detail?' + $.param({
+             $("#detailContainer").load('/ProfilePembayaranOP/Detail?' + $.param({
                 nop: nop,
-                jenisPajak: jenisPajak
+                jenisPajak: jenisPajak,
+                tahunKiri: new Date().getFullYear(),  // atau dari dropdown/tahun default
+                tahunKanan: new Date().getFullYear()  // atau dari dropdown/tahun default
             }));
+
         }
 
 
