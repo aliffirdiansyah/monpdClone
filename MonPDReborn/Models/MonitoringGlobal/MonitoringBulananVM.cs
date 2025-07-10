@@ -1,4 +1,7 @@
 ﻿using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
+using DocumentFormat.OpenXml.InkML;
+using MonPDLib;
+using MonPDLib.General;
 
 namespace MonPDReborn.Models.MonitoringGlobal
 {
@@ -34,31 +37,169 @@ namespace MonPDReborn.Models.MonitoringGlobal
         public class Show
         {
             public List<MonitoringBulananViewModels.BulananPajak> BulananPajakList { get; set; } = new();
-            public Show(DateTime TanggalCutOff)
+            public Show(EnumFactory.EPajak jenisPajak, int tahun)
             {
-                BulananPajakList = Method.GetBulananPajak(TanggalCutOff);
+                BulananPajakList = Method.GetBulananPajak(jenisPajak, tahun);
             }
         }
         public class Method
         {
-            public static List<MonitoringBulananViewModels.BulananPajak> GetBulananPajak(DateTime TanggalCutOff)
+            public static List<MonitoringBulananViewModels.BulananPajak> GetBulananPajak(EnumFactory.EPajak jenisPajak, int tahun)
             {
-                var dataBulanan = new List<MonitoringBulananViewModels.BulananPajak>
+                var ret = new List<MonitoringBulananViewModels.BulananPajak>();
+                var context = DBClass.GetContext();
+
+
+
+                switch (jenisPajak)
                 {
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 1, BulanNama = "Januari", AkpTarget = 100000000, Realisasi = 95000000, Pencapaian = 95 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 2, BulanNama = "Februari", AkpTarget = 90000000, Realisasi = 85000000, Pencapaian = 94.4 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 3, BulanNama = "Maret", AkpTarget = 120000000, Realisasi = 100000000, Pencapaian = 83.3 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 4, BulanNama = "April", AkpTarget = 110000000, Realisasi = 78000000, Pencapaian = 70.9 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 5, BulanNama = "Mei", AkpTarget = 95000000, Realisasi = 67000000, Pencapaian = 70.5 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 6, BulanNama = "Juni", AkpTarget = 105000000, Realisasi = 96000000, Pencapaian = 91.4 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 7, BulanNama = "Juli", AkpTarget = 115000000, Realisasi = 108000000, Pencapaian = 93.9 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 8, BulanNama = "Agustus", AkpTarget = 98000000, Realisasi = 76000000, Pencapaian = 77.6 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 9, BulanNama = "September", AkpTarget = 100000000, Realisasi = 69000000, Pencapaian = 69.0 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 10, BulanNama = "Oktober", AkpTarget = 102000000, Realisasi = 97000000, Pencapaian = 95.1 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 11, BulanNama = "November", AkpTarget = 99000000, Realisasi = 95000000, Pencapaian = 96.0 },
-                    new MonitoringBulananViewModels.BulananPajak { JenisPajak = "Restoran", Tahun = 2025, Bulan = 12, BulanNama = "Desember", AkpTarget = 125000000, Realisasi = 128000000, Pencapaian = 102.4 },
-                };
-                return dataBulanan;
+                    case EnumFactory.EPajak.MakananMinuman:
+                        var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
+                                .GroupBy(x => new { x.Bulan })
+                                .Select(g => new
+                                {
+                                    Bulan = g.Key.Bulan,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .ToList();
+
+                        var realisasiRestoPerBulan = context.DbMonRestos
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Month })
+                            .Select(g => new {
+                                Bulan = g.Key.TglBayarPokok, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        var realisasiListrikPerBulan = context.DbMonPpjs
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayarPokok.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        var realisasiHotelPerBulan = context.DbMonHotels
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayarPokok.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        var realisasiParkirPerBulan = context.DbMonParkirs
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayarPokok.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var realisasiHiburanPerBulan = context.DbMonHiburans
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayarPokok.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        var realisasiAbtPerBulan = context.DbMonAbts
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayarPokok.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        var realisasiReklamePerBulan = context.DbMonReklames
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayarPokok.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        var realisasiPbbPerBulan = context.DbMonPbbs
+                            .Where(x => x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayarPokok.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        var realisasiBphtbPerBulan = context.DbMonBphtbs
+                            .Where(x => x.TglBayar.HasValue
+                                        && x.TglBayar.Value.Year == tahun)
+                            .GroupBy(x => x.TglBayar.Value.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.Pokok) ?? 0
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        var realisasiOpsenPkbPerBulan = context.DbMonOpsenPkbs
+                            .Where(x => x.TglSspd.Year == tahun)
+                            .GroupBy(x => x.TglSspd.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.JmlPokok)
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        var realisasiOpsenBbnkbPerBulan = context.DbMonOpsenBbnkbs
+                            .Where(x => x.TglSspd.Year == tahun)
+                            .GroupBy(x => x.TglSspd.Month)
+                            .Select(g => new {
+                                Bulan = g.Key, // 1 - 12
+                                Realisasi = g.Sum(x => x.JmlPokok)
+                            })
+                            .OrderBy(x => x.Bulan)
+                            .ToList();
+                        break;
+                    default:
+                        break;
+                }
+                
+
+                return ret;
             }
         }
         public class MonitoringBulananViewModels
