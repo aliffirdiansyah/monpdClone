@@ -4,7 +4,17 @@
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.MonitoringHarian>()
             .ID("KontrolPrediksiGrid")
-            .DataSource(Model.DataMonitoringHarianList)
+            .DataSource(d => d.Mvc()
+            .Controller("MonitoringHarian") 
+            .LoadAction("GetMonitoringData")
+            .Key("JenisPajak")
+            .LoadParams(new
+            { // 3. Parameter yang akan dikirim dari filter
+                tahun = new JS("function() { return $('#filterTahun').val(); }"),
+                bulan = new JS("function() { return $('#filterBulan').val(); }"),
+                jenisPajak = new JS("function() { return $('#filterJenisPajak').val(); }")
+            })
+            )
             .KeyExpr("JenisPajak")
             .ShowBorders(true)
             .RowAlternationEnabled(true)

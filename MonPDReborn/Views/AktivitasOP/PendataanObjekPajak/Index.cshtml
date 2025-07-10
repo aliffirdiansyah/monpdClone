@@ -7,6 +7,7 @@
 }
 
 <div class="row">
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex">
@@ -16,56 +17,63 @@
                     </h4>
                 </div>
             </div>
-
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card border border-danger border-3">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h4 class="fs-14 text-muted mb-3">Total Pengedokan Pajak Tahun Ini</h4>
-                                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalOpDiperiksa</h4>
-                                    </div>
-                                    <i class="ri-search-eye-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="card border border-danger border-3">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h4 class="fs-14 text-muted mb-3">Rata-Rata Realisasi Tahun Ini</h4>
-                                        <h4 class="fs-16 fw-bold mb-0">@Model.RataRataRealisasi</h4>
-                                    </div>
-                                    <i class="ri-bar-chart-box-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="card border border-danger border-3">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h4 class="fs-14 text-muted mb-3">Total Realisasi Tahun Ini</h4>
-                                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalRealisasi</h4>
-                                    </div>
-                                    <i class=" ri-money-dollar-box-line  fs-2 text-danger"></i> <!-- Ikon di kanan -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            
         </div>
-        
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Total Pengedokan Tahun Ini</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.TotalPengedokan</h4>
+                    </div>
+                    <i class="ri-search-eye-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Total Objek</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.JumlahObjek</h4>
+                    </div>
+                    <i class="ri-search-eye-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Rata-Rata Realisasi Tahun Ini</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.Ratarata.ToString("C")</h4>
+                    </div>
+                    <i class="ri-bar-chart-box-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card border border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fs-14 text-muted mb-3">Total Realisasi Tahun Ini</h4>
+                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.TotalRealisasi.ToString("C")</h4>
+                    </div>
+                    <i class=" ri-money-dollar-box-line  fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="col-lg-12">
