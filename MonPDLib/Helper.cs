@@ -212,6 +212,7 @@ namespace MonPDLib
             public int NILAI_PENGURANG { get; set; }
             public int JENIS_PENGURANG { get; set; }
             public string? REFF_PENGURANG { get; set; }
+            public string NO_KETETAPAN { get; set; }
         }
 
         public class SSPDPbjt

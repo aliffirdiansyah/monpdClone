@@ -284,13 +284,17 @@ namespace AbtWs
 
                         }
 
-                        var sql = @"select   NOP, TAHUN, MASAPAJAK, SEQ, JENIS_KETETAPAN, NPWPD, AKUN, AKUN_JENIS, AKUN_JENIS_OBJEK, AKUN_JENIS_OBJEK_RINCIAN, 
-                                        AKUN_JENIS_OBJEK_RINCIAN_SUB, 
-                                        TGL_KETETAPAN, POKOK, SANKSI_TERLAMBAT_LAPOR, SANKSI_ADMINISTRASI, PROSEN_TARIF_PAJAK, PROSEN_SANKSI_TELAT_BAYAR, TGL_JATUH_TEMPO_BAYAR, 
-                                        TGL_JATUH_TEMPO_LAPOR, JATUH_TEMPO_LAPOR_MODE, JATUH_TEMPO_BAYAR, JATUH_TEMPO_BAYAR_MODE, KELOMPOK_ID, KELOMPOK_NAMA, VOL_PENGGUNAAN_AIR, 
-                                        STATUS_BATAL, BATAL_KET, BATAL_DATE, BATAL_BY, BATAL_REF, INS_DATE, INS_BY, PERUNTUKAN, NILAI_PENGURANG, JENIS_PENGURANG, REFF_PENGURANG
-                                        from objek_pajak_skpd_abt
-                                        WHERE NOP=:nop AND TAHUN=:tahun AND MASAPAJAK=:bulan AND STATUS_BATAL=0 ";
+                        var sql = @"select   A.NOP, a.TAHUN, a.MASAPAJAK, a.SEQ, JENIS_KETETAPAN, NPWPD, AKUN, AKUN_JENIS, AKUN_JENIS_OBJEK, AKUN_JENIS_OBJEK_RINCIAN, 
+        AKUN_JENIS_OBJEK_RINCIAN_SUB, 
+        TGL_KETETAPAN, POKOK, SANKSI_TERLAMBAT_LAPOR, SANKSI_ADMINISTRASI, PROSEN_TARIF_PAJAK, PROSEN_SANKSI_TELAT_BAYAR, TGL_JATUH_TEMPO_BAYAR, 
+        TGL_JATUH_TEMPO_LAPOR, JATUH_TEMPO_LAPOR_MODE, JATUH_TEMPO_BAYAR, JATUH_TEMPO_BAYAR_MODE, KELOMPOK_ID, KELOMPOK_NAMA, VOL_PENGGUNAAN_AIR, 
+        STATUS_BATAL, BATAL_KET, BATAL_DATE, BATAL_BY, BATAL_REF, INS_DATE, INS_BY, PERUNTUKAN, NILAI_PENGURANG, JENIS_PENGURANG, REFF_PENGURANG, NO_KETETAPAN
+from objek_pajak_skpd_abt a
+LEFT JOIN (
+	SELECT tahun, masapajak, seq, (A.SURAT_KLASIFIKASI || '/' || A.SURAT_PAJAK || A.SURAT_DOKUMEN || A.SURAT_BIDANG || A.SURAT_AGENDA || '/' || A.SURAT_OPD || '/' || A.SURAT_TAHUN) no_Ketetapan
+	from OBJEK_PAJAK_SKPD_ABT_PNTPN a
+) b ON a.tahun = b.tahun AND a.MASAPAJAK = b.MASAPAJAK AND a.SEQ = b.SEQ
+WHERE a.NOP=:nop AND a.TAHUN=:tahun AND a.MASAPAJAK=:bulan AND a.STATUS_BATAL=0";
 
                         var ketetapanSbyTaxOld = await _contSbyTaxOld.Set<OPSkpdAbt>()
                             .FromSqlRaw(sql, new[] {
@@ -361,7 +365,8 @@ namespace AbtWs
                                 InsDate = DateTime.Now,
                                 InsBy = "JOB",
                                 UpdDate = DateTime.Now,
-                                UpdBy = "JOB"
+                                UpdBy = "JOB",
+                                NoKetetapan = item.NO_KETETAPAN
                             });
 
                             Console.WriteLine($"DB_MON_ABT {thn}-{bln}-{item.NOP}-{item.SEQ}");
