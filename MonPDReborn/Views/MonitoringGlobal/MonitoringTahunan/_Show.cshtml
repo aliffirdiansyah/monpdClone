@@ -10,8 +10,7 @@
     .ShowRowLines(true)
     .ShowColumnHeaders(true)
     .ColumnAutoWidth(true)
-    .Paging(p => p.PageSize(20))
-    .Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 50 }).ShowInfo(true))
+    .Paging(p => p.Enabled(false))
     .SearchPanel(s => s.Visible(true).Placeholder("Search..."))
     .Columns(columns =>
     {
