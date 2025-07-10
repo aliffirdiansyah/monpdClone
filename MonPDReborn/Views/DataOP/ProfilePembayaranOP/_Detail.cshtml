@@ -1,0 +1,68 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Detail
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>Data Tahun Kiri (@Model.TahunKiri)</h5>
+        <select class="form-select form-select-sm" onchange="changeTahun('kiri', this.value)">
+            @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year; i++)
+            {
+                if (i == Model.TahunKiri)
+                {
+                    <option value="@i" selected>@i</option>
+                }
+                else
+                {
+                    <option value="@i">@i</option>
+                }
+            }
+
+        </select>
+        <div>
+            <!-- tampilkan tabel kiri -->
+            @Html.Partial("~/Views/DataOP/ProfilePembayaranOP/_Tabel.cshtml", Model.DataRealisasiKiri)
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h5>Data Tahun Kanan (@Model.TahunKanan)</h5>
+        <select class="form-select form-select-sm" onchange="changeTahun('kanan', this.value)">
+            @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year; i++)
+            {
+                if (i == Model.TahunKanan)
+                {
+                    <option value="@i" selected>@i</option>
+                }
+                else
+                {
+                    <option value="@i">@i</option>
+                }
+            }
+
+        </select>
+        <div>
+            <!-- tampilkan tabel kanan -->
+            @Html.Partial("~/Views/DataOP/ProfilePembayaranOP/_Tabel.cshtml", Model.DataRealisasiKanan)
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        function changeTahun(side, tahun) {
+            const nop = $('#detailContainer').data('nop');
+            const jenisPajak = $("#detailContainer").data("jenispajak");
+
+            const tahunKiri = (side === 'kiri') ? tahun : '@Model.TahunKiri';
+            const tahunKanan = (side === 'kanan') ? tahun : '@Model.TahunKanan';
+
+            $("#detailContainer").load('/ProfilePembayaranOP/_Detail', {
+                nop: nop,
+                jenisPajak: jenisPajak,
+                tahunKiri: tahunKiri,
+                tahunKanan: tahunKanan
+            });
+        }
+    </script>
+
+
+}

@@ -1,0 +1,103 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Show
+
+@if (!string.IsNullOrEmpty(Model.DataIdentitasObjekPajak.NOP))
+{
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <p class="fs-14 text-muted flex-grow-1">NOP</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-14 fw-semibold">@Model.DataIdentitasObjekPajak.NOP</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <p class="fs-14 text-muted flex-grow-1">Nama Objek Pajak</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-14 fw-semibold">@Model.DataIdentitasObjekPajak.NamaObjekPajak</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <p class="fs-14 text-muted flex-grow-1">Alamat Lengkap</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-14 fw-semibold">@Model.DataIdentitasObjekPajak.AlamatLengkap</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <p class="fs-14 text-muted flex-grow-1">Kecamatan</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-14 fw-semibold">@Model.DataIdentitasObjekPajak.Kecamatan</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <p class="fs-14 text-muted flex-grow-1">Kelurahan</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-14 fw-semibold">@Model.DataIdentitasObjekPajak.Kelurahan</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <p class="fs-14 text-muted flex-grow-1">Wilayah Pajak</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-14 fw-semibold">@Model.DataIdentitasObjekPajak.WilayahPajak</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="detailContainer"
+         data-nop="@Model.DataIdentitasObjekPajak.NOP"
+         data-jenispajak="@((int)Model.JenisPajak)">
+    </div>
+
+}
+else
+{
+    <p class="text-danger">Data tidak ditemukan</p>
+}
+
+@* 
+<div class="table-responsive">
+    
+
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.IdentitasObjekPajak>()
+    .ID("gridIdentitasOP")
+    .DataSource(d => d.Mvc()
+        .LoadAction("GetDataPembayaranOPList")
+    )
+    .KeyExpr("NOP")
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .AllowColumnResizing(true)
+    .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
+    )
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
+    .NoDataText("Objek Pajak Tidak Ditemukan")
+    .Columns(columns => {
+        columns.AddFor(m => m.No).Caption("No").Width(50);
+        columns.AddFor(m => m.Wilayah).Caption("Wilayah");
+        columns.AddFor(m => m.NOP).Caption("NOP");
+        columns.AddFor(m => m.AlamatLengkap).Caption("Alamat Lengkap");
+        columns.AddFor(m => m.Kecamatan).Caption("Kecamatan");
+        columns.AddFor(m => m.Kelurahan).Caption("Kelurahan");
+        columns.AddFor(m => m.WilayahPajak).Caption("Wilayah Pajak");
+        columns.AddFor(m => m.JenisPenarikan).Caption("Jenis Penarikan");
+        
+    })
+)
+</div> *@
