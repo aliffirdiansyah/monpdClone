@@ -335,4 +335,9 @@ public partial class DbMonAbt
     [StringLength(10)]
     [Unicode(false)]
     public string? KelompokKenaikanBayar { get; set; }
+
+    [Column("NO_KETETAPAN")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string NoKetetapan { get; set; } = null!;
 }
