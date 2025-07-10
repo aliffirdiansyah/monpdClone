@@ -492,15 +492,15 @@ namespace MonPDReborn.Models.DataOP
                 return ret;
             }
 
-            public static Dashboard GetDashboard()
+            public static Dashboard GetDashboardData()
             {
                 return new Dashboard
                 {
-                    TotalWP = 150,                
-                    NilaiLaporan = 1_250_000_000, 
-                    MasaPajakTerlapor = 120,      
-                    MasaPajakBlmLapor = 30        
-                }
+                    TotalWP = 150,
+                    NilaiLaporan = 1_250_000_000,
+                    MasaPajakTerlapor = 120,
+                    MasaPajakBlmLapor = 30
+                };
             }
         }
         public class HasilPelaporan

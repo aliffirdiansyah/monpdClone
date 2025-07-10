@@ -41,7 +41,7 @@ namespace MonPDReborn.Controllers.AktivitasWP
                 return Json(response);
             }
         }
-        public IActionResult Show(DateTime tglCutOff)
+        public IActionResult Show(string JenisPajak)
         {
             try
             {

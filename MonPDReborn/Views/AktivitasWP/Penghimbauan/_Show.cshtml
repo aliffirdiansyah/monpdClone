@@ -22,10 +22,16 @@
                    .Caption("Nama WP");
 
                 columns.AddFor(m => m.Ketetapan)
-                    .Caption("Ketetapan");
+                    .Caption("Ketetapan").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+
+                columns.AddFor(m => m.TglKetetapan)
+                    .Caption("Tanggal Ketetapan");
 
                 columns.AddFor(m => m.Terbayar)
-                    .Caption("Terbayar");
+                    .Caption("Terbayar").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+
+                columns.AddFor(m => m.TglBayar)
+                    .Caption("Tanggal Bayar");
 
                 columns.Add()
                     .Caption("Status")
