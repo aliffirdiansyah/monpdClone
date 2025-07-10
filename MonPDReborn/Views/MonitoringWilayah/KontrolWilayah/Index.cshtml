@@ -16,7 +16,7 @@
                     </h4>
                     <p class="text-muted mb-0">Monitoring realisasi pajak per wilayah dan jenis pajak</p>
                 </div>
-                <div class="text-muted mb-1">Periode: <strong>Januari - Desember 2023</strong></div>
+                <div class="text-muted mb-1">Periode: <strong id="periode"></strong></div>
             </div>
         </div>
     </div>
@@ -134,7 +134,13 @@
 
         function fnShow() {
             const filters = getFilters();
+            const bulanNama = [
+                "",
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
 
+            $("#periode").text("Periode Januari - " + bulanNama[filters.bulan] + " " + filters.tahun);
             $.ajax({
                 url: '@(Url.Action("Show"))',
                 type: 'GET',
