@@ -3,7 +3,7 @@
 <div class="table-responsive">
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasWP.PenghimbauanVM.PenghimbauanWP>()
-            .ID("PembayaranWPGrid")
+            .ID("PenghimbauanWPGrid")
             .DataSource(Model.DataPenghimbauanWPList)
             .KeyExpr("NPWPD")
             .ShowBorders(true)
@@ -22,10 +22,16 @@
                    .Caption("Nama WP");
 
                 columns.AddFor(m => m.Ketetapan)
-                    .Caption("Ketetapan");
+                    .Caption("Ketetapan").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+
+                columns.AddFor(m => m.TglKetetapan)
+                    .Caption("Tanggal Ketetapan");
 
                 columns.AddFor(m => m.Terbayar)
-                    .Caption("Terbayar");
+                    .Caption("Terbayar").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+
+                columns.AddFor(m => m.TglBayar)
+                    .Caption("Tanggal Bayar");
 
                 columns.Add()
                     .Caption("Status")
@@ -39,14 +45,7 @@
                         <span class="<%= color %>"><%= status %></span>
                     </text>);
 
-                columns.Add()
-                    .Caption("Aksi")
-                    .CellTemplate(@<text>
-                        <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
-                                data-npwpd="<%= data.NPWPD %>">
-                            <i class="bx bx-show"></i>
-                        </button>
-                    </text>);
+                
             })
         )
 </div>

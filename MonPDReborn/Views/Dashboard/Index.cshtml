@@ -471,6 +471,23 @@
     </div>
  </div>
 
+@* <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title fs-16 mb-0">
+                    📊 STATISTIC
+                </h4>
+
+            </div><!-- end card header -->
+
+            <div class="card-body">
+                <div id="line_chart_datalabel" data-colors='["--vz-danger", "--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div>
+</div> *@
+
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -606,14 +623,32 @@
                     </button>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <div id="loading2-DataPiutang" class="spinner-border text-primary" style="display: none">
-                        <span class="visually-hidden">Loading...</span>
+                <div class="card-body">
+                    <h4 class="card-title fs-16 mb-3">
+                        Data Piutang
+                    </h4>
+
+                    <div class="text-center mb-4">
+                        <div id="loading2-DataPiutang" class="spinner-border text-primary d-none">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
+
+                    <div id="DataPiutang" class="mb-5"></div>
+
+                    <h4 class="card-title fs-16 mb-3">
+                        Data Mutasi
+                    </h4>
+
+                    <div class="text-center mb-4">
+                        <div id="loading2-DataMutasi" class="spinner-border text-primary d-none">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div id="DataMutasi"></div>
                 </div>
-                <div id="DataPiutang"></div>
-            </div>
+
         </div>
     </div>
 </div>

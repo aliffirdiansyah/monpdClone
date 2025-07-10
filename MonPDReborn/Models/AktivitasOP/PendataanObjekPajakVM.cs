@@ -5,9 +5,11 @@
         public class Index
         {
             public string Keyword { get; set; } = string.Empty;
-            public int TotalOpDiperiksa { get; set; }
-            public decimal RataRataRealisasi { get; set; }
-            public decimal TotalRealisasi { get; set; }
+            public Dashboard Data { get; set; } = new Dashboard();
+            public Index()
+            {
+                Data = Method.GetDashboardData();
+            }
         }
 
         public class Show
@@ -56,6 +58,18 @@
             public int AvgRealisasi { get; set; }
             public int Selisih { get; set; }
         }
+
+        public class Dashboard
+        {
+            public decimal TotalPengedokan { get; set; }
+            public decimal TotalRealisasi { get; set; }
+
+            public int JumlahObjek { get; set; }
+
+            public decimal Ratarata =>
+                JumlahObjek > 0 ? TotalRealisasi / JumlahObjek : 0;
+        }
+
 
         public static class Method
         {
@@ -126,6 +140,13 @@
                         AvgRealisasi = 7000000,
                         Selisih = 1000000
                     }
+                };
+            }
+            public static Dashboard GetDashboardData()
+            {
+                return new Dashboard
+                {
+                    TotalPengedokan = 50, JumlahObjek = 100, TotalRealisasi = 800000000
                 };
             }
         }

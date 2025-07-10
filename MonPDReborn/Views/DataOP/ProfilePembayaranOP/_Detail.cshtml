@@ -1,5 +1,59 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Detail
 
+<div class="row mb-3">
+    
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Data Tahun <span class="badge bg-primary">@Model.TahunKiri</span></h6>
+                <select id="tahunKiri" class="form-select form-select-sm w-auto">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year; i++)
+                    {
+                        if (i == Model.TahunKiri)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="card-body p-2" id="tabelKiri">
+                @Html.Partial("~/Views/DataOP/ProfilePembayaranOP/_Tabel.cshtml", Model.DataRealisasiKiri)
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Data Tahun <span class="badge bg-primary">@Model.TahunKanan</span></h6>
+                <select id="tahunKanan" class="form-select form-select-sm w-auto">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year; i++)
+                    {
+                        if (i == Model.TahunKanan)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="card-body p-2" id="tabelKanan">
+                @Html.Partial("~/Views/DataOP/ProfilePembayaranOP/_Tabel.cshtml", Model.DataRealisasiKanan)
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="DetailNOP" value="@Model.NOP" />
+    <input type="hidden" id="DetailJenisPajak" value="@((int)Model.JenisPajak)" />
+</div>
+@* 
 <div class="row">
     <div class="col-md-6">
         <h5>Data Tahun Kiri (@Model.TahunKiri)</h5>
@@ -18,19 +72,7 @@
 
         </select>
         <div>
-            @(Html.DevExtreme().DataGrid()
-                .DataSource(d => d.Mvc()
-                    .Controller("ProfilePembayaranOP")
-                    .LoadAction("GetDataTahunanPembayaranList")
-                )
-                .Columns(columns => {
-                    columns.AddFor("Bulan").Caption("Bulan");
-                    columns.AddFor("TglSSPD").Caption("Tanggal SSPD").DataType(GridColumnDataType.Date);
-                    columns.AddFor("Realisasi").Caption("Realisasi").Format(Format.FixedPoint);
-                })
-                .ShowBorders(true)
-            )
-
+            @Html.Partial("~/Views/DataOP/ProfilePembayaranOP/_Tabel.cshtml", Model.DataRealisasiKiri)
         </div>
     </div>
     <div class="col-md-6">
@@ -54,19 +96,19 @@
             @Html.Partial("~/Views/DataOP/ProfilePembayaranOP/_Tabel.cshtml", Model.DataRealisasiKanan)
         </div>
     </div>
-</div>
-
+    <input type="hidden" id="DetailNOP" value="@Model.NOP" />
+    <input type="hidden" id="DetailJenisPajak" value="@((int)Model.JenisPajak)" />
+</div> *@
+@* 
 @section Scripts{
     <script>
-
         function changeTahun(side, tahun) {
-            const nop = $('#detailContainer').data('nop');
-            const jenisPajak = $("#detailContainer").data("jenispajak");
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+            const tahunKiri = (side === 'kiri') ? tahun : $('#tahunKiri').val();
+            const tahunKanan = (side === 'kanan') ? tahun : $('#tahunKanan').val();
 
-            const tahunKiri = (side === 'kiri') ? tahun : '@Model.TahunKiri';
-            const tahunKanan = (side === 'kanan') ? tahun : '@Model.TahunKanan';
-
-            $("#detailContainer").load('/ProfilePembayaranOP/_Detail', {
+            $("#detailContainer").load('/ProfilePembayaranOP/Detail', {
                 nop: nop,
                 jenisPajak: jenisPajak,
                 tahunKiri: tahunKiri,
@@ -74,6 +116,4 @@
             });
         }
     </script>
-
-
-}
+} *@

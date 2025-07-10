@@ -1,5 +1,127 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model MonPDReborn.Models.AktivitasWP.PeneguranVM.Index
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Penghimbauan Wajib Pajak
+                    </h4>
+                    <p class="text-muted mb-0">Sistem Monitoring Penghimbauan Wajib Pajak</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-error-warning-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.TotalPenghimbauan</h3>
+                        <small class="text-muted">Total Penghimbauan</small>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-time-line text-warning fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.PenghimbauanAktif</h3>
+                        <small class="text-muted">Total Objek Bayar</small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-checkbox-circle-line text-success fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.PresentaseTingkat.ToString("F0")%</h3>
+                        <small class="text-muted">Tingkat Penyelesaian</small>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Rekap Penghimbauan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            fnShow("");      // Panggil data rekap jumlah
+           // loadDetail("");  // Panggil semua data detail saat pertama load
+        });
+
+        function fnShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "Peneguran")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
+
+
+    </script>
 }

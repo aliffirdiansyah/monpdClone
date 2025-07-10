@@ -19,71 +19,33 @@
                 <h5><i class="dx-icon-filter"></i> Filter Data</h5>
                 <div class="row">
                     <div class="col-lg-4">
-                        <select class="form-control">
-                            <option selected>Pajak Bumi dan Bangunan (PBB)</option>
-                            <option>Reklame</option>
-                            <option>Air Tanah</option>
-                        </select>
+                        @Html.DropDownListFor(model => model.SelectedPajak,
+                                 new SelectList(Model.JenisPajakList, "Value", "Text"),
+                                 "Pilih Jenis Pajak",
+                                 new { @class = "form-select mb-3" })
                     </div>
                     <div class="col-lg-3">
-                        <input type="number" class="form-control" value="2025" placeholder="Tahun" />
+                        @Html.DropDownListFor(model => model.SelectedTahun,
+                                 new SelectList(Model.TahunList, "Value", "Text"),
+                                 "Pilih Tahun",
+                                 new { @class = "form-select mb-3" })
                     </div>
                     <div class="col-lg-3">
-                        <select class="form-control">
-                            <option selected>Juni</option>
-                            <option>Januari</option>
-                            <option>Februari</option>
-                            <option>Maret</option>
-                            <option>April</option>
-                            <option>Mei</option>
-                            <option>Juli</option>
-                            <option>Agustus</option>
-                            <option>September</option>
-                            <option>Oktober</option>
-                            <option>November</option>
-                            <option>Desember</option>
-                        </select>
+                        @Html.DropDownListFor(model => model.SelectedBulan,
+                                 new SelectList(Model.BulanList, "Value", "Text"),
+                                 "Pilih Bulan",
+                                 new { @class = "form-select mb-3" })
                     </div>
                     <div class="col-lg-2">
-                        <button class="btn btn-primary w-100"><i class="dx-icon-search"></i> Terapkan Filter</button>
+                        <button class="btn btn-primary w-100" onclick="loadShow()"><i class="dx-icon-search"></i> Terapkan Filter</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-3">
-        <div class="card shadow-sm p-3 border border-warning border-3">
-            <h4 class="fs-14 text-muted mb-3">Total Penetapan</h4>
-            <h4 class="fs-16 fw-bold mb-1">Rp 000.000.000.000</h4>
-            <small>+0.0% dari bulan lalu</small>
-        </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="card shadow-sm p-3 border border-success border-3">
-            <h4 class="fs-14 text-muted mb-3">Jumlah SKPD/SPPT</h4>
-            <h4 class="fs-16 fw-bold mb-1">0</h4>
-            <small>+0.0% dari bulan lalu</small>
-        </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="card shadow-sm p-3 border border-secondary border-3">
-            <h4 class="fs-14 text-muted mb-3">Jumlah Objek Pajak</h4>
-            <h4 class="fs-16 fw-bold mb-1">0</h4>
-            <small>+0.0% dari bulan lalu</small>
-        </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="card shadow-sm p-3 border border-danger border-3">
-            <h4 class="fs-14 text-muted mb-3">Belum Dibayar</h4>
-            <h4 class="fs-16 fw-bold mb-1">Rp 0</h4>
-            <small>+0.0% dari total penetapan</small>
-        </div>
-    </div>
-
+    
+@* 
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
@@ -97,7 +59,7 @@
                 <div id="column_chart"  data-colors='["--vz-danger", "--vz-primary", "--vz-success"]' class="apex-charts" dir="ltr"></div>
             </div>
         </div>
-    </div>
+    </div> *@
 
     <div class="col-lg-12">
         <div class="card">
@@ -118,86 +80,30 @@
 
 @section Scripts{
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-        // Ambil warna dari atribut data
-        var chartElement = document.querySelector("#column_chart");
-        var colors = chartElement.getAttribute("data-colors");
-        colors = JSON.parse(colors.replace(/--([a-z-]+)/g, function(_, name) {
-            return getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
-        }));
-
-        var options = {
-            chart: {
-                type: 'bar',
-                height: 350
-            },
-            series: [{
-                name: 'Reklame',
-                data: [75, 85, 60, 90, 95, 70] // Contoh data dalam persen
-            }, {
-                name: 'PBB',
-                data: [65, 72, 88, 80, 76, 84]
-            }, {
-                name: 'Air Tanah',
-                data: [58, 62, 71, 79, 83, 69]
-            }],
-            colors: colors,
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '50%',
-                    endingShape: 'rounded'
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
-            },
-            yaxis: {
-                title: {
-                    text: 'Persentase (%)'
-                },
-                labels: {
-                    formatter: function (val) {
-                        return val + "%";
-                    }
-                }
-            },
-            fill: {
-                opacity: 1
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val + " %"
-                    }
-                }
-            }
-        };
-
-        var chart = new ApexCharts(chartElement, options);
-        chart.render();
-        });
-
-        // Saat halaman selesai dimuat
-        $(document).ready(function () {
-            loadShow("");       // Load rekap awal
-        });
-
-        // Fungsi untuk memuat data rekap pemeriksaan
+       
         function loadShow() {
+            let jenisPajak = $("#SelectedPajak").val();
+            let tahun = $("#SelectedTahun").val();
+            let bulan = $("#SelectedBulan").val();
+
             $.ajax({
                 url: '@Url.Action("Show", "PenetapanOP")',
                 type: 'GET',
-                success: function (result) {
-                    $('#Show').html(result);
+                data: {
+                    jenisPajak: jenisPajak,
+                    tahun: tahun,
+                    bulan: bulan
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $("#Show").html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
                 },
                 error: function () {
                     $('#Show').html('<div class="alert alert-danger">Gagal memuat data rekap.</div>');

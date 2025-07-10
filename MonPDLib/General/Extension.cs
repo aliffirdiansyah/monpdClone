@@ -60,6 +60,10 @@ namespace MonPDLib.General
             else
                 return $"Rp {nominal:N0}";
         }
+        public static string FormatRupiahFull(decimal nominal)
+        {
+            return $"Rp {nominal.ToString("n0")}";
+        }
 
         /// <summary>
         /// Convert an enum to a list of SelectListItemCustom.

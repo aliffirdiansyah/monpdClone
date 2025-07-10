@@ -1,0 +1,31 @@
+﻿@model MonPDReborn.Models.AktivitasWP.PenagihanVM.Show
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasWP.PenagihanVM.RekapDataWP>()
+        .ID("rekapDataWPGrid")
+        .DataSource(Model.DataRekapWP)
+        .KeyExpr("NPWPD")
+        .ShowBorders(true)
+        .AllowColumnResizing(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 5, 10, 20 }))
+        .SearchPanel(s => s.Visible(true).Width(240).Placeholder("Cari..."))
+        .Columns(columns => {
+            columns.AddFor(m => m.NPWPD).Caption("NPWPD");
+            columns.AddFor(m => m.NamaWP).Caption("Nama WP");
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+            columns.AddFor(m => m.NilaiTagihan).Caption("Nilai Tagihan").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            columns.AddFor(m => m.StatusPengaihan).Caption("Status");
+            columns.Add()
+                .Caption("Aksi")
+                .CellTemplate(@<text>
+                    <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
+                            data-npwpd="<%= data.NPWPD %>">
+                        <i class=" ri-search-line "></i>
+                    </button>
+                </text>);
+        })
+    )
+</div>
+

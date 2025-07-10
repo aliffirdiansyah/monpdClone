@@ -41,8 +41,6 @@ namespace MonPDReborn.Models.AktivitasWP
                 {
                     TotalPenghimbauan = 1274,
                     PenghimbauanAktif = 156,
-                    PenghimbauanSelesai = 103,
-                    TingkatKepatuhan = 11.7,
                 };
             }
 
@@ -55,9 +53,9 @@ namespace MonPDReborn.Models.AktivitasWP
             {
                 return new List<PenghimbauanWP>
                 {
-                    new PenghimbauanWP {NPWPD = "01.01.0001", NamaWP = "Hotel Mawar", Ketetapan = "Rp 20.000.000", Terbayar = "Rp 20.000.000", Status = "Lunas"},
-                    new PenghimbauanWP {NPWPD = "01.01.0002", NamaWP = "PT. ABC", Ketetapan = "Rp 15.300.000", Terbayar = "Rp 12.000.000", Status = "Sebagian"},
-                    new PenghimbauanWP {NPWPD = "01.01.0003", NamaWP = "Karaoke Galaxy", Ketetapan = "Rp 7.800.000", Terbayar = "Rp 7.800.000", Status = "Tunggak"},
+                    new PenghimbauanWP {NPWPD = "01.01.0001", NamaWP = "Hotel Mawar", Ketetapan = 15_000_000, Terbayar = 15_000_000, TglKetetapan = new DateTime(2018, 5, 12), TglBayar = new DateTime(2018, 5, 20), Status = "Lunas"},
+                    new PenghimbauanWP {NPWPD = "01.01.0002", NamaWP = "PT. ABC", Ketetapan = 15_000_000, Terbayar = 7_000_000, TglKetetapan = new DateTime(2018, 5, 12), TglBayar = new DateTime(2018, 5, 20), Status = "Sebagian"},
+                    new PenghimbauanWP {NPWPD = "01.01.0003", NamaWP = "Karaoke Galaxy", Ketetapan = 15_000_000, Terbayar = 0, TglKetetapan = new DateTime(2018, 5, 12), TglBayar = new DateTime(2018, 5, 20), Status = "Tunggak"},
 
                 };
             }
@@ -66,9 +64,15 @@ namespace MonPDReborn.Models.AktivitasWP
         public class Dashboard
         {
             public int TotalPenghimbauan { get; set; }       
-            public double PenghimbauanAktif { get; set; }     
-            public double PenghimbauanSelesai { get; set; }   
-            public double TingkatKepatuhan { get; set; }   
+            public decimal PenghimbauanAktif { get; set; }
+            public decimal PresentaseTingkat
+            {
+                get
+                {
+                    if (TotalPenghimbauan == 0) return 0;
+                    return Math.Round((decimal)PenghimbauanAktif / TotalPenghimbauan * 100, 2);
+                }
+            }
 
         }
 
@@ -76,9 +80,11 @@ namespace MonPDReborn.Models.AktivitasWP
         {
             public string NPWPD { get; set; } = null!;
             public string NamaWP { get; set; } = null!;
-            public string Ketetapan { get; set; } = null!;
-            public string Terbayar { get; set; } = null!;
+            public decimal Ketetapan { get; set; }
+            public decimal Terbayar { get; set; }
             public string Status { get; set; } = null!;
+            public DateTime TglKetetapan { get; set; }
+            public DateTime TglBayar { get; set; }
         }
     }
 }
