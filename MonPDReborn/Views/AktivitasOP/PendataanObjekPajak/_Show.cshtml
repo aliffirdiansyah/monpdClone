@@ -30,15 +30,15 @@
             columns.AddFor(m => m.Potensi)
                    .Caption("Perhitungan Pengedookan")
                    .Alignment(HorizontalAlignment.Center)
-                   .Format("currency");
+                   .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
             columns.AddFor(m => m.TotalRealisasi)
                    .Caption("Total Realisasi")
                    .Alignment(HorizontalAlignment.Center)
-                   .Format("currency");
+                   .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
             columns.AddFor(m => m.Selisih)
                    .Caption("Selisih")
                    .Alignment(HorizontalAlignment.Center)
-                   .Format("currency");
+                   .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
 
             // 🔽 Kolom untuk tombol Detail
             columns.Add()

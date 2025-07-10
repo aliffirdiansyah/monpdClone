@@ -1,13 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExpress.DataAccess.Native.Web;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MonPDReborn.Lib.General;
 using MonPDReborn.Models.AktivitasOP;
 using System;
+using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
     public class PendataanObjekPajakController : Controller
     {
         private readonly ILogger<PendataanObjekPajakController> _logger;
+        ResponseBase response = new ResponseBase();
+
 
         private string URLView => $"../AktivitasOP/{nameof(PendataanObjekPajakController).Replace("Controller", "")}/";
 
@@ -24,18 +29,20 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.AktivitasOP.PendataanObjekPajakVM.Index()
-                {
-                    TotalOpDiperiksa = 15,
-                    RataRataRealisasi = 25500000m,
-                    TotalRealisasi = 382500000m
-                };
-                return PartialView($"{URLView}{actionName}", model);
+                var model = new Models.AktivitasOP.PendataanObjekPajakVM.Index();
+                return View($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Gagal memuat halaman Index");
-                return BadRequest("Terjadi kesalahan saat memuat halaman.");
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
