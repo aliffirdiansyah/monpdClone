@@ -1,5 +1,175 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model MonPDReborn.Models.AktivitasWP.PenghimbauanVM.Index
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Penghimbauan Wajib Pajak
+                    </h4>
+                    <p class="text-muted mb-0">Sistem Monitoring Penghimbauan Wajib Pajak</p>
+                </div>
+                <div class="text-muted mb-1">Periode: <strong>Januari - Desember 2023</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-error-warning-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.TotalPenghimbauan.ToString("N0")</h3>
+                        <small class="text-muted">Total Penghimbauan</small>
+
+                        <h3>
+                            <span class="badge bg-light-primary text-primary fw-semibold ps-0">
+                                ↑ xx% dari bulan lalu
+                            </span>
+                        </h3>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-time-line text-warning fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.PenghimbauanAktif</h3>
+                        <small class="text-muted">Penghimbauan Aktif</small>
+                        <h4>
+                            <span class="badge bg-light-warning text-warning fw-semibold ps-0">
+                                Memerlukan tindak lanjut
+                            </span>
+                        </h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-checkbox-circle-line text-success fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.PenghimbauanSelesai</h3>
+                        <small class="text-muted">Penghimbauan Selesai</small>
+                        <h4>
+                            <span class="badge bg-light-success text-success fw-semibold ps-0">
+                                xx% tingkat penyelesaian
+                            </span>
+                        </h4>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-bar-chart-2-line text-info fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h3 class="mb-0 fw-bold">@Model.Data.TingkatKepatuhan.ToString("N1")%</h3>
+                        <small class="text-muted">Tingkat Kepatuhan</small>
+                        <h3>
+                            <span class="badge bg-light-success text-info fw-semibold ps-0">
+                                Target: xx%
+                            </span>
+                        </h3>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Rekap Penghimbauan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            fnShow("");      // Panggil data rekap jumlah
+           // loadDetail("");  // Panggil semua data detail saat pertama load
+        });
+
+        function fnShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "ProfilePembayaranWP")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
+
+        
+    </script>
 }

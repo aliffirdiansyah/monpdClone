@@ -47,6 +47,20 @@ namespace MonPDLib.General
             return value.ToString();
         }
 
+        public static string FormatRupiah(decimal nominal)
+        {
+            if (nominal >= 1_000_000_000_000)
+                return $"Rp {nominal / 1_000_000_000_000M:N2} T";
+            else if (nominal >= 1_000_000_000)
+                return $"Rp {nominal / 1_000_000_000M:N2} M";
+            else if (nominal >= 1_000_000)
+                return $"Rp {nominal / 1_000_000M:N2} Juta";
+            else if (nominal >= 1_000)
+                return $"Rp {nominal / 1_000M:N2} Ribu";
+            else
+                return $"Rp {nominal:N0}";
+        }
+
         /// <summary>
         /// Convert an enum to a list of SelectListItemCustom.
         /// </summary>

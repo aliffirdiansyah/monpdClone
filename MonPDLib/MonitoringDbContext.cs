@@ -29,6 +29,8 @@ namespace MonPDLib
         public DbSet<OPSkpdListrik> OPSkpdListriks { get; set; }
         public DbSet<OpSkpdBphtb> OpSkpdBphtbs { get; set; }
         public DbSet<OPSkpdPbb> OPSkpdPbbs { get; set; }
+        public DbSet<OpOpsenSkpdPkb> OpOpsenSkpdPkbs { get; set; }
+        public DbSet<OpOpsenSkpdBbnkb> OpOpsenSkpdBbnkbs { get; set; }
         public DbSet<SSPDPbjt> SSPDPbjts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +53,10 @@ namespace MonPDLib
             modelBuilder.Entity<OpSkpdBphtb>().HasNoKey();
 
             modelBuilder.Entity<OPSkpdPbb>().HasNoKey();
+
+            modelBuilder.Entity<OpOpsenSkpdPkb>().HasNoKey();
+
+            modelBuilder.Entity<OpOpsenSkpdBbnkb>().HasNoKey();
 
             modelBuilder.Entity<SSPDPbjt>().HasNoKey();
         }

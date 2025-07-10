@@ -376,6 +376,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.NoKetetapan).HasDefaultValueSql("'-' ");
             entity.Property(e => e.PeruntukanId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
         });
@@ -459,6 +460,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();
             entity.Property(e => e.KodeObyek).IsFixedLength();
+            entity.Property(e => e.NoKetetapan).HasDefaultValueSql("'-' ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
         });
 

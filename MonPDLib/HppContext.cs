@@ -25,6 +25,7 @@ namespace MonPDLib
         public DbSet<DbOpParkir> DbOpParkirs { get; set; }
         public DbSet<DbOpHiburan> DbOpHiburans { get; set; }
         public DbSet<DbOpListrik> DbOpListriks { get; set; }
+        public DbSet<SSPDPbjt> SSPDPbjts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -34,6 +35,7 @@ namespace MonPDLib
             modelBuilder.Entity<DbOpHiburan>().HasNoKey();
             modelBuilder.Entity<DbOpResto>().HasNoKey();
             modelBuilder.Entity<DbOpListrik>().HasNoKey();
+            modelBuilder.Entity<SSPDPbjt>().HasNoKey();
         }
     }
 }

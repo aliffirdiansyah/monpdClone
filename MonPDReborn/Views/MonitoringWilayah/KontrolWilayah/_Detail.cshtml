@@ -3,7 +3,7 @@
 @(
 Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.DataHarian>()
     .ID("harianGrid")
-    .DataSource(Model.DataHarianList)
+    .DataSource(Model.DataHarianList.OrderBy(x => x.Tanggal))
     .KeyExpr("Tanggal")
     .ShowBorders(true)
     .RowAlternationEnabled(true)
@@ -21,7 +21,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilaya
     })
     .Columns(columns => {
         columns.AddFor(m => m.Tanggal)
-            .Caption("Tanggal");
+            .Caption("Tanggal").Format("dd MMMM yyyy");
 
         columns.AddFor(m => m.Hari)
             .Caption("Hari");
@@ -32,13 +32,11 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilaya
         columns.AddFor(m => m.JenisPajak)
             .Caption("Jenis Pajak");
 
-        columns.AddFor(m => m.Target)
-            .Caption("Target")
-            .Format(Format.Currency);
+        columns.AddFor(m => m.Target).Format("#,##0")
+            .Caption("Target");
 
-        columns.AddFor(m => m.Realisasi)
-            .Caption("Realisasi")
-            .Format(Format.Currency);
+        columns.AddFor(m => m.Realisasi).Format("#,##0")
+            .Caption("Realisasi");
 
         columns.Add()
             .Caption("Pencapaian (%)")

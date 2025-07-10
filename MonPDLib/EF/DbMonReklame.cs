@@ -644,4 +644,9 @@ public partial class DbMonReklame
     [StringLength(100)]
     [Unicode(false)]
     public string UpdBy { get; set; } = null!;
+
+    [Column("NO_KETETAPAN")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string NoKetetapan { get; set; } = null!;
 }
