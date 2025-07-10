@@ -21,20 +21,17 @@ namespace HotelWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                var nextRun = now.AddDays(1); // besok jam 00:00
+                var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 try
                 {
@@ -98,61 +95,75 @@ namespace HotelWs
                 using (var _contSbyTax = DBClass.GetSurabayaTaxContext())
                 {
                     var sql = @"
-                    SELECT  A.NOP,
-                            C.NPWPD_NO NPWPD,
-                            C.NAMA NPWPD_NAMA,
-                            C.ALAMAT NPWPD_ALAMAT,
-                            A.PAJAK_ID ,
-                            'PAJAK JASA PERHOTELAN' PAJAK_NAMA,
-                            A.NAMA NAMA_OP,
-                            A.ALAMAT ALAMAT_OP,
-                            A.ALAMAT_NO ALAMAT_OP_NO,
-                            A.RT ALAMAT_OP_RT,
-                            A.RW ALAMAT_OP_RW,
-                            A.TELP,
-                            A.KD_LURAH ALAMAT_OP_KD_LURAH,
-                            A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
-                            TGL_OP_TUTUP,
-                            TGL_MULAI_BUKA_OP,
-                            0 METODE_PENJUALAN,
-                            B.BUKTI_BAYAR METODE_PEMBAYARAN,
-                            B.JUMLAH_KARYAWAN,
-                             CASE D.ID
-		                         WHEN 49 THEN 19
-		                         WHEN 45 THEN 17
-		                         WHEN 48 THEN 18
-		                         WHEN 43 THEN 13
-		                         WHEN 47 THEN 16
-		                         WHEN 44 THEN 15
-		                         WHEN 46 THEN 14
-		                         ELSE 18
-		                     END AS KATEGORI_ID,
-                            D.NAMA KATEGORI_NAMA,
-                            sysdate INS_dATE, 
-                            'JOB' INS_BY,
-                            TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-                            CASE 
-			                    WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
-		                    ELSE 0
-		                    END AS IS_TUTUP,
-		                    'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
-                            '-'  AKUN  ,
-                            '-'  NAMA_AKUN         ,
-                            '-'  KELOMPOK      ,
-                            '-'  NAMA_KELOMPOK     ,
-                            '-'  JENIS             ,
-                            '-'  NAMA_JENIS        ,
-                            '-'  OBJEK            ,
-                            '-'  NAMA_OBJEK       ,
-                            '-'  RINCIAN         ,
-                            '-'  NAMA_RINCIAN     ,
-                            '-'  SUB_RINCIAN      ,
-                            '-'  NAMA_SUB_RINCIAN    
-                    FROM OBJEK_PAJAK A
-                    JOIN OBJEK_PAJAK_HOTEL B ON A.NOP = B.NOP
-                    JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
-                    JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
-                    LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT    
+                        SELECT  A.NOP,
+	                            C.NPWPD_NO NPWPD,
+	                            C.NAMA NPWPD_NAMA,
+	                            C.ALAMAT NPWPD_ALAMAT,
+	                            A.PAJAK_ID ,
+	                            'PAJAK JASA PERHOTELAN' PAJAK_NAMA,
+	                            A.NAMA NAMA_OP,
+	                            A.ALAMAT ALAMAT_OP,
+	                            A.ALAMAT_NO ALAMAT_OP_NO,
+	                            A.RT ALAMAT_OP_RT,
+	                            A.RW ALAMAT_OP_RW,
+	                            A.TELP,
+	                            A.KD_LURAH ALAMAT_OP_KD_LURAH,
+	                            A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
+	                            TGL_OP_TUTUP,
+	                            TGL_MULAI_BUKA_OP,
+	                            0 METODE_PENJUALAN,
+	                            B.BUKTI_BAYAR METODE_PEMBAYARAN,
+	                            B.JUMLAH_KARYAWAN,
+	                             CASE D.ID
+	                                 WHEN 49 THEN 17
+	                                 WHEN 45 THEN 14
+	                                 WHEN 48 THEN 17
+	                                 WHEN 43 THEN 16
+	                                 WHEN 47 THEN 12
+	                                 WHEN 44 THEN 15
+	                                 WHEN 46 THEN 13
+	                                 ELSE 17
+	                             END AS KATEGORI_ID,
+	                            CASE D.ID
+	                                 WHEN 49 THEN 'HOTEL NON BINTANG'
+	                                 WHEN 45 THEN 'HOTEL BINTANG TIGA'
+	                                 WHEN 48 THEN 'HOTEL NON BINTANG'
+	                                 WHEN 43 THEN 'HOTEL BINTANG LIMA'
+	                                 WHEN 47 THEN 'HOTEL BINTANG SATU'
+	                                 WHEN 44 THEN 'HOTEL BINTANG EMPAT'
+	                                 WHEN 46 THEN 'HOTEL BINTANG DUA'
+	                                 ELSE 'HOTEL NON BINTANG'
+	                             END AS KATEGORI_NAMA,
+	                            sysdate INS_dATE, 
+	                            'JOB' INS_BY,
+	                            TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+	                            CASE 
+	                                WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
+	                            ELSE 0
+	                            END AS IS_TUTUP,
+	                            'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
+	                            '-'  AKUN  ,
+	                            '-'  NAMA_AKUN         ,
+	                            '-'  KELOMPOK      ,
+	                            '-'  NAMA_KELOMPOK     ,
+	                            '-'  JENIS             ,
+	                            '-'  NAMA_JENIS        ,
+	                            '-'  OBJEK            ,
+	                            '-'  NAMA_OBJEK       ,
+	                            '-'  RINCIAN         ,
+	                            '-'  NAMA_RINCIAN     ,
+	                            '-'  SUB_RINCIAN      ,
+	                            '-'  NAMA_SUB_RINCIAN    
+	                    FROM OBJEK_PAJAK A
+	                    JOIN OBJEK_PAJAK_HOTEL B ON A.NOP = B.NOP
+	                    JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
+	                    JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
+	                    LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT   
+                        WHERE A.NPWPD NOT IN (
+	                        select npwpd_no  
+	                        from npwpd 
+	                        WHERE REF_THN_PEL = 2023 OR NAMA LIKE '%FULAN%' OR NPWPD_NO = '3578200503840003'
+                        )
                     ";
 
                     var result = await _contSbyTax.Set<DbOpHotel>().FromSqlRaw(sql).ToListAsync();
@@ -275,7 +286,7 @@ namespace HotelWs
                     }
                 }
 
-                using (var _contHpp = DBClass.GetHppContext())
+                using (var _contMonitoringDb2 = DBClass.GetMonitoringDbContext())
                 {
                     var sql = @"
                         select 	REPLACE(FK_NOP, '.', '') NOP,  
@@ -287,8 +298,8 @@ namespace HotelWs
                                 '-' ALAMAT_OP_RW,
                                 NVL(NOMOR_TELEPON, '-') TELP,
                                 NAMA_OP,
-		                        3 PAJAK_ID,
-		                        'Pajak Jasa Perhotelan' PAJAK_NAMA,
+                                3 PAJAK_ID,
+                                'Pajak Jasa Perhotelan' PAJAK_NAMA,
                                 ALAMAT_OP ALAMAT_OP,
                                 FK_KELURAHAN ALAMAT_OP_KD_LURAH,
                                 FK_KECAMATAN ALAMAT_OP_KD_CAMAT,
@@ -303,23 +314,23 @@ namespace HotelWs
                             END AS IS_TUTUP,
                             NAMA_WILAYAH_PAJAK WILAYAH_PAJAK,
                             CASE NAMA_AYAT_PAJAK
-                                WHEN 'RUMAH KOS' THEN 19
-                                WHEN 'HOTEL BINTANG TIGA' THEN 17
-                                WHEN 'HOTEL NON BINTANG' THEN 18
-                                WHEN 'HOTEL BINTANG LIMA' THEN 13
-                                WHEN 'HOTEL BINTANG SATU' THEN 16
+                                WHEN 'RUMAH KOS' THEN 17
+                                WHEN 'HOTEL BINTANG TIGA' THEN 14
+                                WHEN 'HOTEL NON BINTANG' THEN 17
+                                WHEN 'HOTEL BINTANG LIMA' THEN 16
+                                WHEN 'HOTEL BINTANG SATU' THEN 12
                                 WHEN 'HOTEL BINTANG EMPAT' THEN 15
-                                WHEN 'HOTEL BINTANG DUA' THEN 14
+                                WHEN 'HOTEL BINTANG DUA' THEN 13
                                 ELSE 18
                             END AS KATEGORI_ID,
                             CASE NAMA_AYAT_PAJAK
-                                WHEN 'HOTEL BINTANG LIMA' THEN 'BINTANG LIMA'
-                                WHEN 'HOTEL BINTANG EMPAT' THEN 'BINTANG EMPAT'
-                                WHEN 'HOTEL BINTANG DUA' THEN 'BINTANG DUA'
-                                WHEN 'HOTEL BINTANG SATU' THEN 'BINTANG SATU'
-                                WHEN 'HOTEL BINTANG TIGA' THEN 'BINTANG TIGA'
-                                WHEN 'HOTEL NON BINTANG' THEN 'NON BINTANG'
-                                WHEN 'RUMAH KOS' THEN 'RUMAH KOS'
+                                WHEN 'HOTEL BINTANG LIMA' THEN 'HOTEL BINTANG LIMA'
+                                WHEN 'HOTEL BINTANG EMPAT' THEN 'HOTEL BINTANG EMPAT'
+                                WHEN 'HOTEL BINTANG DUA' THEN 'HOTEL BINTANG DUA'
+                                WHEN 'HOTEL BINTANG SATU' THEN 'HOTEL BINTANG SATU'
+                                WHEN 'HOTEL BINTANG TIGA' THEN 'HOTEL BINTANG TIGA'
+                                WHEN 'HOTEL NON BINTANG' THEN 'HOTEL NON BINTANG'
+                                WHEN 'RUMAH KOS' THEN 'HOTEL NON BINTANG'
                                 ELSE NAMA_AYAT_PAJAK
                             END AS KATEGORI_NAMA,
                                 0 METODE_PENJUALAN,
@@ -340,12 +351,11 @@ namespace HotelWs
                             '-'  NAMA_RINCIAN     ,
                             '-'  SUB_RINCIAN      ,
                             '-'  NAMA_SUB_RINCIAN    
-                        FROM VW_SIMPADA_OP_all_mon
-                        WHERE 	NAMA_PAJAK_DAERAH ='HOTEL' AND 
-                                KATEGORI_PAJAK <> 'OBJEK TESTING'
+                        FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
+                        WHERE 	NAMA_PAJAK_DAERAH ='HOTEL' AND KATEGORI_PAJAK <> 'OBJEK TESTING'
                     ";
 
-                    var result = await _contHpp.Set<DbOpHotel>().FromSqlRaw(sql).ToListAsync();
+                    var result = await _contMonitoringDb2.Set<DbOpHotel>().FromSqlRaw(sql).ToListAsync();
 
                     var distinctNop = result.Select(x => x.Nop).ToList();
                     var dataExisting = _contMonPd.DbOpHotels.Where(x => distinctNop.Contains(x.Nop)).ToList();

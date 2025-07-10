@@ -20,20 +20,17 @@ namespace PPJWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                var nextRun = now.AddDays(1); // besok jam 00:00
+                var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 // Eksekusi tugas
                 try
@@ -124,8 +121,8 @@ namespace PPJWs
         	ELSE '-'
         END AS PERUNTUKAN_NAMA,
         CASE SUMBER
-        	WHEN 0 THEN 11
-        	ELSE 12
+        	WHEN 0 THEN 55
+        	ELSE 58
         END AS KATEGORI_ID,
         CASE SUMBER
         	WHEN 0 THEN 'SENDIRI'
@@ -156,6 +153,11 @@ FROM OBJEK_PAJAK A
 JOIN OBJEK_PAJAK_LISTRIK B ON A.NOP = B.NOP
 JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
 LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT     
+WHERE A.NPWPD NOT IN (
+	select npwpd_no  
+	from npwpd 
+	WHERE REF_THN_PEL = 2023 OR NAMA LIKE '%FULAN%' OR NPWPD_NO = '3578200503840003'
+)
                     ";
 
                     var result = await _contSbyTax.Set<DbOpListrik>().FromSqlRaw(sql).ToListAsync();
@@ -279,7 +281,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                 using (var _contHpp = DBClass.GetHppContext())
                 {
                     var sql = @"
-                        	                       		                        	                       	select 	REPLACE(FK_NOP, '.', '') NOP,  
+                        	                       		                        	                       	                        	                       		                        	                       	select 	REPLACE(FK_NOP, '.', '') NOP,  
         NVL(FK_NPWPD, '-') NPWPD,
         NAMA_OP NPWPD_NAMA,
         NVL(ALAMAT_OP, '-') NPWPD_ALAMAT,
@@ -305,23 +307,23 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
     NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA ') WILAYAH_PAJAK,
     NAMA_AYAT_PAJAK,
     CASE NAMA_JENIS_PAJAK
-		WHEN 'PPJ NON PLN' THEN 12
-		WHEN 'PPJ PLN' THEN 11
+		WHEN 'PPJ NON PLN' THEN 55
+		WHEN 'PPJ PLN' THEN 58
 		ELSE NULL
 	END AS SUMBER,
 	CASE NAMA_JENIS_PAJAK
-		WHEN 'PPJ NON PLN' THEN 'SUMBER LAIN'
-		WHEN 'PPJ PLN' THEN 'DIHASILKAN SENDIRI'
+		WHEN 'PPJ NON PLN' THEN 'SENDIRI'
+		WHEN 'PPJ PLN' THEN 'SUMBER LAIN'
 		ELSE NULL
 	END AS SUMBER_NAMA,
     CASE NAMA_JENIS_PAJAK
-		WHEN 'PPJ NON PLN' THEN 12
-		WHEN 'PPJ PLN' THEN 11
+		WHEN 'PPJ NON PLN' THEN 55
+		WHEN 'PPJ PLN' THEN 58
 		ELSE NULL
 	END AS KATEGORI_ID,
     CASE NAMA_JENIS_PAJAK
-		WHEN 'PPJ NON PLN' THEN 'SUMBER LAIN'
-		WHEN 'PPJ PLN' THEN 'DIHASILKAN SENDIRI'
+		WHEN 'PPJ NON PLN' THEN 'SENDIRI'
+		WHEN 'PPJ PLN' THEN 'SUMBER LAIN'
 		ELSE NULL
 	END AS KATEGORI_NAMA,
 	    0 PERUNTUKAN,

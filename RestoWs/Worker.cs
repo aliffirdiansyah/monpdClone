@@ -20,17 +20,17 @@ namespace RestoWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //var nextRun = now.AddDays(1); // besok jam 00:00
-                //var delay = nextRun - now;
+                var nextRun = now.AddDays(1); // besok jam 00:00
+                var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 try
                 {
@@ -95,59 +95,68 @@ namespace RestoWs
                 {
                     var sql = @"
                     SELECT  A.NOP,
-                        C.NPWPD_NO NPWPD,
-                        C.NAMA NPWPD_NAMA,
-                        C.ALAMAT NPWPD_ALAMAT,
-                        A.PAJAK_ID ,
-                        'PAJAK JASA RESTORAN' PAJAK_NAMA,
-                        A.NAMA NAMA_OP,
-                        A.ALAMAT ALAMAT_OP,
-                        A.ALAMAT_NO ALAMAT_OP_NO,
-                        A.RT ALAMAT_OP_RT,
-                        A.RW ALAMAT_OP_RW,
-                        A.TELP,
-                        A.KD_LURAH ALAMAT_OP_KD_LURAH,
-                        A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
-                        TGL_OP_TUTUP,
-                        TGL_MULAI_BUKA_OP,
-                        0 METODE_PENJUALAN,
-                        B.BUKTI_BAYAR METODE_PEMBAYARAN,
-                        B.JUMLAH_KARYAWAN,
-                        B.KAPASITAS_MEJA JUMLAH_MEJA,
-                        B.KAPASITAS_KURSI JUMLAH_KURSI,
-                        B.KAPASITAS_RUANGAN KAPASITAS_RUANGAN_ORANG,
-                        B.MAKSIMAL_PRODUKSI_HARI MAKSIMAL_PRODUKSI_PORSI_HARI,
-                        B.RATA_PENGUNJUNG_HARI RATA_TERJUAL_PORSI_HARI,
-                        CASE 
-	                        WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
-                        ELSE 0
-                        END AS IS_TUTUP,
-                        CASE D.ID
-	                        WHEN 39 THEN 58
-	                        WHEN 40 THEN 9
-	                        ELSE 58
-                        END AS KATEGORI_ID,
-                        D.NAMA KATEGORI_NAMA,
-                        sysdate INS_dATE, 
-                        'JOB' INS_BY,
-                        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-                        'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,'-'  AKUN  ,
-                        '-'  NAMA_AKUN         ,
-                        '-'  KELOMPOK      ,
-                        '-'  NAMA_KELOMPOK     ,
-                        '-'  JENIS             ,
-                        '-'  NAMA_JENIS        ,
-                        '-'  OBJEK            ,
-                        '-'  NAMA_OBJEK       ,
-                        '-'  RINCIAN         ,
-                        '-'  NAMA_RINCIAN     ,
-                        '-'  SUB_RINCIAN      ,
-                        '-'  NAMA_SUB_RINCIAN
-                        FROM OBJEK_PAJAK A
-                        JOIN OBJEK_PAJAK_RESTO B ON A.NOP = B.NOP
-                        JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
-                        JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
-                        LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
+	                        C.NPWPD_NO NPWPD,
+	                        C.NAMA NPWPD_NAMA,
+	                        C.ALAMAT NPWPD_ALAMAT,
+	                        A.PAJAK_ID ,
+	                        'PAJAK JASA RESTORAN' PAJAK_NAMA,
+	                        A.NAMA NAMA_OP,
+	                        A.ALAMAT ALAMAT_OP,
+	                        A.ALAMAT_NO ALAMAT_OP_NO,
+	                        A.RT ALAMAT_OP_RT,
+	                        A.RW ALAMAT_OP_RW,
+	                        A.TELP,
+	                        A.KD_LURAH ALAMAT_OP_KD_LURAH,
+	                        A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
+	                        TGL_OP_TUTUP,
+	                        TGL_MULAI_BUKA_OP,
+	                        0 METODE_PENJUALAN,
+	                        B.BUKTI_BAYAR METODE_PEMBAYARAN,
+	                        B.JUMLAH_KARYAWAN,
+	                        B.KAPASITAS_MEJA JUMLAH_MEJA,
+	                        B.KAPASITAS_KURSI JUMLAH_KURSI,
+	                        B.KAPASITAS_RUANGAN KAPASITAS_RUANGAN_ORANG,
+	                        B.MAKSIMAL_PRODUKSI_HARI MAKSIMAL_PRODUKSI_PORSI_HARI,
+	                        B.RATA_PENGUNJUNG_HARI RATA_TERJUAL_PORSI_HARI,
+	                        CASE 
+	                            WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
+	                        ELSE 0
+	                        END AS IS_TUTUP,
+	                        CASE D.ID
+	                            WHEN 39 THEN 7
+	                            WHEN 40 THEN 4
+	                            ELSE 58
+	                        END AS KATEGORI_ID,
+	                        CASE D.ID
+	                            WHEN 39 THEN 'RESTORAN'
+	                            WHEN 40 THEN 'CATERING'
+	                            ELSE 'RESTORAN'
+	                        END AS KATEGORI_NAMA,
+	                        sysdate INS_dATE, 
+	                        'JOB' INS_BY,
+	                        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+	                        'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,'-'  AKUN  ,
+	                        '-'  NAMA_AKUN         ,
+	                        '-'  KELOMPOK      ,
+	                        '-'  NAMA_KELOMPOK     ,
+	                        '-'  JENIS             ,
+	                        '-'  NAMA_JENIS        ,
+	                        '-'  OBJEK            ,
+	                        '-'  NAMA_OBJEK       ,
+	                        '-'  RINCIAN         ,
+	                        '-'  NAMA_RINCIAN     ,
+	                        '-'  SUB_RINCIAN      ,
+	                        '-'  NAMA_SUB_RINCIAN
+	                        FROM OBJEK_PAJAK A
+	                        JOIN OBJEK_PAJAK_RESTO B ON A.NOP = B.NOP
+	                        JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
+	                        JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
+	                        LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
+                            WHERE A.NPWPD NOT IN (
+	                            select npwpd_no  
+	                            from npwpd 
+	                            WHERE REF_THN_PEL = 2023 OR NAMA LIKE '%FULAN%'
+                            )
                     ";
 
                     var result = await _contSbyTax.Set<DbOpResto>().FromSqlRaw(sql).ToListAsync();
@@ -273,70 +282,201 @@ namespace RestoWs
                     }
                 }
 
-                using (var _contHpp = DBClass.GetHppContext())
+                using (var _contMonitoringDb2 = DBClass.GetMonitoringDbContext())
                 {
                     var sql = @"
-                        select 	REPLACE(FK_NOP, '.', '') NOP,  
-                                NVL(FK_NPWPD, '-') NPWPD,
-                                NAMA_OP NPWPD_NAMA,
-                                ALAMAT_OP NPWPD_ALAMAT,
-                                '-' ALAMAT_OP_NO,
-                                '-' ALAMAT_OP_RT,
-                                '-' ALAMAT_OP_RW,
-                                NVL(NOMOR_TELEPON, '-') TELP,
-                                NAMA_OP,
-                                1 PAJAK_ID,
-                                'Pajak Makanan & Minuman' PAJAK_NAMA,
-                                ALAMAT_OP ALAMAT_OP,
-                                FK_KELURAHAN ALAMAT_OP_KD_LURAH,
-                                FK_KECAMATAN ALAMAT_OP_KD_CAMAT,
-                                 CASE 
-                                WHEN STATUS_OP_DESC <> 'BUKA' THEN TGL_TUTUP 
-                                ELSE NULL 
-                            END AS TGL_OP_TUTUP,
-                            TGL_BUKA TGL_MULAI_BUKA_OP,
-                            CASE 
-                                WHEN STATUS_OP_DESC <> 'BUKA' THEN 0  
-                                ELSE 1 
-                            END AS IS_TUTUP,
-                            NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA ') WILAYAH_PAJAK,
-                            CASE NAMA_AYAT_PAJAK
-                                WHEN 'KATERING' THEN 9
-                                WHEN 'RESTORAN' THEN 58
-		                        ELSE 58
-                            END AS KATEGORI_ID,
-                            CASE NAMA_AYAT_PAJAK
-                                WHEN 'KATERING' THEN 'KATERING'
-                                ELSE 'RESTORAN'
-                            END AS KATEGORI_NAMA,
-                                0 METODE_PENJUALAN,
-                                0 METODE_PEMBAYARAN,
-                                0 JUMLAH_KARYAWAN,
-                                0 JUMLAH_MEJA,
-                                0 JUMLAH_KURSI,
-                                0 KAPASITAS_RUANGAN_ORANG,
-                                0 MAKSIMAL_PRODUKSI_PORSI_HARI,
-                                0 RATA_TERJUAL_PORSI_HARI,
-                            sysdate INS_dATE, 
-                            'JOB' INS_BY,
-                            TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-                            '-'  AKUN  ,
-                            '-'  NAMA_AKUN         ,
-                            '-'  KELOMPOK      ,
-                            '-'  NAMA_KELOMPOK     ,
-                            '-'  JENIS             ,
-                            '-'  NAMA_JENIS        ,
-                            '-'  OBJEK            ,
-                            '-'  NAMA_OBJEK       ,
-                            '-'  RINCIAN         ,
-                            '-'  NAMA_RINCIAN     ,
-                            '-'  SUB_RINCIAN      ,
-                            '-'  NAMA_SUB_RINCIAN    
-                        FROM VW_SIMPADA_OP_all_mon
-                        WHERE 	NAMA_PAJAK_DAERAH ='RESTORAN' AND KATEGORI_PAJAK NOT IN ('OBJEK TESTING', 'MAMIN')
+                        select 	REPLACE(A.FK_NOP, '.', '') NOP,  
+	                            NVL(FK_NPWPD, '-') NPWPD,
+	                            NAMA_OP NPWPD_NAMA,
+	                            ALAMAT_OP NPWPD_ALAMAT,
+	                            '-' ALAMAT_OP_NO,
+	                            '-' ALAMAT_OP_RT,
+	                            '-' ALAMAT_OP_RW,
+	                            NVL(NOMOR_TELEPON, '-') TELP,
+	                            NAMA_OP,
+	                            1 PAJAK_ID,
+	                            'Pajak Makanan & Minuman' PAJAK_NAMA,
+	                            ALAMAT_OP ALAMAT_OP,
+	                            FK_KELURAHAN ALAMAT_OP_KD_LURAH,
+	                            FK_KECAMATAN ALAMAT_OP_KD_CAMAT,
+	                             CASE 
+	                            WHEN STATUS_OP_DESC <> 'BUKA' THEN TGL_TUTUP 
+	                            ELSE NULL 
+	                        END AS TGL_OP_TUTUP,
+	                        TGL_BUKA TGL_MULAI_BUKA_OP,
+	                        CASE 
+	                            WHEN STATUS_OP_DESC <> 'BUKA' THEN 0  
+	                            ELSE 1 
+	                        END AS IS_TUTUP,
+	                        NVL(NAMA_WILAYAH_PAJAK, 'SURABAYA ') WILAYAH_PAJAK,
+	    	                    NVL(B.KATEGORI_ID, 7) KATEGORI_ID,
+	                            NVL(B.KATEGORI_NAMA, 'RESTORAN') KATEGORI_NAMA,
+	                            0 METODE_PENJUALAN,
+	                            0 METODE_PEMBAYARAN,
+	                            0 JUMLAH_KARYAWAN,
+	                            0 JUMLAH_MEJA,
+	                            0 JUMLAH_KURSI,
+	                            0 KAPASITAS_RUANGAN_ORANG,
+	                            0 MAKSIMAL_PRODUKSI_PORSI_HARI,
+	                            0 RATA_TERJUAL_PORSI_HARI,
+	                        sysdate INS_dATE, 
+	                        'JOB' INS_BY,
+	                        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+	                        '-'  AKUN  ,
+	                        '-'  NAMA_AKUN         ,
+	                        '-'  KELOMPOK      ,
+	                        '-'  NAMA_KELOMPOK     ,
+	                        '-'  JENIS             ,
+	                        '-'  NAMA_JENIS        ,
+	                        '-'  OBJEK            ,
+	                        '-'  NAMA_OBJEK       ,
+	                        '-'  RINCIAN         ,
+	                        '-'  NAMA_RINCIAN     ,
+	                        '-'  SUB_RINCIAN      ,
+	                        '-'  NAMA_SUB_RINCIAN    
+	                    FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
+	                    LEFT JOIN (
+	                    SELECT  FK_NOP, 
+			                    PAJAK_ID, 
+			                    KATEGORI_ID, 
+			                    KATEGORI_NAMA
+	                    FROM (
+		                    SELECT 	FK_NOP, 
+				                    PAJAK_ID,
+				                    CASE 
+			                            WHEN KATEGORI_STATUS_BARU = 'BAKERY/PASTRY' THEN 1
+			                            WHEN KATEGORI_STATUS_BARU = 'BUFFET/ALL YOU CAN EAT' THEN 2
+			                            WHEN KATEGORI_STATUS_BARU = 'CAFE' THEN 3
+			                            WHEN KATEGORI_STATUS_BARU = 'CATERING' THEN 4
+			                            WHEN KATEGORI_STATUS_BARU = 'DEPOT/KEDAI' THEN 5
+			                            WHEN KATEGORI_STATUS_BARU = 'FAST FOOD' THEN 6
+			                            WHEN KATEGORI_STATUS_BARU = 'RESTORAN' THEN 7
+			                            WHEN KATEGORI_STATUS_BARU = 'RESTORAN PADA MINIMARKET' THEN 8
+			                            WHEN KATEGORI_STATUS_BARU = 'RESTORAN PADA OBJEK HIBURAN' THEN 9
+			                            WHEN KATEGORI_STATUS_BARU = 'RUMAH MAKAN' THEN 10
+			                            WHEN KATEGORI_STATUS_BARU = 'TENANT MAKANAN/MINUMAN' THEN 11
+			                            WHEN KATEGORI_STATUS_BARU = 'HOTEL BINTANG DUA' THEN 12
+			                            WHEN KATEGORI_STATUS_BARU = 'HOTEL BINTANG EMPAT' THEN 13
+			                            WHEN KATEGORI_STATUS_BARU = 'HOTEL BINTANG LIMA' THEN 14
+			                            WHEN KATEGORI_STATUS_BARU = 'HOTEL BINTANG SATU' THEN 15
+			                            WHEN KATEGORI_STATUS_BARU = 'HOTEL BINTANG TIGA' THEN 16
+			                            WHEN KATEGORI_STATUS_BARU = 'HOTEL NON BINTANG' THEN 17
+			                            WHEN KATEGORI_STATUS_BARU = 'KATERING' THEN 18
+			                            WHEN KATEGORI_STATUS_BARU = 'RUMAH KOS' THEN 20
+			                            WHEN KATEGORI_STATUS_BARU = 'APARTEMEN' THEN 21
+			                            WHEN KATEGORI_STATUS_BARU = 'APOTIK' THEN 22
+			                            WHEN KATEGORI_STATUS_BARU = 'HOTEL/PENGINAPAN' THEN 23
+			                            WHEN KATEGORI_STATUS_BARU = 'KLINIK' THEN 24
+			                            WHEN KATEGORI_STATUS_BARU = 'LABORATORIUM' THEN 25
+			                            WHEN KATEGORI_STATUS_BARU = 'MALL/PLAZA' THEN 26
+			                            WHEN KATEGORI_STATUS_BARU = 'MINIMARKET' THEN 27
+			                            WHEN KATEGORI_STATUS_BARU = 'PASAR' THEN 28
+			                            WHEN KATEGORI_STATUS_BARU = 'PERBANKAN' THEN 29
+			                            WHEN KATEGORI_STATUS_BARU = 'PERGUDANGAN/PABRIK' THEN 30
+			                            WHEN KATEGORI_STATUS_BARU = 'PERKANTORAN' THEN 31
+			                            WHEN KATEGORI_STATUS_BARU = 'PERSEWAAN GEDUNG' THEN 32
+			                            WHEN KATEGORI_STATUS_BARU = 'PERTOKOAN' THEN 33
+			                            WHEN KATEGORI_STATUS_BARU = 'RUMAH SAKIT' THEN 34
+			                            WHEN KATEGORI_STATUS_BARU = 'STASIUN' THEN 35
+			                            WHEN KATEGORI_STATUS_BARU = 'SWALAYAN/SUPERMARKET' THEN 36
+			                            WHEN KATEGORI_STATUS_BARU = 'USAHA HIBURAN' THEN 37
+			                            WHEN KATEGORI_STATUS_BARU = 'USAHA LAINNYA' THEN 38
+			                            WHEN KATEGORI_STATUS_BARU = 'USAHA PARKIR' THEN 39
+			                            WHEN KATEGORI_STATUS_BARU = 'USAHA RESTORAN' THEN 40
+			                            WHEN KATEGORI_STATUS_BARU = 'BAR/CAFE/KLAB MALAM/DISKOTIK' THEN 41
+			                            WHEN KATEGORI_STATUS_BARU = 'BIOSKOP' THEN 42
+			                            WHEN KATEGORI_STATUS_BARU = 'FITNESS/PUSAT KEBUGARAN' THEN 43
+			                            WHEN KATEGORI_STATUS_BARU = 'KARAOKE DEWASA' THEN 44
+			                            WHEN KATEGORI_STATUS_BARU = 'KARAOKE KELUARGA' THEN 45
+			                            WHEN KATEGORI_STATUS_BARU = 'OLAHRAGA' THEN 46
+			                            WHEN KATEGORI_STATUS_BARU = 'PAMERAN SENI BUDAYA, SENI UKIR, BARANG SENI, TUMBU' THEN 47
+			                            WHEN KATEGORI_STATUS_BARU = 'PANTI PIJAT/THERAPY/SAUNA/SPA' THEN 48
+			                            WHEN KATEGORI_STATUS_BARU = 'PERMAINAN ANAK' THEN 49
+			                            WHEN KATEGORI_STATUS_BARU = 'PERMAINAN ANAK/PERMAINAN KETANGKASAN' THEN 50
+			                            WHEN KATEGORI_STATUS_BARU = 'RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM' THEN 51
+			                            WHEN KATEGORI_STATUS_BARU = 'SWALAYAN/SUPERMARKET/MINIMARKET/PASAR' THEN 52
+			                            WHEN KATEGORI_STATUS_BARU = 'USAHA RESTORAN/HIBURAN' THEN 53
+			                            WHEN KATEGORI_STATUS_BARU = 'AIR TANAH' THEN 56
+			                            WHEN KATEGORI_STATUS_BARU = 'PBB' THEN 57
+			                            ELSE NULL
+			                        END AS KATEGORI_ID,
+				                    KATEGORI_STATUS_BARU KATEGORI_NAMA
+		                    FROM (
+			                    SELECT 	FK_NOP,
+					                    3 PAJAK_ID,
+					                    KATEGORI_STATUS,
+					                    CASE
+						                    WHEN KATEGORI_STATUS = 'RUMAH KOS' THEN 'HOTEL NON BINTANG'
+						                    WHEN KATEGORI_STATUS = 'KATERING' THEN 'HOTEL NON BINTANG'
+						                    WHEN KATEGORI_STATUS = 'RESTORAN' THEN 'HOTEL NON BINTANG'
+						                    ELSE KATEGORI_STATUS
+					                    END AS KATEGORI_STATUS_BARU
+			                    FROM T_OP_KATEGORI_STATUS
+			                    WHERE FK_PAJAK_DAERAH = 1
+			                    UNION ALL
+			                    SELECT 	FK_NOP,
+					                    1 PAJAK_ID,
+					                    KATEGORI_STATUS,
+					                    CASE
+						                    WHEN KATEGORI_STATUS = 'RUMAH MAKAN' THEN 'RESTORAN'
+						                    ELSE KATEGORI_STATUS
+					                    END AS KATEGORI_STATUS_BARU
+			                    FROM T_OP_KATEGORI_STATUS
+			                    WHERE FK_PAJAK_DAERAH = 2
+			                    UNION ALL
+			                    SELECT 	FK_NOP,
+					                    4 PAJAK_ID,
+					                    KATEGORI_STATUS,
+					                    CASE
+						                    WHEN KATEGORI_STATUS = 'APOTIK' THEN 'RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM'
+						                    WHEN KATEGORI_STATUS = 'KLINIK' THEN 'RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM'
+						                    WHEN KATEGORI_STATUS = 'LABORATORIUM' THEN 'RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM'
+						                    WHEN KATEGORI_STATUS = 'MINIMARKET' THEN 'SWALAYAN/SUPERMARKET/MINIMARKET/PASAR'
+						                    WHEN KATEGORI_STATUS = 'PASAR' THEN 'SWALAYAN/SUPERMARKET/MINIMARKET/PASAR'
+						                    WHEN KATEGORI_STATUS = 'PERBANKAN' THEN 'PERKANTORAN'
+						                    WHEN KATEGORI_STATUS = 'PERGUDANGAN/PABRIK' THEN 'USAHA LAINNYA'
+						                    WHEN KATEGORI_STATUS = 'PERSEWAAN GEDUNG' THEN 'USAHA LAINNYA'
+						                    WHEN KATEGORI_STATUS = 'RUMAH SAKIT' THEN 'RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM'
+						                    WHEN KATEGORI_STATUS = 'STASIUN' THEN 'USAHA LAINNYA'
+						                    WHEN KATEGORI_STATUS = 'SWALAYAN/SUPERMARKET' THEN 'SWALAYAN/SUPERMARKET/MINIMARKET/PASAR'
+						                    WHEN KATEGORI_STATUS = 'USAHA PARKIR' THEN 'USAHA LAINNYA'
+						                    WHEN KATEGORI_STATUS = 'USAHA RESTORAN' THEN 'USAHA RESTORAN/HIBURAN'
+						                    ELSE KATEGORI_STATUS
+					                    END AS KATEGORI_STATUS_BARU
+			                    FROM T_OP_KATEGORI_STATUS
+			                    WHERE FK_PAJAK_DAERAH = 7
+			                    UNION ALL
+			                    SELECT 	FK_NOP,
+					                    5 PAJAK_ID,
+					                    KATEGORI_STATUS,
+					                    CASE
+						                    WHEN KATEGORI_STATUS = 'BOWLING' THEN 'OLAHRAGA'
+						                    WHEN KATEGORI_STATUS = 'WISATA TIRTA/REKREASI AIR' THEN 'PERMAINAN ANAK/PERMAINAN KETANGKASAN'
+						                    WHEN KATEGORI_STATUS = 'TAMAN SATWA/PEMANDIAN ALAM/TAMAN REKREASI' THEN 'PERMAINAN ANAK/PERMAINAN KETANGKASAN'
+						                    WHEN KATEGORI_STATUS = 'PERMAINAN KETANGKASAN' THEN 'PERMAINAN ANAK/PERMAINAN KETANGKASAN'
+						                    WHEN KATEGORI_STATUS = 'BILLYARD' THEN 'OLAHRAGA'
+						                    WHEN KATEGORI_STATUS = 'DISKOTIK' THEN 'BAR/CAFE/KLAB MALAM/DISKOTIK'
+						                    WHEN KATEGORI_STATUS = 'PERMAINAN ANAK' THEN 'PERMAINAN ANAK/PERMAINAN KETANGKASAN'
+						                    WHEN KATEGORI_STATUS = 'PAMERAN SENI BUDAYA, SENI UKIR, BARANG SENI, TUMBU' THEN 'PERMAINAN ANAK/PERMAINAN KETANGKASAN'
+						                    WHEN KATEGORI_STATUS = 'GEDUNG OLAHRAGA' THEN 'OLAHRAGA'
+						                    WHEN KATEGORI_STATUS = 'BAR/CAFE/KLAB MALAM' THEN 'BAR/CAFE/KLAB MALAM/DISKOTIK'
+						                    WHEN KATEGORI_STATUS = 'FUTSAL (OLAHRAGA)' THEN 'OLAHRAGA'
+						                    WHEN KATEGORI_STATUS = 'KOLAM RENANG' THEN 'OLAHRAGA'
+						                    ELSE KATEGORI_STATUS
+					                    END AS KATEGORI_STATUS_BARU
+			                    FROM (
+				                    SELECT DISTINCT FK_NOP, FK_PAJAK_DAERAH, NAMA_JENIS_PAJAK KATEGORI_STATUS
+				                    FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER
+				                    WHERE NAMA_PAJAK_DAERAH = 'HIBURAN' AND STATUS_OP = 1 AND KATEGORI_PAJAK != 'INSIDENTIL'
+			                    ) A
+		                    ) A
+	                    ) A
+	                    WHERE PAJAK_ID = 1
+	                    ) B ON A.FK_NOP = B.FK_NOP
+	                    WHERE 	NAMA_PAJAK_DAERAH ='RESTORAN' AND KATEGORI_PAJAK NOT IN ('OBJEK TESTING', 'MAMIN')
                     ";
 
-                    var result = await _contHpp.Set<DbOpResto>().FromSqlRaw(sql).ToListAsync();
+                    var result = await _contMonitoringDb2.Set<DbOpResto>().FromSqlRaw(sql).ToListAsync();
 
                     var distinctNop = result.Select(x => x.Nop).ToList();
                     var dataExisting = _contMonPd.DbOpRestos.Where(x => distinctNop.Contains(x.Nop)).ToList();

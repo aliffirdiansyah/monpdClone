@@ -23,20 +23,17 @@ namespace AbtWs
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                var nextRun = now.AddDays(1); // besok jam 00:00
+                var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 //// GUNAKAN KETIKA EKSEKUSI TUGAS MANUAL
                 try
@@ -118,7 +115,7 @@ namespace AbtWs
                                 when B.peruntukan=3 then 'BAHAN BAKU AIR' 
                                 END PERUNTUKAN_NAMA,
                                 56 KATEGORI_ID,
-                                D.NAMA KATEGORI_NAMA,
+                                'AIR TANAH' KATEGORI_NAMA,
                                 1 IS_METERAN_AIR, 0 JUMLAH_KARYAWAN,
                                 DECODE(TGL_OP_TUTUP,NULL,0,1) IS_TUTUP,
                                 'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
@@ -141,6 +138,11 @@ namespace AbtWs
                         JOIN NPWPD  C ON A.NPWPD=C.NPWPD_no
                         JOIN M_KATEGORI_PAJAK D ON D.ID=A.KATEGORI
                         LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
+WHERE A.NPWPD NOT IN (
+	select npwpd_no  
+	from npwpd 
+	WHERE REF_THN_PEL = 2023 OR NAMA LIKE '%FULAN%' OR NPWPD_NO = '3578200503840003'
+)
                     ";
 
                     var result = await _contSbyTax.Set<DbOpAbt>().FromSqlRaw(sql).ToListAsync(); //822

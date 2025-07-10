@@ -21,20 +21,17 @@ namespace PbbWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                var nextRun = now.AddDays(1); // besok jam 00:00
+                var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 // Eksekusi tugas
                 try
