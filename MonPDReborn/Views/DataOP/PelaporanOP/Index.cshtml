@@ -25,7 +25,7 @@
                     <div class="col-lg-3">
                         @Html.DropDownListFor(model => model.SelectedPajak,
                                                 new SelectList(Model.JenisPajakList, "Value", "Text"),
-                                                "Semua Jenis Pajak",
+                                                "Pilih Jenis Pajak",
                                                 new { @class = "form-select rounded-pill mb-3", @aria_label = "Default select example" })
                     </div>
                    
@@ -39,91 +39,6 @@
             </div>
         </div>
     </div>
-
-    <div class="col-lg-12">
-        <div class="card crm-widget">
-            <div class="card-body p-0">
-                <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
-                    <div class="col">
-                        <div class="py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Total Wajib Pajak</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bx bx-group fs-3 text-primary"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0">
-                                        <span class="counter-value" date-target="321">321</span>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Total Nilai Laporan</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bx bx-money fs-3 text-success"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0">
-                                        <span class="counter-value" date-target="321">321</span>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Masa Pajak Terlapor</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bx bx-calendar-check fs-3 text-info"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0">
-                                        <span class="counter-value" date-target="321">321</span>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Masa Pajak Belum Lapor</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bx bx-calendar-exclamation fs-3 text-warning"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0">
-                                        <span class="counter-value" date-target="321">321</span>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Tingkat Kepatuhan</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bx bx-check-shield fs-3 text-success"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0">
-                                        <span class="counter-value" date-target="321">321</span>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex">
@@ -155,9 +70,8 @@
 
 @section Scripts {
     <script>
-                  $(document).ready(function () {
+        $(document).ready(function () {
             // pertama kali load: semua
-            loadData();
 
             // ketika tombol Terapkan Filter diklik
             $('.btn-success').on('click', function () {
@@ -182,7 +96,7 @@
                         $('#Show').html('<div class="text-muted">Memuat data...</div>');
                     },
                     success: function (result) {
-                        $('#Show').html(result); // tampilkan hasil ke div id="Show"
+                        $('#Show').html(result); 
                     },
                     error: function (xhr, status, error) {
                         console.error("Gagal memuat data _Show:", error);

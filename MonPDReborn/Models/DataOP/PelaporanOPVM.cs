@@ -13,7 +13,7 @@ namespace MonPDReborn.Models.DataOP
         public class Index
         {
             public int SelectedPajak { get; set; }
-            public Dashboard Data { get; set; } = new Dashboard();
+
             public List<SelectListItem> JenisPajakList { get; set; }
             public Index()
             {
@@ -25,7 +25,7 @@ namespace MonPDReborn.Models.DataOP
                         Value = ((int)x).ToString(),
                         Text = x.GetDescription()
                     }).ToList();
-                Data = Method.GetDashboardData();
+
             }
 
         }
@@ -34,7 +34,7 @@ namespace MonPDReborn.Models.DataOP
         public class Show
         {
             public List<HasilPelaporan> DaftarHasil { get; set; } = new();
-
+            public Dashboard Data { get; set; } = new Dashboard();
             public Show(EnumFactory.EPajak? JenisPajak)
             {
                 if ((int)JenisPajak == 0)
@@ -42,6 +42,13 @@ namespace MonPDReborn.Models.DataOP
                     throw new ArgumentException("Harap Pilih Jenis Pajak!");
                 }
                 DaftarHasil = Method.GetPalporanList(JenisPajak);
+
+                Data.TotalWP = DaftarHasil.GroupBy(x => x.NPWPD).Count();
+                Data.NilaiLaporan = DaftarHasil.GroupBy(x => x.NOP).Sum(x => x.Sum(x => x.NilaiPelaporan));
+                Data.MasaPajakTerlapor = DaftarHasil.GroupBy(x => x.NOP).Sum(x => x.Sum(x => x.PajakTerlapor));
+                Data.MasaPajakBlmLapor = DaftarHasil.GroupBy(x => x.NOP).Sum(x => x.Sum(x => x.MasaBelumLapor));
+
+
             }
 
         }
@@ -108,8 +115,10 @@ namespace MonPDReborn.Models.DataOP
                             .ToList()
                             .Select(x => new HasilPelaporan
                             {
+                                NPWPD = x.Npwpd,
                                 NOP = x.Nop,
                                 Nama = x.NamaOp,
+                                NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Wilayah = getWilayahResto.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
@@ -148,9 +157,10 @@ namespace MonPDReborn.Models.DataOP
                             .ToList()
                             .Select(x => new HasilPelaporan
                             {
+                                NPWPD = x.Npwpd,
                                 NOP = x.Nop,
                                 Nama = x.NamaOp,
-
+                                NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Wilayah = getWilayahListrik.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
@@ -189,8 +199,10 @@ namespace MonPDReborn.Models.DataOP
                             .ToList()
                             .Select(x => new HasilPelaporan
                             {
+                                NPWPD = x.Npwpd,
                                 NOP = x.Nop,
                                 Nama = x.NamaOp,
+                                NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Wilayah = getWilayahHotel.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
@@ -229,8 +241,10 @@ namespace MonPDReborn.Models.DataOP
                             .ToList()
                             .Select(x => new HasilPelaporan
                             {
+                                NPWPD = x.Npwpd,
                                 NOP = x.Nop,
                                 Nama = x.NamaOp,
+                                NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Wilayah = getWilayahParkir.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
@@ -269,8 +283,10 @@ namespace MonPDReborn.Models.DataOP
                             .ToList()
                             .Select(x => new HasilPelaporan
                             {
+                                NPWPD = x.Npwpd,
                                 NOP = x.Nop,
                                 Nama = x.NamaOp,
+                                NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Wilayah = getWilayahHiburan.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
@@ -284,7 +300,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.AddRange(laporHiburan);
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        
+
                         break;
                     case EnumFactory.EPajak.Reklame:
                         break;
@@ -314,8 +330,10 @@ namespace MonPDReborn.Models.DataOP
                             .ToList()
                             .Select(x => new HasilPelaporan
                             {
+                                NPWPD = x.Npwpd,
                                 NOP = x.Nop,
                                 Nama = x.NamaOp,
+                                NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
                                 EnumPajak = (int)JenisPajak,
                                 JenisPajak = JenisPajak.GetDescription(),
                                 Wilayah = getWilayahPbb.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
@@ -459,26 +477,27 @@ namespace MonPDReborn.Models.DataOP
                 return ret;
             }
 
-            public static Dashboard GetDashboard()
+            public static Dashboard GetDashboardData()
             {
                 return new Dashboard
                 {
-                    TotalWP = 150,                
-                    NilaiLaporan = 1_250_000_000, 
-                    MasaPajakTerlapor = 120,      
-                    MasaPajakBlmLapor = 30        
-                }
+                    TotalWP = 150,
+                    NilaiLaporan = 1_250_000_000,
+                    MasaPajakTerlapor = 120,
+                    MasaPajakBlmLapor = 30
+                };
             }
         }
         public class HasilPelaporan
         {
-            public int No { get; set; }
+            public string NPWPD { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string Nama { get; set; } = null!;
             public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string Wilayah { get; set; } = null!;
             public string Status { get; set; } = null!;
+            public decimal NilaiPelaporan { get; set; }
             public int MasaBelumLapor { get; set; }
             public int PajakSeharusnya { get; set; }
             public int PajakTerlapor { get; set; }

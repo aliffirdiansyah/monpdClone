@@ -19,8 +19,32 @@
 
         columns.AddFor(c => c.AkpTahun).Caption("AKP 1 TAHUN").Format("#,###");
         columns.AddFor(c => c.RealisasiHariAccrual).Caption("REALISASI HARI").Format("#,###");
-        columns.AddFor(c => c.RealisasiSDHariAccrual).Caption("REALISASI SAMPAI DENGAN").Format("#,###");
+        columns.AddFor(c => c.RealisasiSDHariAccrual).Caption("REALISASI SAMPAI DENGAN " + Model.tgl.ToString("dd MMM yyyy")).Format("#,###");
         columns.AddFor(c => c.PersenAccrual).Caption("PERSENTASE").Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"));
 
     })
+    .Summary(s => s
+        .TotalItems(t =>
+        {
+            t.AddFor(c => c.JenisPajak)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total");
+                
+            t.AddFor(c => c.AkpTahun)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            t.AddFor(c => c.RealisasiHariAccrual)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            t.AddFor(c => c.RealisasiSDHariAccrual)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+        })
+    )
     )

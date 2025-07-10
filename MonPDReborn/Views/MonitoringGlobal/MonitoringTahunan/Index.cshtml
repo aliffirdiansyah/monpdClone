@@ -10,11 +10,15 @@
                 <label class="form-label">Tanggal CutOff</label>
             </div>
             <div class="col-md-3">
-                @(Html.DevExtreme().DateBoxFor(x => x.TanggalCutOff)
-                    .Value(DateTime.Today)
-                    .DisplayFormat("dd/MM/yyyy")
-                    .Type(DateBoxType.Date)
-                    )
+                @Html.TextBoxFor(x => x.TanggalCutOff, new
+                    {
+                        @placeholder = "Masukkan Tgl Akhir",
+                        @class = "form-control",
+                        @type = "text",
+                        @data_provider = "flatpickr",
+                        @data_date_format = "Y-m-d",
+                        @data_deafult_date = "today"
+                    })
             </div>
             <div class="col-md-2">
                 <button type="button" onclick="fnShow()" class="btn btn-primary w-100">
@@ -44,12 +48,15 @@
 
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            fnShow();
+        });
         function fnShow() {
             var tglCutOff = $("#TanggalCutOff").val();
             $.ajax({
                 url: '@Url.Action("Show")',
                 type: 'GET',
-                data: tglCutOff ,
+                data: {tglCutOff },
                 beforeSend: function () {
                     $("#card-Show").hide();
                     $("#loading2-Show").show();
