@@ -20,12 +20,14 @@ namespace MonPDReborn.Models.DataOP
         public class ShowRekap
         {
             public List<RekapOP> DataRekapOPList { get; set; } = new();
+            public Dashboard Data { get; set; } = new Dashboard();
 
             public ShowRekap() { }
 
             public ShowRekap(int tahun)
             {
                 DataRekapOPList = Method.GetDataRekapOPList(tahun);
+                Data = Method.GetDashboardData();
             }
         }
 
@@ -59,6 +61,17 @@ namespace MonPDReborn.Models.DataOP
 
         public class Method
         {
+            public static Dashboard GetDashboardData()
+            {
+                return new Dashboard
+                {
+                    TotalPenghimbauan = 1274,
+                    PenghimbauanAktif = 156,
+                    PenghimbauanSelesai = 103,
+                    TingkatKepatuhan = 11.7,
+                };
+            }
+
             public static List<RekapOP> GetDataRekapOPList(int tahun)
             {
                 var context = DBClass.GetContext();
@@ -2251,6 +2264,16 @@ namespace MonPDReborn.Models.DataOP
             public int Tahun2024 { get; set; }
             public int Tahun2025 { get; set; }
         }
+
+        public class Dashboard
+        {
+            public int TotalPenghimbauan { get; set; }
+            public double PenghimbauanAktif { get; set; }
+            public double PenghimbauanSelesai { get; set; }
+            public double TingkatKepatuhan { get; set; }
+
+        }
+
         public class DataDetailOP
         {
             public IdentitasObjekPajak IdentitasPajak { get; set; } = new();
