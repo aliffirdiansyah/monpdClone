@@ -1,0 +1,21 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.DataTahunPembayaran
+
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>Bulan</th>
+            <th>Tanggal SSPD</th>
+            <th>Realisasi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.DataRealisasi)
+        {
+            <tr>
+                <td>@item.Bulan</td>
+                <td>@item.TglSSPD</td>
+                <td>@item.Realisasi.ToString("N0")</td>
+            </tr>
+        }
+    </tbody>
+</table>

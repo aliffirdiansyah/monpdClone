@@ -1,10 +1,344 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Index
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <a class="btn btn-title-box w-100">
+                <h4 class="mt-sm-2">PENCARIAN OP</h4>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form id="formPencarian" method="get" asp-action="Show" onsubmit="return false;">
+            <div class="row mb-3 align-items-center">
+                <div class="col-lg-3">
+                    @Html.DropDownListFor(model => model.SelectedPajak,
+                    new SelectList(Model.JenisPajakList, "Value", "Text"),
+                                        "Semua Jenis Pajak",
+                                        new { @class = "form-select rounded-pill mb-3", @aria_label = "Default select example", id = "JenisPajak" })
+                </div>
+
+                <div class="col-lg-5">
+                    @(Html.DevExtreme().TextBoxFor(x => x.Keyword)
+                                        .ID("Keyword")
+                                        .Placeholder("Masukkan Keyword")
+                                        .Width("100%")
+                                        )
+                </div>
+
+                <div class="col-lg-3 text-end">
+                    <button type="button" class="btn btn-sm btn-primary btn-label waves-effect waves-light rounded-pill" onclick="fnShow()">
+                        <i class="ri-search-eye-line label-icon align-middle rounded-pill fs-16 me-2"></i> Cari
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-center">
+    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div id="card-Show" class="card" style="display:none">
+    <div class="card-header d-flex">
+        <div class="flex-grow-1">
+            <h4 class="card-title">Hasil Pencarian Objek Pajak</h4>
+        </div>
+        <div class="flex-shrink-0">
+            <button id="btnLoadDetail" class="btn btn-primary">
+                <i class="ri-search-line"></i> Lihat Detail
+
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="Show"></div>
+    </div>
+</div>
+
+
+
+@* @section Scripts {
+    <script>
+        function fnShow() {
+            const jenisPajak = $("#JenisPajak").val();
+            const keyword = $("#Keyword").dxTextBox("instance").option("value");
+
+            if (!keyword) {
+                alert("⚠️ Silakan masukkan keyword.");
+                return;
+            }
+
+            $("#loading2-Show").show();
+            $("#card-Show").hide();
+            $("#card-Detail").hide();
+            $("#Show").empty();
+            $("#Detail").empty();
+
+            $.get('@Url.Action("Show")', {
+                jenisPajak: jenisPajak,
+                keyword: keyword
+            }).done(function (html) {
+                $("#Show").html(html);
+                $("#card-Show").show();
+
+                // Ambil NOP & JenisPajak dari hasil Show
+                const nop = $("#Show").find("[data-nop]").data("nop");
+                const jp = $("#Show").find("[data-jenispajak]").data("jenispajak");
+
+                if (nop && jp) {
+                    loadDetail(nop, jp);
+                }
+            }).fail(function () {
+                alert("❌ Gagal memuat data pencarian.");
+            }).always(function () {
+                $("#loading2-Show").hide();
+            });
+        }
+
+        function loadDetail(nop, jenisPajak) {
+            $.get('@Url.Action("Detail")', {
+                nop: nop,
+                jenisPajak: jenisPajak,
+                tahunKiri: new Date().getFullYear(),
+                tahunKanan: new Date().getFullYear() - 1
+            }).done(function (html) {
+                $("#Detail").html(html);
+                $("#card-Detail").show();
+            }).fail(function () {
+                $("#Detail").html('<div class="text-danger">⚠ Gagal memuat detail.</div>');
+                $("#card-Detail").show();
+            });
+        }
+    </script>
+} *@
+
+
+@section Scripts {
+    <script>
+        function fnShow() {
+            let jenisPajak = $("#JenisPajak").val();
+            let keyword = $("#Keyword").dxTextBox("instance").option("value");
+
+            if (!jenisPajak || !keyword) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '<b style="color:orange">Peringatan</b>',
+                    text: 'Silakan pilih Jenis Pajak dan isi Keyword terlebih dahulu.'
+                });
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: {
+                    jenisPajak: jenisPajak,
+                    keyword: keyword
+                },
+                beforeSend: function () {
+                    $("#card-Show").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $("#Show").html(response);
+                        $("#card-Show").show();
+
+                        // setelah Show tampil, attach event listener untuk dropdown tahun di Detail
+                        attachDetailEvents();
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+
+       // Fungsi untuk bind event di _Detail dropdown
+        function attachDetailEvents() {
+            $("#tahunKiri").off("change").on("change", function () {
+                let tahun = $(this).val();
+                loadDetailTabel("#tabelKiri", tahun);
+            });
+
+            $("#tahunKanan").off("change").on("change", function () {
+                let tahun = $(this).val();
+                loadDetailTabel("#tabelKanan", tahun);
+            });
+        }
+
+        // function loadDetailTabel(targetDiv, tahun) {
+        //     $.get('@Url.Action("Detail")', {
+        //         nop: $("#Show").data("nop"),
+        //         jenisPajak: $("#Show").data("jenispajak"),
+        //         tahun: tahun
+        //     }, function (html) {
+        //         $(targetDiv).html(html);
+        //     });
+        // }
+
+        $(document).ready(function () {
+            // kalau ada default keyword dari model, panggil show
+            @if (!string.IsNullOrEmpty(Model.Keyword))
+            {
+                    <text>fnShow();</text>
+            }
+        });
+
+                      $(document).on('click', '#btnLoadDetail', function () {
+            loadDetail();
+        });
+
+         function loadDetail() {
+            const nop = $("#Keyword").dxTextBox("instance").option("value");
+            const jenisPajak = $("#JenisPajak").val();
+
+            if (!nop || !jenisPajak) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '<b style="color:orange">Peringatan</b>',
+                    text: 'Silakan pilih Jenis Pajak dan isi Keyword terlebih dahulu.'
+                });
+                return;
+            }
+
+             $("#detailContainer").load('/ProfilePembayaranOP/Detail?' + $.param({
+                nop: nop,
+                jenisPajak: jenisPajak,
+                tahunKiri: new Date().getFullYear(),  // atau dari dropdown/tahun default
+                tahunKanan: new Date().getFullYear()  // atau dari dropdown/tahun default
+            }));
+
+        }
+
+
+    </script>
 }
+
+@* 
+@section Scripts {
+    @if (!string.IsNullOrEmpty(Model.Keyword))
+    {
+        <script>
+            $(document).ready(function () {
+                fnShow();
+            });
+        </script>
+    }
+
+    <script>
+        function fnShow() {
+            const jenisPajak = $("#JenisPajak").val();
+            const keyword = $("#Keyword").dxTextBox("instance").option("value") || "";
+
+            // opsional: validasi jika Anda ingin jenis pajak wajib
+            if (jenisPajak === "" || jenisPajak === null || jenisPajak === undefined) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '<b style="color:orange">Peringatan</b>',
+                    text: 'Silakan pilih jenis pajak terlebih dahulu.'
+                });
+                return;
+            }
+
+            const formData = {
+                jenisPajak: jenisPajak,
+                keyword: keyword
+            };
+
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: formData,
+                beforeSend: function () {
+                    $("#card-Show").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $("#card-Show").show();
+                        $("#Show").html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+    </script>
+} *@
+
+
+
+@* @section Scripts{
+    @if (!string.IsNullOrEmpty(Model.Keyword))
+    {
+        <script>
+            $(document).ready(function () {
+                fnShow();
+            });
+        </script>
+    }
+    <script>
+        function fnShow() {
+            var formData = $("#formPencarian").serialize();
+
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: formData,
+                beforeSend: function () {
+                    $("#card-Show").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    if(response.Status === undefined){
+                        $("#card-Show").show();
+                        $("#Show").html(response);
+                    } else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+    </script>
+} *@
 
 @*<div class="row">
     <div class="col-lg-12">

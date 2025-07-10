@@ -64,17 +64,18 @@
                     <div class="col-lg col-md-6">
                         <label for="filterJenisPajak" class="form-label ms-2">Jenis Pajak</label>
                         <select id="filterJenisPajak" class="form-select rounded-pill" aria-label="Pilih Jenis Pajak">
-                            <option selected>Semua Jenis Pajak</option>
-                            <option value="hotel">Pajak Hotel</option>
-                            <option value="restoran">Pajak Restoran</option>
-                            <option value="hiburan">Pajak Hiburan</option>
-                            <option value="reklame">Pajak Reklame</option>
-                            <option value="parkir">Pajak Parkir</option>
+                            <option value="" selected>Semua Jenis Pajak</option>
+
+                            <option value="Pajak Hotel">Pajak Hotel</option>
+                            <option value="Pajak Restoran">Pajak Restoran</option>
+                            <option value="Pajak Hiburan">Pajak Hiburan</option>
+                            <option value="Pajak Reklame">Pajak Reklame</option>
+                            <option value="Pajak Parkir">Pajak Parkir</option>
                         </select>
                     </div>
 
                     <div class="col-lg col-md-6">
-                        <button type="button" class="btn btn-success rounded-pill w-100">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success rounded-pill w-100">
                             <i class="ri-filter-3-line me-1"></i> Terapkan
                         </button>
                     </div>
@@ -206,7 +207,7 @@
             });
         }
 
-            document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
@@ -216,6 +217,15 @@
 
             // Atur nilai input tanggal awal ke hari ini
             document.getElementById('tanggalAwal').value = formattedToday;
+        });
+
+        $(document).ready(function() {
+            // Event handler saat tombol filter diklik
+            $('#btnTerapkanFilter').on('click', function () {
+                // Cukup panggil 'refresh' pada DataGrid.
+                // Grid akan otomatis mengambil parameter baru dari 'LoadParams'.
+                $('#KontrolPrediksiGrid').dxDataGrid('instance').refresh();
+            });
         });
 
     </script>
