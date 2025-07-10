@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models.MonitoringGlobal;
 using static MonPDReborn.Lib.General.ResponseBase;
@@ -55,6 +57,17 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
+        }
+
+        [HttpGet]
+        public IActionResult GetMonitoringData(int tahun, int bulan, string jenisPajak, DataSourceLoadOptions loadOptions)
+        {
+            // Panggil method dari ViewModel dengan meneruskan parameter filter
+            var filteredData = MonitoringHarianVM.Method.GetFilteredData(tahun, bulan, jenisPajak);
+
+            // Proses data menggunakan DevExtreme loader dan kembalikan sebagai JSON
+            var result = DataSourceLoader.Load(filteredData, loadOptions);
+            return Json(result);
         }
 
         //public IActionResult Index()
