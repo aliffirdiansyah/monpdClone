@@ -1,5 +1,90 @@
 ﻿@model MonPDReborn.Models.DataOP.PelaporanOPVM.Show
 
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card crm-widget">
+            <div class="card-body p-0">
+                <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
+                    <div class="col">
+                        <div class="py-4 px-3">
+                            <h5 class="text-muted text-uppercase fs-13">Total Wajib Pajak</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bx bx-group fs-3 text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h2 class="mb-0">
+                                        <span class="counter-value" date-target="@Model.Data.TotalWP">@Model.Data.TotalWP.ToString("n0")</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="py-4 px-3">
+                            <h5 class="text-muted text-uppercase fs-13">Total Nilai Laporan</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bx bx-money fs-3 text-success"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h2 class="mb-0">
+                                        <span class="counter-value" date-target="@Model.Data.NilaiLaporan">@Model.Data.NilaiLaporan.ToString("n0")</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="py-4 px-3">
+                            <h5 class="text-muted text-uppercase fs-13">Masa Pajak Terlapor</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bx bx-calendar-check fs-3 text-info"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h2 class="mb-0">
+                                        <span class="counter-value" date-target="@Model.Data.MasaPajakTerlapor">@Model.Data.MasaPajakTerlapor.ToString("n0")</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="py-4 px-3">
+                            <h5 class="text-muted text-uppercase fs-13">Masa Pajak Belum Lapor</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bx bx-calendar-exclamation fs-3 text-warning"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h2 class="mb-0">
+                                        <span class="counter-value" date-target="@Model.Data.MasaPajakBlmLapor">@Model.Data.MasaPajakBlmLapor.ToString("n0")</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="py-4 px-3">
+                            <h5 class="text-muted text-uppercase fs-13">Tingkat Kepatuhan</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bx bx-check-shield fs-3 text-success"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h2 class="mb-0">
+                                        <span class="counter-value" date-target="@Model.Data.TingkatKepatuhan">@Model.Data.TingkatKepatuhan %</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PelaporanOPVM.HasilPelaporan>()
@@ -25,27 +110,28 @@
         })
         .Columns(columns =>
         {
-            columns.AddFor(m => m.No).Caption("No");
+            columns.AddFor(m => m.NPWPD).Caption("NPWPD");
             columns.AddFor(m => m.NOP).Caption("NOP");
             columns.AddFor(m => m.Nama).Caption("Nama OP");
             columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
             columns.AddFor(m => m.Alamat).Caption("Alamat");
             columns.AddFor(m => m.Wilayah).Caption("Wilayah");
+            columns.AddFor(m => m.NilaiPelaporan).Caption("Nilai Pelaporan");
             columns.AddFor(m => m.PajakSeharusnya).Caption("Pajak Seharusnya");
             columns.AddFor(m => m.PajakTerlapor).Caption("Pajak Terlapor");
             columns.AddFor(m => m.MasaBelumLapor).Caption("Masa Belum Lapor");
             columns.AddFor(m => m.Status).Caption("Status");
             columns.Add()
-                .Type(GridCommandColumnType.Buttons)
-                .Buttons(b =>
-                {
-                    b.Add()
-                .Text("Detail")
-                .Icon("search")
-                .OnClick("onDetailClick");
-             });
-            
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b =>
+            {
+                b.Add()
+            .Text("Detail")
+            .Icon("search")
+            .OnClick("onDetailClick");
+            });
+
         })
-        
+
         )
 </div>
