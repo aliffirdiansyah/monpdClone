@@ -20,20 +20,17 @@ namespace ParkirWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                var nextRun = now.AddDays(1); // besok jam 00:00
+                var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 // Eksekusi tugas
                 try
@@ -436,7 +433,7 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
                                     }
 
                                     _contMonPd.SaveChanges();
-                                    Console.WriteLine($"{DateTime.Now} DB_OP_HPP {tahunAmbil} {item.Nop}");
+                                    Console.WriteLine($"{DateTime.Now} DB_OP_HPP {i} {item.Nop}");
                                 }
                             }
 
@@ -885,26 +882,25 @@ LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
             }
 
             //PEMBAYARAN PHR
-            var _contPhr = DBClass.GetPhrhContext();
+            var _contHpp2 = DBClass.GetHppContext();
 
             Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR)");
             var sql1 = @"
                 SELECT 	REPLACE(FK_NOP, '.', '') NOP,
 	                    TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,
 	                    BULAN_PAJAK,
-                        TGL_SETORAN TRANSACTION_DATE,
-		                JML_POKOK NOMINAL_POKOK,
-		                JML_DENDA NOMINAL_SANKSI,
-		                0 NOMINAL_ADMINISTRASI,
-		                0 NOMINAL_LAINNYA,
-		                0 PENGURANG_POKOK,
-		                0 PENGURANG_SANSKSI,
-		                1 SEQ_KETETAPAN
-                FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
-                JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
-                WHERE NAMA_PAJAK_DAERAH='PARKIR' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
+	                    TGL_SETORAN TRANSACTION_DATE,
+	                    JML_POKOK NOMINAL_POKOK,
+	                    JML_DENDA NOMINAL_SANKSI,
+	                    0 NOMINAL_ADMINISTRASI,
+	                    0 NOMINAL_LAINNYA,
+	                    0 PENGURANG_POKOK,
+	                    0 PENGURANG_SANSKSI,
+	                    1 SEQ_KETETAPAN
+	            FROM VW_SIMPADA_SSPD
+	            WHERE NAMA_PAJAK_DAERAH='PARKIR' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
             ";
-            var sspdList = await _contPhr.Set<SSPDPbjt>().FromSqlRaw(sql1).ToListAsync();
+            var sspdList = await _contHpp2.Set<SSPDPbjt>().FromSqlRaw(sql1).ToListAsync();
             Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] OP (SSPD) (PHR)");
 
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
