@@ -50,13 +50,13 @@ namespace MonPDLib.General
         public static string FormatRupiah(decimal nominal)
         {
             if (nominal >= 1_000_000_000_000)
-                return $"Rp {nominal / 1_000_000_000_000M:N1} T";
+                return $"Rp {nominal / 1_000_000_000_000M:N2} T";
             else if (nominal >= 1_000_000_000)
-                return $"Rp {nominal / 1_000_000_000M:N1} M";
+                return $"Rp {nominal / 1_000_000_000M:N2} M";
             else if (nominal >= 1_000_000)
-                return $"Rp {nominal / 1_000_000M:N1} Juta";
+                return $"Rp {nominal / 1_000_000M:N2} Juta";
             else if (nominal >= 1_000)
-                return $"Rp {nominal / 1_000M:N1} Ribu";
+                return $"Rp {nominal / 1_000M:N2} Ribu";
             else
                 return $"Rp {nominal:N0}";
         }
