@@ -18,7 +18,7 @@ namespace MonPDReborn.Models.DataOP
             {
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
-                    .Where(x => x != EnumFactory.EPajak.PBB && x != EnumFactory.EPajak.OpsenBbnkb && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.Reklame)
+                    .Where(x => x != EnumFactory.EPajak.PBB && x != EnumFactory.EPajak.OpsenBbnkb && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.AirTanah)
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
@@ -35,6 +35,10 @@ namespace MonPDReborn.Models.DataOP
 
             public Show(EnumFactory.EPajak JenisPajak)
             {
+                if ((int)JenisPajak == 0)
+                {
+                    throw new ArgumentException("Harap Pilih Jenis Pajak!");
+                }
                 DaftarHasil = Method.GetPalporanList(JenisPajak);
             }
 
@@ -278,44 +282,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.AddRange(laporHiburan);
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        var dataTerlaporAbt = context.DbMonAbts
-                        .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
-                        .GroupBy(x => x.Nop)
-                        .Select(g => new
-                        {
-                            Nop = g.Key,
-                            Count = g.Count()
-                        })
-                        .ToList();
-
-                        var getWilayahAbt = context.DbOpAbts
-                            .Select(x => new
-                            {
-                                Nop = x.Nop,
-                                Wilayah = x.WilayahPajak
-                            })
-                            .ToList();
-
-                        var laporAbt = context.DbMonAbts
-                            .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
-                            .GroupBy(x => x.Nop)
-                            .Select(g => g.First())
-                            .ToList()
-                            .Select(x => new HasilPelaporan
-                            {
-                                NOP = x.Nop,
-                                Nama = x.NamaOp,
-                                EnumPajak = (int)JenisPajak,
-                                JenisPajak = JenisPajak.GetDescription(),
-                                Wilayah = getWilayahAbt.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
-                                Status = "",
-                                PajakTerlapor = dataTerlaporAbt.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0,
-                                MasaBelumLapor = 12 - (dataTerlaporAbt.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0),
-                                PajakSeharusnya = 12,
-                                Alamat = x.AlamatOp
-                            }).ToList();
-
-                        ret.AddRange(laporAbt);
+                        
                         break;
                     case EnumFactory.EPajak.Reklame:
                         break;

@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
+using MonPDReborn.Lib.General;
+using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -12,6 +15,7 @@ namespace MonPDReborn.Controllers.DataOP
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
         public PenetapanOPController(ILogger<PenetapanOPController> logger)
         {
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
@@ -25,22 +29,39 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new Models.DataOP.PenetapanOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
-            catch (Exception)
+
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
-        public IActionResult Show(string keyword)
+        public IActionResult Show(int jenisPajak, int tahun, int bulan)
         {
             try
             {
-                var model = new Models.DataOP.PenetapanOPVM.Show(keyword);
+                var model = new Models.DataOP.PenetapanOPVM.Show((EnumFactory.EPajak)jenisPajak, tahun, bulan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
-            {
 
-                throw;
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
       /*  public IActionResult Detail(string nop)

@@ -268,16 +268,17 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.Reklame:
-                        //var dataRekalme = context.DbOpRekalmes.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()))).ToList();
-                        //var RekalmeTahunIni = dataRekalme.Where(x => x.TahunBuku == currentYear).FirstOrDefault();
-                        //if (RekalmeTahunIni != null)
-                        //{
-                        //    ret.NOP = RekalmeTahunIni.Nop;
-                        //    ret.AlamatLengkap = RekalmeTahunIni.AlamatOp;
-                        //    ret.Kecamatan = RekalmeTahunIni.AlamatOpKdCamat;
-                        //    ret.Kelurahan = RekalmeTahunIni.AlamatOpKdLurah;
-                        //    ret.WilayahPajak = RekalmeTahunIni.WilayahPajak;
-                        //}
+                        var dataRekalme = context.DbOpReklames.Where(x => (x.Nop == keyword) || (x.Nama.ToUpper().Contains(keyword.ToUpper()))).ToList();
+                        var RekalmeTahunIni = dataRekalme.Where(x => x.TahunBuku == currentYear).FirstOrDefault();
+                        if (RekalmeTahunIni != null)
+                        {
+                            ret.NOP = RekalmeTahunIni.Nop;
+                            ret.NamaObjekPajak = RekalmeTahunIni.Nama;
+                            ret.AlamatLengkap = RekalmeTahunIni.Alamat;
+                            ret.Kecamatan = RekalmeTahunIni.Kecamatan;
+                            ret.Kelurahan = RekalmeTahunIni.Nmkelurahan;
+                            ret.WilayahPajak = "-";
+                        }
                         break;
                     case EnumFactory.EPajak.PBB:
                         var dataPbb = context.DbOpPbbs.Where(x => (x.Nop == keyword) || (x.WpNama.ToUpper().Contains(keyword.ToUpper()))).ToList();
