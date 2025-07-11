@@ -1,4 +1,5 @@
 ﻿@model MonPDReborn.Models.DataOP.PenetapanOPVM.Index
+@using DevExtreme.AspNet.Mvc
 
 @{
     ViewBag.Title = "Dashboard Penetapan Pajak";
@@ -17,49 +18,54 @@
             </div>
             <div class="card-body">
                 <h5><i class="dx-icon-filter"></i> Filter Data</h5>
-                <div class="row">
-                    <div class="col-lg-4">
-                        @Html.DropDownListFor(model => model.SelectedPajak,
-                                 new SelectList(Model.JenisPajakList, "Value", "Text"),
-                                 "Pilih Jenis Pajak",
-                                 new { @class = "form-select mb-3" })
+                
+                <div class="row g-3 align-items-center">
+
+                    <div class="col-lg-4 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedPajak)
+                            .ID("selectPajak")
+                            .DataSource(Model.JenisPajakList)
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .Placeholder("Pilih Jenis Pajak")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
                     </div>
-                    <div class="col-lg-3">
-                        @Html.DropDownListFor(model => model.SelectedTahun,
-                                 new SelectList(Model.TahunList, "Value", "Text"),
-                                 "Pilih Tahun",
-                                 new { @class = "form-select mb-3" })
+
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTahun)
+                            .ID("selectTahun")
+                            .DataSource(Model.TahunList)
+                            .ValueExpr("Value")
+                            .Value(DateTime.Now.Year.ToString())
+                            .DisplayExpr("Text")
+                            .Placeholder("Pilih Tahun")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
                     </div>
-                    <div class="col-lg-3">
-                        @Html.DropDownListFor(model => model.SelectedBulan,
-                                 new SelectList(Model.BulanList, "Value", "Text"),
-                                 "Pilih Bulan",
-                                 new { @class = "form-select mb-3" })
+
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedBulan)
+                            .ID("selectBulan")
+                            .DataSource(Model.BulanList)
+                            .ValueExpr("Value")
+                            .Value(DateTime.Now.Month.ToString())
+                            .DisplayExpr("Text")
+                            .Placeholder("Pilih Bulan")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
                     </div>
-                    <div class="col-lg-2">
-                        <button class="btn btn-primary w-100" onclick="loadShow()"><i class="dx-icon-search"></i> Terapkan Filter</button>
+
+                    <div class="col-lg-2 col-md-12">
+                        <button id="btnTerapkan" class="btn btn-success w-80">
+                            <i class="ri-filter-3-line me-1"></i> Terapkan Filter
+                        </button>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
-
-    
-@* 
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Tren Penetapan Pajak
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div id="column_chart"  data-colors='["--vz-danger", "--vz-primary", "--vz-success"]' class="apex-charts" dir="ltr"></div>
-            </div>
-        </div>
-    </div> *@
 
     <div class="col-lg-12">
         <div class="card">
@@ -80,29 +86,37 @@
 
 @section Scripts{
     <script>
-       
+        // Fungsi untuk memuat data berdasarkan filter
         function loadShow() {
-            let jenisPajak = $("#SelectedPajak").val();
-            let tahun = $("#SelectedTahun").val();
-            let bulan = $("#SelectedBulan").val();
+            // 1. Ambil nilai dari komponen DevExtreme dengan cara yang BENAR
+            let jenisPajak = $("#selectPajak").dxSelectBox("instance").option("value");
+            let tahun = $("#selectTahun").dxSelectBox("instance").option("value");
+            let bulan = $("#selectBulan").dxSelectBox("instance").option("value");
+
+            // 2. Siapkan data untuk dikirim
+            // Jika nilai null (karena placeholder dipilih), kirim 0 atau string kosong
+            const filterData = {
+                jenisPajak: jenisPajak === null ? 0 : jenisPajak,
+                tahun: tahun === null ? 0 : tahun,
+                bulan: bulan === null ? 0 : bulan
+            };
 
             $.ajax({
-                url: '@Url.Action("Show", "PenetapanOP")',
+                url: '@Url.Action("Show", "PenetapanOP")', // Pastikan controller & action sudah benar
                 type: 'GET',
-                data: {
-                    jenisPajak: jenisPajak,
-                    tahun: tahun,
-                    bulan: bulan
-                },
+                data: filterData, // Kirim objek data yang sudah benar
                 success: function (response) {
-                    if (response.Status === undefined) {
+                    // Cek jika respons adalah HTML, bukan objek JSON error
+                    if (typeof response === 'string' && response.includes("<div")) {
                         $("#Show").html(response);
-                    } else {
+                    } else if (response.Status !== undefined) {
                         Swal.fire({
                             icon: 'warning',
                             title: '<b style="color:orange">Peringatan</b>',
                             text: response.Message
                         });
+                        // Kosongkan area tabel jika ada peringatan
+                        $('#Show').html('<div class="alert alert-warning text-center">' + response.Message + '</div>');
                     }
                 },
                 error: function () {
@@ -111,9 +125,13 @@
             });
         }
 
-        function onDetailClick(){
+        // 3. Gunakan event handler jQuery yang lebih baik
+        $(document).ready(function () {
+            // Ketika tombol filter diklik
+            $("#btnTerapkan").on("click", function () {
+                loadShow();
+            });
+        });
 
-        }
-</script>
-
+    </script>
 }
