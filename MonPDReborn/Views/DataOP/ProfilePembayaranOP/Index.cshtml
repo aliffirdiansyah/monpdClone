@@ -1,42 +1,45 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Index
 
+@{
+    ViewData["Title"] = "Profil Pembayaran Objek Pajak";
+    Layout = "_Layout";
+}
 
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <a class="btn btn-title-box w-100">
-                <h4 class="mt-sm-2">PENCARIAN OP</h4>
-            </a>
-        </div>
-    </div>
-</div>
 
 <div class="card">
+    <div class="card-header d-flex">
+        <div class="flex-grow-1">
+            <h4 class="card-title fs-16 mb-1">
+                Profil Pembayaran Objek Pajak
+            </h4>
+        </div>
+    </div>
     <div class="card-body">
         <form id="formPencarian" method="get" asp-action="Show" onsubmit="return false;">
-            <div class="row mb-3 align-items-center">
+            <div class="row mb-3 align-items-center gx-2">
                 <div class="col-lg-3">
                     @Html.DropDownListFor(model => model.SelectedPajak,
                     new SelectList(Model.JenisPajakList, "Value", "Text"),
                                         "Semua Jenis Pajak",
-                                        new { @class = "form-select rounded-pill mb-3", @aria_label = "Default select example", id = "JenisPajak" })
+                                        new { @class = "form-select rounded-pill", @aria_label = "Default select example", id = "JenisPajak" })
                 </div>
 
-                <div class="col-lg-5">
-                    @(Html.DevExtreme().TextBoxFor(x => x.Keyword)
-                                        .ID("Keyword")
-                                        .Placeholder("Masukkan Keyword")
-                                        .Width("100%")
-                                        )
-                </div>
-
-                <div class="col-lg-3 text-end">
-                    <button type="button" class="btn btn-sm btn-primary btn-label waves-effect waves-light rounded-pill" onclick="fnShow()">
-                        <i class="ri-search-eye-line label-icon align-middle rounded-pill fs-16 me-2"></i> Cari
+                <div class="col-lg-6 d-flex">
+                    @Html.TextBoxFor(model => model.Keyword, new {
+                                        @class = "form-control rounded-pill",
+                                        @placeholder = "Masukkan Keyword",
+                                        id = "Keyword"
+                                        })
+                    <button type="button"
+                            class="btn btn-primary rounded-pill ms-2"
+                            style="min-width: 100px;"
+                            onclick="fnShow()">
+                        <i class="ri-search-eye-line label-icon align-middle fs-16 me-1"></i> Cari
                     </button>
                 </div>
             </div>
         </form>
+
     </div>
 </div>
 
@@ -49,7 +52,7 @@
 <div id="card-Show" class="card" style="display:none">
     <div class="card-header d-flex">
         <div class="flex-grow-1">
-            <h4 class="card-title">Hasil Pencarian Objek Pajak</h4>
+            <h4 class="card-title">Profil Pembayaran Objek Pajak</h4>
         </div>
         <div class="flex-shrink-0">
             <button id="btnLoadDetail" class="btn btn-primary">
@@ -65,67 +68,11 @@
 
 
 
-@* @section Scripts {
-    <script>
-        function fnShow() {
-            const jenisPajak = $("#JenisPajak").val();
-            const keyword = $("#Keyword").dxTextBox("instance").option("value");
-
-            if (!keyword) {
-                alert("⚠️ Silakan masukkan keyword.");
-                return;
-            }
-
-            $("#loading2-Show").show();
-            $("#card-Show").hide();
-            $("#card-Detail").hide();
-            $("#Show").empty();
-            $("#Detail").empty();
-
-            $.get('@Url.Action("Show")', {
-                jenisPajak: jenisPajak,
-                keyword: keyword
-            }).done(function (html) {
-                $("#Show").html(html);
-                $("#card-Show").show();
-
-                // Ambil NOP & JenisPajak dari hasil Show
-                const nop = $("#Show").find("[data-nop]").data("nop");
-                const jp = $("#Show").find("[data-jenispajak]").data("jenispajak");
-
-                if (nop && jp) {
-                    loadDetail(nop, jp);
-                }
-            }).fail(function () {
-                alert("❌ Gagal memuat data pencarian.");
-            }).always(function () {
-                $("#loading2-Show").hide();
-            });
-        }
-
-        function loadDetail(nop, jenisPajak) {
-            $.get('@Url.Action("Detail")', {
-                nop: nop,
-                jenisPajak: jenisPajak,
-                tahunKiri: new Date().getFullYear(),
-                tahunKanan: new Date().getFullYear() - 1
-            }).done(function (html) {
-                $("#Detail").html(html);
-                $("#card-Detail").show();
-            }).fail(function () {
-                $("#Detail").html('<div class="text-danger">⚠ Gagal memuat detail.</div>');
-                $("#card-Detail").show();
-            });
-        }
-    </script>
-} *@
-
-
 @section Scripts {
     <script>
         function fnShow() {
+            let keyword = $("#Keyword").val();
             let jenisPajak = $("#JenisPajak").val();
-            let keyword = $("#Keyword").dxTextBox("instance").option("value");
 
             if (!jenisPajak || !keyword) {
                 Swal.fire({
@@ -184,16 +131,7 @@
             });
         }
 
-        // function loadDetailTabel(targetDiv, tahun) {
-        //     $.get('@Url.Action("Detail")', {
-        //         nop: $("#Show").data("nop"),
-        //         jenisPajak: $("#Show").data("jenispajak"),
-        //         tahun: tahun
-        //     }, function (html) {
-        //         $(targetDiv).html(html);
-        //     });
-        // }
-
+        
         $(document).ready(function () {
             // kalau ada default keyword dari model, panggil show
             @if (!string.IsNullOrEmpty(Model.Keyword))
@@ -202,12 +140,12 @@
             }
         });
 
-                      $(document).on('click', '#btnLoadDetail', function () {
+        $(document).on('click', '#btnLoadDetail', function () {
             loadDetail();
         });
 
          function loadDetail() {
-            const nop = $("#Keyword").dxTextBox("instance").option("value");
+            const nop = $("#Keyword").val();
             const jenisPajak = $("#JenisPajak").val();
 
             if (!nop || !jenisPajak) {
@@ -253,307 +191,3 @@
 
     </script>
 }
-
-@* 
-@section Scripts {
-    @if (!string.IsNullOrEmpty(Model.Keyword))
-    {
-        <script>
-            $(document).ready(function () {
-                fnShow();
-            });
-        </script>
-    }
-
-    <script>
-        function fnShow() {
-            const jenisPajak = $("#JenisPajak").val();
-            const keyword = $("#Keyword").dxTextBox("instance").option("value") || "";
-
-            // opsional: validasi jika Anda ingin jenis pajak wajib
-            if (jenisPajak === "" || jenisPajak === null || jenisPajak === undefined) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '<b style="color:orange">Peringatan</b>',
-                    text: 'Silakan pilih jenis pajak terlebih dahulu.'
-                });
-                return;
-            }
-
-            const formData = {
-                jenisPajak: jenisPajak,
-                keyword: keyword
-            };
-
-            $.ajax({
-                url: '@Url.Action("Show")',
-                type: 'GET',
-                data: formData,
-                beforeSend: function () {
-                    $("#card-Show").hide();
-                    $("#loading2-Show").show();
-                },
-                success: function (response) {
-                    if (response.Status === undefined) {
-                        $("#card-Show").show();
-                        $("#Show").html(response);
-                    } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        });
-                    }
-                },
-                error: function () {
-                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                },
-                complete: function () {
-                    $("#loading2-Show").hide();
-                }
-            });
-        }
-    </script>
-} *@
-
-
-
-@* @section Scripts{
-    @if (!string.IsNullOrEmpty(Model.Keyword))
-    {
-        <script>
-            $(document).ready(function () {
-                fnShow();
-            });
-        </script>
-    }
-    <script>
-        function fnShow() {
-            var formData = $("#formPencarian").serialize();
-
-            $.ajax({
-                url: '@Url.Action("Show")',
-                type: 'GET',
-                data: formData,
-                beforeSend: function () {
-                    $("#card-Show").hide();
-                    $("#loading2-Show").show();
-                },
-                success: function (response) {
-                    if(response.Status === undefined){
-                        $("#card-Show").show();
-                        $("#Show").html(response);
-                    } else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
-                },
-                error: function (xhr, status, error) {
-                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                },
-                complete: function () {
-                    $("#loading2-Show").hide();
-                }
-            });
-        }
-    </script>
-} *@
-
-@*<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Profil Pembayaran
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-3 gap-2">
-                    @{
-                        Html.DevExtreme().TextBox()
-                        .ID("searchBox")
-                        .Placeholder("Cari berdasarkan Nama Objek Pajak...")
-                        .ShowClearButton(true)
-                        .Width("300px")
-                        .Render();
-                    }
-                    @{
-                        Html.DevExtreme().Button()
-                        .ID("btnSearch")
-                        .Text("Cari")
-                        .Type(ButtonType.Default)
-                        .Icon("search")
-                        .OnClick("onSearchClick")
-                        .Render();
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Identitas Objek Pajak
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                @{
-                    var profilOP = new[] {
-                                new { Label = "NOP", Value = Model.IdentitasPajak.NOP },
-                                new { Label = "Nama Objek Pajak", Value = Model.IdentitasPajak.NamaObjekPajak },
-                                new { Label = "Alamat Lengkap", Value = Model.IdentitasPajak.AlamatLengkap },
-                                new { Label = "Kecamatan - Kelurahan", Value = Model.IdentitasPajak.Kecamatan_Kelurahan }
-                                };
-                }
-                @{
-                    Html.DevExtreme().List()
-                        .ID("profilOPList")
-                        .DataSource(profilOP)
-                        .ItemTemplate(@<text>
-                                <div class="d-flex justify-content-between align-items-center px-2 py-2 border-bottom">
-                                    <span style="font-weight: bold"><%- Label %></span>
-                                    <span><%- Value %></span>
-                                </div>
-                            </text>
-                    )
-                        .Height("auto")
-                        .Render();
-                }
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card mb-4">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Masa Pajak
-                    </h4>
-                </div>
-                <div class="d-flex gap-2">
-                    @{
-                        Html.DevExtreme().SelectBox()
-                            .ID("tahunMasaSelect")
-                            .DataSource(new[] { 2025, 2024, 2023, 2022 })
-                            .Value(Model.MasaPajakData.Tahun)
-                            .Width(150)
-                            .Placeholder("Pilih Tahun")
-                            .Render();
-                    }
-                </div>
-            </div>
-            <div class="card-body">
-                @{
-                    Html.DevExtreme().DataGrid()
-                    .ID("masaPajakGrid")
-                    .DataSource(Model.MasaPajakData.DataRealisasi)
-                    .ShowBorders(true)
-                    .ColumnAutoWidth(true)
-                    .RowAlternationEnabled(true)
-                    .Columns(columns =>
-                    {
-                        columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
-                        columns.Add()
-                                    .DataField("TglSSPD")
-                                    .Caption("Tgl SSPD")
-                                    .DataType(GridColumnDataType.DateTime)
-                                    .Format("dd/MM/yyyy")
-                                    .Alignment(HorizontalAlignment.Center);
-                        columns.Add()
-                                    .DataField("Realisasi")
-                                    .Caption("Realisasi")
-                                    .Format("#,##0")
-                                    .Alignment(HorizontalAlignment.Right);
-                    })
-                    .Summary(summary => summary.TotalItems(totals =>
-                    {
-                        totals.Add()
-                                    .Column("Realisasi")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Total Masa Pajak: {0}");
-                    }))
-                    .Render();
-                }
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card mb-4">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Masa Bayar
-                    </h4>
-                </div>
-                <div class="d-flex gap-2">
-                    @{
-                        Html.DevExtreme().SelectBox()
-                        .ID("tahunBayarSelect")
-                        .DataSource(new[] { 2025, 2024, 2023, 2022 })
-                        .Value(2025)
-                        .Width(150)
-                        .Placeholder("Pilih Tahun")
-                        .Render();
-                    }
-                </div>
-            </div>
-            <div class="card-body">
-                @{
-                    Html.DevExtreme().DataGrid()
-                    .ID("masaBayarGrid")
-                    .DataSource(Model.MasaBayarData.DataRealisasi)
-                    .ShowBorders(true)
-                    .ColumnAutoWidth(true)
-                    .RowAlternationEnabled(true)
-                    .Columns(columns =>
-                    {
-                        columns.Add().DataField("Bulan").Caption("Bulan").Alignment(HorizontalAlignment.Center);
-                        columns.Add()
-                                    .DataField("TglSSPD")
-                                    .Caption("Tgl SSPD")
-                                    .DataType(GridColumnDataType.DateTime)
-                                    .Format("dd/MM/yyyy")
-                                    .Alignment(HorizontalAlignment.Center);
-                        columns.Add()
-                                    .DataField("Realisasi")
-                                    .Caption("Realisasi")
-                                    .Format("#,##0")
-                                    .Alignment(HorizontalAlignment.Right);
-                    })
-                    .Summary(summary => summary.TotalItems(totals =>
-                    {
-                        totals.Add()
-                                    .Column("Realisasi")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Total Masa Pajak: {0}");
-                    }))
-
-                    .Render();
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function onSearchClick() {
-        var keyword = $("#searchBox").dxTextBox("instance").option("value");
-        var grid = $("#dataGrid").dxDataGrid("instance");
-        grid.searchByText(keyword);
-    }
-</script>
- *@
-
