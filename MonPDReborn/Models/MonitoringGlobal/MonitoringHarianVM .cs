@@ -49,24 +49,34 @@ namespace MonPDReborn.Models.MonitoringGlobal
         }
         public class Show
         {
+            // Properti untuk menampung data yang akan ditampilkan
             public List<MonitoringHarian> DataMonitoringHarianList { get; set; } = new();
             public Dashboard Data { get; set; } = new();
-            public Show(EnumFactory.EPajak jenisPajak, int tahun, int bulan)
+
+            // Constructor ini akan dipanggil oleh Controller dengan membawa nilai filter
+            public Show(int jenisPajakId, int tahun, int bulan)
             {
-                Data = Method.GetDashboardData();
+                // 1. Ambil data list yang sudah difilter
+                DataMonitoringHarianList = Method.GetMonitoringHarianList((EnumFactory.EPajak)jenisPajakId, tahun, bulan);
+
+                // 2. Hitung data summary dashboard DARI data yang sudah difilter di atas
+                Data = Method.GetDashboardData(DataMonitoringHarianList, (EnumFactory.EPajak)jenisPajakId, tahun, bulan);
             }
         }
 
         public class Method
         {
-            public static Dashboard GetDashboardData()
+            // Method untuk menghitung data Dashboard secara dinamis
+            public static Dashboard GetDashboardData(List<MonitoringHarian> filteredData, EnumFactory.EPajak jenisPajak, int tahun, int bulan)
             {
-                return new Dashboard
+                var dashboard = new Dashboard();
+                if (filteredData.Any())
                 {
-                    TotalTarget = 500000000,
-                    TotalRealisasi = 435750000.50,
-                    Pencapaian = 87.15
-                };
+                    dashboard.TotalTarget = filteredData.Sum(x => x.TargetHarian);
+                    dashboard.TotalRealisasi = filteredData.Sum(x => x.Realisasi);
+                    dashboard.Pencapaian = (dashboard.TotalTarget > 0) ? (double)(dashboard.TotalRealisasi / dashboard.TotalTarget) * 100 : 0;
+                }
+                return dashboard;
             }
 
             public static List<MonitoringHarian> GetMonitoringHarianList(EnumFactory.EPajak jenisPajak, int tahun, int bulan)
@@ -612,10 +622,9 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
         public class Dashboard
         {
-            public int TotalTarget { get; set; }
-            public double TotalRealisasi { get; set; }
+            public decimal TotalTarget { get; set; }
+            public decimal TotalRealisasi { get; set; }
             public double Pencapaian { get; set; }
-
         }
 
         public class MonitoringHarian
@@ -625,6 +634,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
             public decimal TargetHarian { get; set; }
             public decimal Realisasi { get; set; }
             public double Pencapaian => TargetHarian > 0 ? Math.Round((double)(Realisasi / TargetHarian) * 100, 2) : 0.0;
+
             public string Status
             {
                 get
