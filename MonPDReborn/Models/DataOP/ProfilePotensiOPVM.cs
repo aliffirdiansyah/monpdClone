@@ -50,15 +50,24 @@
         }
         public class Detail
         {
+            public string NOP { get; set; } = string.Empty;
+            public string JenisPajak { get; set; } = string.Empty;
+            public string? Kategori { get; set; }
+            
             public List<RealisasiBulanan> DataRealisasiBulananList { get; set; } = new();
 
             public Detail() { }
 
-            public Detail(string nop, string jenisPajak)
+            public Detail(string nop, string jenisPajak, string? kategori = null)
             {
-                DataRealisasiBulananList = Method.GetDetailByNOP(nop, jenisPajak);
+                NOP = nop;
+                JenisPajak = jenisPajak;
+                Kategori = kategori;
+
+                DataRealisasiBulananList = Method.GetDetailByNOP(nop, jenisPajak, kategori);
             }
         }
+
 
         public class Method
         {
@@ -79,7 +88,7 @@
             }
 
 
-            public static List<RealisasiBulanan> GetDetailByNOP(string nop, string jenisPajak)
+            public static List<RealisasiBulanan> GetDetailByNOP(string nop, string jenisPajak, string? kategori = null)
             {
                 var dataPotensi = GetAllData()
                     .FirstOrDefault(d => d.NOP == nop && d.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase));
@@ -87,10 +96,17 @@
                 if (dataPotensi != null)
                 {
                     var match = AllRealisasiBulanan
-                        .Where(r => r.NOP == nop)
-                        .ToList();
+                        .Where(r => r.NOP == nop);
 
-                    if (match.Any()) return match;
+                    // jika kategori ada, filter juga berdasarkan kategori
+                    if (!string.IsNullOrWhiteSpace(kategori))
+                    {
+                        match = match.Where(r => r.Kategori != null && r.Kategori.Equals(kategori, StringComparison.OrdinalIgnoreCase));
+                    }
+
+                    var result = match.ToList();
+
+                    if (result.Any()) return result;
                 }
 
                 // fallback
@@ -108,6 +124,7 @@
                     }
                 };
                         }
+
 
 
 
@@ -354,6 +371,7 @@
         public class RealisasiBulanan
         {
             public string NOP { get; set; } = null!;
+            public string Kategori { get; set; } = null!;
             public string NamaWP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public int Kapasitas { get; set; }

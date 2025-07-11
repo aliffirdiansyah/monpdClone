@@ -119,13 +119,21 @@
         });
 
 
-        function onDetail(e) {
+                function onDetail(e) {
             const data = e.row?.data;
             if (!data || !data.NOP || !data.JenisPajak) return;
 
-            const url = `/ProfilePotensiOP/Detail?nop=${encodeURIComponent(data.NOP)}&jenisPajak=${encodeURIComponent(data.JenisPajak)}`;
+            let url = `/ProfilePotensiOP/Detail?jenisPajak=${encodeURIComponent(data.JenisPajak)}&nop=${encodeURIComponent(data.NOP)}`;
+
+            // jika hiburan dan kategori tersedia
+            if (data.JenisPajak.toLowerCase() === 'hiburan' && data.Kategori) {
+                url += `&kategoriHiburan=${encodeURIComponent(data.Kategori)}`;
+            }
+
             window.open(url, '_blank');
         }
+
+
 
         function fnShowRekap() {
             $.ajax({

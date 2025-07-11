@@ -114,43 +114,87 @@ namespace MonPDReborn.Controllers.DataOP
 
            }*/
 
-        public IActionResult Detail(string nop, string jenisPajak)
+        //public IActionResult Detail(string nop, string jenisPajak)
+        //{
+        //var detailModel = new ProfilePotensiOPVM.Detail(nop, jenisPajak);
+
+        //// Ambil entri pertama (kalau hanya satu data per NOP)
+        //var firstData = detailModel.DataRealisasiBulananList.FirstOrDefault();
+
+        //    if (firstData == null)
+        //        return NotFound();
+
+        //// Isi ViewBag
+        //ViewBag.NamaWP = firstData.NamaWP;
+        //    ViewBag.Alamat = firstData.Alamat;
+        //    ViewBag.NOP = firstData.NOP;
+        //    ViewBag.Kapasitas = firstData.Kapasitas;
+        //    ViewBag.PerHari = firstData.Perhari;
+        //    ViewBag.PerTahun = firstData.Pertahun;
+        //    ViewBag.PerBulan = firstData.Perbulan;
+
+        //    // Routing ke view berdasarkan jenis pajak
+        //    switch (jenisPajak.ToLower())
+        //    {
+        //        case "hotel":
+        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", detailModel);
+        //        case "parkir":
+        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", detailModel);
+        //        case "restoran":
+        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", detailModel);
+        //        case "massage":
+        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
+        //        case "gym":
+        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
+        //        case "bioskop":
+        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", detailModel);
+        //        // Tambahkan jenis pajak lain sesuai kebutuhan
+        //        default:
+        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", detailModel);
+        //    }
+        //}
+
+        public IActionResult Detail(string jenisPajak, string? kategoriHiburan = null)
         {
-            var detailModel = new ProfilePotensiOPVM.Detail(nop, jenisPajak);
+            var detailModel = new Models.DataOP.ProfilePotensiOPVM.Detail();
 
-            // Ambil entri pertama (kalau hanya satu data per NOP)
-            var firstData = detailModel.DataRealisasiBulananList.FirstOrDefault();
-
-            if (firstData == null)
-                return NotFound();
-
-            // Isi ViewBag
-            ViewBag.NamaWP = firstData.NamaWP;
-            ViewBag.Alamat = firstData.Alamat;
-            ViewBag.NOP = firstData.NOP;
-            ViewBag.Kapasitas = firstData.Kapasitas;
-            ViewBag.PerHari = firstData.Perhari;
-            ViewBag.PerTahun = firstData.Pertahun;
-            ViewBag.PerBulan = firstData.Perbulan;
-
-            // Routing ke view berdasarkan jenis pajak
             switch (jenisPajak.ToLower())
             {
                 case "hotel":
                     return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", detailModel);
+
                 case "parkir":
                     return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", detailModel);
+
                 case "restoran":
                     return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", detailModel);
-                case "massage":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
-                case "gym":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
-                case "bioskop":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", detailModel);
-                // Tambahkan jenis pajak lain sesuai kebutuhan
+
+                case "hiburan":
+                    return ShowDetailHiburan(kategoriHiburan, detailModel);
+
                 default:
                     return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", detailModel);
+            }
+        }
+
+        private IActionResult ShowDetailHiburan(string? kategori, object detailModel)
+        {
+            if (string.IsNullOrEmpty(kategori))
+                return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
+
+            switch (kategori.ToLower())
+            {
+                case "massage":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
+
+                case "gym":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
+
+                case "bioskop":
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", detailModel);
+
+                default:
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
             }
         }
 
