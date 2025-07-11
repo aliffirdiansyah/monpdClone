@@ -51,7 +51,7 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
         {
             try
             {
-                var model = new Models.MonitoringGlobal.MonitoringHarianVM.Show((EnumFactory.EPajak)jenisPajak, bulan, tahun);
+                var model = new Models.MonitoringGlobal.MonitoringHarianVM.Show(jenisPajak, tahun, bulan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

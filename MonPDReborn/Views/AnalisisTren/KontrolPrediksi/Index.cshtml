@@ -89,21 +89,32 @@
             </div>
 
             <div class="card-body">
-                <div class="row g-3 align-items-end">
+                @using DevExtreme.AspNet.Mvc
+
+                <div class="row g-3 align-items-center">
 
                     <div class="col-lg col-md-6">
-                        <label for="tanggalAwal" class="form-label ms-2">Tanggal Awal</label>
-                        <input type="date" id="tanggalAwal" class="form-control rounded-pill" aria-label="Tanggal Awal">
+                        @(Html.DevExtreme().DateBox()
+                            .ID("tanggalAwal")
+                            .Type(DateBoxType.Date)
+                            .Placeholder("Tanggal Awal") // Menggantikan <label>
+                            .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
+                            .Value(DateTime.Now) // Nilai default: hari ini
+                            )
                     </div>
 
                     <div class="col-lg col-md-6">
-                        <label for="tanggalAkhir" class="form-label ms-2">Tanggal Akhir</label>
-                        <input type="date" id="tanggalAkhir" class="form-control rounded-pill" aria-label="Tanggal Akhir">
+                        @(Html.DevExtreme().DateBox()
+                            .ID("tanggalAkhir")
+                            .Type(DateBoxType.Date)
+                            .Placeholder("Tanggal Akhir") // Menggantikan <label>
+                            .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
+                            )
                     </div>
 
                     <div class="col-lg col-md-6">
-                        <button type="button" class="btn btn-success rounded-pill w-100">
-                            <i class="ri-filter-3-line me-1"></i> Terapkan
+                        <button type="button" class="btn btn-success w-100">
+                            Terapkan Filter
                         </button>
                     </div>
 

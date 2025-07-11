@@ -1,4 +1,5 @@
 ﻿@model MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.Index
+@using DevExtreme.AspNet.Mvc
 
 @{
     ViewData["Title"] = "Monitoring Harian";
@@ -30,30 +31,44 @@
             </div>
 
             <div class="card-body">
-                <div class="row mt-3 ms-0">
+                <div class="row g-3 align-items-center">
 
-                    <div class="col-lg-3">
-                        @Html.DropDownListFor(model => model.SelectedPajak,
-                                 new SelectList(Model.JenisPajakList, "Value", "Text"),
-                                 "Semua Jenis Pajak",
-                                 new { @class = "form-select mb-3", @aria_label = "Default select example" })
-                    </div>
-                    <div class="col-lg-2">
-                        @Html.DropDownListFor(model => model.SelectedTahun,
-                                 new SelectList(Model.TahunList, "Value", "Text"),
-                                 "Pilih Tahun",
-                                 new { @class = "form-select mb-3", @id = "ddlTahun", @aria_label = "Default select example" })
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedPajak)
+                            .ID("selectPajak")
+                            .DataSource(Model.JenisPajakList)
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .Placeholder("Semua Jenis Pajak")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
                     </div>
 
-                    <div class="col-lg-2">
-                        @Html.DropDownListFor(model => model.SelectedBulan,
-                                 new SelectList(Model.BulanList, "Value", "Text"),
-                                 new { @class = "form-select mb-3" })
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTahun)
+                            .ID("ddlTahun")
+                            .DataSource(Model.TahunList)
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .Placeholder("Pilih Tahun")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
                     </div>
 
-                    <div class="col-lg col-md-6">
-                        <button type="button" id="btnTerapkanFilter" class="btn btn-success rounded-pill w-100">
-                            <i class="ri-filter-3-line me-1"></i> Terapkan
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedBulan)
+                            .ID("selectBulan")
+                            .DataSource(Model.BulanList)
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .Placeholder("Semua Bulan") // Ditambahkan agar konsisten
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100">
+                            Terapkan Filter
                         </button>
                     </div>
 
@@ -100,41 +115,47 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            fnShow("");      // Panggil data rekap jumlah
-           // loadDetail("");  // Panggil semua data detail saat pertama load
+            // Panggil data saat halaman pertama kali dimuat
+            loadShow();
+
+            // Ketika tombol filter diklik
+            $("#btnTerapkanFilter").on("click", function () {
+                loadShow();
+            });
         });
 
-        function fnShow() {
+        // Ganti seluruh fungsi fnShow Anda dengan ini
+        function loadShow() {
+            // Ambil semua nilai dari setiap filter
+            let jenisPajak = $("#selectPajak").dxSelectBox("instance").option("value");
+            let tahun = $("#ddlTahun").dxSelectBox("instance").option("value");
+            let bulan = $("#selectBulan").dxSelectBox("instance").option("value");
+
+            // Siapkan data untuk dikirim ke controller
+            const filterData = {
+                jenisPajak: jenisPajak == null ? 0 : jenisPajak, // Kirim 0 jika null/semua
+                tahun: tahun,
+                bulan: bulan == null ? 0 : bulan // Kirim 0 jika null/semua
+            };
+
             $.ajax({
-                url: '@Url.Action("Show", "MonitoringHarian")',
+                url: '@Url.Action("Show", "MonitoringHarian")', // Pastikan Controller adalah MonitoringHarian
                 type: 'GET',
+                data: filterData,
                 beforeSend: function () {
-                    // Tampilkan spinner, sembunyikan konten
                     $('#loading2-Show').show();
                     $('#Show').hide();
                 },
                 success: function (result) {
-                    // Sembunyikan spinner, tampilkan hasil
                     $('#loading2-Show').hide();
                     $('#Show').html(result).show();
                 },
                 error: function () {
                     $('#loading2-Show').hide();
-                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data.</div>').show();
                 }
             });
         }
-
-       
-        $(document).ready(function() {
-            // Event handler saat tombol filter diklik
-            $('#btnTerapkanFilter').on('click', function () {
-                // Cukup panggil 'refresh' pada DataGrid.
-                // Grid akan otomatis mengambil parameter baru dari 'LoadParams'.
-                $('#KontrolPrediksiGrid').dxDataGrid('instance').refresh();
-            });
-        });
-
     </script>
 }
 
