@@ -20,57 +20,70 @@
         </div>
     </div>
 
+    @* Dashboard baru *@
     <div class="col-lg-3">
-        <div class="card border border-danger border-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fs-14 text-muted mb-3">Total Pengedokan Tahun Ini</h4>
-                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.TotalPengedokan</h4>
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-search-eye-line text-primary fs-1"></i>
                     </div>
-                    <i class="ri-search-eye-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Pengedokan</h5>
+                        <h4 class="mb-0 fw-bold">@Model.Data.TotalPengedokan.ToString("N0")</h4>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-3">
-        <div class="card border border-danger border-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fs-14 text-muted mb-3">Total Objek</h4>
-                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.JumlahObjek</h4>
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-team-fill text-primary fs-1"></i>
                     </div>
-                    <i class="ri-search-eye-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Objek</h5>
+                        <h4 class="mb-0 fw-bold">@Model.Data.JumlahObjek.ToString("N0")</h4>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-3">
-        <div class="card border border-danger border-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fs-14 text-muted mb-3">Rata-Rata Realisasi Tahun Ini</h4>
-                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.Ratarata.ToString("C")</h4>
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-bar-chart-box-line text-primary fs-1"></i>
                     </div>
-                    <i class="ri-bar-chart-box-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                    <div class="text-start">
+                        <h5 class="text-muted">Rata-Rata Realisasi</h5>
+                        <h4 class="mb-0 fw-bold">@Model.Data.Ratarata.ToString("C")</h4>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-3">
-        <div class="card border border-danger border-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fs-14 text-muted mb-3">Total Realisasi Tahun Ini</h4>
-                        <h4 class="fs-16 fw-bold mb-0">@Model.Data.TotalRealisasi.ToString("C")</h4>
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-money-dollar-box-line text-primary fs-1"></i>
                     </div>
-                    <i class=" ri-money-dollar-box-line  fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Realisasi</h5>
+                        <h4 class="mb-0 fw-bold">@Model.Data.TotalRealisasi.ToString("C")</h4>
+                        
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,16 +10,42 @@
 
             }
         }
-        public class Show
+
+        public class ShowRekap
+        {
+            public List<RekapPotensi> DataRekapPotensi { get; set; } = new();
+            public ShowRekap() { }
+            public ShowRekap(string jenisPajak)
+            {
+
+                DataRekapPotensi = Method.GetRekapPotensiList(jenisPajak);
+            }
+        }
+
+        public class ShowDetail
+        {
+            public List<DetailPotensi> DataDetailPotensi { get; set; } = new();
+            public string JenisPajak { get; set; } = string.Empty;
+
+            public ShowDetail() { }
+            public ShowDetail(string jenisPajak)
+            {
+                JenisPajak = jenisPajak;
+                DataDetailPotensi = Method.GetDetailPotensiList(jenisPajak);
+            }
+        }
+
+        public class ShowData
         {
             public List<DataPotensi> DataPotensiList { get; set; } = new();
-            public Show()
+            public string JenisPajak { get; set; } = string.Empty;
+            public string Kategori { get; set; } = string.Empty;
+            public ShowData() { }
+            public ShowData(string jenisPajak, string kategori)
             {
-                
-            }
-            public Show(string keyword)
-            {
-                DataPotensiList = Method.GetDataPotensiList(keyword);
+                JenisPajak = jenisPajak;
+                Kategori = kategori;
+                DataPotensiList = Method.GetDataPotensiList(jenisPajak, kategori);
             }
         }
         public class Detail
@@ -36,17 +62,22 @@
 
         public class Method
         {
-            public static List<DataPotensi> GetDataPotensiList(string keyword)
+            
+            public static List<DataPotensi> GetDataPotensiList(string jenisPajak, string kategori)
             {
                 var allData = GetAllData();
 
-                if (string.IsNullOrWhiteSpace(keyword))
-                    return allData;
-
                 return allData
-                    .Where(d => d.NOP != null && d.NOP.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                    .Where(d =>
+                        (string.IsNullOrWhiteSpace(jenisPajak) || 
+                         (!string.IsNullOrEmpty(d.JenisPajak) && d.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase)))
+                        &&
+                        (string.IsNullOrWhiteSpace(kategori) || 
+                         (!string.IsNullOrEmpty(d.Kategori) && d.Kategori.Equals(kategori, StringComparison.OrdinalIgnoreCase)))
+                    )
                     .ToList();
             }
+
 
             public static List<RealisasiBulanan> GetDetailByNOP(string nop, string jenisPajak)
             {
@@ -85,16 +116,16 @@
             {
                 return new List<DataPotensi>
                 {
-                     new() {NOP = "32.76.050.123", NamaWP = "PT ABC Sejahtera", Alamat = "Jl. Merdeka", JenisPajak = "Massage", MasaPajak = "Januari", Potensi = 12500000, Realisasi = 10000000, Tahun = 2024},
-                     new() {NOP = "32.76.050.124", NamaWP = "CV Mitra Usaha", Alamat = "Jl. Sudirman", JenisPajak = "Hotel", MasaPajak = "Februari", Potensi = 15000000, Realisasi = 12000000, Tahun = 2024},
-                     new() {NOP = "32.76.050.125", NamaWP = "PT Maju Mundur", Alamat = "Jl. Gatot Subroto", JenisPajak = "Restoran", MasaPajak = "Maret", Potensi = 10000000, Realisasi = 8000000, Tahun = 2024},
-                     new() {NOP = "32.76.050.126", NamaWP = "Toko Sumber Rejeki", Alamat = "Jl. Gajah Mada", JenisPajak = "Gym", MasaPajak = "April", Potensi = 5000000, Realisasi = 4500000, Tahun = 2024},
-                     new() {NOP = "32.76.050.127", NamaWP = "PT Sinar Terang", Alamat = "Jl. Imam Bonjol", JenisPajak = "Bioskop", MasaPajak = "Mei", Potensi = 13000000, Realisasi = 13000000, Tahun = 2024},
-                     new() {NOP = "32.76.050.128", NamaWP = "Bengkel Jaya Motor", Alamat = "Jl. Pahlawan", JenisPajak = "Parkir", MasaPajak = "Juni", Potensi = 6000000, Realisasi = 5000000, Tahun = 2024},
-                     new() {NOP = "32.76.050.129", NamaWP = "Apotek Sehat Sentosa", Alamat = "Jl. Kalimantan", JenisPajak = "PBB", MasaPajak = "Juli", Potensi = 3000000, Realisasi = 3000000, Tahun = 2024},
-                     new() {NOP = "32.76.050.130", NamaWP = "Kafe Kopi Nusantara", Alamat = "Jl. Sumatra", JenisPajak = "Restoran", MasaPajak = "Agustus", Potensi = 8500000, Realisasi = 6000000, Tahun = 2024},
-                     new() {NOP = "32.76.050.131", NamaWP = "PT Transport Abadi", Alamat = "Jl. Diponegoro", JenisPajak = "Parkir", MasaPajak = "September", Potensi = 9000000, Realisasi = 7500000, Tahun = 2024},
-                     new() {NOP = "32.76.050.132", NamaWP = "Mall Surya", Alamat = "Jl. Basuki Rahmat", JenisPajak = "Hotel", MasaPajak = "Oktober", Potensi = 20000000, Realisasi = 18000000, Tahun = 2024}
+                     new() {JenisPajak = "Hiburan", NOP = "32.76.050.123", NamaWP = "PT ABC Sejahtera", Alamat = "Jl. Merdeka", Kategori = "Massage", MasaPajak = "Januari", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Hotel", NOP = "32.76.050.124", NamaWP = "CV Mitra Usaha", Alamat = "Jl. Sudirman", Kategori = "Bintang 5", MasaPajak = "Februari", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Restoran", NOP = "32.76.050.125", NamaWP = "PT Maju Mundur", Alamat = "Jl. Gatot Subroto", Kategori = "Restoran", MasaPajak = "Maret", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Hiburan", NOP = "32.76.050.126", NamaWP = "Toko Sumber Rejeki", Alamat = "Jl. Gajah Mada", Kategori = "Gym", MasaPajak = "April", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Hiburan", NOP = "32.76.050.127", NamaWP = "PT Sinar Terang", Alamat = "Jl. Imam Bonjol", Kategori = "Bioskop", MasaPajak = "Mei", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Parkir", NOP = "32.76.050.128", NamaWP = "Bengkel Jaya Motor", Alamat = "Jl. Pahlawan", Kategori = "Parkir", MasaPajak = "Juni", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "PBB", NOP = "32.76.050.129", NamaWP = "Apotek Sehat Sentosa", Alamat = "Jl. Kalimantan", Kategori = "PBB", MasaPajak = "Juli", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Restoran", NOP = "32.76.050.130", NamaWP = "Kafe Kopi Nusantara", Alamat = "Jl. Sumatra", Kategori = "Restoran", MasaPajak = "Agustus", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Parkir", NOP = "32.76.050.131", NamaWP = "PT Transport Abadi", Alamat = "Jl. Diponegoro", Kategori = "Parkir", MasaPajak = "September", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000},
+                     new() {JenisPajak = "Hotel", NOP = "32.76.050.132", NamaWP = "Mall Surya", Alamat = "Jl. Basuki Rahmat", Kategori = "Bintang 4", MasaPajak = "Oktober", Target1 = 6_000_000, Realisasi1 = 5_000_000, Target2 = 7_000_000, Realisasi2 = 6_200_000, Target3 = 8_000_000, Realisasi3 = 7_800_000, TotalPotensi = 18_000_000}
                 };
             }
 
@@ -133,8 +164,171 @@
                 // tambahkan sebanyak yang kamu perlukan
             };
 
+            public static List<RekapPotensi> GetRekapPotensiList(string jenisPajak)
+            {
+                var allData = GetRekapPotensi();
 
+                if (string.IsNullOrWhiteSpace(jenisPajak))
+                    return allData;
 
+                return allData
+                    .Where(d => d.JenisPajak != null && d.JenisPajak.Contains(jenisPajak, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            private static List<RekapPotensi> GetRekapPotensi()
+            {
+                return new List<RekapPotensi>
+                {
+                     new RekapPotensi
+                    {
+                        JenisPajak = "Hotel",
+                        Target1 = 10_000_000,
+                        Realisasi1 = 8_500_000,
+                        Target2 = 12_000_000,
+                        Realisasi2 = 11_000_000,
+                        Target3 = 15_000_000,
+                        Realisasi3 = 14_500_000,
+                        TotalPotensi = 16_500_000
+                    },
+                    new RekapPotensi
+                    {
+                        JenisPajak = "Restoran",
+                        Target1 = 8_000_000,
+                        Realisasi1 = 6_750_000,
+                        Target2 = 9_000_000,
+                        Realisasi2 = 8_250_000,
+                        Target3 = 10_000_000,
+                        Realisasi3 = 9_200_000,
+                        TotalPotensi = 16_500_000
+                    },
+                    new RekapPotensi
+                    {
+                        JenisPajak = "Hiburan",
+                        Target1 = 5_000_000,
+                        Realisasi1 = 4_000_000,
+                        Target2 = 6_000_000,
+                        Realisasi2 = 5_200_000,
+                        Target3 = 7_000_000,
+                        Realisasi3 = 6_800_000,
+                        TotalPotensi = 16_500_000
+                    },
+                    new RekapPotensi
+                    {
+                        JenisPajak = "Parkir",
+                        Target1 = 3_000_000,
+                        Realisasi1 = 2_500_000,
+                        Target2 = 3_500_000,
+                        Realisasi2 = 3_000_000,
+                        Target3 = 4_000_000,
+                        Realisasi3 = 3_750_000,
+                        TotalPotensi = 16_500_000
+                    }
+                };
+            }
+
+            public static List<DetailPotensi> GetDetailPotensiList(string jenisPajak)
+            {
+                var allData = GetDetailPotensi();
+
+                if (string.IsNullOrWhiteSpace(jenisPajak))
+                    return allData;
+
+                return allData
+                    .Where(d => d.JenisPajak != null && d.JenisPajak.Contains(jenisPajak, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            private static List<DetailPotensi> GetDetailPotensi()
+            {
+                return new List<DetailPotensi>
+                {
+                    new DetailPotensi
+                    {
+                        JenisPajak = "Hotel",
+                        Kategori = "Bintang 5",
+                        Target1 = 6_000_000,
+                        Realisasi1 = 5_000_000,
+                        Target2 = 7_000_000,
+                        Realisasi2 = 6_200_000,
+                        Target3 = 8_000_000,
+                        Realisasi3 = 7_800_000,
+                        TotalPotensi = 18_000_000
+                    },
+                    new DetailPotensi
+                    {
+                        JenisPajak = "Hotel",
+                        Kategori = "Bintang 3",
+                        Target1 = 4_000_000,
+                        Realisasi1 = 3_500_000,
+                        Target2 = 5_000_000,
+                        Realisasi2 = 4_800_000,
+                        Target3 = 6_000_000,
+                        Realisasi3 = 5_900_000,
+                        TotalPotensi = 12_000_000
+                    },
+                    new DetailPotensi
+                    {
+                        JenisPajak = "Restoran",
+                        Kategori = "Franchise",
+                        Target1 = 5_000_000,
+                        Realisasi1 = 4_200_000,
+                        Target2 = 5_500_000,
+                        Realisasi2 = 5_000_000,
+                        Target3 = 6_000_000,
+                        Realisasi3 = 5_700_000,
+                        TotalPotensi = 16_500_000
+                    },
+                    new DetailPotensi
+                    {
+                        JenisPajak = "Restoran",
+                        Kategori = "Mandiri",
+                        Target1 = 3_000_000,
+                        Realisasi1 = 2_550_000,
+                        Target2 = 3_500_000,
+                        Realisasi2 = 3_250_000,
+                        Target3 = 4_000_000,
+                        Realisasi3 = 3_800_000,
+                        TotalPotensi = 10_500_000
+                    },
+                    new DetailPotensi
+                    {
+                        JenisPajak = "Hiburan",
+                        Kategori = "Bioskop",
+                        Target1 = 2_000_000,
+                        Realisasi1 = 1_750_000,
+                        Target2 = 2_500_000,
+                        Realisasi2 = 2_200_000,
+                        Target3 = 3_000_000,
+                        Realisasi3 = 2_850_000,
+                        TotalPotensi = 7_500_000
+                    },
+                    new DetailPotensi
+                    {
+                        JenisPajak = "Hiburan",
+                        Kategori = "Arena",
+                        Target1 = 3_000_000,
+                        Realisasi1 = 2_300_000,
+                        Target2 = 3_500_000,
+                        Realisasi2 = 3_000_000,
+                        Target3 = 4_000_000,
+                        Realisasi3 = 3_750_000,
+                        TotalPotensi = 10_500_000
+                    },
+                    new DetailPotensi
+                    {
+                        JenisPajak = "Parkir",
+                        Kategori = "Parkir",
+                        Target1 = 3_000_000,
+                        Realisasi1 = 2_300_000,
+                        Target2 = 3_500_000,
+                        Realisasi2 = 3_000_000,
+                        Target3 = 4_000_000,
+                        Realisasi3 = 3_750_000,
+                        TotalPotensi = 10_500_000
+                    }
+                };
+            }
         }
 
         public class DataPotensi
@@ -143,11 +337,18 @@
             public string NamaWP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisPajak { get; set; } = null!;
+            public string Kategori { get; set; } = null!;
             public string MasaPajak { get; set; } = null!;
-            public int Potensi { get; set; }
-
-            public int Realisasi { get; set; }
-            public int Tahun { get; set; }
+            public decimal Target1 { get; set; }
+            public decimal Realisasi1 { get; set; }
+            public decimal Capaian1 => Target1 == 0 ? 0 : Math.Round((Realisasi1 / Target1) * 100, 2);
+            public decimal Target2 { get; set; }
+            public decimal Realisasi2 { get; set; }
+            public decimal Capaian2 => Target2 == 0 ? 0 : Math.Round((Realisasi2 / Target2) * 100, 2);
+            public decimal Target3 { get; set; }
+            public decimal Realisasi3 { get; set; }
+            public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
+            public decimal TotalPotensi { get; set; }
         }
 
         public class RealisasiBulanan
@@ -161,6 +362,36 @@
             public int Pertahun { get; set; }
         }
 
+        public class RekapPotensi
+        {
+            public string JenisPajak { get; set; } = null!;
+            public decimal Target1 { get; set; }
+            public decimal Realisasi1 { get; set; }
+            public decimal Capaian1 => Target1 == 0 ? 0 : Math.Round((Realisasi1 / Target1) * 100, 2);
+            public decimal Target2 { get; set; }
+            public decimal Realisasi2 { get; set; }
+            public decimal Capaian2 => Target2 == 0 ? 0 : Math.Round((Realisasi2 / Target2) * 100, 2);
+            public decimal Target3 { get; set; }
+            public decimal Realisasi3 { get; set; }
+            public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
+            public decimal TotalPotensi { get; set; }
+        }
+
+        public class DetailPotensi
+        {
+            public string JenisPajak { get; set; } = null!;
+            public string Kategori { get; set; } = null!;
+            public decimal Target1 { get; set; }
+            public decimal Realisasi1 { get; set; }
+            public decimal Capaian1 => Target1 == 0 ? 0 : Math.Round((Realisasi1 / Target1) * 100, 2);
+            public decimal Target2 { get; set; }
+            public decimal Realisasi2 { get; set; }
+            public decimal Capaian2 => Target2 == 0 ? 0 : Math.Round((Realisasi2 / Target2) * 100, 2);
+            public decimal Target3 { get; set; }
+            public decimal Realisasi3 { get; set; }
+            public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
+            public decimal TotalPotensi { get; set; }
+        }
 
 
     }

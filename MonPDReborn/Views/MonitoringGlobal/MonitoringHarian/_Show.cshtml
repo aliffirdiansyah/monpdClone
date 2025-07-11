@@ -9,14 +9,10 @@
                         <i class="  ri-focus-3-line text-primary fs-1"></i>
                     </div>
                     <div class="text-start">
+                        <h5 class="text-muted">Total Target</h5>
                         <h3 class="mb-0 fw-bold">@Model.Data.TotalTarget.ToString("C")</h3>
-                        <small class="text-muted">Total Target</small>
-
-
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -29,9 +25,8 @@
                         <i class="ri-money-dollar-box-line text-warning fs-1"></i>
                     </div>
                     <div class="text-start">
+                        <h5 class="text-muted">Total Realisasi</h5>
                         <h3 class="mb-0 fw-bold">@Model.Data.TotalRealisasi.ToString("C")</h3>
-                        <small class="text-muted">Total Realisasi</small>
-
                     </div>
                 </div>
 
@@ -47,9 +42,8 @@
                         <i class="ri-bar-chart-2-line text-success fs-1"></i>
                     </div>
                     <div class="text-start">
+                        <h5 class="text-muted">Pencapaian</h5>
                         <h3 class="mb-0 fw-bold">@Model.Data.Pencapaian.ToString("N2")%</h3>
-                        <small class="text-muted">Pencapaian</small>
-
                     </div>
                 </div>
 
@@ -63,17 +57,7 @@
     @(
         Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.MonitoringHarian>()
         .ID("KontrolPrediksiGrid")
-        .DataSource(d => d.Mvc()
-        .Controller("MonitoringHarian")
-        .LoadAction("GetMonitoringData")
-        .Key("JenisPajak")
-        .LoadParams(new
-        { // 3. Parameter yang akan dikirim dari filter
-            tahun = new JS("function() { return $('#filterTahun').val(); }"),
-            bulan = new JS("function() { return $('#filterBulan').val(); }"),
-            jenisPajak = new JS("function() { return $('#filterJenisPajak').val(); }")
-        })
-        )
+        .DataSource(Model.DataMonitoringHarianList)
         .KeyExpr("JenisPajak")
         .ShowBorders(true)
         .RowAlternationEnabled(true)

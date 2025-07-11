@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Lib.General;
+using static MonPDReborn.Lib.General.ResponseBase;
 using MonPDReborn.Models.DataOP;
+
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -13,6 +16,8 @@ namespace MonPDReborn.Controllers.DataOP
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
+
         public ProfilePotensiOPController(ILogger<ProfilePotensiOPController> logger)
         {
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
@@ -38,19 +43,71 @@ namespace MonPDReborn.Controllers.DataOP
                 throw;
             }
         }
-        public IActionResult Show(string keyword)
+        public IActionResult ShowRekap(string jenisPajak)
         {
             try
             {
-                var model = new Models.DataOP.ProfilePotensiOPVM.Show(keyword);
+                var model = new Models.DataOP.ProfilePotensiOPVM.ShowRekap(jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
 
+        public IActionResult ShowDetail(string jenisPajak)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfilePotensiOPVM.ShowDetail
+                {
+                    JenisPajak = jenisPajak,
+                    DataDetailPotensi = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList(jenisPajak)
+                };
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult ShowData(string jenisPajak, string kategori)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfilePotensiOPVM.ShowData
+                {
+                    JenisPajak = jenisPajak,
+                    Kategori = kategori,
+                    DataPotensiList = Models.DataOP.ProfilePotensiOPVM.Method.GetDataPotensiList(jenisPajak, kategori)
+                };
+
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (Exception ex)
+            {
+                // optional: log ex.Message
                 throw;
             }
         }
+
         /*   public IActionResult DetailMassage()
            {
                return View("/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml");
