@@ -15,6 +15,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
             public List<SelectListItem> JenisPajakList { get; set; } = new();
             public Index()
             {
+                JenisPajakList.Add(new SelectListItem { Value = "0", Text = "Semua Jenis Pajak" });
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
                     .Select(x => new SelectListItem

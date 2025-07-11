@@ -31,6 +31,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         Value = ((int)x).ToString(),
                         Text = x.GetDescription()
                     }).ToList();
+
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
                     .Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
