@@ -8,15 +8,22 @@
 }
 <div class="card position-relative overflow-hidden mb-4">
     <!-- Header Background Image -->
-    <div class=" position-relative">
-        <img src="~/assets/images/comingsoon.png" alt="" class="img-fluid w-100" style="height: 200px; object-fit: cover;">
+    <div class="position-relative w-100"
+         style="
+        height: 200px;
+        background: linear-gradient(135deg, rgba(255, 243, 247, 0.8), rgba(230, 242, 255, 0.8)),
+                    url('https://www.transparenttextures.com/patterns/white-wall-3.png');
+        background-blend-mode: overlay;
+        background-size: cover;
+        border-radius: .5rem;
+     ">
     </div>
 
     <!-- Profile Avatar & Info -->
     <div class="container position-relative" style="margin-top: -100px;">
         <div class="d-flex flex-column align-items-center">
             <div class="avatar-xxl mb-3 position-relative">
-                <img src="~/assets/images/user-illustarator-1.png" alt="" class="rounded-circle avatar-xl border border-3 border-white shadow">
+                <img src="~/assets/images/logosby.png" alt="" class="rounded-circle avatar-xl border border-3 border-white shadow">
             </div>
             <div class="text-center">
                 <h5 class="mb-1">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h5>
@@ -352,24 +359,24 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="card mb-4">
-                                <div class="card bg-soft-secondary border-0">
-                                    <div class="card-body px-4 py-3">
-                                        <h4 class="fw-semibold mb-0">Detail Kapasitas</h4>
-                                    </div>
+
+                            <div class="col-lg-12 mb-4">
+                                <div class="card-body">
+                                    <h5 class="fw-bold">Detail Kapasitas</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span class="fw-semibold">Jumlah Meja </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.JumlahMeja</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span class="fw-semibold">Jumlah Kursi </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.JumlahKursi</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span class="fw-semibold">Kapasitas Ruangan </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.KapasitasRuangan</span>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <span class="fw-semibold">Jumlah Meja </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.JumlahMeja</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <span class="fw-semibold">Jumlah Kursi </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.JumlahKursi</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <span class="fw-semibold">Kapasitas Ruangan </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.KapasitasRuangan</span>
-                                    </li>
-                                </ul>
                             </div>
+                            
 
                         </div>
                     </div>
