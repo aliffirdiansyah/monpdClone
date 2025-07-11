@@ -35,6 +35,7 @@ namespace MonPDLib
         public DbSet<OPSkpdPbb> OPSkpdPbbs { get; set; }
         public DbSet<OpOpsenSkpdPkb> OpOpsenSkpdPkbs { get; set; }
         public DbSet<OpOpsenSkpdBbnkb> OpOpsenSkpdBbnkbs { get; set; }
+        public DbSet<OpSkpdSspdReklame> OpSkpdSspdReklames { get; set; }
         public DbSet<SSPDPbjt> SSPDPbjts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +68,8 @@ namespace MonPDLib
             modelBuilder.Entity<OpOpsenSkpdPkb>().HasNoKey();
 
             modelBuilder.Entity<OpOpsenSkpdBbnkb>().HasNoKey();
+
+            modelBuilder.Entity<OpSkpdSspdReklame>().HasNoKey();
 
             modelBuilder.Entity<SSPDPbjt>().HasNoKey();
         }

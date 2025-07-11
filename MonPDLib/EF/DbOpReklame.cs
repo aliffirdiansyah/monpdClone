@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("NoFormulir", "TahunBuku")]
+[PrimaryKey("NoFormulir", "Seq")]
 [Table("DB_OP_REKLAME")]
 public partial class DbOpReklame
 {
@@ -368,7 +368,10 @@ public partial class DbOpReklame
     [Unicode(false)]
     public string? UserVer { get; set; }
 
-    [Key]
     [Column("TAHUN_BUKU", TypeName = "NUMBER")]
     public decimal TahunBuku { get; set; }
+
+    [Key]
+    [Column("SEQ", TypeName = "NUMBER(38)")]
+    public decimal Seq { get; set; }
 }
