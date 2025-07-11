@@ -47,11 +47,12 @@
             columns.AddFor(m => m.Alamat).Caption("Alamat");
             columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
             columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
-            columns.AddFor(m => m.Status).Caption("Status").Caption("Status").CellTemplate(@<text>
-        <span class='<%=
-                        data.Status === "Sudah Dibayar" ? "badge bg-success" : "badge bg-danger"
-                    %>'><%= data.Status %></span>
-    </text>);
+            columns.AddFor(m => m.Status).Caption("Status").CellTemplate(
+            @<text>
+                <span class='<%=
+                    data.Status === "Sudah Dibayar" ? "badge bg-success" : "badge bg-danger" %>'><%= data.Status %>
+                </span>
+            </text>);
 
         })
         .ShowBorders(true)

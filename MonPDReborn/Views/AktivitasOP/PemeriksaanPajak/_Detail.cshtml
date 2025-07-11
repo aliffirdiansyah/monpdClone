@@ -23,7 +23,7 @@
         columns.Add().DataField("NoSP").Caption("No SP").Alignment(HorizontalAlignment.Center);
         columns.Add().DataField("TglST").Caption("Tgl ST").Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
         columns.Add().DataField("Tahun").Alignment(HorizontalAlignment.Center);
-        columns.Add().DataField("JumlahKB").Caption("Jumlah KB").Alignment(HorizontalAlignment.Center).Format(Format.Currency);
+            columns.Add().DataField("JumlahKB").Caption("Jumlah KB").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
         columns.Add().DataField("Keterangan").Alignment(HorizontalAlignment.Center);
         columns.Add().DataField("LHP").Alignment(HorizontalAlignment.Center);
         columns.Add().DataField("TglLHP").Caption("Tgl LHP").Alignment(HorizontalAlignment.Center).DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");

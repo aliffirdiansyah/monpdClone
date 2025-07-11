@@ -28,13 +28,13 @@
                    .Caption("Jumlah OP");
             columns.AddFor(m => m.Potensi)
                    .Caption("Perhitungan Pengedookan")
-                   .Format("#,##0");
+                    .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
             columns.AddFor(m => m.TotalRealisasi)
                    .Caption("Total Realisasi")
-                   .Format("#,##0");
+                    .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
             columns.AddFor(m => m.Selisih)
                    .Caption("Selisih")
-                   .Format("#,##0");
+                    .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
 
             // 🔽 Kolom untuk tombol Detail
             columns.Add()
