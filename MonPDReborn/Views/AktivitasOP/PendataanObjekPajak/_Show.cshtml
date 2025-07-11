@@ -6,39 +6,35 @@
         .ID("gridPendataanShow")
         .DataSource(Model.DataPendataanList)
         .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
         .ShowRowLines(true)
         .ColumnAutoWidth(true)
-        .ShowColumnLines(true)
-
-        // ✅ ENABLE FILTERING PER KOLOM
-        .FilterRow(f => f
-            .Visible(true)       // Tampilkan filter row
-            .ApplyFilter(GridApplyFilterMode.Auto) // Filter otomatis saat ketik
-        )
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .AllowColumnResizing(true)
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
 
         .Columns(columns => {
             columns.AddFor(m => m.Tahun)
                    .Caption("Tahun Pelaksanaan")
-                   .Alignment(HorizontalAlignment.Center)
                    .Fixed(true);
             columns.AddFor(m => m.JenisPajak)
-                   .Caption("Jenis Pajak")
-                   .Alignment(HorizontalAlignment.Center);
+                   .Caption("Jenis Pajak");
             columns.AddFor(m => m.JumlahOp)
-                   .Caption("Jumlah OP")
-                   .Alignment(HorizontalAlignment.Center);
+                   .Caption("Jumlah OP");
             columns.AddFor(m => m.Potensi)
                    .Caption("Perhitungan Pengedookan")
-                   .Alignment(HorizontalAlignment.Center)
-                   .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                   .Format("#,##0");
             columns.AddFor(m => m.TotalRealisasi)
                    .Caption("Total Realisasi")
-                   .Alignment(HorizontalAlignment.Center)
-                   .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                   .Format("#,##0");
             columns.AddFor(m => m.Selisih)
                    .Caption("Selisih")
-                   .Alignment(HorizontalAlignment.Center)
-                   .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                   .Format("#,##0");
 
             // 🔽 Kolom untuk tombol Detail
             columns.Add()
