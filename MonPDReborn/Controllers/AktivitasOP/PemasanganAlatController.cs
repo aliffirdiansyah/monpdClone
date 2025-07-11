@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Lib.General;
+using static MonPDReborn.Lib.General.ResponseBase;
 using MonPDReborn.Models.AktivitasOP;
 
 namespace MonPDReborn.Controllers.Aktivitas
@@ -13,6 +15,8 @@ namespace MonPDReborn.Controllers.Aktivitas
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
+
         public PemasanganAlatController(ILogger<PemasanganAlatController> logger)
         {
             URLView = string.Concat("../AktivitasOP/", GetType().Name.Replace("Controller", ""), "/");
@@ -30,9 +34,17 @@ namespace MonPDReborn.Controllers.Aktivitas
                 };
                 return PartialView($"{URLView}{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
         public IActionResult Show(string keyword)
@@ -42,10 +54,17 @@ namespace MonPDReborn.Controllers.Aktivitas
                 var model = new Models.AktivitasOP.PemasanganAlatVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
         public IActionResult Detail(string JenisPajak)
@@ -55,10 +74,17 @@ namespace MonPDReborn.Controllers.Aktivitas
                 var model = new Models.AktivitasOP.PemasanganAlatVM.Detail(JenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
@@ -110,9 +136,17 @@ namespace MonPDReborn.Controllers.Aktivitas
 
                 return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailModal", filteredData);
             }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
             catch (Exception ex)
             {
-                return Content("SERVER ERROR: " + ex.Message);
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
