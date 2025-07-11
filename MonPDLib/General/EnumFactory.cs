@@ -35,7 +35,8 @@ namespace MonPDLib.General
             DBOPPARKIR, 
             DBOPHIBURAN, 
             DBOPLISTRIK, 
-            DBOPPBB, 
+            DBOPPBB,
+            DBOPREKLAME, 
         }
         public enum EStatePemeriksaanSkpdKbJabatan
         {
@@ -711,6 +712,9 @@ namespace MonPDLib.General
         }
         public enum EPajak
         {
+            [Description("Semua Jenis Pajak")]
+            Semua = 0,
+
             [Description("PBJT Atas Makanan & Minuman")]
             MakananMinuman = 1,
 

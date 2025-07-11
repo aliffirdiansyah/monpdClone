@@ -8,6 +8,68 @@ namespace MonPDLib
 {
     public class Helper
     {
+        public class OpSkpdSspdReklame
+        {
+            public string? NO_FORMULIR { get; set; }
+            public string? ID_KETETAPAN { get; set; }
+            public DateTime? TGLPENETAPAN { get; set; }
+            public int? TAHUN_PAJAK { get; set; }
+            public int? BULAN_PAJAK { get; set; }
+            public decimal? PAJAK_POKOK { get; set; }
+            public int? JNS_KETETAPAN { get; set; }
+            public DateTime? TGL_JTEMPO_SKPD { get; set; }
+            public string? AKUN { get; set; }
+            public string? NAMA_AKUN { get; set; }
+            public string? KELOMPOK { get; set; }
+            public string? NAMA_KELOMPOK { get; set; }
+            public string? JENIS { get; set; }
+            public string? NAMA_JENIS { get; set; }
+            public string? OBJEK { get; set; }
+            public string? NAMA_OBJEK { get; set; }
+            public string? RINCIAN { get; set; }
+            public string? NAMA_RINCIAN { get; set; }
+            public string? SUB_RINCIAN { get; set; }
+            public string? NAMA_SUB_RINCIAN { get; set; }
+            public int? TAHUN_PAJAK_KETETAPAN { get; set; }
+            public int? MASA_PAJAK_KETETAPAN { get; set; }
+            public int? SEQ_PAJAK_KETETAPAN { get; set; }
+            public string? KATEGORI_KETETAPAN { get; set; }
+            public DateTime? TGL_KETETAPAN { get; set; }
+            public DateTime? TGL_JATUH_TEMPO_BAYAR { get; set; }
+            public int? IS_LUNAS_KETETAPAN { get; set; }
+            public DateTime? TGL_LUNAS_KETETAPAN { get; set; }
+            public decimal? POKOK_PAJAK_KETETAPAN { get; set; }
+            public decimal? PENGURANG_POKOK_KETETAPAN { get; set; }
+            public string? AKUN_KETETAPAN { get; set; }
+            public string? KELOMPOK_KETETAPAN { get; set; }
+            public string? JENIS_KETETAPAN { get; set; }
+            public string? OBJEK_KETETAPAN { get; set; }
+            public string? RINCIAN_KETETAPAN { get; set; }
+            public string? SUB_RINCIAN_KETETAPAN { get; set; }
+            public DateTime? TGL_BAYAR_POKOK { get; set; }
+            public decimal? NOMINAL_POKOK_BAYAR { get; set; }
+            public DateTime? TGL_BAYAR_SANKSI { get; set; }
+            public decimal? NOMINAL_SANKSI_BAYAR { get; set; }
+            public string? AKUN_SANKSI_BAYAR { get; set; }
+            public string? KELOMPOK_SANKSI_BAYAR { get; set; }
+            public string? JENIS_SANKSI_BAYAR { get; set; }
+            public string? OBJEK_SANKSI_BAYAR { get; set; }
+            public string? RINCIAN_SANKSI_BAYAR { get; set; }
+            public string? SUB_RINCIAN_SANKSI_BAYAR { get; set; }
+            public DateTime? TGL_BAYAR_SANKSI_KENAIKAN { get; set; }
+            public decimal? NOMINAL_JAMBONG_BAYAR { get; set; }
+            public string? AKUN_JAMBONG_BAYAR { get; set; }
+            public string? KELOMPOK_JAMBONG_BAYAR { get; set; }
+            public string? JENIS_JAMBONG_BAYAR { get; set; }
+            public string? OBJEK_JAMBONG_BAYAR { get; set; }
+            public string? RINCIAN_JAMBONG_BAYAR { get; set; }
+            public string? SUB_RINCIAN_JAMBONG_BAYAR { get; set; }
+            public DateTime? INS_DATE { get; set; }
+            public string? INS_BY { get; set; }
+            public DateTime? UPD_DATE { get; set; }
+            public string? UPD_BY { get; set; }
+            public string? NO_KETETAPAN { get; set; }
+        }
         public class DbAkun
         {
             public string Akun { get; set; } = null!;

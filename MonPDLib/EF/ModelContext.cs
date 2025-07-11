@@ -165,6 +165,20 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PenTeguranBayar> PenTeguranBayars { get; set; }
 
+    public virtual DbSet<PotensiCtrlAirTanah> PotensiCtrlAirTanahs { get; set; }
+
+    public virtual DbSet<PotensiCtrlHiburan> PotensiCtrlHiburans { get; set; }
+
+    public virtual DbSet<PotensiCtrlHotel> PotensiCtrlHotels { get; set; }
+
+    public virtual DbSet<PotensiCtrlParkir> PotensiCtrlParkirs { get; set; }
+
+    public virtual DbSet<PotensiCtrlPpj> PotensiCtrlPpjs { get; set; }
+
+    public virtual DbSet<PotensiCtrlReklame> PotensiCtrlReklames { get; set; }
+
+    public virtual DbSet<PotensiCtrlRestoran> PotensiCtrlRestorans { get; set; }
+
     public virtual DbSet<SetLastRun> SetLastRuns { get; set; }
 
     public virtual DbSet<SetYearJobScan> SetYearJobScans { get; set; }
@@ -246,7 +260,7 @@ public partial class ModelContext : DbContext
                     r => r.HasOne<MKategoriPajak>().WithMany()
                         .HasForeignKey("KategoriSanksi")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("DB_AKUN_KATEGORI_SANKSI_R02"),
+                        .HasConstraintName("KATEGORI_SANKSI_FK"),
                     l => l.HasOne<DbAkun>().WithMany()
                         .HasForeignKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian")
                         .OnDelete(DeleteBehavior.ClientSetNull)
@@ -293,7 +307,7 @@ public partial class ModelContext : DbContext
                     r => r.HasOne<MKategoriPajak>().WithMany()
                         .HasForeignKey("Kategori")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("DB_AKUN_KATEGORI_R01"),
+                        .HasConstraintName("KATEGORI_FK"),
                     l => l.HasOne<DbAkun>().WithMany()
                         .HasForeignKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian")
                         .OnDelete(DeleteBehavior.ClientSetNull)
@@ -536,8 +550,9 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpReklame>(entity =>
         {
-            entity.HasKey(e => new { e.NoFormulir, e.TahunBuku }).HasName("DB_OP_REKLAME_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_OP_REKLAME_PK");
 
+            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();
             entity.Property(e => e.KodeObyek).IsFixedLength();
@@ -1176,6 +1191,60 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => e.Id).HasName("PEN_TEGURAN_BAYAR_PK");
         });
 
+        modelBuilder.Entity<PotensiCtrlAirTanah>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_POTENSI_CTRL_AT");
+
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+        });
+
+        modelBuilder.Entity<PotensiCtrlHiburan>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_HIBURAN");
+
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<PotensiCtrlHotel>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_PAJAK_HOTEL");
+
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<PotensiCtrlParkir>(entity =>
+        {
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<PotensiCtrlPpj>(entity =>
+        {
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+        });
+
+        modelBuilder.Entity<PotensiCtrlReklame>(entity =>
+        {
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+        });
+
+        modelBuilder.Entity<PotensiCtrlRestoran>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_RESTORAN");
+
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
+        });
+
         modelBuilder.Entity<SetLastRun>(entity =>
         {
             entity.HasKey(e => e.Job).HasName("LAST_RUN_PK");
@@ -1239,6 +1308,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
+        modelBuilder.HasSequence("SEQ_DB_OP_REKLAME");
 
         OnModelCreatingPartial(modelBuilder);
     }

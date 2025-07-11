@@ -20,43 +20,53 @@
         </div>
     </div>
 
+    @* dashboard baru *@
     <div class="col-lg-4">
-        <div class="card border border-danger border-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fs-14 text-muted mb-3">Total OP Yang DIperiksa Tahun Ini</h4>
-                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalOpDiperiksa</h4>
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-search-eye-line text-primary fs-1"></i>
                     </div>
-                    <i class="ri-search-eye-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                    <div class="text-start">
+                        <h5 class="text-muted">Total OP Diperiksa</h5>
+                        <h4 class="mb-0 fw-bold">@Model.TotalOpDiperiksa</h4>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-4">
-        <div class="card border border-danger border-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fs-14 text-muted mb-3">Rata-Rata Kurang Bayar Tahun Ini</h4>
-                        <h4 class="fs-16 fw-bold mb-0">@Model.RataRataKurangBayar</h4>
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-bar-chart-box-line text-primary fs-1"></i>
                     </div>
-                    <i class="ri-bar-chart-box-line fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                    <div class="text-start">
+                        <h5 class="text-muted">Rata-Rata Kurang Bayar</h5>
+                        <h4 class="mb-0 fw-bold">@Model.RataRataKurangBayar.ToString("C")</h4>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <div class="col-lg-4">
-        <div class="card border border-danger border-3">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="fs-14 text-muted mb-3">Total Kurang Bayar Tahun Ini</h4>
-                        <h4 class="fs-16 fw-bold mb-0">@Model.TotalKurangBayar</h4>
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-money-dollar-box-line text-primary fs-1"></i>
                     </div>
-                    <i class=" ri-money-dollar-box-line  fs-2 text-danger"></i> <!-- Ikon di kanan -->
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Kurang Bayar</h5>
+                        <h4 class="mb-0 fw-bold">@Model.TotalKurangBayar.ToString("C")</h4>
+
+                    </div>
                 </div>
             </div>
         </div>

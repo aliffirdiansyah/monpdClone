@@ -1416,7 +1416,7 @@ File: Main Js File
                     sessionStorage.setItem('dev_extreme-css-mode', 'light');
                     setLayoutMode('data-layout-mode', 'light', "layout-mode-light", html);
                     setLayoutMode('dev_extreme-css-mode', 'light', "dev_extreme-css-mode-light", html);
-                    loadCSS('/css/devextreme/dx.material.blue.light.css');
+                    loadCSS('/css/devextreme/dx.material.blue.light.compact.css');
                 } else {
                     getElementUsingTagname('data-layout-mode', 'dark');
                     document.documentElement.setAttribute('data-layout-mode', 'dark')
@@ -1426,7 +1426,7 @@ File: Main Js File
                     sessionStorage.setItem('dev_extreme-css-mode', 'dark');
                     setLayoutMode('data-layout-mode', 'dark', "layout-mode-dark", html);
                     setLayoutMode('dev_extreme-css-mode', 'dark', "dev_extreme-css-mode-dark", html);
-                    loadCSS('/css/devextreme/dx.material.blue.dark.css');
+                    loadCSS('/css/devextreme/dx.material.blue.dark.compact.css');
                 }
             });
         }
@@ -1435,9 +1435,9 @@ File: Main Js File
     function loadCSSDevExtreme() {
         //var data = sessionStorage.getItem('dev_extreme-css-mode');
         if (sessionStorage.getItem('dev_extreme-css-mode') == "dark") {
-            loadCSS('/css/devextreme/dx.material.blue.dark.css');
+            loadCSS('/css/devextreme/dx.material.blue.dark.compact.css');
         } else {
-            loadCSS('/css/devextreme/dx.material.blue.light.css');
+            loadCSS('/css/devextreme/dx.material.blue.light.compact.css');
         }
     }
 

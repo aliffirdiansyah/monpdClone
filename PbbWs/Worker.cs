@@ -23,18 +23,33 @@ namespace PbbWs
             {
                 //var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
                 //await Task.Delay(delay, stoppingToken);
 
                 //if (stoppingToken.IsCancellationRequested)
                 //    break;
+
+                var now = DateTime.Now;
+                var nextRun = new DateTime(2025, 7, 11, 1, 0, 0); // 11 Juli 2025 jam 02:00
+
+                if (nextRun <= now)
+                {
+                    _logger.LogInformation("Scheduled time has already passed.");
+                    return; // atau break / return tergantung konteksmu
+                }
+
+                var delay = nextRun - now;
+
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+
+                await Task.Delay(delay, stoppingToken);
+
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 // Eksekusi tugas
                 try

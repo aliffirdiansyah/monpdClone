@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExpress.DataAccess.Native.Web;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
@@ -13,7 +14,7 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
 
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
-
+        ResponseBase response = new ResponseBase();
         public KontrolWilayahController()
         {
             URLView = $"../MonitoringWilayah/{GetType().Name.Replace("Controller", "")}/";
@@ -29,9 +30,17 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
 
                 return View($"{URLView}{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
         public IActionResult Show(int wilayah, int tahun, int bulan, int jenisPajak)
@@ -41,9 +50,17 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
                 var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Show((EnumFactory.EUPTB)wilayah, tahun, bulan, (EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
@@ -54,9 +71,17 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
                 var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Detail((EnumFactory.EUPTB)wilayah, tahun, bulan, (EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 

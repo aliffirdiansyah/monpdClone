@@ -24,14 +24,11 @@ namespace BphtbWs
             {
                 //var now = DateTime.Now;
 
-                //// Hitung waktu untuk 00:00 esok hari
-                //var nextRunTime = now.Date.AddHours(1); // Tambah 1 hari dan set jam 00:00
-                //var delay = nextRunTime - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRunTime);
-                //_logger.LogInformation("Next run scheduled : {lama}", delay.Hours + ":" + delay.Minutes);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //// Tunggu hingga waktu eksekusi
                 //await Task.Delay(delay, stoppingToken);
 
                 //if (stoppingToken.IsCancellationRequested)
@@ -237,14 +234,9 @@ namespace BphtbWs
                 var result = await _contMonitoringDb.Set<OpSkpdBphtb>().FromSqlRaw(sql).ToListAsync();
 
                 var dbMonBphtb = _contMonPd.DbMonBphtbs.ToList();
+                _contMonPd.DbMonBphtbs.RemoveRange(dbMonBphtb);
                 foreach (var item in result)
                 {
-                    var rowMonBphtb = dbMonBphtb.FirstOrDefault(x => x.Idsspd == item.IDSSPD);
-                    if (rowMonBphtb != null)
-                    {
-                        _contMonPd.DbMonBphtbs.Remove(rowMonBphtb);
-                    }
-
                     _contMonPd.DbMonBphtbs.Add(new DbMonBphtb()
                     {
                         Idsspd = item.IDSSPD,
@@ -283,11 +275,14 @@ namespace BphtbWs
                         NamaKelompok = item.NAMA_KELOMPOK,
                     });
 
-                    _contMonPd.SaveChanges();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{DateTime.Now} DB_MON_BPHTB_MONITORINGDB {item.IDSSPD}");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"{DateTime.Now} [PROCESS] DB_MON_BPHTB_MONITORINGDB {item.IDSSPD}");
                     Console.ResetColor();
                 }
+                _contMonPd.SaveChanges();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{DateTime.Now} [SUCCESS] DB_MON_BPHTB_MONITORINGDB");
+                Console.ResetColor();
             }
 
             MailHelper.SendMail(
