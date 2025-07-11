@@ -72,10 +72,17 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new Models.DataOP.PelaporanOPVM.Detail((EnumFactory.EPajak)jenisPajak, nop);
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
     }

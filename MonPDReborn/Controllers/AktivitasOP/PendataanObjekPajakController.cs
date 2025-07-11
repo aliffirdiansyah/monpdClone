@@ -53,10 +53,17 @@ namespace MonPDReborn.Controllers.Aktivitas
                 var model = new PendataanObjekPajakVM.Show(keyword);
                 return PartialView($"{URLView}_Show", model);
             }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Gagal memuat data Show");
-                return BadRequest("Terjadi kesalahan saat memuat data.");
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
@@ -68,10 +75,17 @@ namespace MonPDReborn.Controllers.Aktivitas
                 var model = new PendataanObjekPajakVM.Detail(jenisPajak, tahun);
                 return PartialView($"{URLView}_Detail", model);
             }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Gagal memuat data Detail");
-                return BadRequest("Terjadi kesalahan saat memuat data detail.");
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
     }
