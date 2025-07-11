@@ -148,5 +148,50 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal Potensi => NilaiBlmKB;
         }
 
+        public class PermanenJT
+        {
+            public string Bulan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int SKPDBlmJT { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } =null!;
+            public string Status { get; set; } = null!;
+            public DateTime TahunPajak { get; set; }
+            public decimal JumlahNilai { get; set; }
+            public string Email { get; set; } = null!;
+            public int JmlUpaya { get; set; }
+        }
+        public class PermananBP
+        {
+            public string Bulan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int SKPDBlmPanjang { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string Status { get; set; } = null!;
+            public DateTime TahunPajak { get; set; }
+            public decimal JumlahNilai { get; set; }
+            public int JmlUpaya { get; set; }
+        }
+
+        public class PermanenKB
+        {
+            public string Bulan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int SKPDBlmKB { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string Status { get; set; } = null!;
+            public DateTime TahunPajak { get; set; }
+            public decimal JumlahNilai { get; set; }
+            public string Email { get; set; } = null!;
+            public int JmlUpaya { get; set; }
+        }
     }
 }

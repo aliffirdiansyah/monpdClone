@@ -42,45 +42,46 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        //public IActionResult Show(string keyword)
-        //{
-        //    try
-        //    {
-        //        var model = new Models.AktivitasOP.ReklameSummaryVM.Show(keyword);
-        //        return PartialView($"{URLView}_{actionName}", model);
-        //    }
-        //    catch (ArgumentException e)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-        //        return Json(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = "⚠ Server Error: Internal Server Error";
-        //        return Json(response);
-        //    }
-        //}
-        //public IActionResult Detail(string nop)
-        //{
-        //    try
-        //    {
-        //        var model = new Models.AktivitasOP.ReklameSummaryVM.Detail(nop);
-        //        return PartialView($"{URLView}_{actionName}", model);
-        //    }
-        //    catch (ArgumentException e)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-        //        return Json(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = "⚠ Server Error: Internal Server Error";
-        //        return Json(response);
-        //    }
-        //}
+        public IActionResult Show(int tahun)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.Show(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult Detail()
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.Detail();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }

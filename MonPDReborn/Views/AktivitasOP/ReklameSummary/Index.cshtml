@@ -16,7 +16,97 @@
                     </h4>
                 </div>
             </div>
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <select id="tahunFilter" class="form-select rounded-pill mb-3" aria-label="Pilih Tahun" style="max-width: 200px;">
+                        <option selected disabled>Pilih Tahun</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                    <button type="button" class="btn btn-success rounded-pill mb-3">
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
+    <div class="text-center">
+        <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <div id="Show"></div>
+
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // saat pertama kali: kosongkan hasil
+            $('#Show').html();
+
+            // ketika tombol Terapkan Filter diklik
+            $('.btn-success').on('click', function () {
+                loadData();
+            });
+
+            function loadData() {
+                let tahun = $('#tahunFilter').val();
+
+                if (!tahun) {
+                    $('#Show').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("Show", "ReklameSummary")',
+                    type: 'GET',
+                    data: {
+                        tahun: tahun
+                    },
+                    beforeSend: function () {
+                        // Tampilkan spinner, sembunyikan konten
+                        $('#loading2-Show').show();
+                        $('#Show').hide();
+                    },
+                    success: function (result) {
+                        // Sembunyikan spinner, tampilkan hasil
+                        $('#loading2-Show').hide();
+                        $('#Show').html(result).show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Gagal memuat data Show:", error);
+                        $('#loading2-Show').hide();
+                        $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    }
+                });
+
+            }
+        });
+    </script>
+    <script>
+        function skpdBlmCellTemplate(cellElement, cellInfo) {
+            
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${status}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    onUpayaClick(JenisPajak, kategori, tahun, status);
+                });
+
+            const span = $('<span>').text(cellInfo.value);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(button)
+                .append(span);
+
+            $(cellElement).append(wrapper);
+        }
+    </script>
+}
