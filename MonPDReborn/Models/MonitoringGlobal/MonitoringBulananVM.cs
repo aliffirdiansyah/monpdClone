@@ -26,7 +26,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
         }
         public class Show
         {
-
             public List<MonitoringBulananViewModels.BulananPajak> BulananPajakList { get; set; } = new();
             public List<MonitoringBulananViewModels.BulananPajak> AkumulasiBulananPajakList { get; set; } = new();
             public MonitoringBulananViewModels.DataRekapBulanan Data { get; set; } = new();
@@ -34,7 +33,9 @@ namespace MonPDReborn.Models.MonitoringGlobal
             {
                 BulananPajakList = Method.GetBulananPajak(jenisPajak, tahun);
                 AkumulasiBulananPajakList = Method.GetBulananPajakAkumulasi(jenisPajak, tahun);
-                
+                Data.NamaJenisPajak = jenisPajak.GetDescription();
+                Data.Target = BulananPajakList.Sum(x => x.AkpTarget);
+                Data.Realisasi = BulananPajakList.Sum(x => x.Realisasi);
             }
         }
         public class Method
@@ -43,8 +44,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
             {
                 var ret = new List<MonitoringBulananViewModels.BulananPajak>();
                 var context = DBClass.GetContext();
-
-
 
                 switch (jenisPajak)
                 {
