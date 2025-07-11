@@ -30,7 +30,7 @@
                             </div>
                             <div class="flex-grow-1">
                                 <div class="progress animated-progress custom-progress progress-label">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: @Model.Data.Persentase%" aria-valuenow="@Model.Data.Persentase" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: @Math.Round(Model.Data.Persentase)%" aria-valuenow="@Model.Data.Persentase" aria-valuemin="0" aria-valuemax="100">
                                         <div class="label">@Model.Data.PersentaseDisplay%</div>
                                     </div>
                                 </div>
@@ -103,7 +103,8 @@
                 <div class="d-flex justify-content-end mb-2">
                     @(Html.DevExtreme().SelectBox()
                         .ID("selectTahunOld")
-                        .DataSource(new[] { 2025, 2024, 2023, 2022, 2021, 2020 })
+                        .DataSource(new[] { 2024, 2023, 2022, 2021, 2020 })
+                        .Value(2024)
                         .Width(120)
                         .Placeholder("Pilih Tahun")
                         .OnValueChanged("function(e) { $('#gridAkpTahun').dxDataGrid('instance').refresh(); }")
@@ -209,7 +210,8 @@
                 <div class="d-flex justify-content-end mb-2">
                     @(Html.DevExtreme().SelectBox()
                         .ID("selectTahunAkmOld")
-                        .DataSource(new[] { 2025, 2024, 2023, 2022, 2021, 2020 })
+                        .DataSource(new[] { 2024, 2023, 2022, 2021, 2020 })
+                        .Value(2024)
                         .Width(120)
                         .Placeholder("Pilih Tahun")
                         .OnValueChanged("function(e) { $('#gridAkumulasiAkpTahun').dxDataGrid('instance').refresh(); }")
