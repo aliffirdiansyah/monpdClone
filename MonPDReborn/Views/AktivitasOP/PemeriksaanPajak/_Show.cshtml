@@ -38,21 +38,21 @@
             {
                 sub.Add().Caption("2023").Alignment(HorizontalAlignment.Center).Columns(kb2023 =>
             {
-                kb2023.Add().DataField("Pokok2023").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0");
-                kb2023.Add().DataField("Sanksi2023").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0");
-                kb2023.Add().DataField("Total2023").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2023.Add().DataField("Pokok2023").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2023.Add().DataField("Sanksi2023").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2023.Add().DataField("Total2023").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
             });
                 sub.Add().Caption("2024").Alignment(HorizontalAlignment.Center).Columns(kb2024 =>
             {
-                kb2024.Add().DataField("Pokok2024").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0");
-                kb2024.Add().DataField("Sanksi2024").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0");
-                kb2024.Add().DataField("Total2024").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2024.Add().DataField("Pokok2024").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2024.Add().DataField("Sanksi2024").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2024.Add().DataField("Total2024").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
             });
                 sub.Add().Caption("2025").Alignment(HorizontalAlignment.Center).Columns(kb2025 =>
             {
-                kb2025.Add().DataField("Pokok2025").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0");
-                kb2025.Add().DataField("Sanksi2025").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0");
-                kb2025.Add().DataField("Total2025").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0");
+                kb2025.Add().DataField("Pokok2025").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2025.Add().DataField("Sanksi2025").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2025.Add().DataField("Total2025").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
             });
             });
         })

@@ -16,9 +16,12 @@
     {
         columns.AddFor(c => c.JenisPajak).Caption("JENIS PAJAK");
 
-        columns.AddFor(c => c.AkpTahun).Caption("AKP 1 TAHUN").Format("#,###");
-        columns.AddFor(c => c.RealisasiHariAccrual).Caption("REALISASI HARI").Format("#,###");
-        columns.AddFor(c => c.RealisasiSDHariAccrual).Caption("REALISASI SAMPAI DENGAN " + Model.tgl.ToString("dd MMM yyyy")).Format("#,###");
+        columns.AddFor(c => c.AkpTahun).Caption("AKP 1 TAHUN")
+        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+        columns.AddFor(c => c.RealisasiHariAccrual).Caption("REALISASI HARI")
+        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+        columns.AddFor(c => c.RealisasiSDHariAccrual).Caption("REALISASI SAMPAI DENGAN " + Model.tgl.ToString("dd MMM yyyy"))
+        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
         columns.AddFor(c => c.PersenAccrual).Caption("PERSENTASE").Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"));
 
     })
