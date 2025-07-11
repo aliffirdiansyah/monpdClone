@@ -5,25 +5,31 @@
         <h4 class="card-title mb-0">LAPORAN TAHUNAN PAJAK DAERAH KOTA SURABAYA</h4>
     </div>
     <div class="card-body">
-        <div class="row g-3 align-items-center mb-3">
-            <div class="col-md-2">
-                <label class="form-label">Tanggal CutOff</label>
-            </div>
-            <div class="col-md-3">
-                @Html.TextBoxFor(x => x.TanggalCutOff, new
-                    {
-                        @placeholder = "Masukkan Tgl Akhir",
-                        @class = "form-control",
-                        @type = "text",
-                        @data_provider = "flatpickr",
-                        @data_date_format = "Y-m-d",
-                        @data_deafult_date = "today"
-                    })
-            </div>
-            <div class="col-md-2">
-                <button type="button" onclick="fnShow()" class="btn btn-primary w-100">
-                    <i class="ri-search-line me-1"></i> Cari
-                </button>
+        @using DevExtreme.AspNet.Mvc
+
+        <div class="card-body">
+            <div class="row g-3 align-items-center mb-3">
+
+                <div class="col-lg-3 col-md-4">
+                    @(Html.DevExtreme().DateBoxFor(m => m.TanggalCutOff)
+                        .ID("date-cutoff")
+                        .Type(DateBoxType.Date) // Menentukan tipe input adalah tanggal
+                        .DisplayFormat("yyyy-MM-dd") // Format tanggal yang ditampilkan
+                        .Placeholder("Pilih Tanggal Cut Off...")
+                        .Value(DateTime.Now) // Mengatur tanggal default ke hari ini
+
+                        // 3. Terapkan styling yang sama dengan SelectBox
+                        .StylingMode(EditorStylingMode.Outlined)
+                        .ElementAttr("class", "form-select") // Gunakan kelas yang sama jika perlu
+                        )
+                </div>
+
+                <div class="col-lg-2 col-md-3">
+                    <button type="button" onclick="fnShow()" class="btn btn-success w-100">
+                        <i class="ri-search-line me-1"></i> Terapkan
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>

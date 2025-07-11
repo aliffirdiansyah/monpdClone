@@ -17,16 +17,14 @@
                     .DisplayExpr("Text")
                     .ID("select-jnspajak")
                     .Placeholder("Semua Jenis Pajak...")
-                    // 1. Atur styling agar mirip form-select
                     .StylingMode(EditorStylingMode.Outlined)
-                    // 2. Tambahkan kelas untuk membuatnya berbentuk kapsul
-                    .ElementAttr(new { @class = "rounded-pill" })
+                    .ElementAttr("class", "form-select")
                     )
             </div>
 
-            <div class="col-lg-2 col-md-3">
-                <button type="button" onclick="fnShow()" class="btn btn-success rounded-pill w-100">
-                    <i class="ri-filter-3-line me-1"></i> Terapkan
+            <div class="col-lg-2">
+                <button type="button" onclick="fnShow()" class="btn btn-success w-80">
+                    <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
                 </button>
             </div>
 
