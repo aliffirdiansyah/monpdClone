@@ -28,10 +28,17 @@ namespace MonPDReborn.Models.MonitoringGlobal
         {
             public List<MonitoringBulananViewModels.BulananPajak> BulananPajakList { get; set; } = new();
             public List<MonitoringBulananViewModels.BulananPajak> AkumulasiBulananPajakList { get; set; } = new();
+            public MonitoringBulananViewModels.DataRekapBulanan Data { get; set; } = new();
             public Show(EnumFactory.EPajak jenisPajak, int tahun)
             {
                 BulananPajakList = Method.GetBulananPajak(jenisPajak, tahun);
                 AkumulasiBulananPajakList = Method.GetBulananPajakAkumulasi(jenisPajak, tahun);
+                if ((int)jenisPajak != 0)
+                {
+                    Data.NamaJenisPajak = jenisPajak.GetDescription();
+                }
+                Data.Target = BulananPajakList.Sum(x => x.AkpTarget);
+                Data.Realisasi = BulananPajakList.Sum(x => x.Realisasi);
             }
         }
         public class Method
@@ -40,8 +47,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
             {
                 var ret = new List<MonitoringBulananViewModels.BulananPajak>();
                 var context = DBClass.GetContext();
-
-
 
                 switch (jenisPajak)
                 {
@@ -69,7 +74,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetRestoPerBulan)
+                        foreach (var item in dataTargetRestoPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiRestoPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -112,7 +117,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetListrikPerBulan)
+                        foreach (var item in dataTargetListrikPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiListrikPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -155,7 +160,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetHotelPerBulan)
+                        foreach (var item in dataTargetHotelPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiHotelPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -198,7 +203,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetParkirPerBulan)
+                        foreach (var item in dataTargetParkirPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiParkirPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -241,7 +246,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetHiburanPerBulan)
+                        foreach (var item in dataTargetHiburanPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiHiburanPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -284,7 +289,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetAbtPerBulan)
+                        foreach (var item in dataTargetAbtPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiAbtPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -327,7 +332,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetReklamePerBulan)
+                        foreach (var item in dataTargetReklamePerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiReklamePerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -370,7 +375,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetPbbPerBulan)
+                        foreach (var item in dataTargetPbbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiPbbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -413,7 +418,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetBphtbPerBulan)
+                        foreach (var item in dataTargetBphtbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiBphtbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -455,7 +460,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetOpsenPkbPerBulan)
+                        foreach (var item in dataTargetOpsenPkbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiOpsenPkbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -497,7 +502,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .ToList();
 
 
-                        foreach (var item in dataTargetOpsenBbnkbPerBulan)
+                        foreach (var item in dataTargetOpsenBbnkbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiOpsenBbnkbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -521,7 +526,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 }
 
 
-                return ret;
+                return ret.OrderBy(x => x.Bulan).ToList();
             }
             public static List<MonitoringBulananViewModels.BulananPajak> GetBulananPajakAkumulasi(EnumFactory.EPajak jenisPajak, int tahun)
             {
@@ -558,7 +563,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetResto = 0;
                         decimal akumulasiRealisasiResto = 0;
-                        foreach (var item in dataTargetRestoPerBulan)
+                        foreach (var item in dataTargetRestoPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiRestoPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -604,7 +609,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetListrik = 0;
                         decimal akumulasiRealisasiListrik = 0;
-                        foreach (var item in dataTargetListrikPerBulan)
+                        foreach (var item in dataTargetListrikPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiListrikPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -649,7 +654,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetHotel = 0;
                         decimal akumulasiRealisasiHotel = 0;
-                        foreach (var item in dataTargetHotelPerBulan)
+                        foreach (var item in dataTargetHotelPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiHotelPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -694,7 +699,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetParkir = 0;
                         decimal akumulasiRealisasiParkir = 0;
-                        foreach (var item in dataTargetParkirPerBulan)
+                        foreach (var item in dataTargetParkirPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiParkirPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -740,7 +745,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetHiburan = 0;
                         decimal akumulasiRealisasiHiburan = 0;
-                        foreach (var item in dataTargetHiburanPerBulan)
+                        foreach (var item in dataTargetHiburanPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiHiburanPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -785,7 +790,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetAbt = 0;
                         decimal akumulasiRealisasiAbt = 0;
-                        foreach (var item in dataTargetAbtPerBulan)
+                        foreach (var item in dataTargetAbtPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiAbtPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -831,7 +836,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetReklame = 0;
                         decimal akumulasiRealisasiReklame = 0;
-                        foreach (var item in dataTargetReklamePerBulan)
+                        foreach (var item in dataTargetReklamePerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiReklamePerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -877,7 +882,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetPbb = 0;
                         decimal akumulasiRealisasiPbb = 0;
-                        foreach (var item in dataTargetPbbPerBulan)
+                        foreach (var item in dataTargetPbbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiPbbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -923,7 +928,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetBphtb = 0;
                         decimal akumulasiRealisasiBphtb = 0;
-                        foreach (var item in dataTargetBphtbPerBulan)
+                        foreach (var item in dataTargetBphtbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiBphtbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -967,7 +972,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetOpsenPkb = 0;
                         decimal akumulasiRealisasiOpsenPkb = 0;
-                        foreach (var item in dataTargetOpsenPkbPerBulan)
+                        foreach (var item in dataTargetOpsenPkbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiOpsenPkbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -1012,7 +1017,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         decimal akumulasiTargetOpsenBbnkb = 0;
                         decimal akumulasiRealisasiOpsenBbnkb = 0;
-                        foreach (var item in dataTargetOpsenBbnkbPerBulan)
+                        foreach (var item in dataTargetOpsenBbnkbPerBulan.OrderBy(x => x.Bulan))
                         {
                             var totalRealisasi = realisasiOpsenBbnkbPerBulan
                                     .Where(x => x.Bulan == item.Bulan)
@@ -1037,7 +1042,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 }
 
 
-                return ret;
+                return ret.OrderBy(x => x.Bulan).ToList();
             }
         }
         public class MonitoringBulananViewModels
@@ -1052,6 +1057,24 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 public decimal Realisasi { get; set; }
                 public decimal Pencapaian { get; set; }
                 public decimal Selisih => Realisasi - AkpTarget;
+            }
+
+            public class DataRekapBulanan
+            {
+                public int Tahun { get; set; }
+                public string NamaJenisPajak { get; set; } = "Semua Pajak";
+
+                public decimal Target { get; set; }
+                public decimal Realisasi { get; set; }
+
+                public double Persentase => Target > 0
+                    ? Math.Round((double)(Realisasi / Target * 100), 2)
+                    : 0.0;
+
+                public string PersentaseDisplay => $"{Persentase.ToString("0.##")}%";
+
+                public string RealisasiDisplay => $"Rp. {Realisasi:N0}";
+                public string TargetDisplay => $"Rp. {Target:N0}";
             }
         }
     }

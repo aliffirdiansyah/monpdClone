@@ -1,7 +1,10 @@
 ﻿using DevExpress.DataAccess.Native.Web;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using MonPDReborn.Models.MonitoringGlobal;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.MonitoringGlobal
@@ -47,6 +50,10 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
         {
             try
             {
+                // Teruskan ID jenisPajak ke View melalui ViewData
+                ViewData["JenisPajakId"] = jenisPajak;
+                ViewData["Tahun"] = tahun; // Kita juga teruskan tahun utama
+
                 var model = new Models.MonitoringGlobal.MonitoringBulananVM.Show((EnumFactory.EPajak)jenisPajak, tahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
@@ -62,6 +69,28 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
+        }
+
+
+        //test
+        // Tambahkan dua action ini di dalam MonitoringBulananController.cs
+
+        [HttpGet]
+        public IActionResult GetRealisasiTahunan(int jenisPajak, int tahun, DataSourceLoadOptions loadOptions)
+        {
+            // Panggil method yang sudah ada untuk mengambil data realisasi
+            var data = MonitoringBulananVM.Method.GetBulananPajak((EnumFactory.EPajak)jenisPajak, tahun);
+            var result = DataSourceLoader.Load(data, loadOptions);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public IActionResult GetAkumulasiTahunan(int jenisPajak, int tahun, DataSourceLoadOptions loadOptions)
+        {
+            // Panggil method yang sudah ada untuk mengambil data akumulasi
+            var data = MonitoringBulananVM.Method.GetBulananPajakAkumulasi((EnumFactory.EPajak)jenisPajak, tahun);
+            var result = DataSourceLoader.Load(data, loadOptions);
+            return Json(result);
         }
     }
 }

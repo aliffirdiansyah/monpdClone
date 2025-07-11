@@ -4,60 +4,37 @@
         <h4 class="card-title mb-0">LAPORAN BULANAN PAJAK DAERAH KOTA SURABAYA</h4>
     </div>
     <div class="card-body">
+        @using DevExtreme.AspNet.Mvc
+
+        @using DevExtreme.AspNet.Mvc
+
         <div class="row g-3 align-items-center mb-3">
-            <div class="col-md-2">
-                <label class="form-label">Jenis Pajak</label>
+
+            <div class="col-lg-2 col-md-3">
+                <h3>
+                    <label class="form-label mb-0">Jenis Pajak</label>
+                </h3>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-lg-3 col-md-4">
                 @(Html.DevExtreme().SelectBoxFor(m => m.SelectedPajak)
-                .DataSource(Model.JenisPajakList)
-                .ValueExpr("Value")
-                .DisplayExpr("Text")
-                .ID("select-jnspajak")
-                )
+                    .DataSource(Model.JenisPajakList)
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                    .ID("select-jnspajak")
+                    .Placeholder("Semua Jenis Pajak...")
+                    // 1. Atur styling agar mirip form-select
+                    .StylingMode(EditorStylingMode.Outlined)
+                    // 2. Tambahkan kelas untuk membuatnya berbentuk kapsul
+                    .ElementAttr(new { @class = "rounded-pill" })
+                    )
             </div>
-            <div class="col-md-2">
-                <button type="button" onclick="fnShow()" class="btn btn-primary w-100">
-                    <i class="ri-search-line me-1"></i> Cari
+
+            <div class="col-lg-2 col-md-3">
+                <button type="button" onclick="fnShow()" class="btn btn-success rounded-pill w-100">
+                    <i class="ri-filter-3-line me-1"></i> Terapkan
                 </button>
             </div>
-        </div>
-    </div>
-</div>
-<div class="col-xxl-12 col-sm-12 project-card">
-    <div class="card card-height-100">
-        <div class="card-body">
-            <div class="d-flex flex-column h-100">
-                <div class="container-fluid mt-auto">
-                    <div class="p-3" style="background-color: #eef8ff; border: 1px solid #bce3ff; border-radius: 6px;">
-                        <div class="mb-2">
-                            <h6 class="mb-1">Pendapatan Pajak – 2025 (Semua Pajak)</h6>
-                            <span class="badge bg-warning text-dark me-2">41,68 %</span>
-                            <small class="text-muted">dari target Rp. 7.307.751.999.326</small>
-                        </div>
-
-                        <h4 class="fw-bold mb-3">Rp. 3.045.606.492.045</h4>
-
-                        <div class="d-flex align-items-center pb-2">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-xs">
-                                    <div class="avatar-title bg-light rounded-circle text-muted fs-16">
-                                        <i class="mdi mdi-cash-multiple"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <div class="progress animated-progress custom-progress progress-label">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 41%" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="label">41%</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
         </div>
     </div>
@@ -85,10 +62,15 @@
     <script>
         function fnShow() {
             var tglCutOff = $("#TanggalCutOff").val();
+            var selectedPajak = $("#select-jnspajak").dxSelectBox("instance").option("value");
+            var filterData = {
+                jenisPajak: selectedPajak,
+                tahun: new Date().getFullYear() // Mengirim tahun saat ini sebagai default
+            };
             $.ajax({
                 url: '@Url.Action("Show")',
                 type: 'GET',
-                data: tglCutOff ,
+                data: filterData ,
                 beforeSend: function () {
                     $("#card-Show").hide();
                     $("#loading2-Show").show();
