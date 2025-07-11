@@ -74,38 +74,52 @@
             <div class="card-header d-flex">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-0">
-                        Data Kontrol
+                        Rekap Data Potensi
                     </h4>
                 </div>
             </div>
             <div class="card-body">
-                <div id="Show"></div>
+                <div class="text-center">
+                    <div id="loading2-ShowRekap" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="ShowRekap"></div>
+                <div id="detailModal" class="modal fade" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content shadow-lg border-0 rounded-3">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailModalLabel">
+                                    <i class="bi bi-info-circle me-2"></i> Detail Data
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body p-4" id="detailContent">
+                                <div class="text-center py-5 text-muted">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <div class="mt-2">Memuat data detail...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+
 </div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            loadShow("");      // Panggil data rekap jumlah
+            fnShowRekap("");
            // loadDetail("");  // Panggil semua data detail saat pertama load
         });
 
-        function loadShow() {
-            $.ajax({
-                url: '@Url.Action("Show", "ProfilePotensiOP")',
-                type: 'GET',
-                success: function (result) {
-                    $('#Show').html(result);
-                },
-                error: function () {
-                    $('#Show').html('<div class="alert alert-danger">Gagal memuat data Show.</div>');
-                }
-            });
-        }
 
-        function onDetailClick(e) {
+        function onDetail(e) {
             const data = e.row?.data;
             if (!data || !data.NOP || !data.JenisPajak) return;
 
@@ -113,7 +127,130 @@
             window.open(url, '_blank');
         }
 
+        function fnShowRekap() {
+            $.ajax({
+                url: '@Url.Action("ShowRekap", "ProfilePotensiOP")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-ShowRekap').show();
+                    $('#ShowRekap').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-ShowRekap').hide();
+                    $('#ShowRekap').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-ShowRekap').hide();
+                    $('#ShowRekap').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
 
+        function showDetail(container, options) {
+            var jenisPajak = options.data?.JenisPajak;
+            console.log("showDetail - JenisPajak:", jenisPajak);
+
+            // Buat inner container
+            var innerContainer = $("<div>").addClass("p-2");
+            container.append(innerContainer);
+
+            if (!jenisPajak) {
+                innerContainer.html('<div class="text-danger">Jenis Pajak tidak ditemukan.</div>');
+                return;
+            }
+
+            // Loading spinner
+            innerContainer.html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2 text-muted">Memuat data sub-detail...</div>
+                </div>
+            `);
+
+            $.ajax({
+                url: '@Url.Action("ShowDetail", "ProfilePotensiOP")',
+                type: 'GET',
+                data: { JenisPajak: jenisPajak },
+                success: function (result) {
+                    innerContainer.html(result);
+                },
+                error: function () {
+                    innerContainer.html('<div class="text-danger">❌ Gagal memuat data sub-detail.</div>');
+                }
+            });
+        }
+
+        function onDetailClick(e) {
+            // Pastikan tidak submit default tombol
+            e.event.preventDefault();
+
+            // Ambil data baris terkait
+            const data = e.row?.data;
+
+            if (!data) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            const jenisPajak = data.JenisPajak;
+            const kategori = data.Kategori;
+
+            if (!jenisPajak || !kategori) {
+                DevExpress.ui.notify("Jenis Pajak atau Kategori kosong", "error", 2000);
+                return;
+            }
+
+            console.log("onDetailClick:", jenisPajak, kategori);
+
+            // Tampilkan spinner atau loading
+            const targetDiv = $("#detailContent");
+            targetDiv.html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2 text-muted">Memuat data detail...</div>
+                </div>
+            `);
+
+            // Panggil server
+            $.ajax({
+                url: '/ProfilePotensiOP/ShowData', // ganti dengan nama action & controller yg benar
+                type: 'GET',
+                data: {
+                    JenisPajak: jenisPajak,
+                    Kategori: kategori
+                },
+                success: function (result) {
+                    targetDiv.html(result);
+                },
+                error: function () {
+                    targetDiv.html('<div class="text-danger">❌ Gagal memuat data detail.</div>');
+                }
+            });
+
+            // Kalau pakai modal
+            $('#detailModal').modal('show');
+        }
+
+
+
+        // function fnShowData() {
+        //     $.ajax({
+        //         url: '@Url.Action("ShowData", "ProfilePotensiOP")',
+        //         type: 'GET',
+        //         success: function (result) {
+        //             $('#Show').html(result);
+        //         },
+        //         error: function () {
+        //             $('#Show').html('<div class="alert alert-danger">Gagal memuat data Show.</div>');
+        //         }
+        //     });
+        // }
     </script>
 }
 
