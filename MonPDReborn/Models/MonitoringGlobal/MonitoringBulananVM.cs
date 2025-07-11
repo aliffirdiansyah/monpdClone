@@ -521,7 +521,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 }
 
 
-                return ret;
+                return ret.OrderBy(x => x.Bulan).ToList();
             }
             public static List<MonitoringBulananViewModels.BulananPajak> GetBulananPajakAkumulasi(EnumFactory.EPajak jenisPajak, int tahun)
             {
@@ -1037,7 +1037,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 }
 
 
-                return ret;
+                return ret.OrderBy(x => x.Bulan).ToList();
             }
         }
         public class MonitoringBulananViewModels
