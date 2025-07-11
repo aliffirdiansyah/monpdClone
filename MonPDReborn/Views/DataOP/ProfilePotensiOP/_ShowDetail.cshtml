@@ -1,0 +1,153 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.ShowDetail
+
+@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 2).ToString();
+    var tahun2 = (currentYear - 1).ToString();
+    var tahun3 = currentYear.ToString();
+}
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DetailPotensi>()
+        .ID("detailPotensiGrid_" + (Model.JenisPajak ?? "Unknown").Replace(" ", "_"))
+        .DataSource(Model.DataDetailPotensi)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .RowAlternationEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 5, 10, 20 })
+            .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+
+            columns.AddFor(x => x.Kategori).Caption("Kategori");
+            columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+            {
+                    subColumns.AddFor(x => x.Target1).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(x => x.Realisasi1).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(x => x.Capaian1).Caption("Capaian").Format("#,#0%");
+                });
+            columns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+            {
+                    subColumns.AddFor(x => x.Target2).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(x => x.Realisasi2).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(x => x.Capaian2).Caption("Capaian").Format("#,#0%");
+                });
+            columns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+            {
+                    subColumns.AddFor(x => x.Target3).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(x => x.Realisasi3).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(x => x.Capaian3).Caption("Capaian").Format("#,#0%");
+                });
+            columns.AddFor(x => x.TotalPotensi).Caption("Total Potensi").Format("#,##0");
+            columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Buttons(b =>
+                {
+                    b.Add()
+                .Text("Detail")
+                .Icon("search")
+                .OnClick("onDetailClick");
+                });        
+        })
+        .Summary(summary => {
+                summary.TotalItems(items =>
+                {
+                    items.AddFor(x => x.JenisPajak)
+                         .SummaryType(SummaryType.Sum)
+                         .DisplayFormat("Total");
+
+                    items.AddFor(x => x.Target1)
+                    .SummaryType(SummaryType.Sum)
+                    .CustomizeText(@<text>
+                            function(data) {
+                                const formatted = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                }).format(data.value);
+                                return formatted;
+                            }
+                        </text>
+                );
+
+                                            items.AddFor(x => x.Realisasi1)
+                                            .SummaryType(SummaryType.Sum)
+                                            .CustomizeText(@<text>
+                            function(data) {
+                                const formatted = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                }).format(data.value);
+                                return formatted;
+                            }
+                        </text>
+                );
+
+                                            items.AddFor(x => x.Target2)
+                                            .SummaryType(SummaryType.Sum)
+                                            .CustomizeText(@<text>
+                            function(data) {
+                                const formatted = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                }).format(data.value);
+                                return formatted;
+                            }
+                        </text>
+                );
+
+                                            items.AddFor(x => x.Realisasi2)
+                                            .SummaryType(SummaryType.Sum)
+                                            .CustomizeText(@<text>
+                            function(data) {
+                                const formatted = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                }).format(data.value);
+                                return formatted;
+                            }
+                        </text>
+                );
+
+                                            items.AddFor(x => x.Target3)
+                                            .SummaryType(SummaryType.Sum)
+                                            .CustomizeText(@<text>
+                            function(data) {
+                                const formatted = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                }).format(data.value);
+                                return formatted;
+                            }
+                        </text>
+                );
+
+                                            items.AddFor(x => x.Realisasi3)
+                                            .SummaryType(SummaryType.Sum)
+                                            .CustomizeText(@<text>
+                            function(data) {
+                                const formatted = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                }).format(data.value);
+                                return formatted;
+                            }
+                        </text>
+                );
+                });
+
+            })
+    )
+</div>
