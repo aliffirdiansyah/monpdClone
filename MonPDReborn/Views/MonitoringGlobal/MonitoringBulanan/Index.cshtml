@@ -4,23 +4,38 @@
         <h4 class="card-title mb-0">LAPORAN BULANAN PAJAK DAERAH KOTA SURABAYA</h4>
     </div>
     <div class="card-body">
+        @using DevExtreme.AspNet.Mvc
+
+        @using DevExtreme.AspNet.Mvc
+
         <div class="row g-3 align-items-center mb-3">
-            <div class="col-md-2">
-                <label class="form-label">Jenis Pajak</label>
+
+            <div class="col-lg-2 col-md-3">
+                <h3>
+                    <label class="form-label mb-0">Jenis Pajak</label>
+                </h3>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-lg-3 col-md-4">
                 @(Html.DevExtreme().SelectBoxFor(m => m.SelectedPajak)
-                .DataSource(Model.JenisPajakList)
-                .ValueExpr("Value")
-                .DisplayExpr("Text")
-                .ID("select-jnspajak")
-                )
+                    .DataSource(Model.JenisPajakList)
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                    .ID("select-jnspajak")
+                    .Placeholder("Pilih Jenis Pajak...")
+                    // 1. Atur styling agar mirip form-select
+                    .StylingMode(EditorStylingMode.Outlined)
+                    // 2. Tambahkan kelas untuk membuatnya berbentuk kapsul
+                    .ElementAttr(new { @class = "rounded-pill" })
+                    )
             </div>
-            <div class="col-md-2">
-                <button type="button" onclick="fnShow()" class="btn btn-primary w-100">
-                    <i class="ri-search-line me-1"></i> Cari
+
+            <div class="col-lg-2 col-md-3">
+                <button type="button" onclick="fnShow()" class="btn btn-success rounded-pill w-100">
+                    <i class="ri-filter-3-line me-1"></i> Terapkan
                 </button>
             </div>
+
         </div>
     </div>
 </div>
@@ -85,10 +100,15 @@
     <script>
         function fnShow() {
             var tglCutOff = $("#TanggalCutOff").val();
+            var selectedPajak = $("#select-jnspajak").dxSelectBox("instance").option("value");
+            var filterData = {
+                jenisPajak: selectedPajak,
+                tahun: new Date().getFullYear() // Mengirim tahun saat ini sebagai default
+            };
             $.ajax({
                 url: '@Url.Action("Show")',
                 type: 'GET',
-                data: tglCutOff ,
+                data: filterData ,
                 beforeSend: function () {
                     $("#card-Show").hide();
                     $("#loading2-Show").show();
