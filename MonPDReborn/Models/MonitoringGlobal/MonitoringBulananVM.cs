@@ -26,6 +26,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
         }
         public class Show
         {
+
             public List<MonitoringBulananViewModels.BulananPajak> BulananPajakList { get; set; } = new();
             public List<MonitoringBulananViewModels.BulananPajak> AkumulasiBulananPajakList { get; set; } = new();
             public MonitoringBulananViewModels.DataRekapBulanan Data { get; set; } = new();
