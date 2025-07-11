@@ -28,10 +28,12 @@ namespace MonPDReborn.Models.MonitoringGlobal
         {
             public List<MonitoringBulananViewModels.BulananPajak> BulananPajakList { get; set; } = new();
             public List<MonitoringBulananViewModels.BulananPajak> AkumulasiBulananPajakList { get; set; } = new();
+            public MonitoringBulananViewModels.DataRekapBulanan Data { get; set; } = new();
             public Show(EnumFactory.EPajak jenisPajak, int tahun)
             {
                 BulananPajakList = Method.GetBulananPajak(jenisPajak, tahun);
                 AkumulasiBulananPajakList = Method.GetBulananPajakAkumulasi(jenisPajak, tahun);
+                
             }
         }
         public class Method
@@ -1052,6 +1054,24 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 public decimal Realisasi { get; set; }
                 public decimal Pencapaian { get; set; }
                 public decimal Selisih => Realisasi - AkpTarget;
+            }
+
+            public class DataRekapBulanan
+            {
+                public int Tahun { get; set; }
+                public string NamaJenisPajak { get; set; } = "Semua Pajak";
+
+                public decimal Target { get; set; }
+                public decimal Realisasi { get; set; }
+
+                public double Persentase => Target > 0
+                    ? Math.Round((double)(Realisasi / Target * 100), 2)
+                    : 0.0;
+
+                public string PersentaseDisplay => $"{Persentase.ToString("0.##")}%";
+
+                public string RealisasiDisplay => $"Rp. {Realisasi:N0}";
+                public string TargetDisplay => $"Rp. {Target:N0}";
             }
         }
     }
