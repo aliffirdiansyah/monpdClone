@@ -2,8 +2,10 @@
 using DocumentFormat.OpenXml.InkML;
 using MonPDLib;
 using MonPDLib.General;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Mvc;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 using static MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM;
 
 namespace MonPDReborn.Models.MonitoringGlobal
@@ -603,6 +605,214 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         }
                         break;
                     default:
+                        var dataTargetPerHari = context.DbAkunTargetBulans
+                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan)
+                            .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                            .Select(g => new
+                            {
+                                Tgl = g.Key.Tgl,
+                                Bulan = g.Key.Bulan,
+                                Tahun = g.Key.TahunBuku,
+                                PajakId = g.Key.PajakId,
+                                TotalTarget = g.Sum(x => x.Target)
+                            })
+                            .ToList();
+
+                        var realisasiPerHari = new List<(string Nop, DateTime Tgl, decimal Realisasi)>();
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonRestos
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonPpjs
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonHotels
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonHotels
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonHiburans
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonAbts
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonReklames
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonPbbs
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonBphtbs
+                            .Where(x =>
+                                x.Tahun == tahun &&
+                                x.TglBayar.HasValue &&
+                                x.TglBayar.Value.Year == tahun &&
+                                x.TglBayar.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.SpptNop, TglBayar = x.TglBayar })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                                x.Key.SpptNop,
+                                x.Key.TglBayar.Value,
+                                x.Sum(q => q.Pokok) ?? 0
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonOpsenPkbs
+                            .Where(x =>
+                                x.TahunPajakSspd == tahun &&
+                                x.TglSspd.Year == tahun &&
+                                x.TglSspd.Month == bulan
+                            )
+                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+
+                                x.Key.Nop,
+                                x.Key.TglSspd,
+                                x.Sum(q => q.JmlPokok)
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
+                            context.DbMonOpsenBbnkbs
+                            .Where(x =>
+                                x.TahunPajakSspd == tahun &&
+                                x.TglSspd.Year == tahun &&
+                                x.TglSspd.Month == bulan
+                            )
+                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd })
+                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+
+                                x.Key.Nop,
+                                x.Key.TglSspd,
+                                x.Sum(q => q.JmlPokok)
+                            ))
+                            .ToList()
+                        );
+
+                        foreach (var item in dataTargetPerHari)
+                        {
+                            var totalRealisasi = realisasiPerHari
+                                .Where(x => x.Tgl.Month == item.Bulan && x.Tgl.Day == item.Tgl && x.Tgl.Year == tahun)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                 }
 
