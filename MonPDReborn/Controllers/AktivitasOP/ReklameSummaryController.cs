@@ -213,5 +213,27 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+
+        // Detail Upaya
+        public IActionResult Detail(string? noFormulir)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.Detail(noFormulir);
+                return PartialView("../AktivitasOP/ReklameSummary/_DetailUpaya", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }
