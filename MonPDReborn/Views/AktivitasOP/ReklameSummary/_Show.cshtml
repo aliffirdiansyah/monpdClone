@@ -44,32 +44,35 @@
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");
-                                    subColumns.AddFor(m => m.NilaiJT).Caption("Nilai SKPD").Format("#,##0");
+                                    subColumns.AddFor(m => m.NilaiJT).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmJT)
-                                                .Caption("SKPD Belum")
+                                                .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmJT")
                                                 .CellTemplate(new JS("skpdPermanenJTCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmJT).Caption("Nilai SKPD").Format("#,##0");
+                                    subColumns.AddFor(m => m.NilaiBlmJT).Caption("Nilai Belum Bayar").Format("#,##0");
                                  });
-                            columns.Add().Caption("Belum Perpanjang").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                            columns.Add().Caption("Perpanjangan").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDPanjang).Caption("SKPD");
                                     subColumns.AddFor(m => m.NilaiPanjang).Caption("Nilai").Format("#,##0");
+                                 });
+                            columns.Add().Caption("Belum Perpanjang").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                                {
                                     subColumns.AddFor(m => m.SKPDBlmPanjang)
                                                 .Caption("SKPD")
                                                 .DataField("SKPDBlmPanjang")
                                                 .CellTemplate(new JS("skpdPermanenBPCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmPanjang).Caption("Nilai Belum").Format("#,##0");
+                                    subColumns.AddFor(m => m.NilaiBlmPanjang).Caption("Nilai").Format("#,##0");
                                  });
                             columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDKB).Caption("SKPD");
                                     subColumns.AddFor(m => m.NilaiKB).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmKB)
-                                                .Caption("SKPD Belum")
+                                                .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmKB")
                                                 .CellTemplate(new JS("skpdPermanenKBCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum").Format("#,##0");
+                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum Bayar").Format("#,##0");
                                  });
                             columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
                             
@@ -169,32 +172,35 @@
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");
-                                    subColumns.AddFor(m => m.NilaiJT).Caption("Nilai SKPD").Format("#,##0");
+                                    subColumns.AddFor(m => m.NilaiJT).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmJT)
-                                                .Caption("SKPD Belum")
+                                                .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmJT")
                                                 .CellTemplate(new JS("skpdTerbatasJTCellTemplate"));
                                     subColumns.AddFor(m => m.NilaiBlmJT).Caption("Nilai SKPD").Format("#,##0");
                                  });
-                            columns.Add().Caption("Belum Perpanjang").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                            columns.Add().Caption("Perpanjangan").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDPanjang).Caption("SKPD");
                                     subColumns.AddFor(m => m.NilaiPanjang).Caption("Nilai").Format("#,##0");
+                                 });
+                            columns.Add().Caption("Belum Perpanjang").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                                {
                                     subColumns.AddFor(m => m.SKPDBlmPanjang)
-                                                .Caption("SKPD Belum")
+                                                .Caption("SKPD")
                                                 .DataField("SKPDBlmPanjang")
                                                 .CellTemplate(new JS("skpdTerbatasBPCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmPanjang).Caption("Nilai Belum").Format("#,##0");
+                                    subColumns.AddFor(m => m.NilaiBlmPanjang).Caption("Nilai").Format("#,##0");
                                  });
                             columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDKB).Caption("SKPD");
                                     subColumns.AddFor(m => m.NilaiKB).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmKB)
-                                                .Caption("SKPD Belum")
+                                                .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmKB")
                                                 .CellTemplate(new JS("skpdTerbatasKBCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum").Format("#,#0%");
+                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum Bayar").Format("#,#0%");
                                  });
                             columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
                             
@@ -296,10 +302,10 @@
                                     subColumns.AddFor(m => m.SKPDKB).Caption("SKPD");
                                     subColumns.AddFor(m => m.NilaiKB).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmKB)
-                                                .Caption("SKPD Belum")
+                                                .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmKB")
                                                 .CellTemplate(new JS("skpdKBCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum").Format("#,#0%");
+                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum Bayar").Format("#,#0%");
                                  });
                             columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
                             
