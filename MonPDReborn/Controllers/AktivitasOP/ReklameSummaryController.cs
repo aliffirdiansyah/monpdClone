@@ -62,12 +62,142 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-
-        public IActionResult Detail()
+        // Detail Reklame Permanen
+        public IActionResult DetailPermanenJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.Detail();
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailPermanenJT(tahun, bulan, skpdBlmJT);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult DetailPermanenBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailPermanenBP(tahun, bulan, skpdBlmPanjang);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult DetailPermanenKB(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailPermanenKB(tahun, bulan, skpdBlmPanjang);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        //Detail Reklame Terbatas
+
+        public IActionResult DetailTerbatasJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailTerbatasJT(tahun, bulan, skpdBlmJT);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult DetailTerbatasBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailTerbatasBP(tahun, bulan, skpdBlmPanjang);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult DetailTerbatasKB(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailTerbatasKB(tahun, bulan, skpdBlmPanjang);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        // Detail Reklame Ketetapan Baru
+
+        public IActionResult DetailIsidentilKB(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailIsidentilKB(tahun, bulan, skpdBlmPanjang);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

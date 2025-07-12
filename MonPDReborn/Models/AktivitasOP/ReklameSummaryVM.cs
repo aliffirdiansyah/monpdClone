@@ -7,8 +7,8 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Index
         {
             public string Keyword { get; set; } = null!;
-            public Index() 
-            { 
+            public Index()
+            {
 
             }
 
@@ -31,13 +31,153 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
-        public class Detail
+        //Detail Reklame Permanen
+        public class DetailPermanenJT
         {
+            public int Tahun { get; set; }
+            public string? Bulan { get; set; }
+            public int? SkpdBlmJT { get; set; }
 
-            public Detail() { }
+            public List<PermanenJT> Data { get; set; } = new();
 
-            public Detail(string jenisPajak)
+            public DetailPermanenJT() { }
+
+            public DetailPermanenJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
             {
+                Tahun = tahun;
+                Bulan = bulan;
+                SkpdBlmJT = skpdBlmJT;
+
+                // Panggil GetPermanenJT
+                Data = Method.GetPermanenJT(tahun, bulan, skpdBlmJT);
+            }
+        }
+
+        public class DetailPermanenBP
+        {
+            public int Tahun { get; set; }
+            public string? Bulan { get; set; }
+            public int? SkpdBlmPanjang { get; set; }
+
+            public List<PermanenBP> Data { get; set; } = new();
+
+            public DetailPermanenBP() { }
+
+            public DetailPermanenBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+            {
+                Tahun = tahun;
+                Bulan = bulan;
+                SkpdBlmPanjang = skpdBlmPanjang;
+
+                // Panggil GetPermanenJT
+                Data = Method.GetPermanenBP(tahun, bulan, skpdBlmPanjang);
+            }
+        }
+
+        public class DetailPermanenKB
+        {
+            public int Tahun { get; set; }
+            public string? Bulan { get; set; }
+            public int? SkpdBlmKB { get; set; }
+
+            public List<PermanenKB> Data { get; set; } = new();
+
+            public DetailPermanenKB() { }
+
+            public DetailPermanenKB(int tahun, string? bulan = null, int? skpdKB = null)
+            {
+                Tahun = tahun;
+                Bulan = bulan;
+                SkpdBlmKB = skpdKB;
+
+                // Panggil GetPermanenJT
+                Data = Method.GetPermanenKB(tahun, bulan, skpdKB);
+            }
+        }
+
+        //Detail Reklame Terbatas
+        public class DetailTerbatasJT
+        {
+            public int Tahun { get; set; }
+            public string? Bulan { get; set; }
+            public int? SkpdBlmJT { get; set; }
+
+            public List<TerbatasJT> Data { get; set; } = new();
+
+            public DetailTerbatasJT() { }
+
+            public DetailTerbatasJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
+            {
+                Tahun = tahun;
+                Bulan = bulan;
+                SkpdBlmJT = skpdBlmJT;
+
+                // Panggil GetTerbatasJT
+                Data = Method.GetTerbatasJT(tahun, bulan, skpdBlmJT);
+            }
+        }
+
+        public class DetailTerbatasBP
+        {
+            public int Tahun { get; set; }
+            public string? Bulan { get; set; }
+            public int? SkpdBlmPanjang { get; set; }
+
+            public List<TerbatasBP> Data { get; set; } = new();
+
+            public DetailTerbatasBP() { }
+
+            public DetailTerbatasBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+            {
+                Tahun = tahun;
+                Bulan = bulan;
+                SkpdBlmPanjang = skpdBlmPanjang;
+
+                // Panggil GetPermanenJT
+                Data = Method.GetTerbatasBP(tahun, bulan, skpdBlmPanjang);
+            }
+        }
+
+        public class DetailTerbatasKB
+        {
+            public int Tahun { get; set; }
+            public string? Bulan { get; set; }
+            public int? SkpdBlmKB { get; set; }
+
+            public List<TerbatasKB> Data { get; set; } = new();
+
+            public DetailTerbatasKB() { }
+
+            public DetailTerbatasKB(int tahun, string? bulan = null, int? skpdKB = null)
+            {
+                Tahun = tahun;
+                Bulan = bulan;
+                SkpdBlmKB = skpdKB;
+
+                // Panggil GetTerbatasJT
+                Data = Method.GetTerbatasKB(tahun, bulan, skpdKB);
+            }
+        }
+
+        //Detail Isidentil
+        public class DetailIsidentilKB
+        {
+            public int Tahun { get; set; }
+            public string? Bulan { get; set; }
+            public int? SkpdBlmKB { get; set; }
+
+            public List<IsidentilKB> Data { get; set; } = new();
+
+            public DetailIsidentilKB() { }
+
+            public DetailIsidentilKB(int tahun, string? bulan = null, int? skpdKB = null)
+            {
+                Tahun = tahun;
+                Bulan = bulan;
+                SkpdBlmKB = skpdKB;
+
+                // Panggil GetTerbatasJT
+                Data = Method.GetIsidentilKB(tahun, bulan, skpdKB);
             }
         }
 
@@ -94,6 +234,196 @@ namespace MonPDReborn.Models.AktivitasOP
                 };
             }
 
+            // Detail Reklame Permanen
+            public static List<PermanenJT> GetPermanenJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
+            {
+                var all = GetAllPermanenJT(); // ambil semua data dummy misalnya
+
+                var query = all.Where(x => x.Tahun == tahun);
+
+                if (!string.IsNullOrWhiteSpace(bulan))
+                {
+                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (skpdBlmJT.HasValue)
+                {
+                    query = query.Where(x => x.SKPDBlmJT == skpdBlmJT.Value);
+                }
+
+                return query.ToList();
+            }
+
+            public static List<PermanenJT> GetAllPermanenJT()
+            {
+                return new List<PermanenJT>
+                {
+                    new PermanenJT { Bulan = "Januari", Tahun = 2025, SKPDBlmJT = 5, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, Email = "contact@reklamejaya.co.id", JmlUpaya = 1 },
+                };
+            }
+
+            public static List<PermanenBP> GetPermanenBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+            {
+                var all = GetAllPermanenBP(); // ambil semua data dummy misalnya
+
+                var query = all.Where(x => x.Tahun == tahun);
+
+                if (!string.IsNullOrWhiteSpace(bulan))
+                {
+                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (skpdBlmPanjang.HasValue)
+                {
+                    query = query.Where(x => x.SKPDBlmPanjang == skpdBlmPanjang.Value);
+                }
+
+                return query.ToList();
+            }
+
+            public static List<PermanenBP> GetAllPermanenBP()
+            {
+                return new List<PermanenBP>
+                {
+                    new PermanenBP { Bulan = "Januari", Tahun = 2025, SKPDBlmPanjang = 4, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
+                };
+            }
+
+            public static List<PermanenKB> GetPermanenKB(int tahun, string? bulan = null, int? skpdKB = null)
+            {
+                var all = GetAllPermanenKB(); // ambil semua data dummy misalnya
+
+                var query = all.Where(x => x.Tahun == tahun);
+
+                if (!string.IsNullOrWhiteSpace(bulan))
+                {
+                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (skpdKB.HasValue)
+                {
+                    query = query.Where(x => x.SKPDBlmKB == skpdKB.Value);
+                }
+
+                return query.ToList();
+            }
+
+            public static List<PermanenKB> GetAllPermanenKB()
+            {
+                return new List<PermanenKB>
+                {
+                    new PermanenKB { Bulan = "Januari", Tahun = 2025, SKPDBlmKB = 3, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
+                };
+            }
+            // DetailTerbatas Reklame
+            public static List<TerbatasJT> GetTerbatasJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
+            {
+                var all = GetAllTerbatasJT(); // ambil semua data dummy misalnya
+
+                var query = all.Where(x => x.Tahun == tahun);
+
+                if (!string.IsNullOrWhiteSpace(bulan))
+                {
+                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (skpdBlmJT.HasValue)
+                {
+                    query = query.Where(x => x.SKPDBlmJT == skpdBlmJT.Value);
+                }
+
+                return query.ToList();
+            }
+
+            private static List<TerbatasJT> GetAllTerbatasJT()
+            {
+                return new List<TerbatasJT>
+                {
+                    new TerbatasJT {  Bulan = "Februari", Tahun = 2025, SKPDBlmJT = 6, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, Email = "contact@reklamejaya.co.id", JmlUpaya = 1 },
+                };
+            }
+
+            public static List<TerbatasBP> GetTerbatasBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
+            {
+                var all = GetAllTerbatasBP(); // ambil semua data dummy misalnya
+
+                var query = all.Where(x => x.Tahun == tahun);
+
+                if (!string.IsNullOrWhiteSpace(bulan))
+                {
+                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (skpdBlmPanjang.HasValue)
+                {
+                    query = query.Where(x => x.SKPDBlmPanjang == skpdBlmPanjang.Value);
+                }
+
+                return query.ToList();
+            }
+
+            public static List<TerbatasBP> GetAllTerbatasBP()
+            {
+                return new List<TerbatasBP>
+                {
+                    new TerbatasBP { Bulan = "Februari", Tahun = 2025, SKPDBlmPanjang = 4, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
+                };
+            }
+
+            public static List<TerbatasKB> GetTerbatasKB(int tahun, string? bulan = null, int? skpdKB = null)
+            {
+                var all = GetAllTerbatasKB(); // ambil semua data dummy misalnya
+
+                var query = all.Where(x => x.Tahun == tahun);
+
+                if (!string.IsNullOrWhiteSpace(bulan))
+                {
+                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (skpdKB.HasValue)
+                {
+                    query = query.Where(x => x.SKPDBlmKB == skpdKB.Value);
+                }
+
+                return query.ToList();
+            }
+
+            public static List<TerbatasKB> GetAllTerbatasKB()
+            {
+                return new List<TerbatasKB>
+                {
+                    new TerbatasKB { Bulan = "Februari", Tahun = 2025, SKPDBlmKB = 3, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
+                };
+            }
+
+            // Isidentil Reklame
+            public static List<IsidentilKB> GetIsidentilKB(int tahun, string? bulan = null, int? skpdKB = null)
+            {
+                var all = GetAllIsidentilKB(); // ambil semua data dummy misalnya
+
+                var query = all.Where(x => x.Tahun == tahun);
+
+                if (!string.IsNullOrWhiteSpace(bulan))
+                {
+                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (skpdKB.HasValue)
+                {
+                    query = query.Where(x => x.SKPDBlmKB == skpdKB.Value);
+                }
+
+                return query.ToList();
+            }
+
+            public static List<IsidentilKB> GetAllIsidentilKB()
+            {
+                return new List<IsidentilKB>
+                {
+                    new IsidentilKB { Bulan = "Maret", Tahun = 2025, SKPDBlmKB = 4, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
+                };
+            }
 
 
         }
@@ -102,11 +432,11 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public string Bulan { get; set; } = null!;
             public int Tahun { get; set; }
-            public int SKPDJT { get; set; } 
+            public int SKPDJT { get; set; }
             public decimal NilaiJT { get; set; }
-            public int SKPDBlmJT { get; set; } 
-            public decimal NilaiBlmJT { get; set; } 
-            public int SKPDPanjang { get; set; } 
+            public int SKPDBlmJT { get; set; }
+            public decimal NilaiBlmJT { get; set; }
+            public int SKPDPanjang { get; set; }
             public decimal NilaiPanjang { get; set; }
             public int SKPDBlmPanjang { get; set; }
             public decimal NilaiBlmPanjang { get; set; }
@@ -156,14 +486,14 @@ namespace MonPDReborn.Models.AktivitasOP
             public string NoFormulir { get; set; } = null!;
             public string Nama { get; set; } = null!;
             public string AlamatOP { get; set; } = null!;
-            public string IsiReklame { get; set; } =null!;
+            public string IsiReklame { get; set; } = null!;
             public string Status { get; set; } = null!;
             public DateTime TahunPajak { get; set; }
             public decimal JumlahNilai { get; set; }
             public string Email { get; set; } = null!;
             public int JmlUpaya { get; set; }
         }
-        public class PermananBP
+        public class PermanenBP
         {
             public string Bulan { get; set; } = null!;
             public int Tahun { get; set; }
@@ -179,6 +509,69 @@ namespace MonPDReborn.Models.AktivitasOP
         }
 
         public class PermanenKB
+        {
+            public string Bulan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int SKPDBlmKB { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string Status { get; set; } = null!;
+            public DateTime TahunPajak { get; set; }
+            public decimal JumlahNilai { get; set; }
+            public string Email { get; set; } = null!;
+            public int JmlUpaya { get; set; }
+        }
+
+        public class TerbatasJT
+        {
+            public string Bulan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int SKPDBlmJT { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string Status { get; set; } = null!;
+            public DateTime TahunPajak { get; set; }
+            public decimal JumlahNilai { get; set; }
+            public string Email { get; set; } = null!;
+            public int JmlUpaya { get; set; }
+        }
+
+        public class TerbatasBP
+        {
+            public string Bulan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int SKPDBlmPanjang { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string Status { get; set; } = null!;
+            public DateTime TahunPajak { get; set; }
+            public decimal JumlahNilai { get; set; }
+            public int JmlUpaya { get; set; }
+        }
+
+        public class TerbatasKB
+        {
+            public string Bulan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int SKPDBlmKB { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string Status { get; set; } = null!;
+            public DateTime TahunPajak { get; set; }
+            public decimal JumlahNilai { get; set; }
+            public string Email { get; set; } = null!;
+            public int JmlUpaya { get; set; }
+        }
+
+        public class IsidentilKB
         {
             public string Bulan { get; set; } = null!;
             public int Tahun { get; set; }
