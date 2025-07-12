@@ -201,14 +201,12 @@ namespace MonPDReborn.Models.DataWP
 
                 return ret;
             }
-
             public static List<ProfilWP> GetDataProfilWP(string npwpd)
             {
                 var ret = new List<ProfilWP>();
 
                 return ret;
             }
-
             public static Dashboard GetDashboardData()
             {
                 return new Dashboard
@@ -221,8 +219,6 @@ namespace MonPDReborn.Models.DataWP
                     WPAktif = 11523
                 };
             }
-
-
         }
 
         public class RekapWP
