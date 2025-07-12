@@ -1,4 +1,5 @@
 ﻿using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
+using MonPDLib;
 using static MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM;
 using static MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM;
 
@@ -17,62 +18,197 @@ namespace MonPDReborn.Models.DataWP
         public class Show
         {
             public List<RekapWP> DataRekapWPList { get; set; } = new();
-
-
             public Show()
             {
-                DataRekapWPList = Method.GetFilteredData();
+                DataRekapWPList = Method.GetDataWpList();
             }
         }
         public class Detail
         {
             public List<ProfilWP> DataWPList { get; set; } = new();
-
             public Detail() { }
-
             public Detail(string NPWPD)
             {
-                DataWPList = Method.GetFilteredDataProfilWP(NPWPD);
+                DataWPList = Method.GetDataProfilWP(NPWPD);
             }
         }
 
         public class Method
         {
-            public static List<RekapWP> GetFilteredData()
+            public static List<RekapWP> GetDataWpList()
             {
-                return GetAllDataRekapWP();
-            }
+                var ret = new List<RekapWP>();
+                var context = DBClass.GetContext();
 
-            private static List<RekapWP> GetAllDataRekapWP()
-            {
-                return new List<RekapWP>
-                {
-                    new RekapWP {NPWPD = "01.01.0001", Nama = "Hotel Mawar", JenisSubjek = "Badan Usaha", Kontak = "08123456789", Status = "Aktif"},
-                    new RekapWP {NPWPD = "01.01.0002", Nama = "Restoran Sederhana", JenisSubjek = "Badan Usaha", Kontak = "08129876543", Status = "Aktif" },
-                    new RekapWP {NPWPD = "01.01.0003", Nama = "Taman Hiburan Anak", JenisSubjek = "Orang Pribadi", Kontak = "08122223333", Status = "Non Aktif"}
-                };
-            }
-
-            public static List<ProfilWP> GetFilteredDataProfilWP(string npwpd)
-            {
-                return GetAllDataProfilWP()
-                    .Where(x => x.NPWPD.Equals(npwpd, StringComparison.OrdinalIgnoreCase))
+                var DataResto = context.DbOpRestos
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            Nama = first?.NpwpdNama,
+                            JenisSubjek = "",
+                            Kontak = first?.Telp,
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
                     .ToList();
+                var DataListrik = context.DbOpListriks
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            Nama = first?.NpwpdNama,
+                            JenisSubjek = "",
+                            Kontak = first?.Telp,
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataHotel = context.DbOpHotels
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            Nama = first?.NpwpdNama,
+                            JenisSubjek = "",
+                            Kontak = first?.Telp,
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataParkir = context.DbOpParkirs
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            Nama = first?.NpwpdNama,
+                            JenisSubjek = "",
+                            Kontak = first?.Telp,
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataHiburan = context.DbOpHiburans
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            Nama = first?.NpwpdNama,
+                            JenisSubjek = "",
+                            Kontak = first?.Telp,
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataAbt = context.DbOpAbts
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            Nama = first?.NpwpdNama,
+                            JenisSubjek = "",
+                            Kontak = first?.Telp,
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataReklame = context.DbOpReklames
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            Nama = first?.NamaPerusahaan,
+                            JenisSubjek = "",
+                            Kontak = first?.TelpPerusahaan,
+                            Status = "Aktif"
+                        };
+                    })
+                    .ToList();
+
+                var DataPbb = context.DbOpPbbs
+                    .GroupBy(r => new { r.WpNpwp })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new RekapWP
+                        {
+                            NPWPD = wp.Key.WpNpwp,
+                            Nama = first?.WpNama,
+                            JenisSubjek = "",
+                            Kontak = "-",
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+
+                ret.AddRange(DataResto);
+                ret.AddRange(DataListrik);
+                ret.AddRange(DataHotel);
+                ret.AddRange(DataParkir);
+                ret.AddRange(DataHiburan);
+                ret.AddRange(DataAbt);
+                ret.AddRange(DataReklame);
+                ret.AddRange(DataPbb);
+
+
+                //var DataBphtb = context.DbMonBphtbs
+                //    .GroupBy(r => new { r.Npwpd })
+                //    .ToList()
+                //    .Select(wp =>
+                //    {
+                //        var first = wp.FirstOrDefault();
+                //        return new RekapWP
+                //        {
+                //            NPWPD = wp.Key.WpNpwp,
+                //            Nama = first?.WpNama,
+                //            JenisSubjek = "",
+                //            Kontak = "-",
+                //            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                //        };
+                //    })
+                //    .ToList();
+
+
+
+                return ret;
             }
 
-
-            private static List<ProfilWP> GetAllDataProfilWP()
+            public static List<ProfilWP> GetDataProfilWP(string npwpd)
             {
-                return new List<ProfilWP>
-                {
-                    new ProfilWP {NPWPD = "01.01.0001", Nama = "Hotel Mawar", JenisSubjek = "Badan Usaha", NIB = "1234567890", Status = "Aktif", TanggalDaftar = new DateTime(2018, 5, 12), AlamatDom = "Jl. Mawar No. 1, Jakarta", AlamatUsaha = "Jl. Mawar Raya No. 2, Jakarta", Kontak = "08123456789", Email = "info@hotelmawar.com"},
-                    new ProfilWP {NPWPD = "01.01.0002", Nama = "Restoran Sederhana", JenisSubjek = "Badan Usaha", NIB = "9876543210", Status = "Aktif", TanggalDaftar = new DateTime(2020, 1, 20), AlamatDom = "Jl. Sederhana No. 5, Bandung", AlamatUsaha = "Jl. Sederhana Raya No. 10, Bandung", Kontak = "08129876543", Email = "contact@restoransederhana.co.id"},
-                    new ProfilWP {NPWPD = "01.01.0003", Nama = "Taman Hiburan Anak", JenisSubjek = "Orang Pribadi", NIB = "1122334455", Status = "Non Aktif", TanggalDaftar = new DateTime(2015, 7, 15), AlamatDom = "Jl. Kenanga No. 8, Surabaya", AlamatUsaha = "Jl. Kenanga Raya No. 12, Surabaya", Kontak = "08122223333", Email = "owner@tamankidsplay.id"}
-                };
+                var ret = new List<ProfilWP>();
 
+                return ret;
             }
 
-            
             public static Dashboard GetDashboardData()
             {
                 return new Dashboard
@@ -92,9 +228,9 @@ namespace MonPDReborn.Models.DataWP
         public class RekapWP
         {
             public string NPWPD { get; set; } = null!;
-            public string Nama {  get; set; } = null!;
+            public string Nama { get; set; } = null!;
             public string JenisSubjek { get; set; } = null!;
-            public string Kontak {  get; set; } = null!;
+            public string Kontak { get; set; } = null!;
             public string Status { get; set; } = null!;
         }
 
@@ -103,10 +239,10 @@ namespace MonPDReborn.Models.DataWP
             public string NPWPD { get; set; } = null!;
             public string Nama { get; set; } = null!;
             public string JenisSubjek { get; set; } = null!;
-            public string NIB { get;set; } = null!;
+            public string NIB { get; set; } = null!;
             public string Status { get; set; } = null!;
             public DateTime TanggalDaftar { get; set; }
-            public string AlamatDom {  get; set; } = null!;
+            public string AlamatDom { get; set; } = null!;
             public string AlamatUsaha { get; set; } = null!;
             public string Kontak { get; set; } = null!;
             public string Email { get; set; } = null!;
