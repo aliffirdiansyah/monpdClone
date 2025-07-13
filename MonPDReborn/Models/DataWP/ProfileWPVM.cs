@@ -9,27 +9,32 @@ namespace MonPDReborn.Models.DataWP
     {
         public class Index
         {
-            public Dashboard Data { get; set; } = new Dashboard();
             public Index()
             {
-                Data = Method.GetDashboardData();
             }
         }
         public class Show
         {
+            public Dashboard Data { get; set; } = new Dashboard();
             public List<RekapWP> DataRekapWPList { get; set; } = new();
             public Show()
             {
                 DataRekapWPList = Method.GetDataWpList();
+                Data.BadanUsaha = DataRekapWPList.Count(wp => wp.JenisSubjek == "Badan Usaha");
+                Data.OrangPribadi = DataRekapWPList.Count(wp => wp.JenisSubjek == "Orang Pribadi");
+                Data.WPAktif = DataRekapWPList.Count(wp => wp.Status == "Aktif");
+                Data.WPTahun = DataRekapWPList.Count(wp => wp.TanggalDaftar.Year == DateTime.Now.Year);
+                Data.WPBulan = DataRekapWPList.Count(wp => wp.TanggalDaftar.Year == DateTime.Now.Year && wp.TanggalDaftar.Month == DateTime.Now.Month);
+                Data.RataWPBulan = Data.WPTahun / 12;
             }
         }
         public class Detail
         {
-            public List<ProfilWP> DataWPList { get; set; } = new();
+            public ProfilWP DataWPRow { get; set; } = new();
             public Detail() { }
             public Detail(string NPWPD)
             {
-                DataWPList = Method.GetDataProfilWP(NPWPD);
+                DataWPRow = Method.GetDataProfilWP(NPWPD);
             }
         }
 
@@ -52,7 +57,8 @@ namespace MonPDReborn.Models.DataWP
                             Nama = first?.NpwpdNama,
                             JenisSubjek = "",
                             Kontak = first?.Telp,
-                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                            TanggalDaftar = first.TglMulaiBukaOp,
                         };
                     })
                     .ToList();
@@ -68,7 +74,8 @@ namespace MonPDReborn.Models.DataWP
                             Nama = first?.NpwpdNama,
                             JenisSubjek = "",
                             Kontak = first?.Telp,
-                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                            TanggalDaftar = first.TglMulaiBukaOp,
                         };
                     })
                     .ToList();
@@ -84,7 +91,8 @@ namespace MonPDReborn.Models.DataWP
                             Nama = first?.NpwpdNama,
                             JenisSubjek = "",
                             Kontak = first?.Telp,
-                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                            TanggalDaftar = first.TglMulaiBukaOp,
                         };
                     })
                     .ToList();
@@ -100,7 +108,8 @@ namespace MonPDReborn.Models.DataWP
                             Nama = first?.NpwpdNama,
                             JenisSubjek = "",
                             Kontak = first?.Telp,
-                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                            TanggalDaftar = first.TglMulaiBukaOp,
                         };
                     })
                     .ToList();
@@ -116,7 +125,8 @@ namespace MonPDReborn.Models.DataWP
                             Nama = first?.NpwpdNama,
                             JenisSubjek = "",
                             Kontak = first?.Telp,
-                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                            TanggalDaftar = first.TglMulaiBukaOp,
                         };
                     })
                     .ToList();
@@ -132,7 +142,8 @@ namespace MonPDReborn.Models.DataWP
                             Nama = first?.NpwpdNama,
                             JenisSubjek = "",
                             Kontak = first?.Telp,
-                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                            TanggalDaftar = first.TglMulaiBukaOp,
                         };
                     })
                     .ToList();
@@ -165,7 +176,8 @@ namespace MonPDReborn.Models.DataWP
                             Nama = first?.WpNama,
                             JenisSubjek = "",
                             Kontak = "-",
-                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif"
+                            Status = first?.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                            TanggalDaftar = new DateTime((int)first.TahunBuku, 1, 1),
                         };
                     })
                     .ToList();
@@ -201,9 +213,164 @@ namespace MonPDReborn.Models.DataWP
 
                 return ret;
             }
-            public static List<ProfilWP> GetDataProfilWP(string npwpd)
+            public static ProfilWP GetDataProfilWP(string npwpd)
             {
-                var ret = new List<ProfilWP>();
+                var ret = new ProfilWP();
+                var context = DBClass.GetContext();
+
+                var DataResto = context.DbOpRestos
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.Npwpd,
+                        Nama = r.NpwpdNama,
+                        JenisSubjek = "-",
+                        NIB = "-",
+                        Status = r.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                        TanggalDaftar = r.TglMulaiBukaOp,
+                        AlamatDom = r.NpwpdAlamat,
+                        AlamatUsaha = r.NpwpdAlamat,
+                        Kontak = r.Telp,
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+                var DataListrik = context.DbOpListriks
+                .Where(x => x.Npwpd == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.Npwpd,
+                        Nama = r.NpwpdNama,
+                        JenisSubjek = "-",
+                        NIB = "-",
+                        Status = r.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                        TanggalDaftar = r.TglMulaiBukaOp,
+                        AlamatDom = r.NpwpdAlamat,
+                        AlamatUsaha = r.NpwpdAlamat,
+                        Kontak = r.Telp,
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+                var DataHotel = context.DbOpHotels
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.Npwpd,
+                        Nama = r.NpwpdNama,
+                        JenisSubjek = "-",
+                        NIB = "-",
+                        Status = r.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                        TanggalDaftar = r.TglMulaiBukaOp,
+                        AlamatDom = r.NpwpdAlamat,
+                        AlamatUsaha = r.NpwpdAlamat,
+                        Kontak = r.Telp,
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+                var DataParkir = context.DbOpParkirs
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.Npwpd,
+                        Nama = r.NpwpdNama,
+                        JenisSubjek = "-",
+                        NIB = "-",
+                        Status = r.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                        TanggalDaftar = r.TglMulaiBukaOp,
+                        AlamatDom = r.NpwpdAlamat,
+                        AlamatUsaha = r.NpwpdAlamat,
+                        Kontak = r.Telp,
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+                var DataHiburan = context.DbOpHiburans
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.Npwpd,
+                        Nama = r.NpwpdNama,
+                        JenisSubjek = "-",
+                        NIB = "-",
+                        Status = r.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                        TanggalDaftar = r.TglMulaiBukaOp,
+                        AlamatDom = r.NpwpdAlamat,
+                        AlamatUsaha = r.NpwpdAlamat,
+                        Kontak = r.Telp,
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+                var DataAbt = context.DbOpAbts
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.Npwpd,
+                        Nama = r.NpwpdNama,
+                        JenisSubjek = "-",
+                        NIB = "-",
+                        Status = r.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                        TanggalDaftar = r.TglMulaiBukaOp,
+                        AlamatDom = r.NpwpdAlamat,
+                        AlamatUsaha = r.NpwpdAlamat,
+                        Kontak = r.Telp,
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+                var DataReklame = context.DbOpReklames
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.Npwpd,
+                        Nama = r.NamaPerusahaan,
+                        JenisSubjek = r.JenisWp,
+                        NIB = "-",
+                        Status = "Aktif",
+                        TanggalDaftar = r.TglPermohonan.Value,
+                        AlamatDom = r.AlamatperPenanggungjawab,
+                        AlamatUsaha = r.AlamatPerusahaan,
+                        Kontak = "-",
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+
+                var DataPbb = context.DbOpPbbs
+                    .Where(x => x.WpNpwp == npwpd)
+                    .Select(r => new ProfilWP
+                    {
+                        NPWPD = r.WpNpwp,
+                        Nama = r.WpNama,
+                        JenisSubjek = "-",
+                        NIB = "-",
+                        Status = r.IsTutup == 1 ? "Tidak Aktif" : "Aktif",
+                        TanggalDaftar = r.InsDate,
+                        AlamatDom = r.AlamatWp,
+                        AlamatUsaha = r.AlamatWp,
+                        Kontak = "-",
+                        Email = "-"
+                    })
+                    .OrderBy(r => r.TanggalDaftar)
+                    .FirstOrDefault();
+
+                ret = DataResto
+                    ?? DataListrik
+                    ?? DataHotel
+                    ?? DataParkir
+                    ?? DataHiburan
+                    ?? DataAbt
+                    ?? DataReklame
+                    ?? DataPbb;
 
                 return ret;
             }
@@ -228,6 +395,8 @@ namespace MonPDReborn.Models.DataWP
             public string JenisSubjek { get; set; } = null!;
             public string Kontak { get; set; } = null!;
             public string Status { get; set; } = null!;
+            public DateTime TanggalDaftar { get; set; }
+
         }
 
         public class ProfilWP
