@@ -181,6 +181,25 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
+        // Detail Upaya
+
+        public class Detail
+        {
+            public string? NoFormulir { get; set; }
+
+            public List<DetailUpaya> Data { get; set; } = new();
+
+            public Detail() { }
+
+            public Detail(string? noFormulir)
+            {
+                NoFormulir = noFormulir;
+
+                // panggil GetDetailUpaya
+                Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);
+            }
+        }
+
         public class Method
         {
             public static List<ReklamePermanen> GetReklamePermanen(int tahun)
@@ -421,7 +440,28 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 return new List<IsidentilKB>
                 {
-                    new IsidentilKB { Bulan = "Maret", Tahun = 2025, SKPDBlmKB = 4, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
+                    new IsidentilKB { Bulan = "Maret", Tahun = 2025, SKPDBlmKB = 4, NoFormulir = "FM-2025-0021", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
+                };
+            }
+
+            // Detail Upaya
+            public static List<DetailUpaya> GetDetailUpaya(string noFormulir)
+            {
+                var all = GetAllDetailUpaya(); // ambil semua data dummy misalnya
+
+                if (string.IsNullOrWhiteSpace(noFormulir))
+                    return all;
+
+                return all
+                    .Where(x => x.NoFormulir != null && x.NoFormulir.Contains(noFormulir, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            private static List<DetailUpaya> GetAllDetailUpaya()
+            {
+                return new List<DetailUpaya>
+                {
+                     new DetailUpaya {Tahun = 2025, NoFormulir = "FM-2025-0001", AlamatReklame = "Jl. Merdeka No. 10", JenisReklame = "Billboard", Panjang = 5, Lebar = 3, Luas = 15, Tinggi = 4, TglMulai = new DateTime(2025, 1, 1), TglSelesai = new DateTime(2025, 12, 31), TglUpaya = DateTime.Now, Upaya = "Peringatan Tertulis", Keterangan = "Pemasangan tanpa izin", Petugas = "Budi Santoso"},
                 };
             }
 
@@ -585,6 +625,25 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal JumlahNilai { get; set; }
             public string Email { get; set; } = null!;
             public int JmlUpaya { get; set; }
+        }
+
+        public class DetailUpaya
+        {
+            public int Tahun { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string AlamatReklame { get; set; } = null!;
+            public string JenisReklame { get; set; } = null!;
+            public decimal Panjang { get; set; }
+            public decimal Lebar { get; set; }
+            public decimal Luas { get; set; }
+            public decimal Tinggi { get; set; }
+            public DateTime TglMulai { get; set; }
+            public DateTime TglSelesai { get; set; }
+            public DateTime TglUpaya { get; set; }
+            public string Upaya { get; set; } = null!;
+            public string Keterangan { get; set; } = null!;
+            public string Petugas { get; set; } = null!;
         }
     }
 }

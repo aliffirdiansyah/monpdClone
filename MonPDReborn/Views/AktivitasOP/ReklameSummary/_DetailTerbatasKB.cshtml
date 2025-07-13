@@ -63,14 +63,57 @@
                            columns.AddFor(m => m.JumlahNilai).Caption("Jumlah Nilai").Format("#,##0");
                            columns.AddFor(m => m.Email).Caption("Informasi Email");
                            columns.AddFor(m => m.JmlUpaya).Caption("Jumlah Upaya");
-
+                                            columns.Add()
+                                            .Type(GridCommandColumnType.Buttons)
+                                            .Buttons(b =>
+                                            {
+                                                b.Add()
+                                            .Text("Detail")
+                                            .Icon("search")
+                                            .OnClick("onDetailClick");
+                                            });
 
                        })
 
                        )
+                </div>
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+
+@section Scripts
+{
+    <script>
+         function onDetailClick(e) {
+            const noFormulir = e.row.data.NoFormulir;
+
+            const $modal = $('#detailModal');
+            const $content = $('#detailModalContent');
+
+            $content.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+            $modal.modal('show');
+
+            $.get('/ReklameSummary/Detail', { noFormulir: noFormulir })
+                .done(function (html) {
+                    $content.html(html);
+                })
+                .fail(function () {
+                    $content.html('<div class="text-danger text-center p-3">Gagal memuat detail.</div>');
+                });
+        }
+    </script>
+}
