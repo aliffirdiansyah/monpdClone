@@ -10,48 +10,47 @@
 </div>
 
 <div class="modal-body">
-@foreach (var profil in Model.DataWPList)
-{
+
     <div class="card mb-3">
         <div class="card-header bg-primary text-white d-flex align-items-center">
             <i class="ri-profile-fill fs-3 me-2"></i>
             <h4 class="mb-0 text-white">Identitas Dasar</h4>
         </div>
-    
+
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">NPWPD</label>
-                    <div class="fw-semibold"> .NPWPD</div>
+                    <div class="fw-semibold">@Model.DataWPRow.NPWPD</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">Nama Wajib Pajak</label>
-                    <div class="fw-semibold"> .Nama</div>
+                    <div class="fw-semibold">@Model.DataWPRow.Nama</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">Jenis Subjek Pajak</label>
-                    <div class="fw-semibold"> .JenisSubjek</div>
+                    <div class="fw-semibold">@Model.DataWPRow.JenisSubjek</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">NIB</label>
-                    <div class="fw-semibold"> .NIB</div>
+                    <div class="fw-semibold">@Model.DataWPRow.NIB</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">Status</label>
                     <div>
-                        @if (profil.Status == "Aktif")
+                        @if (Model.DataWPRow.Status == "Aktif")
                         {
                             <span class="badge bg-success px-3 py-2">Aktif</span>
                         }
                         else
                         {
-                            <span class="badge bg-danger px-3 py-2"> .Status</span>
+                            <span class="badge bg-danger px-3 py-2">@Model.DataWPRow.Status</span>
                         }
                     </div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">Tanggal Daftar</label>
-                    <div class="fw-semibold"> .TanggalDaftar.ToString("dd MMMM yyyy")</div>
+                    <div class="fw-semibold">@Model.DataWPRow.TanggalDaftar.ToString("dd MMMM yyyy")</div>
                 </div>
             </div>
         </div>
@@ -66,23 +65,22 @@
             <div class="row g-3">
                 <div class="col-12">
                     <label class="form-label text-muted fw-bold">Alamat Domisili</label>
-                    <div class="fw-semibold"> .AlamatDom</div>
+                    <div class="fw-semibold">@Model.DataWPRow.AlamatDom</div>
                 </div>
                 <div class="col-12">
                     <label class="form-label text-muted fw-bold">Alamat Usaha</label>
-                    <div class="fw-semibold"> .AlamatUsaha</div>
+                    <div class="fw-semibold">@Model.DataWPRow.AlamatUsaha</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">Nomor Telepon</label>
-                    <div class="fw-semibold"> .Kontak</div>
+                    <div class="fw-semibold">@Model.DataWPRow.Kontak</div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">Email</label>
-                    <div class="fw-semibold"> .Email</div>
+                    <div class="fw-semibold">@Model.DataWPRow.Email</div>
                 </div>
             </div>
         </div>
     </div>
 
-}
 </div>

@@ -66,7 +66,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetRestoPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetRestoPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -109,7 +109,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetListrikPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetListrikPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -152,7 +152,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHotelPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHotelPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -195,7 +195,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetParkirPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetParkirPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -238,7 +238,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -281,7 +281,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetAbtPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetAbtPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -324,7 +324,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetReklamePerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetReklamePerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -367,7 +367,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetPbbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetPbbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -410,7 +410,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -452,7 +452,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -494,7 +494,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -525,7 +525,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         break;
                     default:
-                        var dataTargetPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -693,7 +693,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetRestoPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetRestoPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -739,7 +739,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetListrikPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetListrikPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -785,7 +785,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHotelPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHotelPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -830,7 +830,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetParkirPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetParkirPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -875,7 +875,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -921,7 +921,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetAbtPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetAbtPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -966,7 +966,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetReklamePerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetReklamePerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -1012,7 +1012,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetPbbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetPbbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -1058,7 +1058,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -1103,7 +1103,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -1147,7 +1147,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -1181,7 +1181,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         break;
                     default:
-                        var dataTargetPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
