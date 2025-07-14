@@ -56,7 +56,7 @@ namespace MonPDReborn.Models.DataWP
                             Nama = wp.Nama,
                             JenisSubjek = wp.JenisWp == 0 ? "Orang Pribadi" : wp.JenisWp == 1 ? "Badan Usaha" : "Temporary",
                             Kontak = wp.Kontak ?? wp.Hp,
-                            Status = wp.Status == 1 ? "Tidak Aktif" : "Aktif",
+                            Status = wp.Status == 0 ? "Tidak Aktif" : "Aktif",
                             TanggalDaftar = wp.InsDate,
                         };
                     })
