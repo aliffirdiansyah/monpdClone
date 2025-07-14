@@ -11,7 +11,7 @@
 
     //controller data OP
     var dataOPControllers = new[] {
-        "PROFILEOP", "PROFILEPEMBAYARANOP", "PROFILEPOTENSIOP",
+        "PROFILEOP", "", "PROFILEPOTENSIOP",
         "PROFILETARGETOP", "PROFILESPASIALOP", "PELAPORANOP",
         "PENETAPANOP", "PENCARIANOP"
     };
@@ -168,13 +168,13 @@
                                     Profil OP
                                 </a>
                             </li>
-                            <li class="nav-item">
+                           @*  <li class="nav-item">
                                 <a class="nav-link @(currentController == "PROFILEPEMBAYARANOP" ? "active" : "")"
                                    href="@Url.Action("Index", "ProfilePembayaranOP")"
                                    data-key="t-profilPembayaran">
                                     Profil Pembayaran
                                 </a>
-                            </li>
+                            </li> *@
                             <li class="nav-item">
                                 <a class="nav-link @(currentController == "PROFILEPOTENSIOP" ? "active" : "")"
                                    href="@Url.Action("Index", "ProfilePotensiOP")"
