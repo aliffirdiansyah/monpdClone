@@ -468,8 +468,9 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonReklame>(entity =>
         {
-            entity.HasKey(e => e.NoFormulir).HasName("DB_MON_REKLAME_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_MON_REKLAME_PK");
 
+            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();
@@ -1308,6 +1309,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
+        modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");
         modelBuilder.HasSequence("SEQ_DB_OP_REKLAME");
 
         OnModelCreatingPartial(modelBuilder);
