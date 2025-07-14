@@ -31,19 +31,22 @@
                 <div class="text-start mt-3">
                     <p class="mb-1">Orang Pribadi: <span class="fw-bold">@Model.Data.OrangPribadi.ToString("N0")</span></p>
                     <p class="mb-1">Badan Usaha: <span class="fw-bold">@Model.Data.BadanUsaha.ToString("N0")</span></p>
+                    <p class="mb-1">Badan Usaha: <span class="fw-bold">@Model.Data.Temporary.ToString("N0")</span></p>
                 </div>
 
                 <div class="progress my-2" style="height: 6px;">
                     <div class="progress-bar bg-primary" role="progressbar"
-                         style="width: @Model.Data.PersentaseOrangPribadi.ToString("F0")%;"
-                         aria-valuenow="@Model.Data.PersentaseOrangPribadi.ToString("F0")"
+                         style="width: @Model.Data.PersentaseOrangPribadi.ToString("N0")%;"
+                         aria-valuenow="@Model.Data.PersentaseOrangPribadi.ToString("N0")"
+                         aria-valuenow="@Model.Data.PersentaseTemporary.ToString("N0")"
                          aria-valuemin="0" aria-valuemax="100">
                     </div>
                 </div>
 
                 <div class="text-muted small">
-                    @Model.Data.PersentaseOrangPribadi.ToString("F0")% Orang Pribadi,
-                    @Model.Data.PersentaseBadanUsaha.ToString("F0")% Badan
+                    @Model.Data.PersentaseOrangPribadi.ToString("N2")% Orang Pribadi,
+                    @Model.Data.PersentaseBadanUsaha.ToString("N2")% Badan
+                    @Model.Data.PersentaseTemporary.ToString("N2")% Temporary
                 </div>
             </div>
         </div>
@@ -63,7 +66,7 @@
                         </div>
                     </div>
                     <span class="badge bg-light-success text-success fw-semibold fs-5">
-                        ↑ @Model.Data.Presentase.ToString("F1")%
+                        ↑ @Model.Data.Presentase.ToString("N1")%
                     </span>
                 </div>
 
@@ -90,7 +93,7 @@
                         </div>
                     </div>
                     <span class="badge bg-light-purple text-purple fw-semibold">
-                        @Model.Data.PersentaseAktif.ToString("F1")%
+                        @Model.Data.PersentaseAktif.ToString("N1")%
                     </span>
                 </div>
 
@@ -101,8 +104,8 @@
 
                 <div class="progress my-2" style="height: 6px;">
                     <div class="progress-bar bg-purple" role="progressbar"
-                         style="width: @Model.Data.PersentaseAktif.ToString("F1")%;"
-                         aria-valuenow="@Model.Data.PersentaseAktif.ToString("F1")"
+                         style="width: @Model.Data.PersentaseAktif.ToString("N1")%;"
+                         aria-valuenow="@Model.Data.PersentaseAktif.ToString("N1")"
                          aria-valuemin="0" aria-valuemax="100">
                     </div>
                 </div>
@@ -116,62 +119,63 @@
 </div>
 <div class="table-responsive">
     @(
-    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfileWPVM.RekapWP>()
-        .ID("rekapWPGrid")
-        .DataSource(Model.DataRekapWPList)
-        .KeyExpr("NPWPD")
-        .ShowBorders(true)
-        .ShowColumnLines(true)
-        .ShowColumnHeaders(true)
-        .AllowColumnResizing(true)
-        .ShowRowLines(true)
-        .ColumnAutoWidth(true)
-        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-        .FilterRow(f => f.Visible(true))
-        .HeaderFilter(h => h.Visible(true))
-        .Sorting(s => s.Mode(GridSortingMode.Multiple))
-        .Paging(p => p.PageSize(10))
-        .Pager(pager =>
-        {
-            pager.ShowPageSizeSelector(true);
-            pager.AllowedPageSizes(new[] { 10, 20, 50 });
-            pager.ShowInfo(true);
-        })
-        .Columns(columns => {
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfileWPVM.RekapWP>()
+            .ID("rekapWPGrid")
+            .DataSource(Model.DataRekapWPList)
+            .KeyExpr("NPWPD")
+            .ShowBorders(true)
+            .ShowColumnLines(true)
+            .ShowColumnHeaders(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
+            .ColumnAutoWidth(true)
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .Paging(p => p.PageSize(10))
+            .Pager(pager =>
+            {
+                pager.ShowPageSizeSelector(true);
+                pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                pager.ShowInfo(true);
+            })
+            .Columns(columns =>
+            {
 
-            columns.AddFor(m => m.NPWPD)
-                .Caption("NPWPD")
-                .CellTemplate(@<text>
-                    <strong><%= data.NPWPD %></strong>
-                </text>);
+                columns.AddFor(m => m.NPWPD)
+            .Caption("NPWPD")
+            .CellTemplate(@<text>
+        <strong><%= data.NPWPD %></strong>
+    </text>);
 
-            columns.AddFor(m => m.Nama)
-                .Caption("Nama");
+                columns.AddFor(m => m.Nama)
+            .Caption("Nama");
 
-            columns.AddFor(m => m.JenisSubjek)
-                .Caption("Jenis Subjek");
+                columns.AddFor(m => m.JenisSubjek)
+            .Caption("Jenis Subjek");
 
-            columns.AddFor(m => m.Kontak)
-                .Caption("Kontak");
+                columns.AddFor(m => m.Kontak)
+            .Caption("Kontak");
 
-            columns.Add()
-                .Caption("Status")
-                .CellTemplate(@<text>
-                    <%
-                        var status = data.Status;
-                        var color = status == "Aktif" ? "badge bg-success" : "badge bg-danger";
-                    %>
-                    <span class="<%= color %>"><%= status %></span>
-                </text>);
+                columns.Add()
+            .Caption("Status")
+            .CellTemplate(@<text>
+        <%
+        var status = data.Status;
+        var color = status == "Aktif" ? "badge bg-success" : "badge bg-danger";
+        %>
+        <span class="<%= color %>"><%= status %></span>
+    </text>);
 
-           columns.Add()
-                .Caption("Aksi")
-                .CellTemplate(@<text>
-                    <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
-                            data-npwpd="<%= data.NPWPD %>">
-                        <i class=" ri-search-line "></i>
-                    </button>
-                </text>);
-        })
-)
+                columns.Add()
+            .Caption("Aksi")
+            .CellTemplate(@<text>
+        <button type="button" class="btn btn-sm btn-outline-primary btn-detail"
+                data-npwpd="<%= data.NPWPD %>">
+            <i class=" ri-search-line "></i>
+        </button>
+    </text>);
+            })
+        )
 </div>

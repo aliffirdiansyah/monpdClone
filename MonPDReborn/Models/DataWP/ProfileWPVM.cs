@@ -22,6 +22,7 @@ namespace MonPDReborn.Models.DataWP
                 DataRekapWPList = Method.GetDataWpList();
                 Data.BadanUsaha = DataRekapWPList.Count(wp => wp.JenisSubjek == "Badan Usaha");
                 Data.OrangPribadi = DataRekapWPList.Count(wp => wp.JenisSubjek == "Orang Pribadi");
+                Data.Temporary = DataRekapWPList.Count(wp => wp.JenisSubjek == "Temporary");
                 Data.WPAktif = DataRekapWPList.Count(wp => wp.Status == "Aktif");
                 Data.WPTahun = DataRekapWPList.Count(wp => wp.TanggalDaftar.Year == DateTime.Now.Year);
                 Data.WPBulan = DataRekapWPList.Count(wp => wp.TanggalDaftar.Year == DateTime.Now.Year && wp.TanggalDaftar.Month == DateTime.Now.Month);
@@ -53,7 +54,7 @@ namespace MonPDReborn.Models.DataWP
                         {
                             NPWPD = wp.NpwpdNo,
                             Nama = wp.Nama,
-                            JenisSubjek = wp.JenisWp == 0 ? "Orang Pribadi" : wp.JenisWp == 1 ? "Badan Usaha" : "Tidak Diketahui",
+                            JenisSubjek = wp.JenisWp == 0 ? "Orang Pribadi" : wp.JenisWp == 1 ? "Badan Usaha" : "Temporary",
                             Kontak = wp.Kontak ?? wp.Hp,
                             Status = wp.Status == 1 ? "Tidak Aktif" : "Aktif",
                             TanggalDaftar = wp.InsDate,
@@ -76,7 +77,7 @@ namespace MonPDReborn.Models.DataWP
                     {
                         NPWPD = wp.NpwpdNo,
                         Nama = wp.Nama,
-                        JenisSubjek = wp.JenisWp == 0 ? "Orang Pribadi" : wp.JenisWp == 1 ? "Badan Usaha" : "Tidak Diketahui",
+                        JenisSubjek = wp.JenisWp == 0 ? "Orang Pribadi" : wp.JenisWp == 1 ? "Badan Usaha" : "Temporary",
                         NIB = wp.JenisWp == 0 ? "-" : wp.JenisWp == 1 ? wp.NpwpdNo : "-",
                         Status = wp.Status == 1 ? "Tidak Aktif" : "Aktif",
                         TanggalDaftar = wp.InsDate,
@@ -127,26 +128,36 @@ namespace MonPDReborn.Models.DataWP
         public class Dashboard
         {
             // Data dasar
-            public int TotalWP => OrangPribadi + BadanUsaha;
+            public int TotalWP => OrangPribadi + BadanUsaha + Temporary;
             public int OrangPribadi { get; set; }
             public int BadanUsaha { get; set; }
+            public int Temporary { get; set; }
 
             // Persentase otomatis
-            public double PersentaseOrangPribadi
+            public decimal PersentaseOrangPribadi
             {
                 get
                 {
                     if (TotalWP == 0) return 0;
-                    return (double)OrangPribadi / TotalWP * 100;
+                    return (decimal)OrangPribadi / TotalWP * 100;
                 }
             }
 
-            public double PersentaseBadanUsaha
+            public decimal PersentaseBadanUsaha
             {
                 get
                 {
                     if (TotalWP == 0) return 0;
-                    return (double)BadanUsaha / TotalWP * 100;
+                    return (decimal)BadanUsaha / TotalWP * 100;
+                }
+            }
+            
+            public decimal PersentaseTemporary
+            {
+                get
+                {
+                    if (TotalWP == 0) return 0;
+                    return (decimal)Temporary / TotalWP * 100;
                 }
             }
 
@@ -155,12 +166,12 @@ namespace MonPDReborn.Models.DataWP
             public int WPBulan { get; set; }       // Bulan ini
             public int RataWPBulan { get; set; }   // Rata-rata per bulan
 
-            public double Presentase
+            public decimal Presentase
             {
                 get
                 {
                     if (RataWPBulan == 0) return 0; // Hindari pembagi 0
-                    return ((double)(WPBulan - RataWPBulan) / RataWPBulan) * 100;
+                    return ((decimal)(WPBulan - RataWPBulan) / RataWPBulan) * 100;
                 }
             }
 
@@ -174,12 +185,12 @@ namespace MonPDReborn.Models.DataWP
                 }
             }
 
-            public double PersentaseAktif
+            public decimal PersentaseAktif
             {
                 get
                 {
                     if (TotalWP == 0) return 0;
-                    return ((double)WPAktif / TotalWP) * 100;
+                    return ((decimal)WPAktif / TotalWP) * 100;
                 }
             }
         }
