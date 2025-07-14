@@ -47,6 +47,10 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
+            t.AddFor(c => c.PersenAccrual)
+                .SummaryType(SummaryType.Avg)
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
         })
     )
     )
