@@ -77,7 +77,7 @@
                     .SearchPanel(sp => sp.Visible(false))
                     .Columns(columns =>
                     {
-                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
                         .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Center);
@@ -129,7 +129,7 @@
                     .SearchPanel(sp => sp.Visible(false))
                     .Columns(columns =>
                     {
-                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
                         .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
@@ -180,7 +180,7 @@
                     .SearchPanel(sp => sp.Visible(false))
                     .Columns(columns =>
                     {
-                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
                         .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
@@ -229,7 +229,7 @@
                     .SearchPanel(sp => sp.Visible(false))
                     .Columns(columns =>
                     {
-                        columns.AddFor(c => c.BulanNama).Caption("Bulan");
+                        columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
                         .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);

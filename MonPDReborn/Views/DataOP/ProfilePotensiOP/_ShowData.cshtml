@@ -43,8 +43,8 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
     )
     .Columns(columns =>
     {
-        columns.AddFor(m => m.NOP).Caption("NOP");
-        columns.AddFor(m => m.NamaWP).Caption("Nama WP");
+        columns.AddFor(m => m.NOP).Caption("NOP").Fixed(true);
+        columns.AddFor(m => m.NamaWP).Caption("Nama WP").Fixed(true);
         columns.AddFor(m => m.Alamat).Caption("Alamat");
         columns.AddFor(m => m.Kategori).Caption("Kategori Pajak");
         columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
@@ -69,6 +69,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
         columns.AddFor(m => m.TotalPotensi).Caption("Total Potensi").Format("#,##0");
         columns.Add()
                .Type(GridCommandColumnType.Buttons)
+               .Fixed(false)
                .Buttons(b =>
                {
                    b.Add()
@@ -110,6 +111,10 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
                 }
             </text>);
 
+            items.AddFor(m => m.Capaian1)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
             items.AddFor(m => m.Target2)
             .SummaryType(SummaryType.Sum)
             .CustomizeText(@<text>
@@ -136,6 +141,10 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
                 }
             </text>);
 
+            items.AddFor(m => m.Capaian2)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
             items.AddFor(m => m.Target3)
             .SummaryType(SummaryType.Sum)
             .CustomizeText(@<text>
@@ -161,6 +170,24 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
                     return formatted;
                 }
             </text>);
+
+            items.AddFor(m => m.Capaian3)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
+            items.AddFor(m => m.TotalPotensi)
+            .SummaryType(SummaryType.Sum)
+            .CustomizeText(@<text>
+                function(data) {
+                    const formatted = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0
+                    }).format(data.value);
+                    return formatted;
+                }
+            </text>);
+
         });
     })
 )

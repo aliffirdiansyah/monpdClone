@@ -8,6 +8,26 @@ namespace MonPDLib
 {
     public class Helper
     {
+        public class NpwpdPhr
+        {
+            public string NPWPD_NO { get; set; }
+            public int JENIS_WP { get; set; }
+            public int STATUS { get; set; }
+            public string NAMA { get; set; }
+            public string ALAMAT { get; set; }
+            public string ALAMAT_DOMISILI { get; set; }
+            public string KOTA { get; set; }
+            public string HP { get; set; }
+            public string KONTAK { get; set; }
+            public string EMAIL { get; set; }
+            public int REF_BLN_PEL { get; set; }
+            public int REF_THN_PEL { get; set; }
+            public int REF_SEQ_PEL { get; set; }
+            public string NPWPD_LAMA { get; set; }
+            public int REF_WF { get; set; }
+            public string INS_BY { get; set; }
+            public string RESET_KEY { get; set; }
+        }
         public class OpSkpdSspdReklame
         {
             public string? NO_FORMULIR { get; set; }

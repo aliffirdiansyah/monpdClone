@@ -20,7 +20,7 @@ namespace MonPDLib
         {
         }
 
-        public DbSet<Npwpd> Npwpds { get; set; }
+        public DbSet<NpwpdPhr> NpwpdPhrs { get; set; }
         public DbSet<SSPDPbjt> SSPD { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,7 +28,7 @@ namespace MonPDLib
 
             modelBuilder.Entity<SSPDPbjt>().HasNoKey();
 
-            modelBuilder.Entity<Npwpd>().HasNoKey();
+            modelBuilder.Entity<NpwpdPhr>().HasNoKey();
         }
     }
 }
