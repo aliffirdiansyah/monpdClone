@@ -75,6 +75,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
 
+    public virtual DbSet<Npwpd> Npwpds { get; set; }
+
     public virtual DbSet<Op> Ops { get; set; }
 
     public virtual DbSet<OpAbt> OpAbts { get; set; }
@@ -194,6 +196,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TPenungguanSptpdParkir> TPenungguanSptpdParkirs { get; set; }
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
+
+    public virtual DbSet<TempBulanan> TempBulanans { get; set; }
+
+    public virtual DbSet<TempHituptb> TempHituptbs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -468,8 +474,9 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonReklame>(entity =>
         {
-            entity.HasKey(e => e.NoFormulir).HasName("DB_MON_REKLAME_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_MON_REKLAME_PK");
 
+            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();
@@ -640,6 +647,17 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<Npwpd>(entity =>
+        {
+            entity.HasKey(e => e.NpwpdNo).HasName("NPWPD_PK");
+
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+            entity.Property(e => e.IsValid).HasDefaultValueSql("0 ");
+            entity.Property(e => e.RefWf).HasDefaultValueSql("0");
+            entity.Property(e => e.Status).HasDefaultValueSql("1 ");
         });
 
         modelBuilder.Entity<Op>(entity =>
@@ -1308,6 +1326,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
+        modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");
         modelBuilder.HasSequence("SEQ_DB_OP_REKLAME");
 
         OnModelCreatingPartial(modelBuilder);

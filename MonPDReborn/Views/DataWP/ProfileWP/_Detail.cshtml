@@ -1,4 +1,5 @@
-﻿@model MonPDReborn.Models.DataWP.ProfileWPVM.Detail
+﻿@using System.Globalization
+@model MonPDReborn.Models.DataWP.ProfileWPVM.Detail
 
 <div class="modal-header">
     <h5 class="modal-title d-flex align-items-center">
@@ -50,7 +51,8 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted fw-bold">Tanggal Daftar</label>
-                    <div class="fw-semibold">@Model.DataWPRow.TanggalDaftar.ToString("dd MMMM yyyy")</div>
+                    <div class="fw-semibold">@Model.DataWPRow.TanggalDaftar.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                    </div>
                 </div>
             </div>
         </div>

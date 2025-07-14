@@ -33,17 +33,17 @@
 
                     <div class="mb-2">
                         <span class="text-muted">Potensi:</span>
-                        <span class="fw-semibold float-end">@ViewBag.Potensi</span>
+                        <span class="fw-semibold float-end">@ViewBag.Potensi.ToString("C")</span>
                     </div>
 
                     <div class="mb-2">
                         <span class="text-muted">Realisasi:</span>
-                        <span class="fw-semibold float-end">@ViewBag.RealisasiTotal</span>
+                        <span class="fw-semibold float-end">@ViewBag.RealisasiTotal.ToString("C")</span>
                     </div>
 
                     <div>
                         <span class="text-muted">Capaian:</span>
-                        <span class="fw-semibold float-end">@ViewBag.Capaian</span>
+                        <span class="fw-semibold float-end">@ViewBag.Capaian.ToString("N0")%</span>
                     </div>
                 </div>
             </div>

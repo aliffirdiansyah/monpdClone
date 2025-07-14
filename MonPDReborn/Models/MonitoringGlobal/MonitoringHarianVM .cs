@@ -90,7 +90,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 {
                     case EnumFactory.EPajak.MakananMinuman:
                         var dataTargetResto = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -138,7 +138,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         var dataTargetListrik = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -186,7 +186,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var dataTargetHotel = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -234,7 +234,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.JasaParkir:
                         var dataTargetParkir = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -282,7 +282,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
                         var dataTargetHiburan = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -330,7 +330,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.AirTanah:
                         var dataTargetAbt = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -378,7 +378,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.Reklame:
                         var dataTargetReklame = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -426,7 +426,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.PBB:
                         var dataTargetPbb = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -474,7 +474,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         var dataTargetBphtb = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -522,7 +522,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         var dataTargetOpsenPkb = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -569,7 +569,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     case EnumFactory.EPajak.OpsenBbnkb:
                         var dataTargetOpsenBbnkb = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {
@@ -616,7 +616,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         break;
                     default:
                         var dataTargetPerHari = context.DbAkunTargetBulans
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan)
+                            .Where(x => x.TahunBuku == tahun && x.Bulan == bulan)
                             .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                             .Select(g => new
                             {

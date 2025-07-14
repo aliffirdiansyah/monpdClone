@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpsenWs", "OpsenWs\OpsenWs.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReklameWs", "ReklameWs\ReklameWs.csproj", "{C87AF6A8-C5AE-4680-B444-8C9DA0C42507}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NpwpdWs", "NpwpdWs\NpwpdWs.csproj", "{F4B75469-6F98-4BA6-8EE6-1EBF2965020D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,10 @@ Global
 		{C87AF6A8-C5AE-4680-B444-8C9DA0C42507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C87AF6A8-C5AE-4680-B444-8C9DA0C42507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C87AF6A8-C5AE-4680-B444-8C9DA0C42507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4B75469-6F98-4BA6-8EE6-1EBF2965020D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4B75469-6F98-4BA6-8EE6-1EBF2965020D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4B75469-6F98-4BA6-8EE6-1EBF2965020D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4B75469-6F98-4BA6-8EE6-1EBF2965020D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

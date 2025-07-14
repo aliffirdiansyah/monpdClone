@@ -50,7 +50,7 @@
                         <i class=" ri-error-warning-line text-primary fs-1"></i>
                     </div>
                     <div class="text-start">
-                        <h3 class="mb-0 fw-bold">Rp @Model.Data.JmlPenagihan.ToString("N0")</h3>
+                        <h3 class="mb-0 fw-bold">@Model.Data.JmlPenagihan.ToString("C")</h3>
                         <small class="text-muted">Total Penagihan</small>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                         <i class="ri-checkbox-circle-line text-success fs-1"></i>
                     </div>
                     <div class="text-start">
-                        <h3 class="mb-0 fw-bold">Rp @Model.Data.TotalPenerimaan.ToString("N0")</h3>
+                        <h3 class="mb-0 fw-bold">@Model.Data.TotalPenerimaan.ToString("C")</h3>
                         <small class="text-muted">Total Penerimaan Penagihan</small>
                     </div>
                 </div>

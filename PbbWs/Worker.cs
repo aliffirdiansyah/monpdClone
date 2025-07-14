@@ -21,27 +21,9 @@ namespace PbbWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
-
-                //var nextRun = now.AddDays(1); // besok jam 00:00
-                //var delay = nextRun - now;
-
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
-
-                //await Task.Delay(delay, stoppingToken);
-
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
-
                 var now = DateTime.Now;
-                var nextRun = new DateTime(2025, 7, 11, 1, 0, 0); // 11 Juli 2025 jam 02:00
 
-                if (nextRun <= now)
-                {
-                    _logger.LogInformation("Scheduled time has already passed.");
-                    return; // atau break / return tergantung konteksmu
-                }
-
+                var nextRun = now.AddDays(1); // besok jam 00:00
                 var delay = nextRun - now;
 
                 _logger.LogInformation("Next run scheduled at: {time}", nextRun);

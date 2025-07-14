@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MonPDLib.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,15 @@ namespace MonPDLib
         {
         }
 
+        public DbSet<Npwpd> Npwpds { get; set; }
         public DbSet<SSPDPbjt> SSPD { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<SSPDPbjt>().HasNoKey();
+
+            modelBuilder.Entity<Npwpd>().HasNoKey();
         }
     }
 }

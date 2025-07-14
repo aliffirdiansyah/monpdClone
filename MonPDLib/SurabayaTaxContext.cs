@@ -20,6 +20,7 @@ namespace MonPDLib
         {
         }
 
+        public DbSet<Npwpd> Npwpds { get; set; }
         public DbSet<DbOpAbt> DbOpAbts { get; set; }
         public DbSet<DbOpHotel> DbOpHotels { get; set; }
         public DbSet<DbOpResto> DbOpRestos { get; set; }
@@ -35,6 +36,7 @@ namespace MonPDLib
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Npwpd>().HasNoKey();
             modelBuilder.Entity<DbOpAbt>().HasNoKey();
             modelBuilder.Entity<DbOpHotel>().HasNoKey();
             modelBuilder.Entity<DbOpResto>().HasNoKey();

@@ -58,6 +58,9 @@
 
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            fnShow();
+        });
         function fnShow() {
             var tglCutOff = $("#TanggalCutOff").val();
             var selectedPajak = $("#select-jnspajak").dxSelectBox("instance").option("value");

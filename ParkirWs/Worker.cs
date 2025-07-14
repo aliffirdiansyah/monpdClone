@@ -20,27 +20,9 @@ namespace ParkirWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
-
-                //var nextRun = now.AddDays(1); // besok jam 00:00
-                //var delay = nextRun - now;
-
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
-
-                //await Task.Delay(delay, stoppingToken);
-
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
-
                 var now = DateTime.Now;
-                var nextRun = new DateTime(2025, 7, 11, 1, 0, 0); // 11 Juli 2025 jam 02:00
 
-                if (nextRun <= now)
-                {
-                    _logger.LogInformation("Scheduled time has already passed.");
-                    return; // atau break / return tergantung konteksmu
-                }
-
+                var nextRun = now.AddDays(1); // besok jam 00:00
                 var delay = nextRun - now;
 
                 _logger.LogInformation("Next run scheduled at: {time}", nextRun);
@@ -615,7 +597,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PARKIR'
                 }
             }
 
-            ////FILL KETETAPAN 
+            //FILL KETETAPAN 
             var _contSbyTaxOld = DBClass.GetSurabayaTaxContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
@@ -768,7 +750,9 @@ WHERE 	NAMA_PAJAK_DAERAH ='PARKIR'
                             });
 
                             _contMonPd.SaveChanges();
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"DB_MON_PARKIR {thn}-{bln}-{item.NOP}-{item.SEQ}");
+                            Console.ResetColor();
                         }
                     }
                 }
@@ -902,7 +886,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PARKIR'
                 }
             }
 
-            //PEMBAYARAN
+            ////PEMBAYARAN
             var _contBima = DBClass.GetBimaContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
@@ -959,6 +943,8 @@ WHERE 	NAMA_PAJAK_DAERAH ='PARKIR'
                                             new OracleParameter("MASA", bln),
                                             new OracleParameter("SEQ", op.SeqPajakKetetapan)
                             }).ToListAsync();
+
+                        Console.WriteLine($"{DateTime.Now} SSPD_PARKIR_MONITORINGDB {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
 
                         if (pembayaranSspdList1 != null && pembayaranSspdList1.Count > 0)
                         {
@@ -1048,7 +1034,9 @@ WHERE 	NAMA_PAJAK_DAERAH ='PARKIR'
                                 op.SubRincianSanksiBayar = SUB_RINCIAN_SANKSI_BAYAR;
                             }
                             _contMonPd.SaveChanges();
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"{DateTime.Now} DB_MON_PARKIR (SSPD): {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
+                            Console.ResetColor();
                         }
                     }
                 }
@@ -1093,7 +1081,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PARKIR'
                             if (pembayaranSspdList.Count > 0)
                             {
                                 DateTime tanggalBayarTerakhir = pembayaranSspdList.Max(x => (DateTime)x.TRANSACTION_DATE);
-                                int maxTahunBayar = pembayaranSspdList.Max(x => ((DateTime)x.TRANSACTION_DATE).Year);
+                                int maxTahunBayar = pembayaranSspdList.Max(x => x.TAHUN_PAJAK);
                                 decimal nominalPokokBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_POKOK);
                                 decimal nominalSanksiBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_SANKSI);
                                 decimal nominalAdministrasi = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_ADMINISTRASI);
