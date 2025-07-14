@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
+[PrimaryKey("NoFormulir", "Seq")]
 [Table("DB_MON_REKLAME")]
 public partial class DbMonReklame
 {
@@ -649,4 +650,8 @@ public partial class DbMonReklame
     [StringLength(200)]
     [Unicode(false)]
     public string NoKetetapan { get; set; } = null!;
+
+    [Key]
+    [Column("SEQ", TypeName = "NUMBER(38)")]
+    public decimal Seq { get; set; }
 }

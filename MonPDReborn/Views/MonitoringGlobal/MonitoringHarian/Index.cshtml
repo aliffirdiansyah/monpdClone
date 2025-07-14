@@ -37,6 +37,7 @@
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedPajak)
                             .ID("selectPajak")
                             .DataSource(Model.JenisPajakList)
+                            .Value(0.ToString())
                             .ValueExpr("Value")
                             .DisplayExpr("Text")
                             .Placeholder("Semua Jenis Pajak")
@@ -48,6 +49,7 @@
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTahun)
                             .ID("ddlTahun")
                             .DataSource(Model.TahunList)
+                            .Value(DateTime.Now.Year.ToString())
                             .ValueExpr("Value")
                             .DisplayExpr("Text")
                             .Placeholder("Pilih Tahun")
@@ -59,6 +61,7 @@
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedBulan)
                             .ID("selectBulan")
                             .DataSource(Model.BulanList)
+                            .Value(DateTime.Now.Month.ToString())
                             .ValueExpr("Value")
                             .DisplayExpr("Text")
                             .Placeholder("Semua Bulan") // Ditambahkan agar konsisten
