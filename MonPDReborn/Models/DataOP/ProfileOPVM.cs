@@ -107,8 +107,8 @@ namespace MonPDReborn.Models.DataOP
                 var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == tahun);
                 var OpBphtbAwal = context.DbMonBphtbs.Count(x => x.Tahun == tahun - 1);
 
-                var OpReklameNow = 0;
-                var OpReklameAwal = 0;
+                var OpReklameNow = context.DbOpReklames.Count(x => x.TahunBuku == tahun);
+                var OpReklameAwal = context.DbOpReklames.Count(x => x.TahunBuku == tahun - 1);
 
                 var OpOpsenPkbNow = 0;
                 var OpOpsenPkbAwal = 0;
@@ -176,7 +176,7 @@ namespace MonPDReborn.Models.DataOP
                         Tahun = tahun,
                         JmlOpAwal = OpPbbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpPbbNow - OpPbbAwal,
+                        JmlOpBaru = OpPbbNow - 0,
                         JmlOpAkhir = OpPbbAwal - 0
                      + (OpPbbNow - OpPbbAwal)},
                     new RekapOP
@@ -186,7 +186,7 @@ namespace MonPDReborn.Models.DataOP
                         Tahun = tahun,
                         JmlOpAwal = OpBphtbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpBphtbNow - OpBphtbAwal,
+                        JmlOpBaru = OpBphtbNow - 0,
                         JmlOpAkhir = OpBphtbAwal - 0
                      + (OpBphtbNow - OpBphtbAwal)},
                     new RekapOP
@@ -284,11 +284,11 @@ namespace MonPDReborn.Models.DataOP
                 var OpBphtbMines3 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 3);
                 var OpBphtbMines4 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 4);
 
-                var OpReklameNow = 0;
-                var OpReklameMines1 = 0;
-                var OpReklameMines2 = 0;
-                var OpReklameMines3 = 0;
-                var OpReklameMines4 = 0;
+                var OpReklameNow = context.DbOpReklames.Count(x => x.TahunBuku == currentYear);;
+                var OpReklameMines1 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 1);
+                var OpReklameMines2 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 2);
+                var OpReklameMines3 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 3);
+                var OpReklameMines4 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 4);
 
                 var OpOpsenPkbNow = 0;
                 var OpOpsenPkbMines1 = 0;
