@@ -80,17 +80,17 @@
                         columns.AddFor(c => c.BulanNama).Caption("Bulan");
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Center);
 
                         columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Center);
 
                         columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
                         .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
-                        .Alignment(HorizontalAlignment.Right);
+                        .Alignment(HorizontalAlignment.Center);
 
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Center);
                     })
                     )
             </div>
