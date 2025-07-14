@@ -356,17 +356,40 @@ namespace MonPDReborn.Models.DataWP
 
                 return ret;
             }
+            // Di dalam public class Method
             public static Dashboard GetDashboardData()
             {
-                return new Dashboard
+                // 1. Panggil data asli dari database SATU KALI SAJA
+                List<PembayaranWP> allData = GetDataPembayaranWPList();
+
+                // 2. Lakukan semua perhitungan di sini menggunakan LINQ
+                int totalWp = allData.Count();
+
+                decimal totalKetetapan = allData.Sum(x => x.Ketetapan);
+                decimal totalPembayaran = allData.Sum(x => x.Terbayar);
+
+                decimal totalTunggakan = totalKetetapan - totalPembayaran;
+
+                decimal tingkatKepatuhan = (totalKetetapan > 0)
+                    ? (totalPembayaran / totalKetetapan) * 100
+                    : 0;
+
+                // Asumsi: WP Menunggak adalah WP yang punya tunggakan (Ketetapan > Terbayar)
+                // Ini lebih akurat daripada menghitung status "Tidak Aktif"
+                int wpMenunggak = allData.Count(x => x.Ketetapan > x.Terbayar);
+
+                // 3. Buat dan kembalikan objek Dashboard dengan data yang sudah dihitung
+                var dashboardData = new Dashboard
                 {
-                    TotalWP = 1274,
-                    WPBulan = 156,
-                    RataWPBulan = 103,
-                    KetetapanWP = 11.7m,
-                    TerbayarWP = 8.2m,
-                    TargetKepatuhan = 85
+                    TotalWP = totalWp,
+                    PersentaseKepatuhan = tingkatKepatuhan,
+                    TotalTunggakan = totalTunggakan,
+                    WPMenunggak = wpMenunggak,
+                    TargetKepatuhan = 85, // Bisa diatur sesuai kebutuhan
+                    PresentaseWP = 0 // Logika untuk ini bisa ditambahkan jika perlu
                 };
+
+                return dashboardData;
             }
 
         }
@@ -408,50 +431,16 @@ namespace MonPDReborn.Models.DataWP
 
         }
 
+        // Di dalam ProfilePembayaranWPVM.cs
         public class Dashboard
         {
-
             public int TotalWP { get; set; }
-            public decimal WPBulan { get; set; }
-            public decimal RataWPBulan { get; set; }
-
-            public decimal PresentaseWP
-            {
-                get
-                {
-                    if (RataWPBulan == 0) return 0;
-                    return ((decimal)(WPBulan - RataWPBulan) / RataWPBulan) * 100;
-                }
-            }
-            public decimal KetetapanWP { get; set; }
-            public decimal TerbayarWP { get; set; }
-            public int TargetKepatuhan { get; set; }
-
-            public decimal PersentaseKepatuhan
-            {
-                get
-                {
-                    if (KetetapanWP == 0) return 0;
-                    return ((decimal)TerbayarWP / KetetapanWP) * 100;
-                }
-            }
-
-            public decimal Tunggakan
-            {
-                get
-                {
-                    return ((decimal)KetetapanWP - TerbayarWP);
-                }
-            }
-
-            public decimal WPMenunggak
-            {
-                get
-                {
-                    return ((decimal)TotalWP - WPBulan);
-                }
-            }
-
+            public decimal PersentaseKepatuhan { get; set; }
+            public decimal Tunggakan { get; set; }
+            public decimal TotalTunggakan { get; set; }
+            public int WPMenunggak { get; set; }
+            public decimal PresentaseWP { get; set; }
+            public int TargetKepatuhan { get; set; } = 85; // Contoh target
         }
     }
 }

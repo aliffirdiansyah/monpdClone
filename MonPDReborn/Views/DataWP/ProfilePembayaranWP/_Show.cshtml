@@ -46,9 +46,7 @@
             .CellTemplate(@<text>
                                <%
                                var status = data.Status;
-                               var color = status == "Lunas" ? "badge bg-success" :
-                               status == "Sebagian" ? "badge bg-warning" :
-                               "badge bg-danger";
+                               var color = status == "Aktif" ? "badge bg-success" : "badge bg-danger";
                                %>
                                <span class="<%= color %>"><%= status %></span>
                            </text>);
