@@ -716,7 +716,7 @@ namespace MonPDLib.General
             [Description("Semua Jenis Pajak")]
             Semua = 0,
 
-            [Description("PBJT Atas Makanan & Minuman")]
+            [Description("PBJT atas Makanan dan/atau Minuman")]
             MakananMinuman = 1,
 
             [Description("PBJT Atas Tenaga Listrik")]
@@ -728,7 +728,7 @@ namespace MonPDLib.General
             [Description("PBJT Atas Jasa Parkir")]
             JasaParkir = 4,
 
-            [Description("PBJT Atas Jasa Kesenian Hiburan")]
+            [Description("PBJT atas Jasa Kesenian dan Hiburan")]
             JasaKesenianHiburan = 5,
 
             [Description("Pajak Air Tanah")]

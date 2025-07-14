@@ -1,4 +1,5 @@
-﻿@model MonPDReborn.Models.DashboardVM.Index
+﻿@using MonPDLib.General
+@model MonPDReborn.Models.DashboardVM.Index
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -35,7 +36,7 @@
                             <!-- Keterangan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak Hotel</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())</span>
                                     <i class="bx bx-building fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -71,7 +72,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak Restoran</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.MakananMinuman.GetDescription())</span>
                                     <i class="bx bx-restaurant fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -109,7 +110,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak Hiburan</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())</span>
                                     <i class="bx bx-camera-movie fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -146,7 +147,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak PPJ</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.TenagaListrik.GetDescription())</span>
                                     <i class="bx bx-bulb fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -183,7 +184,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak Parkir</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.JasaParkir.GetDescription())</span>
                                     <i class="bx bx-stop-circle fs-20"></i> <!-- Ganti jika nanti bx-parking tersedia -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -220,7 +221,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak Reklame</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.Reklame.GetDescription())</span>
                                     <i class="bx bx-news fs-20"></i> <!-- Ikon cocok untuk reklame/banner/news -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -257,7 +258,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak Air Tanah</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.AirTanah.GetDescription())</span>
                                     <i class="bx bx-water fs-20"></i> <!-- Ikon cocok -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -294,7 +295,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Pajak PBB</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.PBB.GetDescription())</span>
                                     <i class="bx bx-home fs-20"></i> <!-- Ikon rumah -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -331,7 +332,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">BPHTB</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.BPHTB.GetDescription())</span>
                                     <i class="bx bx-transfer-alt fs-20"></i> <!-- Ikon transfer hak -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -368,7 +369,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Opsen PKB</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.OpsenPkb.GetDescription())</span>
                                     <i class="bx bx-car fs-20"></i> <!-- Ikon mobil -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
@@ -405,7 +406,7 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">Opsen BBNKB</span>
+                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.OpsenBbnkb.GetDescription())</span>
                                     <i class="bx bx-transfer fs-20"></i> <!-- Ikon perpindahan kepemilikan kendaraan -->
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">

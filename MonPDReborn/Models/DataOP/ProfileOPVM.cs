@@ -116,38 +116,48 @@ namespace MonPDReborn.Models.DataOP
                 var context = DBClass.GetContext();
 
                 #region Method
-                var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == tahun);
                 var OpRestoTutup = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == tahun - 1);
+                var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1);
+                var OpRestoBaru = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
+                var OpRestoAkhir = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun);
 
-                var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == tahun);
                 var OpHotelTutup = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1);
+                var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1);
+                var OpHotelBaru = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
+                var OpHotelAkhir = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun);
 
-                var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == tahun);
                 var OpHiburanTutup = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                var OpHiburanAwal = context.DbOpHiburans.Count(x => x.TahunBuku == tahun - 1);
+                var OpHiburanAwal = context.DbOpHiburans.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1);
+                var OpHiburanBaru = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
+                var OpHiburanAkhir = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun);
 
-                var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == tahun);
                 var OpParkirTutup = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                var OpParkirAwal = context.DbOpParkirs.Count(x => x.TahunBuku == tahun - 1);
+                var OpParkirAwal = context.DbOpParkirs.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1);
+                var OpParkirBaru = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
+                var OpParkirAkhir = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun);
 
-                var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == tahun);
                 var OpListrikTutup = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                var OpListrikAwal = context.DbOpListriks.Count(x => x.TahunBuku == tahun - 1);
+                var OpListrikAwal = context.DbOpListriks.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1);
+                var OpListrikBaru = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
+                var OpListrikAkhir = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun);
 
-                var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == tahun);
                 var OpAbtTutup = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                var OpAbtAwal = context.DbOpAbts.Count(x => x.TahunBuku == tahun - 1);
+                var OpAbtAwal = context.DbOpAbts.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1);
+                var OpAbtBaru = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
+                var OpAbtAkhir = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun);
 
-                var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == tahun);
-                var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == tahun - 1);
+                var OpPbbTutup = context.DbOpPbbs.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
+                var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == tahun - 1 /*&& x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1*/);
+                var OpPbbBaru = context.DbOpPbbs.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
+                var OpPbbAkhir = context.DbOpPbbs.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun*/);
 
                 var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == tahun);
                 var OpBphtbAwal = context.DbMonBphtbs.Count(x => x.Tahun == tahun - 1);
 
-                var OpReklameNow = context.DbOpReklames.Count(x => x.TahunBuku == tahun);
-                var OpReklameAwal = context.DbOpReklames.Count(x => x.TahunBuku == tahun - 1);
+                var OpReklameTutup = context.DbOpReklames.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
+                var OpReklameAwal = context.DbOpReklames.Count(x => x.TahunBuku == tahun - 1 /*&& x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1*/);
+                var OpReklameBaru = context.DbOpReklames.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
+                var OpReklameAkhir = context.DbOpReklames.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun*/);
 
                 var OpOpsenPkbNow = 0;
                 var OpOpsenPkbAwal = 0;
@@ -162,111 +172,101 @@ namespace MonPDReborn.Models.DataOP
                     {
                         JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
-                        Tahun = tahun,
                         JmlOpAwal = OpRestoAwal,
                         JmlOpTutupPermanen = OpRestoTutup,
-                        JmlOpBaru = OpRestoNow - OpRestoAwal,
-                        JmlOpAkhir = OpRestoAwal - OpRestoTutup + (OpRestoNow - OpRestoAwal)
+                        JmlOpBaru = OpRestoBaru,
+                        JmlOpAkhir = OpRestoAkhir
                     },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
-                        Tahun = tahun,
                         JmlOpAwal = OpHotelAwal,
                         JmlOpTutupPermanen = OpHotelTutup,
-                        JmlOpBaru = OpHotelNow - OpHotelAwal,
-                        JmlOpAkhir = OpHotelAwal - OpHotelTutup + (OpHotelNow - OpHotelAwal)
+                        JmlOpBaru = OpHotelBaru,
+                        JmlOpAkhir = OpHotelAkhir
                     },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
-                        Tahun = tahun,
                         JmlOpAwal = OpHiburanAwal,
                         JmlOpTutupPermanen = OpHiburanTutup,
-                        JmlOpBaru = OpHiburanNow - OpHiburanAwal,
-                        JmlOpAkhir = OpHiburanAwal - OpHiburanTutup + (OpHiburanNow - OpHiburanAwal)
+                        JmlOpBaru = OpHiburanBaru,
+                        JmlOpAkhir = OpHiburanAkhir
                     },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
-                        Tahun = tahun,
                         JmlOpAwal = OpParkirAwal,
                         JmlOpTutupPermanen = OpParkirTutup,
-                        JmlOpBaru = OpParkirNow - OpParkirAwal,
-                        JmlOpAkhir = OpParkirAwal - OpParkirTutup + (OpParkirNow - OpParkirAwal)
+                        JmlOpBaru = OpParkirBaru,
+                        JmlOpAkhir = OpParkirAkhir
                     },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
-                        Tahun = tahun,
                         JmlOpAwal = OpListrikAwal,
                         JmlOpTutupPermanen = OpListrikTutup,
-                        JmlOpBaru = OpListrikNow - OpListrikAwal,
-                        JmlOpAkhir = OpListrikAwal - OpListrikTutup + (OpListrikNow - OpListrikAwal)
+                        JmlOpBaru = OpListrikBaru,
+                        JmlOpAkhir = OpListrikAkhir
                     },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.PBB,
-                        Tahun = tahun,
                         JmlOpAwal = OpPbbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpPbbNow - 0,
-                        JmlOpAkhir = OpPbbAwal - 0
-                     + (OpPbbNow - OpPbbAwal)},
+                        JmlOpBaru = OpPbbBaru,
+                        JmlOpAkhir = OpPbbAkhir,
+                    },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.BPHTB,
-                        Tahun = tahun,
                         JmlOpAwal = OpBphtbAwal,
                         JmlOpTutupPermanen = 0,
                         JmlOpBaru = OpBphtbNow - 0,
-                        JmlOpAkhir = OpBphtbAwal - 0
-                     + (OpBphtbNow - OpBphtbAwal)},
+                        JmlOpAkhir = OpBphtbAwal - 0 + (OpBphtbNow - OpBphtbAwal)
+                    },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.Reklame,
-                        Tahun = tahun,
                         JmlOpAwal = OpReklameAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpReklameNow - OpReklameAwal,
-                        JmlOpAkhir = OpReklameAwal - 0
-                     + (OpReklameNow - OpReklameAwal)},
+                        JmlOpBaru = OpReklameBaru,
+                        JmlOpAkhir = OpReklameAkhir
+                    },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.AirTanah,
-                        Tahun = tahun,
                         JmlOpAwal = OpAbtAwal,
                         JmlOpTutupPermanen = OpAbtTutup,
-                        JmlOpBaru = OpAbtNow - OpAbtAwal,
-                        JmlOpAkhir = OpAbtAwal - OpAbtTutup + (OpAbtNow - OpAbtAwal)
+                        JmlOpBaru = OpAbtBaru,
+                        JmlOpAkhir = OpAbtAkhir
                     },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.OpsenPkb,
-                        Tahun = tahun,
                         JmlOpAwal = OpOpsenPkbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpOpsenPkbNow - OpOpsenPkbAwal,
-                        JmlOpAkhir = OpOpsenPkbAwal - 0
-                     + (OpOpsenPkbNow - OpOpsenPkbAwal)},
+                        JmlOpBaru = 0,
+                        JmlOpAkhir = 0
+                    },
                     new RekapOP
                     {
                         JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.OpsenBbnkb,
-                        Tahun = tahun,
                         JmlOpAwal = OpOpsenBbnkbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpOpsenBbnkbNow - OpOpsenBbnkbAwal,
-                        JmlOpAkhir = OpOpsenBbnkbAwal - 0 + (OpOpsenBbnkbNow - OpOpsenBbnkbAwal)},
+                        JmlOpBaru = 0,
+                        JmlOpAkhir = 0
+                    },
                 };
             }
             public static List<SeriesOP> GetDataSeriesOPList()
@@ -274,41 +274,41 @@ namespace MonPDReborn.Models.DataOP
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
 
-                var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == currentYear);
-                var OpRestoMines1 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 1);
-                var OpRestoMines2 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 2);
-                var OpRestoMines3 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 3);
-                var OpRestoMines4 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 4);
+                var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear);
+                var OpRestoMines1 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 1);
+                var OpRestoMines2 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 2 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 2);
+                var OpRestoMines3 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 3 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 3);
+                var OpRestoMines4 = context.DbOpRestos.Count(x => x.TahunBuku == currentYear - 4 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 4);
 
-                var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == currentYear);
-                var OpHotelMines1 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 1);
-                var OpHotelMines2 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 2);
-                var OpHotelMines3 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 3);
-                var OpHotelMines4 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 4);
+                var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear);
+                var OpHotelMines1 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 1);
+                var OpHotelMines2 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 2 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 2);
+                var OpHotelMines3 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 3 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 3);
+                var OpHotelMines4 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 4 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 4);
 
-                var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear);
-                var OpHiburanMines1 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 1);
-                var OpHiburanMines2 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 2);
-                var OpHiburanMines3 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 3);
-                var OpHiburanMines4 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 4);
+                var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear);
+                var OpHiburanMines1 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 1);
+                var OpHiburanMines2 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 2 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 2);
+                var OpHiburanMines3 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 3 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 3);
+                var OpHiburanMines4 = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear - 4 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 4);
 
-                var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear);
-                var OpParkirMines1 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 1);
-                var OpParkirMines2 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 2);
-                var OpParkirMines3 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 3);
-                var OpParkirMines4 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 4);
+                var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear);
+                var OpParkirMines1 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 1);
+                var OpParkirMines2 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 2 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 2);
+                var OpParkirMines3 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 3 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 3);
+                var OpParkirMines4 = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear - 4 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 4);
 
-                var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == currentYear);
-                var OpListrikMines1 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 1);
-                var OpListrikMines2 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 2);
-                var OpListrikMines3 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 3);
-                var OpListrikMines4 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 4);
+                var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear);
+                var OpListrikMines1 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 1);
+                var OpListrikMines2 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 2 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 2);
+                var OpListrikMines3 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 3 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 3);
+                var OpListrikMines4 = context.DbOpListriks.Count(x => x.TahunBuku == currentYear - 4 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 4);
 
-                var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == currentYear);
-                var OpAbtMines1 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 1);
-                var OpAbtMines2 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 2);
-                var OpAbtMines3 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 3);
-                var OpAbtMines4 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 4);
+                var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == currentYear && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear);
+                var OpAbtMines1 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 1);
+                var OpAbtMines2 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 2 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 2);
+                var OpAbtMines3 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 3 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 3);
+                var OpAbtMines4 = context.DbOpAbts.Count(x => x.TahunBuku == currentYear - 4 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 4);
 
                 var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear);
                 var OpPbbMines1 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 1);
@@ -316,14 +316,13 @@ namespace MonPDReborn.Models.DataOP
                 var OpPbbMines3 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 3);
                 var OpPbbMines4 = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear - 4);
 
-
                 var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == currentYear);
                 var OpBphtbMines1 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 1);
                 var OpBphtbMines2 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 2);
                 var OpBphtbMines3 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 3);
                 var OpBphtbMines4 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 4);
 
-                var OpReklameNow = context.DbOpReklames.Count(x => x.TahunBuku == currentYear);;
+                var OpReklameNow = context.DbOpReklames.Count(x => x.TahunBuku == currentYear);
                 var OpReklameMines1 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 1);
                 var OpReklameMines2 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 2);
                 var OpReklameMines3 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 3);
@@ -482,13 +481,11 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.MakananMinuman:
                         foreach (var kat in kategoriList)
                         {
-                            var OpRestoNow = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
-                            var OpRestoTutup = context.DbOpRestos.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun &&
-                                x.KategoriId == kat.Id);
-                            var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+                            var OpRestoTutup = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
+                            var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1 && x.KategoriId == kat.Id);
+                            var OpRestoBaru = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
+                            var OpRestoAkhir = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun && x.KategoriId == kat.Id);
+                            
 
                             ret.Add(new RekapDetail
                             {
@@ -499,21 +496,18 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpRestoAwal,
                                 JmlOpTutupPermanen = OpRestoTutup,
-                                JmlOpBaru = OpRestoNow - OpRestoAwal,
-                                JmlOpAkhir = OpRestoAwal - OpRestoTutup + (OpRestoNow - OpRestoAwal)
+                                JmlOpBaru = OpRestoBaru,
+                                JmlOpAkhir = OpRestoAkhir
                             });
                         }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         foreach (var kat in kategoriList)
                         {
-                            var OpListrikNow = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
-                            var OpListrikTutup = context.DbOpListriks.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun &&
-                                x.KategoriId == kat.Id);
-                            var OpListrikAwal = context.DbOpListriks.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+                            var OpListrikTutup = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
+                            var OpListrikAwal = context.DbOpListriks.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1 && x.KategoriId == kat.Id);
+                            var OpListrikBaru = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
+                            var OpListrikAkhir = context.DbOpListriks.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun && x.KategoriId == kat.Id);
 
                             ret.Add(new RekapDetail
                             {
@@ -524,21 +518,18 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpListrikAwal,
                                 JmlOpTutupPermanen = OpListrikTutup,
-                                JmlOpBaru = OpListrikNow - OpListrikAwal,
-                                JmlOpAkhir = OpListrikAwal - OpListrikTutup + (OpListrikNow - OpListrikAwal)
+                                JmlOpBaru = OpListrikBaru,
+                                JmlOpAkhir = OpListrikAkhir
                             });
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         foreach (var kat in kategoriList)
                         {
-                            var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
-                            var OpHotelTutup = context.DbOpHotels.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun &&
-                                x.KategoriId == kat.Id);
-                            var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+                            var OpHotelTutup = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
+                            var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1 && x.KategoriId == kat.Id);
+                            var OpHotelBaru = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
+                            var OpHotelAkhir = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun && x.KategoriId == kat.Id);
 
                             ret.Add(new RekapDetail
                             {
@@ -549,21 +540,18 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpHotelAwal,
                                 JmlOpTutupPermanen = OpHotelTutup,
-                                JmlOpBaru = OpHotelNow - OpHotelAwal,
-                                JmlOpAkhir = OpHotelAwal - OpHotelTutup + (OpHotelNow - OpHotelAwal)
+                                JmlOpBaru = OpHotelBaru,
+                                JmlOpAkhir = OpHotelAkhir
                             });
                         }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
                         foreach (var kat in kategoriList)
                         {
-                            var OpParkirNow = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
-                            var OpParkirTutup = context.DbOpParkirs.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun &&
-                                x.KategoriId == kat.Id);
-                            var OpParkirAwal = context.DbOpParkirs.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+                            var OpParkirTutup = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
+                            var OpParkirAwal = context.DbOpParkirs.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1 && x.KategoriId == kat.Id);
+                            var OpParkirBaru = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
+                            var OpParkirAkhir = context.DbOpParkirs.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun && x.KategoriId == kat.Id);
 
                             ret.Add(new RekapDetail
                             {
@@ -574,21 +562,18 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpParkirAwal,
                                 JmlOpTutupPermanen = OpParkirTutup,
-                                JmlOpBaru = OpParkirNow - OpParkirAwal,
-                                JmlOpAkhir = OpParkirAwal - OpParkirTutup + (OpParkirNow - OpParkirAwal)
+                                JmlOpBaru = OpParkirBaru,
+                                JmlOpAkhir = OpParkirAkhir
                             });
                         }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
                         foreach (var kat in kategoriList)
                         {
-                            var OpHiburanNow = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
-                            var OpHiburanTutup = context.DbOpHiburans.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun &&
-                                x.KategoriId == kat.Id);
-                            var OpHiburanAwal = context.DbOpHiburans.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+                            var OpHiburanTutup = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
+                            var OpHiburanAwal = context.DbOpHiburans.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1 && x.KategoriId == kat.Id);
+                            var OpHiburanBaru = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
+                            var OpHiburanAkhir = context.DbOpHiburans.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun && x.KategoriId == kat.Id);
 
                             ret.Add(new RekapDetail
                             {
@@ -599,21 +584,18 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpHiburanAwal,
                                 JmlOpTutupPermanen = OpHiburanTutup,
-                                JmlOpBaru = OpHiburanNow - OpHiburanAwal,
-                                JmlOpAkhir = OpHiburanAwal - OpHiburanTutup + (OpHiburanNow - OpHiburanAwal)
+                                JmlOpBaru = OpHiburanBaru,
+                                JmlOpAkhir = OpHiburanAkhir
                             });
                         }
                         break;
                     case EnumFactory.EPajak.AirTanah:
                         foreach (var kat in kategoriList)
                         {
-                            var OpAbtNow = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
-                            var OpAbtTutup = context.DbOpAbts.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun &&
-                                x.KategoriId == kat.Id);
-                            var OpAbtAwal = context.DbOpAbts.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+                            var OpAbtTutup = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
+                            var OpAbtAwal = context.DbOpAbts.Count(x => x.TahunBuku == tahun - 1 && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1 && x.KategoriId == kat.Id);
+                            var OpAbtBaru = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
+                            var OpAbtAkhir = context.DbOpAbts.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun && x.KategoriId == kat.Id);
 
                             ret.Add(new RekapDetail
                             {
@@ -624,8 +606,8 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpAbtAwal,
                                 JmlOpTutupPermanen = OpAbtTutup,
-                                JmlOpBaru = OpAbtNow - OpAbtAwal,
-                                JmlOpAkhir = OpAbtAwal - OpAbtTutup + (OpAbtNow - OpAbtAwal)
+                                JmlOpBaru = OpAbtBaru,
+                                JmlOpAkhir = OpAbtAkhir
                             });
                         }
                         break;
@@ -634,9 +616,10 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.PBB:
                         foreach (var kat in kategoriList)
                         {
-                            var OpPbbNow = context.DbOpPbbs.Count(x => x.TahunBuku == tahun && x.KategoriId == kat.Id);
-
-                            var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == tahun - 1 && x.KategoriId == kat.Id);
+                            var OpPbbTutup = context.DbOpPbbs.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/ && x.KategoriId == kat.Id);
+                            var OpPbbAwal = context.DbOpPbbs.Count(x => x.TahunBuku == tahun - 1 /*&& x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1*/ && x.KategoriId == kat.Id);
+                            var OpPbbBaru = context.DbOpPbbs.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun */&& x.KategoriId == kat.Id);
+                            var OpPbbAkhir = context.DbOpPbbs.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun */&& x.KategoriId == kat.Id);
 
                             ret.Add(new RekapDetail
                             {
@@ -647,8 +630,8 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori = kat.Nama,
                                 JmlOpAwal = OpPbbAwal,
                                 JmlOpTutupPermanen = 0,
-                                JmlOpBaru = OpPbbNow - OpPbbAwal,
-                                JmlOpAkhir = OpPbbAwal - 0 + (OpPbbNow - OpPbbAwal)
+                                JmlOpBaru = OpPbbBaru,
+                                JmlOpAkhir = OpPbbAkhir
                             });
                         }
                         break;
