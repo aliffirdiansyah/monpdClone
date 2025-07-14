@@ -404,7 +404,7 @@ namespace MonPDReborn.Models.DataWP
             public string AlamatUsaha { get; set; } = null!;
             public string Kontak { get; set; } = null!;
             public string Email { get; set; } = null!;
-            public List<DetailPembayaranWP> DetailPembayaranWPList { get; set; }
+            public List<DetailPembayaranWP> DetailPembayaranWPList { get; set; } = new List<DetailPembayaranWP>();
 
         }
 
