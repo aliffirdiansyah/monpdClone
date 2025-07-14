@@ -10,7 +10,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">Total Target</h5>
-                        <h3 class="mb-0 fw-bold">@Model.Data.TotalTarget.ToString("C")</h3>
+                        <h3 class="mb-0 fw-bold">@MonPDLib.General.Extension.FormatRupiahFull(Model.Data.TotalTarget)</h3>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">Total Realisasi</h5>
-                        <h3 class="mb-0 fw-bold">@Model.Data.TotalRealisasi.ToString("C")</h3>
+                        <h3 class="mb-0 fw-bold">@MonPDLib.General.Extension.FormatRupiahFull(Model.Data.TotalRealisasi)</h3>
                     </div>
                 </div>
 
@@ -55,57 +55,57 @@
 
 <div class="table-responsive">
     @(
-        Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.MonitoringHarian>()
-        .ID("KontrolPrediksiGrid")
-        .DataSource(Model.DataMonitoringHarianList)
-        .KeyExpr("JenisPajak")
-        .ShowBorders(true)
-        .RowAlternationEnabled(true)
-        .ColumnAutoWidth(true)
-        .Columns(columns =>
-        {
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.MonitoringHarian>()
+            .ID("KontrolPrediksiGrid")
+            .DataSource(Model.DataMonitoringHarianList)
+            .KeyExpr("JenisPajak")
+            .ShowBorders(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .Columns(columns =>
+            {
 
-            columns.AddFor(m => m.Tanggal)
+                columns.AddFor(m => m.Tanggal).Format("dd MMM yyyy")
             .Caption("Tanggal");
 
-            columns.AddFor(m => m.JenisPajak)
+                columns.AddFor(m => m.JenisPajak)
             .Caption("Jenis Pajak");
 
-            columns.AddFor(m => m.TargetHarian)
+                columns.AddFor(m => m.TargetHarian)
             .Caption("Target Harian").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
 
-            columns.AddFor(m => m.Realisasi)
+                columns.AddFor(m => m.Realisasi)
             .Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
 
-            columns.AddFor(m => m.Pencapaian)
+                columns.AddFor(m => m.Pencapaian)
             .Caption("Pencapaian")
             // Tambahkan baris di bawah ini
             .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
             .Alignment(HorizontalAlignment.Right); // Tambahan agar rata kanan
 
-            columns.AddFor(m => m.Status)
+                columns.AddFor(m => m.Status)
             .Caption("Status")
             .Alignment(HorizontalAlignment.Center) // Agar badge di tengah
             .CellTemplate(
-                @<text>
-                    <%
-                    var status = data.Status;
-                    var colorClass = "badge "; // Awal kelas
+        @<text>
+        <%
+        var status = data.Status;
+        var colorClass = "badge "; // Awal kelas
 
-                    // Logika untuk menentukan warna berdasarkan 3 atau lebih status
-                    if (status === "Tercapai") {
-                    colorClass += "bg-success"; // Hijau
-                    } else if (status === "Belum Tercapai") {
-                    colorClass += "bg-warning text-dark"; // Oranye/Kuning
-                    } else { // Untuk status "Di Bawah Target" atau lainnya
-                    colorClass += "bg-danger"; // Merah
-                    }
-                    %>
+        // Logika untuk menentukan warna berdasarkan 3 atau lebih status
+        if (status === "Tercapai") {
+        colorClass += "bg-success"; // Hijau
+        } else if (status === "Belum Tercapai") {
+        colorClass += "bg-warning text-dark"; // Oranye/Kuning
+        } else { // Untuk status "Di Bawah Target" atau lainnya
+        colorClass += "bg-danger"; // Merah
+        }
+        %>
 
-                    <span class="<%= colorClass %>"><%= status %></span>
-                </text>
-            );
+        <span class="<%= colorClass %>"><%= status %></span>
+    </text>
+        );
 
-        })
+            })
         )
 </div>

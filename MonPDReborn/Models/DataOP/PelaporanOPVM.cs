@@ -19,7 +19,7 @@ namespace MonPDReborn.Models.DataOP
             {
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
-                    .Where(x => x != EnumFactory.EPajak.PBB && x != EnumFactory.EPajak.OpsenBbnkb && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.AirTanah)
+                    .Where(x => x != EnumFactory.EPajak.PBB && x != EnumFactory.EPajak.OpsenBbnkb && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.AirTanah && x != EnumFactory.EPajak.Semua)
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
@@ -353,6 +353,7 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.OpsenBbnkb:
                         break;
                     default:
+
                         break;
                 }
 
@@ -465,14 +466,6 @@ namespace MonPDReborn.Models.DataOP
                     default:
                         break;
                 }
-
-                //return new List<RealisasiBulanan>
-                //{
-                //    new() { NOP = "35.78.001.001.902.00001", BulanKe = 1, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 1, 15), Nilai = 45000000 },
-                //    new() { NOP = "35.78.001.001.902.00001", BulanKe = 3, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 3, 18), Nilai = 45000000 },
-                //    new() { NOP = "35.78.001.001.902.00001", BulanKe = 6, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 6, 10), Nilai = 45000000 },
-                //    new() { NOP = "35.78.001.001.902.00004", BulanKe = 1, Tahun = "2025", Status ="Sudah Lapor",TanggalLapor = new DateTime(2025, 1, 20), Nilai = 45000000 },
-                //};
 
                 return ret;
             }

@@ -1,34 +1,26 @@
 ﻿@model MonPDReborn.Models.DataOP.PenetapanOPVM.Show
 
-<div class="row">
-    <div class="col-lg-3">
+<div class="row justify-content">
+    <div class="col-lg-4">
         <div class="card shadow-sm p-3 border border-warning border-3">
             <h4 class="fs-14 text-muted mb-3">Total Penetapan</h4>
-            <h4 class="fs-16 fw-bold mb-1">Rp 000.000.000.000</h4>
+            <h4 class="fs-16 fw-bold mb-1">@MonPDLib.General.Extension.FormatRupiahFull(Model.StatistikData.TotalNilaiPenetapan)</h4>
             <small>+0.0% dari bulan lalu</small>
         </div>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-lg-4">
         <div class="card shadow-sm p-3 border border-success border-3">
             <h4 class="fs-14 text-muted mb-3">Jumlah SKPD/SPPT</h4>
-            <h4 class="fs-16 fw-bold mb-1">0</h4>
+            <h4 class="fs-16 fw-bold mb-1">@Model.StatistikData.JumlahPenetapan.ToString("N0")</h4>
             <small>+0.0% dari bulan lalu</small>
         </div>
     </div>
 
-    <div class="col-lg-3">
-        <div class="card shadow-sm p-3 border border-secondary border-3">
-            <h4 class="fs-14 text-muted mb-3">Jumlah Objek Pajak</h4>
-            <h4 class="fs-16 fw-bold mb-1">0</h4>
-            <small>+0.0% dari bulan lalu</small>
-        </div>
-    </div>
-
-    <div class="col-lg-3">
+    <div class="col-lg-4">
         <div class="card shadow-sm p-3 border border-danger border-3">
             <h4 class="fs-14 text-muted mb-3">Belum Dibayar</h4>
-            <h4 class="fs-16 fw-bold mb-1">Rp 0</h4>
+            <h4 class="fs-16 fw-bold mb-1">@MonPDLib.General.Extension.FormatRupiahFull(Model.StatistikData.TotalBelumTerbayar)</h4>
             <small>+0.0% dari total penetapan</small>
         </div>
     </div>
