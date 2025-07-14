@@ -6,6 +6,8 @@
 *@
 @{
 }
+<input type="hidden" id="DetailNOP" value="@Model.DataDetail.IdentitasPajak.NOP" />
+<input type="hidden" id="DetailJenisPajak" value="@((int)Model.Pajak)" />
 <div class="card position-relative overflow-hidden mb-4">
     <!-- Header Background Image -->
     <div class="position-relative w-100"
@@ -528,12 +530,49 @@
 
 
 </div>
+@* 
 @section Scripts {
     <script>
+        $(document).on("change", "#tahunKiri", function () {
+            const tahun = $(this).val();
+            updateTabel('kiri', tahun);
+        });
+
+        $(document).on("change", "#tahunKanan", function () {
+            const tahun = $(this).val();
+            updateTabel('kanan', tahun);
+        });
+
+        function updateTabel(side, tahun) {
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+
+            $.ajax({
+                url: '/ProfilePembayaranOP/Detail',
+                type: 'GET',
+                data: {
+                    nop: nop,
+                    jenisPajak: jenisPajak,
+                    tahun: tahun,
+                    side: side
+                },
+                success: function (html) {
+                    if (side === 'kiri') {
+                        $('#tabelKiri').html(html);
+                    } else if (side === 'kanan') {
+                        $('#tabelKanan').html(html);
+                    }
+                },
+                error: function () {
+                    alert('Gagal memuat data pembayaran.');
+                }
+            });
+        }
+
         function fnPembayaranPajak(nop, pajak)
         {
             $.ajax({
-              url: '@(Url.Action("Detail", "PencarianOP"))',
+              url: '@(Url.Action("Detail", "ProfilePembayaranOP"))',
               data: {
                     nop, pajak
                 },
@@ -565,4 +604,71 @@
         }
 
     </script>
+} *@
+
+@section Scripts {
+    <script>
+        // Fungsi untuk bind event di _Detail dropdown
+        // function attachDetailEvents() {
+        //     $("#tahunKiri").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKiri", tahun);
+        //     });
+
+        //     $("#tahunKanan").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKanan", tahun);
+        //     });
+        // }
+
+        $(document).on("change", "#tahunKiri", function () {
+            fnPembayaranPajak();
+        });
+
+        $(document).on("change", "#tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+         function fnPembayaranPajak() {
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();   // fallback ke tahun sekarang
+            const tahunKanan = $('#tahunKanan').val() || new Date().getFullYear(); // fallback ke tahun sekarang
+
+            $.ajax({
+                url: '@Url.Action("Detail", "ProfilePembayaranOP")',
+                type: 'GET',
+                data: {
+                    nop: nop,
+                    jenisPajak: jenisPajak,
+                    tahunKiri: tahunKiri,
+                    tahunKanan: tahunKanan
+                },
+                beforeSend: function () {
+                    $('#loading2-PembayaranPajak').show();
+                    $('#PembayaranPajak').hide();
+                },
+                success: function (response) {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html(response);
+                },
+                error: function () {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
+        // Bind event ke dropdown
+        $(document).on("change", "#tahunKiri, #tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+        // Panggil sekali saat halaman load
+        $(document).ready(function () {
+            fnPembayaranPajak();
+        });
+
+    </script>
 }
+
