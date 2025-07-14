@@ -40,7 +40,7 @@
                         )
                         .Columns(columns =>
                         {
-                            columns.AddFor(m => m.Bulan).Caption("Bulan");
+                            columns.AddFor(m => m.Bulan).Caption("Bulan").Fixed(true);
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");
@@ -168,7 +168,7 @@
                         )
                         .Columns(columns =>
                         {
-                            columns.AddFor(m => m.Bulan).Caption("Bulan");
+                            columns.AddFor(m => m.Bulan).Caption("Bulan").Fixed(true);
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");

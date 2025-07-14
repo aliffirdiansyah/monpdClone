@@ -26,7 +26,7 @@
         .Columns(columns =>
         {
 
-            columns.AddFor(x => x.Kategori).Caption("Kategori");
+            columns.AddFor(x => x.Kategori).Caption("Kategori").Fixed(true);
             columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
             {
                     subColumns.AddFor(x => x.Target1).Caption("Target").Format("#,##0");
@@ -48,6 +48,7 @@
             columns.AddFor(x => x.TotalPotensi).Caption("Total Potensi").Format("#,##0");
             columns.Add()
                 .Type(GridCommandColumnType.Buttons)
+                .Fixed(false)
                 .Buttons(b =>
                 {
                     b.Add()

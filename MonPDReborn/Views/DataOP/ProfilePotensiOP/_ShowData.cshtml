@@ -43,8 +43,8 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
     )
     .Columns(columns =>
     {
-        columns.AddFor(m => m.NOP).Caption("NOP");
-        columns.AddFor(m => m.NamaWP).Caption("Nama WP");
+        columns.AddFor(m => m.NOP).Caption("NOP").Fixed(true);
+        columns.AddFor(m => m.NamaWP).Caption("Nama WP").Fixed(true);
         columns.AddFor(m => m.Alamat).Caption("Alamat");
         columns.AddFor(m => m.Kategori).Caption("Kategori Pajak");
         columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
@@ -69,6 +69,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
         columns.AddFor(m => m.TotalPotensi).Caption("Total Potensi").Format("#,##0");
         columns.Add()
                .Type(GridCommandColumnType.Buttons)
+               .Fixed(false)
                .Buttons(b =>
                {
                    b.Add()

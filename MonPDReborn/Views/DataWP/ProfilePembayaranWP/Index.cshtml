@@ -169,21 +169,28 @@
             fnDetail(npwpd);
         });
 
-        function fnDetail(NPWPD) {
+                function fnDetail(NPWPD) {
             $.ajax({
-                url: '@Url.Action("Detail", "ProfilePembayaranWP")',  // pastikan controller & action sesuai
+                url: '@Url.Action("Detail", "ProfilePembayaranWP")',
                 type: 'GET',
-                data: { npwpd: NPWPD }, // ganti ke npwpd kalau parameternya memang npwpd
+                data: { NPWPD: NPWPD }, // Sesuai dengan parameter di controller (huruf besar/kecil penting di C#)
                 beforeSend: function () {
                     $("#loader").show();
-                    $("#staticBackdropLargeScrollable").modal('hide');
+
+                    // Bersihkan modal sebelum isi data baru
+                    const $modal = $("#staticBackdropLargeScrollable");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
                 },
                 success: function (response) {
                     $("#loader").hide();
+
+                    const $modal = $("#staticBackdropLargeScrollable");
+
                     if (response.Status === undefined) {
-                        $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
-                        $("#staticBackdropLargeScrollable .modal-body").html(response);
-                        $("#staticBackdropLargeScrollable").modal('show');
+                        $modal.find(".modal-title").html("Detail WP");
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
                     } else {
                         Swal.fire({
                             icon: 'warning',
@@ -194,15 +201,18 @@
                 },
                 error: function () {
                     $("#loader").hide();
-                    $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
-                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                    $("#staticBackdropLargeScrollable").modal('show');
+
+                    const $modal = $("#staticBackdropLargeScrollable");
+                    $modal.find(".modal-title").html("Detail WP");
+                    $modal.find(".modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
                 },
                 complete: function () {
                     $("#loader").hide();
                 }
             });
         }
+
 
     </script>
 }

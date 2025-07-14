@@ -28,7 +28,7 @@
             .OnExporting("exportGrid")
             .Columns(columns =>
             {
-                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Left);
+                columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Left).Fixed(true);
                 columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                 {
                     subColumns.AddFor(x => x.Target1).Caption("Target")

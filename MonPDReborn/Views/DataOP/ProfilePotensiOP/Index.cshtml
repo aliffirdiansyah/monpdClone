@@ -111,7 +111,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
-                            <div class="modal-body p-4" id="detailContent">
+                            <div class="modal-body p-4 mb-2" id="detailContent">
                                 <div class="text-center py-5 text-muted">
                                     <div class="spinner-border text-primary" role="status"></div>
                                     <div class="mt-2">Memuat data detail...</div>
@@ -208,7 +208,7 @@
             });
         }
 
-        function onDetailClick(e) {
+                function onDetailClick(e) {
             // Pastikan tidak submit default tombol
             e.event.preventDefault();
 
@@ -230,16 +230,10 @@
 
             console.log("onDetailClick:", jenisPajak, kategori);
 
-            // Tampilkan spinner atau loading
-            const targetDiv = $("#detailContent");
-            targetDiv.html(`
-                <div class="text-center my-3">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div class="mt-2 text-muted">Memuat data detail...</div>
-                </div>
-            `);
+            // Tampilkan loader
+            $("#loader").show();
+            const $modal = $("#staticBackdropLargeScrollable");
+            $modal.modal("hide");
 
             // Panggil server
             $.ajax({
@@ -249,17 +243,33 @@
                     JenisPajak: jenisPajak,
                     Kategori: kategori
                 },
-                success: function (result) {
-                    targetDiv.html(result);
+                success: function (response) {
+                    $("#loader").hide();
+
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Detail WP");
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
                 },
                 error: function () {
-                    targetDiv.html('<div class="text-danger">❌ Gagal memuat data detail.</div>');
+                    $("#loader").hide();
+                    $modal.find(".modal-title").html("Detail WP");
+                    $modal.find(".modal-body").html('<div class="text-danger">❌ Gagal memuat data detail.</div>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
                 }
             });
-
-            // Kalau pakai modal
-            $('#detailModal').modal('show');
         }
+
 
 
 

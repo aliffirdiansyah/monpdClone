@@ -85,7 +85,7 @@
                         <div class="table-responsive">
                             @(
                                     Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfilePembayaranWPVM.DetailPembayaranWP>()
-                                    .ID("detailPembayaranWPGrid")
+                                    .ID($"detailprofilePembayaranWPGrid_{Model.DataWPDetailRow.NPWPD}")
                                     .DataSource(Model.DataWPDetailRow.DetailPembayaranWPList)
                                     .KeyExpr("NPWPD")
                                     .ShowBorders(true)
@@ -116,13 +116,13 @@
                                     .Caption("Tahun Buku");
 
                                         columns.AddFor(m => m.Ketetapan)
-                                    .Caption("Ketetapan");
+                                    .Caption("Ketetapan").Format("#,##0");
 
                                         columns.AddFor(m => m.Terbayar)
-                                    .Caption("Terbayar");
+                                    .Caption("Terbayar").Format("#,##0");
 
                                         columns.AddFor(m => m.Tunggakan)
-                                    .Caption("Tunggakan");
+                                    .Caption("Tunggakan").Format("#,##0");
 
                                         columns.Add()
                                     .Caption("Status")
