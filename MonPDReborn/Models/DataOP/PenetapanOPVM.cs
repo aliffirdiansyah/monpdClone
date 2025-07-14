@@ -61,6 +61,8 @@ namespace MonPDReborn.Models.DataOP
         public class Show
         {
             public List<PenetapanOP> DataPenetapanOPList { get; set; } = new();
+            public PenetapanOPStatistik StatistikData { get; set; } = new();
+
             public Show()
             {
 
@@ -72,6 +74,25 @@ namespace MonPDReborn.Models.DataOP
                     throw new ArgumentException("Harap Pilih Jenis Pajak!");
                 }
                 DataPenetapanOPList = Method.GetDataPenetapanOPList(JenisPajak, tahun, bulan);
+
+                // Ambil nilai status negatif (selain "Sudah Dibayar")
+                // **Penting:** Pastikan string "Belum Dibayar" sesuai dengan data Anda
+                string statusBelumBayar = "Belum Ada Pembayaran";
+
+                // Isi properti StatistikData dengan hasil kalkulasi
+                StatistikData = new PenetapanOPStatistik
+                {
+                    // Menjumlahkan seluruh 'NilaiPenetapan'
+                    TotalNilaiPenetapan = DataPenetapanOPList.Sum(x => x.NilaiPenetapan),
+
+                    // Menghitung jumlah baris/item dalam list
+                    JumlahPenetapan = DataPenetapanOPList.Count(),
+
+                    // Menyaring data yang statusnya belum bayar, lalu menjumlahkan 'NilaiPenetapan'
+                    TotalBelumTerbayar = DataPenetapanOPList
+                                            .Where(x => x.Status == statusBelumBayar)
+                                            .Sum(x => x.NilaiPenetapan)
+                };
             }
         }
         public class Method
@@ -181,6 +202,13 @@ namespace MonPDReborn.Models.DataOP
             public decimal NilaiPenetapan { get; set; } = 0;
             public string MasaPajak { get; set; } = null!;
             public string Status { get; set; } = null!;
+        }
+
+        public class PenetapanOPStatistik
+        {
+            public decimal TotalNilaiPenetapan { get; set; }
+            public int JumlahPenetapan { get; set; }
+            public decimal TotalBelumTerbayar { get; set; }
         }
     }
 }
