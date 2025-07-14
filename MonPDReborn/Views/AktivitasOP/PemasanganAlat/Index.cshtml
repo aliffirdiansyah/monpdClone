@@ -212,94 +212,58 @@
             });
         }
 
-
-        /*function showSubDetailModal(e) {
-            const kategori = e.row.data.Kategori;
-
+        function loadSubDetail(kategori, status) {
             $.ajax({
                 url: '/PemasanganAlat/SubDetailModal',
                 type: 'GET',
-                data: { kategori: kategori },
-                success: function (result) {
-                    $("#subDetailModalContainer").html(result);
-
-                    const $modal = $("#subDetailModal");
-                    $modal.modal("show");
+                data: { kategori: kategori, status: status },
+                beforeSend: function () {
+                    $("#loader").show();
+                    $("#staticBackdropLargeScrollable").modal('hide');
+                },
+                success: function (response) {
+                    $("#loader").hide();
+                    if (response.Status === undefined) {
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
+                        $("#staticBackdropLargeScrollable .modal-body").html(response);
+                        $("#staticBackdropLargeScrollable").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
                 },
                 error: function () {
-                    alert("Gagal memuat data detail.");
+                    $("#loader").hide();
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
+                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#staticBackdropLargeScrollable").modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
                 }
             });
-        }*/
+        }
 
-     function onJumlahOPClick(kategori, value) {
-        $.ajax({
-            url: '/PemasanganAlat/SubDetailModal',
-            type: 'GET',
-            data: { kategori: kategori, status: 'JumlahOP' },
-            success: function (result) {
-                $("#subDetailModalContainer").html(result);
+        function onJumlahOPClick(kategori, value) {
+            loadSubDetail(kategori, 'JumlahOP');
+        }
 
-                const $modal = $("#subDetailModal");
-                $modal.modal("show");
-            },
-            error: function () {
-                alert("Gagal memuat data detail.");
-            }
-        });
-    }
+        function onTerpasangTSClick(kategori, value) {
+            loadSubDetail(kategori, 'TerpasangTS');
+        }
+
+        function onTerpasangTBClick(kategori, value) {
+            loadSubDetail(kategori, 'TerpasangTB');
+        }
+
+        function onTerpasangSBClick(kategori, value) {
+            loadSubDetail(kategori, 'TerpasangSB');
+        }
 
 
-    function onTerpasangTSClick(kategori, value) {
-        $.ajax({
-            url: '/PemasanganAlat/SubDetailModal',
-            type: 'GET',
-            data: { kategori: kategori, status: 'TerpasangTS' },
-            success: function (result) {
-                $("#subDetailModalContainer").html(result);
-
-                const $modal = $("#subDetailModal");
-                $modal.modal("show");
-            },
-            error: function () {
-                alert("Gagal memuat data detail.");
-            }
-        });
-    }
-
-    function onTerpasangTBClick(kategori, value) {
-        $.ajax({
-            url: '/PemasanganAlat/SubDetailModal',
-            type: 'GET',
-            data: { kategori: kategori, status: 'TerpasangTB' },
-            success: function (result) {
-                $("#subDetailModalContainer").html(result);
-
-                const $modal = $("#subDetailModal");
-                $modal.modal("show");
-            },
-            error: function () {
-                alert("Gagal memuat data detail.");
-            }
-        });
-    }
-
-    function onTerpasangSBClick(kategori, value) {
-        $.ajax({
-            url: '/PemasanganAlat/SubDetailModal',
-            type: 'GET',
-            data: { kategori: kategori, status: 'TerpasangSB' },
-            success: function (result) {
-                $("#subDetailModalContainer").html(result);
-
-                const $modal = $("#subDetailModal");
-                $modal.modal("show");
-            },
-            error: function () {
-                alert("Gagal memuat data detail.");
-            }
-        });
-    }
     </script>
 }
 
