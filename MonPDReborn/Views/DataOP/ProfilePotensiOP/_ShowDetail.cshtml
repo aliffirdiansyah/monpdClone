@@ -91,6 +91,9 @@
                             }
                         </text>
                 );
+                items.AddFor(x => x.Capaian1)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
 
                                             items.AddFor(x => x.Target2)
                                             .SummaryType(SummaryType.Sum)
@@ -119,6 +122,9 @@
                             }
                         </text>
                 );
+                items.AddFor(x => x.Capaian2)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
 
                                             items.AddFor(x => x.Target3)
                                             .SummaryType(SummaryType.Sum)
@@ -137,6 +143,23 @@
                                             items.AddFor(x => x.Realisasi3)
                                             .SummaryType(SummaryType.Sum)
                                             .CustomizeText(@<text>
+                            function(data) {
+                                const formatted = new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0
+                                }).format(data.value);
+                                return formatted;
+                            }
+                        </text>
+                );
+                items.AddFor(x => x.Capaian3)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
+                items.AddFor(x => x.TotalPotensi)
+                    .SummaryType(SummaryType.Sum)
+                    .CustomizeText(@<text>
                             function(data) {
                                 const formatted = new Intl.NumberFormat('id-ID', {
                                     style: 'currency',

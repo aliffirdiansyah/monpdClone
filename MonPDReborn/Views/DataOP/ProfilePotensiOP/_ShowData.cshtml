@@ -111,6 +111,10 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
                 }
             </text>);
 
+            items.AddFor(m => m.Capaian1)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
             items.AddFor(m => m.Target2)
             .SummaryType(SummaryType.Sum)
             .CustomizeText(@<text>
@@ -137,6 +141,10 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
                 }
             </text>);
 
+            items.AddFor(m => m.Capaian2)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
             items.AddFor(m => m.Target3)
             .SummaryType(SummaryType.Sum)
             .CustomizeText(@<text>
@@ -162,6 +170,24 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
                     return formatted;
                 }
             </text>);
+
+            items.AddFor(m => m.Capaian3)
+                .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
+                .ValueFormat("#,#0%").DisplayFormat("{0}");
+
+            items.AddFor(m => m.TotalPotensi)
+            .SummaryType(SummaryType.Sum)
+            .CustomizeText(@<text>
+                function(data) {
+                    const formatted = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0
+                    }).format(data.value);
+                    return formatted;
+                }
+            </text>);
+
         });
     })
 )
