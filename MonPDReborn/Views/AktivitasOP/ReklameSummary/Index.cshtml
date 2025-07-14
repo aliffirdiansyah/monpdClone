@@ -1,0 +1,298 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.Index
+
+@{
+    ViewData["Title"] = "Reklame Summary";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Reklame Summary
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <select id="tahunFilter" class="form-select rounded-pill mb-3" aria-label="Pilih Tahun" style="max-width: 200px;">
+                        <option selected disabled>Pilih Tahun</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                    <button type="button" class="btn btn-success rounded-pill mb-3">
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="text-center">
+        <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <div id="Show"></div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // saat pertama kali: kosongkan hasil
+            $('#Show').html();
+
+            // ketika tombol Terapkan Filter diklik
+            $('.btn-success').on('click', function () {
+                loadData();
+            });
+
+            function loadData() {
+                let tahun = $('#tahunFilter').val();
+
+                if (!tahun) {
+                    $('#Show').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("Show", "ReklameSummary")',
+                    type: 'GET',
+                    data: {
+                        tahun: tahun
+                    },
+                    beforeSend: function () {
+                        // Tampilkan spinner, sembunyikan konten
+                        $('#loading2-Show').show();
+                        $('#Show').hide();
+                    },
+                    success: function (result) {
+                        // Sembunyikan spinner, tampilkan hasil
+                        $('#loading2-Show').hide();
+                        $('#Show').html(result).show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Gagal memuat data Show:", error);
+                        $('#loading2-Show').hide();
+                        $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    }
+                });
+
+            }
+        });
+    </script>
+    <script>
+
+        //button Permanen Reklame
+        function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
+            const skpdBlmJT = cellInfo.value;  // isi kolom SKPDBlmJT
+            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
+            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${skpdBlmJT}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    loadDetailJT(tahun, bulan, skpdBlmJT);
+                });
+
+            const span = $('<span>').text(skpdBlmJT);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(span)
+                .append(button);
+
+            $(cellElement).append(wrapper);
+        }
+
+        function skpdPermanenBPCellTemplate(cellElement, cellInfo) {
+            const skpdBlmPanjang = cellInfo.value;  // isi kolom SKPDBlmJT
+            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
+            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${skpdBlmPanjang}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    loadDetailBP(tahun, bulan, skpdBlmPanjang);
+                });
+
+            const span = $('<span>').text(skpdBlmPanjang);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(span)
+                .append(button);
+
+            $(cellElement).append(wrapper);
+        }
+
+        function skpdPermanenKBCellTemplate(cellElement, cellInfo) {
+            const skpdKB = cellInfo.value;  // isi kolom SKPDBlmJT
+            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
+            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${skpdKB}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    loadDetailKB(tahun, bulan, skpdKB);
+                });
+
+            const span = $('<span>').text(skpdKB);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(span)
+                .append(button);
+
+            $(cellElement).append(wrapper);
+        }
+
+        //button Terbatas Reklame
+        function skpdTerbatasJTCellTemplate(cellElement, cellInfo) {
+            const skpdBlmJT = cellInfo.value;  // isi kolom SKPDBlmJT
+            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
+            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${skpdBlmJT}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    loadDetailTerbatasJT(tahun, bulan, skpdBlmJT);
+                });
+
+            const span = $('<span>').text(skpdBlmJT);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(span)
+                .append(button);
+
+            $(cellElement).append(wrapper);
+        }
+
+        function skpdTerbatasBPCellTemplate(cellElement, cellInfo) {
+            const skpdBlmPanjang = cellInfo.value;  // isi kolom SKPDBlmJT
+            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
+            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${skpdBlmPanjang}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    loadDetailTerbatasBP(tahun, bulan, skpdBlmPanjang);
+                });
+
+            const span = $('<span>').text(skpdBlmPanjang);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(span)
+                .append(button);
+
+            $(cellElement).append(wrapper);
+        }
+
+        function skpdTerbatasKBCellTemplate(cellElement, cellInfo) {
+            const skpdKB = cellInfo.value;  // isi kolom SKPDBlmJT
+            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
+            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${skpdKB}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    loadDetailTerbatasKB(tahun, bulan, skpdKB);
+                });
+
+            const span = $('<span>').text(skpdKB);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(span)
+                .append(button);
+
+            $(cellElement).append(wrapper);
+        }
+
+        // Ketetapan Baru Reklame
+        function skpdKBCellTemplate(cellElement, cellInfo) {
+            const skpdKB = cellInfo.value;  // isi kolom SKPDBlmJT
+            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
+            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', `Lihat Detail ${skpdKB}`)
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    loadDetailIsidentilKB(tahun, bulan, skpdKB);
+                });
+
+            const span = $('<span>').text(skpdKB);
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(span)
+                .append(button);
+
+            $(cellElement).append(wrapper);
+        }
+
+    </script>
+    <script>
+
+        // function Permanen Reklame
+        function loadDetailJT(tahun, bulan, skpdBlmJT) {
+            const url = `/ReklameSummary/DetailPermanenJT?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmJT=${encodeURIComponent(skpdBlmJT)}`;
+            window.open(url, '_blank');
+        }
+
+        function loadDetailBP(tahun, bulan, skpdBlmPanjang) {
+            const url = `/ReklameSummary/DetailPermanenBP?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmPanjang=${encodeURIComponent(skpdBlmPanjang)}`;
+            window.open(url, '_blank');
+        }
+
+        function loadDetailKB(tahun, bulan, skpdKB) {
+            const url = `/ReklameSummary/DetailPermanenKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
+            window.open(url, '_blank');
+        }
+
+        // function Terbatas Reklame
+        function loadDetailTerbatasJT(tahun, bulan, skpdBlmJT) {
+            const url = `/ReklameSummary/DetailTerbatasJT?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmJT=${encodeURIComponent(skpdBlmJT)}`;
+            window.open(url, '_blank');
+        }
+
+        function loadDetailTerbatasBP(tahun, bulan, skpdBlmPanjang) {
+            const url = `/ReklameSummary/DetailTerbatasBP?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmPanjang=${encodeURIComponent(skpdBlmPanjang)}`;
+            window.open(url, '_blank');
+        }
+
+        function loadDetailTerbatasKB(tahun, bulan, skpdKB) {
+            const url = `/ReklameSummary/DetailTerbatasKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
+            window.open(url, '_blank');
+        }
+
+        // function
+        function loadDetailIsidentilKB(tahun, bulan, skpdKB) {
+            const url = `/ReklameSummary/DetailIsidentilKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
+            window.open(url, '_blank');
+        }
+
+    </script>
+}

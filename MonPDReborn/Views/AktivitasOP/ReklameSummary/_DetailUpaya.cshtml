@@ -1,0 +1,207 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.Detail
+
+<div class="modal-header">
+    <h5 class="modal-title d-flex align-items-center">
+        <i class="ri-building-3-fill fs-4 me-2"></i>
+        <span>Detail Upaya</span>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+    <div class="card">
+        <div class="card-body">
+            <div class="mb-4">
+                <label for="noFormulir" class="form-label fs-4">No. Formulir</label>
+                <input type="text" class="form-control" id="noFormulir" value="@Model.NoFormulir" disabled>
+            </div>
+
+            <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#input-upaya" role="tab">
+                        Input Upaya
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#informasi-reklame" role="tab" onclick="fnShowSeries()">
+                        Informasi Reklame
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content text-muted">
+                <div class="tab-pane active" id="input-upaya" role="tabpanel">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Jenis Upaya</label>
+                            <select class="form-select" name="JenisUpaya">
+                                <option value="">~ Pilih Upaya ~</option>
+                                <!-- opsi dropdown diisi di controller -->
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Keterangan</label>
+                            <select class="form-select" name="Keterangan">
+                                <option value="">~ Pilih Keterangan ~</option>
+                                <!-- opsi dropdown diisi di controller -->
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Petugas</label>
+                            <input type="text" class="form-control" name="Petugas" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Upaya</label>
+                            <input type="date" class="form-control" name="TanggalUpaya" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Lampiran</label>
+                            <input type="file" class="form-control" name="Lampiran" />
+                            <small class="form-text text-muted">
+                                Hanya file gambar (.jpg, .jpeg, .png) dan PDF yang diperbolehkan.
+                            </small>
+                        </div>
+
+                        <div class="mb-3 text-end">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                    <h4 class="card-title fs-16 mb-3 mt-2">
+                        Data Upaya
+                    </h4>
+                    <div class="table-responsive">
+                        @(
+                            Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.DetailUpaya>()
+                            .ID("detailUpayaGrid")
+                            .DataSource(Model.Data)
+                            .ShowBorders(true)
+                            .ShowColumnHeaders(true)
+                            .ShowColumnLines(true)
+                            .ShowRowLines(true)
+                            .AllowColumnResizing(true)
+                            .RowAlternationEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                            .Paging(p => p.PageSize(10))
+                            .Pager(p => p
+                            .ShowPageSizeSelector(true)
+                            .AllowedPageSizes(new[] { 10, 20, 50 })
+                            .ShowInfo(true)
+                            )
+                            .Columns(columns =>
+                            {
+                                columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir");
+                                columns.AddFor(m => m.TglUpaya).Caption("Tanggal Upaya");
+                                columns.AddFor(m => m.Upaya).Caption("Upaya");
+                                columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+                                columns.AddFor(m => m.Petugas).Caption("Petugas");
+                            })
+
+                            )
+                    </div>
+                    
+                </div>
+
+                <div class="tab-pane" id="informasi-reklame" role="tabpanel">
+                    @foreach (var Model in Model.Data)
+                    {
+                        <div class="container mt-4">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label">Isi Reklame</label>
+                                    <input type="text" class="form-control" value="@Model.IsiReklame" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label">Alamat Reklame</label>
+                                    <input type="text" class="form-control" value="@Model.AlamatReklame" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label">Jenis Reklame</label>
+                                    <input type="text" class="form-control" value="@Model.JenisReklame" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label">Panjang (P)</label>
+                                    <input type="text" class="form-control" value="@Model.Panjang" readonly />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">Lebar (L)</label>
+                                    <input type="text" class="form-control" value="@Model.Lebar" readonly />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">Luas (LS)</label>
+                                    <input type="text" class="form-control" value="@Model.Luas" readonly />
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">Tinggi (T)</label>
+                                    <input type="text" class="form-control" value="@Model.Tinggi" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-5">
+                                <div class="col-6">
+                                    <label class="form-label">Tahun Pajak</label>
+                                    <input type="text" class="form-control" value="@Model.Tahun" readonly />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Masa Pajak</label>
+                                    <input type="text" class="form-control"
+                                           value="@Model.TglMulai.ToString("dd MMM yyyy") s/d @Model.TglSelesai.ToString("dd MMM yyyy")"
+                                           readonly />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <h4 class="card-title fs-16 mb-3 mt-2">
+                        Data Upaya
+                    </h4>
+                    <div class="table-responsive">
+                        @(
+                            Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.DetailUpaya>()
+                            .ID("detailUpayaInfoGrid")
+                            .DataSource(Model.Data)
+                            .ShowBorders(true)
+                            .ShowColumnHeaders(true)
+                            .ShowColumnLines(true)
+                            .ShowRowLines(true)
+                            .AllowColumnResizing(true)
+                            .RowAlternationEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                            .Paging(p => p.PageSize(10))
+                            .Pager(p => p
+                            .ShowPageSizeSelector(true)
+                            .AllowedPageSizes(new[] { 10, 20, 50 })
+                            .ShowInfo(true)
+                            )
+                            .Columns(columns =>
+                            {
+                                columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir");
+                                columns.AddFor(m => m.TglUpaya).Caption("Tanggal Upaya");
+                                columns.AddFor(m => m.Upaya).Caption("Upaya");
+                                columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+                                columns.AddFor(m => m.Petugas).Caption("Petugas");
+                            })
+
+                            )
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>

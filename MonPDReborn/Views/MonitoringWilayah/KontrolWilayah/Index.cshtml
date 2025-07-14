@@ -27,28 +27,61 @@
                 <div class="row mt-3 ms-0">
 
                     <div class="col-lg-3">
-                        @Html.DropDownListFor(model => model.SelectedUPTB,
-                                 new SelectList(Model.JenisUptbList, "Value", "Text"),
-                                 new { @class = "form-select rounded-pill mb-3", @aria_label = "Default select example" })
+                        @(Html.DevExtreme().SelectBox()
+                            .ID("SelectedUPTB")
+                            .Value(Model.SelectedUPTB)
+                            .DataSource(Model.JenisUptbList)
+                            .DisplayExpr("Text")
+                            .ValueExpr("Value")
+                            .SearchEnabled(true)
+                            .Value(0.ToString())
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .ElementAttr("class", "form-select mb-3")
+                            )
                     </div>
 
                     <div class="col-lg-3">
-                        @Html.DropDownListFor(model => model.SelectedPajak,
-                                 new SelectList(Model.JenisPajakList, "Value", "Text"),
-                                 "Semua Jenis Pajak",
-                                 new { @class = "form-select rounded-pill mb-3", @aria_label = "Default select example" })
-                    </div>
-                    <div class="col-lg-2">
-                        @Html.DropDownListFor(model => model.SelectedTahun,
-                                 new SelectList(Model.TahunList, "Value", "Text"),
-                                 "Pilih Tahun",
-                                 new { @class = "form-select rounded-pill mb-3", @id = "ddlTahun", @aria_label = "Default select example" })
+                        @(Html.DevExtreme().SelectBox()
+                            .ID("SelectedPajak")
+                            .Value(Model.SelectedPajak)
+                            .DataSource(Model.JenisPajakList)
+                            .DisplayExpr("Text")
+                            .ValueExpr("Value")
+                            .Value(0.ToString())
+                            .SearchEnabled(true)
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .ElementAttr("class", "form-select mb-3")
+                            )
                     </div>
 
                     <div class="col-lg-2">
-                        @Html.DropDownListFor(model => model.SelectedBulan,
-                                 new SelectList(Model.BulanList, "Value", "Text"),
-                                 new { @class = "form-select rounded-pill mb-3" })
+                        @(Html.DevExtreme().SelectBox()
+                            .ID("SelectedTahun")
+                            .Value(Model.SelectedTahun)
+                            .DataSource(Model.TahunList)
+                            .DisplayExpr("Text")
+                            .ValueExpr("Value")
+                            .SearchEnabled(true)
+                            .Value(DateTime.Now.Year.ToString())
+                            .Placeholder("Pilih Tahun")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .ElementAttr("class", "form-select mb-3")
+                            )
+                    </div>
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBox()
+                            .ID("SelectedBulan")
+                            .Value(Model.SelectedBulan)
+                            .DataSource(Model.BulanList)
+                            .DisplayExpr("Text")
+                            .ValueExpr("Value")
+                            .SearchEnabled(true)
+                            .Value(DateTime.Now.Month.ToString())
+                            .Placeholder("Pilih Bulan")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .ElementAttr("class", "form-select mb-3")
+                            )
                     </div>
 
                     <div class="col-lg-2">
@@ -124,10 +157,10 @@
 
         function getFilters() {
             return {
-                wilayah: $('#SelectedUPTB').val(),
-                jenisPajak: $('#SelectedPajak').val(),
-                tahun: $('#ddlTahun').val(), // kamu belum pakai DropDownListFor, akan dijelaskan di bawah
-                bulan: $('#SelectedBulan').val()
+                wilayah: $("#SelectedUPTB").dxSelectBox("instance").option("value"),
+                jenisPajak: $("#SelectedPajak").dxSelectBox("instance").option("value"),
+                tahun: $("#SelectedTahun").dxSelectBox("instance").option("value"),
+                bulan: $("#SelectedBulan").dxSelectBox("instance").option("value")
             };
         }
 

@@ -21,6 +21,7 @@ namespace MonPDReborn.Models.DataOP
         {
             public List<RekapOP> DataRekapOPList { get; set; } = new();
             public Dashboard Data { get; set; } = new Dashboard();
+            public RekapOPTotal SummaryData { get; set; } = new();
 
             public ShowRekap() { }
 
@@ -28,20 +29,58 @@ namespace MonPDReborn.Models.DataOP
             {
                 DataRekapOPList = Method.GetDataRekapOPList(tahun);
                 Data = Method.GetDashboardData();
+
+                SummaryData.TotalOpAwal = DataRekapOPList.Sum(x => x.JmlOpAwal);
+                SummaryData.TotalOpTutup = DataRekapOPList.Sum(x => x.JmlOpTutupPermanen);
+                SummaryData.TotalOpBaru = DataRekapOPList.Sum(x => x.JmlOpBaru);
+                SummaryData.TotalOpAkhir = DataRekapOPList.Sum(x => x.JmlOpAkhir);
             }
         }
-
-
 
         public class ShowSeries
         {
             public List<SeriesOP> DataSeriesOPList { get; set; } = new();
+            public SeriesOPStatistik StatistikData { get; set; } = new();
 
             public ShowSeries() { }
 
             public ShowSeries(string keyword)
             {
                 DataSeriesOPList = Method.GetDataSeriesOPList();
+
+                // Hitung total untuk setiap tahun menggunakan LINQ
+                int total2021 = DataSeriesOPList.Sum(x => x.Tahun2021);
+                int total2022 = DataSeriesOPList.Sum(x => x.Tahun2022);
+                int total2023 = DataSeriesOPList.Sum(x => x.Tahun2023);
+                int total2024 = DataSeriesOPList.Sum(x => x.Tahun2024);
+                int total2025 = DataSeriesOPList.Sum(x => x.Tahun2025);
+
+                // Hitung selisih pertumbuhan tahunan
+                var selisihPerTahun = new Dictionary<string, int>
+                {
+                    { "2021-2022", total2022 - total2021 },
+                    { "2022-2023", total2023 - total2022 },
+                    { "2023-2024", total2024 - total2023 },
+                    { "2024-2025", total2025 - total2024 }
+                };
+
+                // Cari kenaikan tertinggi
+                int kenaikanTertinggi = 0;
+                string periodeTertinggi = "-";
+                if (selisihPerTahun.Any())
+                {
+                    kenaikanTertinggi = selisihPerTahun.Values.Max();
+                    periodeTertinggi = selisihPerTahun.FirstOrDefault(kv => kv.Value == kenaikanTertinggi).Key ?? "-";
+                }
+
+                // Masukkan semua hasil perhitungan ke dalam model StatistikData
+                StatistikData = new SeriesOPStatistik
+                {
+                    TotalOpTahunIni = total2025,
+                    PertumbuhanOp = total2025 - total2024,
+                    KenaikanTertinggiOp = kenaikanTertinggi,
+                    PeriodeKenaikanTertinggi = periodeTertinggi
+                };
             }
         }
         public class Detail
@@ -107,8 +146,8 @@ namespace MonPDReborn.Models.DataOP
                 var OpBphtbNow = context.DbMonBphtbs.Count(x => x.Tahun == tahun);
                 var OpBphtbAwal = context.DbMonBphtbs.Count(x => x.Tahun == tahun - 1);
 
-                var OpReklameNow = 0;
-                var OpReklameAwal = 0;
+                var OpReklameNow = context.DbOpReklames.Count(x => x.TahunBuku == tahun);
+                var OpReklameAwal = context.DbOpReklames.Count(x => x.TahunBuku == tahun - 1);
 
                 var OpOpsenPkbNow = 0;
                 var OpOpsenPkbAwal = 0;
@@ -176,7 +215,7 @@ namespace MonPDReborn.Models.DataOP
                         Tahun = tahun,
                         JmlOpAwal = OpPbbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpPbbNow - OpPbbAwal,
+                        JmlOpBaru = OpPbbNow - 0,
                         JmlOpAkhir = OpPbbAwal - 0
                      + (OpPbbNow - OpPbbAwal)},
                     new RekapOP
@@ -186,7 +225,7 @@ namespace MonPDReborn.Models.DataOP
                         Tahun = tahun,
                         JmlOpAwal = OpBphtbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpBphtbNow - OpBphtbAwal,
+                        JmlOpBaru = OpBphtbNow - 0,
                         JmlOpAkhir = OpBphtbAwal - 0
                      + (OpBphtbNow - OpBphtbAwal)},
                     new RekapOP
@@ -284,11 +323,11 @@ namespace MonPDReborn.Models.DataOP
                 var OpBphtbMines3 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 3);
                 var OpBphtbMines4 = context.DbMonBphtbs.Count(x => x.Tahun == currentYear - 4);
 
-                var OpReklameNow = 0;
-                var OpReklameMines1 = 0;
-                var OpReklameMines2 = 0;
-                var OpReklameMines3 = 0;
-                var OpReklameMines4 = 0;
+                var OpReklameNow = context.DbOpReklames.Count(x => x.TahunBuku == currentYear);;
+                var OpReklameMines1 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 1);
+                var OpReklameMines2 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 2);
+                var OpReklameMines3 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 3);
+                var OpReklameMines4 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 4);
 
                 var OpOpsenPkbNow = 0;
                 var OpOpsenPkbMines1 = 0;
@@ -2251,7 +2290,13 @@ namespace MonPDReborn.Models.DataOP
             public int JmlOpTutupPermanen { get; set; }
             public int JmlOpBaru { get; set; }
             public int JmlOpAkhir { get; set; }
-
+        }
+        public class RekapOPTotal
+        {
+            public int TotalOpAwal { get; set; }
+            public int TotalOpTutup { get; set; }
+            public int TotalOpBaru { get; set; }
+            public int TotalOpAkhir { get; set; }
         }
 
         public class SeriesOP
@@ -2263,6 +2308,15 @@ namespace MonPDReborn.Models.DataOP
             public int Tahun2023 { get; set; }
             public int Tahun2024 { get; set; }
             public int Tahun2025 { get; set; }
+        }
+
+        // Di dalam ProfileOPVM.cs
+        public class SeriesOPStatistik
+        {
+            public int TotalOpTahunIni { get; set; }
+            public int PertumbuhanOp { get; set; }
+            public int KenaikanTertinggiOp { get; set; }
+            public string PeriodeKenaikanTertinggi { get; set; } = "-";
         }
 
         public class Dashboard

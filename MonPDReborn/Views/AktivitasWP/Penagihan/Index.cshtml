@@ -1,4 +1,10 @@
 ﻿@model MonPDReborn.Models.AktivitasWP.PenagihanVM.Index
+@using DevExtreme.AspNet.Mvc
+
+@{
+    ViewData["Title"] = "Penagihan WP";
+    Layout = "_Layout";
+}
 
 <div class="row">
 
@@ -13,25 +19,21 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
+                <div class="row g-3 align-items-center">
 
-                    <div class="col-lg-1">
-                        <label for="JenisPajak" class="form-label">Jenis Pajak</label>
+                    <div class="col-lg-3 col-md-4">
+                        @(Html.DevExtreme().SelectBox()
+                            .ID("selectJenisPajakFilter")
+                            .DataSource(new[] { "Semua Jenis Pajak", "Makanan", "Hotel", "Parkir", "Listrik" })
+                            .Placeholder("Semua Jenis Pajak")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .Name("jenisPajak") 
+                            )
                     </div>
 
-                    <div class="col-lg-4">
-                        <select id="JenisPajak" class="form-select">
-                            <option value="">Semua Jenis Pajak</option>
-                            <option value="Makanan">Makanan</option>
-                            <option value="Hotel">Hotel</option>
-                            <option value="Parkir">Parkir</option>
-                            <option value="Listrik">Listrik</option>
-                        </select>
-                    </div>
-
-                    <div class="col-lg-3">
+                    <div class="col-lg-2 col-md-3">
                         <button id="btnFilter" class="btn btn-success w-100">
-                            <i class="bi bi-funnel-fill"></i> Filter
+                            Terapkan Filter
                         </button>
                     </div>
 
@@ -125,7 +127,15 @@
 
             // ketika klik tombol filter
             $("#btnFilter").on("click", function () {
-                const jenisPajak = $("#JenisPajak").val();
+                // Ambil nilai yang dipilih
+                let jenisPajak = $("#selectJenisPajakFilter").dxSelectBox("instance").option("value");
+
+                // Jika yang dipilih adalah "Semua Jenis Pajak", ubah nilainya menjadi string kosong
+                if (jenisPajak === "Semua Jenis Pajak") {
+                    jenisPajak = "";
+                }
+
+                // Panggil fungsi load dengan nilai yang sudah dikoreksi
                 loadShow(jenisPajak);
             });
 

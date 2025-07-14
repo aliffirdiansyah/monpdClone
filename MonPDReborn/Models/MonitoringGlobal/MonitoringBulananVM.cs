@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.InkML;
 using MonPDLib;
 using MonPDLib.General;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Mvc;
 
@@ -15,6 +16,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
             public List<SelectListItem> JenisPajakList { get; set; } = new();
             public Index()
             {
+                JenisPajakList.Add(new SelectListItem { Value = "0", Text = "Semua Jenis Pajak" });
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
                     .Select(x => new SelectListItem
@@ -39,6 +41,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 }
                 Data.Target = BulananPajakList.Sum(x => x.AkpTarget);
                 Data.Realisasi = BulananPajakList.Sum(x => x.Realisasi);
+                Data.Tahun = tahun;
             }
         }
         public class Method
@@ -63,7 +66,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetRestoPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetRestoPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -106,7 +109,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetListrikPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetListrikPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -149,7 +152,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHotelPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHotelPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -192,7 +195,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetParkirPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetParkirPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -235,7 +238,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -278,7 +281,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetAbtPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetAbtPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -321,7 +324,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetReklamePerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetReklamePerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -364,7 +367,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetPbbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetPbbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -407,7 +410,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -449,7 +452,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -491,7 +494,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -522,6 +525,146 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         break;
                     default:
+                        var dataTargetPerBulan = context.DbAkunTargetBulans
+                                .Where(x => x.TahunBuku == tahun)
+                                .GroupBy(x => new { x.Bulan })
+                                .Select(g => new
+                                {
+                                    Bulan = (int)g.Key.Bulan,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .ToList();
+                        var realisasiPerBulan = new List<(int Bulan, decimal Realisasi)>();
+
+                        realisasiPerBulan.AddRange(
+                            context.DbMonRestos
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonPpjs
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonHotels
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonParkirs
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonHiburans
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonAbts
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonReklames
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonBphtbs
+                                .Where(x => x.TglBayar.HasValue
+                                            && x.TglBayar.Value.Year == tahun)
+                                .GroupBy(x => new { TglBayar = (int)x.TglBayar.Value.Month })
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key.TglBayar,
+                                    g.Sum(x => x.Pokok) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonOpsenPkbs
+                                .Where(x => x.TglSspd.Year == tahun)
+                                .GroupBy(x => new { TglSspd = (int)x.TglSspd.Month })
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key.TglSspd,
+                                    g.Sum(x => x.JmlPokok)
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonOpsenBbnkbs
+                                .Where(x => x.TglSspd.Year == tahun)
+                                .GroupBy(x => new { TglSspd = (int)x.TglSspd.Month })
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key.TglSspd,
+                                    g.Sum(x => x.JmlPokok)
+                                ))
+                                .ToList()
+                        );
+                        foreach (var item in dataTargetPerBulan.OrderBy(x => x.Bulan))
+                        {
+                            var totalRealisasi = realisasiPerBulan
+                                    .Where(x => x.Bulan == item.Bulan)
+                                    .Sum(x => x.Realisasi);
+
+                            ret.Add(new MonitoringBulananViewModels.BulananPajak()
+                            {
+                                JenisPajak = jenisPajak.GetDescription(),
+                                Tahun = tahun,
+                                Bulan = item.Bulan,
+                                BulanNama = new DateTime(tahun, item.Bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                AkpTarget = item.TotalTarget,
+                                Realisasi = totalRealisasi,
+                                Pencapaian = item.TotalTarget == 0 ? 0 : (totalRealisasi / item.TotalTarget) * 100
+                            });
+                        }
+
                         break;
                 }
 
@@ -550,7 +693,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetRestoPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetRestoPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -596,7 +739,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetListrikPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetListrikPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -642,7 +785,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHotelPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHotelPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -687,7 +830,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetParkirPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetParkirPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -732,7 +875,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -778,7 +921,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetAbtPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetAbtPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -823,7 +966,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetReklamePerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetReklamePerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -869,7 +1012,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetPbbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetPbbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -915,7 +1058,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetBphtbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -960,7 +1103,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenPkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -1004,7 +1147,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .OrderBy(x => x.Bulan)
                             .ToList();
 
-                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulanUptbs
+                        var dataTargetOpsenBbnkbPerBulan = context.DbAkunTargetBulans
                                 .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
@@ -1038,6 +1181,148 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         break;
                     default:
+                        var dataTargetPerBulan = context.DbAkunTargetBulans
+                                .Where(x => x.TahunBuku == tahun)
+                                .GroupBy(x => new { x.Bulan })
+                                .Select(g => new
+                                {
+                                    Bulan = (int)g.Key.Bulan,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .ToList();
+                        var realisasiPerBulan = new List<(int Bulan, decimal Realisasi)>();
+
+                        realisasiPerBulan.AddRange(
+                            context.DbMonRestos
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonPpjs
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonHotels
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonParkirs
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonHiburans
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonAbts
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonReklames
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahun)
+                                .GroupBy(x => x.TglBayarPokok.Value.Month)
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key,
+                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonBphtbs
+                                .Where(x => x.TglBayar.HasValue
+                                            && x.TglBayar.Value.Year == tahun)
+                                .GroupBy(x => new { TglBayar = (int)x.TglBayar.Value.Month })
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key.TglBayar,
+                                    g.Sum(x => x.Pokok) ?? 0
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonOpsenPkbs
+                                .Where(x => x.TglSspd.Year == tahun)
+                                .GroupBy(x => new { TglSspd = (int)x.TglSspd.Month })
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key.TglSspd,
+                                    g.Sum(x => x.JmlPokok)
+                                ))
+                                .ToList()
+                        );
+                        realisasiPerBulan.AddRange(
+                            context.DbMonOpsenBbnkbs
+                                .Where(x => x.TglSspd.Year == tahun)
+                                .GroupBy(x => new { TglSspd = (int)x.TglSspd.Month })
+                                .Select(g => new ValueTuple<int, decimal>(
+                                    g.Key.TglSspd,
+                                    g.Sum(x => x.JmlPokok)
+                                ))
+                                .ToList()
+                        );
+                        decimal akumulasiTarget = 0;
+                        decimal akumulasiRealisasi = 0;
+                        foreach (var item in dataTargetPerBulan.OrderBy(x => x.Bulan))
+                        {
+                            var totalRealisasi = realisasiPerBulan
+                                    .Where(x => x.Bulan == item.Bulan)
+                                    .Sum(x => x.Realisasi);
+
+
+                            ret.Add(new MonitoringBulananViewModels.BulananPajak()
+                            {
+                                JenisPajak = jenisPajak.GetDescription(),
+                                Tahun = tahun,
+                                Bulan = item.Bulan,
+                                BulanNama = new DateTime(tahun, item.Bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                AkpTarget = akumulasiTarget += item.TotalTarget, // Akumulasi Target
+                                Realisasi = akumulasiRealisasi += totalRealisasi, // Akumulasi Realisasi
+                                Pencapaian = item.TotalTarget == 0 ? 0 : (totalRealisasi / item.TotalTarget) * 100
+                            });
+                        }
                         break;
                 }
 

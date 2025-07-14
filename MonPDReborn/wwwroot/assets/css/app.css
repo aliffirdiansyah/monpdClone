@@ -197,7 +197,12 @@ File: Main Css File
   --vz-input-group-addon-bg: #2a2f34;
   --vz-input-check-border: #33393f;
 }
-
+.dx-datagrid-headers .dx-header-row > td {
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase; /* <-- ini untuk auto uppercase */
+    background-color: #00796b;
+}
 #page-topbar {
   position: fixed;
   top: 0;
