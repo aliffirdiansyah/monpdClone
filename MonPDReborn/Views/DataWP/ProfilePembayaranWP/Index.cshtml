@@ -169,11 +169,11 @@
             fnDetail(npwpd);
         });
 
-        function fnDetail(nop) {
+        function fnDetail(NPWPD) {
             $.ajax({
                 url: '@Url.Action("Detail", "ProfilePembayaranWP")',  // pastikan controller & action sesuai
                 type: 'GET',
-                data: { npwpd: nop }, // ganti ke npwpd kalau parameternya memang npwpd
+                data: { npwpd: NPWPD }, // ganti ke npwpd kalau parameternya memang npwpd
                 beforeSend: function () {
                     $("#loader").show();
                     $("#staticBackdropLargeScrollable").modal('hide');
