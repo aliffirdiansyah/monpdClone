@@ -26,7 +26,7 @@
                 </div>
                 <div id="Show"></div>
                 
-                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                <div class="modal fade" id="detailModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div id="detailModalContent">
@@ -83,23 +83,52 @@
                 .appendTo(cellElement);
         }
 
-        // Klik detail
+                // Hapus blok "// Klik detail" Anda yang lama, dan ganti dengan dua blok ini:
+
+        // Event handler saat tombol detail diklik
         $(document).on('click', '.btn-detail', function () {
             const npwpd = $(this).data('npwpd');
-            const url = '@Url.Action("Detail", "ProfileWP")' + '?npwpd=' + encodeURIComponent(npwpd);
-
-            $('#detailModalContent').html(`
-                <div class="text-center p-5">
-                    <div class="spinner-border text-primary"></div>
-                </div>
-            `);
-
-            $('#detailModal').modal('show');
-
-            $.get(url, function (data) {
-                $('#detailModalContent').html(data);
-            });
+            // Panggil fungsi fnDetail yang baru
+            fnDetail(npwpd);
         });
+
+        // Fungsi baru untuk memuat detail via AJAX (meniru pola yang Anda inginkan)
+        function fnDetail(npwpd) {
+            $.ajax({
+                url: '@Url.Action("Detail", "ProfileWP")', // URL sudah benar mengarah ke ProfileWP
+                type: 'GET',
+                data: { npwpd: npwpd }, // Mengirim data dengan nama parameter yang benar
+                beforeSend: function () {
+                    // Tampilkan spinner di dalam modal sebelum konten dimuat
+                    $('#detailModalContent').html(`
+                        <div class="text-center p-5">
+                            <div class="spinner-border text-primary"></div>
+                        </div>
+                    `);
+                    // Tampilkan modalnya
+                    $('#detailModal').modal('show');
+                },
+                success: function (response) {
+                    // Cek jika ada pesan error dari server
+                    if (response.Status === undefined) {
+                        // Jika sukses, ganti spinner dengan konten detail
+                        $('#detailModalContent').html(response);
+                    } else {
+                        // Sembunyikan modal dan tampilkan peringatan
+                        $('#detailModal').modal('hide');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    // Ganti spinner dengan pesan error jika AJAX gagal
+                    $('#detailModalContent').html('<p class="text-danger p-5">Terjadi kesalahan saat memuat data detail.</p>');
+                }
+            });
+        }
 
 
     </script>

@@ -135,7 +135,7 @@
                     </div>
                 </div>
                 <div id="fnShowRekap"></div>
-                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                <div class="modal fade" id="detailModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div id="detailModalContent">
@@ -308,57 +308,54 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            fnShowRekap("");      // Panggil data rekap jumlah
-            fnShowRiwayat("");      // Panggil data rekap jumlah
-
-           // loadDetail("");  // Panggil semua data detail saat pertama load
+            // Memuat data tabel saat halaman pertama kali dibuka
+            fnShowRekap();
+            fnShowRiwayat();
         });
 
+        // Fungsi untuk memuat tabel "Daftar Piutang WP"
         function fnShowRekap() {
             $.ajax({
                 url: '@Url.Action("ShowRekap", "ProfilePiutangWP")',
                 type: 'GET',
                 beforeSend: function () {
-                    // Tampilkan spinner, sembunyikan konten
                     $('#loading2-fnShowRekap').show();
                     $('#fnShowRekap').hide();
                 },
                 success: function (result) {
-                    // Sembunyikan spinner, tampilkan hasil
                     $('#loading2-fnShowRekap').hide();
                     $('#fnShowRekap').html(result).show();
                 },
                 error: function () {
                     $('#loading2-fnShowRekap').hide();
-                    $('#fnShowRekap').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    $('#fnShowRekap').html('<div class="alert alert-danger">❌ Gagal memuat data Rekap.</div>').show();
                 }
             });
         }
 
+        // Fungsi untuk memuat tabel "Riwayat Tindakan Penagihan"
         function fnShowRiwayat() {
             $.ajax({
                 url: '@Url.Action("ShowRiwayat", "ProfilePiutangWP")',
                 type: 'GET',
                 beforeSend: function () {
-                    // Tampilkan spinner, sembunyikan konten
                     $('#loading2-fnShowRiwayat').show();
                     $('#fnShowRiwayat').hide();
                 },
                 success: function (result) {
-                    // Sembunyikan spinner, tampilkan hasil
                     $('#loading2-fnShowRiwayat').hide();
                     $('#fnShowRiwayat').html(result).show();
                 },
                 error: function () {
                     $('#loading2-fnShowRiwayat').hide();
-                    $('#fnShowRiwayat').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    $('#fnShowRiwayat').html('<div class="alert alert-danger">❌ Gagal memuat data Riwayat.</div>').show();
                 }
             });
         }
 
+        // Fungsi untuk membuat tombol detail di grid (jika Anda pakai)
         function aksiTemplate(cellElement, cellInfo) {
             const npwpd = cellInfo.data.NPWPD;
-
             $('<button>')
                 .attr('type', 'button')
                 .attr('data-npwpd', npwpd)
@@ -367,22 +364,52 @@
                 .appendTo(cellElement);
         }
 
-        // Klik detail
+        // --- INI BAGIAN YANG DIPERBAIKI ---
+
+        // Event handler saat tombol detail diklik
         $(document).on('click', '.btn-detail', function () {
             const npwpd = $(this).data('npwpd');
-            const url = '@Url.Action("Detail", "ProfilePiutangWP")' + '?npwpd=' + encodeURIComponent(npwpd);
-
-            $('#detailModalContent').html(`
-                <div class="text-center p-5">
-                    <div class="spinner-border text-primary"></div>
-                </div>
-            `);
-
-            $('#detailModal').modal('show');
-
-            $.get(url, function (data) {
-                $('#detailModalContent').html(data);
-            });
+            fnDetail(npwpd);
         });
+
+        // Fungsi untuk memuat detail via AJAX (pola yang sama dengan halaman lain)
+        function fnDetail(npwpd) {
+            $.ajax({
+                url: '@Url.Action("Detail", "ProfilePiutangWP")',
+                type: 'GET',
+                data: { npwpd: npwpd },
+                beforeSend: function () {
+                    // Tampilkan spinner di dalam modal sebelum konten dimuat
+                    $('#detailModalContent').html(`
+                        <div class="text-center p-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    `);
+                    // Tampilkan modal
+                    $('#detailModal').modal('show');
+                },
+                success: function (response) {
+                    // Cek jika ada pesan error dari server
+                    if (typeof response === 'string' && response.includes("<div")) {
+                        // Jika sukses, ganti spinner dengan konten detail
+                        $('#detailModalContent').html(response);
+                    } else if (response.Status !== undefined) {
+                        // Sembunyikan modal dan tampilkan peringatan
+                        $('#detailModal').modal('hide');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    // Ganti spinner dengan pesan error jika AJAX gagal
+                    $('#detailModalContent').html('<p class="text-danger p-5">Terjadi kesalahan saat memuat data detail.</p>');
+                }
+            });
+        }
     </script>
 }
