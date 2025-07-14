@@ -77,10 +77,17 @@
 
                        )
                 </div>
-                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
+                <div class="modal fade" id="staticBackdropLargeScrollable" tabindex="-1" aria-labelledby="staticBackdropLargeScrollableLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div id="detailModalContent">
+                            <div class="modal-header">
+                                <h5 class="modal-title d-flex align-items-center">
+                                    <i class="ri-building-3-fill fs-4 me-2"></i>
+                                    <span>Detail Upaya</span>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
                                 <div class="text-center p-5">
                                     <div class="spinner-border text-primary"></div>
                                 </div>
@@ -88,6 +95,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -97,23 +105,47 @@
 @section Scripts
 {
     <script>
-         function onDetailClick(e) {
+               function onDetailClick(e) {
             const noFormulir = e.row.data.NoFormulir;
 
-            const $modal = $('#detailModal');
-            const $content = $('#detailModalContent');
+            const $modal = $('#staticBackdropLargeScrollable');
+            const $title = $modal.find('.modal-title span');
+            const $body = $modal.find('.modal-body');
 
-            $content.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+            $("#loader").show(); // opsional: kalau pakai loader global
+            $modal.modal('hide');
 
-            $modal.modal('show');
+            $.ajax({
+                url: '/ReklameSummary/Detail',
+                type: 'GET',
+                data: { noFormulir: noFormulir },
+                success: function (response) {
+                    $("#loader").hide();
 
-            $.get('/ReklameSummary/Detail', { noFormulir: noFormulir })
-                .done(function (html) {
-                    $content.html(html);
-                })
-                .fail(function () {
-                    $content.html('<div class="text-danger text-center p-3">Gagal memuat detail.</div>');
-                });
+                    if (response.Status === undefined) {
+                        $title.text("Detail Reklame");
+                        $body.html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $("#loader").hide();
+                    $title.text("Detail Reklame");
+                    $body.html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
         }
+
+
     </script>
 }

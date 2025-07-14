@@ -14,17 +14,17 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">NPWPD</span>
-                            <span class="fw-semibold">@Model.DataWPList.FirstOrDefault()?.NPWPD</span>
+                            <span class="fw-semibold">@Model.DataWPDetailRow.NPWPD</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <label class="form-label text-muted fw-bold">Nama Wajib Pajak</label>
-                            <div class="fw-semibold">@Model.DataWPList.FirstOrDefault()?.NamaWP</div>
+                            <div class="fw-semibold">@Model.DataWPDetailRow.NamaWP</div>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <label class="form-label text-muted fw-bold">Status Keseluruhan</label>
-                            <div class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Status</div>
+                            <div class="fw-semibold">@Model.DataWPDetailRow.Status</div>
                         </div>
 
                     </div>
@@ -41,28 +41,31 @@
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">NPWPD</span>
-                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.NPWPD</span>
+                            <span class="fw-semibold">@Model.DataWPDetailRow.NPWPD</span>
                         </div>
-
-                        <div class="d-flex justify-content-between mb-2">
+                        @foreach (var Model in Model.DataWPDetailRow.DetailPembayaranWPList)
+                        {
+                            <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Total Ketetapan</span>
-                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Ketetapan</span>
+                            <span class="fw-semibold">@Model.Ketetapan</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Total Terbayar</span>
-                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Terbayar</span>
+                            <span class="fw-semibold">@Model.Terbayar</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Total Tunggakan</span>
-                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Tunggakan</span>
+                            <span class="fw-semibold">@Model.Tunggakan</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Tingkat Kepatuhan</span>
-                            <span class="fw-semibold">@Model.DetailPembayaranWPList.FirstOrDefault()?.Kepatuhan</span>
+                            <span class="fw-semibold">@Model.Kepatuhan</span>
                         </div>
+                        }
+                        
 
                     </div>
                 </div>
@@ -81,7 +84,7 @@
                             @(
                                     Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfilePembayaranWPVM.DetailPembayaranWP>()
                                     .ID("DetailPembayaranWPGrid")
-                                    .DataSource(Model.DetailPembayaranWPList)
+                                    .DataSource(Model.DataWPDetailRow.DetailPembayaranWPList)
                                     .KeyExpr("NPWPD")
                                     .ShowBorders(true)
                                     .RowAlternationEnabled(true)

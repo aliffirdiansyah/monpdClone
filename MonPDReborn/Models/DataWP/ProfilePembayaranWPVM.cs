@@ -1,4 +1,8 @@
-﻿using static MonPDReborn.Models.DataWP.ProfileWPVM;
+﻿using MonPDLib;
+using MonPDLib.EF;
+using MonPDLib.General;
+using System.Collections.Generic;
+using static MonPDReborn.Models.DataWP.ProfileWPVM;
 
 namespace MonPDReborn.Models.DataWP
 {
@@ -16,63 +20,342 @@ namespace MonPDReborn.Models.DataWP
         public class Show
         {
             public List<PembayaranWP> DataPembayaranWPList { get; set; } = new();
-
-
             public Show()
             {
-                DataPembayaranWPList = Method.GetFilteredData();
+                DataPembayaranWPList = Method.GetDataPembayaranWPList();
             }
         }
         public class Detail
         {
-            public List<ProfilWP> DataWPList { get; set; } = new();
-            public List<DetailPembayaranWP> DetailPembayaranWPList { get; set; } = new();
+            public ProfilWP DataWPDetailRow { get; set; } = new();
 
             public Detail() { }
 
             public Detail(string NPWPD)
             {
-                DataWPList = Method.GetFilteredDataProfilWP(NPWPD);
-                DetailPembayaranWPList = Method.GetDetailData(NPWPD);
+                DataWPDetailRow = Method.GetDetailWP(NPWPD);
             }
 
         }
         public class Method
         {
-            public static List<PembayaranWP> GetFilteredData()
+            public static List<PembayaranWP> GetDataPembayaranWPList()
             {
-                return GetAllDataPembayaranWP();
-            }
+                var ret = new List<PembayaranWP>();
+                var context = DBClass.GetContext();
+                var currentYear = DateTime.Now.Year;
 
-            private static List<PembayaranWP> GetAllDataPembayaranWP()
+                var DataResto = context.DbMonRestos
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NpwpdNama ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataListrik = context.DbMonPpjs
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NpwpdNama ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataHotel = context.DbMonHotels
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NpwpdNama ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataParkir = context.DbMonParkirs
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NpwpdNama ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataHiburan = context.DbMonHiburans
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NpwpdNama ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataAbt = context.DbMonAbts
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NpwpdNama ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+                var DataReklame = context.DbMonReklames
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NamaPerusahaan ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = "Aktif"
+                        };
+                    })
+                    .ToList();
+
+                var DataPbb = context.DbMonPbbs
+                    .GroupBy(r => new { r.Npwpd })
+                    .ToList()
+                    .Select(wp =>
+                    {
+                        var first = wp.FirstOrDefault();
+                        return new PembayaranWP
+                        {
+                            NPWPD = wp.Key.Npwpd,
+                            NamaWP = first?.NpwpdNama ?? "-",
+                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                        };
+                    })
+                    .ToList();
+
+                ret.AddRange(DataResto);
+                ret.AddRange(DataListrik);
+                ret.AddRange(DataHotel);
+                ret.AddRange(DataParkir);
+                ret.AddRange(DataHiburan);
+                ret.AddRange(DataAbt);
+                ret.AddRange(DataReklame);
+                ret.AddRange(DataPbb);
+
+                return ret;
+            }
+            public static ProfilWP GetDetailWP(string npwpd)
             {
-                return new List<PembayaranWP>
+                var ret = new ProfilWP();
+                var context = DBClass.GetContext();
+
+                var wp = context.Npwpds
+                    .FirstOrDefault(w => w.NpwpdNo == npwpd);
+
+                if (wp != null)
                 {
-                    new PembayaranWP {NPWPD = "01.01.0001", NamaWP = "Hotel Mawar", Ketetapan = "Rp 20.000.000", Terbayar = "Rp 20.000.000", Status = "Lunas"},
-                    new PembayaranWP {NPWPD = "01.01.0002", NamaWP = "PT. ABC", Ketetapan = "Rp 15.300.000", Terbayar = "Rp 12.000.000", Status = "Sebagian"},
-                    new PembayaranWP {NPWPD = "01.01.0003", NamaWP = "Karaoke Galaxy", Ketetapan = "Rp 7.800.000", Terbayar = "Rp 7.800.000", Status = "Tunggak"},
-                    
-                };
+                    ret.NPWPD = wp.NpwpdNo;
+                    ret.NamaWP = wp.Nama;
+                    ret.JenisSubjek = wp.JenisWp == 0 ? "Orang Pribadi" : wp.JenisWp == 1 ? "Badan Usaha" : "Tidak Diketahui";
+                    ret.NIB = wp.JenisWp == 0 ? "-" : wp.JenisWp == 1 ? wp.NpwpdNo : "-";
+                    ret.Status = wp.Status == 1 ? "Tidak Aktif" : "Aktif";
+                    ret.TanggalDaftar = wp.InsDate;
+                    ret.AlamatDom = wp.AlamatDomisili;
+                    ret.AlamatUsaha = wp.Alamat;
+                    ret.Kontak = wp.Kontak ?? wp.Hp;
+                    ret.Email = wp.Email ?? "-";
+                }
+
+                var DataResto = context.DbMonRestos
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+                var DataListrik = context.DbMonPpjs
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+                var DataHotel = context.DbMonHotels
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+                var DataParkir = context.DbMonParkirs
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+                var DataHiburan = context.DbMonHiburans
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+                var DataAbt = context.DbMonAbts
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+                var DataReklame = context.DbMonReklames
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak.Reklame)).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+
+                var DataPbb = context.DbMonPbbs
+                    .Where(x => x.Npwpd == npwpd)
+                    .Select(wp => new DetailPembayaranWP
+                    {
+                        NPWPD = wp.Npwpd,
+                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                        TahunBuku = (int)wp.TahunBuku,
+                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                        Terbayar = wp.NominalPokokBayar ?? 0,
+                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                    })
+                    .ToList();
+
+                ret.DetailPembayaranWPList.AddRange(DataResto);
+                ret.DetailPembayaranWPList.AddRange(DataListrik);
+                ret.DetailPembayaranWPList.AddRange(DataHotel);
+                ret.DetailPembayaranWPList.AddRange(DataParkir);
+                ret.DetailPembayaranWPList.AddRange(DataHiburan);
+                ret.DetailPembayaranWPList.AddRange(DataAbt);
+                ret.DetailPembayaranWPList.AddRange(DataReklame);
+                ret.DetailPembayaranWPList.AddRange(DataPbb);
+
+                return ret;
             }
-
-            public static List<DetailPembayaranWP> GetDetailData(string npwpd)
-            {
-                return GetAllDetailPembayaranWP()
-                    .Where(x => x.NPWPD.Equals(npwpd, StringComparison.OrdinalIgnoreCase))
-                    .ToList(); ;
-            }
-
-            private static List<DetailPembayaranWP> GetAllDetailPembayaranWP()
-            {
-                return new List<DetailPembayaranWP>
-                {
-                    new DetailPembayaranWP {NPWPD = "01.01.0001", JenisPajak = "Pajak Hotel", TahunBuku = "Hotel Mawar", Ketetapan = "Rp 20.000.000", Terbayar = "Rp 20.000.000", Tunggakan = "Rp 20.000.000", Status = "Lunas", Kepatuhan = "00%"},
-                    new DetailPembayaranWP {NPWPD = "01.01.0002" , JenisPajak = "Pajak Restoran", TahunBuku = "PT. ABC", Ketetapan = "Rp 15.300.000", Terbayar = "Rp 12.000.000", Tunggakan = "Rp 20.000.000", Status = "Sebagian", Kepatuhan = "00%"},
-                    new DetailPembayaranWP {NPWPD = "01.01.0003", JenisPajak = "Pajak Hiburan", TahunBuku = "Karaoke Galaxy", Ketetapan = "Rp 7.800.000", Terbayar = "Rp 7.800.000",Tunggakan = "Rp 20.000.000", Status = "Tunggak", Kepatuhan = "00%"},
-
-                };
-            }
-
             public static Dashboard GetDashboardData()
             {
                 return new Dashboard
@@ -80,36 +363,20 @@ namespace MonPDReborn.Models.DataWP
                     TotalWP = 1274,
                     WPBulan = 156,
                     RataWPBulan = 103,
-                    KetetapanWP = 11.7,
-                    TerbayarWP = 8.2,
+                    KetetapanWP = 11.7m,
+                    TerbayarWP = 8.2m,
                     TargetKepatuhan = 85
                 };
             }
 
-            public static List<ProfilWP> GetFilteredDataProfilWP(string npwpd)
-            {
-                return GetAllDataProfilWP()
-                    .Where(x => x.NPWPD.Equals(npwpd, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-            private static List<ProfilWP> GetAllDataProfilWP()
-            {
-                return new List<ProfilWP>
-                {
-                    new ProfilWP {NPWPD = "01.01.0001", NamaWP = "Hotel Mawar", JenisSubjek = "Badan Usaha", NIB = "1234567890", Status = "Aktif", TanggalDaftar = new DateTime(2018, 5, 12), AlamatDom = "Jl. Mawar No. 1, Jakarta", AlamatUsaha = "Jl. Mawar Raya No. 2, Jakarta", Kontak = "08123456789", Email = "info@hotelmawar.com"},
-                    new ProfilWP {NPWPD = "01.01.0002", NamaWP = "PT. ABC", JenisSubjek = "Badan Usaha", NIB = "9876543210", Status = "Aktif", TanggalDaftar = new DateTime(2020, 1, 20), AlamatDom = "Jl. Sederhana No. 5, Bandung", AlamatUsaha = "Jl. Sederhana Raya No. 10, Bandung", Kontak = "08129876543", Email = "contact@restoransederhana.co.id"},
-                    new ProfilWP {NPWPD = "01.01.0003", NamaWP = "Karaoke Galaxy", JenisSubjek = "Orang Pribadi", NIB = "1122334455", Status = "Non Aktif", TanggalDaftar = new DateTime(2015, 7, 15), AlamatDom = "Jl. Kenanga No. 8, Surabaya", AlamatUsaha = "Jl. Kenanga Raya No. 12, Surabaya", Kontak = "08122223333", Email = "owner@tamankidsplay.id"}
-                };
-
-            }
         }
 
         public class PembayaranWP
         {
             public string NPWPD { get; set; } = null!;
             public string NamaWP { get; set; } = null!;
-            public string Ketetapan { get; set; } = null!;
-            public string Terbayar { get; set; } = null!;
+            public decimal Ketetapan { get; set; }
+            public decimal Terbayar { get; set; }
             public string Status { get; set; } = null!;
         }
 
@@ -117,10 +384,10 @@ namespace MonPDReborn.Models.DataWP
         {
             public string NPWPD { get; set; } = null!;
             public string JenisPajak { get; set; } = null!;
-            public string TahunBuku { get; set; } = null!;
-            public string Ketetapan { get; set; } = null!;
-            public string Terbayar { get; set; } = null!;
-            public string Tunggakan { get; set; } = null!;
+            public int TahunBuku { get; set; }
+            public decimal Ketetapan { get; set; }
+            public decimal Terbayar { get; set; }
+            public decimal Tunggakan { get; set; }
             public string Status { get; set; } = null!;
             public string Kepatuhan { get; set; } = null!;
         }
@@ -137,54 +404,51 @@ namespace MonPDReborn.Models.DataWP
             public string AlamatUsaha { get; set; } = null!;
             public string Kontak { get; set; } = null!;
             public string Email { get; set; } = null!;
-
-            public List<DetailPembayaranWP> DetailPembayaranWPList { get; set; }
+            public List<DetailPembayaranWP> DetailPembayaranWPList { get; set; } = new List<DetailPembayaranWP>();
 
         }
 
         public class Dashboard
         {
-            // Wajib Pajak Baru
-            public int TotalWP { get; set; }       // Total tahun ini
-            public double WPBulan { get; set; }       // Bulan ini
-            public double RataWPBulan { get; set; }   // Rata-rata per bulan
 
-            public double PresentaseWP
+            public int TotalWP { get; set; }
+            public decimal WPBulan { get; set; }
+            public decimal RataWPBulan { get; set; }
+
+            public decimal PresentaseWP
             {
                 get
                 {
-                    if (RataWPBulan == 0) return 0; // Hindari pembagi 0
-                    return ((double)(WPBulan - RataWPBulan) / RataWPBulan) * 100;
+                    if (RataWPBulan == 0) return 0;
+                    return ((decimal)(WPBulan - RataWPBulan) / RataWPBulan) * 100;
                 }
             }
-
-            // Wajib Pajak Aktif
-            public Double KetetapanWP { get; set; }
-            public Double TerbayarWP { get; set; }
+            public decimal KetetapanWP { get; set; }
+            public decimal TerbayarWP { get; set; }
             public int TargetKepatuhan { get; set; }
 
-            public double PersentaseKepatuhan
+            public decimal PersentaseKepatuhan
             {
                 get
                 {
-                    if (KetetapanWP == 0) return 0; // Hindari pembagi 0
-                    return ((double)TerbayarWP / KetetapanWP) * 100;
+                    if (KetetapanWP == 0) return 0;
+                    return ((decimal)TerbayarWP / KetetapanWP) * 100;
                 }
             }
 
-            public double Tunggakan
+            public decimal Tunggakan
             {
                 get
                 {
-                    return ((double)KetetapanWP - TerbayarWP);
+                    return ((decimal)KetetapanWP - TerbayarWP);
                 }
             }
 
-            public double WPMenunggak
+            public decimal WPMenunggak
             {
                 get
                 {
-                    return ((double)TotalWP - WPBulan);
+                    return ((decimal)TotalWP - WPBulan);
                 }
             }
 
