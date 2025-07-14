@@ -40,7 +40,7 @@
                     </div>
                     <div class="card-body">
 
-                         <div class="d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Total Ketetapan</span>
                             <span class="fw-semibold">Rp @Model.DataWPDetailRow.DetailPembayaranWPList.Sum(x => x.Ketetapan).ToString("N0")</span>
                         </div>
@@ -85,12 +85,26 @@
                         <div class="table-responsive">
                             @(
                                     Html.DevExtreme().DataGrid<MonPDReborn.Models.DataWP.ProfilePembayaranWPVM.DetailPembayaranWP>()
-                                    .ID("DetailPembayaranWPGrid")
+                                    .ID("detailPembayaranWPGrid")
                                     .DataSource(Model.DataWPDetailRow.DetailPembayaranWPList)
                                     .KeyExpr("NPWPD")
                                     .ShowBorders(true)
-                                    .RowAlternationEnabled(true)
+                                    .ShowColumnLines(true)
+                                    .ShowColumnHeaders(true)
+                                    .AllowColumnResizing(true)
+                                    .ShowRowLines(true)
                                     .ColumnAutoWidth(true)
+                                    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                                    .FilterRow(f => f.Visible(true))
+                                    .HeaderFilter(h => h.Visible(true))
+                                    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                                    .Paging(p => p.PageSize(10))
+                                    .Pager(pager =>
+                                    {
+                                        pager.ShowPageSizeSelector(true);
+                                        pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                                        pager.ShowInfo(true);
+                                    })
                                     .Columns(columns =>
                                     {
 
