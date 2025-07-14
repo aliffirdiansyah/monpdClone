@@ -3,6 +3,7 @@
 
 
 <div class="modal-body">
+    
     <div class="mb-1">
         <div class="row g-3 mb-1">
             <div class="col-md-6">
@@ -39,34 +40,35 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="form-label text-muted fw-bold">NPWPD</span>
-                            <span class="fw-semibold">@Model.DataWPDetailRow.NPWPD</span>
-                        </div>
-                        @foreach (var Model in Model.DataWPDetailRow.DetailPembayaranWPList)
-                        {
-                            <div class="d-flex justify-content-between mb-2">
+                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Total Ketetapan</span>
-                            <span class="fw-semibold">@Model.Ketetapan</span>
+                            <span class="fw-semibold">Rp @Model.DataWPDetailRow.DetailPembayaranWPList.Sum(x => x.Ketetapan).ToString("N0")</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Total Terbayar</span>
-                            <span class="fw-semibold">@Model.Terbayar</span>
+                            <span class="fw-semibold">Rp @Model.DataWPDetailRow.DetailPembayaranWPList.Sum(x => x.Terbayar).ToString("N0")</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Total Tunggakan</span>
-                            <span class="fw-semibold">@Model.Tunggakan</span>
+                            <span class="fw-semibold">Rp @Model.DataWPDetailRow.DetailPembayaranWPList.Sum(x => x.Tunggakan).ToString("N0")</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="form-label text-muted fw-bold">Tingkat Kepatuhan</span>
-                            <span class="fw-semibold">@Model.Kepatuhan</span>
+                            <span class="fw-semibold">
+                                @(
+                                  Model.DataWPDetailRow.DetailPembayaranWPList.Sum(x => x.Ketetapan) == 0
+                                  ? "0%"
+                                  : Math.Round(
+                                  (decimal)Model.DataWPDetailRow.DetailPembayaranWPList.Sum(x => x.Terbayar)
+                                  / Model.DataWPDetailRow.DetailPembayaranWPList.Sum(x => x.Ketetapan) * 100, 2
+                                  ) + "%"
+                                  )
+                            </span>
                         </div>
-                        }
                         
-
                     </div>
                 </div>
             </div>
