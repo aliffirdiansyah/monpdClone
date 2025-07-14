@@ -1047,7 +1047,7 @@ namespace MonPDReborn.Models
                         JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                         JmlOpAwal = OpPbbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpPbbNow - OpPbbAwal,
+                        JmlOpBaru = OpPbbNow - 0,
                         JmlOpAkhir = OpPbbAwal - 0
                      + (OpPbbNow - OpPbbAwal)},
                     new ViewModel.JumlahObjekPajakTahunan
@@ -1055,7 +1055,7 @@ namespace MonPDReborn.Models
                         JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                         JmlOpAwal = OpBphtbAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpBphtbNow - OpBphtbAwal,
+                        JmlOpBaru = OpBphtbNow - 0,
                         JmlOpAkhir = OpBphtbAwal - 0
                      + (OpBphtbNow - OpBphtbAwal)},
                     new ViewModel.JumlahObjekPajakTahunan
@@ -1063,7 +1063,7 @@ namespace MonPDReborn.Models
                         JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                         JmlOpAwal = OpReklameAwal,
                         JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpReklameNow - OpReklameAwal,
+                        JmlOpBaru = OpReklameNow - 0,
                         JmlOpAkhir = OpReklameAwal - 0
                      + (OpReklameNow - OpReklameAwal)},
                     new ViewModel.JumlahObjekPajakTahunan
