@@ -1,9 +1,26 @@
 ﻿@model MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetail
-
+@* 
 <div class="table-responsive">
     @if (Model.DataRestoranList != null)
     {
-        <h4>Detail PBJT Makanan & Minuman - @Model.DataRestoranList.FirstOrDefault()?.Tahun</h4>
+        
+    }
+    else if (Model.DataParkirList != null)
+    {
+        <h4>Detail PBJT Parkir - @Model.DataParkirList.FirstOrDefault()?.Tahun</h4>
+        
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Data tidak tersedia.
+        </div>
+    }
+</div> *@
+
+@if (Model.DataRestoranList?.Count > 0)
+{
+    <h4>Detail PBJT Makanan & Minuman - @Model.DataRestoranList.FirstOrDefault()?.Tahun</h4>
         @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailRestoran>()
             .ID("gridRestoran")
             .DataSource(Model.DataRestoranList)
@@ -51,11 +68,10 @@
                     .Format("#,##0");
             })
         )
-    }
-    else if (Model.DataParkirList != null)
-    {
-        <h4>Detail PBJT Parkir - @Model.DataParkirList.FirstOrDefault()?.Tahun</h4>
-        @(
+}
+else if (Model.DataParkirList?.Count > 0)
+{
+    @(
             Html.DevExtreme().DataGrid < MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailParkir>()
              .ID("gridParkir")
             .DataSource(Model.DataParkirList)
@@ -130,11 +146,8 @@
                     .Format("#,##0");
             })
         )
-    }
-    else
-    {
-        <div class="alert alert-warning">
-            Data tidak tersedia.
-        </div>
-    }
-</div>
+}
+else
+{
+    <div class="alert alert-warning">Data tidak tersedia</div>
+}
