@@ -160,11 +160,11 @@ namespace MonPDReborn.Models.DataOP
                 var OpReklameBaru = context.DbOpReklames.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
                 var OpReklameAkhir = context.DbOpReklames.Count(x => x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahu)n*/);
 
-                var OpOpsenPkbNow = 0;
-                var OpOpsenPkbAwal = 0;
+                var OpOpsenPkbNow = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == tahun);
+                var OpOpsenPkbAwal = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == tahun - 1);
 
-                var OpOpsenBbnkbNow = 0;
-                var OpOpsenBbnkbAwal = 0;
+                var OpOpsenBbnkbNow = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == tahun);
+                var OpOpsenBbnkbAwal = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == tahun - 1);
                 #endregion
 
                 return new List<RekapOP>
@@ -266,7 +266,7 @@ namespace MonPDReborn.Models.DataOP
                         JmlOpAwal = OpOpsenPkbAwal,
                         JmlOpTutupPermanen = 0,
                         JmlOpBaru = 0,
-                        JmlOpAkhir = 0,
+                        JmlOpAkhir = OpOpsenPkbNow,
                         Tahun = tahun
                     },
                     new RekapOP
@@ -276,7 +276,7 @@ namespace MonPDReborn.Models.DataOP
                         JmlOpAwal = OpOpsenBbnkbAwal,
                         JmlOpTutupPermanen = 0,
                         JmlOpBaru = 0,
-                        JmlOpAkhir = 0,
+                        JmlOpAkhir = OpOpsenBbnkbNow,
                         Tahun = tahun
                     },
                 };
@@ -340,17 +340,17 @@ namespace MonPDReborn.Models.DataOP
                 var OpReklameMines3 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 3);
                 var OpReklameMines4 = context.DbOpReklames.Count(x => x.TahunBuku == currentYear - 4);
 
-                var OpOpsenPkbNow = 0;
-                var OpOpsenPkbMines1 = 0;
-                var OpOpsenPkbMines2 = 0;
-                var OpOpsenPkbMines3 = 0;
-                var OpOpsenPkbMines4 = 0;
+                var OpOpsenPkbNow = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == currentYear);
+                var OpOpsenPkbMines1 = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == currentYear - 1);
+                var OpOpsenPkbMines2 = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == currentYear - 2);
+                var OpOpsenPkbMines3 = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == currentYear - 3);
+                var OpOpsenPkbMines4 = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == currentYear - 4);
 
-                var OpOpsenBbnkbNow = 0;
-                var OpOpsenBbnkbMines1 = 0;
-                var OpOpsenBbnkbMines2 = 0;
-                var OpOpsenBbnkbMines3 = 0;
-                var OpOpsenBbnkbMines4 = 0;
+                var OpOpsenBbnkbNow = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == currentYear);
+                var OpOpsenBbnkbMines1 = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == currentYear - 1);
+                var OpOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == currentYear - 2);
+                var OpOpsenBbnkbMines3 = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == currentYear - 3);
+                var OpOpsenBbnkbMines4 = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == currentYear - 4);
 
                 var result = new List<SeriesOP>();
 
