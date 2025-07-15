@@ -52,5 +52,14 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilaya
                     </div>
                 </div>
             </text>);
+        columns.Add()
+             .Type(GridCommandColumnType.Buttons)
+             .Buttons(b =>
+             {
+                 b.Add()
+             .Text("Detail")
+             .Icon("search")
+             .OnClick("onDetailClick");
+             });
     })
 )

@@ -85,5 +85,26 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
             }
         }
 
+        public IActionResult DetailModal(int wilayah, int tahun, int bulan, int jenisPajak)
+        {
+            try
+            {
+                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.DetailModal((EnumFactory.EUPTB)wilayah, tahun, bulan, (EnumFactory.EPajak)jenisPajak);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
     }
 }

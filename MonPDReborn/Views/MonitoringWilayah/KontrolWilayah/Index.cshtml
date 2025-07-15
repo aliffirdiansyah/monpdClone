@@ -120,6 +120,24 @@
                     </div>
                 </div>
                 <div id="Detail"></div>
+                <div class="modal fade" id="detailModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail Realisasi</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center my-3">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -258,6 +276,55 @@
 
             $(cellElement).append(wrapper);
         }
+
+                function onDetailClick(e) {
+            e.event.preventDefault();
+
+            const rowData = e.row?.data;
+
+            if (!rowData) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            const tanggal = DevExpress.localization.formatDate(rowData.Tanggal, 'yyyy-MM-dd');
+            const enumWilayah = rowData.EnumWilayah;
+            const jenisPajak = rowData.JenisPajak;
+
+            console.log("Detail click:", tanggal, enumWilayah, jenisPajak);
+
+            const $modal = $("#detailModal");
+            $modal.find(".modal-title").text(`Detail Realisasi - ${rowData.Wilayah}`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+            $modal.modal("show");
+
+            $.ajax({
+                url: '/KontrolWilayah/DetailModal',
+                type: 'GET',
+                data: {
+                    tanggal: tanggal,
+                    wilayah: enumWilayah,
+                    jenisPajak: jenisPajak
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
+
 
     </script>
 }
