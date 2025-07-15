@@ -781,7 +781,7 @@ namespace RestoWs
                             SELECT 	REPLACE(NOP, '.','') NOP,
                             TAHUN,
                             MASAPAJAK,
-                            1 SEQ,
+                            100 SEQ,
                             1 JENIS_KETETAPAN,
                             NVL(TANGGALENTRY, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_KETETAPAN,
                              NVL(TANGGALJATUHTEMPO, TO_DATE('2000-01-01', 'YYYY-MM-DD')) TGL_JATUH_TEMPO_BAYAR,
@@ -1064,7 +1064,7 @@ namespace RestoWs
 		                0 NOMINAL_LAINNYA,
 		                0 PENGURANG_POKOK,
 		                0 PENGURANG_SANSKSI,
-		                1 SEQ_KETETAPAN
+		                100 SEQ_KETETAPAN
                 FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
                 JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
                 WHERE NAMA_PAJAK_DAERAH='RESTORAN' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY') AND  REPLACE(FK_NOP, '.', '') = :NOP AND A.TAHUN = :TAHUN AND A.MASA = :MASA AND 

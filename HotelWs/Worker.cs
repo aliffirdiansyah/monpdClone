@@ -659,7 +659,7 @@ namespace HotelWs
                             SELECT 	REPLACE(NOP, '.','') NOP,
 		                            TAHUN,
 		                            MASAPAJAK,
-		                            1 SEQ,
+		                            100 SEQ,
 		                            1 JENIS_KETETAPAN,
 		                            TANGGALENTRY TGL_KETETAPAN,
 		                            TANGGALJATUHTEMPO TGL_JATUH_TEMPO_BAYAR,
@@ -945,7 +945,7 @@ namespace HotelWs
 		                0 NOMINAL_LAINNYA,
 		                0 PENGURANG_POKOK,
 		                0 PENGURANG_SANSKSI,
-		                1 SEQ_KETETAPAN
+		                100 SEQ_KETETAPAN
                 FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
                 JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
                 WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')

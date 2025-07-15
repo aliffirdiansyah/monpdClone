@@ -1052,7 +1052,7 @@ namespace HiburanWs
 		                0 NOMINAL_LAINNYA,
 		                0 PENGURANG_POKOK,
 		                0 PENGURANG_SANSKSI,
-		                1 SEQ_KETETAPAN
+		                100 SEQ_KETETAPAN
                 FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
                 JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
                 WHERE NAMA_PAJAK_DAERAH='HIBURAN' 
