@@ -104,6 +104,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 DataHarianList = Method.GetDataDataHarianList(wilayah, tahun, bulan, jenisPajak);
             }
         }
+
+        public class DetailModal
+        {
+            public List<DataModal> DataModalList { get; set; } = new();
+            public DetailModal() { }
+            public DetailModal(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
+            {
+                DataModalList = Method.GetDataModalList(wilayah, tahun, bulan, jenisPajak);
+            }
+        }
         public class Method
         {
             public static List<RealisasiWilayah> GetDataRealisasiWilayahList(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
@@ -3603,6 +3613,126 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 }
                 return ret;
             }
+            public static List<DataModal> GetDataModalList(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
+            {
+                var ret = new List<DataModal>();
+                var context = DBClass.GetContext();
+
+                switch (jenisPajak)
+                {
+                    case EnumFactory.EPajak.Semua:
+                        break;
+                    case EnumFactory.EPajak.MakananMinuman:
+                        var dataRestoWilayah = context.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun)
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value, // perbaiki regex: hilangkan \\ jadi \ saja
+                                x.PajakId
+                            })
+                            .ToList();
+
+                        var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
+                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                            .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                            .Select(g => new
+                            {
+                                Uptb = g.Key.Uptb,
+                                Tgl = g.Key.Tgl,
+                                Bulan = g.Key.Bulan,
+                                Tahun = g.Key.TahunBuku,
+                                PajakId = g.Key.PajakId,
+                                TotalTarget = g.Sum(x => x.Target)
+                            })
+                            .ToList();
+
+                        var dataRealisasiWilayahQuery = context.DbMonRestos
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month <= bulan
+                            )
+                            .GroupBy(x => new { x.Nop, x.TglBayarPokok, x.PajakId })
+                            .Select(x => new
+                            {
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok,
+                                x.Key.PajakId,
+                                Realisasi = x.Sum(q => q.NominalPokokBayar)
+                            })
+                            .ToList();
+
+                        var filterWilayah = wilayah == EnumFactory.EUPTB.SEMUA
+                            ? null
+                            : (int?)wilayah;
+
+                        var dataTargetFiltered = filterWilayah == null
+                            ? dataTargetWilayahResto
+                            : dataTargetWilayahResto.Where(x => x.Uptb == (decimal)filterWilayah).ToList();
+
+                        foreach (var item in dataTargetFiltered)
+                        {
+                            var nopsUptb = dataRestoWilayah
+                                .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                .Select(w => w.Nop)
+                                .ToList();
+
+                            var realisasiDetail = dataRealisasiWilayahQuery
+                                .Where(x =>
+                                    x.TglBayarPokok.Value.Month == item.Bulan &&
+                                    x.TglBayarPokok.Value.Day == item.Tgl &&
+                                    x.TglBayarPokok.Value.Year == item.Tahun &&
+                                    x.PajakId == item.PajakId &&
+                                    nopsUptb.Contains(x.Nop)
+                                )
+                                .ToList();
+
+                            var modal = new DataModal
+                            {
+                                Wilayah = $"UPTB {(int)item.Uptb}",
+                                EnumWilayah = (int)item.Uptb,
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                Tahun = (int)item.Tahun,
+                                Bulan = (int)item.Bulan,
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                Detail = realisasiDetail.Select(r => new DataDetailModal
+                                {
+                                    NOP = r.Nop,
+                                    Realisasi = r.Realisasi ?? 0
+                                }).ToList()
+                            };
+
+                            // 👉 Tambahkan ke hasil
+                            ret.Add(modal);
+                        }
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
+                    default:
+                        break;
+                }
+                return ret;
+            }
             public static decimal TotalRealisasiPencapaianHarianPerHariIni(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
             {
                 decimal result = 0;
@@ -3812,6 +3942,25 @@ namespace MonPDReborn.Models.MonitoringWilayah
             public decimal Realisasi { get; set; }
             public double Pencapaian => Target > 0 ? Math.Round((double)(Realisasi / Target) * 100, 2) : 0.0;
             public string Hari => Tanggal.ToString("dddd", new System.Globalization.CultureInfo("id-ID"));
+        }
+
+        public class DataModal
+        {
+            public string Wilayah { get; set; } = null!;
+            public int EnumWilayah { get; set; }
+            public string JenisPajak { get; set; } = null!;
+            public DateTime Tanggal { get; set; }
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+            public string Hari => Tanggal.ToString("dddd", new System.Globalization.CultureInfo("id-ID"));
+            public List<DataDetailModal> Detail { get; set; } = new();
+        }
+
+        public class DataDetailModal
+        {
+            public string NOP { get; set; } = null!;
+            public decimal Realisasi { get; set; }
+
         }
 
     }

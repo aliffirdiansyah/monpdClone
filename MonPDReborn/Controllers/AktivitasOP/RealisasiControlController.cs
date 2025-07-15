@@ -2,22 +2,23 @@
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 
-namespace MonPDReborn.Controllers.Reklame
+namespace MonPDReborn.Controllers.Aktivitas
 {
-    public class ReklameController : Controller
+    public class RealisasiControlController : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<ReklameController> _logger;
+        private readonly ILogger<RealisasiControlController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         ResponseBase response = new ResponseBase();
-        public ReklameController(ILogger<ReklameController> logger)
+
+        public RealisasiControlController(ILogger<RealisasiControlController> logger)
         {
-            URLView = string.Concat("../Reklame/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../AktivitasOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
@@ -25,8 +26,8 @@ namespace MonPDReborn.Controllers.Reklame
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.Reklame.ReklameVM.Index();
-                return View($"{URLView}{actionName}", model);
+                var model = new Models.AktivitasOP.RealisasiControlVM.Index();
+                return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
             {
@@ -45,7 +46,7 @@ namespace MonPDReborn.Controllers.Reklame
         {
             try
             {
-                var model = new Models.Reklame.ReklameVM.Show();
+                var model = new Models.AktivitasOP.RealisasiControlVM.Show();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -61,28 +62,5 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
-
-        public IActionResult Detail(string namaJalan)
-        {
-            try
-            {
-                var model = new Models.Reklame.ReklameVM.Detail(namaJalan);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-
-
     }
 }
