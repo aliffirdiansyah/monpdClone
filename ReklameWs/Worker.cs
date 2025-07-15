@@ -20,17 +20,17 @@ namespace ReklameWs
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
+                //var now = DateTime.Now;
 
-                var nextRun = now.AddDays(1); // besok jam 00:00
-                var delay = nextRun - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 //// GUNAKAN KETIKA EKSEKUSI TUGAS MANUAL
                 try
@@ -596,7 +596,7 @@ LEFT JOIN (
     WHERE TGL_BAYAR >= SYSDATE - INTERVAL '4' YEAR
 	GROUP BY NO_FORMULIR, TGL_BAYAR
 ) B ON A.NO_FORMULIR = B.NO_FORMULIR AND A.TGL_BAYAR = B.TGL_BAYAR
-WHERE A.TGL_BAYAR >= SYSDATE - INTERVAL '4' YEAR
+WHERE A.TGLSKPD >= SYSDATE - INTERVAL '4' YEAR
 ";
 
             var pembayaranSspdList = await _contMonitoringDb2.Set<OpSkpdSspdReklame>()

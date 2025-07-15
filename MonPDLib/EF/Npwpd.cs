@@ -19,7 +19,7 @@ public partial class Npwpd
     public decimal Status { get; set; }
 
     [Column("NAMA")]
-    [StringLength(100)]
+    [StringLength(150)]
     [Unicode(false)]
     public string Nama { get; set; } = null!;
 
@@ -80,7 +80,7 @@ public partial class Npwpd
     public string? ResetKey { get; set; }
 
     [Column("HP")]
-    [StringLength(15)]
+    [StringLength(100)]
     [Unicode(false)]
     public string Hp { get; set; } = null!;
 

@@ -374,4 +374,10 @@ public partial class DbOpReklame
     [Key]
     [Column("SEQ", TypeName = "NUMBER(38)")]
     public decimal Seq { get; set; }
+
+    [Column("TGL_OP_TUTUP", TypeName = "DATE")]
+    public DateTime? TglOpTutup { get; set; }
+
+    [Column("KATEGORI_ID", TypeName = "NUMBER(38)")]
+    public decimal? KategoriId { get; set; }
 }
