@@ -7,6 +7,7 @@ namespace MonPDReborn.Models.Reklame
     {
         public class Index
         {
+            public DashboardData Data { get; set; } = new();
             // Properti untuk menampung nilai yang dipilih dari filter
             public int SelectedJalan { get; set; }
             public int SelectedKecamatan { get; set; }
@@ -19,7 +20,9 @@ namespace MonPDReborn.Models.Reklame
 
             public Index()
             {
-                // Anda bisa mengisi data list ini dari database atau secara statis
+                Data = Method.GetDashboardData();
+
+                
                 // Contoh pengisian data statis:
                 JalanList.Add(new SelectListItem { Value = "1", Text = "Jl. Ahmad Yani" });
                 JalanList.Add(new SelectListItem { Value = "2", Text = "Jl. Basuki Rahmat" });
@@ -58,6 +61,25 @@ namespace MonPDReborn.Models.Reklame
 
         public class Method
         {
+            public static DashboardData GetDashboardData()
+            {
+                // 1. Ambil data sumber
+                var semuaReklame = GetAllDataReklame();       // Untuk total reklame
+                var reklamePerJalan = GetDataReklamePerJalan(); // Untuk total jalan
+
+                // 2. Lakukan perhitungan sesuai permintaan
+                var dashboard = new DashboardData
+                {
+                    // Menghitung jumlah semua reklame
+                    TotalReklame = semuaReklame.Count(),
+                    // Menghitung jumlah baris/jalan unik yang memiliki reklame
+                    JalanDenganReklame = reklamePerJalan.Count(),
+                    // Mengisi data dummy untuk pelanggaran
+                    PelanggaranTerdeteksi = 12
+                };
+
+                return dashboard;
+            }
             // Method BARU untuk membuat data ringkasan per jalan
             public static List<ReklamePerJalan> GetDataReklamePerJalan()
             {
@@ -123,6 +145,13 @@ namespace MonPDReborn.Models.Reklame
         public string Ukuran { get; set; } = null!;
         public string Penyelenggara { get; set; } = null!;
         public string MasaBerlaku { get; set; } = null!;
+    }
+
+    public class DashboardData
+    {
+        public int TotalReklame { get; set; }
+        public int JalanDenganReklame { get; set; }
+        public int PelanggaranTerdeteksi { get; set; }
     }
 
 }
