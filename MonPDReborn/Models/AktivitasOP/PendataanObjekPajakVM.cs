@@ -32,9 +32,9 @@ namespace MonPDReborn.Models.AktivitasOP
 
             public Detail() { }
 
-            public Detail(EnumFactory.EPajak jenisPajak, int tahun)
+            public Detail(EnumFactory.EPajak jenisPajak)
             {
-                DataDetailList = Method.GetDetailPengedokan(jenisPajak, tahun);
+                DataDetailList = Method.GetDetailPendataanList(jenisPajak);
             }
         }
 

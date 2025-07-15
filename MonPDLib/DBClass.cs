@@ -56,11 +56,5 @@ namespace MonPDLib
             return new MonitoringDbContext(optionsBuilder.Options);
         }
 
-        public class GetContext
-        {
-            public GetContext()
-            {
-            }
-        }
     }
 }
