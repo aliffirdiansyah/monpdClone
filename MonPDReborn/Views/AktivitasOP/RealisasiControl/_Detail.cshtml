@@ -1,0 +1,63 @@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model RealisasiControlVM.Detail
+
+@(Html.DevExtreme().DataGrid<RealisasiControlVM.DataDetailRealisasi>()
+    .DataSource(Model.DataDetailList)
+    .ShowBorders(true)
+    .ShowColumnLines(true)
+    .ColumnAutoWidth(true)
+    .Columns(columns =>
+    {
+        // TAMBAHKAN .Fixed(true) DI SINI
+        columns.AddFor(m => m.No).Caption("NO").Width(50).Alignment(HorizontalAlignment.Center).Fixed(true);
+        columns.AddFor(m => m.JenisPajak).Caption("JENIS PAJAK").Fixed(true);
+
+        // Definisi untuk UPTB 1
+        columns.AddFor(m => m.UPTB1).Caption("UPTB 1").Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.Add().Caption("Target").Alignment(HorizontalAlignment.Center).DataField("UPTB1.Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                sub.Add().Caption("Realisasi").Alignment(HorizontalAlignment.Center).DataField("UPTB1.Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                sub.Add().Caption("%").Alignment(HorizontalAlignment.Center).DataField("UPTB1.Persen")
+                    .CellTemplate(@<text>
+                        <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
+                    </text>);
+            });
+
+        // Definisi untuk UPTB 2
+        columns.AddFor(m => m.UPTB2).Caption("UPTB 2").Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.Add().Caption("Target").Alignment(HorizontalAlignment.Center).DataField("UPTB2.Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                sub.Add().Caption("Realisasi").Alignment(HorizontalAlignment.Center).DataField("UPTB2.Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                sub.Add().Caption("%").Alignment(HorizontalAlignment.Center).DataField("UPTB2.Persen")
+                .CellTemplate(@<text>
+                    <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
+                </text>);
+            });
+
+        // ... dan seterusnya untuk UPTB 3, 4, 5, dan Bidang
+        columns.AddFor(m => m.UPTB3).Caption("UPTB 3").Alignment(HorizontalAlignment.Center)
+            .Columns(
+                sub => { sub.Add().Caption("Target").Alignment(HorizontalAlignment.Center).DataField("UPTB3.Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("Realisasi").Alignment(HorizontalAlignment.Center).DataField("UPTB3.Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("%").Alignment(HorizontalAlignment.Center).DataField("UPTB3.Persen").Format(f => f.Type(Format.Percent).Precision(2)); 
+                });
+        columns.AddFor(m => m.UPTB4).Caption("UPTB 4").Alignment(HorizontalAlignment.Center)
+            .Columns(
+                sub => { sub.Add().Caption("Target").Alignment(HorizontalAlignment.Center).DataField("UPTB4.Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("Realisasi").Alignment(HorizontalAlignment.Center).DataField("UPTB4.Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("%").Alignment(HorizontalAlignment.Center).DataField("UPTB4.Persen").Format(f => f.Type(Format.Percent).Precision(2)); 
+                });
+        columns.AddFor(m => m.UPTB5).Caption("UPTB 5").Alignment(HorizontalAlignment.Center)
+            .Columns(
+                sub => { sub.Add().Caption("Target").Alignment(HorizontalAlignment.Center).DataField("UPTB5.Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("Realisasi").Alignment(HorizontalAlignment.Center).DataField("UPTB5.Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("%").Alignment(HorizontalAlignment.Center).DataField("UPTB5.Persen").Format(f => f.Type(Format.Percent).Precision(2)); 
+                });
+        columns.AddFor(m => m.Bidang).Caption("BIDANG").Alignment(HorizontalAlignment.Center)
+            .Columns(
+                sub => { sub.Add().Caption("Target").Alignment(HorizontalAlignment.Center).DataField("Bidang.Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("Realisasi").Alignment(HorizontalAlignment.Center).DataField("Bidang.Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")); 
+                sub.Add().Caption("%").Alignment(HorizontalAlignment.Center).DataField("Bidang.Persen").Format(f => f.Type(Format.Percent).Precision(2)); 
+                });
+    })
+)
