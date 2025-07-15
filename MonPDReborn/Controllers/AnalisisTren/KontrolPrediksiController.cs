@@ -44,7 +44,7 @@ namespace MonPDReborn.Controllers.AnalisisTren
                 return Json(response);
             }
         }
-        public IActionResult Show(DateTime tglCutOff)
+        public IActionResult Show()
         {
             try
             {

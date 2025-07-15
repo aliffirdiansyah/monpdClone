@@ -1,63 +1,56 @@
 ﻿@using MonPDReborn.Models.AktivitasOP
 @model RealisasiControlVM.Show
 
-@(Html.DevExtreme().DataGrid<RealisasiControlVM.DataRealisasi>()
-    .DataSource(Model.DataRealisasiList)
-    .ShowBorders(true)
-    .ShowColumnLines(true)
-    .ColumnAutoWidth(true)
-    .Columns(columns =>
-    {
-        columns.AddFor(m => m.No).Caption("NO").Width(50).Alignment(HorizontalAlignment.Center).Fixed(true);
-        columns.AddFor(m => m.JenisPajak).Caption("JENIS PAJAK").Fixed(true);
-        columns.AddFor(m => m.Target).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<RealisasiControlVM.DataRealisasi>()
+        .ID("realisasiAKPGrid")
+        .DataSource(Model.DataRealisasiList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ColumnAutoWidth(true)
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.No).Caption("NO").Width(50).Alignment(HorizontalAlignment.Center).Fixed(true);
+            columns.AddFor(m => m.JenisPajak).Caption("JENIS PAJAK").Fixed(true);
+            columns.AddFor(m => m.Target).Format("#,##0");
 
-        columns.Add().Caption("PEMBAYARAN").Alignment(HorizontalAlignment.Center)
+            columns.Add().Caption("PEMBAYARAN").Alignment(HorizontalAlignment.Center)
             .Columns(pembayaran =>
             {
                 pembayaran.Add().Caption("BULAN INI").Alignment(HorizontalAlignment.Center)
-                    .Columns(bi =>
-                    {
-                        bi.AddFor(m => m.PembayaranBulanIni.AKP).Caption("AKP").Alignment(HorizontalAlignment.Center)
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                        bi.AddFor(m => m.PembayaranBulanIni.Realisasi).Caption("Realisasi").Alignment(HorizontalAlignment.Center)
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                        bi.AddFor(m => m.PembayaranBulanIni.Persen).Caption("%").Alignment(HorizontalAlignment.Center)
-                        .Alignment(HorizontalAlignment.Right)
-                            .CellTemplate(@<text>
-                                <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
-                            </text>);
-                    });
+            .Columns(bi =>
+            {
+                bi.AddFor(m => m.PembayaranBulanIni.AKP).Caption("AKP").Format("#,##0");
+                bi.AddFor(m => m.PembayaranBulanIni.Realisasi).Caption("Realisasi").Format("#,##0");
+                bi.AddFor(m => m.PembayaranBulanIni.Persen).Caption("%").Alignment(HorizontalAlignment.Center)
+            .Alignment(HorizontalAlignment.Right)
+            .CellTemplate(@<text>
+                               <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
+                           </text>);
+            });
 
                 pembayaran.Add().Caption("S.D. BULAN INI").Alignment(HorizontalAlignment.Center)
-                    .Columns(sdbi =>
-                    {
-                        sdbi.AddFor(m => m.PembayaranSDBI.AKP).Caption("AKP")
-                            .Alignment(HorizontalAlignment.Center)
-                            .CellTemplate(@<text>
-                                <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
-                            </text>);
-                        sdbi.AddFor(m => m.PembayaranSDBI.Realisasi).Caption("Realisasi")
-                        .Alignment(HorizontalAlignment.Center)
-                            .CellTemplate(@<text>
-                                <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
-                            </text>);
-                        sdbi.AddFor(m => m.PembayaranSDBI.PersenAkpTarget).Caption("% AKP Target")
-                        .Alignment(HorizontalAlignment.Center)
-                            .CellTemplate(@<text>
-                                <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
-                            </text>);
-                        sdbi.AddFor(m => m.PembayaranSDBI.PersenAkpRealisasi).Caption("% AKP Realisasi")
-                        .Alignment(HorizontalAlignment.Center)
-                            .CellTemplate(@<text>
-                                <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
-                            </text>);
-                        sdbi.AddFor(m => m.PembayaranSDBI.PersenTarget).Caption("% Target")
-                        .Alignment(HorizontalAlignment.Center)
-                            .CellTemplate(@<text>
-                                <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
-                            </text>);
-                    });
+            .Columns(sdbi =>
+            {
+                sdbi.AddFor(m => m.PembayaranSDBI.AKP).Caption("AKP").Format("#,##0");
+                sdbi.AddFor(m => m.PembayaranSDBI.Realisasi).Caption("Realisasi").Format("#,##0");
+                sdbi.AddFor(m => m.PembayaranSDBI.PersenAkpTarget).Caption("% AKP Target")
+            .Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+                               <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
+                           </text>);
+                sdbi.AddFor(m => m.PembayaranSDBI.PersenAkpRealisasi).Caption("% AKP Realisasi")
+            .Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+                               <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
+                           </text>);
+                sdbi.AddFor(m => m.PembayaranSDBI.PersenTarget).Caption("% Target")
+            .Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+                               <%- (value / 100).toLocaleString('id-ID', { style: 'percent', minimumFractionDigits: 2 }) %>
+                           </text>);
             });
-    })
-)
+            });
+        })
+        )
+</div>

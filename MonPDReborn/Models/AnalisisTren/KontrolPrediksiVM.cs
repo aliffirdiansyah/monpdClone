@@ -43,64 +43,41 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
         {
             return new List<KontrolPrediksi>
             {
-                // Skenario 1: Melebihi target
                 new KontrolPrediksi
                 {
-                    JenisPajak = "Pajak Hotel",
-                    Target = "Rp 150.000.000",
-                    RealisasiBulanLalu = "Rp 145.500.000",
-                    RealisasiBulanIni = "Rp 152.300.000",
-                    Prediksi = "Rp 151.000.000",
-                    Jumlah = "101,5%",
-                    Persentase = 101.5
+                    tgl = new DateTime(2025, 7, 15),
+                    JenisPajak = "PBJT Makanan & Minuman",
+                    Target = 1_000_000_000m,
+                    RealisasiBulanLalu = 400_000_000m,
+                    RealisasiBulanIni = 350_000_000m,
+                    RealisasiHari = 25_000_000m
                 },
-
-                // Skenario 2: Di bawah target
                 new KontrolPrediksi
                 {
-                    JenisPajak = "Pajak Restoran",
-                    Target = "Rp 200.000.000",
-                    RealisasiBulanLalu = "Rp 198.000.000",
-                    RealisasiBulanIni = "Rp 185.000.000",
-                    Prediksi = "Rp 188.000.000",
-                    Jumlah = "92,5%",
-                    Persentase = 92.5
+                    tgl = new DateTime(2025, 7, 15),
+                    JenisPajak = "PBJT Parkir",
+                    Target = 500_000_000m,
+                    RealisasiBulanLalu = 200_000_000m,
+                    RealisasiBulanIni = 150_000_000m,
+                    RealisasiHari = 10_000_000m
                 },
-
-                // Skenario 3: Hampir mencapai target
                 new KontrolPrediksi
                 {
-                    JenisPajak = "Pajak Hiburan",
-                    Target = "Rp 75.000.000",
-                    RealisasiBulanLalu = "Rp 70.000.000",
-                    RealisasiBulanIni = "Rp 73.800.000",
-                    Prediksi = "Rp 74.500.000",
-                    Jumlah = "98,4%",
-                    Persentase = 98.4
+                    tgl = new DateTime(2025, 7, 15),
+                    JenisPajak = "PBJT Hiburan",
+                    Target = 300_000_000m,
+                    RealisasiBulanLalu = 100_000_000m,
+                    RealisasiBulanIni = 120_000_000m,
+                    RealisasiHari = 5_000_000m
                 },
-    
-                // Skenario 4: Jauh di bawah target
                 new KontrolPrediksi
                 {
-                    JenisPajak = "Pajak Reklame",
-                    Target = "Rp 60.000.000",
-                    RealisasiBulanLalu = "Rp 55.000.000",
-                    RealisasiBulanIni = "Rp 35.000.000",
-                    Prediksi = "Rp 40.000.000",
-                    Jumlah = "58,3%",
-                    Persentase = 58.3
-                },
-
-                // Skenario 5: Sesuai target
-                new KontrolPrediksi
-                {
-                    JenisPajak = "Pajak Parkir",
-                    Target = "Rp 90.000.000",
-                    RealisasiBulanLalu = "Rp 88.000.000",
-                    RealisasiBulanIni = "Rp 90.000.000",
-                    Prediksi = "Rp 90.000.000",
-                    Jumlah = "100,0%",
-                    Persentase = 100.0
+                    tgl = new DateTime(2025, 7, 15),
+                    JenisPajak = "PBB",
+                    Target = 2_000_000_000m,
+                    RealisasiBulanLalu = 1_200_000_000m,
+                    RealisasiBulanIni = 600_000_000m,
+                    RealisasiHari = 50_000_000m
                 }
             };
         }
@@ -116,12 +93,15 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
     public class KontrolPrediksi
     {
+        public DateTime tgl { get; set; }
         public string JenisPajak { get; set; } = null!;
-        public string Target { get; set; } = null!;
-        public string RealisasiBulanLalu { get; set; } = null!;
-        public string RealisasiBulanIni { get; set; } = null!;
-        public string Prediksi { get; set; } = null!;
-        public string Jumlah { get; set; } = null!;
-        public double Persentase { get; set; }
+        public decimal Target { get; set; }
+        public decimal RealisasiBulanLalu { get; set; }
+        public decimal RealisasiBulanIni { get; set; }
+        public decimal RealisasiHari { get; set; }
+        public decimal Jumlah => RealisasiBulanIni + RealisasiBulanLalu + RealisasiHari;
+        public decimal Persentase => Target > 0
+            ? Math.Round((Jumlah / Target) * 100, 2)
+            : 0;
     }
 }
