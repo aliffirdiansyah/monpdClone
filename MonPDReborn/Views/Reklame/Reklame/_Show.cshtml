@@ -1,0 +1,43 @@
+﻿@model MonPDReborn.Models.Reklame.ReklameVM.Show
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.ReklamePerJalan>()
+        .ID("reklameSummaryGrid")
+        .DataSource(Model.DataReklamePerJalanList)
+        .KeyExpr("NamaJalan")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .AllowColumnResizing(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false).Placeholder("Cari..."))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns => {
+            columns.AddFor(m => m.NamaJalan).Caption("Nama Jalan");
+            columns.AddFor(m => m.Kecamatan).Caption("Kecamatan");
+            columns.AddFor(m => m.TotalReklame).Caption("Total").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Insidentil).Caption("Insidentil").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.PermanenKecil).Caption("Permanen < 8m").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.PermanenBesar).Caption("Permanen > 8m").Alignment(HorizontalAlignment.Center);
+            
+            columns.Add()
+                .Caption("Aksi")
+                .Width(80)
+                .Alignment(HorizontalAlignment.Center)
+                .CellTemplate(@<text>
+                    <button class="btn btn-sm btn-outline-primary" onclick="showDetailModal('<%= data.NamaJalan %>')">
+                        <i class="ri-search-line"></i>
+                    </button>
+                </text>);
+        })
+        )
+</div>

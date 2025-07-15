@@ -1,5 +1,265 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MonPDReborn.Models.Reklame.ReklameVM.Index
+@using DevExtreme.AspNet.Mvc
+
 @{
+    ViewData["Title"] = "Detail Reklame";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Informasi Reklame
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Cari Informasi Reklame
+                    </h4>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-lg-4 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedJalan)
+                            .ID("selectJalan")
+                            .DataSource(Model.JalanList) // Mengambil dari Model.JalanList
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .SearchEnabled(true)
+                            .Placeholder("Semua Nama Jalan")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedKecamatan)
+                            .ID("selectKecamatan")
+                            .DataSource(Model.KecamatanList) // Mengambil dari Model.KecamatanList
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .SearchEnabled(true)
+                            .Placeholder("Semua Kecamatan")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedJenisReklame)
+                            .ID("selectJenisReklame")
+                            .DataSource(Model.JenisReklameList) // Mengambil dari Model.JenisReklameList
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .Placeholder("Semua Jenis Reklame")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
+                    </div>
+
+                    <div class="col-lg-2 col-md-12">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100">
+                            <i class="ri-filter-3-line me-1"></i> Terapkan
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Dashboard baru *@
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-advertisement-line text-success fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Reklame</h5>
+                        <h4 class="mb-0 fw-bold text-success">@Model.Data.TotalReklame.ToString("N0")</h4>
+
+                        <small class="text-muted"><span class="text-success fw-bold">xx%</span> dari bulan lalu</small>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-road-map-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Jalan Dengan Reklame</h5>
+                        <h4 class="mb-0 fw-bold text-primary">@Model.Data.JalanDenganReklame.ToString("N0")</h4>
+
+                        <small class="text-muted"><span class="text-success fw-bold">xx%</span> dari bulan lalu</small>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-error-warning-line text-danger fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pelanggaran Terdeteksi</h5>
+                        <h4 class="mb-0 fw-bold text-danger">@Model.Data.PelanggaranTerdeteksi.ToString("N0")</h4>
+
+                        <small class="text-muted"><span class="text-danger fw-bold">xx%</span> dari bulan lalu</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Daftar Titik Reklame
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+
+                <div class="modal fade" id="detailModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Laporkan Pelanggaran
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="#" method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="namaPelapor" class="form-label">Nama Pelapor</label>
+                            <input type="text" class="form-control" id="namaPelapor" placeholder="Masukkan nama Anda">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nomorTelepon" class="form-label">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="nomorTelepon" placeholder="Masukkan nomor telepon aktif">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="lokasiPelanggaran" class="form-label">Lokasi Pelanggaran</label>
+                        <input type="text" class="form-control" id="lokasiPelanggaran" placeholder="Contoh: Jl. Ahmad Yani (depan Graha Pena)">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="jenisPelanggaran" class="form-label">Jenis Pelanggaran</label>
+                        <select class="form-select" id="jenisPelanggaran">
+                            <option selected>Pilih Jenis Pelanggaran...</option>
+                            <option value="1">Reklame Tidak Berizin</option>
+                            <option value="2">Pajak Reklame Sudah Habis</option>
+                            <option value="3">Konstruksi Membahayakan</option>
+                            <option value="4">Isi Konten Tidak Sesuai</option>
+                            <option value="5">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="deskripsiPelanggaran" class="form-label">Deskripsi Pelanggaran</label>
+                        <textarea class="form-control" id="deskripsiPelanggaran" rows="4" placeholder="Jelaskan detail pelanggaran di sini..."></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="fotoBukti" class="form-label">Unggah Foto Bukti (Opsional)</label>
+                        <input class="form-control" type="file" id="fotoBukti">
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="ri-send-plane-fill me-1"></i> Kirim Laporan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        // Fungsi untuk memuat tabel ringkasan utama
+        function fnShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "Reklame")',
+                beforeSend: function () { $('#loading-Show').show(); },
+                success: function (result) { $('#Show').html(result); },
+                error: function () { $('#Show').html('<p class="text-danger">Gagal memuat data.</p>'); },
+                complete: function() { $('#loading-Show').hide(); }
+            });
+        }
+
+        // Fungsi untuk menampilkan modal detail
+        function showDetailModal(namaJalan) {
+            const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
+
+            $('#detailModal').modal('show');
+            // Tampilkan spinner di modal
+            $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+            // Ambil konten detail via AJAX
+            $.get(url, function (data) {
+                $('#detailModalContent').html(data);
+            }).fail(function() {
+                 $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
+            });
+        }
+
+        // Memuat tabel ringkasan saat halaman dibuka
+        $(document).ready(function() {
+            fnShow();
+        });
+    </script>
 }
