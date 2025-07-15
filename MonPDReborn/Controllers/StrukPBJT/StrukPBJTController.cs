@@ -20,13 +20,21 @@ namespace MonPDReborn.Controllers.StrukPBJT
             URLView = string.Concat("../StrukPBJT/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? keyword)
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.StrukPBJT.StrukPBJTVM.Index();
-                return View($"{URLView}{actionName}", model);
+                if (string.IsNullOrEmpty(keyword))
+                {
+                    var model = new Models.StrukPBJT.StrukPBJTVM.Index(string.Empty);
+                    return View($"{URLView}{actionName}", model);
+                }
+                else
+                {
+                    var model = new Models.StrukPBJT.StrukPBJTVM.Index(keyword);
+                    return View($"{URLView}{actionName}", model);
+                }
             }
             catch (ArgumentException e)
             {

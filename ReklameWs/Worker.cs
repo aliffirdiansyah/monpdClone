@@ -20,17 +20,17 @@ namespace ReklameWs
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
+                //var now = DateTime.Now;
 
-                var nextRun = now.AddDays(1); // besok jam 00:00
-                var delay = nextRun - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 //// GUNAKAN KETIKA EKSEKUSI TUGAS MANUAL
                 try
@@ -88,6 +88,7 @@ namespace ReklameWs
             {
                 using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
                 {
+                    Console.WriteLine($"{DateTime.Now} DB_OP_REKLAME_MONITORINGDB");
                     var sql = @"
 SELECT 	NVL(NO_FORMULIR, '-') NO_FORMULIR, 
 		NO_PERUSAHAAN, 
@@ -168,8 +169,10 @@ UNIT_BERKAS,
 STATUS_VER, 
 TGL_VER, 
 USER_VER,
+TGL_OP_TUTUP,
 NOR,
 2025 TAHUN_BUKU,
+KATEGORI_ID,
 0 SEQ
 FROM (
 	SELECT NO_FORMULIR,
@@ -251,6 +254,9 @@ FROM (
 	STATUS_VER,
 	TGL_VER,
 	USER_VER,
+    TGL_AKHIR_BERLAKU AS TGL_OP_TUTUP,
+    60 KATEGORI_ID,
+    'PERMANEN' KATEGORI_NAMA,
 	NOR
 	FROM VWTABELPERMOHONAN@lihatreklame
 	WHERE TGL_PERMOHONAN >= SYSDATE - INTERVAL '4' YEAR
@@ -334,6 +340,9 @@ FROM (
 	0 STATUS_VER,
 	NULL TGL_VER,
 	NULL USER_VER,
+    TGL_AKHIR_BERLAKU AS TGL_OP_TUTUP,
+    59 KATEGORI_ID,
+    'INSIDENTIL' KATEGORI_NAMA,
 	CAST(NULL AS VARCHAR(500)) AS NOR
 	FROM VWTABELPERMOHONANINS@lihatreklame
 	WHERE TGL_PERMOHONAN >= SYSDATE - INTERVAL '4' YEAR
@@ -417,6 +426,9 @@ FROM (
 	NULL STATUS_VER,
 	CAST(NULL AS DATE) TGL_VER,
 	NULL USER_VER,
+    TGL_AKHIR_BERLAKU AS TGL_OP_TUTUP,
+    61 KATEGORI_ID,
+    'TERBATAS' KATEGORI_NAMA,
 	NOR
 	FROM VWPERMOHONANSIMRLAMA1@lihatreklame
 	WHERE TGL_PERMOHONAN >= SYSDATE - INTERVAL '4' YEAR
@@ -424,10 +436,14 @@ FROM (
 
                     ";
 
-                    var result = await _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToListAsync(); //822
-
+                    var result = await _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToListAsync();
+                    
                     var existingr = await _contMonPd.DbOpReklames.ToListAsync();
                     _contMonPd.DbOpReklames.RemoveRange(existingr);
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{DateTime.Now} DB_OP_REKLAME_MONITORINGDB");
+                    Console.ResetColor();
 
                     foreach (var item in result)
                     {
@@ -512,6 +528,8 @@ FROM (
                         newRow.TglVer = item.TglVer;
                         newRow.UserVer = item.UserVer;
                         newRow.TahunBuku = item.TglMulaiBerlaku.HasValue ? item.TglMulaiBerlaku.Value.Year : DateTime.Now.Year;
+                        newRow.TglOpTutup = item.TglOpTutup;
+                        newRow.KategoriId = item.KategoriId;
 
                         _contMonPd.DbOpReklames.Add(newRow);
                         Console.ForegroundColor = ConsoleColor.White;
@@ -596,7 +614,7 @@ LEFT JOIN (
     WHERE TGL_BAYAR >= SYSDATE - INTERVAL '4' YEAR
 	GROUP BY NO_FORMULIR, TGL_BAYAR
 ) B ON A.NO_FORMULIR = B.NO_FORMULIR AND A.TGL_BAYAR = B.TGL_BAYAR
-WHERE A.TGL_BAYAR >= SYSDATE - INTERVAL '4' YEAR
+WHERE A.TGLSKPD >= SYSDATE - INTERVAL '4' YEAR
 ";
 
             var pembayaranSspdList = await _contMonitoringDb2.Set<OpSkpdSspdReklame>()
