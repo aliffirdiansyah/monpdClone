@@ -1,0 +1,81 @@
+﻿@model MonPDReborn.Models.StrukPBJT.StrukPBJTVM.Index
+
+@{
+    ViewData["Title"] = "Struk PBJT";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container my-4">
+    <div class="text-center mb-4">
+        <h4><i class="ri-search-eye-line"></i> Cek Struk PBJT Anda</h4>
+        <p class="text-muted">Cek apakah transaksi Anda tercatat resmi oleh sistem pajak daerah.<br />Masukkan informasi dari nota pembelian untuk verifikasi.</p>
+    </div>
+
+    <form method="get" class="mb-4">
+        <div class="mb-3">
+            <label>Nomor Struk / ID Transaksi</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="ri-receipt-line"></i></span>
+                <input type="text" class="form-control" name="nomorStruk" value="" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Verifikasi Captcha</label>
+            <div class="d-flex align-items-center">
+                <img src="/captcha" alt="captcha" class="me-2" style="height: 40px;" />
+                <input type="text" class="form-control w-50" name="captcha" value="" />
+                <button class="btn btn-link ms-2">Ganti Captcha</button>
+            </div>
+        </div>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+                <i class="ri-search-eye-line"></i> Cek Transaksi
+            </button>
+        </div>
+
+        <div class="text-center mt-2">
+            <a href="#">Lihat Riwayat Transaksi Saya</a>
+        </div>
+    </form>
+
+  
+        <div class="alert alert-success d-flex align-items-center">
+            <i class="ri-check-double-line fs-4 me-2"></i>
+            <div>
+                Informasi Transaksi Ditemukan – No. Struk:
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Nama Objek</th>
+                        <th>Alamat Objek</th>
+                        <th>Nilai Transaksi</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* @foreach (var item in Model.Hasil)
+                    {
+                        <tr>
+                            <td>@item.NamaObjek</td>
+                            <td>@item.AlamatObjek</td>
+                            <td>Rp @item.NilaiTransaksi.ToString("N0")</td>
+                            <td><span class="badge bg-info">@item.Status</span></td>
+                        </tr>
+                    } *@
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-muted mt-2">
+            Total
+        </div>
+
+</div>
