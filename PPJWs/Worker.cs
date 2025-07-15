@@ -3,6 +3,9 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
+using System.Drawing;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static MonPDLib.General.EnumFactory;
 using static MonPDLib.Helper;
 
 namespace PPJWs
@@ -20,17 +23,17 @@ namespace PPJWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
 
-                //var nextRun = now.AddDays(1); // besok jam 00:00
-                //var delay = nextRun - now;
+                var nextRun = now.AddDays(1); // besok jam 00:00
+                var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 // Eksekusi tugas
                 try
@@ -356,6 +359,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                     var result = await _contHpp.Set<DbOpListrik>().FromSqlRaw(sql).ToListAsync();
 
                     var distinctNop = result.Select(x => x.Nop).ToList();
+                    var dataExisting = _contMonPd.DbOpListriks.Where(x => distinctNop.Contains(x.Nop)).ToList();
 
 
                     for (var i = tahunAmbil; i <= tglServer.Year; i++)
@@ -363,7 +367,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                         var source = await _contMonPd.DbOpListriks.Where(x => x.TahunBuku == i).ToListAsync();
                         foreach (var item in result)
                         {
-                            var isExist = _contMonPd.DbOpListriks.Where(x => x.Nop == item.Nop && x.TahunBuku == i).Any();
+                            var isExist = dataExisting.Where(x => x.Nop == item.Nop).Any();
                             if (!isExist)
                             {
                                 if (item.TglMulaiBukaOp.Year <= i)
@@ -481,327 +485,306 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
             }
 
             //////FILL KETETAPAN 
-            //var _contSbyTaxOld = DBClass.GetSurabayaTaxContext();
-            //for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
-            //{
-            //    var opList = _contMonPd.DbOpListriks.Where(x => x.TahunBuku == thn).ToList();
-            //    for (int bln = 1; bln <= 12; bln++)
-            //    {
-            //        foreach (var op in opList)
-            //        {
-            //            bool isOPTutup = false;
-            //            DateTime tglPenetapan = new DateTime(thn, bln, 1);
-            //            if (op.TglOpTutup.HasValue)
-            //            {
-            //                if (op.TglOpTutup.Value.Date < tglPenetapan.Date)
-            //                {
-            //                    isOPTutup = true;
-            //                }
-
-            //            }
-            //            Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN SBYTAX LISTRIK {thn}-{bln}-{op.Nop}");
-            //            var sql = @"
-            //                SELECT 	A.NOP,
-            //                  A.TAHUN,
-            //                  A.MASAPAJAK,
-            //                  A.SEQ,
-            //                  1 JENIS_KETETAPAN,
-            //                  B.TGL_PENETAPAN TGL_KETETAPAN,
-            //                  C.TGL_JATUH_TEMPO_BAYAR ,
-            //                  0 NILAI_PENGURANG,
-            //                  A.NILAI_PAJAK POKOK
-            //                FROM (
-            //                 SELECT 	A.NOP, 
-            //                   A.TAHUN, 
-            //                   A.MASAPAJAK,
-            //                   A.SEQ,
-            //                   ((NVL(B.PROSEN_TARIF_PAJAK, 0)/100) * A.TOTAL_OMSET) NILAI_PAJAK
-            //                 FROM (
-            //                  SELECT 	A.NOP, 
-            //                    A.TAHUN, 
-            //                    A.MASAPAJAK, 
-            //                    A.SEQ,
-            //                    SUM(A.OMSET) TOTAL_OMSET
-            //                  FROM OBJEK_PAJAK_SPTPD_DET A
-            //                  WHERE NOP IN (
-            //                   SELECT NOP
-            //                   FROM OBJEK_PAJAK
-            //                   WHERE PAJAK_ID = 2
-            //                  )
-            //                  GROUP BY NOP, TAHUN, MASAPAJAK, SEQ
-            //                 ) A
-            //                 LEFT JOIN (
-            //                  SELECT 	A.NOP, 
-            //                    A.TAHUN, 
-            //                    A.MASAPAJAK,
-            //                    A.SEQ,
-            //                    A.PROSEN_TARIF_PAJAK
-            //                  FROM OBJEK_PAJAK_SPTPD A
-            //                  WHERE NOP IN (
-            //                   SELECT NOP
-            //                   FROM OBJEK_PAJAK
-            //                   WHERE PAJAK_ID = 2
-            //                  )
-            //                  GROUP BY A.NOP, 
-            //                    A.TAHUN, 
-            //                    A.MASAPAJAK,
-            //                    A.SEQ,
-            //                    A.PROSEN_TARIF_PAJAK
-            //                 ) B ON A.NOP = B.NOP AND A.TAHUN = B.TAHUN AND A.MASAPAJAK = B.MASAPAJAK AND A.SEQ = B.SEQ
-            //                ) A
-            //                JOIN OBJEK_PAJAK_SPTPD_PENETAPAN B ON A.NOP = B.NOP 
-            //                 AND A.TAHUN = B.TAHUN 
-            //                 AND A.MASAPAJAK = B.MASAPAJAK
-            //                 AND A.SEQ = B.SEQ
-            //                JOIN OBJEK_PAJAK_SPTPD C ON A.NOP = C.NOP
-            //                 AND A.TAHUN = C.TAHUN 
-            //                 AND A.MASAPAJAK = C.MASAPAJAK
-            //                 AND A.SEQ = C.SEQ
-            //                WHERE A.NOP = :nop AND A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
-            //            ";
-
-            //            var ketetapanSbyTaxOld = await _contSbyTaxOld.Set<OPSkpdListrik>()
-            //                .FromSqlRaw(sql, new[] {
-            //                    new OracleParameter("nop", op.Nop),
-            //                    new OracleParameter("tahun", thn),
-            //                    new OracleParameter("bulan", bln)
-            //                }).ToListAsync();
-            //            Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN SBYTAX LISTRIK {thn}-{bln}-{op.Nop}");
-
-            //            var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)12);
-            //            foreach (var item in ketetapanSbyTaxOld)
-            //            {
-            //                string nop = item.NOP;
-            //                int tahunPajak = item.TAHUN;
-            //                int masaPajak = item.MASAPAJAK;
-            //                int seqPajak = item.SEQ;
-            //                var rowMonListrik = _contMonPd.DbMonPpjs.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak && x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
-
-            //                if (rowMonListrik != null)
-            //                {
-            //                    _contMonPd.DbMonPpjs.Remove(rowMonListrik);
-            //                }
-            //                _contMonPd.DbMonPpjs.Add(new DbMonPpj()
-            //                {
-            //                    Nop = item.NOP,
-            //                    Npwpd = op.Npwpd,
-            //                    NpwpdNama = op.NpwpdNama,
-            //                    NpwpdAlamat = op.NpwpdAlamat,
-            //                    PajakId = op.PajakId,
-            //                    PajakNama = op.PajakNama,
-            //                    NamaOp = op.NamaOp,
-            //                    AlamatOp = op.AlamatOp,
-            //                    AlamatOpKdLurah = op.AlamatOpKdLurah,
-            //                    AlamatOpKdCamat = op.AlamatOpKdCamat,
-            //                    TglOpTutup = op.TglOpTutup,
-            //                    TglMulaiBukaOp = op.TglMulaiBukaOp,
-            //                    IsTutup = isOPTutup ? 1 : 0,
-            //                    TahunBuku = thn,
-            //                    Akun = op.Akun,
-            //                    NamaAkun = op.NamaAkun,
-            //                    Jenis = op.Jenis,
-            //                    NamaJenis = op.NamaJenis,
-            //                    Objek = op.Objek,
-            //                    NamaObjek = op.NamaObjek,
-            //                    Rincian = op.Rincian,
-            //                    NamaRincian = op.NamaRincian,
-            //                    SubRincian = op.SubRincian,
-            //                    NamaSubRincian = op.NamaSubRincian,
-            //                    SumberNama = op.SumberNama,
-            //                    PeruntukanNama = op.PeruntukanNama,
-            //                    TahunPajakKetetapan = item.TAHUN,
-            //                    MasaPajakKetetapan = item.MASAPAJAK,
-            //                    SeqPajakKetetapan = item.SEQ,
-            //                    KategoriKetetapan = item.JENIS_KETETAPAN.ToString(),
-            //                    TglKetetapan = item.TGL_KETETAPAN,
-            //                    TglJatuhTempoBayar = item.TGL_JATUH_TEMPO_BAYAR,
-            //                    PokokPajakKetetapan = item.POKOK - item.NILAI_PENGURANG,
-            //                    PengurangPokokKetetapan = item.NILAI_PENGURANG,
-            //                    AkunKetetapan = dbAkunPokok.Akun,
-            //                    KelompokKetetapan = dbAkunPokok.Kelompok,
-            //                    JenisKetetapan = dbAkunPokok.Jenis,
-            //                    ObjekKetetapan = dbAkunPokok.Objek,
-            //                    RincianKetetapan = dbAkunPokok.Rincian,
-            //                    SubRincianKetetapan = dbAkunPokok.SubRincian,
-            //                    InsDate = DateTime.Now,
-            //                    InsBy = "JOB",
-            //                    UpdDate = DateTime.Now,
-            //                    UpdBy = "JOB"
-            //                });
-
-            //                _contMonPd.SaveChanges();
-            //                Console.WriteLine($"DB_MON_LISTRIK {thn}-{bln}-{item.NOP}-{item.SEQ}");
-            //            }
-            //        }
-            //    }
-            //}
-
-            //FILL KETETAPAN MONITORING DB
-            //var _contMonitoringDb = DBClass.GetMonitoringDbContext();
-            //for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
-            //{
-            //    var opList = _contMonPd.DbOpListriks.Where(x => x.TahunBuku == thn).ToList();
-            //    for (int bln = 1; bln <= 12; bln++)
-            //    {
-            //        Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
-            //        var sql = @"
-            //                SELECT 	REPLACE(FK_NOP, '.','') NOP,
-            //                        TO_NUMBER(TAHUN_PAJAK) TAHUN,
-	           //                   BULAN_PAJAK MASAPAJAK,
-	           //                   1 SEQ,
-	           //                   1 JENIS_KETETAPAN,
-	           //                   NVL(A.TGL_SPTPD_DISETOR, MP_AKHIR) TGL_KETETAPAN,
-	           //                   TGL_JATUH_TEMPO TGL_JATUH_TEMPO_BAYAR,
-	           //                   0 NILAI_PENGURANG,
-	           //                   NVL(KETETAPAN_TOTAL, 0) POKOK
-            //                FROM (
-	           //                 SELECT 	ID_KETETAPAN, 
-			         //                   FK_OP, 
-			         //                   FK_NOP, 
-			         //                   NAMA_BULAN_PAJAK, 
-			         //                   BULAN_PAJAK, 
-			         //                   TAHUN_PAJAK, 
-			         //                   OMZET_TOTAL, 
-			         //                   TARIF_PAJAK_SPTPD, 
-			         //                   KETETAPAN_TOTAL, 
-			         //                   PERHITUNGAN_KETETAPAN, 
-			         //                   MP_AWAL, 
-			         //                   MP_AKHIR, 
-			         //                   TGL_JATUH_TEMPO, 
-			         //                   JENIS_KETETAPAN, 
-			         //                   NAMA_OP, 
-			         //                   ALAMAT_OP, 
-			         //                   FK_NPWPD, 
-			         //                   FK_PAJAK_DAERAH, 
-			         //                   NAMA_PAJAK_DAERAH, 
-			         //                   FK_WILAYAH_PAJAK, 
-			         //                   NAMA_WILAYAH_PAJAK, 
-			         //                   FK_WILAYAH_LAMA, 
-			         //                   NAMA_WILAYAH_LAMA, 
-			         //                   KATEGORI_PAJAK, 
-			         //                   NAMA_JENIS_PAJAK, 
-			         //                   FK_AYAT_PAJAK, 
-			         //                   REALISASI_POKOK, 
-			         //                   REALISASI_DENDA, 
-			         //                   REALISASI_TOTAL, 
-			         //                   TGL_REALISASI, 
-			         //                   TUNGGAKAN_POKOK, 
-			         //                   TUNGGAKAN_DENDA, 
-			         //                   TUNGGAKAN_TOTAL, 
-			         //                   TGL_SPTPD_DISETOR, 
-			         //                   PETUGAS_PENERIMA, 
-			         //                   CATATAN, 
-			         //                   PPJ_JAM_OPERASI, 
-			         //                   PPJ_KAPASITAS_DAYA, 
-			         //                   PPJ_HARGA_LISTRIK, 
-			         //                   PPJ_PAJAK_TERUTANG, 
-			         //                   PPJ_SELISIH_PAJAK
-	           //                 FROM VW_SIMPADA_SPTPD@LIHATHPPSERVER
-	           //                 WHERE NAMA_PAJAK_DAERAH='PPJ'
-            //                ) A
-            //                WHERE TAHUN_PAJAK = :tahun AND BULAN_PAJAK = :bulan
-            //            ";
-
-            //        var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdListrik>()
-            //            .FromSqlRaw(sql, new[] {
-            //                    new OracleParameter("tahun", thn),
-            //                    new OracleParameter("bulan", bln)
-            //            })
-            //            .ToListAsync();
-            //        Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN MONITORING DB {thn}-{bln}");
-            //        foreach (var op in opList)
-            //        {
-            //            bool isOPTutup = false;
-            //            DateTime tglPenetapan = new DateTime(thn, bln, 1);
-            //            if (op.TglOpTutup.HasValue)
-            //            {
-            //                if (op.TglOpTutup.Value.Date < tglPenetapan.Date)
-            //                {
-            //                    isOPTutup = true;
-            //                }
-            //            }
-
-            //            var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)12);
-            //            foreach (var item in ketetapanSbyTaxOld.Where(x => x.NOP == op.Nop))
-            //            {
-            //                string nop = item.NOP;
-            //                int tahunPajak = item.TAHUN;
-            //                int masaPajak = item.MASAPAJAK;
-            //                int seqPajak = item.SEQ;
-            //                var rowMonListrik = _contMonPd.DbMonPpjs.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak && x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
-            //                if (rowMonListrik != null)
-            //                {
-            //                    _contMonPd.DbMonPpjs.Remove(rowMonListrik);
-            //                }
-            //                _contMonPd.DbMonPpjs.Add(new DbMonPpj()
-            //                {
-            //                    Nop = item.NOP,
-            //                    Npwpd = op.Npwpd,
-            //                    NpwpdNama = op.NpwpdNama,
-            //                    NpwpdAlamat = op.NpwpdAlamat,
-            //                    PajakId = op.PajakId,
-            //                    PajakNama = op.PajakNama,
-            //                    NamaOp = op.NamaOp,
-            //                    AlamatOp = op.AlamatOp,
-            //                    AlamatOpKdLurah = op.AlamatOpKdLurah,
-            //                    AlamatOpKdCamat = op.AlamatOpKdCamat,
-            //                    TglOpTutup = op.TglOpTutup,
-            //                    TglMulaiBukaOp = op.TglMulaiBukaOp,
-            //                    IsTutup = isOPTutup ? 1 : 0,
-            //                    TahunBuku = thn,
-            //                    Akun = op.Akun,
-            //                    NamaAkun = op.NamaAkun,
-            //                    Jenis = op.Jenis,
-            //                    NamaJenis = op.NamaJenis,
-            //                    Objek = op.Objek,
-            //                    NamaObjek = op.NamaObjek,
-            //                    Rincian = op.Rincian,
-            //                    NamaRincian = op.NamaRincian,
-            //                    SubRincian = op.SubRincian,
-            //                    NamaSubRincian = op.NamaSubRincian,
-            //                    SumberNama = op.SumberNama,
-            //                    PeruntukanNama = op.PeruntukanNama,
-            //                    TahunPajakKetetapan = item.TAHUN,
-            //                    MasaPajakKetetapan = item.MASAPAJAK,
-            //                    SeqPajakKetetapan = item.SEQ,
-            //                    KategoriKetetapan = item.JENIS_KETETAPAN.ToString(),
-            //                    TglKetetapan = item.TGL_KETETAPAN,
-            //                    TglJatuhTempoBayar = item.TGL_JATUH_TEMPO_BAYAR,
-            //                    PokokPajakKetetapan = item.POKOK - item.NILAI_PENGURANG,
-            //                    PengurangPokokKetetapan = item.NILAI_PENGURANG,
-            //                    AkunKetetapan = dbAkunPokok.Akun,
-            //                    KelompokKetetapan = dbAkunPokok.Kelompok,
-            //                    JenisKetetapan = dbAkunPokok.Jenis,
-            //                    ObjekKetetapan = dbAkunPokok.Objek,
-            //                    RincianKetetapan = dbAkunPokok.Rincian,
-            //                    SubRincianKetetapan = dbAkunPokok.SubRincian,
-            //                    InsDate = DateTime.Now,
-            //                    InsBy = "JOB",
-            //                    UpdDate = DateTime.Now,
-            //                    UpdBy = "JOB"
-            //                });
-
-            //                _contMonPd.SaveChanges();
-            //                Console.ForegroundColor = ConsoleColor.Green;
-            //                Console.WriteLine($"{DateTime.Now} DB_MON_LISTRIK_MONITORINGDB {thn}-{bln}-{item.NOP}-{item.SEQ}");
-            //                Console.ResetColor();
-            //            }
-            //        }
-            //    }
-            //}
-
-            //PEMBAYARAN
-            var _contBima = DBClass.GetBimaContext();
+            var _contSbyTaxOld = DBClass.GetSurabayaTaxContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
+                var opList = _contMonPd.DbOpListriks.Where(x => x.TahunBuku == thn).ToList();
                 for (int bln = 1; bln <= 12; bln++)
                 {
-                    var opList = _contMonPd.DbMonPpjs.Where(x => x.TahunPajakKetetapan == thn && x.MasaPajakKetetapan == bln).ToList();
-
                     foreach (var op in opList)
                     {
-                        Console.WriteLine($"{DateTime.Now} [QUERY] DB_MON_LISTRIK_MONITORINGDB {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
-                        var sql = @"SELECT 	ID_SSPD, 
+                        bool isOPTutup = false;
+                        DateTime tglPenetapan = new DateTime(thn, bln, 1);
+                        if (op.TglOpTutup.HasValue)
+                        {
+                            if (op.TglOpTutup.Value.Date < tglPenetapan.Date)
+                            {
+                                isOPTutup = true;
+                            }
+
+                        }
+                        Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN SBYTAX LISTRIK {thn}-{bln}-{op.Nop}");
+                        var sql = @"
+                            SELECT 	A.NOP,
+                              A.TAHUN,
+                              A.MASAPAJAK,
+                              A.SEQ,
+                              1 JENIS_KETETAPAN,
+                              B.TGL_PENETAPAN TGL_KETETAPAN,
+                              C.TGL_JATUH_TEMPO_BAYAR ,
+                              0 NILAI_PENGURANG,
+                              A.NILAI_PAJAK POKOK
+                            FROM (
+                             SELECT 	A.NOP, 
+                               A.TAHUN, 
+                               A.MASAPAJAK,
+                               A.SEQ,
+                               ((NVL(B.PROSEN_TARIF_PAJAK, 0)/100) * A.TOTAL_OMSET) NILAI_PAJAK
+                             FROM (
+                              SELECT 	A.NOP, 
+                                A.TAHUN, 
+                                A.MASAPAJAK, 
+                                A.SEQ,
+                                SUM(A.OMSET) TOTAL_OMSET
+                              FROM OBJEK_PAJAK_SPTPD_DET A
+                              WHERE NOP IN (
+                               SELECT NOP
+                               FROM OBJEK_PAJAK
+                               WHERE PAJAK_ID = 2
+                              )
+                              GROUP BY NOP, TAHUN, MASAPAJAK, SEQ
+                             ) A
+                             LEFT JOIN (
+                              SELECT 	A.NOP, 
+                                A.TAHUN, 
+                                A.MASAPAJAK,
+                                A.SEQ,
+                                A.PROSEN_TARIF_PAJAK
+                              FROM OBJEK_PAJAK_SPTPD A
+                              WHERE NOP IN (
+                               SELECT NOP
+                               FROM OBJEK_PAJAK
+                               WHERE PAJAK_ID = 2
+                              )
+                              GROUP BY A.NOP, 
+                                A.TAHUN, 
+                                A.MASAPAJAK,
+                                A.SEQ,
+                                A.PROSEN_TARIF_PAJAK
+                             ) B ON A.NOP = B.NOP AND A.TAHUN = B.TAHUN AND A.MASAPAJAK = B.MASAPAJAK AND A.SEQ = B.SEQ
+                            ) A
+                            JOIN OBJEK_PAJAK_SPTPD_PENETAPAN B ON A.NOP = B.NOP 
+                             AND A.TAHUN = B.TAHUN 
+                             AND A.MASAPAJAK = B.MASAPAJAK
+                             AND A.SEQ = B.SEQ
+                            JOIN OBJEK_PAJAK_SPTPD C ON A.NOP = C.NOP
+                             AND A.TAHUN = C.TAHUN 
+                             AND A.MASAPAJAK = C.MASAPAJAK
+                             AND A.SEQ = C.SEQ
+                            WHERE A.NOP = :nop AND A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
+                        ";
+
+                        var ketetapanSbyTaxOld = await _contSbyTaxOld.Set<OPSkpdListrik>()
+                            .FromSqlRaw(sql, new[] {
+                                new OracleParameter("nop", op.Nop),
+                                new OracleParameter("tahun", thn),
+                                new OracleParameter("bulan", bln)
+                            }).ToListAsync();
+                        Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN SBYTAX LISTRIK {thn}-{bln}-{op.Nop}");
+
+                        var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)12);
+                        foreach (var item in ketetapanSbyTaxOld)
+                        {
+                            string nop = item.NOP;
+                            int tahunPajak = item.TAHUN;
+                            int masaPajak = item.MASAPAJAK;
+                            int seqPajak = item.SEQ;
+                            var rowMonListrik = _contMonPd.DbMonPpjs.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak &&
+                                                                                    x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
+
+                            if (rowMonListrik != null)
+                            {
+                                _contMonPd.DbMonPpjs.Remove(rowMonListrik);
+                            }
+
+                            var newRow = new DbMonPpj();
+                            newRow.Nop = item.NOP;
+                            newRow.Npwpd = op.Npwpd;
+                            newRow.NpwpdNama = op.NpwpdNama;
+                            newRow.NpwpdAlamat = op.NpwpdAlamat;
+                            newRow.PajakId = op.PajakId;
+                            newRow.PajakNama = op.PajakNama;
+                            newRow.NamaOp = op.NamaOp;
+                            newRow.AlamatOp = op.AlamatOp;
+                            newRow.AlamatOpKdLurah = op.AlamatOpKdLurah;
+                            newRow.AlamatOpKdCamat = op.AlamatOpKdCamat;
+                            newRow.TglOpTutup = op.TglOpTutup;
+                            newRow.TglMulaiBukaOp = op.TglMulaiBukaOp;
+                            newRow.IsTutup = isOPTutup ? 1 : 0;
+                            newRow.TahunBuku = thn;
+                            newRow.Akun = op.Akun;
+                            newRow.NamaAkun = op.NamaAkun;
+                            newRow.Jenis = op.Jenis;
+                            newRow.NamaJenis = op.NamaJenis;
+                            newRow.Objek = op.Objek;
+                            newRow.NamaObjek = op.NamaObjek;
+                            newRow.Rincian = op.Rincian;
+                            newRow.NamaRincian = op.NamaRincian;
+                            newRow.SubRincian = op.SubRincian;
+                            newRow.NamaSubRincian = op.NamaSubRincian;
+                            newRow.SumberNama = op.SumberNama;
+                            newRow.PeruntukanNama = op.PeruntukanNama;
+                            newRow.TahunPajakKetetapan = item.TAHUN;
+                            newRow.MasaPajakKetetapan = item.MASAPAJAK;
+                            newRow.SeqPajakKetetapan = item.SEQ;
+                            newRow.KategoriKetetapan = item.JENIS_KETETAPAN.ToString();
+                            newRow.TglKetetapan = item.TGL_KETETAPAN;
+                            newRow.TglJatuhTempoBayar = item.TGL_JATUH_TEMPO_BAYAR;
+                            newRow.PokokPajakKetetapan = item.POKOK - item.NILAI_PENGURANG;
+                            newRow.PengurangPokokKetetapan = item.NILAI_PENGURANG;
+                            newRow.AkunKetetapan = dbAkunPokok.Akun;
+                            newRow.KelompokKetetapan = dbAkunPokok.Kelompok;
+                            newRow.JenisKetetapan = dbAkunPokok.Jenis;
+                            newRow.ObjekKetetapan = dbAkunPokok.Objek;
+                            newRow.RincianKetetapan = dbAkunPokok.Rincian;
+                            newRow.SubRincianKetetapan = dbAkunPokok.SubRincian;
+                            newRow.InsDate = DateTime.Now;
+                            newRow.InsBy = "JOB";
+                            newRow.UpdDate = DateTime.Now;
+                            newRow.UpdBy = "JOB";
+
+                            GetRealisasi(ref newRow);
+
+                            _contMonPd.DbMonPpjs.Add(newRow);
+                            _contMonPd.SaveChanges();
+                            Console.WriteLine($"DB_MON_LISTRIK {thn}-{bln}-{item.NOP}-{item.SEQ}");
+                        }
+                    }
+                }
+            }
+
+            //FILL KETETAPAN MONITORING DB
+            var _contMonitoringDb = DBClass.GetMonitoringDbContext();
+            for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
+            {
+                var opList = _contMonPd.DbOpListriks.Where(x => x.TahunBuku == thn).ToList();
+                for (int bln = 1; bln <= 12; bln++)
+                {
+                    Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
+                    var sql = @"
+                            SELECT 	REPLACE(NOP, '.','') NOP,
+                              TAHUN,
+                              MASAPAJAK,
+                              1 SEQ,
+                              1 JENIS_KETETAPAN,
+                              TANGGALENTRY TGL_KETETAPAN,
+                              TANGGALJATUHTEMPO TGL_JATUH_TEMPO_BAYAR,
+                              0 NILAI_PENGURANG,
+                              NVL(PAJAK_TERUTANG, 0) POKOK
+                            FROM (
+                             select  NO_SPTPD, A.NPWPD, IDAYAT, 
+                                     TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
+                                     RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
+                                     A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
+                             from PHRH_USER.sptpd_new@LIHATHR A
+                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='LISTRIK'
+                             WHERE STATUS=0
+                             UNION ALL
+                             select KD_BILL,NPWPD,KODEREKENING,
+                                     TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
+                                     PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
+                             from sptpd_payment@LIHATBONANG A
+                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='LISTRIK'
+                             where STATUS_HAPUS=0
+                            ) A
+                            WHERE A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
+                        ";
+
+                    var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdListrik>()
+                        .FromSqlRaw(sql, new[] {
+                                new OracleParameter("tahun", thn),
+                                new OracleParameter("bulan", bln)
+                        })
+                        .ToListAsync();
+                    Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN MONITORING DB {thn}-{bln}");
+                    foreach (var op in opList)
+                    {
+                        bool isOPTutup = false;
+                        DateTime tglPenetapan = new DateTime(thn, bln, 1);
+                        if (op.TglOpTutup.HasValue)
+                        {
+                            if (op.TglOpTutup.Value.Date < tglPenetapan.Date)
+                            {
+                                isOPTutup = true;
+                            }
+                        }
+
+                        var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)12);
+                        foreach (var item in ketetapanSbyTaxOld.Where(x => x.NOP == op.Nop))
+                        {
+                            string nop = item.NOP;
+                            int tahunPajak = item.TAHUN;
+                            int masaPajak = item.MASAPAJAK;
+                            int seqPajak = item.SEQ;
+                            var rowMonListrik = _contMonPd.DbMonPpjs.SingleOrDefault(x => x.Nop == nop && x.TahunPajakKetetapan == tahunPajak && x.MasaPajakKetetapan == masaPajak && x.SeqPajakKetetapan == seqPajak);
+                            if (rowMonListrik != null)
+                            {
+                                _contMonPd.DbMonPpjs.Remove(rowMonListrik);
+                            }
+
+                            var newRow = new DbMonPpj();
+
+                            newRow.Nop = item.NOP;
+                            newRow.Npwpd = op.Npwpd;
+                            newRow.NpwpdNama = op.NpwpdNama;
+                            newRow.NpwpdAlamat = op.NpwpdAlamat;
+                            newRow.PajakId = op.PajakId;
+                            newRow.PajakNama = op.PajakNama;
+                            newRow.NamaOp = op.NamaOp;
+                            newRow.AlamatOp = op.AlamatOp;
+                            newRow.AlamatOpKdLurah = op.AlamatOpKdLurah;
+                            newRow.AlamatOpKdCamat = op.AlamatOpKdCamat;
+                            newRow.TglOpTutup = op.TglOpTutup;
+                            newRow.TglMulaiBukaOp = op.TglMulaiBukaOp;
+                            newRow.IsTutup = isOPTutup ? 1 : 0;
+                            newRow.TahunBuku = thn;
+                            newRow.Akun = op.Akun;
+                            newRow.NamaAkun = op.NamaAkun;
+                            newRow.Jenis = op.Jenis;
+                            newRow.NamaJenis = op.NamaJenis;
+                            newRow.Objek = op.Objek;
+                            newRow.NamaObjek = op.NamaObjek;
+                            newRow.Rincian = op.Rincian;
+                            newRow.NamaRincian = op.NamaRincian;
+                            newRow.SubRincian = op.SubRincian;
+                            newRow.NamaSubRincian = op.NamaSubRincian;
+                            newRow.SumberNama = op.SumberNama;
+                            newRow.PeruntukanNama = op.PeruntukanNama;
+                            newRow.TahunPajakKetetapan = item.TAHUN;
+                            newRow.MasaPajakKetetapan = item.MASAPAJAK;
+                            newRow.SeqPajakKetetapan = item.SEQ;
+                            newRow.KategoriKetetapan = item.JENIS_KETETAPAN.ToString();
+                            newRow.TglKetetapan = item.TGL_KETETAPAN;
+                            newRow.TglJatuhTempoBayar = item.TGL_JATUH_TEMPO_BAYAR;
+                            newRow.PokokPajakKetetapan = item.POKOK - item.NILAI_PENGURANG;
+                            newRow.PengurangPokokKetetapan = item.NILAI_PENGURANG;
+                            newRow.AkunKetetapan = dbAkunPokok.Akun;
+                            newRow.KelompokKetetapan = dbAkunPokok.Kelompok;
+                            newRow.JenisKetetapan = dbAkunPokok.Jenis;
+                            newRow.ObjekKetetapan = dbAkunPokok.Objek;
+                            newRow.RincianKetetapan = dbAkunPokok.Rincian;
+                            newRow.SubRincianKetetapan = dbAkunPokok.SubRincian;
+                            newRow.InsDate = DateTime.Now;
+                            newRow.InsBy = "JOB";
+                            newRow.UpdDate = DateTime.Now;
+                            newRow.UpdBy = "JOB";
+
+                            GetRealisasiPhr(ref newRow);
+
+                            _contMonPd.DbMonPpjs.Add(newRow);
+                            _contMonPd.SaveChanges();
+
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"{DateTime.Now} DB_MON_LISTRIK_MONITORINGDB {thn}-{bln}-{item.NOP}-{item.SEQ}");
+                            Console.ResetColor();
+                        }
+                    }
+                }
+            }
+
+
+            MailHelper.SendMail(
+            false,
+            "DONE PPJ WS",
+            $@"PPJ WS FINISHED",
+            null
+            );
+        }
+        private void GetRealisasi(ref DbMonPpj row)
+        {
+            //PEMBAYARAN
+            var _contBima = DBClass.GetBimaContext();
+            var sql = @"SELECT 	ID_SSPD, 
                                       KODE_BILL, 
                                       NO_KETETAPAN, 
                                       JENIS_PEMBAYARAN, 
@@ -835,129 +818,119 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                                       SEQ_KETETAPAN, 
                                       INS_DATE	
                                     FROM T_SSPD A
-                                    WHERE 	A.JENIS_PAJAK = 5 AND 
+                                    WHERE 	A.JENIS_PAJAK = 2 AND 
                                       A.NOP = :NOP AND
                                       A.TAHUN = :TAHUN AND 
                                       A.MASA = :MASA AND 
                                       A.SEQ_KETETAPAN = :SEQ";
 
-                        var pembayaranSspdList1 = await _contBima.Set<SSPD>()
-                            .FromSqlRaw(sql, new[] {
-                                            new OracleParameter("NOP", op.Nop),
-                                            new OracleParameter("TAHUN", thn),
-                                            new OracleParameter("MASA", bln),
-                                            new OracleParameter("SEQ", op.SeqPajakKetetapan)
-                            }).ToListAsync();
+            var pembayaranSspdList = _contBima.Set<SSPD>()
+                .FromSqlRaw(sql, new[] {
+                                            new OracleParameter("NOP", row.Nop),
+                                            new OracleParameter("TAHUN", row.TahunPajakKetetapan),
+                                            new OracleParameter("MASA", row.MasaPajakKetetapan),
+                                            new OracleParameter("SEQ", row.SeqPajakKetetapan)
+                }).ToList();
 
-                        if (pembayaranSspdList1.Count > 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] DB_MON_LISTRIK_MONITORINGDB {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan} - NO DATA");
-                            Console.ResetColor();
-                        }
+            if (pembayaranSspdList != null && pembayaranSspdList.Count > 0)
+            {
+                DateTime tanggalBayarTerakhir = pembayaranSspdList.Max(x => (DateTime)x.TRANSACTION_DATE);
+                int maxTahunBayar = pembayaranSspdList.Max(x => ((DateTime)x.TRANSACTION_DATE).Year);
+                decimal nominalPokokBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_POKOK);
+                decimal nominalSanksiBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_SANKSI);
+                decimal nominalAdministrasi = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_ADMINISTRASI);
+                decimal nominalLainnya = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_LAINYA);
+                decimal pengurangPokok = pembayaranSspdList.Sum(x => (decimal)x.PENGURANG_POKOK);
+                decimal pengurangSanksi = pembayaranSspdList.Sum(x => (decimal)x.PENGURANG_SANKSI);
 
-                        if (pembayaranSspdList1 != null && pembayaranSspdList1.Count > 0)
-                        {
-                            DateTime tanggalBayarTerakhir = pembayaranSspdList1.Max(x => (DateTime)x.TRANSACTION_DATE);
-                            int maxTahunBayar = pembayaranSspdList1.Max(x => ((DateTime)x.TRANSACTION_DATE).Year);
-                            decimal nominalPokokBayar = pembayaranSspdList1.Sum(x => (decimal)x.NOMINAL_POKOK);
-                            decimal nominalSanksiBayar = pembayaranSspdList1.Sum(x => (decimal)x.NOMINAL_SANKSI);
-                            decimal nominalAdministrasi = pembayaranSspdList1.Sum(x => (decimal)x.NOMINAL_ADMINISTRASI);
-                            decimal nominalLainnya = pembayaranSspdList1.Sum(x => (decimal)x.NOMINAL_LAINYA);
-                            decimal pengurangPokok = pembayaranSspdList1.Sum(x => (decimal)x.PENGURANG_POKOK);
-                            decimal pengurangSanksi = pembayaranSspdList1.Sum(x => (decimal)x.PENGURANG_SANKSI);
+                string akunBayar = "-";
+                string kelompokBayar = "-";
+                string jenisBayar = "-";
+                string objekBayar = "-";
+                string rincianBayar = "-";
+                string subrincianBayar = "-";
 
-                            string akunBayar = "-";
-                            string kelompokBayar = "-";
-                            string jenisBayar = "-";
-                            string objekBayar = "-";
-                            string rincianBayar = "-";
-                            string subrincianBayar = "-";
-
-                            var getAkun = GetDbAkun(maxTahunBayar, 6, 56);
-                            if (getAkun != null)
-                            {
-                                akunBayar = getAkun.Akun;
-                                kelompokBayar = getAkun.Kelompok;
-                                jenisBayar = getAkun.Jenis;
-                                objekBayar = getAkun.Objek;
-                                rincianBayar = getAkun.Rincian;
-                                subrincianBayar = getAkun.SubRincian;
-                            }
-
-                            string akunSanksi = "-";
-                            string kelompokSanksi = "-";
-                            string jenisSanksi = "-";
-                            string objekSanksi = "-";
-                            string rincianSanksi = "-";
-                            string subrincianSanksi = "-";
-
-                            var getAkunSanksi = GetDbAkunSanksi(maxTahunBayar, 6, 56);
-                            if (getAkunSanksi != null)
-                            {
-                                akunSanksi = getAkunSanksi.Akun;
-                                kelompokSanksi = getAkunSanksi.Kelompok;
-                                jenisSanksi = getAkunSanksi.Jenis;
-                                objekSanksi = getAkunSanksi.Objek;
-                                rincianSanksi = getAkunSanksi.Rincian;
-                                subrincianSanksi = getAkunSanksi.SubRincian;
-                            }
-
-                            if (nominalPokokBayar > 0)
-                            {
-                                DateTime TGL_BAYAR_POKOK = tanggalBayarTerakhir;
-                                decimal NOMINAL_POKOK_BAYAR = nominalPokokBayar;
-                                string AKUN_POKOK_BAYAR = akunBayar;
-                                string KELOMPOK_POKOK_BAYAR = kelompokBayar;
-                                string JENIS_POKOK_BAYAR = jenisBayar;
-                                string OBJEK_POKOK_BAYAR = objekBayar;
-                                string RINCIAN_POKOK_BAYAR = rincianBayar;
-                                string SUB_RINCIAN_POKOK_BAYAR = subrincianBayar;
-
-                                op.TglBayarPokok = TGL_BAYAR_POKOK;
-                                op.NominalPokokBayar = NOMINAL_POKOK_BAYAR;
-                                op.AkunPokokBayar = AKUN_POKOK_BAYAR;
-                                op.JenisPokokBayar = JENIS_POKOK_BAYAR;
-                                op.ObjekPokokBayar = OBJEK_POKOK_BAYAR;
-                                op.RincianPokokBayar = RINCIAN_POKOK_BAYAR;
-                                op.SubRincianPokokBayar = SUB_RINCIAN_POKOK_BAYAR;
-                            }
-
-                            if (nominalSanksiBayar > 0 || nominalLainnya > 0 || nominalAdministrasi > 0)
-                            {
-                                DateTime TGL_BAYAR_SANKSI = tanggalBayarTerakhir;
-                                decimal NOMINAL_SANKSI_BAYAR = (nominalSanksiBayar + nominalLainnya + nominalAdministrasi);
-                                string AKUN_SANKSI_BAYAR = akunSanksi;
-                                string KELOMPOK_SANKSI_BAYAR = kelompokSanksi;
-                                string JENIS_SANKSI_BAYAR = jenisSanksi;
-                                string OBJEK_SANKSI_BAYAR = objekSanksi;
-                                string RINCIAN_SANKSI_BAYAR = rincianSanksi;
-                                string SUB_RINCIAN_SANKSI_BAYAR = subrincianSanksi;
-
-                                op.TglBayarSanksi = TGL_BAYAR_SANKSI;
-                                op.NominalSanksiBayar = NOMINAL_SANKSI_BAYAR;
-                                op.AkunSanksiBayar = AKUN_SANKSI_BAYAR;
-                                op.KelompokSanksiBayar = KELOMPOK_SANKSI_BAYAR;
-                                op.JenisSanksiBayar = JENIS_SANKSI_BAYAR;
-                                op.ObjekSanksiBayar = OBJEK_SANKSI_BAYAR;
-                                op.RincianSanksiBayar = RINCIAN_SANKSI_BAYAR;
-                                op.SubRincianSanksiBayar = SUB_RINCIAN_SANKSI_BAYAR;
-                            }
-                            _contMonPd.SaveChanges();
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"{DateTime.Now} DB_MON_LISTRIK (SSPD): {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
-                            Console.ResetColor();
-                        }
-                    }
+                var getAkun = GetDbAkun(maxTahunBayar, 6, 56);
+                if (getAkun != null)
+                {
+                    akunBayar = getAkun.Akun;
+                    kelompokBayar = getAkun.Kelompok;
+                    jenisBayar = getAkun.Jenis;
+                    objekBayar = getAkun.Objek;
+                    rincianBayar = getAkun.Rincian;
+                    subrincianBayar = getAkun.SubRincian;
                 }
-            }
 
+                string akunSanksi = "-";
+                string kelompokSanksi = "-";
+                string jenisSanksi = "-";
+                string objekSanksi = "-";
+                string rincianSanksi = "-";
+                string subrincianSanksi = "-";
+
+                var getAkunSanksi = GetDbAkunSanksi(maxTahunBayar, 6, 56);
+                if (getAkunSanksi != null)
+                {
+                    akunSanksi = getAkunSanksi.Akun;
+                    kelompokSanksi = getAkunSanksi.Kelompok;
+                    jenisSanksi = getAkunSanksi.Jenis;
+                    objekSanksi = getAkunSanksi.Objek;
+                    rincianSanksi = getAkunSanksi.Rincian;
+                    subrincianSanksi = getAkunSanksi.SubRincian;
+                }
+
+                if (nominalPokokBayar > 0)
+                {
+                    DateTime TGL_BAYAR_POKOK = tanggalBayarTerakhir;
+                    decimal NOMINAL_POKOK_BAYAR = nominalPokokBayar;
+                    string AKUN_POKOK_BAYAR = akunBayar;
+                    string KELOMPOK_POKOK_BAYAR = kelompokBayar;
+                    string JENIS_POKOK_BAYAR = jenisBayar;
+                    string OBJEK_POKOK_BAYAR = objekBayar;
+                    string RINCIAN_POKOK_BAYAR = rincianBayar;
+                    string SUB_RINCIAN_POKOK_BAYAR = subrincianBayar;
+
+                    row.TglBayarPokok = TGL_BAYAR_POKOK;
+                    row.NominalPokokBayar = NOMINAL_POKOK_BAYAR;
+                    row.AkunPokokBayar = AKUN_POKOK_BAYAR;
+                    row.JenisPokokBayar = JENIS_POKOK_BAYAR;
+                    row.ObjekPokokBayar = OBJEK_POKOK_BAYAR;
+                    row.RincianPokokBayar = RINCIAN_POKOK_BAYAR;
+                    row.SubRincianPokokBayar = SUB_RINCIAN_POKOK_BAYAR;
+                }
+
+                if (nominalSanksiBayar > 0 || nominalLainnya > 0 || nominalAdministrasi > 0)
+                {
+                    DateTime TGL_BAYAR_SANKSI = tanggalBayarTerakhir;
+                    decimal NOMINAL_SANKSI_BAYAR = (nominalSanksiBayar + nominalLainnya + nominalAdministrasi);
+                    string AKUN_SANKSI_BAYAR = akunSanksi;
+                    string KELOMPOK_SANKSI_BAYAR = kelompokSanksi;
+                    string JENIS_SANKSI_BAYAR = jenisSanksi;
+                    string OBJEK_SANKSI_BAYAR = objekSanksi;
+                    string RINCIAN_SANKSI_BAYAR = rincianSanksi;
+                    string SUB_RINCIAN_SANKSI_BAYAR = subrincianSanksi;
+
+                    row.TglBayarSanksi = TGL_BAYAR_SANKSI;
+                    row.NominalSanksiBayar = NOMINAL_SANKSI_BAYAR;
+                    row.AkunSanksiBayar = AKUN_SANKSI_BAYAR;
+                    row.KelompokSanksiBayar = KELOMPOK_SANKSI_BAYAR;
+                    row.JenisSanksiBayar = JENIS_SANKSI_BAYAR;
+                    row.ObjekSanksiBayar = OBJEK_SANKSI_BAYAR;
+                    row.RincianSanksiBayar = RINCIAN_SANKSI_BAYAR;
+                    row.SubRincianSanksiBayar = SUB_RINCIAN_SANKSI_BAYAR;
+                }
+
+                Console.WriteLine($"DB_MON_PPJ (SSPD): {row.TahunPajakKetetapan}-{row.MasaPajakKetetapan}-{row.Nop}-{row.SeqPajakKetetapan}-{row.NominalPokokBayar}");
+            }
+        }
+        private void GetRealisasiPhr(ref DbMonPpj row)
+        {
             //PEMBAYARAN PHR
             var _contMonitoringDb = DBClass.GetMonitoringDbContext();
 
             Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR)");
-            var sql1 = @"
-                SELECT 	REPLACE(FK_NOP, '.', '') NOP,
+            var sql = @"
+               SELECT 	REPLACE(FK_NOP, '.', '') NOP,
                         TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,
                         BULAN_PAJAK,
                         TGL_SETORAN TRANSACTION_DATE,
@@ -970,136 +943,114 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                         1 SEQ_KETETAPAN
                 FROM VW_SIMPADA_SSPD@LIHATHPPSERVER
                 WHERE NAMA_PAJAK_DAERAH='PPJ' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
+                    AND  REPLACE(FK_NOP, '.', '') = :NOP AND A.TAHUN = :TAHUN AND A.MASA = :MASA AND 
             ";
-            var sspdList = await _contMonitoringDb.Set<SSPDPbjt>().FromSqlRaw(sql1).ToListAsync();
 
-            if (sspdList.Count > 0)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR)");
-                Console.ResetColor();
-            }
+            var pembayaranSspdList = _contMonitoringDb.Set<SSPDPbjt>()
+                 .FromSqlRaw(sql, new[] {
+                        new OracleParameter("NOP", row.Nop),
+                        new OracleParameter("TAHUN", row.TahunPajakKetetapan),
+                        new OracleParameter("MASA", row.MasaPajakKetetapan),
+                }).ToList();
+            Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] OP (SSPD) (PHR)");
 
-            for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
+            if (pembayaranSspdList != null)
             {
-                for (int bln = 1; bln <= 12; bln++)
+
+                if (pembayaranSspdList.Count > 0)
                 {
-                    var opList = _contMonPd.DbMonPpjs.Where(x => x.TahunPajakKetetapan == thn && x.MasaPajakKetetapan == bln).ToList();
+                    DateTime tanggalBayarTerakhir = pembayaranSspdList.Max(x => (DateTime)x.TRANSACTION_DATE);
+                    int maxTahunBayar = pembayaranSspdList.Max(x => ((DateTime)x.TRANSACTION_DATE).Year);
+                    decimal nominalPokokBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_POKOK);
+                    decimal nominalSanksiBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_SANKSI);
+                    decimal nominalAdministrasi = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_ADMINISTRASI);
+                    decimal nominalLainnya = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_LAINNYA);
+                    decimal pengurangPokok = pembayaranSspdList.Sum(x => (decimal)x.PENGURANG_POKOK);
+                    decimal pengurangSanksi = pembayaranSspdList.Sum(x => (decimal)x.PENGURANG_SANSKSI);
 
-                    foreach (var op in opList)
+                    string akunBayar = "-";
+                    string kelompokBayar = "-";
+                    string jenisBayar = "-";
+                    string objekBayar = "-";
+                    string rincianBayar = "-";
+                    string subrincianBayar = "-";
+
+                    var getAkun = GetDbAkun(maxTahunBayar, 6, 56);
+                    if (getAkun != null)
                     {
-                        Console.WriteLine($"{DateTime.Now} [PROCESS] OP (SSPD) (PHR) {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
-
-                        if (sspdList != null)
-                        {
-                            var pembayaranSspdList = sspdList.Where(x => x.TAHUN_PAJAK == thn && x.BULAN_PAJAK == bln && x.NOP == op.Nop).ToList();
-
-                            if (pembayaranSspdList.Count > 0)
-                            {
-                                DateTime tanggalBayarTerakhir = pembayaranSspdList.Max(x => (DateTime)x.TRANSACTION_DATE);
-                                int maxTahunBayar = pembayaranSspdList.Max(x => ((DateTime)x.TRANSACTION_DATE).Year);
-                                decimal nominalPokokBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_POKOK);
-                                decimal nominalSanksiBayar = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_SANKSI);
-                                decimal nominalAdministrasi = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_ADMINISTRASI);
-                                decimal nominalLainnya = pembayaranSspdList.Sum(x => (decimal)x.NOMINAL_LAINNYA);
-                                decimal pengurangPokok = pembayaranSspdList.Sum(x => (decimal)x.PENGURANG_POKOK);
-                                decimal pengurangSanksi = pembayaranSspdList.Sum(x => (decimal)x.PENGURANG_SANSKSI);
-
-                                string akunBayar = "-";
-                                string kelompokBayar = "-";
-                                string jenisBayar = "-";
-                                string objekBayar = "-";
-                                string rincianBayar = "-";
-                                string subrincianBayar = "-";
-
-                                var getAkun = GetDbAkun(maxTahunBayar, 6, 56);
-                                if (getAkun != null)
-                                {
-                                    akunBayar = getAkun.Akun;
-                                    kelompokBayar = getAkun.Kelompok;
-                                    jenisBayar = getAkun.Jenis;
-                                    objekBayar = getAkun.Objek;
-                                    rincianBayar = getAkun.Rincian;
-                                    subrincianBayar = getAkun.SubRincian;
-                                }
-
-                                string akunSanksi = "-";
-                                string kelompokSanksi = "-";
-                                string jenisSanksi = "-";
-                                string objekSanksi = "-";
-                                string rincianSanksi = "-";
-                                string subrincianSanksi = "-";
-
-                                var getAkunSanksi = GetDbAkunSanksi(maxTahunBayar, 6, 56);
-                                if (getAkunSanksi != null)
-                                {
-                                    akunSanksi = getAkunSanksi.Akun;
-                                    kelompokSanksi = getAkunSanksi.Kelompok;
-                                    jenisSanksi = getAkunSanksi.Jenis;
-                                    objekSanksi = getAkunSanksi.Objek;
-                                    rincianSanksi = getAkunSanksi.Rincian;
-                                    subrincianSanksi = getAkunSanksi.SubRincian;
-                                }
-
-                                if (nominalPokokBayar > 0)
-                                {
-                                    DateTime TGL_BAYAR_POKOK = tanggalBayarTerakhir;
-                                    decimal NOMINAL_POKOK_BAYAR = nominalPokokBayar;
-                                    string AKUN_POKOK_BAYAR = akunBayar;
-                                    string KELOMPOK_POKOK_BAYAR = kelompokBayar;
-                                    string JENIS_POKOK_BAYAR = jenisBayar;
-                                    string OBJEK_POKOK_BAYAR = objekBayar;
-                                    string RINCIAN_POKOK_BAYAR = rincianBayar;
-                                    string SUB_RINCIAN_POKOK_BAYAR = subrincianBayar;
-
-                                    op.TglBayarPokok = TGL_BAYAR_POKOK;
-                                    op.NominalPokokBayar = NOMINAL_POKOK_BAYAR;
-                                    op.AkunPokokBayar = AKUN_POKOK_BAYAR;
-                                    op.JenisPokokBayar = JENIS_POKOK_BAYAR;
-                                    op.ObjekPokokBayar = OBJEK_POKOK_BAYAR;
-                                    op.RincianPokokBayar = RINCIAN_POKOK_BAYAR;
-                                    op.SubRincianPokokBayar = SUB_RINCIAN_POKOK_BAYAR;
-                                }
-
-                                if (nominalSanksiBayar > 0 || nominalLainnya > 0 || nominalAdministrasi > 0)
-                                {
-                                    DateTime TGL_BAYAR_SANKSI = tanggalBayarTerakhir;
-                                    decimal NOMINAL_SANKSI_BAYAR = (nominalSanksiBayar + nominalLainnya + nominalAdministrasi);
-                                    string AKUN_SANKSI_BAYAR = akunSanksi;
-                                    string KELOMPOK_SANKSI_BAYAR = kelompokSanksi;
-                                    string JENIS_SANKSI_BAYAR = jenisSanksi;
-                                    string OBJEK_SANKSI_BAYAR = objekSanksi;
-                                    string RINCIAN_SANKSI_BAYAR = rincianSanksi;
-                                    string SUB_RINCIAN_SANKSI_BAYAR = subrincianSanksi;
-
-                                    op.TglBayarSanksi = TGL_BAYAR_SANKSI;
-                                    op.NominalSanksiBayar = NOMINAL_SANKSI_BAYAR;
-                                    op.AkunSanksiBayar = AKUN_SANKSI_BAYAR;
-                                    op.KelompokSanksiBayar = KELOMPOK_SANKSI_BAYAR;
-                                    op.JenisSanksiBayar = JENIS_SANKSI_BAYAR;
-                                    op.ObjekSanksiBayar = OBJEK_SANKSI_BAYAR;
-                                    op.RincianSanksiBayar = RINCIAN_SANKSI_BAYAR;
-                                    op.SubRincianSanksiBayar = SUB_RINCIAN_SANKSI_BAYAR;
-                                }
-                                _contMonPd.SaveChanges();
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"{DateTime.Now} [SAVED] DB_MON_LISTRIK (SSPD) (PHR): {thn}-{bln}-{op.Nop}-{op.SeqPajakKetetapan}");
-                                Console.ResetColor();
-                            }
-                        }
+                        akunBayar = getAkun.Akun;
+                        kelompokBayar = getAkun.Kelompok;
+                        jenisBayar = getAkun.Jenis;
+                        objekBayar = getAkun.Objek;
+                        rincianBayar = getAkun.Rincian;
+                        subrincianBayar = getAkun.SubRincian;
                     }
+
+                    string akunSanksi = "-";
+                    string kelompokSanksi = "-";
+                    string jenisSanksi = "-";
+                    string objekSanksi = "-";
+                    string rincianSanksi = "-";
+                    string subrincianSanksi = "-";
+
+                    var getAkunSanksi = GetDbAkunSanksi(maxTahunBayar, 6, 56);
+                    if (getAkunSanksi != null)
+                    {
+                        akunSanksi = getAkunSanksi.Akun;
+                        kelompokSanksi = getAkunSanksi.Kelompok;
+                        jenisSanksi = getAkunSanksi.Jenis;
+                        objekSanksi = getAkunSanksi.Objek;
+                        rincianSanksi = getAkunSanksi.Rincian;
+                        subrincianSanksi = getAkunSanksi.SubRincian;
+                    }
+
+                    if (nominalPokokBayar > 0)
+                    {
+                        DateTime TGL_BAYAR_POKOK = tanggalBayarTerakhir;
+                        decimal NOMINAL_POKOK_BAYAR = nominalPokokBayar;
+                        string AKUN_POKOK_BAYAR = akunBayar;
+                        string KELOMPOK_POKOK_BAYAR = kelompokBayar;
+                        string JENIS_POKOK_BAYAR = jenisBayar;
+                        string OBJEK_POKOK_BAYAR = objekBayar;
+                        string RINCIAN_POKOK_BAYAR = rincianBayar;
+                        string SUB_RINCIAN_POKOK_BAYAR = subrincianBayar;
+
+                        row.TglBayarPokok = TGL_BAYAR_POKOK;
+                        row.NominalPokokBayar = NOMINAL_POKOK_BAYAR;
+                        row.AkunPokokBayar = AKUN_POKOK_BAYAR;
+                        row.JenisPokokBayar = JENIS_POKOK_BAYAR;
+                        row.ObjekPokokBayar = OBJEK_POKOK_BAYAR;
+                        row.RincianPokokBayar = RINCIAN_POKOK_BAYAR;
+                        row.SubRincianPokokBayar = SUB_RINCIAN_POKOK_BAYAR;
+                    }
+
+                    if (nominalSanksiBayar > 0 || nominalLainnya > 0 || nominalAdministrasi > 0)
+                    {
+                        DateTime TGL_BAYAR_SANKSI = tanggalBayarTerakhir;
+                        decimal NOMINAL_SANKSI_BAYAR = (nominalSanksiBayar + nominalLainnya + nominalAdministrasi);
+                        string AKUN_SANKSI_BAYAR = akunSanksi;
+                        string KELOMPOK_SANKSI_BAYAR = kelompokSanksi;
+                        string JENIS_SANKSI_BAYAR = jenisSanksi;
+                        string OBJEK_SANKSI_BAYAR = objekSanksi;
+                        string RINCIAN_SANKSI_BAYAR = rincianSanksi;
+                        string SUB_RINCIAN_SANKSI_BAYAR = subrincianSanksi;
+
+                        row.TglBayarSanksi = TGL_BAYAR_SANKSI;
+                        row.NominalSanksiBayar = NOMINAL_SANKSI_BAYAR;
+                        row.AkunSanksiBayar = AKUN_SANKSI_BAYAR;
+                        row.KelompokSanksiBayar = KELOMPOK_SANKSI_BAYAR;
+                        row.JenisSanksiBayar = JENIS_SANKSI_BAYAR;
+                        row.ObjekSanksiBayar = OBJEK_SANKSI_BAYAR;
+                        row.RincianSanksiBayar = RINCIAN_SANKSI_BAYAR;
+                        row.SubRincianSanksiBayar = SUB_RINCIAN_SANKSI_BAYAR;
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{DateTime.Now} [SAVED] DB_MON_PPJ (SSPD) (PHR): {row.TahunPajakKetetapan}-{row.MasaPajakKetetapan}-{row.Nop}-{row.SeqPajakKetetapan}");
+                    Console.ResetColor();
                 }
             }
-
-
-            MailHelper.SendMail(
-            false,
-            "DONE PPJ WS",
-            $@"PPJ WS FINISHED",
-            null
-            );
         }
-
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
