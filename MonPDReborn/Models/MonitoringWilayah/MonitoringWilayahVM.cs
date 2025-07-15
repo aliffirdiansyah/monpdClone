@@ -107,11 +107,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
         public class DetailModal
         {
-            public List<DataModal> DataModalList { get; set; } = new();
+            public DataModal DataModalRow { get; set; } = new();
             public DetailModal() { }
-            public DetailModal(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
+            public DetailModal(DateTime tanggal, EnumFactory.EUPTB wilayah, EnumFactory.EPajak jenisPajak)
             {
-                DataModalList = Method.GetDataModalList(wilayah, tahun, bulan, jenisPajak);
+                DataModalRow = Method.GetDataModalRow(wilayah, tanggal, jenisPajak);
             }
         }
         public class Method
@@ -2461,10 +2461,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2512,10 +2514,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2597,10 +2601,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2648,10 +2654,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2733,10 +2741,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2784,10 +2794,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2869,10 +2881,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2920,10 +2934,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -3006,10 +3022,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -3057,10 +3075,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -3143,10 +3163,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -3194,10 +3216,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -3282,10 +3306,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -3333,10 +3359,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 DataHarian result = new DataHarian
                                 {
                                     Wilayah = $"UPTB {(int)item.Uptb}",
+                                    EnumWilayah = (int)item.Uptb,
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
                                     JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -3599,6 +3627,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
                                 Wilayah = $"UPTB {(int)item.Uptb}",
                                 EnumWilayah = (int)item.Uptb,
+                                EnumPajak = (int)item.PajakId,
                                 Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                 Tahun = (int)item.Bulan,
                                 Bulan = (int)item.Tahun,
@@ -3613,9 +3642,9 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 }
                 return ret;
             }
-            public static List<DataModal> GetDataModalList(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
+            public static DataModal GetDataModalRow(EnumFactory.EUPTB wilayah, DateTime tanggal, EnumFactory.EPajak jenisPajak)
             {
-                var ret = new List<DataModal>();
+                var ret = new DataModal();
                 var context = DBClass.GetContext();
 
                 switch (jenisPajak)
@@ -3624,7 +3653,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         break;
                     case EnumFactory.EPajak.MakananMinuman:
                         var dataRestoWilayah = context.DbOpRestos
-                            .Where(x => x.TahunBuku == tahun)
+                            .Where(x => x.TahunBuku == tanggal.Year)
                             .Select(x => new
                             {
                                 x.Nop,
@@ -3633,26 +3662,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             })
                             .ToList();
 
-                        var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
-                            .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                            .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
-                            .Select(g => new
-                            {
-                                Uptb = g.Key.Uptb,
-                                Tgl = g.Key.Tgl,
-                                Bulan = g.Key.Bulan,
-                                Tahun = g.Key.TahunBuku,
-                                PajakId = g.Key.PajakId,
-                                TotalTarget = g.Sum(x => x.Target)
-                            })
-                            .ToList();
-
                         var dataRealisasiWilayahQuery = context.DbMonRestos
                             .Where(x =>
-                                x.TahunBuku == tahun &&
+                                x.TahunBuku == tanggal.Year &&
                                 x.TglBayarPokok.HasValue &&
-                                x.TglBayarPokok.Value.Year == tahun &&
-                                x.TglBayarPokok.Value.Month <= bulan
+                                x.TglBayarPokok.Value.Year == tanggal.Year &&
+                                x.TglBayarPokok.Value.Month <= tanggal.Month
                             )
                             .GroupBy(x => new { x.Nop, x.TglBayarPokok, x.PajakId })
                             .Select(x => new
@@ -3668,45 +3683,37 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             ? null
                             : (int?)wilayah;
 
-                        var dataTargetFiltered = filterWilayah == null
-                            ? dataTargetWilayahResto
-                            : dataTargetWilayahResto.Where(x => x.Uptb == (decimal)filterWilayah).ToList();
-
-                        foreach (var item in dataTargetFiltered)
-                        {
-                            var nopsUptb = dataRestoWilayah
-                                .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                        var nopsUptb = dataRestoWilayah
+                                .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
                                 .Select(w => w.Nop)
                                 .ToList();
 
-                            var realisasiDetail = dataRealisasiWilayahQuery
-                                .Where(x =>
-                                    x.TglBayarPokok.Value.Month == item.Bulan &&
-                                    x.TglBayarPokok.Value.Day == item.Tgl &&
-                                    x.TglBayarPokok.Value.Year == item.Tahun &&
-                                    x.PajakId == item.PajakId &&
-                                    nopsUptb.Contains(x.Nop)
-                                )
-                                .ToList();
+                        var realisasiDetail = dataRealisasiWilayahQuery
+                            .Where(x =>
+                                x.TglBayarPokok.Value.Month == tanggal.Month &&
+                                x.TglBayarPokok.Value.Day == tanggal.Day &&
+                                x.TglBayarPokok.Value.Year == tanggal.Year &&
+                                x.PajakId == (int)jenisPajak &&
+                                nopsUptb.Contains(x.Nop)
+                            )
+                            .ToList();
 
-                            var modal = new DataModal
+                        ret = new DataModal
+                        {
+                            Wilayah = $"UPTB {(int)wilayah}",
+                            EnumWilayah = (int)wilayah,
+                            Tanggal = tanggal,
+                            Tahun = (int)tanggal.Year,
+                            Bulan = (int)tanggal.Month,
+                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
+                            Detail = realisasiDetail.Select(r => new DataDetailModal
                             {
-                                Wilayah = $"UPTB {(int)item.Uptb}",
-                                EnumWilayah = (int)item.Uptb,
-                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                Tahun = (int)item.Tahun,
-                                Bulan = (int)item.Bulan,
-                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                Detail = realisasiDetail.Select(r => new DataDetailModal
-                                {
-                                    NOP = r.Nop,
-                                    Realisasi = r.Realisasi ?? 0
-                                }).ToList()
-                            };
+                                NOP = r.Nop,
+                                Realisasi = r.Realisasi ?? 0
+                            }).ToList()
+                        };
 
-                            // 👉 Tambahkan ke hasil
-                            ret.Add(modal);
-                        }
+
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         break;
@@ -3934,6 +3941,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
         {
             public string Wilayah { get; set; } = null!;
             public int EnumWilayah { get; set; }
+            public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public DateTime Tanggal { get; set; }
             public int Tahun { get; set; }
