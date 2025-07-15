@@ -1,0 +1,51 @@
+﻿@model MonPDReborn.Models.StrukPBJT.StrukPBJTVM.Show
+
+@if (!Model.DataRekapStrukList.Any())
+{
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class=" ri-alert-fill  me-2"></i>
+        <div>
+            <strong>Data Tidak Ditemukan</strong><br />
+            Nomor struk tidak ditemukan dalam sistem. Pastikan nomor struk yang Anda masukkan sudah benar.
+        </div>
+    </div>
+}
+else
+{
+    <h4 class="card-title fs-16 mb-3 mt-2">
+        Informasi Transaksi Ditemukan
+    </h4>
+    <div class="table-responsive">
+        @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.StrukPBJT.StrukPBJTVM.RekapStruk>()
+            .ID("rekapStrukGrid")
+            .DataSource(Model.DataRekapStrukList)
+            .KeyExpr("NoStruk")
+            .ShowBorders(true)
+            .ShowColumnHeaders(true)
+            .ShowColumnLines(true)
+            .ShowRowLines(true)
+            .AllowColumnResizing(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .Paging(p => p.PageSize(10))
+            .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+            )
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.NamaObjek).Caption("Nama Objek");
+                columns.AddFor(m => m.AlamatObjek).Caption("Alamat Objek");
+                columns.AddFor(m => m.NilaiTransaksi).Caption("Nilai Transaksi");
+                columns.AddFor(m => m.Status).Caption("Status");
+            })
+
+            )
+</div>
+}
+
+
+
