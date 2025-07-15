@@ -1,0 +1,140 @@
+﻿@model MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetail
+
+<div class="table-responsive">
+    @if (Model.DataRestoranList != null)
+    {
+        <h4>Detail PBJT Makanan & Minuman - @Model.DataRestoranList.FirstOrDefault()?.Tahun</h4>
+        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailRestoran>()
+            .ID("gridRestoran")
+            .DataSource(Model.DataRestoranList)
+            .KeyExpr("NOP")
+            .ShowBorders(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .SearchPanel(sp => sp
+                .Visible(true)
+                .Placeholder("Cari...")
+                .Width(300)
+            )
+            .Paging(p => p.PageSize(10))
+            .Pager(pg => {
+                pg.ShowPageSizeSelector(true);
+                pg.AllowedPageSizes(new[] { 10, 20, 50 });
+                pg.ShowInfo(true);
+            })
+            .Columns(columns => {
+                columns.AddFor(m => m.Hari)
+                    .Caption("Hari")
+                    .Format("dddd");
+                columns.AddFor(m => m.Tgl)
+                    .Caption("Tanggal")
+                    .Format("dd/MM/yyyy");
+                columns.AddFor(m => m.NOP)
+                    .Caption("NOP");
+                columns.AddFor(m => m.ObjekPajak)
+                    .Caption("Objek Pajak");
+                columns.AddFor(m => m.Alamat)
+                    .Caption("Alamat");
+                columns.AddFor(m => m.JmlMeja)
+                    .Caption("Jml Meja");
+                columns.AddFor(m => m.JmlKursi)
+                    .Caption("Jml Kursi");
+                columns.AddFor(m => m.JmlPengunjung)
+                    .Caption("Jml Pengunjung");
+                columns.AddFor(m => m.Bill)
+                    .Caption("Bill")
+                    .Format("#,##0");
+                columns.AddFor(m => m.RataPengunjung)
+                    .Caption("Rata Pengunjung");
+                columns.AddFor(m => m.RataBill)
+                    .Caption("Rata Bill")
+                    .Format("#,##0");
+            })
+        )
+    }
+    else if (Model.DataParkirList != null)
+    {
+        <h4>Detail PBJT Parkir - @Model.DataParkirList.FirstOrDefault()?.Tahun</h4>
+        @(
+            Html.DevExtreme().DataGrid < MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailParkir>()
+             .ID("gridParkir")
+            .DataSource(Model.DataParkirList)
+            .KeyExpr("NOP")
+            .ShowBorders(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .SearchPanel(sp => sp
+                .Visible(true)
+                .Placeholder("Cari...")
+                .Width(300)
+            )
+            .Paging(p => p.PageSize(10))
+            .Pager(pg => {
+                pg.ShowPageSizeSelector(true);
+                pg.AllowedPageSizes(new[] { 10, 20, 50 });
+                pg.ShowInfo(true);
+            })
+            .Columns(columns => {
+                columns.AddFor(m => m.Hari)
+                    .Caption("Hari")
+                    .Format("dddd");
+                columns.AddFor(m => m.Tgl)
+                    .Caption("Tanggal")
+                    .Format("dd/MM/yyyy");
+                columns.AddFor(m => m.NOP)
+                    .Caption("NOP");
+                columns.AddFor(m => m.ObjekPajak)
+                    .Caption("Objek Pajak");
+                columns.AddFor(m => m.Alamat)
+                    .Caption("Alamat");
+                columns.AddFor(m => m.JenisBiaya)
+                    .Caption("Jenis Biaya");
+                columns.AddFor(m => m.KapasitasMotor)
+                    .Caption("Kapasitas Motor");
+                columns.AddFor(m => m.KapasitasMobil)
+                    .Caption("Kapasitas Mobil");
+                columns.AddFor(m => m.JmlMotor)
+                    .Caption("Jml Motor");
+                columns.AddFor(m => m.JmlMobil)
+                    .Caption("Jml Mobil");
+                columns.AddFor(m => m.JmlMobilBox)
+                    .Caption("Jml Mobil Box");
+                columns.AddFor(m => m.JmlTruk)
+                    .Caption("Jml Truk");
+                columns.AddFor(m => m.JmlTrailer)
+                    .Caption("Jml Trailer");
+                columns.AddFor(m => m.EstMotor)
+                    .Caption("Est Motor");
+                columns.AddFor(m => m.EstMobil)
+                    .Caption("Est Mobil");
+                columns.AddFor(m => m.EstMobilBox)
+                    .Caption("Est Mobil Box");
+                columns.AddFor(m => m.EstTruk)
+                    .Caption("Est Truk");
+                columns.AddFor(m => m.EstTrailer)
+                    .Caption("Est Trailer");
+                columns.AddFor(m => m.TarifMotor)
+                    .Caption("Tarif Motor")
+                    .Format("#,##0");
+                columns.AddFor(m => m.TarifMobil)
+                    .Caption("Tarif Mobil")
+                    .Format("#,##0");
+                columns.AddFor(m => m.TarifMobilBox)
+                    .Caption("Tarif Mobil Box")
+                    .Format("#,##0");
+                columns.AddFor(m => m.TarifTruk)
+                    .Caption("Tarif Truk")
+                    .Format("#,##0");
+                columns.AddFor(m => m.TarifTrailer)
+                    .Caption("Tarif Trailer")
+                    .Format("#,##0");
+            })
+        )
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Data tidak tersedia.
+        </div>
+    }
+</div>

@@ -88,5 +88,26 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+
+        public IActionResult SubDetail(string jenisPajak, string nop)
+        {
+            try
+            {
+                var model = new PendataanObjekPajakVM.SubDetail(jenisPajak, nop);
+                return PartialView($"{URLView}_SubDetail", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }

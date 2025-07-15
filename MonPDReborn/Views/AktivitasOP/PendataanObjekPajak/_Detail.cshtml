@@ -26,6 +26,14 @@
         columns.AddFor(m => m.PajakBulanan).Caption("Pajak Bulanan").Format("#,##0");
         columns.AddFor(m => m.AvgRealisasi).Caption("Rata-Rata Realisasi").Format("#,##0");
         columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
+        columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b => {
+                b.Add()
+                .Text("Detail")
+                .Icon("search")
+                .OnClick("onDetailClick");
+            });
     })
 )
 </div>
