@@ -168,6 +168,7 @@ UNIT_BERKAS,
 STATUS_VER, 
 TGL_VER, 
 USER_VER,
+TGL_OP_TUTUP,
 NOR,
 2025 TAHUN_BUKU,
 0 SEQ
@@ -251,6 +252,8 @@ FROM (
 	STATUS_VER,
 	TGL_VER,
 	USER_VER,
+    TGL_AKHIR_BERLAKU AS TGL_OP_TUTUP,
+    60 KATEGORI_ID,
 	NOR
 	FROM VWTABELPERMOHONAN@lihatreklame
 	WHERE TGL_PERMOHONAN >= SYSDATE - INTERVAL '4' YEAR
@@ -334,6 +337,8 @@ FROM (
 	0 STATUS_VER,
 	NULL TGL_VER,
 	NULL USER_VER,
+    TGL_AKHIR_BERLAKU AS TGL_OP_TUTUP,
+    59 KATEGORI_ID,
 	CAST(NULL AS VARCHAR(500)) AS NOR
 	FROM VWTABELPERMOHONANINS@lihatreklame
 	WHERE TGL_PERMOHONAN >= SYSDATE - INTERVAL '4' YEAR
@@ -417,6 +422,8 @@ FROM (
 	NULL STATUS_VER,
 	CAST(NULL AS DATE) TGL_VER,
 	NULL USER_VER,
+    TGL_AKHIR_BERLAKU AS TGL_OP_TUTUP,
+    61 KATEGORI_ID,
 	NOR
 	FROM VWPERMOHONANSIMRLAMA1@lihatreklame
 	WHERE TGL_PERMOHONAN >= SYSDATE - INTERVAL '4' YEAR
@@ -512,6 +519,8 @@ FROM (
                         newRow.TglVer = item.TglVer;
                         newRow.UserVer = item.UserVer;
                         newRow.TahunBuku = item.TglMulaiBerlaku.HasValue ? item.TglMulaiBerlaku.Value.Year : DateTime.Now.Year;
+                        newRow.TglOpTutup = item.TglOpTutup;
+                        newRow.KategoriId = item.KategoriId;
 
                         _contMonPd.DbOpReklames.Add(newRow);
                         Console.ForegroundColor = ConsoleColor.White;
