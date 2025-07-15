@@ -42,7 +42,8 @@
                     .Caption("Realisasi Sampai Dengan Tanggal").Format("#,##0");
 
                 columns.AddFor(m => m.Jumlah)
-                    .Caption("Jumlah");
+            .Caption("Jumlah").Format("#,##0");
+
                 columns.Add()
                     .Caption("%")
                     .CellTemplate(@<text>
@@ -58,6 +59,40 @@
                 </div>
             </text>);
 
+            })
+            .Summary(s => {
+                s.TotalItems(items => {
+                    items.AddFor(m => m.JenisPajak)
+                        .SummaryType(SummaryType.Sum)
+                        .DisplayFormat("Total:");
+
+                    items.AddFor(m => m.Target)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("Rp {0}");
+
+                    items.AddFor(m => m.RealisasiBulanLalu)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("Rp {0}");
+
+                    items.AddFor(m => m.RealisasiBulanIni)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("Rp {0}");
+
+                    items.AddFor(m => m.RealisasiHari)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("Rp {0}");
+
+                    items.AddFor(m => m.Jumlah)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("Rp {0}");
+
+                   
+                });
             })
         )
 </div>
