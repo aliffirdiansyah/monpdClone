@@ -1,4 +1,8 @@
-﻿namespace MonPDReborn.Models.AktivitasOP
+﻿using MonPDLib;
+using MonPDLib.General;
+using System.Linq;
+
+namespace MonPDReborn.Models.AktivitasOP
 {
     public class PendataanObjekPajakVM
     {
@@ -15,12 +19,9 @@
         public class Show
         {
             public List<DataPendataan> DataPendataanList { get; set; } = new();
-
-            public Show() { }
-
-            public Show(string keyword)
+            public Show()
             {
-                DataPendataanList = Method.GetFilteredData(keyword);
+                DataPendataanList = Method.GetDataPendataanList();
             }
         }
 
@@ -30,7 +31,7 @@
 
             public Detail() { }
 
-            public Detail(string jenisPajak, int tahun)
+            public Detail(EnumFactory.EPajak jenisPajak, int tahun)
             {
                 DataDetailList = Method.GetDetailByJenisPajakAndTahun(jenisPajak, tahun);
             }
@@ -41,13 +42,13 @@
             public List<SubDetailRestoran> DataRestoranList { get; set; } = new();
             public List<SubDetailParkir> DataParkirList { get; set; } = new();
             public SubDetail() { }
-            public SubDetail(string jenisPajak, string nop)
+            public SubDetail(EnumFactory.EPajak jenisPajak, string nop)
             {
-                if (jenisPajak.Equals("PBJT Makanan & Minuman", StringComparison.OrdinalIgnoreCase))
+                if (jenisPajak == EnumFactory.EPajak.MakananMinuman)
                 {
                     DataRestoranList = Method.GetSubDetailRestoran(jenisPajak, nop);
                 }
-                else if (jenisPajak.Equals("PBJT Parkir", StringComparison.OrdinalIgnoreCase))
+                else if (jenisPajak == EnumFactory.EPajak.JasaParkir)
                 {
                     DataParkirList = Method.GetSubDetailParkir(jenisPajak, nop);
                 }
@@ -57,16 +58,19 @@
         public class DataPendataan
         {
             public int Tahun { get; set; }
+            public int EnumPajak { get; set; }
+            public string Nop { get; set; } = string.Empty;
             public string JenisPajak { get; set; } = string.Empty;
-            public int JumlahOp { get; set; }
-            public int Potensi { get; set; }
-            public int TotalRealisasi { get; set; }
-            public int Selisih { get; set; }
+            public decimal JumlahOp { get; set; }
+            public decimal Potensi { get; set; }
+            public decimal TotalRealisasi { get; set; }
+            public decimal Selisih { get; set; }
         }
 
         public class DataDetailPendataan
         {
             public int Tahun { get; set; }
+            public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = string.Empty;
             public string NOP { get; set; } = string.Empty;
             public string ObjekPajak { get; set; } = string.Empty;
@@ -91,39 +95,67 @@
 
         public static class Method
         {
-            public static List<DataPendataan> GetFilteredData(string keyword)
+            public static List<DataPendataan> GetDataPendataanList()
             {
-                var all = GetAllData();
+                var ret = new List<DataPendataan>();
+                var context = DBClass.GetContext();
 
-                if (string.IsNullOrWhiteSpace(keyword))
-                    return all;
-
-                return all
-                    .Where(x => x.JenisPajak.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                var restoDokNop = context.DbRekamRestorans.GroupBy(x => new { Nop = x.Nop }).Select(x => x.Key.Nop).ToList();
+                var restoRealisasi = context.DbMonRestos.Where(x => restoDokNop.Contains(x.Nop)).Sum(x => x.NominalPokokBayar);
+                var restoDok = context.DbRekamRestorans.GroupBy(x => new { Nop = x.Nop })
+                    .Select(x => new DataPendataan
+                    {
+                        Tahun = DateTime.Now.Year,
+                        EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
+                        Nop = x.Key.Nop,
+                        JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                        JumlahOp = x.Count(),
+                        Potensi = x.Sum(x => x.PajakBulan),
+                        TotalRealisasi = restoRealisasi ?? 0,
+                        Selisih = x.Sum(x => x.PajakBulan) - (restoRealisasi ?? 0)
+                    })
                     .ToList();
+
+                ret.AddRange(restoDok);
+
+                var parkirDokNop = context.DbRekamParkirs.GroupBy(x => new { Nop = x.Nop }).Select(x => x.Key.Nop).ToList();
+                var parkirRealisasi = context.DbMonRestos.Where(x => parkirDokNop.Contains(x.Nop)).Sum(x => x.NominalPokokBayar);
+                var parkirDok = context.DbRekamParkirs.GroupBy(x => new { Nop = x.Nop })
+                    .Select(x => new DataPendataan
+                    {
+                        Tahun = DateTime.Now.Year,
+                        EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
+                        Nop = x.Key.Nop,
+                        JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
+                        JumlahOp = x.Count(),
+                        Potensi = x.Sum(x => x.PajakBulan),
+                        TotalRealisasi = parkirRealisasi ?? 0,
+                        Selisih = x.Sum(x => x.PajakBulan) - (parkirRealisasi ?? 0)
+                    })
+                    .ToList();
+
+                ret.AddRange(parkirDok);
+
+                return ret;
             }
 
-            public static List<DataDetailPendataan> GetDetailByJenisPajakAndTahun(string jenisPajak, int tahun)
+            public static List<DataDetailPendataan> GetDetailByJenisPajakAndTahun(EnumFactory.EPajak jenisPajak, int tahun)
             {
-                var all = GetAllDetail();
+                var ret = new List<DataDetailPendataan>();
 
-                return all
-                    .Where(x => x.Tahun == tahun && x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                return ret;
             }
-            public static List<SubDetailRestoran> GetSubDetailRestoran(string jenisPajak, string nop)
+            public static List<SubDetailRestoran> GetSubDetailRestoran(EnumFactory.EPajak jenisPajak, string nop)
             {
-                var all = GetSubDetailRestoran();
-                return all
-                    .Where(x => x.NOP == nop && x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                var ret = new List<SubDetailRestoran>();
+
+                return ret;
             }
-            public static List<SubDetailParkir> GetSubDetailParkir(string jenisPajak, string nop)
+            public static List<SubDetailParkir> GetSubDetailParkir(EnumFactory.EPajak jenisPajak, string nop)
             {
-                var all = GetSubDetailParkir();
-                return all
-                    .Where(x => x.NOP == nop && x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                var ret = new List<SubDetailParkir>();
+
+                return ret;
             }
             private static List<SubDetailParkir> GetSubDetailParkir()
             {
@@ -264,7 +296,9 @@
             {
                 return new Dashboard
                 {
-                    TotalPengedokan = 50, JumlahObjek = 100, TotalRealisasi = 800000000
+                    TotalPengedokan = 50,
+                    JumlahObjek = 100,
+                    TotalRealisasi = 800000000
                 };
             }
         }
@@ -272,6 +306,7 @@
         public class SubDetailRestoran
         {
             public int Tahun { get; set; }
+            public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string ObjekPajak { get; set; } = null!;
@@ -289,6 +324,7 @@
         public class SubDetailParkir
         {
             public int Tahun { get; set; }
+            public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string ObjekPajak { get; set; } = null!;

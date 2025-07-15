@@ -55,5 +55,12 @@ namespace MonPDLib
             optionsBuilder.UseOracle(MonitoringDb, opt => opt.UseOracleSQLCompatibility("11"));
             return new MonitoringDbContext(optionsBuilder.Options);
         }
+
+        public class GetContext
+        {
+            public GetContext()
+            {
+            }
+        }
     }
 }
