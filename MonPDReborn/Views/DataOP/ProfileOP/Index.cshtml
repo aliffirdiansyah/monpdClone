@@ -187,7 +187,7 @@
                     onSeriesClick(enumPajak, kategori, tahun);
                 });
 
-            const span = $('<span>').text(cellInfo.value);
+                const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID') );
 
             const wrapper = $('<div>')
                 .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })

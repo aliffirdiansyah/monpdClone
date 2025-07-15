@@ -1,0 +1,164 @@
+﻿@model MonPDReborn.Models.Reklame.ReklameVM.Detail
+
+<div class="modal-header">
+    <h5 class="modal-title">Detail Reklame di @Model.NamaJalan</h5>
+    
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+</div>
+
+<div class="modal-body">
+    
+    <div class="mb-1">
+        <div class="row g-3 mb-1">
+            <div class="col-lg-6">
+                <div class="card shadow-sm rounded-xl">
+                    <div class="card-body">
+
+                        <h5 class="fw-bold fs-16 mb-3">Informasi Jalan</h5>
+
+                        <hr class="mt-0 mb-3">
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Nama Jalan:</p>
+                            <p class="fw-bold mb-0">Jl. Ahmad Yani</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Kecamatan:</p>
+                            <p class="fw-bold mb-0 text-end">Gayungan</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Panjang Jalan:</p>
+                            <p class="fw-bold mb-0 text-end">5.2 km</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Kategori Jalan:</p>
+                            <p class="fw-bold mb-0">Jalan Protokol</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm rounded-xl">
+                    <div class="card-body">
+
+                        <h5 class="fw-bold fs-16 mb-3">Ringkasan Reklame</h5>
+
+                        <hr class="mt-0 mb-3">
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Total Reklame:</p>
+                            <p class="fw-bold mb-0">42</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Insidentil:</p>
+                            <p class="fw-bold mb-0 text-end">12</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Permanen < 8m:</p>
+                            <p class="fw-bold mb-0 text-end">18</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-semibold mb-0">Permanen > 8m:</p>
+                            <p class="fw-bold mb-0">12</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-1">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-success text-white d-flex align-items-center">
+                        <i class="ri-map-pin-2-line fs-4 me-2"></i>
+                        <h5 class="mb-0 text-white">Detail Tunggakan per Jenis Pajak & Tahun Buku</h5>
+                    </div>
+                    <div class="card-body fw-semibold">
+                        <div class="table-responsive">
+                            @(
+                                Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.DataReklame>()
+                                .ID("reklameDetailGrid")
+                                .DataSource(Model.DataReklameDetailList) // Mengambil data dari Model
+                                .KeyExpr("TitikLokasi", "Penyelenggara") // Kombinasi kunci jika tidak ada yg unik
+                                .ShowBorders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .RowAlternationEnabled(true)
+                                .AllowColumnResizing(true)
+                                .ColumnAutoWidth(true)
+                                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false).Placeholder("Cari..."))
+                                .FilterRow(f => f.Visible(true))
+                                .HeaderFilter(h => h.Visible(true))
+                                .Paging(p => p.PageSize(10))
+                                .Pager(pager =>
+                                {
+                                    pager.ShowPageSizeSelector(true);
+                                    pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                                    pager.ShowInfo(true);
+                                })
+                                .Columns(columns => {
+                                    columns.AddFor(m => m.TitikLokasi).Caption("Titik Lokasi");
+                                    columns.AddFor(m => m.Jenis).Caption("Jenis")
+                                    .CellTemplate(@<text>
+                                        <%
+                                            var jenis = data.Jenis;
+                                            var colorClass = "badge "; // Kelas dasar
+
+                                            // Logika untuk memilih warna badge
+                                            if (jenis === "Permanen > 8m") {
+                                                colorClass += "bg-primary"; // Biru
+                                            } else if (jenis === "Permanen < 8m") {
+                                                colorClass += "bg-info text-dark"; // Biru muda
+                                            } else if (jenis === "Insidentil") {
+                                                colorClass += "bg-success"; // Hijau
+                                            } else {
+                                                colorClass += "bg-secondary"; // Warna default jika ada jenis lain
+                                            }
+                                        %>
+                                        <span class="<%= colorClass %>"><%= jenis %></span>
+                                    </text>);
+                                    columns.AddFor(m => m.Ukuran).Caption("Ukuran").Alignment(HorizontalAlignment.Center);
+                                    columns.AddFor(m => m.Penyelenggara).Caption("Penyelenggara");
+                                    columns.AddFor(m => m.MasaBerlaku).Caption("Masa Berlaku");
+                                })
+                                )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card h-100 bg-warning border-warning">
+                        <div class="card-body">
+                            <p class="mb-0">
+                                Data Wajib Pajak ini belum diverifikasi oleh petugas lapangan. Mohon lakukan validasi data terlebih dahulu.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 bg-success border-success">
+
+                        <div class="card-body">
+                            <p class="mb-0 text-white">
+                                Lakukan pemeriksaan objek pajak untuk validasi data dan potensi penerimaan pajak.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

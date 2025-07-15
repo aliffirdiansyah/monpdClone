@@ -100,32 +100,32 @@
             items.Add()
                 .Column("OPAwal")
                 .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("TutupSementara")
+                .Column("JmlOpTutupPermanen")
                 .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("TutupPermanen")
+                .Column("JmlOpBaru")
                 .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
             items.Add()
-                .Column("OPBaru")
+                .Column("JmlOpAkhir")
                 .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
                 .DisplayFormat("{0}")
                 .Alignment(HorizontalAlignment.Right);
 
-            items.Add()
-                .Column("Buka")
-                .SummaryType(SummaryType.Sum)
-                .DisplayFormat("{0}")
-                .Alignment(HorizontalAlignment.Right);
+           
 
         });
     })

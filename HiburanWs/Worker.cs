@@ -756,45 +756,53 @@ namespace HiburanWs
                 var opList = _contMonPd.DbOpHiburans.Where(x => x.TahunBuku == thn).ToList();
                 for (int bln = 1; bln <= 12; bln++)
                 {
-                    Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
-                    var sql = @"
-                            SELECT 	REPLACE(NOP, '.','') NOP,
-                              TAHUN,
-                              MASAPAJAK,
-                              1 SEQ,
-                              1 JENIS_KETETAPAN,
-                              TANGGALENTRY TGL_KETETAPAN,
-                              TANGGALJATUHTEMPO TGL_JATUH_TEMPO_BAYAR,
-                              0 NILAI_PENGURANG,
-                              NVL(PAJAK_TERUTANG, 0) POKOK
-                            FROM (
-                             select  NO_SPTPD, A.NPWPD, IDAYAT, 
-                                     TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
-                                     RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
-                                     A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
-                             from PHRH_USER.sptpd_new@LIHATHR A
-                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HIBURAN'
-                             WHERE STATUS=0
-                             UNION ALL
-                             select KD_BILL,NPWPD,KODEREKENING,
-                                     TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
-                                     PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
-                             from sptpd_payment@LIHATBONANG A
-                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HIBURAN'
-                             where STATUS_HAPUS=0
-                            ) A
-                            WHERE A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
-                        ";
-
-                    var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdHiburan>()
-                        .FromSqlRaw(sql, new[] {
-                                new OracleParameter("tahun", thn),
-                                new OracleParameter("bulan", bln)
-                        })
-                        .ToListAsync();
-                    Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN MONITORING DB {thn}-{bln}");
                     foreach (var op in opList)
                     {
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
+                        Console.ResetColor();
+
+                        var sql = @"
+                            SELECT  NOP,
+                                  TAHUN,
+                                  MASAPAJAK,
+                                  1 SEQ,
+                                  1 JENIS_KETETAPAN,
+                                  TANGGALENTRY TGL_KETETAPAN,
+                                  TANGGALJATUHTEMPO TGL_JATUH_TEMPO_BAYAR,
+                                  0 NILAI_PENGURANG,
+                                  NVL(PAJAK_TERUTANG, 0) POKOK
+                                FROM (
+                                 select  NO_SPTPD, A.NPWPD, IDAYAT, 
+                                         TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
+                                         RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
+                                         REPLACE(A.NOP, '.','') NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
+                                 from PHRH_USER.sptpd_new@LIHATHR A
+                                 JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HIBURAN'
+                                 WHERE STATUS=0 and REPLACE(A.NOP, '.','') = :nop AND TAHUN = :tahun AND MASAPAJAK = :bulan
+                                 UNION ALL
+                                 select KD_BILL,NPWPD,KODEREKENING,
+                                         TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
+                                         PROSEN,PAJAK,REPLACE(A.NOP, '.','') NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
+                                 from sptpd_payment@LIHATBONANG A
+                                 JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HIBURAN'
+                                 where STATUS_HAPUS=0 and REPLACE(A.NOP, '.','') = :nop AND TAHUNPAJAK = :tahun AND MASAPAJAK = :bulan
+                            ) A
+                        ";
+
+                        var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdHiburan>()
+                            .FromSqlRaw(sql, new[] {
+                                new OracleParameter("nop", op.Nop),
+                                new OracleParameter("tahun", thn),
+                                new OracleParameter("bulan", bln)
+                            })
+                            .ToListAsync();
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
+                        Console.ResetColor();
+
                         bool isOPTutup = false;
                         DateTime tglPenetapan = new DateTime(thn, bln, 1);
                         if (op.TglOpTutup.HasValue)
@@ -806,7 +814,7 @@ namespace HiburanWs
                         }
 
                         var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)op.KategoriId);
-                        foreach (var item in ketetapanSbyTaxOld.Where(x => x.NOP == op.Nop))
+                        foreach (var item in ketetapanSbyTaxOld)
                         {
                             string nop = item.NOP;
                             int tahunPajak = item.TAHUN;
