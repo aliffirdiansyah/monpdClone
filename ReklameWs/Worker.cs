@@ -88,6 +88,7 @@ namespace ReklameWs
             {
                 using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
                 {
+                    Console.WriteLine($"{DateTime.Now} DB_OP_REKLAME_MONITORINGDB");
                     var sql = @"
 SELECT 	NVL(NO_FORMULIR, '-') NO_FORMULIR, 
 		NO_PERUSAHAAN, 
@@ -171,6 +172,7 @@ USER_VER,
 TGL_OP_TUTUP,
 NOR,
 2025 TAHUN_BUKU,
+KATEGORI_ID,
 0 SEQ
 FROM (
 	SELECT NO_FORMULIR,
@@ -431,10 +433,14 @@ FROM (
 
                     ";
 
-                    var result = await _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToListAsync(); //822
-
+                    var result = await _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToListAsync();
+                    
                     var existingr = await _contMonPd.DbOpReklames.ToListAsync();
                     _contMonPd.DbOpReklames.RemoveRange(existingr);
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{DateTime.Now} DB_OP_REKLAME_MONITORINGDB");
+                    Console.ResetColor();
 
                     foreach (var item in result)
                     {

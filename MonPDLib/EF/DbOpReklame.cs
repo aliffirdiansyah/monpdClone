@@ -380,4 +380,12 @@ public partial class DbOpReklame
 
     [Column("KATEGORI_ID", TypeName = "NUMBER(38)")]
     public decimal? KategoriId { get; set; }
+
+    [Column("TGL_MULAI_BUKA_OP", TypeName = "DATE")]
+    public DateTime? TglMulaiBukaOp { get; set; }
+
+    [Column("KATEGORI_NAMA")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? KategoriNama { get; set; }
 }
