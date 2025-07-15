@@ -4,31 +4,47 @@
 
 <div class="table-responsive">
     @(
-Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.DataDetailModal>()
-    .ID("modalGrid")
-    .DataSource(Model.DataModalList)
-    .KeyExpr("NOP")  @* pakai NOP karena unik di sini *@
-    .ShowBorders(true)
-    .RowAlternationEnabled(true)
-    .ColumnAutoWidth(true)
-    .SearchPanel(sp => sp
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.DataDetailModal>()
+        .ID("modalGrid")
+        .DataSource(Model.DataModalRow.Detail)
+        .KeyExpr("NOP")  // pakai NOP karena unik
+        .ShowBorders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(sp => sp
         .Visible(true)
         .Placeholder("Cari NOP atau Realisasi...")
         .Width(300)
-    )
-    .Paging(p => p.PageSize(5))
-    .Pager(pg => {
-        pg.ShowPageSizeSelector(true);
-        pg.AllowedPageSizes(new[] { 5, 10, 20 });
-        pg.ShowInfo(true);
-    })
-    .Columns(columns => {
-        columns.AddFor(m => m.NOP)
+        )
+        .Paging(p => p.PageSize(5))
+        .Pager(pg =>
+        {
+            pg.ShowPageSizeSelector(true);
+            pg.AllowedPageSizes(new[] { 5, 10, 20 });
+            pg.ShowInfo(true);
+        })
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NOP)
             .Caption("NOP");
 
-        columns.AddFor(m => m.Realisasi)
+            columns.AddFor(m => m.Realisasi)
             .Caption("Realisasi")
             .Format("#,##0");
-    })
-    )
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.NOP)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total");
+
+                items.AddFor(m => m.Realisasi)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+            });
+        })
+        )
 </div>

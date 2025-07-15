@@ -277,7 +277,7 @@
             $(cellElement).append(wrapper);
         }
 
-                function onDetailClick(e) {
+        function onDetailClick(e) {
             e.event.preventDefault();
 
             const rowData = e.row?.data;
@@ -289,7 +289,7 @@
 
             const tanggal = DevExpress.localization.formatDate(rowData.Tanggal, 'yyyy-MM-dd');
             const enumWilayah = rowData.EnumWilayah;
-            const jenisPajak = rowData.JenisPajak;
+            const jenisPajak = rowData.EnumPajak;
 
             console.log("Detail click:", tanggal, enumWilayah, jenisPajak);
 
