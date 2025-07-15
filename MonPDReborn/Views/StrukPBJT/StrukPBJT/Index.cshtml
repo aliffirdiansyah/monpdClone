@@ -6,76 +6,130 @@
 }
 
 
+<div class="row">
 
-<div class="container my-4">
-    <div class="text-center mb-4">
-        <h4><i class="ri-search-eye-line"></i> Cek Struk PBJT Anda</h4>
-        <p class="text-muted">Cek apakah transaksi Anda tercatat resmi oleh sistem pajak daerah.<br />Masukkan informasi dari nota pembelian untuk verifikasi.</p>
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="mb-2 text-center">
+                    <i class="ri-search-eye-line" style="font-size: 3rem; color: #0d6efd;"></i>
+                </div>
+                <div class="text-center mb-4">
+                    <h4>Cek Struk PBJT Anda</h4>
+                    <p class="text-muted">Cek apakah transaksi Anda tercatat resmi oleh sistem pajak daerah.<br />Masukkan informasi dari nota pembelian untuk verifikasi.</p>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <form id="formPencarian" method="get" asp-action="Show" onsubmit="return false;">
+                    <div class="row gy-2">
+
+                        <div class="col-lg-12">
+                            <label class="form-label">No Struk / ID Transaksi</label>
+                            @Html.TextBoxFor(model => model.Keyword, new {
+                            @class = "form-control form-control-md rounded-pill",
+                                                        @placeholder = "Masukkan Keyword",
+                                                        id = "Keyword"
+                                                        })
+                        </div>
+
+                        @* <div class="col-lg-12">
+                            <div class="mb-1">
+                                <img src="/captcha-image" alt="Captcha" id="captchaImage" class="img-fluid rounded" />
+                                <a href="javascript:void(0);" onclick="reloadCaptcha()" class="small d-block mt-1">Ganti Captcha</a>
+                            </div>
+                            <input type="text"
+                                   name="CaptchaCode"
+                                   class="form-control form-control-md rounded-pill"
+                                   placeholder="Masukkan Kode Captcha"
+                                   id="CaptchaCode" />
+                        </div> *@
+
+                        <div class="col-lg-12">
+                            <button type="button"
+                                    class="btn btn-primary btn-md rounded-pill w-100 mt-2 mb-3"
+                                    onclick="fnShow()">
+                                <i class="ri-search-eye-line label-icon align-middle fs-16 me-1"></i> Cek Transaksi
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show" class="mt-2"></div>
+
+            </div>
+        </div>
     </div>
-
-    <form method="get" class="mb-4">
-        <div class="mb-3">
-            <label>Nomor Struk / ID Transaksi</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="ri-receipt-line"></i></span>
-                <input type="text" class="form-control" name="nomorStruk" value="" />
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label>Verifikasi Captcha</label>
-            <div class="d-flex align-items-center">
-                <img src="/captcha" alt="captcha" class="me-2" style="height: 40px;" />
-                <input type="text" class="form-control w-50" name="captcha" value="" />
-                <button class="btn btn-link ms-2">Ganti Captcha</button>
-            </div>
-        </div>
-
-        <div class="d-grid">
-            <button type="submit" class="btn btn-primary">
-                <i class="ri-search-eye-line"></i> Cek Transaksi
-            </button>
-        </div>
-
-        <div class="text-center mt-2">
-            <a href="#">Lihat Riwayat Transaksi Saya</a>
-        </div>
-    </form>
-
-  
-        <div class="alert alert-success d-flex align-items-center">
-            <i class="ri-check-double-line fs-4 me-2"></i>
-            <div>
-                Informasi Transaksi Ditemukan – No. Struk:
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead class="table-primary">
-                    <tr>
-                        <th>Nama Objek</th>
-                        <th>Alamat Objek</th>
-                        <th>Nilai Transaksi</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @* @foreach (var item in Model.Hasil)
-                    {
-                        <tr>
-                            <td>@item.NamaObjek</td>
-                            <td>@item.AlamatObjek</td>
-                            <td>Rp @item.NilaiTransaksi.ToString("N0")</td>
-                            <td><span class="badge bg-info">@item.Status</span></td>
-                        </tr>
-                    } *@
-                </tbody>
-            </table>
-        </div>
-
-        <div class="text-muted mt-2">
-            Total
-        </div>
+    <div class="col-lg-3"></div>
 
 </div>
+
+@section Scripts{
+    <script>
+                function fnShow() {
+            let keyword = $("#Keyword").val();
+
+            if (!keyword) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '<b style="color:orange">Peringatan</b>',
+                    text: 'Silakan isi Keyword terlebih dahulu.'
+                });
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: {
+                    noStruk: keyword
+                },
+                beforeSend: function () {
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    $("#loading2-Show").hide();
+
+                    if (response.Status === undefined) {
+                        // tampilkan view partial normal
+                        $("#Show").html(response);
+
+                    } else if (response.Status === "NotFound") {
+                        // data tidak ditemukan: tampilkan alert
+                        $("#Show").html(`
+                            <div class="alert alert-warning d-flex align-items-center p-3 rounded-3" role="alert">
+                                <i class="ri-error-warning-line fs-4 me-2 text-warning"></i>
+                                <div>
+                                    <strong>Data Tidak Ditemukan</strong><br />
+                                    Nomor struk <strong>${keyword}</strong> tidak ditemukan dalam sistem. Pastikan nomor struk yang Anda masukkan sudah benar.
+                                </div>
+                            </div>
+                        `);
+
+                    } else {
+                        // fallback pesan lain
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $("#Show").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+
+    </script>
+}

@@ -7,10 +7,10 @@ namespace MonPDReborn.Models.StrukPBJT
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
-            public Index()
+            public string Keyword { get; set; } = string.Empty;
+            public Index(string keyword)
             {
-
+                Keyword = keyword;
             }
         }
         public class Show
@@ -53,6 +53,7 @@ namespace MonPDReborn.Models.StrukPBJT
                 {
                     new RekapStruk {NoStruk = "STRK-20250714001", NamaObjek = "Toko Maju Jaya",AlamatObjek = "Jl. Merdeka No. 123, Bandung", NilaiTransaksi = 1_250_000m, Status = "Terekam"},
                     new RekapStruk {NoStruk = "STRK-20250714001", NamaObjek = "Toko Maju Jalan",AlamatObjek = "Jl. Merdeka No. 123, Bandung", NilaiTransaksi = 1_300_000m, Status = "Terekam"},
+                    new RekapStruk {NoStruk = "STRK-20220", NamaObjek = "Toko Maju Jalan",AlamatObjek = "Jl. Merdeka No. 123, Bandung", NilaiTransaksi = 1_300_000m, Status = "Terekam"},
 
                 };
             }
