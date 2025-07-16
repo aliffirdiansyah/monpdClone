@@ -2,86 +2,102 @@
 @model RealisasiControlVM.Index
 
 @{
-    ViewData["Title"] = "Realisasi Kontrol OP";
-    Layout = "_Layout";
+    Layout = null;
 }
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row mb-3 align-items-center">
-                    <div class="col-1 text-center">
-                        <img src="~/assets/images/logosby.png" alt="Logo Pemkot Surabaya" style="width: 80px; height: auto;" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Realisasi Kontrol OP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn3.devexpress.com/jslib/23.2.6/css/dx.light.css" rel="stylesheet" />
+    <script src="https://cdn3.devexpress.com/jslib/23.2.6/js/dx.all.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-1 text-center">
+                                <img src="~/assets/images/logosby.png" alt="Logo Pemkot Surabaya" style="width: 80px; height: auto;" />
+                            </div>
+                            <div class="col-11 text-center">
+                                <h5 class="mb-1 fw-bold">PEMERINTAH KOTA SURABAYA</h5>
+                                <h6 class="mb-1">BADAN PENDAPATAN DAERAH KOTA SURABAYA</h6>
+                                <p class="mb-0 small">
+                                    Jalan Jimerto Nomor 25 - 27 Surabaya 60272 <br />
+                                    Telepon (031) 5312144, ext. 584,345,388 Faksimile (031) 5351486
+                                </p>
+                                <h6 class="mt-2 text-primary fw-bold">
+                                    REALISASI PENDAPATAN BANDING AKP PENDAPATAN TAHUN ANGGARAN 2025
+                                </h6>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-11 text-center">
-                        <h5 class="mb-1 fw-bold">PEMERINTAH KOTA SURABAYA</h5>
-                        <h6 class="mb-1">BADAN PENDAPATAN DAERAH KOTA SURABAYA</h6>
-                        <p class="mb-0 small">
-                            Jalan Jimerto Nomor 25 - 27 Surabaya 60272 <br />
-                            Telepon (031) 5312144, ext. 584,345,388 Faksimile (031) 5351486
-                        </p>
-                        <h6 class="mt-2 text-primary fw-bold">
-                            REALISASI PENDAPATAN BANDING AKP PENDAPATAN TAHUN ANGGARAN 2025
-                        </h6>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Realisasi Pendapatan Banding AKP Pendapatan</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-Show" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="Show"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Detail Realisasi per UPTB & Bidang</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-Detail" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="Detail"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</body>
+</html>
 
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Realisasi Pendapatan Banding AKP Pendapatan</h5>
-            </div>
-            <div class="card-body">
-                <div id="loading-Show" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
-                <div id="Show"></div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Detail Realisasi per UPTB & Bidang</h5>
-            </div>
-            <div class="card-body">
-                <div id="loading-Detail" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
-                <div id="Detail"></div>
-            </div>
-        </div>
-    </div>
-</div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            loadShow();
-            loadDetail();
+<script>
+    $(document).ready(function () {
+        loadShow();
+        loadDetail();
+    });
+
+    function loadShow() {
+        $.ajax({
+            url: '@Url.Action("Show", "RealisasiControl")',
+            type: 'GET',
+            beforeSend: function () { $('#loading-Show').show(); },
+            success: function (result) { $('#Show').html(result); },
+            error: function () { $('#Show').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-Show').hide(); }
         });
+    }
 
-        function loadShow() {
-            $.ajax({
-                url: '@Url.Action("Show", "RealisasiControl")',
-                type: 'GET',
-                beforeSend: function () { $('#loading-Show').show(); },
-                success: function (result) { $('#Show').html(result); },
-                error: function () { $('#Show').html('<p class="text-danger">Gagal memuat data.</p>'); },
-                complete: function () { $('#loading-Show').hide(); }
-            });
-        }
-
-        function loadDetail() {
-            $.ajax({
-                url: '@Url.Action("Detail", "RealisasiControl")',
-                type: 'GET',
-                beforeSend: function () { $('#loading-Detail').show(); },
-                success: function (result) { $('#Detail').html(result); },
-                error: function () { $('#Detail').html('<p class="text-danger">Gagal memuat data.</p>'); },
-                complete: function () { $('#loading-Detail').hide(); }
-            });
-        }
-    </script>
-}
+    function loadDetail() {
+        $.ajax({
+            url: '@Url.Action("Detail", "RealisasiControl")',
+            type: 'GET',
+            beforeSend: function () { $('#loading-Detail').show(); },
+            success: function (result) { $('#Detail').html(result); },
+            error: function () { $('#Detail').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-Detail').hide(); }
+        });
+    }
+</script>
