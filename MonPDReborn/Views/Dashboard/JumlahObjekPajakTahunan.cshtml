@@ -43,6 +43,11 @@
         })
         .Summary(s => {
             s.TotalItems(items => {
+                items.AddFor(x => x.JenisPajak)
+                    .DisplayFormat("TOTAL")
+                    .SummaryType(SummaryType.Sum);
+            });
+            s.TotalItems(items => {
                 items.AddFor(x => x.JmlOpAwal)
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}")

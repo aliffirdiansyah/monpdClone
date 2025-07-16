@@ -118,6 +118,7 @@
         </text>);
 
         s.TotalItems(items => {
+            items.AddFor(x => x.JenisPajak).SummaryType(SummaryType.Sum).DisplayFormat("TOTAL");
             items.AddFor(x => x.Target1).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
             items.AddFor(x => x.Realisasi1).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
             items.AddFor(x => x.Persentase1).SummaryType(SummaryType.Custom).Name("Persen1").DisplayFormat("{0}%");
