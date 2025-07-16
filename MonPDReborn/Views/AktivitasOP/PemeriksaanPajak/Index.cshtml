@@ -128,70 +128,53 @@
     <script>
         // Saat halaman selesai dimuat
         $(document).ready(function () {
-            loadShow("");       // Load rekap awal
-            loadDetail("");   // Load semua detail awal
+            // HANYA memuat tabel rekap utama di awal
+            loadShow();
+            // Kosongkan tabel detail di awal
+            $('#Detail').html('<p class="text-center text-muted">Klik ikon 🔍 pada tabel di atas untuk melihat detail.</p>');
         });
 
-        // Fungsi untuk memuat data rekap pemeriksaan
+        // Fungsi untuk memuat data rekap pemeriksaan (tidak berubah)
         function loadShow() {
             $.ajax({
                 url: '@Url.Action("Show", "PemeriksaanPajak")',
                 type: 'GET',
-                beforeSend: function () {
-                    // Tampilkan spinner, sembunyikan konten
-                    $('#loading2-Show').show();
-                    $('#Show').hide();
-                },
-                success: function (result) {
-                    // Sembunyikan spinner, tampilkan hasil
-                    $('#loading2-Show').hide();
-                    $('#Show').html(result).show();
-                },
-                error: function () {
-                    $('#loading2-Show').hide();
-                    $('#Show').html(`
-                        <div class="alert alert-danger">
-                            ❌ Gagal memuat data rekap.
-                        </div>
-                    `).show();
-                }
+                beforeSend: function () { $('#loading2-Show').show(); $('#Show').hide(); },
+                success: function (result) { $('#loading2-Show').hide(); $('#Show').html(result).show(); },
+                error: function () { $('#loading2-Show').hide(); $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data rekap.</div>').show(); }
             });
         }
 
+        // FUNGSI INI DIPANGGIL DARI TOMBOL SEARCH DI TABEL SHOW
+        function onDetailPemeriksaanClick(jenisPajak, tahun) {
+            // Panggil fungsi loadDetail dengan parameter yang sesuai
+            loadDetail(jenisPajak, tahun);
+        }
 
-        // Fungsi untuk memuat data detail pemeriksaan
-        function loadDetail(keyword) {
+        // FUNGSI INI SEKARANG DIMODIFIKASI untuk menerima parameter dan memuat data detail
+        function loadDetail(jenisPajak, tahun) {
             $.ajax({
                 url: '@Url.Action("Detail", "PemeriksaanPajak")',
                 type: 'GET',
-                data: { jenisPajak: keyword },
+                // Kirim data jenisPajak dan tahun ke controller
+                data: {
+                    jenisPajak: jenisPajak,
+                    tahun: tahun
+                },
                 beforeSend: function () {
-                    // Tampilkan spinner, sembunyikan konten
                     $('#loading2-Detail').show();
                     $('#Detail').hide();
                 },
                 success: function (result) {
-                    // Sembunyikan spinner, tampilkan hasil
                     $('#loading2-Detail').hide();
                     $('#Detail').html(result).show();
                 },
                 error: function () {
                     $('#loading2-Detail').hide();
-                    $('#Detail').html(`
-                        <div class="alert alert-danger">
-                            ❌ Gagal memuat data detail.
-                        </div>
-                    `).show();
+                    $('#Detail').html('<div class="alert alert-danger">❌ Gagal memuat data detail.</div>').show();
                 }
             });
         }
-
-
-        // Event ketika select box berubah
-       /* function onJenisPajakChanged(e) {
-            const keyword = e.value;
-            loadDetail(keyword); // Kirim value terpilih ke server untuk memfilter
-        }*/
     </script>
 }
 

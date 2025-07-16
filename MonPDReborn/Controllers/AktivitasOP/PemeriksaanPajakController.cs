@@ -67,11 +67,11 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult Detail(string nop)
+        public IActionResult Detail(string jenisPajak, int tahun)
         {
             try
             {
-                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Detail(nop);
+                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Detail(jenisPajak, tahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
