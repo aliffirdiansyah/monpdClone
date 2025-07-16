@@ -24,17 +24,17 @@ namespace HotelWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
+                //var now = DateTime.Now;
 
-                var nextRun = now.AddDays(1); // besok jam 00:00
-                var delay = nextRun - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 try
                 {
@@ -949,7 +949,7 @@ namespace HotelWs
                 FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
                 JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
                 WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
-                    AND  REPLACE(FK_NOP, '.', '') = :NOP AND A.TAHUN = :TAHUN AND A.MASA = :MASA AND 
+                    AND  REPLACE(FK_NOP, '.', '') = :NOP AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN AND A.BULAN_PAJAK = :MASA 
             ";
 
             var pembayaranSspdList = _contPhr.Set<SSPDPbjt>()

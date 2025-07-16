@@ -22,17 +22,17 @@ namespace HiburanWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
+                //var now = DateTime.Now;
 
-                var nextRun = now.AddDays(1); // besok jam 00:00
-                var delay = nextRun - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 // Eksekusi tugas
                 try
@@ -593,7 +593,7 @@ namespace HiburanWs
                 }
             }
 
-            //////FILL KETETAPAN 
+            ////FILL KETETAPAN 
             var _contSbyTaxOld = DBClass.GetSurabayaTaxContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
@@ -745,7 +745,9 @@ namespace HiburanWs
                             GetRealisasi(ref newRow);
                             _contMonPd.DbMonHiburans.Add(newRow);
                             _contMonPd.SaveChanges();
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"DB_MON_HIBURAN {thn}-{bln}-{item.NOP}-{item.SEQ}");
+                            Console.ResetColor();
                         }
                     }
                 }
@@ -755,37 +757,56 @@ namespace HiburanWs
             var _contMonitoringDb = DBClass.GetMonitoringDbContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
+                Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR) {thn}");
+                var sql2 = @"
+                SELECT 
+    REPLACE(FK_NOP, '.', '') NOP,
+    A.BULAN_PAJAK_SSPD  BULAN_PAJAK, 
+    TO_NUMBER(TAHUN_PAJAK_SSPD) TAHUN_PAJAK,
+    TGL_SSPD TRANSACTION_DATE,  
+    JML_POKOK NOMINAL_POKOK, 
+    JML_DENDA NOMINAL_SANKSI, 
+    0 NOMINAL_ADMINISTRASI,
+    0 NOMINAL_LAINNYA,
+    0 PENGURANG_POKOK,
+    0 PENGURANG_SANSKSI,
+    100 SEQ_KETETAPAN
+    FROM (
+        SELECT ID_SSPD,TGL_SETORAN TGL_SSPD,TGL_SETORAN SSPD_TGL_ENTRY,CASE FK_AYAT_PAJAK
+                    WHEN '4.1.1.03.01' THEN '4.1.01.08.01'
+                    WHEN '4.1.1.03.21' THEN '4.1.01.08.02'
+                    ELSE '4.1.01.08.05'
+                END ID_AYAT_PAJAK,FK_NOP,NAMA_OP NAMA_WP,ALAMAT_OP ALAMAT_WP,BULAN_PAJAK BULAN_PAJAK_SSPD,TAHUN_PAJAK TAHUN_PAJAK_SSPD, JML_POKOK,JML_DENDA,REFF_DASAR_SETORAN,NAMA_LOKASI_BAYAR TEMPAT_BAYAR,DASAR_SETORAN SETORAN_BERDASARKAN,SYSDATE REKON_DATE,'JOB' REKON_BY,
+                FK_OP,DASAR_SETORAN,NAMA_JENIS_PAJAK                
+        FROM VW_SIMPADA_SSPD@LIHATHPPSERVER
+        WHERE NAMA_PAJAK_DAERAH='HIBURAN' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY') AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN
+    ) A
+                ";
+                var pembayaranSspdList = _contMonitoringDb.Set<SSPDPbjt>()
+                     .FromSqlRaw(sql2, new[] {
+                            new OracleParameter("TAHUN", thn),
+                    }).ToList();
+                Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] OP (SSPD) (PHR) {thn}");
+
                 var opList = _contMonPd.DbOpHiburans.Where(x => x.TahunBuku == thn).ToList();
                 for (int bln = 1; bln <= 12; bln++)
                 {
                     Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
                     var sql = @"
-                            SELECT 	REPLACE(NOP, '.','') NOP,
-                              TAHUN,
-                              MASAPAJAK,
-                              100 SEQ,
-                              100 JENIS_KETETAPAN,
-                              TANGGALENTRY TGL_KETETAPAN,
-                              TANGGALJATUHTEMPO TGL_JATUH_TEMPO_BAYAR,
-                              0 NILAI_PENGURANG,
-                              NVL(PAJAK_TERUTANG, 0) POKOK
-                            FROM (
-                             select  NO_SPTPD, A.NPWPD, IDAYAT, 
-                                     TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
-                                     RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
-                                     A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
-                             from PHRH_USER.sptpd_new@LIHATHR A
-                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HIBURAN'
-                             WHERE STATUS=0
-                             UNION ALL
-                             select KD_BILL,NPWPD,KODEREKENING,
-                                     TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
-                                     PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
-                             from sptpd_payment@LIHATBONANG A
-                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HIBURAN'
-                             where STATUS_HAPUS=0
-                            ) A
-                            WHERE A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
+                             SELECT 	REPLACE(FK_NOP, '.','') NOP,
+                               TO_NUMBER(TAHUN_PAJAK) TAHUN,
+                               BULAN_PAJAK MASAPAJAK,
+                               100 SEQ,
+                               100 JENIS_KETETAPAN,
+  NVL(TGL_SPTPD_DISETOR, MP_AKHIR) TGL_KETETAPAN,
+                               TGL_JATUH_TEMPO TGL_JATUH_TEMPO_BAYAR,
+                               0 NILAI_PENGURANG,
+                               NVL(KETETAPAN_TOTAL, 0) POKOK
+                             FROM (
+  	                            SELECT *
+                                FROM VW_SIMPADA_SPTPD@LIHATHPPSERVER
+                                WHERE NAMA_PAJAK_DAERAH='HIBURAN' AND FK_NOP IS NOT NULL AND TO_NUMBER(TAHUN_PAJAK) = :tahun AND BULAN_PAJAK = :bulan
+                             ) A
                         ";
 
                     var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdHiburan>()
@@ -874,7 +895,7 @@ namespace HiburanWs
                             newRow.UpdDate = DateTime.Now;
                             newRow.UpdBy = "JOB";
 
-                            GetRealisasiPhr(ref newRow);
+                            GetRealisasiPhr(ref newRow, pembayaranSspdList);
                             _contMonPd.DbMonHiburans.Add(newRow);
                             _contMonPd.SaveChanges();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -1035,38 +1056,42 @@ namespace HiburanWs
                 Console.WriteLine($"DB_MON_HIBURAN (SSPD): {row.TahunPajakKetetapan}-{row.MasaPajakKetetapan}-{row.Nop}-{row.SeqPajakKetetapan}-{row.NominalPokokBayar}");
             }
         }
-        private void GetRealisasiPhr(ref DbMonHiburan row)
+        private void GetRealisasiPhr(ref DbMonHiburan row, List<SSPDPbjt> pembayaranSspdList)
         {
             //PEMBAYARAN PHR
-            var _contPhr = DBClass.GetPhrhContext();
+            //var _contPhr = DBClass.GetPhrhContext();
+            //Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR)");
+            //var sql = @"
+            //    SELECT 	REPLACE(FK_NOP, '.', '') NOP,
+	           //         TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,
+	           //         BULAN_PAJAK,
+            //            TGL_SETORAN TRANSACTION_DATE,
+		          //      JML_POKOK NOMINAL_POKOK,
+		          //      JML_DENDA NOMINAL_SANKSI,
+		          //      0 NOMINAL_ADMINISTRASI,
+		          //      0 NOMINAL_LAINNYA,
+		          //      0 PENGURANG_POKOK,
+		          //      0 PENGURANG_SANSKSI,
+		          //      100 SEQ_KETETAPAN
+            //    FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
+            //    JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
+            //    WHERE NAMA_PAJAK_DAERAH='HIBURAN' 
+            //        AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
+            //        AND  REPLACE(FK_NOP, '.', '') = :NOP AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN AND A.BULAN_PAJAK = :MASA 
+            //";
 
-            Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR)");
-            var sql = @"
-                SELECT 	REPLACE(FK_NOP, '.', '') NOP,
-	                    TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,
-	                    BULAN_PAJAK,
-                        TGL_SETORAN TRANSACTION_DATE,
-		                JML_POKOK NOMINAL_POKOK,
-		                JML_DENDA NOMINAL_SANKSI,
-		                0 NOMINAL_ADMINISTRASI,
-		                0 NOMINAL_LAINNYA,
-		                0 PENGURANG_POKOK,
-		                0 PENGURANG_SANSKSI,
-		                100 SEQ_KETETAPAN
-                FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
-                JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
-                WHERE NAMA_PAJAK_DAERAH='HIBURAN' 
-                    AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
-                    AND  REPLACE(FK_NOP, '.', '') = :NOP AND A.TAHUN = :TAHUN AND A.MASA = :MASA AND 
-            ";
+            //var pembayaranSspdList = _contPhr.Set<SSPDPbjt>()
+            //     .FromSqlRaw(sql, new[] {
+            //            new OracleParameter("NOP", row.Nop),
+            //            new OracleParameter("TAHUN", row.TahunPajakKetetapan),
+            //            new OracleParameter("MASA", row.MasaPajakKetetapan),
+            //    }).ToList();
+            //Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] OP (SSPD) (PHR)");
 
-            var pembayaranSspdList = _contPhr.Set<SSPDPbjt>()
-                 .FromSqlRaw(sql, new[] {
-                        new OracleParameter("NOP", row.Nop),
-                        new OracleParameter("TAHUN", row.TahunPajakKetetapan),
-                        new OracleParameter("MASA", row.MasaPajakKetetapan),
-                }).ToList();
-            Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] OP (SSPD) (PHR)");
+            string nop = row.Nop;
+            int thn = Convert.ToInt32(row.TahunPajakKetetapan);
+            int bln = Convert.ToInt32(row.MasaPajakKetetapan);
+            pembayaranSspdList = pembayaranSspdList.Where(x => x.NOP == nop && x.TAHUN_PAJAK == thn && x.BULAN_PAJAK == bln).ToList();
 
             if (pembayaranSspdList != null)
             {

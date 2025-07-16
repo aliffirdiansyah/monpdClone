@@ -23,17 +23,17 @@ namespace PPJWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
+                //var now = DateTime.Now;
 
-                var nextRun = now.AddDays(1); // besok jam 00:00
-                var delay = nextRun - now;
+                //var nextRun = now.AddDays(1); // besok jam 00:00
+                //var delay = nextRun - now;
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 // Eksekusi tugas
                 try
@@ -367,7 +367,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                         var source = await _contMonPd.DbOpListriks.Where(x => x.TahunBuku == i).ToListAsync();
                         foreach (var item in result)
                         {
-                            var isExist = dataExisting.Where(x => x.Nop == item.Nop).Any();
+                            var isExist = dataExisting.Where(x => x.Nop == item.Nop && x.TahunBuku == i).Any();
                             if (!isExist)
                             {
                                 if (item.TglMulaiBukaOp.Year <= i)
@@ -941,9 +941,9 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                         0 PENGURANG_POKOK,
                         0 PENGURANG_SANSKSI,
                         100 SEQ_KETETAPAN
-                FROM VW_SIMPADA_SSPD@LIHATHPPSERVER
+                FROM VW_SIMPADA_SSPD@LIHATHPPSERVER A
                 WHERE NAMA_PAJAK_DAERAH='PPJ' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
-                    AND  REPLACE(FK_NOP, '.', '') = :NOP AND A.TAHUN = :TAHUN AND A.MASA = :MASA AND 
+                    AND  REPLACE(FK_NOP, '.', '') = :NOP AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN AND A.BULAN_PAJAK = :MASA 
             ";
 
             var pembayaranSspdList = _contMonitoringDb.Set<SSPDPbjt>()
