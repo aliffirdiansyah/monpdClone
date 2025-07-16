@@ -26,9 +26,41 @@
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub =>
             {
-                sub.Add().DataField("JumlahOP2023").Caption("2023").Alignment(HorizontalAlignment.Center);
-                sub.Add().DataField("JumlahOP2024").Caption("2024").Alignment(HorizontalAlignment.Center);
-                sub.Add().DataField("JumlahOP2025").Caption("2025").Alignment(HorizontalAlignment.Center);
+                sub.Add().DataField("JumlahOP2023").Caption("2023").Alignment(HorizontalAlignment.Center)
+                .CellTemplate(@<text>
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <button class="btn btn-sm btn-outline-primary"
+                                    onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', 2023)"
+                                    title="Lihat Detail Pemeriksaan 2023">
+                                <i class="ri-search-line"></i>
+                            </button>
+                            <span class="ms-2"><%- value.toLocaleString('id-ID') %></span>
+                        </div>
+                    </text>);
+
+                sub.Add().DataField("JumlahOP2024").Caption("2024").Alignment(HorizontalAlignment.Center)
+                .CellTemplate(@<text>
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <button class="btn btn-sm btn-outline-primary"
+                                    onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', 2024)"
+                                    title="Lihat Detail Pemeriksaan 2024">
+                                <i class="ri-search-line"></i>
+                            </button>
+                            <span class="ms-2"><%- value.toLocaleString('id-ID') %></span>
+                        </div>
+                    </text>);
+
+                sub.Add().DataField("JumlahOP2025").Caption("2025").Alignment(HorizontalAlignment.Center)
+                .CellTemplate(@<text>
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <button class="btn btn-sm btn-outline-primary"
+                                    onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', 2025)"
+                                    title="Lihat Detail Pemeriksaan 2025">
+                                <i class="ri-search-line"></i>
+                            </button>
+                            <span class="ms-2"><%- value.toLocaleString('id-ID') %></span>
+                        </div>
+                           </text>);
             });
 
             columns.Add()
