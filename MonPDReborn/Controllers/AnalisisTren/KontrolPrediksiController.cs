@@ -44,11 +44,11 @@ namespace MonPDReborn.Controllers.AnalisisTren
                 return Json(response);
             }
         }
-        public IActionResult Show()
+        public IActionResult Show(DateTime? tanggalAwal, DateTime? tanggalAkhir)
         {
             try
             {
-                var model = new Models.AnalisisTren.KontrolPrediksiVM.Show();
+                var model = new Models.AnalisisTren.KontrolPrediksiVM.Show(tanggalAwal, tanggalAkhir);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

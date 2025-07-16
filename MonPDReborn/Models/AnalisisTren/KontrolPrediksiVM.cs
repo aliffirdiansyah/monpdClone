@@ -16,9 +16,9 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
         public List<KontrolPrediksi> DataKontrolPrediksiList { get; set; } = new();
 
 
-        public Show()
+        public Show(DateTime? tanggalAwal, DateTime? tanggalAkhir)
         {
-            DataKontrolPrediksiList = Method.GetFilteredData();
+            DataKontrolPrediksiList = Method.GetFilteredData(tanggalAwal, tanggalAkhir);
         }
     }
 
@@ -34,9 +34,23 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             };
         }
 
-        public static List<KontrolPrediksi> GetFilteredData()
+        public static List<KontrolPrediksi> GetFilteredData(DateTime? tanggalAwal, DateTime? tanggalAkhir)
         {
-            return GetAllDataKontrolPrediksi();
+            var allData = GetAllDataKontrolPrediksi();
+
+            // Terapkan filter jika tanggalAwal memiliki nilai
+            if (tanggalAwal.HasValue)
+            {
+                allData = allData.Where(x => x.tgl >= tanggalAwal.Value.Date).ToList();
+            }
+
+            // Terapkan filter jika tanggalAkhir memiliki nilai
+            if (tanggalAkhir.HasValue)
+            {
+                allData = allData.Where(x => x.tgl <= tanggalAkhir.Value.Date).ToList();
+            }
+
+            return allData;
         }
 
         private static List<KontrolPrediksi> GetAllDataKontrolPrediksi()
@@ -54,7 +68,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                 },
                 new KontrolPrediksi
                 {
-                    tgl = new DateTime(2025, 7, 15),
+                    tgl = new DateTime(2025, 7, 22),
                     JenisPajak = "PBJT Parkir",
                     Target = 500_000_000m,
                     RealisasiBulanLalu = 200_000_000m,
@@ -63,7 +77,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                 },
                 new KontrolPrediksi
                 {
-                    tgl = new DateTime(2025, 7, 15),
+                    tgl = new DateTime(2025, 2, 5),
                     JenisPajak = "PBJT Hiburan",
                     Target = 300_000_000m,
                     RealisasiBulanLalu = 100_000_000m,
@@ -72,7 +86,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                 },
                 new KontrolPrediksi
                 {
-                    tgl = new DateTime(2025, 7, 15),
+                    tgl = new DateTime(2025, 2, 15),
                     JenisPajak = "PBB",
                     Target = 2_000_000_000m,
                     RealisasiBulanLalu = 1_200_000_000m,
