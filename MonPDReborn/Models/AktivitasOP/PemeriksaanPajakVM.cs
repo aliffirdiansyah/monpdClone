@@ -14,7 +14,6 @@ namespace MonPDReborn.Models.AktivitasOP
             public Index() { }
         }
 
-        // ======= SHOW ==========
         public class Show
         {
             public List<DataPemeriksaan> DataPemeriksaanList { get; set; } = new();
@@ -34,9 +33,9 @@ namespace MonPDReborn.Models.AktivitasOP
 
             public Detail() { }
 
-            public Detail(string jenisPajak)
+            public Detail(string jenisPajak, int tahun)
             {
-                DataDetailList = Method.GetDetailByJenisPajak(jenisPajak);
+                DataDetailList = Method.GetDetailPemeriksaan(jenisPajak, tahun);
             }
         }
 
@@ -53,15 +52,17 @@ namespace MonPDReborn.Models.AktivitasOP
                 return all.Where(x => x.JenisPajak.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            public static List<DataDetailPemeriksaan> GetDetailByJenisPajak(string jenisPajak)
+            public static List<DataDetailPemeriksaan> GetDetailPemeriksaan(string jenisPajak, int tahun)
             {
                 var all = GetAllDetail();
 
-                if (string.IsNullOrWhiteSpace(jenisPajak))
-                    return all;
+                // Jika tidak ada filter, kembalikan list kosong agar tidak semua data tampil di awal
+                if (string.IsNullOrWhiteSpace(jenisPajak) || tahun == 0)
+                    return new List<DataDetailPemeriksaan>();
 
+                // Filter berdasarkan Jenis Pajak DAN Tahun
                 return all
-                    .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase))
+                    .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase) && x.Tahun == tahun)
                     .ToList();
             }
 
