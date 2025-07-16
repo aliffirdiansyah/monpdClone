@@ -1387,7 +1387,7 @@ namespace MonPDReborn.Models
                             case EnumFactory.EPajak.BPHTB:
                                 awal = context.DbMonBphtbs.Count(x => x.Tahun == yearBefore);
                                 tutup = 0; // karena tidak ada data tutup di BPHTB
-                                baru = context.DbMonBphtbs.Count(x => x.Tahun == year) - awal;
+                                baru = context.DbMonBphtbs.Count(x => x.Tahun == year);
                                 akhir = awal + baru;
                                 break;
 
