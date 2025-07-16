@@ -199,11 +199,35 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TPenungguanSptpdParkir> TPenungguanSptpdParkirs { get; set; }
 
+    public virtual DbSet<TPiutangAbt> TPiutangAbts { get; set; }
+
+    public virtual DbSet<TPiutangBphtb> TPiutangBphtbs { get; set; }
+
+    public virtual DbSet<TPiutangHiburan> TPiutangHiburans { get; set; }
+
+    public virtual DbSet<TPiutangHotel> TPiutangHotels { get; set; }
+
+    public virtual DbSet<TPiutangListrik> TPiutangListriks { get; set; }
+
+    public virtual DbSet<TPiutangOpsenBbnkb> TPiutangOpsenBbnkbs { get; set; }
+
+    public virtual DbSet<TPiutangOpsenPkb> TPiutangOpsenPkbs { get; set; }
+
+    public virtual DbSet<TPiutangParkir> TPiutangParkirs { get; set; }
+
+    public virtual DbSet<TPiutangPbb> TPiutangPbbs { get; set; }
+
+    public virtual DbSet<TPiutangReklame> TPiutangReklames { get; set; }
+
+    public virtual DbSet<TPiutangResto> TPiutangRestos { get; set; }
+
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
     public virtual DbSet<TempBulanan> TempBulanans { get; set; }
 
     public virtual DbSet<TempHituptb> TempHituptbs { get; set; }
+
+    public virtual DbSet<TempPeriksa> TempPeriksas { get; set; }
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -1330,6 +1354,61 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.IdNavigation).WithMany(p => p.TPenungguanSptpdParkirs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("T_PENUNGGUAN_SPTPD_PARKIR_R01");
+        });
+
+        modelBuilder.Entity<TPiutangAbt>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_ABT_PK");
+        });
+
+        modelBuilder.Entity<TPiutangBphtb>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_BPHTB_PK");
+        });
+
+        modelBuilder.Entity<TPiutangHiburan>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_HIBURAN_PK");
+        });
+
+        modelBuilder.Entity<TPiutangHotel>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_HOTEL_PK");
+        });
+
+        modelBuilder.Entity<TPiutangListrik>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_LISTRIK_PK");
+        });
+
+        modelBuilder.Entity<TPiutangOpsenBbnkb>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_OPSEN_BBNKB_PK");
+        });
+
+        modelBuilder.Entity<TPiutangOpsenPkb>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_OPSEN_PKB_PK");
+        });
+
+        modelBuilder.Entity<TPiutangParkir>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_PARKIR_PK");
+        });
+
+        modelBuilder.Entity<TPiutangPbb>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_PBB_PK");
+        });
+
+        modelBuilder.Entity<TPiutangReklame>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_REKLAME_PK");
+        });
+
+        modelBuilder.Entity<TPiutangResto>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_RESTO_PK");
         });
 
         modelBuilder.Entity<TTeguranSptpd>(entity =>
