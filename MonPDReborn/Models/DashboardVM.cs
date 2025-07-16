@@ -1,4 +1,5 @@
 ﻿using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
 using System.Web.Mvc;
 
@@ -97,6 +98,14 @@ namespace MonPDReborn.Models
             }
         }
 
+        public class JumlahObjekPajak
+        {
+            public List<ViewModel.JumlahObjekPajak> Data { get; set; } = new List<ViewModel.JumlahObjekPajak>();
+            public JumlahObjekPajak()
+            {
+                Data = Method.GetJumlahObjekPajakData();
+            }
+        }
 
 
         public class ViewModel
@@ -222,6 +231,35 @@ namespace MonPDReborn.Models
                 public decimal Jumlah3 { get; set; }
                 public decimal Jumlah4 { get; set; }
                 public decimal Jumlah5 { get; set; }
+            }
+
+            public class JumlahObjekPajak
+            {
+                public string JenisPajak { get; set; }
+                public decimal Tahun1_Awal { get; set; }
+                public decimal Tahun1_Tutup { get; set; }
+                public decimal Tahun1_Baru { get; set; }
+                public decimal Tahun1_Akhir { get; set; }
+
+                public decimal Tahun2_Awal { get; set; }
+                public decimal Tahun2_Tutup { get; set; }
+                public decimal Tahun2_Baru { get; set; }
+                public decimal Tahun2_Akhir { get; set; }
+
+                public decimal Tahun3_Awal { get; set; }
+                public decimal Tahun3_Tutup { get; set; }
+                public decimal Tahun3_Baru { get; set; }
+                public decimal Tahun3_Akhir { get; set; }
+
+                public decimal Tahun4_Awal { get; set; }
+                public decimal Tahun4_Tutup { get; set; }
+                public decimal Tahun4_Baru { get; set; }
+                public decimal Tahun4_Akhir { get; set; }
+
+                public decimal Tahun5_Awal { get; set; }
+                public decimal Tahun5_Tutup { get; set; }
+                public decimal Tahun5_Baru { get; set; }
+                public decimal Tahun5_Akhir { get; set; }
             }
             public class PemasanganAlatRekamSeries
             {
@@ -1258,6 +1296,168 @@ namespace MonPDReborn.Models
 
                 return result;
             }
+            public static List<ViewModel.JumlahObjekPajak> GetJumlahObjekPajakData()
+            {
+                var context = DBClass.GetContext();
+
+                var result = new List<ViewModel.JumlahObjekPajak>();
+
+                var tahunList = new[] { 2025, 2024, 2023, 2022, 2021 };
+
+                var pajakList = new[]
+                {
+                    EnumFactory.EPajak.MakananMinuman,
+                    EnumFactory.EPajak.JasaPerhotelan,
+                    EnumFactory.EPajak.JasaKesenianHiburan,
+                    EnumFactory.EPajak.JasaParkir,
+                    EnumFactory.EPajak.TenagaListrik,
+                    EnumFactory.EPajak.PBB,
+                    EnumFactory.EPajak.BPHTB,
+                    EnumFactory.EPajak.Reklame,
+                    EnumFactory.EPajak.AirTanah,
+                    EnumFactory.EPajak.OpsenPkb,
+                    EnumFactory.EPajak.OpsenBbnkb
+                };
+
+                foreach (var pajak in pajakList)
+                {
+                    var item = new ViewModel.JumlahObjekPajak
+                    {
+                        JenisPajak = pajak.GetDescription()
+                    };
+
+                    for (int i = 0; i < tahunList.Length; i++)
+                    {
+                        var year = tahunList[i];
+                        var yearBefore = year - 1;
+
+                        int awal = 0, tutup = 0, baru = 0, akhir = 0;
+
+                        switch (pajak)
+                        {
+                            case EnumFactory.EPajak.MakananMinuman:
+                                awal = context.DbOpRestos.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
+                                tutup = context.DbOpRestos.Count(x => x.TahunBuku == year && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year);
+                                baru = context.DbOpRestos.Count(x => x.TahunBuku == year && x.TglMulaiBukaOp.Year == year);
+                                akhir = context.DbOpRestos.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year));
+                                break;
+
+                            case EnumFactory.EPajak.JasaPerhotelan:
+                                awal = context.DbOpHotels.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
+                                tutup = context.DbOpHotels.Count(x => x.TahunBuku == year && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year);
+                                baru = context.DbOpHotels.Count(x => x.TahunBuku == year && x.TglMulaiBukaOp.Year == year);
+                                akhir = context.DbOpHotels.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year));
+                                break;
+
+                            case EnumFactory.EPajak.JasaKesenianHiburan:
+                                awal = context.DbOpHiburans.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
+                                tutup = context.DbOpHiburans.Count(x => x.TahunBuku == year && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year);
+                                baru = context.DbOpHiburans.Count(x => x.TahunBuku == year && x.TglMulaiBukaOp.Year == year);
+                                akhir = context.DbOpHiburans.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year));
+                                break;
+
+                            case EnumFactory.EPajak.JasaParkir:
+                                awal = context.DbOpParkirs.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
+                                tutup = context.DbOpParkirs.Count(x => x.TahunBuku == year && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year);
+                                baru = context.DbOpParkirs.Count(x => x.TahunBuku == year && x.TglMulaiBukaOp.Year == year);
+                                akhir = context.DbOpParkirs.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year));
+                                break;
+
+                            case EnumFactory.EPajak.TenagaListrik:
+                                awal = context.DbOpListriks.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
+                                tutup = context.DbOpListriks.Count(x => x.TahunBuku == year && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year);
+                                baru = context.DbOpListriks.Count(x => x.TahunBuku == year && x.TglMulaiBukaOp.Year == year);
+                                akhir = context.DbOpListriks.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year));
+                                break;
+
+                            case EnumFactory.EPajak.PBB:
+                                awal = context.DbOpPbbs.Count(x => x.TahunBuku == yearBefore/* && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore)*/);
+                                tutup = context.DbOpPbbs.Count(x => x.TahunBuku == year /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year*/);
+                                baru = context.DbOpPbbs.Count(x => x.TahunBuku == year /*&& x.TglMulaiBukaOp.Year == year*/);
+                                akhir = context.DbOpPbbs.Count(x => x.TahunBuku == year /*&& (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year)*/);
+                                break;
+
+                            case EnumFactory.EPajak.AirTanah:
+                                awal = context.DbOpAbts.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
+                                tutup = context.DbOpAbts.Count(x => x.TahunBuku == year && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year);
+                                baru = context.DbOpAbts.Count(x => x.TahunBuku == year && x.TglMulaiBukaOp.Year == year);
+                                akhir = context.DbOpAbts.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year));
+                                break;
+
+                            case EnumFactory.EPajak.BPHTB:
+                                awal = context.DbMonBphtbs.Count(x => x.Tahun == yearBefore);
+                                tutup = 0; // karena tidak ada data tutup di BPHTB
+                                baru = context.DbMonBphtbs.Count(x => x.Tahun == year) - awal;
+                                akhir = awal + baru;
+                                break;
+
+                            case EnumFactory.EPajak.Reklame:
+                                awal = context.DbOpReklames.Count(
+                                    x => x.TahunBuku == year - 1 &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > (year - 1))
+                                );
+
+                                tutup = context.DbOpReklames.Count(
+                                    x => x.TahunBuku == year &&
+                                        x.TglOpTutup.HasValue &&
+                                        x.TglOpTutup.Value.Year == year
+                                );
+
+                                baru = context.DbOpReklames.Count(
+                                    x => x.TahunBuku == year &&
+                                        x.TglMulaiBukaOp.HasValue &&
+                                        x.TglMulaiBukaOp.Value.Year == year
+                                );
+
+                                akhir = context.DbOpReklames.Count(
+                                    x => x.TahunBuku == year &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year)
+                                );
+                                break; 
+
+                            case EnumFactory.EPajak.OpsenPkb:
+                                awal = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == yearBefore);
+                                tutup = 0; // Tidak ada data `TglOpTutup` di contoh pola sebelumnya
+                                baru = 0; // Tidak ada data `TglMulaiBukaOp` di contoh pola sebelumnya
+                                akhir = context.DbMonOpsenPkbs.Count(x => x.TahunPajakSspd == year);
+                                break;
+
+                            case EnumFactory.EPajak.OpsenBbnkb:
+                                awal = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == yearBefore);
+                                tutup = 0; // tidak ada kolom TglOpTutup di pola
+                                baru = 0;  // tidak ada kolom TglMulaiBukaOp di pola
+                                akhir = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == year);
+                                break;
+
+                        }
+
+                        switch (i)
+                        {
+                            case 0:
+                                item.Tahun1_Awal = awal; item.Tahun1_Tutup = tutup; item.Tahun1_Baru = baru; item.Tahun1_Akhir = akhir;
+                                break;
+                            case 1:
+                                item.Tahun2_Awal = awal; item.Tahun2_Tutup = tutup; item.Tahun2_Baru = baru; item.Tahun2_Akhir = akhir;
+                                break;
+                            case 2:
+                                item.Tahun3_Awal = awal; item.Tahun3_Tutup = tutup; item.Tahun3_Baru = baru; item.Tahun3_Akhir = akhir;
+                                break;
+                            case 3:
+                                item.Tahun4_Awal = awal; item.Tahun4_Tutup = tutup; item.Tahun4_Baru = baru; item.Tahun4_Akhir = akhir;
+                                break;
+                            case 4:
+                                item.Tahun5_Awal = awal; item.Tahun5_Tutup = tutup; item.Tahun5_Baru = baru; item.Tahun5_Akhir = akhir;
+                                break;
+                        }
+                    }
+
+                    result.Add(item);
+                }
+
+                return result;
+            }
+                
+
             public static List<ViewModel.PemasanganAlatRekamSeries> GetPemasanganAlatRekamSeriesData()
             {
                 var result = new List<ViewModel.PemasanganAlatRekamSeries>();

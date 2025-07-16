@@ -228,5 +228,25 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
+
+        public IActionResult JumlahObjekPajak()
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var model = new Models.DashboardVM.JumlahObjekPajak();
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+                return Json(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+                return Json(response.ToInternalServerError());
+            }
+        }
     }
 }
