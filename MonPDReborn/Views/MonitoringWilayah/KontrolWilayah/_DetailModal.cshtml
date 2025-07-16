@@ -1,6 +1,15 @@
 ﻿@model MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.DetailModal
 
-
+<div class="mb-3">
+    <h5 class="mb-0">
+        Monitoring Wilayah - @Model.DataModalRow.Wilayah
+    </h5>
+    <p class="text-muted mb-0">
+        Tanggal: @Model.DataModalRow.Tanggal.ToString("dd/MM/yyyy") |
+        Hari: @Model.DataModalRow.Tanggal.ToString("dddd", new System.Globalization.CultureInfo("id-ID")) |
+        Jenis Pajak: @Model.DataModalRow.JenisPajak
+    </p>
+</div>
 
 <div class="table-responsive">
     @(
@@ -27,6 +36,12 @@
         {
             columns.AddFor(m => m.NOP)
             .Caption("NOP");
+
+            columns.AddFor(m => m.NamaOP)
+            .Caption("Nama OP");
+
+            columns.AddFor(m => m.AlamatOP)
+            .Caption("Alamat OP");
 
             columns.AddFor(m => m.Realisasi)
             .Caption("Realisasi")
