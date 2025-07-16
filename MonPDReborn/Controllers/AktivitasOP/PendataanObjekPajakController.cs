@@ -1,6 +1,7 @@
 ﻿using DevExpress.DataAccess.Native.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models.AktivitasOP;
 using System;
@@ -46,11 +47,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
-        public IActionResult Show(string keyword)
+        public IActionResult Show()
         {
             try
             {
-                var model = new PendataanObjekPajakVM.Show(keyword);
+                var model = new PendataanObjekPajakVM.Show();
                 return PartialView($"{URLView}_Show", model);
             }
             catch (ArgumentException e)
@@ -68,12 +69,33 @@ namespace MonPDReborn.Controllers.Aktivitas
         }
 
         // ✅ Versi baru: menerima jenisPajak dan tahun
-        public IActionResult Detail(string jenisPajak, int tahun)
+        public IActionResult Detail(int jenisPajak)
         {
             try
             {
-                var model = new PendataanObjekPajakVM.Detail(jenisPajak, tahun);
+                var model = new PendataanObjekPajakVM.Detail((EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_Detail", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult SubDetail(int jenisPajak, string nop)
+        {
+            try
+            {
+                var model = new PendataanObjekPajakVM.SubDetail((EnumFactory.EPajak)jenisPajak, nop);
+                return PartialView($"{URLView}_SubDetail", model);
             }
             catch (ArgumentException e)
             {

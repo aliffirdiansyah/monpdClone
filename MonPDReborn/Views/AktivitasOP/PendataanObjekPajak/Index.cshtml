@@ -134,6 +134,23 @@
             </div>
             <div class="card-body">
                 <div id="Detail"></div>
+                <div class="modal fade" id="detailModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary"></div>
+                                    <p>Loading data...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -200,6 +217,43 @@
         // Contoh: bisa digunakan jika ingin memfilter via dropdown
         function onJenisPajakChanged(jenis, tahun) {
             loadDetail(jenis, tahun);
+        }
+
+        function onDetailClick(e) {
+            e.event.preventDefault();
+            const data = e.row?.data;
+            if (!data) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            const jenisPajak = data.JenisPajak;
+            const nop = data.NOP;
+
+            const $modal = $("#detailModal");
+            $modal.find(".modal-title").text(`Detail - ${jenisPajak} ${nop}`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary"></div>
+                    <p>Loading data...</p>
+                </div>
+            `);
+
+            $modal.modal("show");
+
+            $.ajax({
+                url: '/PendataanObjekPajak/SubDetail',
+                type: 'GET',
+                data: { jenisPajak, nop },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">Gagal memuat data.</div>
+                    `);
+                }
+            });
         }
     </script>
 }

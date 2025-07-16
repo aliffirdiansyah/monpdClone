@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using System.Globalization;
 using static MonPDReborn.Lib.General.ResponseBase;
 using static MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM;
 
@@ -85,11 +86,14 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
             }
         }
 
-        public IActionResult DetailModal(int wilayah, int tahun, int bulan, int jenisPajak)
+        public IActionResult DetailModal(string tanggal, int wilayah, int jenisPajak)
         {
             try
             {
-                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.DetailModal((EnumFactory.EUPTB)wilayah, tahun, bulan, (EnumFactory.EPajak)jenisPajak);
+                if (!DateTime.TryParseExact(tanggal, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedTanggal))
+                    throw new ArgumentException("Format tanggal tidak valid. Gunakan format yyyy-MM-dd");
+
+                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.DetailModal(parsedTanggal, (EnumFactory.EUPTB)wilayah, (EnumFactory.EPajak)jenisPajak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

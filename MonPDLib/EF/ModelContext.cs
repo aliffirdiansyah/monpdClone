@@ -61,6 +61,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
 
+    public virtual DbSet<DbRekamParkir> DbRekamParkirs { get; set; }
+
+    public virtual DbSet<DbRekamRestoran> DbRekamRestorans { get; set; }
+
     public virtual DbSet<MFasilita> MFasilitas { get; set; }
 
     public virtual DbSet<MJenisKendaraan> MJenisKendaraans { get; set; }
@@ -201,9 +205,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TempHituptb> TempHituptbs { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -578,6 +582,16 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.MaksimalProduksiPorsiHari).HasDefaultValueSql("0                     ");
             entity.Property(e => e.RataTerjualPorsiHari).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<DbRekamParkir>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.Tanggal, e.Seq }).HasName("PK_REKAM_PARKIR");
+        });
+
+        modelBuilder.Entity<DbRekamRestoran>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.Tanggal, e.Seq }).HasName("SYS_C0032871");
         });
 
         modelBuilder.Entity<MFasilita>(entity =>
