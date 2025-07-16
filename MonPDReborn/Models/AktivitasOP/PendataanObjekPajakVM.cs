@@ -42,7 +42,9 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public List<SubDetailRestoran> DataRestoranList { get; set; } = new();
             public List<SubDetailParkir> DataParkirList { get; set; } = new();
+
             public SubDetail() { }
+
             public SubDetail(EnumFactory.EPajak jenisPajak, string nop)
             {
                 if (jenisPajak == EnumFactory.EPajak.MakananMinuman)
@@ -55,6 +57,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 }
             }
         }
+
 
         public class DataPendataan
         {
@@ -100,7 +103,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var ret = new List<DataPendataan>();
                 var context = DBClass.GetContext();
 
-                var restoDokNop = context.DbRekamRestorans.GroupBy(x => new { Nop = x.Nop }).Select(x => x.Key.Nop).ToList();
+                var restoDokNop = context.DbRekamRestorans.GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".","")).ToList();
                 var restoRealisasi = context.DbMonRestos.Where(x => restoDokNop.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year).Sum(x => x.NominalPokokBayar);
                 var restoDok = context.DbRekamRestorans.GroupBy(x => new { PajakId = x.PajakId })
                     .Select(x => new DataPendataan
@@ -117,7 +120,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 ret.AddRange(restoDok);
 
-                var parkirDokNop = context.DbRekamParkirs.GroupBy(x => new { Nop = x.Nop }).Select(x => x.Key.Nop).ToList();
+                var parkirDokNop = context.DbRekamParkirs.GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).ToList();
                 var parkirRealisasi = context.DbMonParkirs.Where(x => parkirDokNop.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year).Sum(x => x.NominalPokokBayar);
                 var parkirDok = context.DbRekamParkirs.GroupBy(x => new { PajakId = x.PajakId })
                     .Select(x => new DataPendataan
@@ -155,7 +158,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             .ToList()
                             .Select(x =>
                             {
-                                var nop = x.Key.Nop;
+                                var nop = (x.Key.Nop).Replace(".","");
                                 var realisasi = restoRealisasiList.FirstOrDefault(r => r.Nop == nop);
                                 return new DataDetailPendataan
                                 {
@@ -187,7 +190,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             .ToList()
                             .Select(x =>
                             {
-                                var nop = x.Key.Nop;
+                                var nop = (x.Key.Nop).Replace(".","");
                                 var realisasi = parkirRealisasiList.FirstOrDefault(r => r.Nop == nop);
                                 return new DataDetailPendataan
                                 {
@@ -218,6 +221,7 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 var ret = new List<SubDetailRestoran>();
                 var context = DBClass.GetContext();
+                nop = nop.Replace(".", "");
 
                 var dbResto = context.DbOpRestos
                     .Where(x => x.Nop == nop && x.PajakId == (int)jenisPajak)
@@ -229,7 +233,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .FirstOrDefault();
                 var restoData = context.DbRekamRestorans
-                    .Where(x => x.Nop == nop && x.PajakId == (int)jenisPajak)
+                    .Where(x => (x.Nop).Replace(".","") == nop && x.PajakId == (int)jenisPajak)
                     .Select(x => new SubDetailRestoran
                     {
                         Tahun = DateTime.Now.Year,
@@ -255,6 +259,7 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 var ret = new List<SubDetailParkir>();
                 var context = DBClass.GetContext();
+                nop = nop.Replace(".", "");
 
                 var dbParkir = context.DbOpParkirs
                     .Where(x => x.Nop == nop && x.PajakId == (int)jenisPajak)
@@ -266,7 +271,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .FirstOrDefault();
                 var parkirData = context.DbRekamParkirs
-                    .Where(x => x.Nop == nop && x.PajakId == (int)jenisPajak)
+                    .Where(x => (x.Nop).Replace(".","") == nop && x.PajakId == (int)jenisPajak)
                     .Select(x => new SubDetailParkir
                     {
                         Tahun = DateTime.Now.Year,

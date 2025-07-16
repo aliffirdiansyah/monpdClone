@@ -218,21 +218,27 @@
             loadDetail(jenis, tahun);
         }
 
-        function onDetailClick(e) {
+         function onDetailClick(e) {
             e.event.preventDefault();
-            const data = e.row?.data;
+            const data = e.row.data;
+
+            console.log("DATA CLIENT:", data);
+
             if (!data) {
                 DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
                 return;
             }
 
-            const jenisPajak = data.JenisPajak;
+            const jenisPajak = data.EnumPajak;
             const nop = data.NOP;
+
+            console.log("JenisPajak:", jenisPajak);
+            console.log("NOP:", nop);
 
             const $modal = $("#detailModal");
             $modal.find(".modal-title").text(`Detail - ${jenisPajak} ${nop}`);
             $modal.find(".modal-body").html(`
-                <div class="text-center py-5">
+                <div class="text-center py-5">  
                     <div class="spinner-border text-primary"></div>
                     <p>Loading data...</p>
                 </div>
@@ -254,5 +260,6 @@
                 }
             });
         }
+
     </script>
 }
