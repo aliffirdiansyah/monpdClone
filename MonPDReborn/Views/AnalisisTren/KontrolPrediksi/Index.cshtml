@@ -113,7 +113,7 @@
                     </div>
 
                     <div class="col-lg col-md-6">
-                        <button type="button" class="btn btn-success w-100">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100">
                             Terapkan Filter
                         </button>
                     </div>
@@ -160,43 +160,61 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            fnShow("");      // Panggil data rekap jumlah
-           // loadDetail("");  // Panggil semua data detail saat pertama load
+            // Saat halaman pertama kali dimuat, langsung panggil klik tombol filter
+            // untuk mengambil nilai default dan memuat data awal.
+            $('#btnTerapkanFilter').click();
         });
 
-        function fnShow() {
+        // Event handler untuk klik tombol filter
+        $('#btnTerapkanFilter').on('click', function() {
+            // Ambil objek Date dari DevExtreme
+            const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
+            const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
+
+            // Format tanggal ke "YYYY-MM-DD" HANYA JIKA ada nilainya
+            let tglAwalFormatted = null;
+            if (tglAwalDate) {
+                const yyyy = tglAwalDate.getFullYear();
+                const mm = String(tglAwalDate.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+                const dd = String(tglAwalDate.getDate()).padStart(2, '0');
+                tglAwalFormatted = `${yyyy}-${mm}-${dd}`;
+            }
+
+            let tglAkhirFormatted = null;
+            if (tglAkhirDate) {
+                const yyyy = tglAkhirDate.getFullYear();
+                const mm = String(tglAkhirDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(tglAkhirDate.getDate()).padStart(2, '0');
+                tglAkhirFormatted = `${yyyy}-${mm}-${dd}`;
+            }
+
+            // Panggil kembali fnShow dengan nilai filter baru yang sudah diformat
+            fnShow(tglAwalFormatted, tglAkhirFormatted);
+        });
+
+        // fnShow sekarang menerima string tanggal atau null
+        function fnShow(tanggalAwal, tanggalAkhir) {
             $.ajax({
                 url: '@Url.Action("Show", "KontrolPrediksi")',
                 type: 'GET',
+                data: {
+                    tanggalAwal: tanggalAwal,
+                    tanggalAkhir: tanggalAkhir
+                },
                 beforeSend: function () {
-                    // Tampilkan spinner, sembunyikan konten
                     $('#loading2-Show').show();
                     $('#Show').hide();
                 },
                 success: function (result) {
-                    // Sembunyikan spinner, tampilkan hasil
                     $('#loading2-Show').hide();
                     $('#Show').html(result).show();
                 },
                 error: function () {
                     $('#loading2-Show').hide();
-                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data.</div>').show();
                 }
             });
         }
-
-            document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
-            const dd = String(today.getDate()).padStart(2, '0');
-
-            const formattedToday = `${yyyy}-${mm}-${dd}`;
-
-            // Atur nilai input tanggal awal ke hari ini
-            document.getElementById('tanggalAwal').value = formattedToday;
-        });
-
     </script>
 }
 
