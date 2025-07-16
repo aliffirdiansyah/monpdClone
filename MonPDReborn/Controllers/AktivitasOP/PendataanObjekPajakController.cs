@@ -90,11 +90,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
-        public IActionResult SubDetail(int jenisPajak, string nop)
+        public IActionResult SubDetail(EnumFactory.EPajak jenisPajak, string nop)
         {
             try
             {
-                var model = new PendataanObjekPajakVM.SubDetail((EnumFactory.EPajak)jenisPajak, nop);
+                var model = new PendataanObjekPajakVM.SubDetail(jenisPajak, nop);
                 return PartialView($"{URLView}_SubDetail", model);
             }
             catch (ArgumentException e)

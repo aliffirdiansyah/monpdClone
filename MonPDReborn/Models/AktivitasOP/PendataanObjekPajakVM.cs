@@ -219,7 +219,6 @@ namespace MonPDReborn.Models.AktivitasOP
             }
             public static List<SubDetailRestoran> GetSubDetailRestoran(EnumFactory.EPajak jenisPajak, string nop)
             {
-                var ret = new List<SubDetailRestoran>();
                 var context = DBClass.GetContext();
                 nop = nop.Replace(".", "");
 
@@ -253,11 +252,10 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .ToList();
 
-                return ret;
+                return restoData;
             }
             public static List<SubDetailParkir> GetSubDetailParkir(EnumFactory.EPajak jenisPajak, string nop)
             {
-                var ret = new List<SubDetailParkir>();
                 var context = DBClass.GetContext();
                 nop = nop.Replace(".", "");
 
@@ -303,7 +301,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .ToList();
 
-                return ret;
+                return parkirData;
             }
 
             public static Dashboard GetDashboardData()
