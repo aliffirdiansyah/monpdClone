@@ -164,7 +164,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                 {
                                     Tahun = DateTime.Now.Year,
                                     EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
-                                    JenisPajak = ((EnumFactory.EPajak.JasaParkir).GetDescription()),
+                                    JenisPajak = ((EnumFactory.EPajak.MakananMinuman).GetDescription()),
                                     NOP = nop,
                                     ObjekPajak = realisasi?.NamaOp ?? "-",
                                     Alamat = realisasi?.AlamatOp ?? "-",
@@ -195,7 +195,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                 return new DataDetailPendataan
                                 {
                                     Tahun = DateTime.Now.Year,
-                                    EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
+                                    EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                                     JenisPajak = ((EnumFactory.EPajak.JasaParkir).GetDescription()),
                                     NOP = nop,
                                     ObjekPajak = realisasi?.NamaOp ?? "-",
