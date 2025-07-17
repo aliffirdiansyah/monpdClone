@@ -634,6 +634,20 @@
                     </div>
 
                     <div id="DataPiutang" class="mb-5"></div>
+                    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Detail</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Isi modal akan diisi lewat JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                 </div>
 
@@ -1138,6 +1152,67 @@
                   }
                });
             }
+
+        </script>
+        <script>
+            function detailPiutangCellTemplate(cellElement, cellInfo) {
+                const enumPajak = cellInfo.data.EnumPajak;
+                const tahun = cellInfo.column.dataField;
+
+                const button = $('<button>')
+                    .addClass('btn btn-sm btn-outline-primary me-2')
+                    .attr('title', 'Lihat Detail')
+                    .html('<i class="ri-search-line"></i>')
+                    .on('click', function () {
+                        ondetailPiutangClick(enumPajak, tahun);
+                    });
+
+                const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID'));
+
+                const wrapper = $('<div>')
+                    .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                    .append(button)
+                    .append(span);
+
+                $(cellElement).append(wrapper);
+            }
+
+            function ondetailPiutangClick(enumPajak, tahun) {
+                const $modal = $("#detailModal");
+
+                $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);
+                $modal.find(".modal-body").html(`
+                    <div class="text-center my-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                `);
+
+                $modal.modal("show");
+
+                $.ajax({
+                    url: '/Dashboard/DetailPiutang',
+                    type: 'GET',
+                    data: {
+                        enumPajak: enumPajak,
+                        tahun: tahun
+                        // jika ada kategori, tambahkan juga di sini
+                        // kategori: kategori
+                    },
+                    success: function (response) {
+                        $modal.find(".modal-body").html(response);
+                    },
+                    error: function () {
+                        $modal.find(".modal-body").html(`
+                            <div class="alert alert-danger">
+                                Gagal memuat detail data.
+                            </div>
+                        `);
+                    }
+                });
+            }
+
 
         </script>
     }
