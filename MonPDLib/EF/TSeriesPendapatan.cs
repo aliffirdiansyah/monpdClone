@@ -60,9 +60,8 @@ public partial class TSeriesPendapatan
     [Column("JUMLAH", TypeName = "NUMBER(18,2)")]
     public decimal? Jumlah { get; set; }
 
-    [Column("TAHUN")]
-    [Precision(4)]
-    public byte? Tahun { get; set; }
+    [Column("TAHUN", TypeName = "NUMBER(38)")]
+    public decimal? Tahun { get; set; }
 
     [Column("INSERT_DATE", TypeName = "DATE")]
     public DateTime? InsertDate { get; set; }

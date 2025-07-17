@@ -509,6 +509,7 @@ namespace HotelWs
 
                         }
 
+                        Console.WriteLine($"QUERY KETETAPAN {op.Nop} {thn} {bln}");
                         var sql = @"
                             SELECT 	A.NOP,
 		                            A.TAHUN,
@@ -575,6 +576,11 @@ namespace HotelWs
                                 new OracleParameter("tahun", thn),
                                 new OracleParameter("bulan", bln)
                             }).ToListAsync();
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"QUERY KETETAPAN {op.Nop} {thn} {bln}");
+                        Console.ResetColor();
+
                         var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)op.KategoriId);
                         foreach (var item in ketetapanSbyTaxOld)
                         {
@@ -690,7 +696,10 @@ namespace HotelWs
                                 new OracleParameter("bulan", bln)
                         })
                         .ToListAsync();
-                    Console.WriteLine($"{DateTime.Now} [QUERY_FINISHED] KETETAPAN MONITORING DB {thn}-{bln}");
+
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
+                    Console.ResetColor();
                     foreach (var op in opList)
                     {
                         bool isOPTutup = false;
@@ -948,7 +957,7 @@ namespace HotelWs
 		                100 SEQ_KETETAPAN
                 FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
                 JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
-                WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
+                WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TAHUN_SETOR=:TAHUN
                     AND  REPLACE(FK_NOP, '.', '') = :NOP AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN AND A.BULAN_PAJAK = :MASA 
             ";
 
