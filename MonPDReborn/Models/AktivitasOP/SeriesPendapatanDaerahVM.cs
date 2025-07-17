@@ -27,6 +27,15 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             }
         }
 
+        public class ShowPenerimaanPembiayaan
+        {
+            public List<PenerimaanPembiayaan> Data { get; set; } = new();
+            public ShowPenerimaanPembiayaan()
+            {
+                Data = Method.GetDataPenerimaanPembiayaan();
+            }
+        }
+
         public static class Method
         {
             public static List<PenerimaanInduk> GetData()
@@ -115,6 +124,25 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 }
             };
             }
+
+            public static List<PenerimaanPembiayaan> GetDataPenerimaanPembiayaan()
+            {
+                return new List<PenerimaanPembiayaan>
+            {
+                new() {
+                    ID = 1, Uraian = "SiLPA Thn. Sebelumnya",
+                    Target1 = 150, Realisasi1 = 150, Target2 = 160, Realisasi2 = 160,
+                    Target3 = 170, Realisasi3 = 170, Target4 = 180, Realisasi4 = 180,
+                    Target5 = 190, Realisasi5 = 190
+                },
+                new() {
+                    ID = 2, Uraian = "Penerimaan Kembali Pemberian Pinjaman",
+                    Target1 = 50, Realisasi1 = 45, Target2 = 55, Realisasi2 = 58,
+                    Target3 = 60, Realisasi3 = 62, Target4 = 65, Realisasi4 = 65,
+                    Target5 = 70, Realisasi5 = 75
+                }
+            };
+            }
         }
         public class PenerimaanInduk
         {
@@ -179,6 +207,28 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
             public List<DataTransfer>? DetailItems { get; set; } // Properti untuk sub-baris
+        }
+
+        public class PenerimaanPembiayaan
+        {
+            public int ID { get; set; }
+            public string Uraian { get; set; } = "";
+            public decimal Target1 { get; set; }
+            public decimal Realisasi1 { get; set; }
+            public decimal Persentase1 => Target1 > 0 ? (Realisasi1 / Target1) * 100 : 0;
+            // ... properti untuk tahun 2, 3, 4, 5 sama
+            public decimal Target2 { get; set; }
+            public decimal Realisasi2 { get; set; }
+            public decimal Persentase2 => Target2 > 0 ? (Realisasi2 / Target2) * 100 : 0;
+            public decimal Target3 { get; set; }
+            public decimal Realisasi3 { get; set; }
+            public decimal Persentase3 => Target3 > 0 ? (Realisasi3 / Target3) * 100 : 0;
+            public decimal Target4 { get; set; }
+            public decimal Realisasi4 { get; set; }
+            public decimal Persentase4 => Target4 > 0 ? (Realisasi4 / Target4) * 100 : 0;
+            public decimal Target5 { get; set; }
+            public decimal Realisasi5 { get; set; }
+            public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
         }
     }
 }

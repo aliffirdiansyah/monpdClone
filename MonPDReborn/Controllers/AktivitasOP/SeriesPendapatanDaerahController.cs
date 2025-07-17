@@ -75,12 +75,39 @@ namespace MonPDReborn.Controllers.Aktivitas
                 var model = new SeriesPendapatanDaerahVM.ShowPendapatanTransfer();
                 return PartialView($"{URLView}_ShowPendapatanTransfer", model);
             }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
             catch (Exception ex)
             {
-                // ... (error handling seperti action Show) ...
-                return StatusCode(500, "Gagal memuat data.");
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
 
+        public IActionResult ShowPenerimaanPembiayaan()
+        {
+            try
+            {
+                var model = new SeriesPendapatanDaerahVM.ShowPenerimaanPembiayaan();
+                return PartialView($"{URLView}_ShowPenerimaanPembiayaan", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }

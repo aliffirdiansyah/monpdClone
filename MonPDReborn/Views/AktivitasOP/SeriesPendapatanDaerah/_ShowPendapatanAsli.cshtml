@@ -10,6 +10,8 @@
 
 @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.PenerimaanInduk>()
     .ID("SeriesPendapatanDaerah")
+    .DataSource(Model.Data)
+    .KeyExpr("ID")
     .ShowBorders(true)
     .ShowColumnHeaders(true)
     .ShowColumnLines(true)
@@ -20,8 +22,6 @@
     .HeaderFilter(h => h.Visible(true))
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
     .AllowColumnResizing(true)
-    .DataSource(Model.Data)
-    .KeyExpr("ID")
     .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
     .OnExporting("exportGrid")
     .MasterDetail(md =>
