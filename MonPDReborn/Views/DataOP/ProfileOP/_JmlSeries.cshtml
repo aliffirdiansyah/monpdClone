@@ -7,8 +7,67 @@
     var tahun4 = 2022;
     var tahun5 = 2021;
 }
+<div class="flex-grow-1">
+    <h4 class="card-title fs-16 mb-3">
+        Series Jumlah Objek Pajak
+    </h4>
+</div>
+<div class="row">
 
-@(
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-group-fill text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Objek Pajak</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.TotalOpTahunIni.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-line-chart-fill text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pertumbuhan</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.PertumbuhanOp.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-trophy-fill text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Kenaikan Tertinggi</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.KenaikanTertinggiOp.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="table-responsive">
+    @(
 Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>()
     .ID("seriesGrid")
     .ShowBorders(true)
@@ -200,3 +259,5 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>(
     </text>);
         })
 )
+</div>
+

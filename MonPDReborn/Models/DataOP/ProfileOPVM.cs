@@ -92,9 +92,45 @@ namespace MonPDReborn.Models.DataOP
         public class RekapJml
         {
             public List<JmlObjekPajak> Data { get; set; } = new();
+            public SeriesOPStatistik StatistikData { get; set; } = new();
+
             public RekapJml()
             {
                 Data = Method.GetJmlObjekPajakData();
+
+                // Hitung total untuk setiap tahun menggunakan LINQ
+                decimal total2021 = Data.Sum(x => x.Tahun1_Akhir);
+                decimal total2022 = Data.Sum(x => x.Tahun2_Akhir);
+                decimal total2023 = Data.Sum(x => x.Tahun3_Akhir);
+                decimal total2024 = Data.Sum(x => x.Tahun4_Akhir);
+                decimal total2025 = Data.Sum(x => x.Tahun5_Akhir);
+
+                // Hitung selisih pertumbuhan tahunan
+                var selisihPerTahun = new Dictionary<string, decimal>
+                {
+                    { "2021-2022", total2022 - total2021 },
+                    { "2022-2023", total2023 - total2022 },
+                    { "2023-2024", total2024 - total2023 },
+                    { "2024-2025", total2025 - total2024 }
+                };
+
+                // Cari kenaikan tertinggi
+                decimal kenaikanTertinggi = 0;
+                string periodeTertinggi = "-";
+                if (selisihPerTahun.Any())
+                {
+                    kenaikanTertinggi = selisihPerTahun.Values.Max();
+                    periodeTertinggi = selisihPerTahun.FirstOrDefault(kv => kv.Value == kenaikanTertinggi).Key ?? "-";
+                }
+
+                // Masukkan semua hasil perhitungan ke dalam model StatistikData
+                StatistikData = new SeriesOPStatistik
+                {
+                    TotalOpTahunIni = total2025,
+                    PertumbuhanOp = total2025 - total2024,
+                    KenaikanTertinggiOp = kenaikanTertinggi,
+                    PeriodeKenaikanTertinggi = periodeTertinggi
+                };
             }
 
         }
@@ -3214,9 +3250,9 @@ namespace MonPDReborn.Models.DataOP
         // Di dalam ProfileOPVM.cs
         public class SeriesOPStatistik
         {
-            public int TotalOpTahunIni { get; set; }
-            public int PertumbuhanOp { get; set; }
-            public int KenaikanTertinggiOp { get; set; }
+            public decimal TotalOpTahunIni { get; set; }
+            public decimal PertumbuhanOp { get; set; }
+            public decimal KenaikanTertinggiOp { get; set; }
             public string PeriodeKenaikanTertinggi { get; set; } = "-";
         }
 
