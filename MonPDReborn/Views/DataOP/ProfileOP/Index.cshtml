@@ -101,7 +101,7 @@
                                         </div>
 
                                         <div id="detailContainerSeries" class="mt-4" style="display: none;">
-                                            @Html.Partial("~/Views/DataOP/ProfileOP/_SeriesMaster.cshtml")
+                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailOP.cshtml")
                                         </div>
                                     </div>
 
@@ -176,7 +176,7 @@
         }
 
         function kategoriSeriesCellTemplate(cellElement, cellInfo) {
-            const enumPajak = cellInfo.data.EnumPajak;
+            const jenisPajak = cellInfo.data.EnumPajak;
             const kategori = cellInfo.data.KategoriId;
             const tahun = cellInfo.column.dataField;
             const button = $('<button>')
@@ -184,7 +184,7 @@
                 .attr('title', 'Lihat Detail')
                 .html('<i class="ri-search-line"></i>')
                 .on('click', function () {
-                    onSeriesClick(enumPajak, kategori, tahun);
+                    onSeriesClick(jenisPajak, kategori, tahun);
                 });
 
                 const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID') );
@@ -200,7 +200,7 @@
         function fnShowSeries()
         {
             $.ajax({
-              url: '@(Url.Action("ShowSeries"))',
+              url: '@(Url.Action("JmlSeries"))',
               type: 'GET',
               beforeSend: function () {
                  $('#loading2-ShowSeries').show();
@@ -288,7 +288,7 @@
             $("#detailLoadingSeries").show();
 
             $.ajax({
-                url: '/ProfileOP/SeriesMaster',
+                url: '/ProfileOP/DetailOP',
                 type: 'GET',
                 data: {
                     enumPajak: enumPajak,
@@ -296,7 +296,7 @@
                     tahun: tahun
                 },
                 success: function (data) {
-                    const grid = $("#SeriesGrid").dxDataGrid("instance");
+                     const grid = $("#detailOPGrid").dxDataGrid("instance");
 
                     grid.option("dataSource", data);
 
@@ -330,31 +330,31 @@
         });
 
 
-      /*  function onSeriesClick(enumPajak, kategori, tahun) {
-            $.ajax({
-                url: '/ProfileOP/SeriesMaster',
-                type: 'GET',
-                data: {
-                    enumPajak: enumPajak,
-                    kategori: kategori,
-                    tahun: tahun
-                },
-                success: function (data) {
-                    const grid = $("#SeriesGrid").dxDataGrid("instance"); // ✅ pastikan id nya SeriesGrid
-                    grid.option("dataSource", data);
+       // function onSeriesClick(jenisPajak, kategori, tahun) {
+       //      $.ajax({
+       //          url: '/ProfileOP/DetailOP',
+       //          type: 'GET',
+       //          data: {
+       //              jenisPajak: enumPajak,
+       //              kategori: kategori,
+       //              tahun: tahun
+       //          },
+       //          success: function (data) {
+       //              const grid = $("#SeriesGrid").dxDataGrid("instance"); 
+       //              grid.option("dataSource", data);
 
-                    $("#detailWrapperSeries").show(); // ✅ tampilkan wrapper detail series
-                    $("#detailWrapper").hide();       // ✅ sembunyikan wrapper lama
-                },
-                error: function (xhr) {
-                    swal.fire({
-                            icon: 'error',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: "❌ Gagal memuat data Series."
-                        })
-                }
-            });
-        }*/
+       //              $("#detailWrapperSeries").show(); 
+       //              $("#detailWrapper").hide();       
+       //          },
+       //          error: function (xhr) {
+       //              swal.fire({
+       //                      icon: 'error',
+       //                      title: '<b style="color:orange">Peringatan</b>',
+       //                      text: "❌ Gagal memuat data Series."
+       //                  })
+       //          }
+       //      });
+       //  }
 
 
 
@@ -364,6 +364,48 @@
               window.open(url, '_blank');
           }
           
+
+    </script>
+    <script>
+        //                 function subDetailTemplate(detailElement, info) {
+        //     const data = info.data;
+
+        //     console.log("DATA CLIENT:", data);
+
+        //     if (!data || typeof data.EnumPajak === 'undefined') {
+        //         DevExpress.ui.notify("Data EnumPajak tidak ditemukan", "error", 2000);
+        //         detailElement.append(`<div class="alert alert-danger">Data EnumPajak tidak ditemukan</div>`);
+        //         return;
+        //     }
+
+        //     const jenisPajak = data.EnumPajak; pastikan ini integer
+
+        //     console.log("JenisPajak (enum int):", jenisPajak);
+
+        //     Tampilkan spinner saat loading
+        //     detailElement.empty().append(`
+        //         <div class="text-center py-5">
+        //             <div class="spinner-border text-primary"></div>
+        //             <p>Loading detail...</p>
+        //         </div>
+        //     `);
+
+        //     Panggil partial view dari server
+        //     $.ajax({
+        //         url: '/ProfileOP/DetailSeries',
+        //         type: 'GET',
+        //         data: { jenisPajak }, kirim sebagai int
+        //         success: function (response) {
+        //             detailElement.empty().append(response);
+        //         },
+        //         error: function () {
+        //             detailElement.empty().append(`
+        //                 <div class="alert alert-danger">Gagal memuat detail dari server.</div>
+        //             `);
+        //         }
+        //     });
+        // }
+
 
     </script>
 }

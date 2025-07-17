@@ -1,6 +1,4 @@
-﻿@using static MonPDReborn.Models.DashboardVM
-@model MonPDReborn.Models.DashboardVM.JumlahObjekPajak
-
+﻿
 @{
     var tahun1 = 2025;
     var tahun2 = 2024;
@@ -8,27 +6,36 @@
     var tahun4 = 2022;
     var tahun5 = 2021;
 }
+<div class="table-responsive">
+    
 
 @(
-Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
-    .ID("dg-JumlahObjekPajakTahunan")
-    .ShowBorders(true)
+Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
+    .DataSource(m => m.Mvc()
+        .LoadAction("GetDetailJmlOPData")
+        .Key("Kategori")
+        .LoadParams(new
+        {
+            JenisPajak = new JS("data.EnumPajak")
+        })
+    )
     .ShowColumnLines(true)
     .ShowRowLines(true)
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .RowAlternationEnabled(true)
     .ColumnAutoWidth(true)
-    .SearchPanel(s => s.Visible(true))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(h => h.Visible(true))
-    .Sorting(s => s.Mode(GridSortingMode.Multiple))
-    .AllowColumnResizing(true)
-    .DataSource(Model.Data)
-    .KeyExpr("JenisPajak")
-    .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
-    .OnExporting("exportGrid")
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+    )
     .Columns(columns => {
 
-        columns.AddFor(x => x.JenisPajak)
-            .Caption("JENIS PAJAK")
+        columns.AddFor(x => x.EnumPajak).Visible(false);
+        columns.AddFor(x => x.Kategori)
+            .Caption("Kategori")
             .Fixed(true)
             .FixedPosition(HorizontalEdge.Left)
             .CssClass("fw-bold");
@@ -37,55 +44,55 @@ Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
             .Caption(tahun5.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
-                sub.AddFor(x => x.Tahun5_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun5_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun5_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun5_Akhir).Caption("Akhir").Format("#,##0");
+                sub.AddFor(x => x.Tahun1_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun1_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun1_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun1_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
             });
 
         columns.Add()
             .Caption(tahun4.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
-                sub.AddFor(x => x.Tahun4_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun4_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun4_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun4_Akhir).Caption("Akhir").Format("#,##0");
+                sub.AddFor(x => x.Tahun2_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun2_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun2_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun2_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
             });
 
         columns.Add()
             .Caption(tahun3.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
-                sub.AddFor(x => x.Tahun3_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun3_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun3_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun3_Akhir).Caption("Akhir").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun3_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun3_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun3_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
             });
 
         columns.Add()
             .Caption(tahun2.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
-                sub.AddFor(x => x.Tahun2_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun2_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun2_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun2_Akhir).Caption("Akhir").Format("#,##0");
+                sub.AddFor(x => x.Tahun4_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun4_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun4_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun4_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
             });
 
         columns.Add()
             .Caption(tahun1.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
-                sub.AddFor(x => x.Tahun1_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun1_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun1_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun1_Akhir).Caption("Akhir").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun5_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun5_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+                sub.AddFor(x => x.Tahun5_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
             });
     })
     .Summary(s => {
         s.TotalItems(items => {
-            items.AddFor(x => x.JenisPajak)
+            items.AddFor(x => x.Kategori)
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("Total");
 
@@ -191,3 +198,4 @@ Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
         });
     })
 )
+</div>

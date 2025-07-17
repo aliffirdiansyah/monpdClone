@@ -1,5 +1,4 @@
-﻿@using static MonPDReborn.Models.DashboardVM
-@model MonPDReborn.Models.DashboardVM.JumlahObjekPajak
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.RekapJml
 
 @{
     var tahun1 = 2025;
@@ -10,8 +9,8 @@
 }
 
 @(
-Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
-    .ID("dg-JumlahObjekPajakTahunan")
+Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>()
+    .ID("seriesGrid")
     .ShowBorders(true)
     .ShowColumnLines(true)
     .ShowRowLines(true)
@@ -22,7 +21,6 @@ Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
     .AllowColumnResizing(true)
     .DataSource(Model.Data)
-    .KeyExpr("JenisPajak")
     .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
     .OnExporting("exportGrid")
     .Columns(columns => {
@@ -190,4 +188,15 @@ Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
                 .DisplayFormat("{0}");
         });
     })
+    .MasterDetail(md =>
+        {
+        md.Enabled(true);
+        md.Template(
+        @<text>
+            @{
+                ViewData["JenisPajak"] = new JS("data.EnumPajak");
+            }
+        @await Html.PartialAsync("~/Views/DataOP/ProfileOP/_DetailSeries.cshtml")
+    </text>);
+        })
 )
