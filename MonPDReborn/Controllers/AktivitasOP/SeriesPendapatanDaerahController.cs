@@ -52,7 +52,7 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 var model = new SeriesPendapatanDaerahVM.Show();
-                return PartialView($"{URLView}_Show", model);
+                return PartialView($"{URLView}_ShowPendapatanAsli", model);
             }
             catch (ArgumentException e)
             {
@@ -65,6 +65,20 @@ namespace MonPDReborn.Controllers.Aktivitas
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
+            }
+        }
+
+        public IActionResult ShowPendapatanTransfer()
+        {
+            try
+            {
+                var model = new SeriesPendapatanDaerahVM.ShowPendapatanTransfer();
+                return PartialView($"{URLView}_ShowPendapatanTransfer", model);
+            }
+            catch (Exception ex)
+            {
+                // ... (error handling seperti action Show) ...
+                return StatusCode(500, "Gagal memuat data.");
             }
         }
 

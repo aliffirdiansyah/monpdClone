@@ -1,5 +1,111 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model SeriesPendapatanDaerahVM.Index
+
 @{
+    ViewData["Title"] = "Series Pendapatan Daerah";
+    Layout = "_Layout"; // Pastikan path layout ini benar
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
+                <div class="flex-grow-1">
+                    <h5 class="card-title text-white fs-16 mb-0">
+                        <i class="mdi mdi-file-chart align-middle me-1"></i> PENDAPATAN ASLI DAERAH
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-light" title="Segarkan Data" onclick="loadShow()">
+                        <i class="mdi mdi-refresh align-middle"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading-Show" class="spinner-border text-primary my-3" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
+                <div class="flex-grow-1">
+                    <h5 class="card-title text-white fs-16 mb-0">
+                        <i class="mdi mdi-swap-horizontal-bold align-middle me-1"></i> PENDAPATAN TRANSFER
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-light" title="Segarkan Data" onclick="loadShowPendapatanTransfer()">
+                        <i class="mdi mdi-refresh align-middle"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading-Transfer" class="spinner-border text-primary my-3" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="ShowTransfer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Saat halaman siap, langsung panggil fungsi untuk memuat data
+        $(document).ready(function () {
+            loadShow();
+            loadShowPendapatanTransfer();
+        });
+
+        // Fungsi untuk memuat tabel dari _Show.cshtml via AJAX
+        function loadShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "SeriesPendapatanDaerah")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading-Show').show(); // ID SUDAH DISAMAKAN
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading-Show').hide();
+                    $('#Show').html(result).show();
+                },
+                error: function () {
+                    $('#loading-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger text-center">❌ Gagal memuat data. Silakan coba lagi.</div>').show();
+                }
+            });
+        }
+
+        function loadShowPendapatanTransfer() {
+            $.ajax({
+                url: '@Url.Action("ShowPendapatanTransfer", "SeriesPendapatanDaerah")',
+                type: 'GET',
+                beforeSend: function () {
+                    $('#loading-Transfer').show();
+                    $('#ShowTransfer').hide();
+                },
+                success: function (result) {
+                    $('#loading-Transfer').hide();
+                    $('#ShowTransfer').html(result).show();
+                },
+                error: function () {
+                    $('#loading-Transfer').hide();
+                    $('#ShowTransfer').html('<div class="alert alert-danger text-center">❌ Gagal memuat data.</div>').show();
+                }
+            });
+        }
+        
+    </script>
 }
