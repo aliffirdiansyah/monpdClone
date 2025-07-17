@@ -476,7 +476,7 @@ namespace HiburanWs
                         var source = await _contMonPd.DbOpHiburans.Where(x => x.TahunBuku == i).ToListAsync();
                         foreach (var item in result)
                         {
-                            var isExist = dataExisting.Where(x => x.Nop == item.Nop).Any();
+                            var isExist = dataExisting.Where(x => x.Nop == item.Nop && x.TahunBuku == i).Any();
                             if (!isExist)
                             {
                                 if (item.TglMulaiBukaOp.Year <= i)
@@ -779,7 +779,7 @@ namespace HiburanWs
                 END ID_AYAT_PAJAK,FK_NOP,NAMA_OP NAMA_WP,ALAMAT_OP ALAMAT_WP,BULAN_PAJAK BULAN_PAJAK_SSPD,TAHUN_PAJAK TAHUN_PAJAK_SSPD, JML_POKOK,JML_DENDA,REFF_DASAR_SETORAN,NAMA_LOKASI_BAYAR TEMPAT_BAYAR,DASAR_SETORAN SETORAN_BERDASARKAN,SYSDATE REKON_DATE,'JOB' REKON_BY,
                 FK_OP,DASAR_SETORAN,NAMA_JENIS_PAJAK                
         FROM VW_SIMPADA_SSPD@LIHATHPPSERVER
-        WHERE NAMA_PAJAK_DAERAH='HIBURAN' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY') AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN
+        WHERE NAMA_PAJAK_DAERAH='HIBURAN' AND TAHUN_SETOR=:TAHUN AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN
     ) A
                 ";
                 var pembayaranSspdList = _contMonitoringDb.Set<SSPDPbjt>()
@@ -1076,7 +1076,7 @@ namespace HiburanWs
             //    FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR A
             //    JOIN PHRH_USER.KODEREKENING_BARU B ON A.FK_AYAT_PAJAK=B.KODE
             //    WHERE NAMA_PAJAK_DAERAH='HIBURAN' 
-            //        AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
+            //        AND TAHUN_SETOR=:TAHUN
             //        AND  REPLACE(FK_NOP, '.', '') = :NOP AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN AND A.BULAN_PAJAK = :MASA 
             //";
 
