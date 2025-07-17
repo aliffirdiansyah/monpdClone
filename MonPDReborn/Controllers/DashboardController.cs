@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
 
 namespace MonPDReborn.Controllers
@@ -236,6 +237,26 @@ namespace MonPDReborn.Controllers
             {
                 var model = new Models.DashboardVM.JumlahObjekPajak();
                 return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+                return Json(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+                return Json(response.ToInternalServerError());
+            }
+        }
+
+        public IActionResult DetailPiutang(int jenisPajak)
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var model = new Models.DashboardVM.DetailPiutang((EnumFactory.EPajak)jenisPajak);
+                return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException ex)
             {

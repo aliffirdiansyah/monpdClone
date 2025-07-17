@@ -91,6 +91,14 @@ namespace MonPDReborn.Models
                 Data = Method.GetDataPiutangData();
             }
         }
+        public class DetailPiutang
+        {
+            public List<ViewModel.DetailPiutang> Data { get; set; } = new List<ViewModel.DetailPiutang>();
+            public DetailPiutang(EnumFactory.EPajak jenisPajak)
+            {
+                Data = Method.GetDetailPiutangData(jenisPajak);
+            }
+        }
         public class DataMutasi
         {
             public List<ViewModel.DataMutasi> Data { get; set; } = new List<ViewModel.DataMutasi>();

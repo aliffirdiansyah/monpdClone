@@ -1,0 +1,56 @@
+﻿@using static MonPDReborn.Models.DashboardVM
+@model MonPDReborn.Models.DashboardVM.DetailPiutang
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<ViewModel.DetailPiutang>()
+                .ID("dg-DetailPiutang")
+                .ShowBorders(true)
+                .ShowColumnHeaders(true)
+                .ShowColumnLines(true)
+                .ShowRowLines(true)
+                .ColumnAutoWidth(true)
+                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                .FilterRow(f => f.Visible(true))
+                .HeaderFilter(h => h.Visible(true))
+                .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                .AllowColumnResizing(true)
+                .DataSource(Model.Data)
+                .KeyExpr("ID")
+                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                .OnExporting("exportGrid")
+                .Columns(columns =>
+                {
+                    columns.AddFor(x => x.Nop).Caption("NOP").Alignment(HorizontalAlignment.Left);
+                    columns.AddFor(x => x.NamaOp).Caption("Nama OP").Alignment(HorizontalAlignment.Left);
+                    columns.AddFor(x => x.AlamatOp).Caption("Allamat OP").Alignment(HorizontalAlignment.Left);
+                    columns.AddFor(x => x.WilayahPajak).Caption("UPTB").Alignment(HorizontalAlignment.Left);
+                    columns.AddFor(x => x.MasaPajak).Caption("Masa Pajak").Alignment(HorizontalAlignment.Left);
+                    columns.AddFor(x => x.TahunPajak).Caption("Tahun Pajak").Alignment(HorizontalAlignment.Left);
+                    columns.AddFor(x => x.NominalPiutang).Caption("Piutang").Alignment(HorizontalAlignment.Right).Format("#,##0");
+                })
+                .Summary(s =>
+                {
+                    s.TotalItems(items =>
+                    {
+                        items.Add()
+                    .Column("TahunPajak")
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("Total")
+                    .Alignment(HorizontalAlignment.Right);
+
+                        items.Add()
+                    .Column("NominalPiutang")
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}")
+                    .Alignment(HorizontalAlignment.Right);
+
+                        
+                    });
+                })
+                
+            
+        )
+</div>
+
