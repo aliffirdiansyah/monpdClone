@@ -136,7 +136,7 @@ namespace EaccountingWs
                                     KODE = x.Key.KODE,
                                     NODOKUMEN = x.Key.NODOKUMEN,
                                     URAIAN = string.Join(" ", x.Select(i => i.URAIAN)),
-                                    JUMLAH = x.Sum(i => decimal.TryParse(i.JUMLAH, out var jumlah) ? jumlah : 0),
+                                    JUMLAH = x.Sum(i => decimal.TryParse(i.JUMLAH ?? "0", System.Globalization.NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var jumlah) ? jumlah : 0),
                                     TAHUN = thn.ToString()
                                 }).ToList();
 
