@@ -1,0 +1,100 @@
+﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.ShowPendapatanTransfer
+@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 4).ToString();
+    var tahun2 = (currentYear - 3).ToString();
+    var tahun3 = (currentYear - 2).ToString();
+    var tahun4 = (currentYear - 1).ToString();
+    var tahun5 = currentYear.ToString();
+}
+
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.DataTransfer>()
+    .ID("GridPendapatanTransfer")
+    .DataSource(Model.Data)
+    .KeyExpr("ID")
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ColumnAutoWidth(true)
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .AllowColumnResizing(true)
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
+    .MasterDetail(md =>
+    {
+        md.Enabled(true);
+        md.Template(@<text>
+            @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.DataTransfer>()
+                .DataSource(new JS("data.DetailItems"))
+                .ShowBorders(true)
+                .ColumnAutoWidth(true)
+                .Columns(detailColumns =>
+                {
+                    detailColumns.AddFor(m => m.JenisPendapatan).Caption("Rincian Pendapatan");
+
+                    // --- KOLOM DETAIL LENGKAP ---
+                    detailColumns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(sub => {
+                        sub.AddFor(m => m.Target1).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Realisasi1).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Persentase1).Caption("%").Format("#,##0.00'%'");
+                    });
+                    detailColumns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(sub => {
+                        sub.AddFor(m => m.Target2).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Realisasi2).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Persentase2).Caption("%").Format("#,##0.00'%'");
+                    });
+                    detailColumns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(sub => {
+                        sub.AddFor(m => m.Target3).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Realisasi3).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Persentase3).Caption("%").Format("#,##0.00'%'");
+                    });
+                    detailColumns.Add().Caption(tahun4).Alignment(HorizontalAlignment.Center).Columns(sub => {
+                        sub.AddFor(m => m.Target4).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Realisasi4).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Persentase4).Caption("%").Format("#,##0.00'%'");
+                    });
+                    detailColumns.Add().Caption(tahun5).Alignment(HorizontalAlignment.Center).Columns(sub => {
+                        sub.AddFor(m => m.Target5).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Realisasi5).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                        sub.AddFor(m => m.Persentase5).Caption("%").Format("#,##0.00'%'");
+                    });
+                })
+            )
+        </text>);
+    })
+    .Columns(columns =>
+    {
+        // --- KOLOM UTAMA LENGKAP ---
+        columns.AddFor(x => x.JenisPendapatan).CssClass("fw-bold").Caption("JENIS PENDAPATAN").Fixed(true);
+
+        columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(sub => {
+            sub.AddFor(x => x.Target1).Caption("TARGET").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Realisasi1).Caption("REALISASI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Persentase1).Caption("%").Format("#,##0.00'%'");
+        });
+        columns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(sub => {
+            sub.AddFor(x => x.Target2).Caption("TARGET").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Realisasi2).Caption("REALISASI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Persentase2).Caption("%").Format("#,##0.00'%'");
+        });
+        columns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(sub => {
+            sub.AddFor(x => x.Target3).Caption("TARGET").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Realisasi3).Caption("REALISASI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Persentase3).Caption("%").Format("#,##0.00'%'");
+        });
+        columns.Add().Caption(tahun4).Alignment(HorizontalAlignment.Center).Columns(sub => {
+            sub.AddFor(x => x.Target4).Caption("TARGET").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Realisasi4).Caption("REALISASI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Persentase4).Caption("%").Format("#,##0.00'%'");
+        });
+        columns.Add().Caption(tahun5).Alignment(HorizontalAlignment.Center).Columns(sub => {
+            sub.AddFor(x => x.Target5).Caption("TARGET").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Realisasi5).Caption("REALISASI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            sub.AddFor(x => x.Persentase5).Caption("%").Format("#,##0.00'%'");
+        });
+    })
+)
