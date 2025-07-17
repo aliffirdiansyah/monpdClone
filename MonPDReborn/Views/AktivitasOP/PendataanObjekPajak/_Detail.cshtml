@@ -7,15 +7,22 @@
     .ID("gridPendataanDetail")
     .DataSource(Model.DataDetailList)
     .ShowBorders(true)
-    .ShowColumnHeaders(true)
     .ShowColumnLines(true)
+    .ShowColumnHeaders(true)
+    .AllowColumnResizing(true)
     .ShowRowLines(true)
     .ColumnAutoWidth(true)
     .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
     .FilterRow(f => f.Visible(true))
     .HeaderFilter(h => h.Visible(true))
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
-    .AllowColumnResizing(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(pager =>
+    {
+        pager.ShowPageSizeSelector(true);
+        pager.AllowedPageSizes(new[] { 10, 20, 50 });
+        pager.ShowInfo(true);
+    })
     .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
     .OnExporting("exportGrid")
     .Columns(columns => {

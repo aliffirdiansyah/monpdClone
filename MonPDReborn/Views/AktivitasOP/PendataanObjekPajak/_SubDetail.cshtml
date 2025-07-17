@@ -8,18 +8,21 @@
             .DataSource(Model.DataRestoranList)
             .KeyExpr("NOP")
             .ShowBorders(true)
-            .RowAlternationEnabled(true)
+            .ShowColumnLines(true)
+            .ShowColumnHeaders(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
             .ColumnAutoWidth(true)
-            .SearchPanel(sp => sp
-                .Visible(true)
-                .Placeholder("Cari...")
-                .Width(300)
-            )
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
             .Paging(p => p.PageSize(10))
-            .Pager(pg => {
-                pg.ShowPageSizeSelector(true);
-                pg.AllowedPageSizes(new[] { 10, 20, 50 });
-                pg.ShowInfo(true);
+            .Pager(pager =>
+            {
+                pager.ShowPageSizeSelector(true);
+                pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                pager.ShowInfo(true);
             })
             .Columns(columns => {
                 columns.AddFor(m => m.Hari)
@@ -59,18 +62,21 @@
             .DataSource(Model.DataParkirList)
             .KeyExpr("NOP")
             .ShowBorders(true)
-            .RowAlternationEnabled(true)
+            .ShowColumnLines(true)
+            .ShowColumnHeaders(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
             .ColumnAutoWidth(true)
-            .SearchPanel(sp => sp
-                .Visible(true)
-                .Placeholder("Cari...")
-                .Width(300)
-            )
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
             .Paging(p => p.PageSize(10))
-            .Pager(pg => {
-                pg.ShowPageSizeSelector(true);
-                pg.AllowedPageSizes(new[] { 10, 20, 50 });
-                pg.ShowInfo(true);
+            .Pager(pager =>
+            {
+                pager.ShowPageSizeSelector(true);
+                pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                pager.ShowInfo(true);
             })
             .Columns(columns => {
                 columns.AddFor(m => m.Hari)
