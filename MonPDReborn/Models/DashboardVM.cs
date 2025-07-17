@@ -346,6 +346,7 @@ namespace MonPDReborn.Models
                 public decimal NominalMutasi2 { get; set; }
                 public decimal NominalMutasi3 { get; set; }
                 public decimal NominalMutasi4 { get; set; }
+                public decimal NominalMutasi5 { get; set; }
             }
         }
 
@@ -2046,33 +2047,26 @@ namespace MonPDReborn.Models
             }
             public static List<ViewModel.DataMutasi> GetDataMutasiData()
             {
-                return new List<ViewModel.DataMutasi>
+                var ret = new List<ViewModel.DataMutasi>();
+                var context = DBClass.GetContext();
+                var currentYear = DateTime.Now.Year;
+
+                var MutasiData = context.TMutasiPiutangs
+                    .Where(x => x.Status == true)
+                    .GroupBy(x => x.Mutasi)
+                    .ToList();
+
+                ret = MutasiData.Select(g => new ViewModel.DataMutasi
                 {
-                    new ViewModel.DataMutasi
-                    {
-                        Keterangan = "Penyesuaian akhir tahun",
-                        NominalMutasi1 = 5000000,
-                        NominalMutasi2 = 4500000,
-                        NominalMutasi3 = 4000000,
-                        NominalMutasi4 = 3500000
-                    },
-                    new ViewModel.DataMutasi
-                    {
-                        Keterangan = "Koreksi sistem",
-                        NominalMutasi1 = 3000000,
-                        NominalMutasi2 = 2800000,
-                        NominalMutasi3 = 2600000,
-                        NominalMutasi4 = 2400000
-                    },
-                    new ViewModel.DataMutasi
-                    {
-                        Keterangan = "Pemindahan saldo",
-                        NominalMutasi1 = 7000000,
-                        NominalMutasi2 = 6800000,
-                        NominalMutasi3 = 6500000,
-                        NominalMutasi4 = 6000000
-                    }
-                };
+                    Keterangan = g.Key, // pakai nama mutasi sebagai keterangan
+                    NominalMutasi1 = g.Where(x => int.Parse(x.TahunBuku) <= currentYear - 4).Sum(x => x.Nilai),
+                    NominalMutasi2 = g.Where(x => int.Parse(x.TahunBuku) == currentYear - 3).Sum(x => x.Nilai),
+                    NominalMutasi3 = g.Where(x => int.Parse(x.TahunBuku) == currentYear - 2).Sum(x => x.Nilai),
+                    NominalMutasi4 = g.Where(x => int.Parse(x.TahunBuku) == currentYear - 1).Sum(x => x.Nilai),
+                    NominalMutasi5 = g.Where(x => int.Parse(x.TahunBuku) == currentYear).Sum(x => x.Nilai),
+                }).ToList();
+
+                return ret;
             }
 
         }
