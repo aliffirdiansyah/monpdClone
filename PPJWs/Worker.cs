@@ -484,7 +484,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                 }
             }
 
-            //////FILL KETETAPAN 
+            ////FILL KETETAPAN 
             var _contSbyTaxOld = DBClass.GetSurabayaTaxContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
@@ -652,32 +652,31 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                 {
                     Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN MONITORING DB {thn}-{bln}");
                     var sql = @"
-                            SELECT 	REPLACE(NOP, '.','') NOP,
-                              TAHUN,
-                              MASAPAJAK,
-                              100 SEQ,
-                              1 JENIS_KETETAPAN,
-                              TANGGALENTRY TGL_KETETAPAN,
-                              TANGGALJATUHTEMPO TGL_JATUH_TEMPO_BAYAR,
-                              0 NILAI_PENGURANG,
-                              NVL(PAJAK_TERUTANG, 0) POKOK
-                            FROM (
-                             select  NO_SPTPD, A.NPWPD, IDAYAT, 
-                                     TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
-                                     RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
-                                     A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
-                             from PHRH_USER.sptpd_new@LIHATHR A
-                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='LISTRIK'
-                             WHERE STATUS=0
-                             UNION ALL
-                             select KD_BILL,NPWPD,KODEREKENING,
-                                     TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
-                                     PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
-                             from sptpd_payment@LIHATBONANG A
-                             JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='LISTRIK'
-                             where STATUS_HAPUS=0
-                            ) A
-                            WHERE A.TAHUN = :tahun AND A.MASAPAJAK = :bulan
+                             SELECT 	REPLACE(NOP, '.','') NOP,
+                                      TAHUN,
+                                      MASAPAJAK,
+                                      100 SEQ,
+                                      1 JENIS_KETETAPAN,
+                                      TANGGALENTRY TGL_KETETAPAN,
+                                      TANGGALJATUHTEMPO TGL_JATUH_TEMPO_BAYAR,
+                                      0 NILAI_PENGURANG,
+                                      NVL(PAJAK_TERUTANG, 0) POKOK
+                                    FROM (
+                                     select  NO_SPTPD, A.NPWPD, IDAYAT, 
+                                             TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
+                                             RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
+                                             A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
+                                     from PHRH_USER.sptpd_new@LIHATHR A
+                                     JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='PPJ'
+                                     WHERE STATUS=0 AND TAHUN = :tahun AND MASAPAJAK = :bulan
+                                     UNION ALL
+                                     select KD_BILL,NPWPD,KODEREKENING,
+                                             TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
+                                             PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
+                                     from sptpd_payment@LIHATBONANG A
+                                     JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='PPJ'
+                                     where STATUS_HAPUS=0 AND TAHUNPAJAK = :tahun AND MASAPAJAK = :bulan
+                                    ) A
                         ";
 
                     var ketetapanSbyTaxOld = await _contMonitoringDb.Set<OPSkpdListrik>()
@@ -928,7 +927,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
             //PEMBAYARAN PHR
             var _contMonitoringDb = DBClass.GetMonitoringDbContext();
 
-            Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR)");
+            Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR) {row.TahunPajakKetetapan}-{row.MasaPajakKetetapan}-{row.Nop}-{row.SeqPajakKetetapan}");
             var sql = @"
                SELECT 	REPLACE(FK_NOP, '.', '') NOP,
                         TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,
@@ -942,8 +941,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                         0 PENGURANG_SANSKSI,
                         100 SEQ_KETETAPAN
                 FROM VW_SIMPADA_SSPD@LIHATHPPSERVER A
-                WHERE NAMA_PAJAK_DAERAH='PPJ' AND TAHUN_SETOR=TO_CHAR(SYSDATE,'YYYY')
-                    AND  REPLACE(FK_NOP, '.', '') = :NOP AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN AND A.BULAN_PAJAK = :MASA 
+                WHERE NAMA_PAJAK_DAERAH='PPJ' AND TAHUN_SETOR=:TAHUN AND  REPLACE(FK_NOP, '.', '') = :NOP AND TO_NUMBER(TAHUN_PAJAK) = :TAHUN AND A.BULAN_PAJAK = :MASA 
             ";
 
             var pembayaranSspdList = _contMonitoringDb.Set<SSPDPbjt>()
@@ -1046,7 +1044,7 @@ WHERE 	NAMA_PAJAK_DAERAH ='PPJ'
                     }
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{DateTime.Now} [SAVED] DB_MON_PPJ (SSPD) (PHR): {row.TahunPajakKetetapan}-{row.MasaPajakKetetapan}-{row.Nop}-{row.SeqPajakKetetapan}");
+                    Console.WriteLine($"{DateTime.Now} [QUERY] OP (SSPD) (PHR) {row.TahunPajakKetetapan}-{row.MasaPajakKetetapan}-{row.Nop}-{row.SeqPajakKetetapan}");
                     Console.ResetColor();
                 }
             }

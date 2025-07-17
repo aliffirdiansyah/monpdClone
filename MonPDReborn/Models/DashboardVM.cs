@@ -784,6 +784,26 @@ namespace MonPDReborn.Models
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
+                    JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
+                    Target5 = targetListrikNow,
+                    Realisasi5 = realisasiListrikNow,
+                    Persentase5 = targetListrikNow != 0 ? Math.Round(realisasiListrikNow / targetListrikNow * 100, 2) : 0,
+                    Target4 = targetListrikMines1,
+                    Realisasi4 = realisasiListrikMines1,
+                    Persentase4 = targetListrikMines1 != 0 ? Math.Round(realisasiListrikMines1 / targetListrikMines1 * 100, 2) : 0,
+                    Target3 = targetListrikMines2,
+                    Realisasi3 = realisasiListrikMines2,
+                    Persentase3 = targetListrikMines2 != 0 ? Math.Round(realisasiListrikMines2 / targetListrikMines2 * 100, 2) : 0,
+                    Target2 = targetListrikMines3,
+                    Realisasi2 = realisasiListrikMines3,
+                    Persentase2 = targetListrikMines3 != 0 ? Math.Round(realisasiListrikMines3 / targetListrikMines3 * 100, 2) : 0,
+                    Target1 = targetListrikMines4,
+                    Realisasi1 = realisasiListrikMines4,
+                    Persentase1 = targetListrikMines4 != 0 ? Math.Round(realisasiListrikMines4 / targetListrikMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
                     JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                     Target5 = targetHotelNow,
                     Realisasi5 = realisasiHotelNow,
@@ -801,28 +821,6 @@ namespace MonPDReborn.Models
                     Realisasi1 = realisasiHotelMines4,
                     Persentase1 = targetHotelMines4 != 0 ? Math.Round(realisasiHotelMines4 / targetHotelMines4 * 100, 2) : 0,
                 });
-
-
-                result.Add(new ViewModel.SeriesPajakDaerah
-                {
-                    JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
-                    Target5 = targetHiburanNow,
-                    Realisasi5 = realisasiHiburanNow,
-                    Persentase5 = targetHiburanNow != 0 ? Math.Round(realisasiHiburanNow / targetHiburanNow * 100, 2) : 0,
-                    Target4 = targetHiburanMines1,
-                    Realisasi4 = realisasiHiburanMines1,
-                    Persentase4 = targetHiburanMines1 != 0 ? Math.Round(realisasiHiburanMines1 / targetHiburanMines1 * 100, 2) : 0,
-                    Target3 = targetHiburanMines2,
-                    Realisasi3 = realisasiHiburanMines2,
-                    Persentase3 = targetHiburanMines2 != 0 ? Math.Round(realisasiHiburanMines2 / targetHiburanMines2 * 100, 2) : 0,
-                    Target2 = targetHiburanMines3,
-                    Realisasi2 = realisasiHiburanMines3,
-                    Persentase2 = targetHiburanMines3 != 0 ? Math.Round(realisasiHiburanMines3 / targetHiburanMines3 * 100, 2) : 0,
-                    Target1 = targetHiburanMines4,
-                    Realisasi1 = realisasiHiburanMines4,
-                    Persentase1 = targetHiburanMines4 != 0 ? Math.Round(realisasiHiburanMines4 / targetHiburanMines4 * 100, 2) : 0,
-                });
-
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
@@ -846,23 +844,64 @@ namespace MonPDReborn.Models
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
-                    JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
-                    Target5 = targetListrikNow,
-                    Realisasi5 = realisasiListrikNow,
-                    Persentase5 = targetListrikNow != 0 ? Math.Round(realisasiListrikNow / targetListrikNow * 100, 2) : 0,
-                    Target4 = targetListrikMines1,
-                    Realisasi4 = realisasiListrikMines1,
-                    Persentase4 = targetListrikMines1 != 0 ? Math.Round(realisasiListrikMines1 / targetListrikMines1 * 100, 2) : 0,
-                    Target3 = targetListrikMines2,
-                    Realisasi3 = realisasiListrikMines2,
-                    Persentase3 = targetListrikMines2 != 0 ? Math.Round(realisasiListrikMines2 / targetListrikMines2 * 100, 2) : 0,
-                    Target2 = targetListrikMines3,
-                    Realisasi2 = realisasiListrikMines3,
-                    Persentase2 = targetListrikMines3 != 0 ? Math.Round(realisasiListrikMines3 / targetListrikMines3 * 100, 2) : 0,
-                    Target1 = targetListrikMines4,
-                    Realisasi1 = realisasiListrikMines4,
-                    Persentase1 = targetListrikMines4 != 0 ? Math.Round(realisasiListrikMines4 / targetListrikMines4 * 100, 2) : 0,
+                    JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
+                    Target5 = targetHiburanNow,
+                    Realisasi5 = realisasiHiburanNow,
+                    Persentase5 = targetHiburanNow != 0 ? Math.Round(realisasiHiburanNow / targetHiburanNow * 100, 2) : 0,
+                    Target4 = targetHiburanMines1,
+                    Realisasi4 = realisasiHiburanMines1,
+                    Persentase4 = targetHiburanMines1 != 0 ? Math.Round(realisasiHiburanMines1 / targetHiburanMines1 * 100, 2) : 0,
+                    Target3 = targetHiburanMines2,
+                    Realisasi3 = realisasiHiburanMines2,
+                    Persentase3 = targetHiburanMines2 != 0 ? Math.Round(realisasiHiburanMines2 / targetHiburanMines2 * 100, 2) : 0,
+                    Target2 = targetHiburanMines3,
+                    Realisasi2 = realisasiHiburanMines3,
+                    Persentase2 = targetHiburanMines3 != 0 ? Math.Round(realisasiHiburanMines3 / targetHiburanMines3 * 100, 2) : 0,
+                    Target1 = targetHiburanMines4,
+                    Realisasi1 = realisasiHiburanMines4,
+                    Persentase1 = targetHiburanMines4 != 0 ? Math.Round(realisasiHiburanMines4 / targetHiburanMines4 * 100, 2) : 0,
                 });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                    Target5 = targetAbtNow,
+                    Realisasi5 = realisasiAbtNow,
+                    Persentase5 = targetAbtNow != 0 ? Math.Round(realisasiAbtNow / targetAbtNow * 100, 2) : 0,
+                    Target4 = targetAbtMines1,
+                    Realisasi4 = realisasiAbtMines1,
+                    Persentase4 = targetAbtMines1 != 0 ? Math.Round(realisasiAbtMines1 / targetAbtMines1 * 100, 2) : 0,
+                    Target3 = targetAbtMines2,
+                    Realisasi3 = realisasiAbtMines2,
+                    Persentase3 = targetAbtMines2 != 0 ? Math.Round(realisasiAbtMines2 / targetAbtMines2 * 100, 2) : 0,
+                    Target2 = targetAbtMines3,
+                    Realisasi2 = realisasiAbtMines3,
+                    Persentase2 = targetAbtMines3 != 0 ? Math.Round(realisasiAbtMines3 / targetAbtMines3 * 100, 2) : 0,
+                    Target1 = targetAbtMines4,
+                    Realisasi1 = realisasiAbtMines4,
+                    Persentase1 = targetAbtMines4 != 0 ? Math.Round(realisasiAbtMines4 / targetAbtMines4 * 100, 2) : 0,
+                });
+
+                result.Add(new ViewModel.SeriesPajakDaerah
+                {
+                    JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
+                    Target5 = targetReklameNow,
+                    Realisasi5 = realisasiReklameNow,
+                    Persentase5 = targetReklameNow != 0 ? Math.Round(realisasiReklameNow / targetReklameNow * 100, 2) : 0,
+                    Target4 = targetReklameMines1,
+                    Realisasi4 = realisasiReklameMines1,
+                    Persentase4 = targetReklameMines1 != 0 ? Math.Round(realisasiReklameMines1 / targetReklameMines1 * 100, 2) : 0,
+                    Target3 = targetReklameMines2,
+                    Realisasi3 = realisasiReklameMines2,
+                    Persentase3 = targetReklameMines2 != 0 ? Math.Round(realisasiReklameMines2 / targetReklameMines2 * 100, 2) : 0,
+                    Target2 = targetReklameMines3,
+                    Realisasi2 = realisasiReklameMines3,
+                    Persentase2 = targetReklameMines3 != 0 ? Math.Round(realisasiReklameMines3 / targetReklameMines3 * 100, 2) : 0,
+                    Target1 = targetReklameMines4,
+                    Realisasi1 = realisasiReklameMines4,
+                    Persentase1 = targetReklameMines4 != 0 ? Math.Round(realisasiReklameMines4 / targetReklameMines4 * 100, 2) : 0,
+                });
+
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
@@ -904,45 +943,9 @@ namespace MonPDReborn.Models
                     Persentase1 = targetBphtbMines4 != 0 ? Math.Round(realisasiBphtbMines4 / targetBphtbMines4 * 100, 2) : 0,
                 });
 
-                result.Add(new ViewModel.SeriesPajakDaerah
-                {
-                    JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
-                    Target5 = targetReklameNow,
-                    Realisasi5 = realisasiReklameNow,
-                    Persentase5 = targetReklameNow != 0 ? Math.Round(realisasiReklameNow / targetReklameNow * 100, 2) : 0,
-                    Target4 = targetReklameMines1,
-                    Realisasi4 = realisasiReklameMines1,
-                    Persentase4 = targetReklameMines1 != 0 ? Math.Round(realisasiReklameMines1 / targetReklameMines1 * 100, 2) : 0,
-                    Target3 = targetReklameMines2,
-                    Realisasi3 = realisasiReklameMines2,
-                    Persentase3 = targetReklameMines2 != 0 ? Math.Round(realisasiReklameMines2 / targetReklameMines2 * 100, 2) : 0,
-                    Target2 = targetReklameMines3,
-                    Realisasi2 = realisasiReklameMines3,
-                    Persentase2 = targetReklameMines3 != 0 ? Math.Round(realisasiReklameMines3 / targetReklameMines3 * 100, 2) : 0,
-                    Target1 = targetReklameMines4,
-                    Realisasi1 = realisasiReklameMines4,
-                    Persentase1 = targetReklameMines4 != 0 ? Math.Round(realisasiReklameMines4 / targetReklameMines4 * 100, 2) : 0,
-                });
+                
 
-                result.Add(new ViewModel.SeriesPajakDaerah
-                {
-                    JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
-                    Target5 = targetAbtNow,
-                    Realisasi5 = realisasiAbtNow,
-                    Persentase5 = targetAbtNow != 0 ? Math.Round(realisasiAbtNow / targetAbtNow * 100, 2) : 0,
-                    Target4 = targetAbtMines1,
-                    Realisasi4 = realisasiAbtMines1,
-                    Persentase4 = targetAbtMines1 != 0 ? Math.Round(realisasiAbtMines1 / targetAbtMines1 * 100, 2) : 0,
-                    Target3 = targetAbtMines2,
-                    Realisasi3 = realisasiAbtMines2,
-                    Persentase3 = targetAbtMines2 != 0 ? Math.Round(realisasiAbtMines2 / targetAbtMines2 * 100, 2) : 0,
-                    Target2 = targetAbtMines3,
-                    Realisasi2 = realisasiAbtMines3,
-                    Persentase2 = targetAbtMines3 != 0 ? Math.Round(realisasiAbtMines3 / targetAbtMines3 * 100, 2) : 0,
-                    Target1 = targetAbtMines4,
-                    Realisasi1 = realisasiAbtMines4,
-                    Persentase1 = targetAbtMines4 != 0 ? Math.Round(realisasiAbtMines4 / targetAbtMines4 * 100, 2) : 0,
-                });
+                
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
@@ -1055,19 +1058,19 @@ namespace MonPDReborn.Models
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
+                        JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
+                        JmlOpAwal = OpListrikAwal,
+                        JmlOpTutupPermanen = OpListrikTutup,
+                        JmlOpBaru = OpListrikBaru,
+                        JmlOpAkhir = OpListrikAkhir
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
                         JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                         JmlOpAwal = OpHotelAwal,
                         JmlOpTutupPermanen = OpHotelTutup,
                         JmlOpBaru = OpHotelBaru,
                         JmlOpAkhir = OpHotelAkhir
-                    },
-                    new ViewModel.JumlahObjekPajakTahunan
-                    {
-                        JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
-                        JmlOpAwal = OpHiburanAwal,
-                        JmlOpTutupPermanen = OpHiburanTutup,
-                        JmlOpBaru = OpHiburanBaru,
-                        JmlOpAkhir = OpHiburanAkhir
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
@@ -1079,11 +1082,27 @@ namespace MonPDReborn.Models
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
-                        JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
-                        JmlOpAwal = OpListrikAwal,
-                        JmlOpTutupPermanen = OpListrikTutup,
-                        JmlOpBaru = OpListrikBaru,
-                        JmlOpAkhir = OpListrikAkhir
+                        JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
+                        JmlOpAwal = OpHiburanAwal,
+                        JmlOpTutupPermanen = OpHiburanTutup,
+                        JmlOpBaru = OpHiburanBaru,
+                        JmlOpAkhir = OpHiburanAkhir
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                        JmlOpAwal = OpAbtAwal,
+                        JmlOpTutupPermanen = OpAbtTutup,
+                        JmlOpBaru = OpAbtBaru,
+                        JmlOpAkhir = OpAbtAkhir
+                    },
+                    new ViewModel.JumlahObjekPajakTahunan
+                    {
+                        JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
+                        JmlOpAwal = OpReklameAwal,
+                        JmlOpTutupPermanen = 0,
+                        JmlOpBaru = OpReklameBaru,
+                        JmlOpAkhir = OpReklameAkhir
                     },
                     new ViewModel.JumlahObjekPajakTahunan
                     {
@@ -1100,23 +1119,7 @@ namespace MonPDReborn.Models
                         JmlOpTutupPermanen = 0,
                         JmlOpBaru = OpBphtbNow - 0,
                         JmlOpAkhir = OpBphtbAwal - 0 + (OpBphtbNow - OpBphtbAwal)
-                    },
-                    new ViewModel.JumlahObjekPajakTahunan
-                    {
-                        JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
-                        JmlOpAwal = OpReklameAwal,
-                        JmlOpTutupPermanen = 0,
-                        JmlOpBaru = OpReklameBaru,
-                        JmlOpAkhir = OpReklameAkhir
-                    },
-                    new ViewModel.JumlahObjekPajakTahunan
-                    {
-                        JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
-                        JmlOpAwal = OpAbtAwal,
-                        JmlOpTutupPermanen = OpAbtTutup,
-                        JmlOpBaru = OpAbtBaru,
-                        JmlOpAkhir = OpAbtAkhir
-                    },
+                    },                    
                     new ViewModel.JumlahObjekPajakTahunan
                     {
                         JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
@@ -1220,22 +1223,22 @@ namespace MonPDReborn.Models
 
                 result.Add(new ViewModel.JumlahObjekPajakSeries()
                 {
+                    JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
+                    Jumlah1 = OpListrikMines4,
+                    Jumlah2 = OpListrikMines3,
+                    Jumlah3 = OpListrikMines2,
+                    Jumlah4 = OpListrikMines1,
+                    Jumlah5 = OpListrikNow
+                });
+
+                result.Add(new ViewModel.JumlahObjekPajakSeries()
+                {
                     JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                     Jumlah1 = OpHotelMines4,
                     Jumlah2 = OpHotelMines3,
                     Jumlah3 = OpHotelMines2,
                     Jumlah4 = OpHotelMines1,
                     Jumlah5 = OpHotelNow
-                });
-
-                result.Add(new ViewModel.JumlahObjekPajakSeries()
-                {
-                    JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
-                    Jumlah1 = OpHiburanMines4,
-                    Jumlah2 = OpHiburanMines3,
-                    Jumlah3 = OpHiburanMines2,
-                    Jumlah4 = OpHiburanMines1,
-                    Jumlah5 = OpHiburanNow
                 });
 
                 result.Add(new ViewModel.JumlahObjekPajakSeries()
@@ -1250,12 +1253,32 @@ namespace MonPDReborn.Models
 
                 result.Add(new ViewModel.JumlahObjekPajakSeries()
                 {
-                    JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
-                    Jumlah1 = OpListrikMines4,
-                    Jumlah2 = OpListrikMines3,
-                    Jumlah3 = OpListrikMines2,
-                    Jumlah4 = OpListrikMines1,
-                    Jumlah5 = OpListrikNow
+                    JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
+                    Jumlah1 = OpHiburanMines4,
+                    Jumlah2 = OpHiburanMines3,
+                    Jumlah3 = OpHiburanMines2,
+                    Jumlah4 = OpHiburanMines1,
+                    Jumlah5 = OpHiburanNow
+                });
+
+                result.Add(new ViewModel.JumlahObjekPajakSeries()
+                {
+                    JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                    Jumlah1 = OpAbtMines4,
+                    Jumlah2 = OpAbtMines3,
+                    Jumlah3 = OpAbtMines2,
+                    Jumlah4 = OpAbtMines1,
+                    Jumlah5 = OpAbtNow
+                });
+
+                result.Add(new ViewModel.JumlahObjekPajakSeries()
+                {
+                    JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
+                    Jumlah1 = OpReklameMines4,
+                    Jumlah2 = OpReklameMines3,
+                    Jumlah3 = OpReklameMines2,
+                    Jumlah4 = OpReklameMines1,
+                    Jumlah5 = OpReklameNow
                 });
 
                 result.Add(new ViewModel.JumlahObjekPajakSeries()
@@ -1276,26 +1299,6 @@ namespace MonPDReborn.Models
                     Jumlah3 = OpBphtbMines2,
                     Jumlah4 = OpBphtbMines1,
                     Jumlah5 = OpBphtbNow
-                });
-
-                result.Add(new ViewModel.JumlahObjekPajakSeries()
-                {
-                    JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
-                    Jumlah1 = OpReklameMines4,
-                    Jumlah2 = OpReklameMines3,
-                    Jumlah3 = OpReklameMines2,
-                    Jumlah4 = OpReklameMines1,
-                    Jumlah5 = OpReklameNow
-                });
-
-                result.Add(new ViewModel.JumlahObjekPajakSeries()
-                {
-                    JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
-                    Jumlah1 = OpAbtMines4,
-                    Jumlah2 = OpAbtMines3,
-                    Jumlah3 = OpAbtMines2,
-                    Jumlah4 = OpAbtMines1,
-                    Jumlah5 = OpAbtNow
                 });
 
                 result.Add(new ViewModel.JumlahObjekPajakSeries()

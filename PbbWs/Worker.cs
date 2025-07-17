@@ -270,6 +270,183 @@ namespace PbbWs
             var _contMonitoringDb2 = DBClass.GetMonitoringDbContext();
             for (var thn = tahunAmbil; thn <= tglServer.Year; thn++)
             {
+                Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN SBYTAX PBB {thn}");
+                var sql = @"
+                            SELECT *
+FROM (
+	SELECT 	A.NOP,
+	        A.TGL_JATUH_TEMPO_BAYAR,
+	        A.TGL_KETETAPAN,
+	        A.TAHUN,
+	        A.MASAPAJAK,
+	        A.SEQ,
+	        A.JENIS_KETETAPAN,
+	        A.NILAI_PENGURANG,
+	        A.POKOK,
+	        B.TRANSACTION_DATE,
+	        NVL(B.NOMINAL_POKOK, 0) NOMINAL_POKOK,
+	        NVL(B.NOMINAL_SANKSI, 0) NOMINAL_SANKSI,
+	        0 NOMINAL_ADMINISTRASI,
+	        0 NOMINAL_LAINNYA,
+	        0 PENGURANG_POKOK,
+	        0 PENGURANG_SANSKSI,
+	        100 SEQ_KETETAPAN
+	FROM (
+		SELECT *
+		FROM (
+			SELECT 	FK_OP AS NOP,
+			        D_PJK_TJTT AS TGL_JATUH_TEMPO_BAYAR,
+			        D_CREA_DATE AS TGL_KETETAPAN,
+			        EXTRACT(YEAR FROM D_CREA_DATE) AS TAHUN,
+			        EXTRACT(MONTH FROM D_CREA_DATE) AS MASAPAJAK,
+			        1 SEQ,
+			        1 JENIS_KETETAPAN,
+			        0 NILAI_PENGURANG,
+			        D_PJK_TAX POKOK
+			FROM (
+			    SELECT 	ID_KETETAPAN, 
+			            FK_OP, 
+			            FK_NOP, 
+			            D_PJK_THN, 
+			            D_PJK_BLN, 
+			            D_PJK_MGU, 
+			            T_KWIL_KD, 
+			            T_KPPBB_KD, 
+			            T_TUNGGAL_KD, 
+			            T_PERSEPSI_KD, 
+			            T_BANKTP_KD, 
+			            D_PJK_TAX, 
+			            D_PJK_TGAK, 
+			            D_KRG_LBH, 
+			            D_PJK_ADJ, 
+			            D_PJK_JBYR, 
+			            D_PJK_TJTT, 
+			            D_PJK_LST, 
+			            D_PJK_LSB, 
+			            D_PJK_KLT, 
+			            D_PJK_KLB, 
+			            D_PJK_NLT, 
+			            D_PJK_NLB, 
+			            D_PJK_BOOK, 
+			            D_PJK_TGBYR, 
+			            D_PJK_LUNAS, 
+			            D_PJK_NBYR, 
+			            D_PJK_JAD, 
+			            D_CREA_DATE, 
+			            D_CREA_USER, 
+			            D_MODI_DATE, 
+			            D_MODI_USER, 
+			            D_REC_VERSION, 
+			            NOP, 
+			            REF AS REF, 
+			            DENDA_DISETUJUI, 
+			            IPINSERT, 
+			            KATEGORI, 
+			            KD_CAMAT, 
+			            KD_LURAH, 
+			            KATEGORI_OP, 
+			            LUAS_BUMI, 
+			            LUAS_BANGUNAN, 
+			            LUAS_BUMIB, 
+			            LUAS_BANGUNANB
+			    FROM (
+			        SELECT A.T_PROP_KD||A.T_DATI2_KD||A.T_KEC_KD||A.T_KEL_KD||A.D_NOP_BLK||A.D_NOP_URUT||A.D_NOP_JNS||A.D_PJK_THN ID_KETETAPAN,
+			               A.T_PROP_KD||A.T_DATI2_KD||A.T_KEC_KD||A.T_KEL_KD||A.D_NOP_BLK||A.D_NOP_URUT||A.D_NOP_JNS  FK_OP,
+			               A.T_PROP_KD|| '.' || A.T_DATI2_KD|| '.' || A.T_KEC_KD|| '.' || A.T_KEL_KD|| '.' || A.D_NOP_BLK|| '.' || A.D_NOP_URUT|| '.' || A.D_NOP_JNS  FK_NOP,
+			               A.D_PJK_THN, A.D_PJK_BLN, D_PJK_MGU, T_KWIL_KD, T_KPPBB_KD, T_TUNGGAL_KD, T_PERSEPSI_KD, T_BANKTP_KD, D_PJK_TAX, D_PJK_TGAK, D_KRG_LBH, D_PJK_ADJ,
+			               A.D_PJK_JBYR, A.D_PJK_TJTT, A.D_PJK_LST, D_PJK_LSB, D_PJK_KLT, D_PJK_KLB, D_PJK_NLT, D_PJK_NLB, D_PJK_BOOK, D_PJK_TGBYR, D_PJK_LUNAS, D_PJK_NBYR,
+			               A.D_PJK_JAD, A.D_CREA_DATE, A.D_CREA_USER, A.D_MODI_DATE, A.D_MODI_USER, A.D_REC_VERSION, A.NOP, REF, DENDA_DISETUJUI, IPINSERT,NVL(B.KATEGORI,'BELUM DIKETAHUI') KATEGORI,KD_CAMAT,KD_LURAH,
+			               CASE
+			                        WHEN LUAS_BANGUNANB>0 THEN 'BB'
+			                        WHEN LUAS_BANGUNAN=0 THEN 'TK'
+			                        ELSE 'TB'
+			                        END    KATEGORI_op,LUAS_BUMI, LUAS_BANGUNAN,LUAS_BUMIB,LUAS_BANGUNANB,0
+			        FROM DATABAYAR@LIHATGATOTKACA A
+			        LEFT JOIN POTENSIBYR@NRC B ON  T_PROP_KD=SPPT_PROP AND T_DATI2_KD=SPPT_KOTA AND T_KEC_KD=SPPT_KEC AND T_KEL_KD=SPPT_KEL AND D_NOP_BLK=SPPT_URUTBLK AND D_NOP_URUT=SPPT_URUTOP AND D_NOP_JNS=SPPT_TANDA
+			        LEFT JOIN    DATAOP@LIHATGATOTKACA B 
+	              ON A.T_KEC_KD=B.T_KEC_KD 
+	              AND A.T_KEL_KD=B.T_KEL_KD 
+	              AND A.D_NOP_BLK=B.D_NOP_BLK 
+	              AND A.D_NOP_URUT=B.D_NOP_URUT 
+	              AND A.D_NOP_JNS=B.D_NOP_JNS
+			        LEFT JOIN    sppt_new@LIHATGATOTKACA c 
+	              ON A.T_KEC_KD=c.sppt_kec 
+	              AND A.T_KEL_KD=c.sppt_kel 
+	              AND A.D_NOP_BLK=c.sppt_urutblk 
+	              AND A.D_NOP_URUT=c.sppt_urutop 
+	              AND A.D_NOP_JNS=c.sppt_tanda
+			        WHERE EXTRACT(YEAR FROM A.D_CREA_DATE) = :TAHUN 
+			    ) A 
+			) A
+		) A
+	) A
+	LEFT JOIN (
+		SELECT *
+		FROM (
+			SELECT 	NOP, 
+			TAHUN_PAJAK, 
+			BULAN_PAJAK, 
+		    MAX(TRANSACTION_DATE) AS TRANSACTION_DATE,
+			SUM(NOMINAL_POKOK) NOMINAL_POKOK,
+			SUM(NOMINAL_SANKSI) NOMINAL_SANKSI
+	FROM (
+		SELECT 	REPLACE(NOP, '.', '') NOP,
+		        EXTRACT(YEAR FROM D_PJK_TGBYR) AS TAHUN_PAJAK,
+		        EXTRACT(MONTH FROM D_PJK_TGBYR) AS BULAN_PAJAK,
+		        D_CREA_DATE TRANSACTION_DATE,
+		        POKOK NOMINAL_POKOK,
+		        SANKSI NOMINAL_SANKSI,
+		        0 NOMINAL_ADMINISTRASI,
+		        0 NOMINAL_LAINNYA,
+		        0 PENGURANG_POKOK,
+		        0 PENGURANG_SANSKSI,
+		        100 SEQ_KETETAPAN
+		FROM (
+		    SELECT   ID_SSPD,D_PJK_TGBYR,A.D_CREA_DATE,AKUN,A.T_PROP_KD || '.' || A.T_DATI2_KD || '.' || A.T_KEC_KD || '.' || A.T_KEL_KD || '.' || A.D_NOP_BLK || '.' || A.D_NOP_URUT || '.' || A.D_NOP_JNS NOP,
+		             D_WP_NAMA NAMA,D_OP_JLN || ' ' || D_OP_JLNO ALAMAT,-1 MASA,D_PJK_THN TAHUN,POKOK,SANKSI,B.KD_CAMAT || '-' || B.KD_LURAH NO_KETETAPAN,TEMPAT_BAYAR,REFF,SYSDATE REKON_DATE,'JOB' REKON_BY
+		    FROM(
+		                SELECT      A.T_PROP_KD || '.' || A.T_DATI2_KD || '.' || A.T_KEC_KD || '.' || A.T_KEL_KD || '.' || A.D_NOP_BLK || '.' || A.D_NOP_URUT || '.' || A.D_NOP_JNS || '.' || A.d_pjk_thn ID_SSPD,
+		                A.T_PROP_KD , A.T_DATI2_KD , A.T_KEC_KD , A.T_KEL_KD , A.D_NOP_BLK ,A.D_NOP_URUT , A.D_NOP_JNS ,
+		                D_PJK_TGBYR,D_CREA_DATE,'4.1.1.15.01' AKUN,-1,D_PJK_THN,D_PJK_PBB POKOK,D_PJK_JMBYR-D_PJK_PBB SANKSI,'-' NO_KETETAPAN,'MOBLING/DINAS/' || D_CREA_USER TEMPAT_BAYAR,'-' REFF
+		                FROM        CATBAYAR@LIHATGATOTKACA A 
+		                WHERE       to_char(D_PJK_TGBYR,'MMYYYY') = TO_CHAR(SYSDATE,'MMYYYY') 
+		                	AND EXTRACT(YEAR FROM D_PJK_TGBYR) = :TAHUN 
+		                UNION ALL
+		                SELECT      NTPPD,A.KD_PROPINSI , A.KD_DATI2 , A.KD_KECAMATAN , A.KD_KELURAHAN , A.KD_BLOK , A.NO_URUT , A.KD_JNS_OP ,
+		                            TGL_PEMBAYARAN_SPPT,TGL_REKAM_BYR_SPPT,'4.1.1.15.01' AKUN,-1,THN_PAJAK_SPPT,JML_SPPT_YG_DIBAYAR-DENDA_SPPT,DENDA_SPPT,'-',
+		                            CASE 
+		                            WHEN TRIM(KD_BANK_TUNGGAL)='00' THEN 'BANK JATIM'
+		                            WHEN TRIM(KD_BANK_TUNGGAL)='08' THEN 'BANK MANDIRI'
+		                            WHEN TRIM(KD_BANK_TUNGGAL)='09' THEN 'BANK BNI'
+		                            WHEN TRIM(KD_BANK_TUNGGAL)='11401' THEN 'BANK JATIM QRIS'
+		                            WHEN TRIM(KD_BANK_TUNGGAL)='114' THEN 'BANK JATIM AGREGAT'
+		                            WHEN TRIM(KD_BANK_TUNGGAL)='11402' THEN 'BANK JATIM VA'
+		                            WHEN TRIM(KD_BANK_TUNGGAL)='11588' THEN 'BANK BRI'
+		                            ELSE '-'
+		                            END TEMPAT_BAYAR
+		                            ,'-' REFF
+		                FROM        PEMBAYARAN_SPPT@LIHATGATOTKACA A
+		                WHERE       NVL(REV_FLAG,0) !=1 AND EXTRACT(YEAR FROM TGL_PEMBAYARAN_SPPT) = :TAHUN 
+		        ) A
+		    JOIN    DATAOP@LIHATGATOTKACA B ON A.T_KEC_KD=B.T_KEC_KD AND A.T_KEL_KD=B.T_KEL_KD AND A.D_NOP_BLK=B.D_NOP_BLK AND A.D_NOP_URUT=B.D_NOP_URUT AND A.D_NOP_JNS=B.D_NOP_JNS
+		) A
+	) A
+	GROUP BY NOP, 
+			TAHUN_PAJAK, 
+			BULAN_PAJAK
+		) A
+	) B ON A.NOP = B.NOP AND A.TAHUN = B.TAHUN_PAJAK AND A.MASAPAJAK = B.BULAN_PAJAK
+) A
+                        ";
+
+                var ketetapanSbyTaxOld = await _contMonitoringDb2.Set<OPSkpdPbb>()
+                    .FromSqlRaw(sql, new[] {
+                                new OracleParameter("TAHUN", thn),
+                    }).ToListAsync();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN SBYTAX PBB {thn}");
+                Console.ResetColor();
+
                 var opList = _contMonPd.DbOpPbbs.Where(x => x.TahunBuku == thn).ToList();
                 for (int bln = 1; bln <= 12; bln++)
                 {
@@ -283,178 +460,10 @@ namespace PbbWs
                         //    {
                         //        isOPTutup = true;
                         //    }
-
                         //}
-                        Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN SBYTAX PBB {thn}-{bln}-{op.Nop}");
-                        var sql = @"
-                            SELECT 	A.NOP,
-        A.TGL_JATUH_TEMPO_BAYAR,
-        A.TGL_KETETAPAN,
-        A.TAHUN,
-        A.MASAPAJAK,
-        A.SEQ,
-        A.JENIS_KETETAPAN,
-        A.NILAI_PENGURANG,
-        A.POKOK,
-        B.TRANSACTION_DATE,
-        B.NOMINAL_POKOK,
-        B.NOMINAL_SANKSI,
-        0 NOMINAL_ADMINISTRASI,
-        0 NOMINAL_LAINNYA,
-        0 PENGURANG_POKOK,
-        0 PENGURANG_SANSKSI,
-        100 SEQ_KETETAPAN
-FROM (
-	SELECT *
-	FROM (
-		SELECT 	FK_OP AS NOP,
-		        D_PJK_TJTT AS TGL_JATUH_TEMPO_BAYAR,
-		        D_CREA_DATE AS TGL_KETETAPAN,
-		        EXTRACT(YEAR FROM D_CREA_DATE) AS TAHUN,
-		        EXTRACT(MONTH FROM D_CREA_DATE) AS MASAPAJAK,
-		        1 SEQ,
-		        1 JENIS_KETETAPAN,
-		        0 NILAI_PENGURANG,
-		        D_PJK_TAX POKOK
-		FROM (
-		    SELECT 	ID_KETETAPAN, 
-		            FK_OP, 
-		            FK_NOP, 
-		            D_PJK_THN, 
-		            D_PJK_BLN, 
-		            D_PJK_MGU, 
-		            T_KWIL_KD, 
-		            T_KPPBB_KD, 
-		            T_TUNGGAL_KD, 
-		            T_PERSEPSI_KD, 
-		            T_BANKTP_KD, 
-		            D_PJK_TAX, 
-		            D_PJK_TGAK, 
-		            D_KRG_LBH, 
-		            D_PJK_ADJ, 
-		            D_PJK_JBYR, 
-		            D_PJK_TJTT, 
-		            D_PJK_LST, 
-		            D_PJK_LSB, 
-		            D_PJK_KLT, 
-		            D_PJK_KLB, 
-		            D_PJK_NLT, 
-		            D_PJK_NLB, 
-		            D_PJK_BOOK, 
-		            D_PJK_TGBYR, 
-		            D_PJK_LUNAS, 
-		            D_PJK_NBYR, 
-		            D_PJK_JAD, 
-		            D_CREA_DATE, 
-		            D_CREA_USER, 
-		            D_MODI_DATE, 
-		            D_MODI_USER, 
-		            D_REC_VERSION, 
-		            NOP, 
-		            REF AS REF, 
-		            DENDA_DISETUJUI, 
-		            IPINSERT, 
-		            KATEGORI, 
-		            KD_CAMAT, 
-		            KD_LURAH, 
-		            KATEGORI_OP, 
-		            LUAS_BUMI, 
-		            LUAS_BANGUNAN, 
-		            LUAS_BUMIB, 
-		            LUAS_BANGUNANB
-		    FROM (
-		        SELECT A.T_PROP_KD||A.T_DATI2_KD||A.T_KEC_KD||A.T_KEL_KD||A.D_NOP_BLK||A.D_NOP_URUT||A.D_NOP_JNS||A.D_PJK_THN ID_KETETAPAN,
-		               A.T_PROP_KD||A.T_DATI2_KD||A.T_KEC_KD||A.T_KEL_KD||A.D_NOP_BLK||A.D_NOP_URUT||A.D_NOP_JNS  FK_OP,
-		               A.T_PROP_KD|| '.' || A.T_DATI2_KD|| '.' || A.T_KEC_KD|| '.' || A.T_KEL_KD|| '.' || A.D_NOP_BLK|| '.' || A.D_NOP_URUT|| '.' || A.D_NOP_JNS  FK_NOP,
-		               A.D_PJK_THN, A.D_PJK_BLN, D_PJK_MGU, T_KWIL_KD, T_KPPBB_KD, T_TUNGGAL_KD, T_PERSEPSI_KD, T_BANKTP_KD, D_PJK_TAX, D_PJK_TGAK, D_KRG_LBH, D_PJK_ADJ,
-		               A.D_PJK_JBYR, A.D_PJK_TJTT, A.D_PJK_LST, D_PJK_LSB, D_PJK_KLT, D_PJK_KLB, D_PJK_NLT, D_PJK_NLB, D_PJK_BOOK, D_PJK_TGBYR, D_PJK_LUNAS, D_PJK_NBYR,
-		               A.D_PJK_JAD, A.D_CREA_DATE, A.D_CREA_USER, A.D_MODI_DATE, A.D_MODI_USER, A.D_REC_VERSION, A.NOP, REF, DENDA_DISETUJUI, IPINSERT,NVL(B.KATEGORI,'BELUM DIKETAHUI') KATEGORI,KD_CAMAT,KD_LURAH,
-		               CASE
-		                        WHEN LUAS_BANGUNANB>0 THEN 'BB'
-		                        WHEN LUAS_BANGUNAN=0 THEN 'TK'
-		                        ELSE 'TB'
-		                        END    KATEGORI_op,LUAS_BUMI, LUAS_BANGUNAN,LUAS_BUMIB,LUAS_BANGUNANB,0
-		        FROM DATABAYAR@LIHATGATOTKACA A
-		        LEFT JOIN POTENSIBYR@NRC B ON  T_PROP_KD=SPPT_PROP AND T_DATI2_KD=SPPT_KOTA AND T_KEC_KD=SPPT_KEC AND T_KEL_KD=SPPT_KEL AND D_NOP_BLK=SPPT_URUTBLK AND D_NOP_URUT=SPPT_URUTOP AND D_NOP_JNS=SPPT_TANDA
-		        LEFT JOIN    DATAOP@LIHATGATOTKACA B ON A.T_KEC_KD=B.T_KEC_KD AND A.T_KEL_KD=B.T_KEL_KD AND A.D_NOP_BLK=B.D_NOP_BLK AND A.D_NOP_URUT=B.D_NOP_URUT AND A.D_NOP_JNS=B.D_NOP_JNS
-		        LEFT JOIN    sppt_new@LIHATGATOTKACA c ON A.T_KEC_KD=c.sppt_kec AND A.T_KEL_KD=c.sppt_kel AND A.D_NOP_BLK=c.sppt_urutblk AND A.D_NOP_URUT=c.sppt_urutop AND A.D_NOP_JNS=c.sppt_tanda
-		        WHERE TO_CHAR(A.D_CREA_DATE,'YYYY')= TO_CHAR(SYSDATE,'YYYY') AND A.D_PJK_THN = :TAHUN AND A.D_PJK_BLN = :MASA
-		    ) A
-        WHERE FK_OP = :NOP 
-		) A
-	) A
-) A
-LEFT JOIN (
-	SELECT *
-	FROM (
-		SELECT 	NOP, 
-		TAHUN_PAJAK, 
-		BULAN_PAJAK, 
-	    MAX(TRANSACTION_DATE) AS TRANSACTION_DATE,
-		SUM(NOMINAL_POKOK) NOMINAL_POKOK,
-		SUM(NOMINAL_SANKSI) NOMINAL_SANKSI
-FROM (
-	SELECT 	REPLACE(NOP, '.', '') NOP,
-	        EXTRACT(YEAR FROM D_PJK_TGBYR) AS TAHUN_PAJAK,
-	        EXTRACT(MONTH FROM D_PJK_TGBYR) AS BULAN_PAJAK,
-	        D_CREA_DATE TRANSACTION_DATE,
-	        POKOK NOMINAL_POKOK,
-	        SANKSI NOMINAL_SANKSI,
-	        0 NOMINAL_ADMINISTRASI,
-	        0 NOMINAL_LAINNYA,
-	        0 PENGURANG_POKOK,
-	        0 PENGURANG_SANSKSI,
-	        100 SEQ_KETETAPAN
-	FROM (
-	    SELECT   ID_SSPD,D_PJK_TGBYR,A.D_CREA_DATE,AKUN,A.T_PROP_KD || '.' || A.T_DATI2_KD || '.' || A.T_KEC_KD || '.' || A.T_KEL_KD || '.' || A.D_NOP_BLK || '.' || A.D_NOP_URUT || '.' || A.D_NOP_JNS NOP,
-	             D_WP_NAMA NAMA,D_OP_JLN || ' ' || D_OP_JLNO ALAMAT,-1 MASA,D_PJK_THN TAHUN,POKOK,SANKSI,B.KD_CAMAT || '-' || B.KD_LURAH NO_KETETAPAN,TEMPAT_BAYAR,REFF,SYSDATE REKON_DATE,'JOB' REKON_BY
-	    FROM(
-	                SELECT      A.T_PROP_KD || '.' || A.T_DATI2_KD || '.' || A.T_KEC_KD || '.' || A.T_KEL_KD || '.' || A.D_NOP_BLK || '.' || A.D_NOP_URUT || '.' || A.D_NOP_JNS || '.' || A.d_pjk_thn ID_SSPD,
-	                A.T_PROP_KD , A.T_DATI2_KD , A.T_KEC_KD , A.T_KEL_KD , A.D_NOP_BLK ,A.D_NOP_URUT , A.D_NOP_JNS ,
-	                D_PJK_TGBYR,D_CREA_DATE,'4.1.1.15.01' AKUN,-1,D_PJK_THN,D_PJK_PBB POKOK,D_PJK_JMBYR-D_PJK_PBB SANKSI,'-' NO_KETETAPAN,'MOBLING/DINAS/' || D_CREA_USER TEMPAT_BAYAR,'-' REFF
-	                FROM        CATBAYAR@LIHATGATOTKACA A 
-	                WHERE       to_char(D_PJK_TGBYR,'MMYYYY') = TO_CHAR(SYSDATE,'MMYYYY') AND EXTRACT(YEAR FROM D_PJK_TGBYR) = :TAHUN AND EXTRACT(MONTH FROM D_PJK_TGBYR) = :MASA
-	                UNION ALL
-	                SELECT      NTPPD,A.KD_PROPINSI , A.KD_DATI2 , A.KD_KECAMATAN , A.KD_KELURAHAN , A.KD_BLOK , A.NO_URUT , A.KD_JNS_OP ,
-	                            TGL_PEMBAYARAN_SPPT,TGL_REKAM_BYR_SPPT,'4.1.1.15.01' AKUN,-1,THN_PAJAK_SPPT,JML_SPPT_YG_DIBAYAR-DENDA_SPPT,DENDA_SPPT,'-',
-	                            CASE 
-	                            WHEN TRIM(KD_BANK_TUNGGAL)='00' THEN 'BANK JATIM'
-	                            WHEN TRIM(KD_BANK_TUNGGAL)='08' THEN 'BANK MANDIRI'
-	                            WHEN TRIM(KD_BANK_TUNGGAL)='09' THEN 'BANK BNI'
-	                            WHEN TRIM(KD_BANK_TUNGGAL)='11401' THEN 'BANK JATIM QRIS'
-	                            WHEN TRIM(KD_BANK_TUNGGAL)='114' THEN 'BANK JATIM AGREGAT'
-	                            WHEN TRIM(KD_BANK_TUNGGAL)='11402' THEN 'BANK JATIM VA'
-	                            WHEN TRIM(KD_BANK_TUNGGAL)='11588' THEN 'BANK BRI'
-	                            ELSE '-'
-	                            END TEMPAT_BAYAR
-	                            ,'-' REFF
-	                FROM        PEMBAYARAN_SPPT@LIHATGATOTKACA A
-	                WHERE       to_char(TGL_PEMBAYARAN_SPPT,'MMYYYY') = TO_CHAR(SYSDATE,'MMYYYY') AND NVL(REV_FLAG,0) !=1
-	                			AND EXTRACT(YEAR FROM TGL_PEMBAYARAN_SPPT) = :TAHUN AND EXTRACT(MONTH FROM TGL_PEMBAYARAN_SPPT) = :MASA
-	        ) A
-	    JOIN    DATAOP@LIHATGATOTKACA B ON A.T_KEC_KD=B.T_KEC_KD AND A.T_KEL_KD=B.T_KEL_KD AND A.D_NOP_BLK=B.D_NOP_BLK AND A.D_NOP_URUT=B.D_NOP_URUT AND A.D_NOP_JNS=B.D_NOP_JNS
-      WHERE REPLACE(NOP, '.', '') = :NOP
-	) A
-) A
-GROUP BY NOP, 
-		TAHUN_PAJAK, 
-		BULAN_PAJAK
-	) A
-) B ON A.NOP = B.NOP AND A.TAHUN = B.TAHUN_PAJAK AND A.MASAPAJAK = B.BULAN_PAJAK
-                        ";
-
-                        var ketetapanSbyTaxOld = await _contMonitoringDb2.Set<OPSkpdPbb>()
-                            .FromSqlRaw(sql, new[] {
-                                new OracleParameter("NOP", op.Nop),
-                                new OracleParameter("TAHUN", thn),
-                                new OracleParameter("MASA", bln)
-                            }).ToListAsync();
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"{DateTime.Now} [QUERY] KETETAPAN SBYTAX PBB {thn}-{bln}-{op.Nop}");
-                        Console.ResetColor();
-
+                        
                         var dbAkunPokok = GetDbAkunPokok(thn, idPajak, (int)12);
-                        foreach (var item in ketetapanSbyTaxOld)
+                        foreach (var item in ketetapanSbyTaxOld.Where(x => x.MASAPAJAK == bln && x.NOP == op.Nop))
                         {
                             string nop = item.NOP;
                             int tahunPajak = item.TAHUN;
@@ -485,7 +494,7 @@ GROUP BY NOP,
                             newRow.AlamatOp = op.AlamatOp ?? "-";
                             newRow.KategoriId = op.KategoriId;
                             newRow.KategoriNama = op.KategoriNama;
-                            newRow.TahunBuku = DateTime.Now.Year;
+                            newRow.TahunBuku = thn;
                             newRow.Akun = op.Akun;
                             newRow.NamaAkun = op.NamaAkun;
                             newRow.Jenis = op.Jenis;

@@ -152,13 +152,13 @@ namespace MonPDLib
             public int JENIS_KETETAPAN { get; set; }
             public decimal NILAI_PENGURANG { get; set; }
             public decimal POKOK { get; set; }
-            public DateTime TRANSACTION_DATE { get; set; }
-            public decimal NOMINAL_POKOK { get; set; }
-            public decimal NOMINAL_SANKSI { get; set; }
-            public decimal NOMINAL_ADMINISTRASI { get; set; }
-            public decimal NOMINAL_LAINNYA { get; set; }
-            public decimal PENGURANG_POKOK { get; set; }
-            public decimal PENGURANG_SANSKSI { get; set; }
+            public DateTime? TRANSACTION_DATE { get; set; }
+            public decimal? NOMINAL_POKOK { get; set; }
+            public decimal? NOMINAL_SANKSI { get; set; }
+            public decimal? NOMINAL_ADMINISTRASI { get; set; }
+            public decimal? NOMINAL_LAINNYA { get; set; }
+            public decimal? PENGURANG_POKOK { get; set; }
+            public decimal? PENGURANG_SANSKSI { get; set; }
             public int SEQ_KETETAPAN { get; set; }
         }
         public class OpOpsenSkpdPkb
