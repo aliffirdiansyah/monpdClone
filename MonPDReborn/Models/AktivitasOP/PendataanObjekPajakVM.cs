@@ -13,7 +13,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public Dashboard Data { get; set; } = new Dashboard();
             public Index()
             {
-                Data = Method.GetDashboardData();
+                Data = Method.GetDashboard();
             }
         }
 
@@ -89,7 +89,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal TotalPengedokan { get; set; }
             public decimal TotalRealisasi { get; set; }
 
-            public int JumlahObjek { get; set; }
+            public decimal JumlahObjek { get; set; }
 
             public decimal Ratarata =>
                 JumlahObjek > 0 ? TotalRealisasi / JumlahObjek : 0;
@@ -303,16 +303,19 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return parkirData;
             }
-
-            public static Dashboard GetDashboardData()
+            public static Dashboard GetDashboard()
             {
+                var ret = GetDataPendataanList();
+
                 return new Dashboard
                 {
-                    TotalPengedokan = 50,
-                    JumlahObjek = 100,
-                    TotalRealisasi = 800000000
+                    TotalPengedokan = ret.Sum(x => x.Potensi),
+                    TotalRealisasi = ret.Sum(x => x.TotalRealisasi),
+                    JumlahObjek = ret.Sum(x => x.JumlahOp)
                 };
             }
+
+
         }
 
         public class SubDetailRestoran
