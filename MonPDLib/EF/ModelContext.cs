@@ -191,6 +191,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<THimbauanSptpd> THimbauanSptpds { get; set; }
 
+    public virtual DbSet<TMutasiPiutang> TMutasiPiutangs { get; set; }
+
     public virtual DbSet<TPemeriksaan> TPemeriksaans { get; set; }
 
     public virtual DbSet<TPenungguanSptpd> TPenungguanSptpds { get; set; }
@@ -221,13 +223,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TPiutangResto> TPiutangRestos { get; set; }
 
+    public virtual DbSet<TSeriesPendapatan> TSeriesPendapatans { get; set; }
+
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
-
-    public virtual DbSet<TempBulanan> TempBulanans { get; set; }
-
-    public virtual DbSet<TempHituptb> TempHituptbs { get; set; }
-
-    public virtual DbSet<TempPeriksa> TempPeriksas { get; set; }
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -1325,9 +1323,14 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<TMutasiPiutang>(entity =>
+        {
+            entity.HasKey(e => new { e.Mutasi, e.TahunBuku }).HasName("PK_MUTASI_PIUTANG");
+        });
+
         modelBuilder.Entity<TPemeriksaan>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajak, e.MasaPajak }).HasName("T_PEMERIKSAAN_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajak, e.MasaPajak, e.Seq }).HasName("T_PEMERIKSAAN_PK");
         });
 
         modelBuilder.Entity<TPenungguanSptpd>(entity =>
@@ -1409,6 +1412,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<TPiutangResto>(entity =>
         {
             entity.HasKey(e => new { e.TahunBuku, e.Nop, e.MasaPajak, e.TahunPajak }).HasName("T_PIUTANG_RESTO_PK");
+        });
+
+        modelBuilder.Entity<TSeriesPendapatan>(entity =>
+        {
+            entity.Property(e => e.InsertDate).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<TTeguranSptpd>(entity =>

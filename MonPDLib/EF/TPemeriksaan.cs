@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("Nop", "TahunPajak", "MasaPajak")]
+[PrimaryKey("Nop", "TahunPajak", "MasaPajak", "Seq")]
 [Table("T_PEMERIKSAAN")]
 public partial class TPemeriksaan
 {
@@ -23,8 +23,9 @@ public partial class TPemeriksaan
 
     [Key]
     [Column("MASA_PAJAK")]
-    [Precision(10)]
-    public int MasaPajak { get; set; }
+    [StringLength(20)]
+    [Unicode(false)]
+    public string MasaPajak { get; set; } = null!;
 
     [Column("NO_SP")]
     [StringLength(100)]
@@ -52,4 +53,9 @@ public partial class TPemeriksaan
 
     [Column("PAJAK_ID", TypeName = "NUMBER(38)")]
     public decimal PajakId { get; set; }
+
+    [Key]
+    [Column("SEQ")]
+    [Precision(2)]
+    public byte Seq { get; set; }
 }
