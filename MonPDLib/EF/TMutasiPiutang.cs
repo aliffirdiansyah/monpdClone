@@ -23,9 +23,13 @@ public partial class TMutasiPiutang
     public string TahunBuku { get; set; } = null!;
 
     [Column("STATUS")]
-    [Precision(1)]
-    public bool Status { get; set; }
+    [Precision(10)]
+    public int Status { get; set; }
 
     [Column("NILAI", TypeName = "NUMBER(20,2)")]
     public decimal Nilai { get; set; }
+
+    [Column("URUTAN")]
+    [Precision(10)]
+    public int Urutan { get; set; }
 }

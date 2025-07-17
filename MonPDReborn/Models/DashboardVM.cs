@@ -2052,13 +2052,14 @@ namespace MonPDReborn.Models
                 var currentYear = DateTime.Now.Year;
 
                 var MutasiData = context.TMutasiPiutangs
-                    .Where(x => x.Status == true)
-                    .GroupBy(x => x.Mutasi)
+                    .AsEnumerable()
+                    .GroupBy(x => new { x.Mutasi, x.Urutan })
+                    .OrderBy(g => g.Key.Urutan)
                     .ToList();
 
                 ret = MutasiData.Select(g => new ViewModel.DataMutasi
                 {
-                    Keterangan = g.Key, // pakai nama mutasi sebagai keterangan
+                    Keterangan = g.Key.Mutasi,
                     NominalMutasi1 = g.Where(x => int.Parse(x.TahunBuku) <= currentYear - 4).Sum(x => x.Nilai),
                     NominalMutasi2 = g.Where(x => int.Parse(x.TahunBuku) == currentYear - 3).Sum(x => x.Nilai),
                     NominalMutasi3 = g.Where(x => int.Parse(x.TahunBuku) == currentYear - 2).Sum(x => x.Nilai),
@@ -2067,6 +2068,7 @@ namespace MonPDReborn.Models
                 }).ToList();
 
                 return ret;
+
             }
 
         }

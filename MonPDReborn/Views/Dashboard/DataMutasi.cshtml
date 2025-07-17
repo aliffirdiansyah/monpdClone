@@ -35,6 +35,10 @@
         {
             s.TotalItems(items =>
             {
+                items.AddFor(x => x.Keterangan)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("TOTAL");
+                
                 items.AddFor(x => x.NominalMutasi1)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
