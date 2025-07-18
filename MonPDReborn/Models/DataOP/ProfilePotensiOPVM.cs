@@ -395,6 +395,38 @@ namespace MonPDReborn.Models.DataOP
                     TarifMobil = 10000
                 };
             }
+
+            public static InfoDasar GetInfoDasarHotel(string nop)
+            {
+                // Simulasi ambil data dari DB
+                return new InfoDasar
+                {
+                    NOP = nop,
+                    NamaWP = "HOTEL JW MARRIOTT",
+                    Alamat = "Jl. Embong Malang 85-89, Surabaya",
+                };
+            }
+
+            public static InfoKamar GetInfoKamar(string nop)
+            {
+                return new InfoKamar
+                {
+                    JumlahKamar = 400,
+                    TarifRataRata = 1500000,
+                    TingkatHunian = 85 // artinya 85%
+                };
+            }
+
+            public static InfoBanquet GetInfoBanquet(string nop)
+            {
+                return new InfoBanquet
+                {
+                    KapasitasMaksimum = 1500,
+                    TingkatOkupansi = 60, // artinya 60%
+                    TarifRataRata = 250000,
+                    HariEventPerBulan = 10
+                };
+            }
         }
 
         public class Dashboard
@@ -552,6 +584,71 @@ namespace MonPDReborn.Models.DataOP
                 TotalOmzetBulanan = OmzetMotor + OmzetMobil;
                 PotensiBulanan = TotalOmzetBulanan * TarifPajak;
                 PotensiTahunan = PotensiBulanan * 12;
+            }
+        }
+
+        // Class ini akan menjadi @model untuk halaman DetailHotel.cshtml
+        public class DetailHotel
+        {
+            public InfoDasar DataDasar { get; set; } = new();
+            public InfoKamar DataKamar { get; set; } = new();
+            public InfoBanquet DataBanquet { get; set; } = new();
+            public PotensiPajakHotel DataPotensi { get; set; } = new();
+
+            public DetailHotel() { }
+            public DetailHotel(string nop)
+            {
+                DataDasar = Method.GetInfoDasarHotel(nop);
+                DataKamar = Method.GetInfoKamar(nop);
+                DataBanquet = Method.GetInfoBanquet(nop);
+                DataPotensi = new PotensiPajakHotel(DataKamar, DataBanquet);
+            }
+        }
+
+        // Class untuk info kamar
+        public class InfoKamar
+        {
+            public int JumlahKamar { get; set; }
+            public decimal TarifRataRata { get; set; }
+            public decimal TingkatHunian { get; set; } // Dalam persen (misal: 85 untuk 85%)
+            public int RataKamarTerjual => (int)(JumlahKamar * (TingkatHunian / 100));
+        }
+
+        // Class untuk info banquet
+        public class InfoBanquet
+        {
+            public int KapasitasMaksimum { get; set; }
+            public decimal TingkatOkupansi { get; set; } // Dalam persen
+            public decimal TarifRataRata { get; set; }
+            public int HariEventPerBulan { get; set; }
+            public int RataTamuBanquet => (int)(KapasitasMaksimum * (TingkatOkupansi / 100));
+        }
+
+        // Class untuk kalkulasi potensi pajak hotel
+        public class PotensiPajakHotel
+        {
+            public decimal OmzetKamarBulanan { get; }
+            public decimal PajakKamarBulanan { get; }
+            public decimal OmzetBanquetBulanan { get; }
+            public decimal PajakBanquetBulanan { get; }
+            public decimal TotalPotensiBulanan { get; }
+            public decimal TotalPotensiTahunan { get; }
+            public const decimal TarifPajak = 0.10m; // 10%
+
+            public decimal PersenPotensiKamar => TotalPotensiBulanan > 0 ? (PajakKamarBulanan / TotalPotensiBulanan) * 100 : 0;
+            public decimal PersenPotensiBanquet => TotalPotensiBulanan > 0 ? (PajakBanquetBulanan / TotalPotensiBulanan) * 100 : 0;
+
+            public PotensiPajakHotel() { }
+            public PotensiPajakHotel(InfoKamar kamar, InfoBanquet banquet)
+            {
+                OmzetKamarBulanan = kamar.TarifRataRata * kamar.RataKamarTerjual * 30;
+                PajakKamarBulanan = OmzetKamarBulanan * TarifPajak;
+
+                OmzetBanquetBulanan = banquet.TarifRataRata * banquet.RataTamuBanquet * banquet.HariEventPerBulan;
+                PajakBanquetBulanan = OmzetBanquetBulanan * TarifPajak;
+
+                TotalPotensiBulanan = PajakKamarBulanan + PajakBanquetBulanan;
+                TotalPotensiTahunan = TotalPotensiBulanan * 12;
             }
         }
 

@@ -108,7 +108,8 @@ namespace MonPDReborn.Controllers.DataOP
             switch (jenisPajak.ToLower())
             {
                 case "hotel":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", detailModel);
+                    var hotelModel = new ProfilePotensiOPVM.DetailHotel(nop);
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", hotelModel);
 
                 case "parkir":
                     var parkirModel = new ProfilePotensiOPVM.DetailParkir(nop);
