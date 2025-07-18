@@ -5,7 +5,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.AktivitasWP
 {
-    public class PeneguranController : Controller
+    public class PeneguranController : BaseController
     {
         string URLView = string.Empty;
 

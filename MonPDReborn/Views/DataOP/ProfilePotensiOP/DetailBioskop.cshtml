@@ -1,4 +1,5 @@
-﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.Detail
+﻿@using MonPDReborn.Models.DataOP
+@Model ProfilePotensiOPVM.DetailBioskop
 
 @{
     Layout = "_Layout";
@@ -21,46 +22,46 @@
                             </div>
                             <div class="mt-2">
                                 <h4 class="fs-16 fw-semibold">
-                                    @ViewBag.NamaWP
+                                    @Model.DataDasar.NamaWP
                                 </h4>
                                 <p class="fs-16 lh-base">
-                                    @ViewBag.Alamat
+                                    @Model.DataDasar.Alamat
                                 </p>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4">
                         <div class="d-flex p-3">
-                            <h3 class="fs-16 fw-semibold">
-                                Potensi Pajak
-                            </h3>
+                            <h3 class="fs-16 fw-semibold">Potensi Pajak</h3>
                         </div>
                         <div class="d-flex p-3 py-0">
                             <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
                             <div class="flex-shrink-0">
-                                <p class="fs-16 fw-semibold">@ViewBag.Perbulan</p>
+                                <p class="fs-16 fw-semibold">@Model.DataPotensi.PotensiBulanan.ToString("C0")</p>
                             </div>
                         </div>
                         <div class="d-flex p-3 py-0">
                             <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
                             <div class="flex-shrink-0">
-                                <p class="fs-16 fw-semibold">@ViewBag.Pertahun</p>
+                                <p class="fs-16 fw-semibold">@Model.DataPotensi.PotensiTahunan.ToString("C0")</p>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-12">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 ms-3">
                                 <p class="fs-14 text-muted mb-1">NOP</p>
-                                <p class="fs-14 fw-semibold mb-3">@ViewBag.NOP</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.DataDasar.NOP</p>
                             </div>
                             <div class="flex-shrink-0 ms-5">
                                 <p class="fs-14 text-muted mb-1">Kapasitas Kursi Studio</p>
-                                <p class="fs-14 fw-semibold mb-3">@ViewBag.Kapasitas Kursi</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.DataBioskop.KapasitasKursi.ToString("N0") Kursi</p>
                             </div>
                             <div class="flex-shrink-0 ms-3">
                                 <p class="fs-14 text-muted mb-1">Kursi Terjual per Hari</p>
-                                <p class="fs-14 fw-semibold mb-3">@ViewBag.Perhari Tiket</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.DataBioskop.KursiTerjualPerHari.ToString("N0") Tiket</p>
                             </div>
                         </div>
                     </div>
@@ -71,234 +72,22 @@
 
     <div class="col-lg-8">
         <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Detail Kunjungan Bioskop
-                    </h4>
-                </div>
-            </div>
+            <div class="card-header d-flex bg-soft-warning"><h4 class="card-title fs-16 mb-0">Detail Kunjungan Bioskop</h4></div>
             <div class="card-body">
                 <div class="row">
-
                     <div class="col-lg-6">
-                        <div class="card border border-danger border-2">
-                            <div class="card-body bg-soft-danger bg-opacity-25">
-                                <div class="text-center">
-                                    <h3 class="fs-18 fw-semibold mb-1">
-                                        0
-                                    </h3>
-                                    <h4 class="fs-14">
-                                        Rata-rata Pengunjung Hari Kerja
-                                    </h4>
-                                </div>
+                        <div class="card border border-danger border-2 h-100">
+                            <div class="card-body bg-soft-danger bg-opacity-25 text-center">
+                                <h3 class="fs-18 fw-semibold mb-1">@Model.DataBioskop.RataKunjunganHariKerja.ToString("N0")</h3>
+                                <h4 class="fs-14">Rata-rata Pengunjung Hari Kerja</h4>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-lg-6">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body bg-soft-warning bg-opacity-25">
-                                <div class="text-center">
-                                    <h3 class="fs-18 fw-semibold mb-1">
-                                        0
-                                    </h3>
-                                    <h4 class="fs-14">
-                                        Rata-rata Pengunjung Akhir Pekan
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="fs-14 fw-semibold mb-4">
-                                    Kapasitas & Penjualan
-                                </h4>
-                                <!-- Multiple Bars -->
-                                <div class="progress" style="height:20px">
-                                    <div class="progress-bar text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100">Hari Kerja (73%)</div>
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 27%" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100">Akhir Pekan (27%)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Kapasitas Kursi Studio</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Kursi</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Kursi Studio Terjual per Hari</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Tiket</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Turnover Hari Kerja</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0,00 Kali</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0,00 Kali</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Orang</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body bg-light bg-opacity-25">
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Perhitungan Rata-rata Kunjungan Hari Kerja:
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Kursi Studio Terjual per Hari x Turnover Hari Kerja
-                                </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    0 x 0,00 = 0 Pengunjung
-                                </p>
-                                <h4 class="fs-16 fw-semibold mb-1">
-                                    Perhitungan Rata-rata Kunjungan Akhir Pekan :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Kursi Studio Terjual per Hari x Turnover Akhir Pekan
-                                </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    0 x 0,00 = 0 Pengunjung
-                                </p>
-                                <h4 class="fs-16 fw-semibold mb-1">
-                                    Perhitungan Rata-rata Member Bulanan :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    ((Rata-rata Kunjungan Hari Kerja x 22 Hari) + (Rata-rata Kunjungan Akhir Perkan x 8 Hari))/12
-                                </p>
-                                <p class="fs-14 text-muted mb-1">
-                                    ((0 x 22) + (0 x 8))/12 = 0 Member
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Detail Omzet Bulanan
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Masuk Hari Kerja</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Masuk Akhir Pekan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Harga Membership Bulanan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body bg-soft-warning bg-opacity-25">
-                                <div class="p-1">
-                                    <h4 class="fs-16 fw-semibold mb-4">
-                                        Omzet Bulanan
-                                    </h4>
-                                    <h4 class="fs-16 fw-semibold mb-1">
-                                        Rp 0
-                                    </h4>
-                                    <p class="fs-14 text-muted mb-1">Total pendapatan dari penjual tiket</p>
-                                </div>
-                                <br />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="fs-14 fw-semibold mb-4">
-                                    Distribusi Omzet Bulanan
-                                </h4>
-                                <!-- Multiple Bars -->
-                                <div class="progress" style="height:20px">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated  bg-danger text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100">Hari Kerja (73%)</div>
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 27%" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100">Akhir Pekan (27%)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body bg-light bg-opacity-25">
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Perhitungan Omzet Hari Kerja:
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Harga Tiket Hari Kerja x Rata-rata Kunjungan Hari Kerja x 22 Hari
-                                </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 x 000,0 x 22 = Rp 0
-                                </p>
-                                <h4 class="fs-16 fw-semibold mb-1">
-                                    Perhitungan Omzet Akhir Pekan
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Harga Tiket Akhir Pekan x Rata-rata Kunjungan Akhir Pekan x 8 Hari
-                                </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 x 000,0 x 8 = Rp 0
-                                </p>
-                                <h4 class="fs-16 fw-semibold mb-1">
-                                    Total Omzet Bulanan :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Omzet Hari Kerja + Omzet Akhir Pekan
-                                </p>
-                                <p class="fs-14 text-muted mb-1">
-                                    Rp 0 + Rp 0 = Rp 0
-                                </p>
+                        <div class="card border border-warning border-2 h-100">
+                            <div class="card-body bg-soft-warning bg-opacity-25 text-center">
+                                <h3 class="fs-18 fw-semibold mb-1">@Model.DataBioskop.RataKunjunganAkhirPekan.ToString("N0")</h3>
+                                <h4 class="fs-14">Rata-rata Pengunjung Akhir Pekan</h4>
                             </div>
                         </div>
                     </div>
@@ -306,266 +95,44 @@
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Perhitungan Potensi Pajak
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak Per Bulan :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Omzet Bulanan x Tarif Pajak
-                                </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 x 10% = Rp 0
-                                </p>
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak Per Tahun :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Potensi Pajak Per Bulan x 12
-                                </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 x 12 = Rp 0
-                                </p>
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Total Potensi Pajak Per Tahun : Rp 0
-                                </h4>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex bg-soft-warning"><h4 class="card-title fs-16 mb-0">Detail Omzet Bulanan</h4></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex"><p class="fs-14 text-muted flex-grow-1">Harga Tiket Hari Kerja</p><div class="flex-shrink-0"><p class="fs-14 fw-semibold">@Model.DataBioskop.HargaTiketHariKerja.ToString("C0")</p></div></div>
+                                    <div class="d-flex"><p class="fs-14 text-muted flex-grow-1">Harga Tiket Akhir Pekan</p><div class="flex-shrink-0"><p class="fs-14 fw-semibold">@Model.DataBioskop.HargaTiketAkhirPekan.ToString("C0")</p></div></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body">
-                                <h4 class="fs-16 fw-semibold mb-3">
-                                    Distribusi Omzet Bulanan
-                                </h4>
-                                <!-- Multiple Bars -->
-                                <div class="progress mb-3" style="height:20px">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 93%" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100">93%</div>
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 7%" aria-valuenow="7" aria-valuemin="0" aria-valuemax="100">7%</div>
-                                </div>
-                                <div class="d-flex mb-5">
-                                    <h6 class="px-4"><span class="badge bg-warning">93%</span> = Hari Kerja</h6>
-                                    <div class="flex-shrink-0">
-                                        <h6><span class="badge bg-danger">7%</span> = Akhir Pekan</h6>
-                                    </div>
+                        <div class="col-lg-6">
+                            <div class="card border border-warning border-2 h-100">
+                                <div class="card-body bg-soft-warning bg-opacity-25 text-center">
+                                    <h5 class="fs-16 fw-semibold mb-3">Omzet Bulanan</h5>
+                                    <h3 class="fs-22 fw-bold mb-1">@Model.DataPotensi.TotalOmzetBulanan.ToString("C0")</h3>
+                                    <p class="fs-12 text-muted mb-1">Total pendapatan dari penjualan tiket</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-6">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body">
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Potensi Pajak per Bulan
-                                </h4>
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    0
-                                </h4>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Hari Kerja</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Akhir Pekan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-4">
-
         <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Ringkasan
-                    </h4>
-                </div>
-            </div>
+            <div class="card-header d-flex bg-soft-warning"><h4 class="card-title fs-16 mb-0">Ringkasan</h4></div>
             <div class="card-body">
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">NOP</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">00.00.000.000.000.00000</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Nama Bioskop</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Bioskop</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Alamat</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Jalan</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kapasitas Kursi Studio</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Kursi</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kursi Studio Terjual per Hari</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Tiket</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Potensi Pajak
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body bg-soft-warning bg-opacity-25">
-                                <h4 class="card-title fs-14 mb-4">
-                                    Potensi Pajak per Bulan
-                                </h4>
-                                <h4 class="card-title fs-18 mb-0">
-                                    Rp 0
-                                </h4>
-                                <p class="fs-12 text-muted">10% dari omzet bulanan</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="card border border-warning border-2">
-                            <div class="card-body bg-soft-warning bg-opacity-25">
-                                <h4 class="card-title fs-14 mb-4">
-                                    Potensi Pajak per Tahun
-                                </h4>
-                                <h4 class="card-title fs-18 mb-0">
-                                    Rp 0
-                                </h4>
-                                <p class="fs-12 text-muted">Proyeksi untuk 12 bulan</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Visualisasi Penjualan Tiket
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 Hari/Bulan)</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Tiket</p>
-                    </div>
-                </div>
-
-                <div class="progress" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
-                </div>
-
-                <br />
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 Hari/Bulan)</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Tiket</p>
-                    </div>
-                </div>
-
-                <div class="progress" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">90%</div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Parameter Perhitungan Pajak
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Hari Kerja</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Akhir Pekan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Rp 0</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Turnover Harik Kerja</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0,00 Kali</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0,00 Kali</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Hari Kerja per Bulan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">22 Hari</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Akhir Pekan per Bulan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">8 Hari</p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">10%</p>
-                    </div>
-                </div>
+                <div class="d-flex"><p class="fs-14 text-muted flex-grow-1">NOP</p><div class="flex-shrink-0"><p class="fs-14 fw-semibold mb-1">@Model.DataDasar.NOP</p></div></div>
+                <div class="d-flex"><p class="fs-14 text-muted flex-grow-1">Nama Bioskop</p><div class="flex-shrink-0"><p class="fs-14 fw-semibold mb-1">@Model.DataDasar.NamaWP</p></div></div>
+                <div class="d-flex"><p class="fs-14 text-muted flex-grow-1">Alamat</p><div class="flex-shrink-0"><p class="fs-14 fw-semibold mb-1">@Model.DataDasar.Alamat</p></div></div>
+                <hr class="my-2">
+                <div class="d-flex"><p class="fs-14 text-muted flex-grow-1">Kapasitas Kursi Studio</p><div class="flex-shrink-0"><p class="fs-14 fw-semibold mb-1">@Model.DataBioskop.KapasitasKursi.ToString("N0") Kursi</p></div></div>
+                <div class="d-flex"><p class="fs-14 text-muted flex-grow-1">Kursi Terjual per Hari</p><div class="flex-shrink-0"><p class="fs-14 fw-semibold mb-1">@Model.DataBioskop.KursiTerjualPerHari.ToString("N0") Tiket</p></div></div>
             </div>
         </div>
     </div>

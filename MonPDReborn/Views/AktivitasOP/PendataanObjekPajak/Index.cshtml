@@ -29,8 +29,8 @@
                         <i class="ri-search-eye-line text-primary fs-1"></i>
                     </div>
                     <div class="text-start">
-                        <h5 class="text-muted">Total Pengedokan</h5>
-                        <h4 class="mb-0 fw-bold">@Model.Data.TotalPengedokan.ToString("N0")</h4>
+                        <h5 class="text-muted">Potensi Pajak Hasil Pengedokan</h5>
+                        <h4 class="mb-0 fw-bold">Rp @Model.Data.TotalPengedokan.ToString("N0")</h4>
                         
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">Rata-Rata Realisasi</h5>
-                        <h4 class="mb-0 fw-bold">@Model.Data.Ratarata.ToString("C")</h4>
+                        <h4 class="mb-0 fw-bold">Rp @Model.Data.Ratarata.ToString("N0")</h4>
                         
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">Total Realisasi</h5>
-                        <h4 class="mb-0 fw-bold">@Model.Data.TotalRealisasi.ToString("C")</h4>
+                        <h4 class="mb-0 fw-bold">Rp @Model.Data.TotalRealisasi.ToString("N0")</h4>
                         
                     </div>
                 </div>
@@ -91,7 +91,7 @@
 
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
+            <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 text-white mb-0">
                         Pengedokan Pajak
@@ -116,7 +116,7 @@
 
     <div class="col-lg-12" id="detailWrapper" style="display: none;">
         <div class="card shadow-sm">
-            <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
+            <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title text-white fs-16 mb-0">
                         Detail Pengedokan Pajak

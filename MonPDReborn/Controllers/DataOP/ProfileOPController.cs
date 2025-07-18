@@ -9,7 +9,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class ProfileOPController : Controller
+    public class ProfileOPController : BaseController
     {
         string URLView = string.Empty;
 
@@ -121,11 +121,27 @@ namespace MonPDReborn.Controllers.DataOP
         #endregion
         #region SERIES DATA
         [HttpGet]
-        public object GetSeriesDetailData(DataSourceLoadOptions load_options, int JenisPajak)
+        public object GetDetailJmlOPData(DataSourceLoadOptions load_options, int JenisPajak)
         {
-            var data = Models.DataOP.ProfileOPVM.Method.GetSeriesDetailData((EnumFactory.EPajak)JenisPajak);
+            var data = Models.DataOP.ProfileOPVM.Method.GetDetailJmlOPData((EnumFactory.EPajak)JenisPajak);
             return DataSourceLoader.Load(data, load_options);
         }
+        public IActionResult DetailOP(int enumPajak, int kategori, string status, int tahun)
+        {
+            try
+            {
+                var jenisPajak = (EnumFactory.EPajak)enumPajak;
+                var filtered = Models.DataOP.ProfileOPVM.Method.GetDetailOPAllYears(jenisPajak, kategori, status, tahun);
+
+                return Json(filtered);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ ERROR: " + ex.Message);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         public IActionResult SeriesMaster(int enumPajak, int kategori, string tahun)
         {
             try
@@ -165,5 +181,26 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
+        public IActionResult JmlSeries()
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfileOPVM.RekapJml();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+       
     }
 }

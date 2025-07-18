@@ -9,7 +9,7 @@ using static MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM;
 
 namespace MonPDReborn.Controllers.MonitoringWilayah
 {
-    public class KontrolWilayahController : Controller
+    public class KontrolWilayahController : BaseController
     {
         private readonly string URLView;
 
@@ -109,6 +109,7 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
                 return Json(response);
             }
         }
+
 
     }
 }

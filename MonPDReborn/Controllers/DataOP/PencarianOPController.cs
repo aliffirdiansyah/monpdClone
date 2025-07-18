@@ -5,7 +5,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class PencarianOPController : Controller
+    public class PencarianOPController : BaseController
     {
         string URLView = string.Empty;
 

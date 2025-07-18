@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Lib.General;
 
 namespace MonPDReborn.Controllers
 {
-    public class DataController : Controller
+    public class DataController : BaseController
     {
         public IActionResult ProfilOp()
         {

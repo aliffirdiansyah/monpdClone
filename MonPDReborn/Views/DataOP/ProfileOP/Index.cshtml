@@ -101,7 +101,7 @@
                                         </div>
 
                                         <div id="detailContainerSeries" class="mt-4" style="display: none;">
-                                            @Html.Partial("~/Views/DataOP/ProfileOP/_SeriesMaster.cshtml")
+                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailOP.cshtml")
                                         </div>
                                     </div>
 
@@ -125,7 +125,7 @@
     <script>
             // Mendapatkan tahun sekarang
         const currentYear = new Date().getFullYear();
-        const startYear = 2023;
+        const startYear = 2021;
         const endYear = 2025;
         const ddlTahun = document.getElementById("ddlTahun");
 
@@ -147,9 +147,7 @@
         $(document).ready(function () {
             var tahun = $('#ddlTahun').val(); // ambil default tahun saat page load
             fnShowRekap("", tahun);
-            fnShowSeries();
         });
-
         
         function fnShowRekap(keyword, tahun)
         {
@@ -175,32 +173,66 @@
             });
         }
 
-        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
-            const enumPajak = cellInfo.data.EnumPajak;
+                        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+            const jenisPajak = cellInfo.data.EnumPajak;
             const kategori = cellInfo.data.KategoriId;
-            const tahun = cellInfo.column.dataField;
-            const button = $('<button>')
+            const tahunKey = cellInfo.column.dataField;
+
+            const mapping = {
+                'Tahun1_Awal': { tahun: 2021, status: 'JmlOpAwal' },
+                'Tahun1_Baru': { tahun: 2021, status: 'JmlOpBaru' },
+                'Tahun1_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
+                'Tahun1_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
+
+                'Tahun2_Awal': { tahun: 2022, status: 'JmlOpAwal' },
+                'Tahun2_Baru': { tahun: 2022, status: 'JmlOpBaru' },
+                'Tahun2_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
+                'Tahun2_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
+
+                'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
+                'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
+                'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
+                'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
+
+                'Tahun4_Awal': { tahun: 2024, status: 'JmlOpAwal' },
+                'Tahun4_Baru': { tahun: 2024, status: 'JmlOpBaru' },
+                'Tahun4_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
+                'Tahun4_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
+
+                'Tahun5_Awal': { tahun: 2025, status: 'JmlOpAwal' },
+                'Tahun5_Baru': { tahun: 2025, status: 'JmlOpBaru' },
+                'Tahun5_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
+                'Tahun5_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
+            };
+
+            const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
+
+            const $button = $('<button>')
                 .addClass('btn btn-sm btn-outline-primary me-2')
                 .attr('title', 'Lihat Detail')
                 .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    onSeriesClick(enumPajak, kategori, tahun);
-                });
+                .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
 
-                const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID') );
+            const $span = $('<span>').text(
+                (cellInfo.value ?? 0).toLocaleString('id-ID')
+            );
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(button)
-                .append(span);
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                })
+                .append([$button, $span]);
 
-            $(cellElement).append(wrapper);
+            $(cellElement).append($wrapper);
         }
+
 
         function fnShowSeries()
         {
             $.ajax({
-              url: '@(Url.Action("ShowSeries"))',
+              url: '@(Url.Action("JmlSeries"))',
               type: 'GET',
               beforeSend: function () {
                  $('#loading2-ShowSeries').show();
@@ -282,40 +314,47 @@
         }
 
         // 📌 Series Master
-        function onSeriesClick(enumPajak, kategori, tahun) {
-            $('#detailModalSeries').modal('show');
-            $("#detailContainerSeries").hide();
-            $("#detailLoadingSeries").show();
+                function onSeriesClick(enumPajak, kategori, tahun, status ) {
+            const $modal = $('#detailModalSeries');
+            const $loading = $("#detailLoadingSeries");
+            const $container = $("#detailContainerSeries");
+            const $wrapper = $("#detailWrapper");
+
+            $modal.modal('show');
+            $container.hide();
+            $loading.show();
 
             $.ajax({
-                url: '/ProfileOP/SeriesMaster',
-                type: 'GET',
+                url: '/ProfileOP/DetailOP',
+                method: 'GET',
                 data: {
-                    enumPajak: enumPajak,
-                    kategori: kategori,
-                    tahun: tahun
+                    enumPajak,
+                    kategori,
+                    tahun,
+                    status
                 },
                 success: function (data) {
-                    const grid = $("#SeriesGrid").dxDataGrid("instance");
+                    const grid = $("#detailOPGrid").dxDataGrid("instance");
+                    if (grid) {
+                        grid.option("dataSource", data);
+                    }
 
-                    grid.option("dataSource", data);
-
-                    setTimeout(function () {
-                        $("#detailLoadingSeries").fadeOut(300, function () {
-                            $("#detailContainerSeries").fadeIn(300);
+                    setTimeout(() => {
+                        $loading.fadeOut(300, () => {
+                            $container.fadeIn(300);
                         });
                     }, 500);
 
                     // Sembunyikan panel Rekap
-                    $("#detailWrapper").hide();
+                    $wrapper.hide();
                 },
                 error: function () {
-                    swal.fire({
+                    Swal.fire({
                         icon: 'error',
                         title: '<b style="color:orange">Peringatan</b>',
-                        text: "❌ Gagal memuat data Series."
+                        html: "❌ Gagal memuat data Series."
                     });
-                    hideDetailSeries();
+                    hideDetailSeries?.();
                 }
             });
         }
@@ -330,31 +369,31 @@
         });
 
 
-      /*  function onSeriesClick(enumPajak, kategori, tahun) {
-            $.ajax({
-                url: '/ProfileOP/SeriesMaster',
-                type: 'GET',
-                data: {
-                    enumPajak: enumPajak,
-                    kategori: kategori,
-                    tahun: tahun
-                },
-                success: function (data) {
-                    const grid = $("#SeriesGrid").dxDataGrid("instance"); // ✅ pastikan id nya SeriesGrid
-                    grid.option("dataSource", data);
+       // function onSeriesClick(jenisPajak, kategori, tahun) {
+       //      $.ajax({
+       //          url: '/ProfileOP/DetailOP',
+       //          type: 'GET',
+       //          data: {
+       //              jenisPajak: enumPajak,
+       //              kategori: kategori,
+       //              tahun: tahun
+       //          },
+       //          success: function (data) {
+       //              const grid = $("#SeriesGrid").dxDataGrid("instance"); 
+       //              grid.option("dataSource", data);
 
-                    $("#detailWrapperSeries").show(); // ✅ tampilkan wrapper detail series
-                    $("#detailWrapper").hide();       // ✅ sembunyikan wrapper lama
-                },
-                error: function (xhr) {
-                    swal.fire({
-                            icon: 'error',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: "❌ Gagal memuat data Series."
-                        })
-                }
-            });
-        }*/
+       //              $("#detailWrapperSeries").show(); 
+       //              $("#detailWrapper").hide();       
+       //          },
+       //          error: function (xhr) {
+       //              swal.fire({
+       //                      icon: 'error',
+       //                      title: '<b style="color:orange">Peringatan</b>',
+       //                      text: "❌ Gagal memuat data Series."
+       //                  })
+       //          }
+       //      });
+       //  }
 
 
 
@@ -364,6 +403,48 @@
               window.open(url, '_blank');
           }
           
+
+    </script>
+    <script>
+        //                 function subDetailTemplate(detailElement, info) {
+        //     const data = info.data;
+
+        //     console.log("DATA CLIENT:", data);
+
+        //     if (!data || typeof data.EnumPajak === 'undefined') {
+        //         DevExpress.ui.notify("Data EnumPajak tidak ditemukan", "error", 2000);
+        //         detailElement.append(`<div class="alert alert-danger">Data EnumPajak tidak ditemukan</div>`);
+        //         return;
+        //     }
+
+        //     const jenisPajak = data.EnumPajak; pastikan ini integer
+
+        //     console.log("JenisPajak (enum int):", jenisPajak);
+
+        //     Tampilkan spinner saat loading
+        //     detailElement.empty().append(`
+        //         <div class="text-center py-5">
+        //             <div class="spinner-border text-primary"></div>
+        //             <p>Loading detail...</p>
+        //         </div>
+        //     `);
+
+        //     Panggil partial view dari server
+        //     $.ajax({
+        //         url: '/ProfileOP/DetailSeries',
+        //         type: 'GET',
+        //         data: { jenisPajak }, kirim sebagai int
+        //         success: function (response) {
+        //             detailElement.empty().append(response);
+        //         },
+        //         error: function () {
+        //             detailElement.empty().append(`
+        //                 <div class="alert alert-danger">Gagal memuat detail dari server.</div>
+        //             `);
+        //         }
+        //     });
+        // }
+
 
     </script>
 }

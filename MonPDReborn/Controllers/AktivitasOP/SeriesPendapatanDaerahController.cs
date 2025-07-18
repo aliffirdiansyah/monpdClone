@@ -9,7 +9,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
-    public class SeriesPendapatanDaerahController : Controller
+    public class SeriesPendapatanDaerahController : BaseController
     {
         private readonly ILogger<SeriesPendapatanDaerahController> _logger;
         ResponseBase response = new ResponseBase();

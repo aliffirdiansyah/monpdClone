@@ -33,17 +33,17 @@
 
                     <div class="mb-2">
                         <span class="text-muted">Potensi:</span>
-                        <span class="fw-semibold float-end">@ViewBag.Potensi.ToString("C")</span>
+                        <span class="fw-semibold float-end">@Model.Data.Potensi.ToString("C")</span>
                     </div>
 
                     <div class="mb-2">
                         <span class="text-muted">Realisasi:</span>
-                        <span class="fw-semibold float-end">@ViewBag.RealisasiTotal.ToString("C")</span>
+                        <span class="fw-semibold float-end">@Model.Data.RealisasiTotal.ToString("C")</span>
                     </div>
 
                     <div>
                         <span class="text-muted">Capaian:</span>
-                        <span class="fw-semibold float-end">@ViewBag.Capaian.ToString("N0")%</span>
+                        <span class="fw-semibold float-end">@Model.Data.Capaian.ToString("N0")%</span>
                     </div>
                 </div>
             </div>
@@ -60,23 +60,23 @@
                     </div>
                 </div>
 
-                <!-- Teks Kanan -->
+                <!-- Teks Kiri -->
                 <div class="flex-grow-1">
                     <h4 class="fw-bold text-success mb-2">Total OP Tahun 2025</h4>
 
                     <div class="mb-2">
                         <span class="text-muted">Total OP:</span>
-                        <span class="fw-semibold float-end">@ViewBag.TotalOP</span>
+                        <span class="fw-semibold float-end">@Model.Data.TotalOP</span>
                     </div>
 
                     <div class="mb-2">
                         <span class="text-muted">Realisasi OP:</span>
-                        <span class="fw-semibold float-end">@ViewBag.RealisasiOP</span>
+                        <span class="fw-semibold float-end">@Model.Data.RealisasiOP</span>
                     </div>
 
                     <div>
                         <span class="text-muted">Terealisasi:</span>
-                        <span class="fw-semibold float-end">@ViewBag.CapaianOP</span>
+                        <span class="fw-semibold float-end">@Model.Data.RealisasiOP</span>
                     </div>
                 </div>
             </div>
@@ -101,6 +101,7 @@
                     </div>
                 </div>
                 <div id="ShowRekap"></div>
+
                 <div id="detailModal" class="modal fade" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content shadow-lg border-0 rounded-3">
@@ -135,7 +136,7 @@
         });
 
 
-                function onDetail(e) {
+        function onDetail(e) {
             const data = e.row?.data;
             if (!data || !data.NOP || !data.JenisPajak) return;
 
@@ -148,8 +149,6 @@
 
             window.open(url, '_blank');
         }
-
-
 
         function fnShowRekap() {
             $.ajax({
@@ -208,7 +207,7 @@
             });
         }
 
-                function onDetailClick(e) {
+        function onDetailClick(e) {
             // Pastikan tidak submit default tombol
             e.event.preventDefault();
 
@@ -270,21 +269,6 @@
             });
         }
 
-
-
-
-        // function fnShowData() {
-        //     $.ajax({
-        //         url: '@Url.Action("ShowData", "ProfilePotensiOP")',
-        //         type: 'GET',
-        //         success: function (result) {
-        //             $('#Show').html(result);
-        //         },
-        //         error: function () {
-        //             $('#Show').html('<div class="alert alert-danger">Gagal memuat data Show.</div>');
-        //         }
-        //     });
-        // }
     </script>
 }
 

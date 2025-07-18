@@ -34,33 +34,13 @@ Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
             .CssClass("fw-bold");
 
         columns.Add()
-            .Caption(tahun1.ToString())
+            .Caption(tahun5.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
-                sub.AddFor(x => x.Tahun1_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun1_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun1_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun1_Akhir).Caption("Akhir").Format("#,##0");
-            });
-
-        columns.Add()
-            .Caption(tahun2.ToString())
-            .Alignment(HorizontalAlignment.Center)
-            .Columns(sub => {
-                sub.AddFor(x => x.Tahun2_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun2_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun2_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun2_Akhir).Caption("Akhir").Format("#,##0");
-            });
-
-        columns.Add()
-            .Caption(tahun3.ToString())
-            .Alignment(HorizontalAlignment.Center)
-            .Columns(sub => {
-                sub.AddFor(x => x.Tahun3_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun3_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun3_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun3_Akhir).Caption("Akhir").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Akhir).Caption("Akhir").Format("#,##0");
             });
 
         columns.Add()
@@ -74,20 +54,140 @@ Html.DevExtreme().DataGrid<ViewModel.JumlahObjekPajak>()
             });
 
         columns.Add()
-            .Caption(tahun5.ToString())
+            .Caption(tahun3.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
-                sub.AddFor(x => x.Tahun5_Awal).Caption("Awal").Format("#,##0");
-                sub.AddFor(x => x.Tahun5_Tutup).Caption("Tutup").Format("#,##0");
-                sub.AddFor(x => x.Tahun5_Baru).Caption("Baru").Format("#,##0");
-                sub.AddFor(x => x.Tahun5_Akhir).Caption("Akhir").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Akhir).Caption("Akhir").Format("#,##0");
+            });
+
+        columns.Add()
+            .Caption(tahun2.ToString())
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.AddFor(x => x.Tahun2_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun2_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun2_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun2_Akhir).Caption("Akhir").Format("#,##0");
+            });
+
+        columns.Add()
+            .Caption(tahun1.ToString())
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.AddFor(x => x.Tahun1_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun1_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun1_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun1_Akhir).Caption("Akhir").Format("#,##0");
             });
     })
     .Summary(s => {
         s.TotalItems(items => {
             items.AddFor(x => x.JenisPajak)
-                .SummaryType(SummaryType.Count)
-                .DisplayFormat("Total Jenis Pajak: {0}");
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total");
+
+            items.AddFor(x => x.Tahun1_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun1_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun1_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun1_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
         });
     })
 )

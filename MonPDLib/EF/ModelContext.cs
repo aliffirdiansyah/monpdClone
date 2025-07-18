@@ -77,7 +77,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MTipekamarhotel> MTipekamarhotels { get; set; }
 
+    public virtual DbSet<MUserLogin> MUserLogins { get; set; }
+
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
+
+    public virtual DbSet<MvSeriesPendapatan> MvSeriesPendapatans { get; set; }
+
+    public virtual DbSet<MvSeriesTargetP> MvSeriesTargetPs { get; set; }
 
     public virtual DbSet<Npwpd> Npwpds { get; set; }
 
@@ -195,6 +201,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TPemeriksaan> TPemeriksaans { get; set; }
 
+    public virtual DbSet<TPendapatanDaerah> TPendapatanDaerahs { get; set; }
+
     public virtual DbSet<TPenungguanSptpd> TPenungguanSptpds { get; set; }
 
     public virtual DbSet<TPenungguanSptpdMamin> TPenungguanSptpdMamins { get; set; }
@@ -225,11 +233,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TSeriesPendapatan> TSeriesPendapatans { get; set; }
 
+    public virtual DbSet<TSeriesTargetP> TSeriesTargetPs { get; set; }
+
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -680,9 +690,25 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<MUserLogin>(entity =>
+        {
+            entity.Property(e => e.InsertBy).HasDefaultValueSql("'MASTER KEY'");
+            entity.Property(e => e.InsertDate).HasDefaultValueSql("SYSDATE");
+        });
+
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvSeriesPendapatan>(entity =>
+        {
+            entity.ToView("MV_SERIES_PENDAPATAN");
+        });
+
+        modelBuilder.Entity<MvSeriesTargetP>(entity =>
+        {
+            entity.ToView("MV_SERIES_TARGET_P");
         });
 
         modelBuilder.Entity<Npwpd>(entity =>
@@ -1333,6 +1359,11 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.Nop, e.TahunPajak, e.MasaPajak, e.Seq }).HasName("T_PEMERIKSAAN_PK");
         });
 
+        modelBuilder.Entity<TPendapatanDaerah>(entity =>
+        {
+            entity.ToView("T_PENDAPATAN_DAERAH");
+        });
+
         modelBuilder.Entity<TPenungguanSptpd>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("T_PENUNGGUAN_SPTPD_PK");
@@ -1417,6 +1448,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<TSeriesPendapatan>(entity =>
         {
             entity.Property(e => e.InsertDate).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<TSeriesTargetP>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.KelompokRek, e.JenisRek, e.ObyekRek, e.RincianRek, e.SubrincianRek }).HasName("PK_PAD_TARGET_REKLAME");
         });
 
         modelBuilder.Entity<TTeguranSptpd>(entity =>

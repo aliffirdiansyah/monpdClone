@@ -1,0 +1,264 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.RekapJml
+
+@{
+    var tahuns = MonPDLib.General.Utility.Generate5TahunKebelakang();
+    var tahun1 = tahuns.Tahun1;
+    var tahun2 = tahuns.Tahun2;
+    var tahun3 = tahuns.Tahun3;
+    var tahun4 = tahuns.Tahun4;
+    var tahun5 = tahuns.Tahun5;
+}
+<div class="flex-grow-1">
+    <h4 class="card-title fs-16 mb-3">
+        Series Jumlah Objek Pajak
+    </h4>
+</div>
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-group-fill text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Objek Pajak</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.TotalOpTahunIni.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-line-chart-fill text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pertumbuhan</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.PertumbuhanOp.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3 text-center">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-trophy-fill text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Kenaikan Tertinggi</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.KenaikanTertinggiOp.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="table-responsive">
+    @(
+Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>()
+    .ID("seriesGrid")
+    .ShowBorders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ColumnAutoWidth(true)
+    .SearchPanel(s => s.Visible(true))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .AllowColumnResizing(true)
+    .DataSource(Model.Data)
+    .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
+    .Columns(columns => {
+
+        columns.AddFor(x => x.JenisPajak)
+            .Caption("JENIS PAJAK")
+            .Fixed(true)
+            .FixedPosition(HorizontalEdge.Left)
+            .CssClass("fw-bold");
+
+        columns.Add()
+            .Caption(tahun5.ToString())
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.AddFor(x => x.Tahun5_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun5_Akhir).Caption("Akhir").Format("#,##0");
+            });
+
+        columns.Add()
+            .Caption(tahun4.ToString())
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.AddFor(x => x.Tahun4_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun4_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun4_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun4_Akhir).Caption("Akhir").Format("#,##0");
+            });
+
+        columns.Add()
+            .Caption(tahun3.ToString())
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.AddFor(x => x.Tahun3_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun3_Akhir).Caption("Akhir").Format("#,##0");
+            });
+
+        columns.Add()
+            .Caption(tahun2.ToString())
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.AddFor(x => x.Tahun2_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun2_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun2_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun2_Akhir).Caption("Akhir").Format("#,##0");
+            });
+
+        columns.Add()
+            .Caption(tahun1.ToString())
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub => {
+                sub.AddFor(x => x.Tahun1_Awal).Caption("Awal").Format("#,##0");
+                sub.AddFor(x => x.Tahun1_Tutup).Caption("Tutup").Format("#,##0");
+                sub.AddFor(x => x.Tahun1_Baru).Caption("Baru").Format("#,##0");
+                sub.AddFor(x => x.Tahun1_Akhir).Caption("Akhir").Format("#,##0");
+            });
+    })
+    .Summary(s => {
+        s.TotalItems(items => {
+            items.AddFor(x => x.JenisPajak)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total");
+
+            items.AddFor(x => x.Tahun1_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun1_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun1_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun1_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun2_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun3_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun4_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Awal)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Tutup)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Baru)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Tahun5_Akhir)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+        });
+    })
+    .MasterDetail(md =>
+        {
+        md.Enabled(true);
+        md.Template(
+        @<text>
+            @{
+                ViewData["JenisPajak"] = new JS("data.EnumPajak");
+            }
+        @await Html.PartialAsync("~/Views/DataOP/ProfileOP/_DetailSeries.cshtml")
+    </text>);
+        })
+)
+</div>
+

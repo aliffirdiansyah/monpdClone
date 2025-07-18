@@ -4,7 +4,7 @@ using MonPDReborn.Lib.General;
 
 namespace MonPDReborn.Controllers
 {
-    public class DashboardController : Controller
+    public class DashboardController : BaseController
     {
         string URLView = string.Empty;
 
