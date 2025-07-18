@@ -574,7 +574,7 @@ SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
-WHERE NAMA_PAJAK_DAERAH='HIBURAN' AND A.FK_NOP IS NOT NULL
+WHERE NAMA_PAJAK_DAERAH='HIBURAN' AND A.FK_NOP IS NOT NULL 
 )
 WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN)
                     ";
@@ -693,6 +693,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                                 newRow.NamaSubRincian = item.NamaSubRincian;
                             }
                             _contMonPd.DbOpHiburans.Add(newRow);
+                            _contMonPd.SaveChanges();
                         }
 
                     }
@@ -711,7 +712,7 @@ SELECT FK_NOP NOP, TO_NUMBER(TAHUN_PAJAK) TAHUN,TO_NUMBER(BULAN_PAJAK) MASAPAJAK
 FROM VW_SIMPADA_SPTPD@LIHATHPPSERVER
 WHERE NAMA_PAJAK_DAERAH='HIBURAN' AND FK_NOP IS NOT NULL and REPLACE(FK_NOP,'.','')=:NOP
 )
-WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
+WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN       ";
 
                         var ketetapanMonitoringDb = _contMonitoringDB.Set<OPSkpdHiburan>()
                             .FromSqlRaw(sqlKetetapan, new[] {
@@ -799,6 +800,8 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
                     }
 
                     // realisasi
+
+                    var newRowEx= new DbMonHiburan();
                     try
                     {
                         var sqlRealisasi = @"SELECT  ID_SSPD,
@@ -808,7 +811,7 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
             5 JENIS_PAJAK,
             1 JENIS_KETETAPAN, 
             TO_DATE(MP_AKHIR) JATUH_TEMPO, 
-            FK_NOP NOP,
+            REPLACE(FK_NOP,'.','') NOP,
             TO_NUMBER( BULAN_PAJAK) MASA, 
             TO_NUMBER(TAHUN_PAJAK) TAHUN, 
            TO_NUMBER(JML_POKOK) NOMINAL_POKOK, 
@@ -829,14 +832,29 @@ WHERE NAMA_PAJAK_DAERAH='HIBURAN'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(T
                     new OracleParameter("TAHUN", tahunBuku)
                             }).ToList();
 
+                        
+
                         if (pembayaranSspdList != null)
                         {
                             foreach (var itemSSPD in pembayaranSspdList)
                             {
+                                if (item.Nop == "357810000190301208" && itemSSPD.MASA==12 && itemSSPD.TAHUN==2020)
+                                {
+                                    string x = "";
+                                }
+
                                 var ketetapan = _contMonPd.DbMonHiburans.SingleOrDefault(x => x.Nop == itemSSPD.NOP &&
                                                                                         x.TahunPajakKetetapan == itemSSPD.TAHUN &&
                                                                                         x.MasaPajakKetetapan == itemSSPD.MASA &&
                                                                                         x.SeqPajakKetetapan == itemSSPD.SEQ_KETETAPAN);
+
+                                if (ketetapan ==null)
+                                {
+                                    ketetapan = _contMonPd.DbMonHiburans.SingleOrDefault(x => x.Nop == itemSSPD.NOP &&
+                                                                                        x.TahunPajakKetetapan == itemSSPD.TAHUN &&
+                                                                                        x.MasaPajakKetetapan == itemSSPD.MASA &&
+                                                                                        x.SeqPajakKetetapan == 101);
+                                }
                                 if (ketetapan != null)
                                 {
                                     string akunBayar = "-";
@@ -1060,6 +1078,7 @@ WHERE NAMA_PAJAK_DAERAH='HIBURAN'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(T
                                     newRow.ObjekSanksiBayar = objekSanksi;
                                     newRow.RincianSanksiBayar = rincianSanksi;
                                     newRow.SubRincianSanksiBayar = subrincianSanksi;
+                                    newRowEx = newRow;
                                     _contMonPd.DbMonHiburans.Add(newRow);
                                     _contMonPd.SaveChanges();
                                 }
