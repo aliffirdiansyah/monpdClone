@@ -3,6 +3,7 @@
 using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
 using DocumentFormat.OpenXml.InkML;
 using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -3660,6 +3661,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                 x.NamaOp,
                                 x.AlamatOp,
+                                x.KategoriNama,
                                 x.PajakId
                             })
                             .ToList();
@@ -3721,6 +3723,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NOP = r.Nop,
                                     NamaOP = op?.NamaOp ?? "-",
                                     AlamatOP = op?.AlamatOp ?? "-",
+                                    KategoriNama = op?.KategoriNama ?? "-",
                                     Realisasi = r.Realisasi ?? 0
                                 };
                             }).ToList()
@@ -3738,6 +3741,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                 x.NamaOp,
                                 x.AlamatOp,
+                                x.KategoriNama,
                                 x.PajakId
                             })
                             .ToList();
@@ -3783,6 +3787,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NOP = r.Nop,
                                     NamaOP = master?.NamaOp ?? "-",
                                     AlamatOP = master?.AlamatOp ?? "-",
+                                    KategoriNama = master?.KategoriNama ?? "-",
                                     Realisasi = r.Realisasi ?? 0
                                 };
                             })
@@ -3809,6 +3814,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                 x.NamaOp,
                                 x.AlamatOp,
+                                x.KategoriNama,
                                 x.PajakId
                             })
                             .ToList();
@@ -3854,6 +3860,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NOP = r.Nop,
                                     NamaOP = master?.NamaOp ?? "-",
                                     AlamatOP = master?.AlamatOp ?? "-",
+                                    KategoriNama = master?.KategoriNama ?? "-",
                                     Realisasi = r.Realisasi ?? 0
                                 };
                             })
@@ -3881,6 +3888,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                 x.NamaOp,
                                 x.AlamatOp,
+                                x.KategoriNama,
                                 x.PajakId
                             })
                             .ToList();
@@ -3926,6 +3934,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NOP = r.Nop,
                                     NamaOP = master?.NamaOp ?? "-",
                                     AlamatOP = master?.AlamatOp ?? "-",
+                                    KategoriNama = master?.KategoriNama ?? "-",
                                     Realisasi = r.Realisasi ?? 0
                                 };
                             })
@@ -3953,6 +3962,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                 x.NamaOp,
                                 x.AlamatOp,
+                                x.KategoriNama,
                                 x.PajakId
                             })
                             .ToList();
@@ -3998,6 +4008,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NOP = r.Nop,
                                     NamaOP = master?.NamaOp ?? "-",
                                     AlamatOP = master?.AlamatOp ?? "-",
+                                    KategoriNama = master?.KategoriNama ?? "-",
                                     Realisasi = r.Realisasi ?? 0
                                 };
                             })
@@ -4024,6 +4035,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                 x.NamaOp,
                                 x.AlamatOp,
+                                x.KategoriNama,
                                 x.PajakId
                             })
                             .ToList();
@@ -4069,6 +4081,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NOP = r.Nop,
                                     NamaOP = master?.NamaOp ?? "-",
                                     AlamatOP = master?.AlamatOp ?? "-",
+                                    KategoriNama = master?.KategoriNama ?? "-",
                                     Realisasi = r.Realisasi ?? 0
                                 };
                             })
@@ -4097,6 +4110,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                                 NamaOp = "-",            // PBB biasanya tidak ada, default "-"
                                 AlamatOp = "-",          // PBB biasanya tidak ada, default "-"
+                                KategoriNama = "-",
                                 PajakId = 9m
                             })
                             .ToList();
@@ -4142,6 +4156,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NOP = r.Nop,
                                     NamaOP = master?.NamaOp ?? "-",
                                     AlamatOP = master?.AlamatOp ?? "-",
+                                    KategoriNama = master?.KategoriNama ?? "-",
                                     Realisasi = r.Realisasi ?? 0
                                 };
                             })
@@ -4399,6 +4414,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
             public string NOP { get; set; } = null!;
             public string NamaOP { get; set; } = null!;
             public string AlamatOP { get; set; } = null!;
+            public string KategoriNama { get; set; } = null!;
             public decimal Realisasi { get; set; }
 
         }
