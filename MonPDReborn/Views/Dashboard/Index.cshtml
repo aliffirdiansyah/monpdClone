@@ -6,10 +6,10 @@
 }
 
 <div class="card border shadow-sm mb-4">
-    <div class="card-header d-flex align-items-center" style="background-color: #d35400;">
+    <div class="card-header d-flex align-items-center">
         <div class="flex-grow-1">
-            <h5 class="card-title fs-16 text-white mb-0">
-                <h5 class="card-title fs-16 text-white mb-0">
+            <h5 class="card-title fs-16  mb-0">
+                <h5 class="card-title fs-16  mb-0">
                     <i class="mdi mdi-database align-middle me-1"></i> REALISASI PAJAK DAERAH
                 </h5>
             </h5>
@@ -23,12 +23,12 @@
     <div class="card-body">
         <div class="row g-1">
             <div class="col-sm-6 col-lg-3">
-                <div class="card card-success bg-primary border-0 shadow-sm text-white">
+                <div class="card card-success  border-0 shadow-sm text-black" style="background-color: #f7f4e7;">
                     <div class="card-body py-2 px-3">
                         <div class="d-flex align-items-center">
                             <!-- Persen di kiri -->
                             <div class="flex-shrink-0 me-3">
-                                <div class="bg-primary text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                <div class=" text-black border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
                                     @Model.Data.PersentaseHotel %
                                 </div>
                             </div>
@@ -36,15 +36,15 @@
                             <!-- Keterangan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())</span>
+                                    <span class="fw-semibold fs-15 text-black">@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())</span>
                                     <i class="bx bx-building fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
                                     <span class="fs-12 d-block">
-                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiHotel.ToString("n0")</strong>
+                                        Real : <strong class="text-black">Rp @Model.Data.RealisasiHotel.ToString("n0")</strong>
                                     </span>
                                     <span class="fs-12 d-block">
-                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetHotel.ToString("n0")</strong>
+                                        Trgt : <strong class="text-black">Rp @Model.Data.TargetHotel.ToString("n0")</strong>
                                     </span>
                                 </p>
 
@@ -58,13 +58,13 @@
             </div>
 
             <div class="col-sm-6 col-lg-3">
-                <div class="card card-success bg-info border-0 shadow-sm text-white">
+                <div class="card card-success  border-0 shadow-sm text-black" style="background-color: #fbc7c3;">
                     <div class="card-body py-2 px-3">
                         <div class="d-flex align-items-center">
 
                             <!-- Persentase di kiri -->
                             <div class="flex-shrink-0 me-3">
-                                <div class="bg-info text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                <div class=" text-black border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
                                     @Model.Data.PersentaseMamin %
                                 </div>
                             </div>
@@ -72,15 +72,15 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.MakananMinuman.GetDescription())</span>
+                                    <span class="fw-semibold fs-15 text-black">@(EnumFactory.EPajak.MakananMinuman.GetDescription())</span>
                                     <i class="bx bx-restaurant fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
                                     <span class="fs-12 d-block">
-                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiMamin.ToString("n0")</strong>
+                                        Real : <strong class="text-black">Rp @Model.Data.RealisasiMamin.ToString("n0")</strong>
                                     </span>
                                     <span class="fs-12 d-block">
-                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetMamin.ToString("n0")</strong>
+                                        Trgt : <strong class="text-black">Rp @Model.Data.TargetMamin.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -96,13 +96,13 @@
 
 
             <div class="col-sm-6 col-lg-3">
-                <div class="card card-success bg-danger border-0 shadow-sm text-white">
+                <div class="card card-success  border-0 shadow-sm text-black" style="background-color: #b989f5;">
                     <div class="card-body py-2 px-3">
                         <div class="d-flex align-items-center">
 
                             <!-- Persentase di kiri -->
                             <div class="flex-shrink-0 me-3">
-                                <div class="bg-danger text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                <div class=" text-black border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
                                     @Model.Data.PersentaseHiburan %
                                 </div>
                             </div>
@@ -110,15 +110,15 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())</span>
+                                    <span class="fw-semibold fs-15 text-black">@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())</span>
                                     <i class="bx bx-camera-movie fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
                                     <span class="fs-12 d-block">
-                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiHiburan.ToString("n0")</strong>
+                                        Real : <strong class="text-black">Rp @Model.Data.RealisasiHiburan.ToString("n0")</strong>
                                     </span>
                                     <span class="fs-12 d-block">
-                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetHiburan.ToString("n0")</strong>
+                                        Trgt : <strong class="text-black">Rp @Model.Data.TargetHiburan.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>
@@ -133,13 +133,13 @@
             </div>
 
             <div class="col-sm-6 col-lg-3">
-                <div class="card card-success bg-success border-0 shadow-sm text-white">
+                <div class="card card-success  border-0 shadow-sm text-black" style="background-color: #8ef5d7;">
                     <div class="card-body py-2 px-3">
                         <div class="d-flex align-items-center">
 
                             <!-- Persentase di kiri -->
                             <div class="flex-shrink-0 me-3">
-                                <div class="bg-success text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
+                                <div class=" text-black border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
                                     @Model.Data.PersentaseListrik %
                                 </div>
                             </div>
@@ -147,15 +147,15 @@
                             <!-- Keterangan di kanan -->
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.TenagaListrik.GetDescription())</span>
+                                    <span class="fw-semibold fs-15 text-black">@(EnumFactory.EPajak.TenagaListrik.GetDescription())</span>
                                     <i class="bx bx-bulb fs-20"></i>
                                 </div>
                                 <p class="card-text mb-1 fs-14 mt-1">
                                     <span class="fs-12 d-block">
-                                        Real : <strong class="text-white">Rp @Model.Data.RealisasiListrik.ToString("n0")</strong>
+                                        Real : <strong class="text-black">Rp @Model.Data.RealisasiListrik.ToString("n0")</strong>
                                     </span>
                                     <span class="fs-12 d-block">
-                                        Trgt : <strong class="text-white">Rp @Model.Data.TargetListrik.ToString("n0")</strong>
+                                        Trgt : <strong class="text-black">Rp @Model.Data.TargetListrik.ToString("n0")</strong>
                                     </span>
                                 </p>
                             </div>

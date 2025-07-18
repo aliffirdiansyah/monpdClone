@@ -8,7 +8,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.MonitoringGlobal
 {
-    public class MonitoringHarianController : Controller
+    public class MonitoringHarianController : BaseController
     {
         string URLView = string.Empty;
 

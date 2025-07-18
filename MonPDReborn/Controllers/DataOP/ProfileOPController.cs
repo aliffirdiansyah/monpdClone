@@ -9,7 +9,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class ProfileOPController : Controller
+    public class ProfileOPController : BaseController
     {
         string URLView = string.Empty;
 
@@ -126,12 +126,12 @@ namespace MonPDReborn.Controllers.DataOP
             var data = Models.DataOP.ProfileOPVM.Method.GetDetailJmlOPData((EnumFactory.EPajak)JenisPajak);
             return DataSourceLoader.Load(data, load_options);
         }
-        public IActionResult DetailOP(int enumPajak, int kategori)
+        public IActionResult DetailOP(int enumPajak, int kategori, string status, int tahun)
         {
             try
             {
                 var jenisPajak = (EnumFactory.EPajak)enumPajak;
-                var filtered = Models.DataOP.ProfileOPVM.Method.GetDetailObjekPajak(jenisPajak, kategori);
+                var filtered = Models.DataOP.ProfileOPVM.Method.GetDetailOPAllYears(jenisPajak, kategori, status, tahun);
 
                 return Json(filtered);
             }

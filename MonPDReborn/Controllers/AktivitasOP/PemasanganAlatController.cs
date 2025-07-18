@@ -5,7 +5,7 @@ using MonPDReborn.Models.AktivitasOP;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
-    public class PemasanganAlatController : Controller
+    public class PemasanganAlatController : BaseController
     {
         string URLView = string.Empty;
 
