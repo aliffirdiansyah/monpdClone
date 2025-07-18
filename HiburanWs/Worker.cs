@@ -294,6 +294,7 @@ WHERE A.NPWPD NOT IN (
                                 newRow.NamaSubRincian = item.NamaSubRincian;
                             }
                             _contMonPd.DbOpHiburans.Add(newRow);
+                            _contMonPd.SaveChanges();
                         }
 
                     }
