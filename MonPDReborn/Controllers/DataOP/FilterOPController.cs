@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Lib.General;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class FilterOPController : Controller
+    public class FilterOPController : BaseController
     {
         string URLView = string.Empty;
 

@@ -6,7 +6,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class ProfilePembayaranOPController : Controller
+    public class ProfilePembayaranOPController : BaseController
     {
         string URLView = string.Empty;
 

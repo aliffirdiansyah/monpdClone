@@ -4,7 +4,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataWP
 {
-    public class ProfilePiutangWPController : Controller
+    public class ProfilePiutangWPController : BaseController
     {
         string URLView = string.Empty;
 

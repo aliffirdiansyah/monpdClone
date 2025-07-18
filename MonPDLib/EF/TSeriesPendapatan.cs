@@ -12,7 +12,7 @@ public partial class TSeriesPendapatan
 {
     [Key]
     [Column("NO_BUKTI")]
-    [StringLength(50)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NoBukti { get; set; } = null!;
 
@@ -22,13 +22,13 @@ public partial class TSeriesPendapatan
 
     [Key]
     [Column("KD_RINCI")]
-    [StringLength(50)]
+    [StringLength(150)]
     [Unicode(false)]
     public string KdRinci { get; set; } = null!;
 
     [Key]
     [Column("KD_KEGIATAN")]
-    [StringLength(50)]
+    [StringLength(150)]
     [Unicode(false)]
     public string KdKegiatan { get; set; } = null!;
 
@@ -38,7 +38,7 @@ public partial class TSeriesPendapatan
 
     [Key]
     [Column("KD_ORGANISASI")]
-    [StringLength(50)]
+    [StringLength(150)]
     [Unicode(false)]
     public string KdOrganisasi { get; set; } = null!;
 
@@ -50,14 +50,14 @@ public partial class TSeriesPendapatan
 
     [Key]
     [Column("NO_DOKUMEN")]
-    [StringLength(50)]
+    [StringLength(150)]
     [Unicode(false)]
     public string NoDokumen { get; set; } = null!;
 
     [Column("URAIAN", TypeName = "CLOB")]
     public string? Uraian { get; set; }
 
-    [Column("JUMLAH", TypeName = "NUMBER(18,2)")]
+    [Column("JUMLAH", TypeName = "NUMBER(30,2)")]
     public decimal? Jumlah { get; set; }
 
     [Column("TAHUN", TypeName = "NUMBER(38)")]

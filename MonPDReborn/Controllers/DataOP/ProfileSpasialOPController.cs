@@ -4,7 +4,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class ProfileSpasialOPController : Controller
+    public class ProfileSpasialOPController : BaseController
     {
         string URLView = string.Empty;
 

@@ -6,7 +6,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.AnalisisTren
 {
-    public class KontrolPrediksiController : Controller
+    public class KontrolPrediksiController : BaseController
     {
         string URLView = string.Empty;
 
