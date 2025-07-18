@@ -11,7 +11,7 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
 
         public class Show
         {
-            public List<PenerimaanInduk> Data { get; set; } = new();
+            public List<PendapatanAsliDaerah> Data { get; set; } = new();
             public Show()
             {
                 Data = Method.GetData();
@@ -38,7 +38,7 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
 
         public static class Method
         {
-            public static List<PenerimaanInduk> GetData()
+            public static List<PendapatanAsliDaerah> GetData()
             {
                 var detailPajakDaerah = new List<PenerimaanDetail>
                 {
@@ -56,7 +56,7 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 };
 
 
-                return new List<PenerimaanInduk>
+                return new List<PendapatanAsliDaerah>
                 {
                     new() {
                         ID = 1, JenisPajak = "Pajak Daerah",
@@ -144,7 +144,7 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             };
             }
         }
-        public class PenerimaanInduk
+        public class PendapatanAsliDaerah
         {
             public int ID { get; set; }
             public string JenisPajak { get; set; } = "";
