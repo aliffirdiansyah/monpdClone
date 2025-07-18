@@ -3030,87 +3030,29 @@ namespace MonPDReborn.Models.DataOP
                 return ret;
             }
 
-            public static List<DetailOP> GetDetailObjekPajak(EnumFactory.EPajak jenisPajak, int kategori)
+            public static List<DetailOP> GetDetailOPAllYears(EnumFactory.EPajak jenisPajak, int kategori, string status, int tahun)
             {
                 var context = DBClass.GetContext();
                 var result = new List<DetailOP>();
 
-                for (int tahun = 2025; tahun >= 2021; tahun--)
+                // hanya untuk tahun tertentu
+                var rekap = GetRekapMasterData(jenisPajak, kategori, status, tahun);
+
+                result = rekap.Select(x => new DetailOP
                 {
-                    IQueryable<dynamic> query = null;
-
-                    switch (jenisPajak)
-                    {
-                        case EnumFactory.EPajak.MakananMinuman:
-                            query = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.TenagaListrik:
-                            query = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.JasaPerhotelan:
-                            query = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.JasaParkir:
-                            query = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.JasaKesenianHiburan:
-                            query = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.AirTanah:
-                            query = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.Reklame:
-                            query = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.PBB:
-                            query = context.DbOpPbbs.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori);
-                            break;
-
-                        case EnumFactory.EPajak.BPHTB:
-                            query = context.DbMonBphtbs.Where(x => x.Tahun == tahun);
-                            break;
-
-                        case EnumFactory.EPajak.OpsenBbnkb:
-                            query = context.DbMonOpsenBbnkbs.Where(x => x.TahunPajakSspd == tahun);
-                            break;
-
-                        case EnumFactory.EPajak.OpsenPkb:
-                            query = context.DbMonOpsenPkbs.Where(x => x.TahunPajakSspd == tahun);
-                            break;
-
-                        // Untuk BPHTB, OpsenPkb, OpsenBbnkb tidak ada implementasi
-                        default:
-                            continue;
-                    }
-
-                    if (query != null)
-                    {
-                        var list = query.ToList().Select(x => new DetailOP
-                        {
-                            Tahun = tahun,
-                            EnumPajak = (int)jenisPajak,
-                            KategoriId = (int)x.KategoriId,
-                            KategoriNama = x.KategoriNama,
-                            NOP = x.Nop,
-                            NamaOP = x.NamaOp ?? x.Nama ?? x.WpNama,
-                            Alamat = x.AlamatOp ?? x.Alamat,
-                            JenisOP = "-",
-                            Wilayah = x.WilayahPajak ?? "-"
-                        });
-
-                        result.AddRange(list);
-                    }
-                }
+                    EnumPajak = x.EnumPajak,
+                    Kategori_Id = x.Kategori_Id,
+                    Kategori_Nama = x.Kategori_Nama,
+                    NOP = x.NOP,
+                    NamaOP = x.NamaOP,
+                    Alamat = x.Alamat,
+                    JenisOP = x.JenisOP,
+                    Wilayah = x.Wilayah
+                }).ToList();
 
                 return result;
             }
+
 
 
 
@@ -3424,15 +3366,16 @@ namespace MonPDReborn.Models.DataOP
         }
         public class DetailOP
         {
-            public int Tahun { get; set; }
             public int EnumPajak { get; set; }
-            public int? KategoriId { get; set; }
-            public string? KategoriNama { get; set; }   // ✅ Tambahkan ini
-            public string? NOP { get; set; }
-            public string? NamaOP { get; set; }
-            public string? Alamat { get; set; }
-            public string? JenisOP { get; set; }
-            public string? Wilayah { get; set; }
+            public int Kategori_Id { get; set; }
+            public string Kategori_Nama { get; set; } = null!;
+            public string NOP { get; set; } = null!;
+            public string NamaOP { get; set; } = null!;
+            public string Alamat { get; set; } = null!;
+            public string JenisOP { get; set; } = null!;
+            public string Wilayah { get; set; } = null!;
+            public string Status { get; set; } = null!;
+
         }
 
 

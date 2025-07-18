@@ -175,27 +175,61 @@
             });
         }
 
-        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+                        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
             const jenisPajak = cellInfo.data.EnumPajak;
             const kategori = cellInfo.data.KategoriId;
-            const tahun = cellInfo.column.dataField;
-            const button = $('<button>')
+            const tahunKey = cellInfo.column.dataField;
+
+            const mapping = {
+                'Tahun1_Awal': { tahun: 2021, status: 'JmlOpAwal' },
+                'Tahun1_Baru': { tahun: 2021, status: 'JmlOpBaru' },
+                'Tahun1_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
+                'Tahun1_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
+
+                'Tahun2_Awal': { tahun: 2022, status: 'JmlOpAwal' },
+                'Tahun2_Baru': { tahun: 2022, status: 'JmlOpBaru' },
+                'Tahun2_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
+                'Tahun2_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
+
+                'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
+                'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
+                'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
+                'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
+
+                'Tahun4_Awal': { tahun: 2024, status: 'JmlOpAwal' },
+                'Tahun4_Baru': { tahun: 2024, status: 'JmlOpBaru' },
+                'Tahun4_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
+                'Tahun4_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
+
+                'Tahun5_Awal': { tahun: 2025, status: 'JmlOpAwal' },
+                'Tahun5_Baru': { tahun: 2025, status: 'JmlOpBaru' },
+                'Tahun5_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
+                'Tahun5_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
+            };
+
+            const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
+
+            const $button = $('<button>')
                 .addClass('btn btn-sm btn-outline-primary me-2')
                 .attr('title', 'Lihat Detail')
                 .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    onSeriesClick(jenisPajak, kategori, tahun);
-                });
+                .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
 
-                const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID') );
+            const $span = $('<span>').text(
+                (cellInfo.value ?? 0).toLocaleString('id-ID')
+            );
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(button)
-                .append(span);
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                })
+                .append([$button, $span]);
 
-            $(cellElement).append(wrapper);
+            $(cellElement).append($wrapper);
         }
+
 
         function fnShowSeries()
         {
@@ -282,40 +316,47 @@
         }
 
         // 📌 Series Master
-        function onSeriesClick(enumPajak, kategori, tahun) {
-            $('#detailModalSeries').modal('show');
-            $("#detailContainerSeries").hide();
-            $("#detailLoadingSeries").show();
+                function onSeriesClick(enumPajak, kategori, tahun, status ) {
+            const $modal = $('#detailModalSeries');
+            const $loading = $("#detailLoadingSeries");
+            const $container = $("#detailContainerSeries");
+            const $wrapper = $("#detailWrapper");
+
+            $modal.modal('show');
+            $container.hide();
+            $loading.show();
 
             $.ajax({
                 url: '/ProfileOP/DetailOP',
-                type: 'GET',
+                method: 'GET',
                 data: {
-                    enumPajak: enumPajak,
-                    kategori: kategori,
-                    tahun: tahun
+                    enumPajak,
+                    kategori,
+                    tahun,
+                    status
                 },
                 success: function (data) {
-                     const grid = $("#detailOPGrid").dxDataGrid("instance");
+                    const grid = $("#detailOPGrid").dxDataGrid("instance");
+                    if (grid) {
+                        grid.option("dataSource", data);
+                    }
 
-                    grid.option("dataSource", data);
-
-                    setTimeout(function () {
-                        $("#detailLoadingSeries").fadeOut(300, function () {
-                            $("#detailContainerSeries").fadeIn(300);
+                    setTimeout(() => {
+                        $loading.fadeOut(300, () => {
+                            $container.fadeIn(300);
                         });
                     }, 500);
 
                     // Sembunyikan panel Rekap
-                    $("#detailWrapper").hide();
+                    $wrapper.hide();
                 },
                 error: function () {
-                    swal.fire({
+                    Swal.fire({
                         icon: 'error',
                         title: '<b style="color:orange">Peringatan</b>',
-                        text: "❌ Gagal memuat data Series."
+                        html: "❌ Gagal memuat data Series."
                     });
-                    hideDetailSeries();
+                    hideDetailSeries?.();
                 }
             });
         }
