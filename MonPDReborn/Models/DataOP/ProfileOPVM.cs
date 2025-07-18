@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
@@ -287,8 +288,8 @@ namespace MonPDReborn.Models.DataOP
                         JmlOpAwal = OpBphtbAwal,
                         JmlOpTutupPermanen = 0,
                         JmlOpBaru = OpBphtbNow - 0,
-                        JmlOpAkhir = OpBphtbAwal ,
-                        Tahun = tahun- 0 + (OpBphtbNow - OpBphtbAwal)
+                        JmlOpAkhir = OpBphtbNow ,
+                        Tahun = tahun
                     },
                     new RekapOP
                     {
@@ -719,6 +720,26 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.BPHTB:
+                        foreach (var kat in kategoriList)
+                        {
+                            var OpBphtbTutup = context.DbMonBphtbs.Count(x => x.Tahun == tahun && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kat.Id);
+                            var OpBphtbAwal = context.DbMonBphtbs.Count(x => x.Tahun == tahun - 1 && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kat.Id);
+                            var OpBphtbBaru = context.DbMonBphtbs.Count(x => x.Tahun == tahun && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kat.Id);
+                            var OpBphtbAkhir = context.DbMonBphtbs.Count(x => x.Tahun == tahun && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kat.Id);
+
+                            ret.Add(new RekapDetail
+                            {
+                                JenisPajak = JenisPajak.GetDescription(),
+                                EnumPajak = (int)JenisPajak,
+                                Tahun = tahun,
+                                KategoriId = (int)kat.Id,
+                                Kategori = kat.Nama,
+                                JmlOpAwal = OpBphtbAwal,
+                                JmlOpTutupPermanen = 0,
+                                JmlOpBaru = OpBphtbBaru,
+                                JmlOpAkhir = OpBphtbAkhir
+                            });
+                        }
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         break;
@@ -1235,6 +1256,57 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.BPHTB:
+                        var OpBphtbTutup = context.DbMonBphtbs.Where(x => x.Tahun == tahun && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kategori).ToList();
+                        var OpBphtbAwal = context.DbMonBphtbs.Where(x => x.Tahun == tahun - 1 && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kategori).ToList();
+                        var OpBphtbBaru = context.DbMonBphtbs.Where(x => x.Tahun == tahun && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kategori).ToList();
+                        var OpBphtbAkhir = context.DbMonBphtbs.Where(x => x.Tahun == tahun && Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()) == kategori).ToList();
+
+                        if (status == "JmlOpAwal")
+                        {
+                            ret = OpBphtbAwal.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()),
+                                Kategori_Nama = x.Perolehan,
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpTutupPermanen")
+                        {
+                            //
+                        }
+                        else if (status == "JmlOpBaru")
+                        {
+                            ret = OpBphtbBaru.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()),
+                                Kategori_Nama = x.Perolehan,
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
+                        else if (status == "JmlOpAkhir")
+                        {
+                            ret = OpBphtbAkhir.Select(x => new RekapMaster()
+                            {
+                                EnumPajak = (int)JenisPajak,
+                                Kategori_Id = (int)Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()),
+                                Kategori_Nama = x.Perolehan,
+                                NOP = x.SpptNop,
+                                NamaOP = x.NamaWp,
+                                Alamat = x.Alamat,
+                                JenisOP = "-",
+                                Wilayah = "-"
+                            }).ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         break;
