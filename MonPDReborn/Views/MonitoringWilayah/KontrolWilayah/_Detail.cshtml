@@ -19,6 +19,8 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilaya
         pg.AllowedPageSizes(new[] { 5, 10, 20 });
         pg.ShowInfo(true);
     })
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
     .Columns(columns => {
         columns.AddFor(m => m.Tanggal)
             .Caption("Tanggal").Format("dd MMMM yyyy");
