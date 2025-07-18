@@ -9,7 +9,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class ProfileOPController : Controller
+    public class ProfileOPController : BaseController
     {
         string URLView = string.Empty;
 

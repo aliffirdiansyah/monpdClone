@@ -6,7 +6,7 @@ using static MonPDReborn.Models.DataOP.ProfileTargetOPVM;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class ProfileTargetOPController : Controller
+    public class ProfileTargetOPController : BaseController
     {
         string URLView = string.Empty;
 

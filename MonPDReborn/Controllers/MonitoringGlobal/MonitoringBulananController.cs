@@ -9,7 +9,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.MonitoringGlobal
 {
-    public class MonitoringBulananController : Controller
+    public class MonitoringBulananController : BaseController
     {
         string URLView = string.Empty;
 

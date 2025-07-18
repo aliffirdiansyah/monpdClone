@@ -4,7 +4,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
-    public class ReklameSummaryController : Controller
+    public class ReklameSummaryController : BaseController
     {
         string URLView = string.Empty;
 

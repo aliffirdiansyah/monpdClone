@@ -4,7 +4,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.StrukPBJT
 {
-    public class StrukPBJTController : Controller
+    public class StrukPBJTController : BaseController
     {
         string URLView = string.Empty;
 

@@ -5,7 +5,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.MonitoringGlobal
 {
-    public class MonitoringTahunanController : Controller
+    public class MonitoringTahunanController : BaseController
     {
         string URLView = string.Empty;
 

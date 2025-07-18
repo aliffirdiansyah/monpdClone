@@ -1,0 +1,32 @@
+﻿@model MonPDReborn.Models.LoginVM.Index
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutLogin";
+}
+
+<div class="card shadow rounded-4 p-4" style="width: 100%; max-width: 400px;">
+    <h3 class="text-center mb-4">Login</h3>
+
+    @if (TempData["ERROR_LOGIN"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ERROR_LOGIN"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form method="post" asp-action="Index">
+        <div class="mb-3">
+            <label asp-for="Row.Username" class="form-label"></label>
+            <input asp-for="Row.Username" class="form-control" placeholder="Masukkan Username" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Row.Password" class="form-label"></label>
+            <input asp-for="Row.Password" type="password" class="form-control" placeholder="Masukkan Password" />
+        </div>
+        <div class="mb-3 text-end">
+            <a href="/account/forgot-password" class="text-decoration-none small">Lupa Password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+</div>

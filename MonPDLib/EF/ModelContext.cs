@@ -77,7 +77,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MTipekamarhotel> MTipekamarhotels { get; set; }
 
+    public virtual DbSet<MUserLogin> MUserLogins { get; set; }
+
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
+
+    public virtual DbSet<MvSeriesPendapatan> MvSeriesPendapatans { get; set; }
 
     public virtual DbSet<Npwpd> Npwpds { get; set; }
 
@@ -224,6 +228,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TPiutangResto> TPiutangRestos { get; set; }
 
     public virtual DbSet<TSeriesPendapatan> TSeriesPendapatans { get; set; }
+
+    public virtual DbSet<TSeriesTargetP> TSeriesTargetPs { get; set; }
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
@@ -680,9 +686,20 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<MUserLogin>(entity =>
+        {
+            entity.Property(e => e.InsertBy).HasDefaultValueSql("'MASTER KEY'");
+            entity.Property(e => e.InsertDate).HasDefaultValueSql("SYSDATE");
+        });
+
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvSeriesPendapatan>(entity =>
+        {
+            entity.ToView("MV_SERIES_PENDAPATAN");
         });
 
         modelBuilder.Entity<Npwpd>(entity =>
@@ -1417,6 +1434,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<TSeriesPendapatan>(entity =>
         {
             entity.Property(e => e.InsertDate).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<TSeriesTargetP>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.KelompokRek, e.JenisRek, e.ObyekRek, e.RincianRek, e.SubrincianRek }).HasName("PK_PAD_TARGET_REKLAME");
         });
 
         modelBuilder.Entity<TTeguranSptpd>(entity =>

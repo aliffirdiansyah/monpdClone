@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDReborn.Lib.General;
 
 namespace MonPDReborn.Controllers
 {
-    public class AktivitasController : Controller
+    public class AktivitasController : BaseController
     {
         public IActionResult PemasanganAlat()
         {

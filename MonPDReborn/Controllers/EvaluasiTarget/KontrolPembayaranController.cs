@@ -5,7 +5,7 @@ using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 
 namespace MonPDReborn.Controllers.EvaluasiTarget
 {
-    public class KontrolPembayaranController : Controller
+    public class KontrolPembayaranController : BaseController
     {
         string URLView = string.Empty;
 
