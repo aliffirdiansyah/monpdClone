@@ -702,6 +702,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                                 newRow.NamaSubRincian = item.NamaSubRincian;
                             }
                             _contMonPd.DbOpHotels.Add(newRow);
+                            _contMonPd.SaveChanges();
                         }
 
                     }
@@ -817,7 +818,7 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
             5 JENIS_PAJAK,
             1 JENIS_KETETAPAN, 
             TO_DATE(MP_AKHIR) JATUH_TEMPO, 
-            FK_NOP NOP,
+            REPLACE(FK_NOP,'.','') NOP,
             TO_NUMBER( BULAN_PAJAK) MASA, 
             TO_NUMBER(TAHUN_PAJAK) TAHUN, 
            TO_NUMBER(JML_POKOK) NOMINAL_POKOK, 
@@ -846,6 +847,13 @@ WHERE NAMA_PAJAK_DAERAH='HOTEL'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(TGL
                                                                                         x.TahunPajakKetetapan == itemSSPD.TAHUN &&
                                                                                         x.MasaPajakKetetapan == itemSSPD.MASA &&
                                                                                         x.SeqPajakKetetapan == itemSSPD.SEQ_KETETAPAN);
+                                if (ketetapan == null)
+                                {
+                                    ketetapan = _contMonPd.DbMonHotels.SingleOrDefault(x => x.Nop == itemSSPD.NOP &&
+                                                                                        x.TahunPajakKetetapan == itemSSPD.TAHUN &&
+                                                                                        x.MasaPajakKetetapan == itemSSPD.MASA &&
+                                                                                        x.SeqPajakKetetapan == 101);
+                                }
                                 if (ketetapan != null)
                                 {
                                     string akunBayar = "-";
