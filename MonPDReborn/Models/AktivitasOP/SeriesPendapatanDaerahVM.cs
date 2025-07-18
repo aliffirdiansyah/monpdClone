@@ -20,7 +20,7 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
 
         public class ShowPendapatanTransfer
         {
-            public List<DataTransfer> Data { get; set; } = new();
+            public List<PendapatanTransfer> Data { get; set; } = new();
             public ShowPendapatanTransfer()
             {
                 Data = Method.GetDataPendapatanTransfer();
@@ -64,8 +64,7 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                         Target2 = detailPajakDaerah.Sum(d => d.Target2), Realisasi2 = detailPajakDaerah.Sum(d => d.Realisasi2),
                         Target3 = detailPajakDaerah.Sum(d => d.Target3), Realisasi3 = detailPajakDaerah.Sum(d => d.Realisasi3),
                         Target4 = detailPajakDaerah.Sum(d => d.Target4), Realisasi4 = detailPajakDaerah.Sum(d => d.Realisasi4),
-                        Target5 = detailPajakDaerah.Sum(d => d.Target5), Realisasi5 = detailPajakDaerah.Sum(d => d.Realisasi5),
-                        DetailItems = detailPajakDaerah
+                        Target5 = detailPajakDaerah.Sum(d => d.Target5), Realisasi5 = detailPajakDaerah.Sum(d => d.Realisasi5)
                     },
                     new() {
                         ID = 2, JenisPajak = "Retribusi Daerah",
@@ -88,10 +87,10 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 };
             }
 
-            public static List<DataTransfer> GetDataPendapatanTransfer()
+            public static List<PendapatanTransfer> GetDataPendapatanTransfer()
             {
                 // Buat data detail untuk 'Pemerintah Pusat'
-                var detailPusat = new List<DataTransfer> {
+                var detailPusat = new List<PendapatanTransfer> {
                 new() { ID = 101, JenisPendapatan = "Insentif Fiskal", Target3 = 500, Realisasi3 = 480 },
                 new() { ID = 102, JenisPendapatan = "Dana Bagi Hasil (DBH)", Target3 = 1200, Realisasi3 = 1250 },
                 new() { ID = 103, JenisPendapatan = "Dana Alokasi Umum", Target3 = 2000, Realisasi3 = 2000 },
@@ -100,27 +99,25 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             };
 
                 // Buat data detail untuk 'Antar Daerah'
-                var detailAntarDaerah = new List<DataTransfer> {
+                var detailAntarDaerah = new List<PendapatanTransfer> {
                 new() { ID = 201, JenisPendapatan = "Pendapatan Bagi Hasil", Target3 = 300, Realisasi3 = 310 },
                 new() { ID = 202, JenisPendapatan = "Bantuan Keuangan", Target3 = 400, Realisasi3 = 390 }
             };
 
-                return new List<DataTransfer>
+                return new List<PendapatanTransfer>
             {
                 // Baris Induk 1
                 new() {
                     ID = 1, JenisPendapatan = "Pendapatan Transfer Pemerintah Pusat",
                     // Total adalah penjumlahan dari detailnya
                     Target3 = detailPusat.Sum(d => d.Target3),
-                    Realisasi3 = detailPusat.Sum(d => d.Realisasi3),
-                    DetailItems = detailPusat
+                    Realisasi3 = detailPusat.Sum(d => d.Realisasi3)
                 },
                 // Baris Induk 2
                 new() {
                     ID = 2, JenisPendapatan = "Pendapatan Transfer Antar Daerah",
                     Target3 = detailAntarDaerah.Sum(d => d.Target3),
-                    Realisasi3 = detailAntarDaerah.Sum(d => d.Realisasi3),
-                    DetailItems = detailAntarDaerah
+                    Realisasi3 = detailAntarDaerah.Sum(d => d.Realisasi3)
                 }
             };
             }
@@ -163,7 +160,6 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
-            public List<PenerimaanDetail>? DetailItems { get; set; }
         }
 
         public class PenerimaanDetail
@@ -186,7 +182,7 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
         }
 
-        public class DataTransfer
+        public class PendapatanTransfer
         {
             public int ID { get; set; }
             public string JenisPendapatan { get; set; } = "";
@@ -206,7 +202,6 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
-            public List<DataTransfer>? DetailItems { get; set; } // Properti untuk sub-baris
         }
 
         public class PenerimaanPembiayaan
