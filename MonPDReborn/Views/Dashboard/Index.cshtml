@@ -5,8 +5,8 @@
     ViewData["Title"] = "Dashboard";
 }
 <div class="row g-1">
-    <div class="col-sm-6 col-lg-3">
-        <div class="card card-success  border-0 bg-dashboard-satu shadow-sm text-black">
+    <div class="col-sm-6 col-lg-3" >
+        <div class="card card-success  border-0 bg-dashboard-satu shadow-sm text-black" style="min-height:152.8px;">
             <div class="card-body py-2 px-3">
                 <div class="d-flex align-items-center">
                     <!-- Persen di kiri -->
@@ -1151,7 +1151,7 @@
 
         </script>
         <script>
-            function detailPiutangCellTemplate(cellElement, cellInfo) {
+                        function detailPiutangCellTemplate(cellElement, cellInfo) {
                 const enumPajak = cellInfo.data.EnumPajak;
                 const tahun = cellInfo.column.dataField;
 
@@ -1160,20 +1160,24 @@
                     .attr('title', 'Lihat Detail')
                     .html('<i class="ri-search-line"></i>')
                     .on('click', function () {
-                        ondetailPiutangClick(enumPajak, tahun);
+                        onDetailPiutangClick(enumPajak, tahun);
                     });
 
                 const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID'));
 
                 const wrapper = $('<div>')
-                    .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                    .css({
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    })
                     .append(button)
                     .append(span);
 
                 $(cellElement).append(wrapper);
             }
 
-            function ondetailPiutangClick(enumPajak, tahun) {
+            function onDetailPiutangClick(jenisPajak, tahun) {
                 const $modal = $("#detailModal");
 
                 $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);
@@ -1191,10 +1195,8 @@
                     url: '/Dashboard/DetailPiutang',
                     type: 'GET',
                     data: {
-                        enumPajak: enumPajak,
-                        tahun: tahun
-                        // jika ada kategori, tambahkan juga di sini
-                        // kategori: kategori
+                        jenisPajak: jenisPajak,   // 👈 sudah konsisten dengan controller
+                        tahun: tahun              // opsional, jika controller mendukung
                     },
                     success: function (response) {
                         $modal.find(".modal-body").html(response);
@@ -1208,6 +1210,7 @@
                     }
                 });
             }
+
 
 
         </script>

@@ -33,22 +33,17 @@
             columns.AddFor(x => x.NominalPiutang1)
             .Caption(tahun1)
             .Alignment(HorizontalAlignment.Center)
-            .CellTemplate("detailPiutangCellTemplate");
+            .CellTemplate(new JS("detailPiutangCellTemplate"));
 
             columns.AddFor(x => x.NominalPiutang2)
             .Caption(tahun2)
             .Alignment(HorizontalAlignment.Center)
-            .CellTemplate("detailPiutangCellTemplate");
+            .CellTemplate(new JS("detailPiutangCellTemplate"));
 
             columns.AddFor(x => x.NominalPiutang3)
             .Caption(tahun3)
             .Alignment(HorizontalAlignment.Center)
-            .CellTemplate("detailPiutangCellTemplate");
-
-            columns.AddFor(x => x.NominalPiutang4)
-            .Caption(tahun4)
-            .Alignment(HorizontalAlignment.Center)
-            .CellTemplate("detailPiutangCellTemplate");
+            .CellTemplate(new JS("detailPiutangCellTemplate"));
 
         })
         )

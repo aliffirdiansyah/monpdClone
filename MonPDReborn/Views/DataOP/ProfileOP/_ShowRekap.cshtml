@@ -68,12 +68,6 @@
                 .RowAlternationEnabled(true)
                 .AllowColumnResizing(true)
                 .ColumnAutoWidth(true)
-                .Paging(p => p.PageSize(10))
-                .Pager(p => p
-                .ShowInfo(true)
-                .ShowPageSizeSelector(true)
-                .AllowedPageSizes(new[] { 5, 10, 20 })
-                )
                 .Columns(columns =>
                 {
                     columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").CssClass("fw-bold");
