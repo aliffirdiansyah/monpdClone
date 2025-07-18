@@ -250,12 +250,12 @@ namespace MonPDReborn.Controllers
             }
         }
 
-        public IActionResult DetailPiutang(int jenisPajak)
+        public IActionResult DetailPiutang(int jenisPajak, int tahun)
         {
             var response = new ResponseBase();
             try
             {
-                var model = new Models.DashboardVM.DetailPiutang((EnumFactory.EPajak)jenisPajak);
+                var model = new Models.DashboardVM.DetailPiutang((EnumFactory.EPajak)jenisPajak, tahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException ex)

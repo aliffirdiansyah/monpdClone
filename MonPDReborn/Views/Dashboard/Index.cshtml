@@ -5,8 +5,8 @@
     ViewData["Title"] = "Dashboard";
 }
 <div class="row g-1">
-    <div class="col-sm-6 col-lg-3">
-        <div class="card card-success  border-0 bg-dashboard-satu shadow-sm text-black">
+    <div class="col-sm-6 col-lg-3" >
+        <div class="card card-success  border-0 bg-dashboard-satu shadow-sm text-black" style="min-height:152.8px;">
             <div class="card-body py-2 px-3">
                 <div class="d-flex align-items-center">
                     <!-- Persen di kiri -->
@@ -1151,9 +1151,11 @@
 
         </script>
         <script>
-            function detailPiutangCellTemplate(cellElement, cellInfo) {
+                                                function detailPiutangCellTemplate(cellElement, cellInfo) {
                 const enumPajak = cellInfo.data.EnumPajak;
-                const tahun = cellInfo.column.dataField;
+
+                // Ambil tahun dari Caption kolom
+                const tahun = parseInt(cellInfo.column.caption);
 
                 const button = $('<button>')
                     .addClass('btn btn-sm btn-outline-primary me-2')
@@ -1173,7 +1175,9 @@
                 $(cellElement).append(wrapper);
             }
 
-            function ondetailPiutangClick(enumPajak, tahun) {
+
+
+                        function ondetailPiutangClick(enumPajak, tahun) {
                 const $modal = $("#detailModal");
 
                 $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);
@@ -1191,10 +1195,8 @@
                     url: '/Dashboard/DetailPiutang',
                     type: 'GET',
                     data: {
-                        enumPajak: enumPajak,
+                        jenisPajak: enumPajak, // perbaikan: pakai jenisPajak di server
                         tahun: tahun
-                        // jika ada kategori, tambahkan juga di sini
-                        // kategori: kategori
                     },
                     success: function (response) {
                         $modal.find(".modal-body").html(response);
@@ -1208,6 +1210,8 @@
                     }
                 });
             }
+
+
 
 
         </script>
