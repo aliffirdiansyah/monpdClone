@@ -1,11 +1,12 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.RekapJml
 
 @{
-    var tahun1 = 2025;
-    var tahun2 = 2024;
-    var tahun3 = 2023;
-    var tahun4 = 2022;
-    var tahun5 = 2021;
+    var tahuns = MonPDLib.General.Utility.Generate5TahunKebelakang();
+    var tahun1 = tahuns.Tahun1;
+    var tahun2 = tahuns.Tahun2;
+    var tahun3 = tahuns.Tahun3;
+    var tahun4 = tahuns.Tahun4;
+    var tahun5 = tahuns.Tahun5;
 }
 <div class="flex-grow-1">
     <h4 class="card-title fs-16 mb-3">
