@@ -8,7 +8,7 @@
     var tahun5 = currentYear.ToString();
 }
 
-@(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.PenerimaanInduk>()
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.PendapatanAsliDaerah>()
     .ID("SeriesPendapatanDaerah")
     .DataSource(Model.Data)
     .KeyExpr("ID")
@@ -24,50 +24,6 @@
     .AllowColumnResizing(true)
     .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
     .OnExporting("exportGrid")
-    .MasterDetail(md =>
-    {
-        md.Enabled(true);
-        md.Template(@<text>
-                @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.PenerimaanDetail>()
-                    .DataSource(new JS("data.DetailItems"))
-                    .ShowBorders(true)
-                    .ColumnAutoWidth(true)
-                    .Columns(detailColumns =>
-                    {
-                        detailColumns.AddFor(m => m.Uraian).Caption("Rincian Pajak");
-
-                        // Definisi kolom untuk grid detail
-                        detailColumns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(sub => {
-                            sub.AddFor(m => m.Target1).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Realisasi1).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Persentase1).Caption("%").Format("#,##0.00'%'").Alignment(HorizontalAlignment.Right);
-                        });
-                        detailColumns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(sub => {
-                            sub.AddFor(m => m.Target2).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Realisasi2).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Persentase2).Caption("%").Format("#,##0.00'%'").Alignment(HorizontalAlignment.Right);
-                        });
-                        detailColumns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(sub => {
-                            sub.AddFor(m => m.Target3).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Realisasi3).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Persentase3).Caption("%").Format("#,##0.00'%'").Alignment(HorizontalAlignment.Right);
-                        });
-                        detailColumns.Add().Caption(tahun4).Alignment(HorizontalAlignment.Center).Columns(sub => {
-                            sub.AddFor(m => m.Target4).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Realisasi4).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Persentase4).Caption("%").Format("#,##0.00'%'").Alignment(HorizontalAlignment.Right);
-                        });
-                        detailColumns.Add().Caption(tahun5).Alignment(HorizontalAlignment.Center).Columns(sub => {
-                            sub.AddFor(m => m.Target5).Caption("Target").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Realisasi5).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                            sub.AddFor(m => m.Persentase5).Caption("%").Format("#,##0.00'%'").Alignment(HorizontalAlignment.Right);
-                        });
-                    })
-                )
-
-            
-        </text>);
-    })
     .Columns(columns =>
     {
         // Definisi kolom untuk grid utama

@@ -25,13 +25,6 @@ namespace MonPDReborn.Controllers.DataOP
         }
         public IActionResult Index()
         {
-            ViewBag.Potensi = 54500000;
-            ViewBag.RealisasiTotal = 45000000;
-            ViewBag.Capaian = 82;
-            ViewBag.TotalOP = 50;
-            ViewBag.RealisasiOP = 45;
-            ViewBag.CapaianOP = 98;
-
             try
             {
                 ViewData["Title"] = controllerName;
@@ -108,97 +101,73 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
-        /*   public IActionResult DetailMassage()
-           {
-               return View("/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml");
+        // Di dalam file ProfilePotensiOPController.cs
 
-           }*/
-
-        //public IActionResult Detail(string nop, string jenisPajak)
-        //{
-        //var detailModel = new ProfilePotensiOPVM.Detail(nop, jenisPajak);
-
-        //// Ambil entri pertama (kalau hanya satu data per NOP)
-        //var firstData = detailModel.DataRealisasiBulananList.FirstOrDefault();
-
-        //    if (firstData == null)
-        //        return NotFound();
-
-        //// Isi ViewBag
-        //ViewBag.NamaWP = firstData.NamaWP;
-        //    ViewBag.Alamat = firstData.Alamat;
-        //    ViewBag.NOP = firstData.NOP;
-        //    ViewBag.Kapasitas = firstData.Kapasitas;
-        //    ViewBag.PerHari = firstData.Perhari;
-        //    ViewBag.PerTahun = firstData.Pertahun;
-        //    ViewBag.PerBulan = firstData.Perbulan;
-
-        //    // Routing ke view berdasarkan jenis pajak
-        //    switch (jenisPajak.ToLower())
-        //    {
-        //        case "hotel":
-        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", detailModel);
-        //        case "parkir":
-        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", detailModel);
-        //        case "restoran":
-        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", detailModel);
-        //        case "massage":
-        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
-        //        case "gym":
-        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
-        //        case "bioskop":
-        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", detailModel);
-        //        // Tambahkan jenis pajak lain sesuai kebutuhan
-        //        default:
-        //            return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", detailModel);
-        //    }
-        //}
-
-        public IActionResult Detail(string jenisPajak, string? kategoriHiburan = null)
+        public IActionResult Detail(string nop, string jenisPajak, string? kategoriHiburan = null)
         {
-            var detailModel = new Models.DataOP.ProfilePotensiOPVM.Detail();
-
-            switch (jenisPajak.ToLower())
+            try
             {
-                case "hotel":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", detailModel);
+                switch (jenisPajak.ToLower())
+                {
+                    case "hotel":
+                        var hotelModel = new ProfilePotensiOPVM.DetailHotel(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", hotelModel);
 
-                case "parkir":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", detailModel);
+                    case "parkir":
+                        var parkirModel = new ProfilePotensiOPVM.DetailParkir(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", parkirModel);
 
-                case "restoran":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", detailModel);
+                    case "restoran":
+                        // Anda mungkin perlu membuat ViewModel untuk restoran juga nantinya
+                        var restoranModel = new ProfilePotensiOPVM.Detail(); // Placeholder
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", restoranModel);
 
-                case "hiburan":
-                    return ShowDetailHiburan(kategoriHiburan, detailModel);
+                    case "hiburan":
+                        // DIUBAH: Panggil method ShowDetailHiburan untuk menangani semua logika hiburan
+                        var hiburanModel = new ProfilePotensiOPVM.Detail(); // Kirim model dasar
+                        return ShowDetailHiburan(kategoriHiburan, hiburanModel, nop); // Tambahkan nop jika perlu
 
-                default:
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", detailModel);
+                    default:
+                        var defaultModel = new ProfilePotensiOPVM.Detail();
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", defaultModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error di Action Detail");
+                return Content("Terjadi kesalahan di server.");
             }
         }
 
-        private IActionResult ShowDetailHiburan(string? kategori, object detailModel)
+        // Ubah juga method ShowDetailHiburan untuk lebih fleksibel
+        private IActionResult ShowDetailHiburan(string? kategori, object detailModel, string nop)
         {
             if (string.IsNullOrEmpty(kategori))
+            {
+                // Tampilkan halaman hiburan umum jika tidak ada kategori
                 return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
+            }
 
             switch (kategori.ToLower())
             {
+                case "bioskop":
+                    var bioskopModel = new ProfilePotensiOPVM.DetailBioskop(nop);
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", bioskopModel);
+
                 case "massage":
+                    // var massageModel = new ProfilePotensiOPVM.DetailMassage(nop);
+                    // return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", massageModel);
                     return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
 
-                case "gym":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
 
-                case "bioskop":
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", detailModel);
+                case "gym":
+                    // var gymModel = new ProfilePotensiOPVM.DetailGym(nop);
+                    // return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", gymModel);
+                    return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
 
                 default:
                     return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
             }
         }
-
-
-
     }
 }
