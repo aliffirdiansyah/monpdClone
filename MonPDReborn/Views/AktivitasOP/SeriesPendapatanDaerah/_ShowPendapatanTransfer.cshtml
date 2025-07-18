@@ -27,7 +27,7 @@
     .Columns(columns =>
     {
         // --- KOLOM UTAMA LENGKAP ---
-        columns.AddFor(x => x.Uraian).CssClass("fw-bold").Caption("JENIS PENDAPATAN").Fixed(true);
+        columns.AddFor(x => x.Uraian).CssClass("fw-bold").Caption("URAIAN").Fixed(true);
 
         columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(sub => {
             sub.AddFor(x => x.Target1).Caption("TARGET").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
