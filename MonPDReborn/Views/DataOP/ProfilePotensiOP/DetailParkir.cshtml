@@ -1,7 +1,9 @@
-﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.Detail
+﻿@using MonPDReborn.Models.DataOP
+@model ProfilePotensiOPVM.DetailParkir
 
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Detail Potensi Parkir";
 }
 
 <div class="row">
@@ -21,10 +23,10 @@
                             </div>
                             <div class="mt-2">
                                 <h4 class="fs-16 fw-semibold">
-                                    @ViewBag.NamaWP
+                                    @Model.DataDasar.NamaWP
                                 </h4>
                                 <p class="fs-16 lh-base">
-                                    @ViewBag.Alamat
+                                    @Model.DataDasar.Alamat
                                 </p>
                             </div>
                         </div>
@@ -38,13 +40,13 @@
                         <div class="d-flex p-3 py-0">
                             <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
                             <div class="flex-shrink-0">
-                                <p class="fs-16 fw-semibold">Rp @ViewBag.Perbulan</p>
+                                <p class="fs-16 fw-semibold">@Model.DataPotensi.PotensiBulanan.ToString("C")</p>
                             </div>
                         </div>
                         <div class="d-flex p-3 py-0">
                             <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
                             <div class="flex-shrink-0">
-                                <p class="fs-16 fw-semibold">Rp @ViewBag.Pertahun</p>
+                                <p class="fs-16 fw-semibold">@Model.DataPotensi.PotensiTahunan.ToString("C")</p>
                             </div>
                         </div>
                     </div>
@@ -52,11 +54,11 @@
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 ms-3">
                                 <p class="fs-14 text-muted mb-1">NOP</p>
-                                <p class="fs-14 fw-semibold mb-3">@ViewBag.NOP</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.DataDasar.NOP</p>
                             </div>
                             <div class="flex-shrink-0 ms-5">
                                 <p class="fs-14 text-muted mb-1">Total Kapasitas</p>
-                                <p class="fs-14 fw-semibold mb-3">@ViewBag.Kapasitas Kendaraan</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.DataDasar.TotalKapasitas</p>
                             </div>
                             <div class="flex-shrink-0 ms-3">
                                 <p class="fs-14 text-muted mb-1">Turnover</p>
@@ -96,10 +98,10 @@
                                     <div class="d-flex flex-grow-1 align-items-center">
                                         <div>
                                             <h4 class="fs-14 fw-semibold mb-1">Sepeda Motor</h4>
-                                            <p class="fs-14 lh-base mb-0">Kapasitas : 0 Unit</p>
+                                            <p class="fs-14 lh-base mb-0">Kapasitas : @Model.DataKapasitas.KapasitasMotor Unit</p>
                                         </div>
                                         <div class="ms-auto my-auto">
-                                            <p class="fs-14 fw-semibold mb-0">Rp 0</p>
+                                            <p class="fs-14 fw-semibold mb-0">@Model.DataKapasitas.TarifMotor.ToString("C")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -114,10 +116,10 @@
                                     <div class="d-flex flex-grow-1 align-items-center">
                                         <div>
                                             <h4 class="fs-14 fw-semibold mb-1">Mobil</h4>
-                                            <p class="fs-14 lh-base mb-0">Kapasitas : 0 Unit</p>
+                                            <p class="fs-14 lh-base mb-0">Kapasitas : @Model.DataKapasitas.KapasitasMobil Unit</p>
                                         </div>
                                         <div class="ms-auto my-auto">
-                                            <p class="fs-14 fw-semibold mb-0">Rp 0</p>
+                                            <p class="fs-14 fw-semibold mb-0">@Model.DataKapasitas.TarifMobil.ToString("C")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -133,18 +135,32 @@
                                 </h4>
                                 <!-- Multiple Bars -->
                                 <div class="progress mb-4" style="height:20px">
-                                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
-                                </div>
-                                <div class="d-flex">
-                                    <h6 class="px-4 fs-6"><span class="badge bg-primary">60%</span> = Motor</h6>
-                                    <div class="flex-shrink-0">
-                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Mobil</h6>
+                                    <div class="progress-bar" role="progressbar"
+                                         style="width: @Model.DataDasar.PersenKapasitasMotor.ToString("F0")%;"
+                                         aria-valuenow="@Model.DataDasar.PersenKapasitasMotor.ToString("F0")"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        @Model.DataDasar.PersenKapasitasMotor.ToString("N0")%
+                                    </div>
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         style="width: @Model.DataDasar.PersenKapasitasMobil.ToString("F0")%;"
+                                         aria-valuenow="@Model.DataDasar.PersenKapasitasMobil.ToString("F0")"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        @Model.DataDasar.PersenKapasitasMobil.ToString("N0")%
                                     </div>
                                 </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <h6 class="px-3 fs-6">
+                                        <span class="badge bg-primary">@Model.DataDasar.PersenKapasitasMotor.ToString("N0")%</span> = Motor
+                                    </h6>
+                                    <h6 class="px-3 fs-6">
+                                        <span class="badge bg-info">@Model.DataDasar.PersenKapasitasMobil.ToString("N0")%</span> = Mobil
+                                    </h6>
+                                </div>
                                 <br />
+
                                 <h4 class="fs-14 fw-semibold mb-3 text-center mb-1">
-                                    Total Kapasitas 0 Kendaraan
+                                    Total Kapasitas @Model.DataDasar.TotalKapasitas.ToString("N0") Kendaraan
                                 </h4>
                             </div>
                         </div>
@@ -190,7 +206,7 @@
                             <div class="card-body bg-soft-secondary bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-semibold mb-1">
-                                        0
+                                        @Model.DataKapasitas.TotalTerparkirHariKerja
                                     </h3>
                                     <h4 class="fs-14">
                                         Kendaraan terparkir Hari Kerja
@@ -205,7 +221,7 @@
                             <div class="card-body bg-soft-warning bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-semibold mb-1">
-                                        0
+                                        @Model.DataKapasitas.TotalTerparkirAkhirPekan
                                     </h3>
                                     <h4 class="fs-14">
                                         Kendaraan Terparkir Akhir Pekan
@@ -231,17 +247,17 @@
                                     <tbody>
                                         <tr>
                                             <td>Motor</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>Rp 0</td>
+                                            <td>@Model.DataKapasitas.KapasitasMotor.ToString("N0")</td>
+                                            <td>@Model.DataKapasitas.TerpakaiMotorHariKerja.ToString("N0")</td>
+                                            <td>@Model.DataKapasitas.TerpakaiMotorAkhirPekan.ToString("N0")</td>
+                                            <td class="text-end">@Model.DataKapasitas.TarifMotor.ToString("C")</td>
                                         </tr>
                                         <tr>
                                             <td>Mobil</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>Rp 0</td>
+                                            <td>@Model.DataKapasitas.KapasitasMobil.ToString("N0")</td>
+                                            <td>@Model.DataKapasitas.TerpakaiMobilHariKerja.ToString("N0")</td>
+                                            <td>@Model.DataKapasitas.TerpakaiMobilAkhirPekan.ToString("N0")</td>
+                                            <td class="text-end">@Model.DataKapasitas.TarifMobil.ToString("C")</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -262,25 +278,25 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Unit</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataDasar.KapasitasMotor Unit</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Terparkir Hari Kerja</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataKapasitas.TerpakaiMotorHariKerja Unit (@Model.DataKapasitas.PersenMotorHariKerja%)</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Terparkir Akhir Pekan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataKapasitas.TerpakaiMotorAkhirPekan Unit (@Model.DataKapasitas.PersenMotorAkhirPekan%)</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Tarif</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataKapasitas.TarifMotor.ToString("C")</p>
                                     </div>
                                 </div>
                             </div>
@@ -300,25 +316,25 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Unit</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataKapasitas.KapasitasMobil Unit</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Terparkir Hari Kerja</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataKapasitas.TerpakaiMobilHariKerja Unit (@Model.DataKapasitas.PersenMobilHariKerja%)</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Terparkir Akhir Pekan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">0 Unit (0%)</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataKapasitas.TerpakaiMobilAkhirPekan Unit (@Model.DataKapasitas.PersenMobilAkhirPekan%)</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Tarif</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp 0</p>
+                                        <p class="fs-14 fw-semibold">@Model.DataKapasitas.TarifMobil.ToString("C")</p>
                                     </div>
                                 </div>
                             </div>
@@ -327,6 +343,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="card">
             <div class="card-header d-flex bg-soft-secondary">
@@ -348,7 +365,7 @@
                                     </span>
                                 </div>
                                 <h4 class="fs-14 fw-semibold mb-2">
-                                    Rp 0
+                                    @Model.DataPotensi.OmzetMotor.ToString("C")
                                 </h4>
                                 <p class="fs-12 text-muted mb-1">
                                     Omzet Sepeda Motor
@@ -366,7 +383,7 @@
                                     </span>
                                 </div>
                                 <h4 class="fs-14 fw-semibold mb-2">
-                                    Rp 0
+                                    @Model.DataPotensi.OmzetMobil.ToString("C")
                                 </h4>
                                 <p class="fs-12 text-muted mb-1">
                                     Omzet Mobil
@@ -376,71 +393,52 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <div class="card border border-secondary border-2">
-                            <div class="card-body bg-soft-secondary bg-opacity-25">
-                                <div class="p-1">
-                                    <h4 class="fs-16 fw-semibold mb-4">
-                                        Total Omzet Bulanan
-                                    </h4>
-                                    <h4 class="fs-16 fw-semibold mb-1">
-                                        Rp 0
-                                    </h4>
-                                    <p class="fs-14 text-muted mb-1">Total pendapatan dari parkir</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="fs-16 fw-semibold mb-3">
-                                    Distribusi Omzet Bulanan
+                        <div class="card border border-secondary border-2 h-100">
+                            <div class="card-body bg-soft-secondary bg-opacity-25 d-flex flex-column justify-content-center">
+                                <h4 class="fs-16 fw-semibold mb-3 text-center">
+                                    Total Omzet Bulanan
                                 </h4>
-                                <!-- Multiple Bars -->
-                                <div class="progress mb-4" style="height:20px">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
-                                </div>
-                                <div class="d-flex">
-                                    <h6 class="px-4 fs-6"><span class="badge bg-primary">60%</span> = Sepeda Motor</h6>
-                                    <div class="flex-shrink-0">
-                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Mobil</h6>
-                                    </div>
-                                </div>
+                                <h4 class="fs-22 fw-bold mb-1 text-center">
+                                    @Model.DataPotensi.TotalOmzetBulanan.ToString("C")
+                                </h4>
+                                <p class="fs-14 text-muted mb-1 text-center">Total pendapatan dari parkir</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-lg-12">
-                        <div class="card border border-secondary border-2">
+                        <div class="card border border-secondary border-2 mt-3">
                             <div class="card-body bg-light bg-opacity-25">
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Omzet Sepeda Motor :
                                 </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    (Motor Terparkir Hari Kerja x Tarif Motor x 22 Hari) + (Motor Terparkir Akhir Pekan x Tarif Motor x 8 Hari)
+                                <p class="fs-14 text-muted mb-1 font-monospace">
+                                    (@Model.DataKapasitas.TerpakaiMotorHariKerja.ToString("N0") x @Model.DataKapasitas.TarifMotor.ToString("C") x 22 Hari) + (@Model.DataKapasitas.TerpakaiMotorAkhirPekan.ToString("N0") x @Model.DataKapasitas.TarifMotor.ToString("C") x 8 Hari)
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    (0 x Rp 0 x 22) + (0 x Rp 0 x 8) = Rp 0
+                                <p class="fs-14 text-muted mb-3 fw-semibold">
+                                    = @Model.DataPotensi.OmzetMotor.ToString("C")
                                 </p>
+
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Omzet Mobil :
                                 </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    (Mobil Terparkir Hari Kerja x Tarif Mobil x 22 Hari) + (Mobil Terparkir Akhir Pekan x Tarif Mobil x 8 Hari)
+                                <p class="fs-14 text-muted mb-1 font-monospace">
+                                    (@Model.DataKapasitas.TerpakaiMobilHariKerja.ToString("N0") x @Model.DataKapasitas.TarifMobil.ToString("C") x 22 Hari) + (@Model.DataKapasitas.TerpakaiMobilAkhirPekan.ToString("N0") x @Model.DataKapasitas.TarifMobil.ToString("C") x 8 Hari)
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    (0 x Rp 0 x 22) + (0 x Rp 0 x 8) = Rp 0
+                                <p class="fs-14 text-muted mb-3 fw-semibold">
+                                    = @Model.DataPotensi.OmzetMobil.ToString("C")
                                 </p>
+
+                                <hr>
+
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Total Omzet Bulanan :
                                 </h4>
-                                <p class="fs-14 text-muted mb-1">
+                                <p class="fs-14 text-muted mb-1 font-monospace">
                                     Omzet Sepeda Motor + Omzet Mobil
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 + Rp 0 = Rp 0
+                                <p class="fs-14 text-muted mb-2 fw-semibold">
+                                    @Model.DataPotensi.OmzetMotor.ToString("C") + @Model.DataPotensi.OmzetMobil.ToString("C") = @Model.DataPotensi.TotalOmzetBulanan.ToString("C")
                                 </p>
                             </div>
                         </div>
@@ -449,6 +447,8 @@
                 </div>
             </div>
         </div>
+
+        @* Di dalam file DetailParkir.cshtml *@
 
         <div class="card">
             <div class="card-header d-flex bg-soft-secondary">
@@ -460,72 +460,35 @@
             </div>
             <div class="card-body">
                 <div class="row">
-
                     <div class="col-lg-12">
                         <div class="card border border-secondary border-2">
                             <div class="card-body bg-light bg-opacity-25">
                                 <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak per Bulan :
+                                    Rumus Potensi Pajak per Bulan:
                                 </h4>
-                                <p class="fs-14 text-muted mb-1">
+                                <p class="fs-14 text-muted mb-1 font-monospace">
                                     Total Omzet Bulanan x Tarif Pajak
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 x 10% = Rp 0
+                                <p class="fs-14 text-muted mb-3 fw-semibold">
+                                    @Model.DataPotensi.TotalOmzetBulanan.ToString("C0") x @ProfilePotensiOPVM.PotensiPajak.TarifPajak.ToString("P0") = @Model.DataPotensi.PotensiBulanan.ToString("C0")
                                 </p>
+                                <hr>
                                 <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak per Tahun :
+                                    Rumus Potensi Pajak per Tahun:
                                 </h4>
-                                <p class="fs-14 text-muted mb-1">
+                                <p class="fs-14 text-muted mb-1 font-monospace">
                                     Potensi Pajak per Bulan x 12
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp 0 x 12 = Rp 0
+                                <p class="fs-14 text-muted mb-3 fw-semibold">
+                                    @Model.DataPotensi.PotensiBulanan.ToString("C0") x 12 = @Model.DataPotensi.PotensiTahunan.ToString("C0")
                                 </p>
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Total Potensi Pajak per Tahun : Rp 0
+                                <hr>
+                                <h4 class="fs-16 fw-semibold mb-2 text-end">
+                                    Total Potensi Pajak per Tahun: <span class="text-success">@Model.DataPotensi.PotensiTahunan.ToString("C0")</span>
                                 </h4>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="fs-16 fw-semibold mb-3">
-                                    Distribusi Omzet Bulanan
-                                </h4>
-                                <!-- Multiple Bars -->
-                                <div class="progress mb-4" style="height:20px">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
-                                </div>
-                                <div class="d-flex">
-                                    <h6 class="px-4 fs-6"><span class="badge bg-primary">60%</span> = Sepeda Motor</h6>
-                                    <div class="flex-shrink-0">
-                                        <h6 class="fs-6"><span class="badge bg-secondary">40%</span> = Mobil</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card border border-secondary border-2">
-                            <div class="card-body bg-soft-secondary bg-opacity-25">
-                                <div class="p-1">
-                                    <h4 class="fs-16 fw-semibold mb-4">
-                                        Omzet Bulanan
-                                    </h4>
-                                    <h4 class="fs-16 fw-semibold mb-1">
-                                        Rp 0
-                                    </h4>
-                                    <p class="fs-14 text-muted mb-2">Total pendapatan dari membership</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -546,25 +509,25 @@
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">NOP</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">00.00.000.000.000.00000</p>
+                        <p class="fs-14 fw-semibold mb-1">@Model.DataDasar.NOP</p>
                     </div>
                 </div>
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Nama Usaha</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Parkir</p>
+                        <p class="fs-14 fw-semibold mb-1">@Model.DataDasar.NamaWP</p>
                     </div>
                 </div>
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Alamat</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Jalan</p>
+                        <p class="fs-14 fw-semibold mb-1">@Model.DataDasar.Alamat</p>
                     </div>
                 </div>
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Total Kapasitas</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">0 Kendaraan</p>
+                        <p class="fs-14 fw-semibold mb-1">@Model.DataDasar.TotalKapasitas Kendaraan</p>
                     </div>
                 </div>
             </div>
@@ -587,7 +550,7 @@
                                     Potensi Pajak per Bulan
                                 </h4>
                                 <h4 class="card-title fs-18 mb-0">
-                                    Rp 0
+                                    @Model.DataPotensi.PotensiBulanan.ToString("C")
                                 </h4>
                                 <p class="fs-12">10% dari omzet bulanan</p>
                             </div>
@@ -600,7 +563,7 @@
                                     Potensi Pajak per Tahun
                                 </h4>
                                 <h4 class="card-title fs-18 mb-0">
-                                    Rp 0
+                                    @Model.DataPotensi.PotensiTahunan.ToString("C")
                                 </h4>
                                 <p class="fs-12">Proyeksi untuk 12 bulan</p>
                             </div>
@@ -623,59 +586,73 @@
                     Sepeda Motor
                 </h4>
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.DataKapasitas.KapasitasMotor.ToString("N0") Unit</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Hari Kerja)</p>
+                        <p class="fs-14 fw-semibold mb-1">Terpakai @Model.DataKapasitas.TerpakaiMotorHariKerja.ToString("N0") Unit (Hari Kerja)</p>
                     </div>
                 </div>
-
                 <div class="progress mb-2" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
-                </div>
-
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Akhir Pekan)</p>
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
+                         aria-valuenow="@Model.DataKapasitas.PersenMotorHariKerja.ToString("F0")"
+                         aria-valuemin="0" aria-valuemax="100"
+                         style="width: @Model.DataKapasitas.PersenMotorHariKerja.ToString("F0")%">
+                        @Model.DataKapasitas.PersenMotorHariKerja.ToString("N0")%
                     </div>
                 </div>
-
-                <div class="progress" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.DataKapasitas.KapasitasMotor.ToString("N0") Unit</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Terpakai @Model.DataKapasitas.TerpakaiMotorAkhirPekan.ToString("N0") Unit (Akhir Pekan)</p>
+                    </div>
                 </div>
+                <div class="progress" style="height:20px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
+                         aria-valuenow="@Model.DataKapasitas.PersenMotorAkhirPekan.ToString("F0")"
+                         aria-valuemin="0" aria-valuemax="100"
+                         style="width: @Model.DataKapasitas.PersenMotorAkhirPekan.ToString("F0")%">
+                        @Model.DataKapasitas.PersenMotorAkhirPekan.ToString("N0")%
+                    </div>
+                </div>
+                <hr class="my-4">
 
-                <br />
                 <h4 class="fs-14 fw-semibold mb-2">
                     Mobil
                 </h4>
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.DataKapasitas.KapasitasMobil.ToString("N0") Unit</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Hari Kerja)</p>
+                        <p class="fs-14 fw-semibold mb-1">Terpakai @Model.DataKapasitas.TerpakaiMobilHariKerja.ToString("N0") Unit (Hari Kerja)</p>
                     </div>
                 </div>
-
                 <div class="progress mb-2" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
-                </div>
-
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: 0 Unit</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Terpakai 0 Unit (Akhir Pekan)</p>
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
+                         aria-valuenow="@Model.DataKapasitas.PersenMobilHariKerja.ToString("F0")"
+                         aria-valuemin="0" aria-valuemax="100"
+                         style="width: @Model.DataKapasitas.PersenMobilHariKerja.ToString("F0")%">
+                        @Model.DataKapasitas.PersenMobilHariKerja.ToString("N0")%
                     </div>
                 </div>
-
-                <div class="progress" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
+                <div class="d-flex">
+                    <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.DataKapasitas.KapasitasMobil.ToString("N0") Unit</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-14 fw-semibold mb-1">Terpakai @Model.DataKapasitas.TerpakaiMobilAkhirPekan.ToString("N0") Unit (Akhir Pekan)</p>
+                    </div>
                 </div>
+                <div class="progress" style="height:20px">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
+                         aria-valuenow="@Model.DataKapasitas.PersenMobilAkhirPekan.ToString("F0")"
+                         aria-valuemin="0" aria-valuemax="100"
+                         style="width: @Model.DataKapasitas.PersenMobilAkhirPekan.ToString("F0")%">
+                        @Model.DataKapasitas.PersenMobilAkhirPekan.ToString("N0")%
+                    </div>
+                </div>
+                <hr class="my-4">
 
-                <br />
                 <h4 class="fs-14 mb-2 text-center">
                     Total Kendaraan Terparkir per Hari
                 </h4>
                 <h4 class="fs-16 fw-semibold mb-2 text-center">
-                    0 Unit (Hari Kerja) | 0 Unit (Akhir Pekan)
+                    @Model.DataKapasitas.TotalTerparkirHariKerja.ToString("N0") Unit (Hari Kerja) | @Model.DataKapasitas.TotalTerparkirAkhirPekan.ToString("N0") Unit (Akhir Pekan)
                 </h4>
             </div>
         </div>

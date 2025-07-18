@@ -1,12 +1,16 @@
-﻿namespace MonPDReborn.Models.DataOP
+﻿using MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM;
+
+namespace MonPDReborn.Models.DataOP
 {
     public class ProfilePotensiOPVM
     {
         public class Index
         {
             public string Keyword { get; set; } = null!;
+            public Dashboard Data { get; set; } = new();
             public Index()
             {
+                Data = Method.GetDashboardData();
 
             }
         }
@@ -71,7 +75,26 @@
 
         public class Method
         {
-            
+            public static Dashboard GetDashboardData()
+            {
+                decimal potensi = 125000000;
+                decimal realisasi = 110000000;
+                int totalOp = 500;
+                int realisasiOp = 450;
+
+                var dashboardData = new Dashboard
+                {
+                    Potensi = potensi,
+                    RealisasiTotal = realisasi,
+                    Capaian = (potensi > 0) ? Math.Round((realisasi / potensi) * 100, 0) : 0,
+                    TotalOP = totalOp,
+                    RealisasiOP = realisasiOp,
+                    CapaianOP = $"{realisasiOp} dari {totalOp} OP"
+                };
+
+                return dashboardData;
+            }
+
             public static List<DataPotensi> GetDataPotensiList(string jenisPajak, string kategori)
             {
                 var allData = GetAllData();
@@ -124,9 +147,6 @@
                     }
                 };
                         }
-
-
-
 
             // Internal dummy data
             private static List<DataPotensi> GetAllData()
@@ -346,6 +366,45 @@
                     }
                 };
             }
+
+            public static InfoDasar GetInfoDasar(string nop)
+            {
+                // Simulasi mengambil data dari DB berdasarkan NOP
+                return new InfoDasar
+                {
+                    NOP = nop,
+                    NamaWP = "GALAXY MALL PARKIR",
+                    Alamat = "JL. DHARMAHUSADA INDAH TIMUR",
+                    KapasitasMotor = 1500,
+                    KapasitasMobil = 1000
+                };
+            }
+
+            // Method untuk data dummy Kapasitas & Tarif
+            public static KapasitasTarif GetKapasitasTarif(string nop)
+            {
+                return new KapasitasTarif
+                {
+                    KapasitasMotor = 1500,
+                    TerpakaiMotorHariKerja = 900,
+                    TerpakaiMotorAkhirPekan = 1350,
+                    TarifMotor = 3000,
+                    KapasitasMobil = 1000,
+                    TerpakaiMobilHariKerja = 800,
+                    TerpakaiMobilAkhirPekan = 950,
+                    TarifMobil = 10000
+                };
+            }
+        }
+
+        public class Dashboard
+        {
+            public decimal Potensi { get; set; }
+            public decimal RealisasiTotal { get; set; }
+            public decimal Capaian { get; set; }
+            public int TotalOP { get; set; }
+            public int RealisasiOP { get; set; }
+            public string CapaianOP { get; set; } = "";
         }
 
         public class DataPotensi
@@ -409,6 +468,91 @@
             public decimal Realisasi3 { get; set; }
             public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
             public decimal TotalPotensi { get; set; }
+        }
+
+        public class DetailParkir
+        {
+            public InfoDasar DataDasar { get; set; } = new();
+            public KapasitasTarif DataKapasitas { get; set; } = new();
+            public PotensiPajak DataPotensi { get; set; } = new();
+
+            public DetailParkir() { }
+
+            // Konstruktor untuk mengambil semua data berdasarkan NOP
+            public DetailParkir(string nop)
+            {
+                // Panggil method untuk mengambil semua data dummy
+                DataDasar = Method.GetInfoDasar(nop);
+                DataKapasitas = Method.GetKapasitasTarif(nop);
+                DataPotensi = new PotensiPajak(DataKapasitas); // Potensi dihitung dari kapasitas
+            }
+        }
+
+        // Class untuk data di kartu paling atas
+        public class InfoDasar
+        {
+            public string NamaWP { get; set; } = "";
+            public string Alamat { get; set; } = "";
+            public string NOP { get; set; } = "";
+            public decimal TotalKapasitas => KapasitasMotor + KapasitasMobil;
+            public decimal KapasitasMotor { get; set; }
+            public decimal KapasitasMobil { get; set; }
+
+            public decimal PersenKapasitasMotor => TotalKapasitas > 0 ? (KapasitasMotor / TotalKapasitas) * 100 : 0;
+
+            // Menghitung persentase kapasitas mobil dari total
+            public decimal PersenKapasitasMobil => TotalKapasitas > 0 ? (KapasitasMobil / TotalKapasitas) * 100 : 0;
+        }
+
+        // Class untuk data di kartu kapasitas dan tarif
+        public class KapasitasTarif
+        {
+            public int KapasitasMotor { get; set; }
+            public int TerpakaiMotorHariKerja { get; set; }
+            public int TerpakaiMotorAkhirPekan { get; set; }
+            public decimal TarifMotor { get; set; }
+
+            public int KapasitasMobil { get; set; }
+            public int TerpakaiMobilHariKerja { get; set; }
+            public int TerpakaiMobilAkhirPekan { get; set; }
+            public decimal TarifMobil { get; set; }
+
+            // Properti kalkulasi untuk persentase pemakaian
+            public decimal PersenMotorHariKerja => KapasitasMotor > 0 ? ((decimal)TerpakaiMotorHariKerja / KapasitasMotor) * 100 : 0;
+            public decimal PersenMotorAkhirPekan => KapasitasMotor > 0 ? ((decimal)TerpakaiMotorAkhirPekan / KapasitasMotor) * 100 : 0;
+            public decimal PersenMobilHariKerja => KapasitasMobil > 0 ? ((decimal)TerpakaiMobilHariKerja / KapasitasMobil) * 100 : 0;
+            public decimal PersenMobilAkhirPekan => KapasitasMobil > 0 ? ((decimal)TerpakaiMobilAkhirPekan / KapasitasMobil) * 100 : 0;
+
+            public int TotalTerparkirHariKerja => TerpakaiMotorHariKerja + TerpakaiMobilHariKerja;
+            public int TotalTerparkirAkhirPekan => TerpakaiMotorAkhirPekan + TerpakaiMobilAkhirPekan;
+        }
+
+        // Class untuk data di kartu perhitungan potensi
+        public class PotensiPajak
+        {
+            public decimal OmzetMotor { get; }
+            public decimal OmzetMobil { get; }
+            public decimal TotalOmzetBulanan { get; }
+            public decimal PotensiBulanan { get; }
+            public decimal PotensiTahunan { get; }
+            public const decimal TarifPajak = 0.10m; // 10%
+
+            // Konstruktor untuk menghitung semua potensi
+            public PotensiPajak() { }
+            public PotensiPajak(KapasitasTarif dataKapasitas)
+            {
+                decimal omzetMotorHariKerja = dataKapasitas.TerpakaiMotorHariKerja * dataKapasitas.TarifMotor * 22;
+                decimal omzetMotorAkhirPekan = dataKapasitas.TerpakaiMotorAkhirPekan * dataKapasitas.TarifMotor * 8;
+                OmzetMotor = omzetMotorHariKerja + omzetMotorAkhirPekan;
+
+                decimal omzetMobilHariKerja = dataKapasitas.TerpakaiMobilHariKerja * dataKapasitas.TarifMobil * 22;
+                decimal omzetMobilAkhirPekan = dataKapasitas.TerpakaiMobilAkhirPekan * dataKapasitas.TarifMobil * 8;
+                OmzetMobil = omzetMobilHariKerja + omzetMobilAkhirPekan;
+
+                TotalOmzetBulanan = OmzetMotor + OmzetMobil;
+                PotensiBulanan = TotalOmzetBulanan * TarifPajak;
+                PotensiTahunan = PotensiBulanan * 12;
+            }
         }
 
 
