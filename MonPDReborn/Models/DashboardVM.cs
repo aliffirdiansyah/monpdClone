@@ -95,9 +95,9 @@ namespace MonPDReborn.Models
         public class DetailPiutang
         {
             public List<ViewModel.DetailPiutang> Data { get; set; } = new List<ViewModel.DetailPiutang>();
-            public DetailPiutang(EnumFactory.EPajak jenisPajak)
+            public DetailPiutang(EnumFactory.EPajak jenisPajak, int tahun)
             {
-                Data = Method.GetDetailPiutangData(jenisPajak);
+                Data = Method.GetDetailPiutangData(jenisPajak, tahun);
             }
         }
         public class DataMutasi
@@ -1852,17 +1852,16 @@ namespace MonPDReborn.Models
                 return ret;
 
             }
-            public static List<ViewModel.DetailPiutang> GetDetailPiutangData(EnumFactory.EPajak jenisPajak)
+            public static List<ViewModel.DetailPiutang> GetDetailPiutangData(EnumFactory.EPajak jenisPajak, int tahun)
             {
                 var ret = new List<ViewModel.DetailPiutang>();
                 var context = DBClass.GetContext();
-                var currentYear = DateTime.Now.Year;
 
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
                         var dataPiutangResto = context.TPiutangRestos
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -1880,7 +1879,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         var dataPiutangListrik = context.TPiutangListriks
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -1898,7 +1897,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var dataPiutangHotel = context.TPiutangHotels
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -1916,7 +1915,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.JasaParkir:
                         var dataPiutangParkir = context.TPiutangParkirs
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -1934,7 +1933,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
                         var dataPiutangHiburan = context.TPiutangHiburans
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -1952,7 +1951,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.AirTanah:
                         var dataPiutangAbt = context.TPiutangAbts
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -1970,7 +1969,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.Reklame:
                         var dataPiutangReklame = context.TPiutangReklames
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -1988,7 +1987,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.PBB:
                         var dataPiutangPbb = context.TPiutangPbbs
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -2006,7 +2005,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         var dataPiutangBphtb = context.TPiutangBphtbs
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -2024,7 +2023,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         var dataPiutangOpsenPkb = context.TPiutangOpsenPkbs
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
@@ -2042,7 +2041,7 @@ namespace MonPDReborn.Models
                         break;
                     case EnumFactory.EPajak.OpsenBbnkb:
                         var dataPiutangOpsenBbnkb = context.TPiutangOpsenBbnkbs
-                            .Where(x => x.TahunBuku == currentYear)
+                            .Where(x => x.TahunBuku == tahun)
                             .Select(x => new ViewModel.DetailPiutang
                             {
                                 Nop = x.Nop,
