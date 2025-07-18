@@ -427,6 +427,30 @@ namespace MonPDReborn.Models.DataOP
                     HariEventPerBulan = 10
                 };
             }
+
+            public static InfoDasar GetInfoDasarBioskop(string nop)
+            {
+                return new InfoDasar
+                {
+                    NOP = nop,
+                    NamaWP = "XXI CITO",
+                    Alamat = "Jl. A. Yani No. 288, Surabaya",
+                    KapasitasKursiStudio = 850 // Properti baru untuk InfoDasar
+                };
+            }
+
+            public static InfoBioskop GetInfoBioskop(string nop)
+            {
+                return new InfoBioskop
+                {
+                    KapasitasKursi = 850,
+                    KursiTerjualPerHari = 600,
+                    TurnoverHariKerja = 2.5m,
+                    TurnoverAkhirPekan = 4.0m,
+                    HargaTiketHariKerja = 40000,
+                    HargaTiketAkhirPekan = 55000
+                };
+            }
         }
 
         public class Dashboard
@@ -534,6 +558,13 @@ namespace MonPDReborn.Models.DataOP
 
             // Menghitung persentase kapasitas mobil dari total
             public decimal PersenKapasitasMobil => TotalKapasitas > 0 ? (KapasitasMobil / TotalKapasitas) * 100 : 0;
+
+            // Hotel
+            public int? JumlahKamar { get; set; }
+            public int? KapasitasBanquet { get; set; }
+
+            // Bioskop
+            public int? KapasitasKursiStudio { get; set; }
         }
 
         // Class untuk data di kartu kapasitas dan tarif
@@ -649,6 +680,58 @@ namespace MonPDReborn.Models.DataOP
 
                 TotalPotensiBulanan = PajakKamarBulanan + PajakBanquetBulanan;
                 TotalPotensiTahunan = TotalPotensiBulanan * 12;
+            }
+        }
+
+        // Class ini akan menjadi @model untuk halaman DetailBioskop.cshtml
+        public class DetailBioskop
+        {
+            public InfoDasar DataDasar { get; set; } = new();
+            public InfoBioskop DataBioskop { get; set; } = new();
+            public PotensiPajakBioskop DataPotensi { get; set; } = new();
+
+            public DetailBioskop() { }
+            public DetailBioskop(string nop)
+            {
+                DataDasar = Method.GetInfoDasarBioskop(nop);
+                DataBioskop = Method.GetInfoBioskop(nop);
+                DataPotensi = new PotensiPajakBioskop(DataBioskop);
+            }
+        }
+
+        // Class untuk info spesifik bioskop
+        public class InfoBioskop
+        {
+            public int KapasitasKursi { get; set; }
+            public int KursiTerjualPerHari { get; set; }
+            public decimal TurnoverHariKerja { get; set; }
+            public decimal TurnoverAkhirPekan { get; set; }
+            public decimal HargaTiketHariKerja { get; set; }
+            public decimal HargaTiketAkhirPekan { get; set; }
+
+            // Properti kalkulasi
+            public int RataKunjunganHariKerja => (int)(KursiTerjualPerHari * TurnoverHariKerja);
+            public int RataKunjunganAkhirPekan => (int)(KursiTerjualPerHari * TurnoverAkhirPekan);
+        }
+
+        // Class untuk kalkulasi potensi pajak bioskop
+        public class PotensiPajakBioskop
+        {
+            public decimal OmzetHariKerja { get; }
+            public decimal OmzetAkhirPekan { get; }
+            public decimal TotalOmzetBulanan { get; }
+            public decimal PotensiBulanan { get; }
+            public decimal PotensiTahunan { get; }
+            public const decimal TarifPajak = 0.10m; // 10%
+
+            public PotensiPajakBioskop() { }
+            public PotensiPajakBioskop(InfoBioskop dataBioskop)
+            {
+                OmzetHariKerja = dataBioskop.HargaTiketHariKerja * dataBioskop.RataKunjunganHariKerja * 22;
+                OmzetAkhirPekan = dataBioskop.HargaTiketAkhirPekan * dataBioskop.RataKunjunganAkhirPekan * 8;
+                TotalOmzetBulanan = OmzetHariKerja + OmzetAkhirPekan;
+                PotensiBulanan = TotalOmzetBulanan * TarifPajak;
+                PotensiTahunan = PotensiBulanan * 12;
             }
         }
 
