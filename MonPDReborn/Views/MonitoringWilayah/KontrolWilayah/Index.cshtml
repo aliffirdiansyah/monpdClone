@@ -18,70 +18,65 @@
                 </div>
                 <div class="text-muted mb-1">Periode: <strong id="periode"></strong></div>
             </div>
-        </div>
-    </div>
-
-    <div class="col-lg-12">
-        <div class="card">
             <div class="car-body">
                 <div class="row mt-3 ms-0">
 
                     <div class="col-lg-3">
                         @(Html.DevExtreme().SelectBox()
-                            .ID("SelectedUPTB")
-                            .Value(Model.SelectedUPTB)
-                            .DataSource(Model.JenisUptbList)
-                            .DisplayExpr("Text")
-                            .ValueExpr("Value")
-                            .SearchEnabled(true)
-                            .Value(0.ToString())
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .ElementAttr("class", "form-select mb-3")
-                            )
+                                                .ID("SelectedUPTB")
+                                                .Value(Model.SelectedUPTB)
+                                                .DataSource(Model.JenisUptbList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .SearchEnabled(true)
+                                                .Value(0.ToString())
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3")
+                                                )
                     </div>
 
                     <div class="col-lg-3">
                         @(Html.DevExtreme().SelectBox()
-                            .ID("SelectedPajak")
-                            .Value(Model.SelectedPajak)
-                            .DataSource(Model.JenisPajakList)
-                            .DisplayExpr("Text")
-                            .ValueExpr("Value")
-                            .Value(0.ToString())
-                            .SearchEnabled(true)
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .ElementAttr("class", "form-select mb-3")
-                            )
+                                                .ID("SelectedPajak")
+                                                .Value(Model.SelectedPajak)
+                                                .DataSource(Model.JenisPajakList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Value(0.ToString())
+                                                .SearchEnabled(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3")
+                                                )
                     </div>
 
                     <div class="col-lg-2">
                         @(Html.DevExtreme().SelectBox()
-                            .ID("SelectedTahun")
-                            .Value(Model.SelectedTahun)
-                            .DataSource(Model.TahunList)
-                            .DisplayExpr("Text")
-                            .ValueExpr("Value")
-                            .SearchEnabled(true)
-                            .Value(DateTime.Now.Year.ToString())
-                            .Placeholder("Pilih Tahun")
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .ElementAttr("class", "form-select mb-3")
-                            )
+                                                .ID("SelectedTahun")
+                                                .Value(Model.SelectedTahun)
+                                                .DataSource(Model.TahunList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .SearchEnabled(true)
+                                                .Value(DateTime.Now.Year.ToString())
+                                                .Placeholder("Pilih Tahun")
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3")
+                                                )
                     </div>
 
                     <div class="col-lg-2">
                         @(Html.DevExtreme().SelectBox()
-                            .ID("SelectedBulan")
-                            .Value(Model.SelectedBulan)
-                            .DataSource(Model.BulanList)
-                            .DisplayExpr("Text")
-                            .ValueExpr("Value")
-                            .SearchEnabled(true)
-                            .Value(DateTime.Now.Month.ToString())
-                            .Placeholder("Pilih Bulan")
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .ElementAttr("class", "form-select mb-3")
-                            )
+                                                .ID("SelectedBulan")
+                                                .Value(Model.SelectedBulan)
+                                                .DataSource(Model.BulanList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .SearchEnabled(true)
+                                                .Value(DateTime.Now.Month.ToString())
+                                                .Placeholder("Pilih Bulan")
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3")
+                                                )
                     </div>
 
                     <div class="col-lg-2">
@@ -94,6 +89,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="text-center">
         <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
@@ -277,7 +273,7 @@
             $(cellElement).append(wrapper);
         }
 
-        function onDetailClick(e) {
+                function onDetailClick(e) {
             e.event.preventDefault();
 
             const rowData = e.row?.data;
@@ -293,7 +289,7 @@
 
             console.log("Detail click:", tanggal, enumWilayah, jenisPajak);
 
-            const $modal = $("#detailModal");
+            const $modal = $("#staticBackdropLargeScrollable");
             $modal.find(".modal-title").text(`Detail Realisasi`);
             $modal.find(".modal-body").html(`
                 <div class="text-center my-3">
@@ -324,6 +320,7 @@
                 }
             });
         }
+
 
 
     </script>
