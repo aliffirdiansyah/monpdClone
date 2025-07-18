@@ -13,7 +13,7 @@
     <div class="position-relative w-100"
          style="
         height: 200px;
-        background: linear-gradient(135deg, rgba(255, 243, 247, 0.8), rgba(230, 242, 255, 0.8)),
+        background: linear-gradient(135deg, rgba(165, 212, 220, 0.8), rgba(82, 167, 204, 0.8)),
                     url('https://www.transparenttextures.com/patterns/white-wall-3.png');
         background-blend-mode: overlay;
         background-size: cover;
@@ -24,8 +24,11 @@
     <!-- Profile Avatar & Info -->
     <div class="container position-relative" style="margin-top: -100px;">
         <div class="d-flex flex-column align-items-center">
-            <div class="avatar-xxl mb-3 position-relative">
-                <img src="~/assets/images/logosby.png" alt="" class="rounded-circle avatar-xl border border-3 border-white shadow">
+            <div class="avatar-xxl mb-3 position-relative rounded-circle overflow-hidden border border-1 border-dark"
+                 style="width:120px; height:120px; background:#fff;">
+                <img src="~/assets/images/logosby.png"
+                     alt="Logo"
+                     style="width: 80%; height: 80%; object-fit: contain; margin: 10%; display: block;">
             </div>
             <div class="text-center">
                 <h5 class="mb-1">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h5>
@@ -39,12 +42,12 @@
         <div class="card-body px-4 py-3">
             <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
                         <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                    <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
                         <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
                     </button>
                 </li>
@@ -65,7 +68,7 @@
 <!-- Tab Content Container -->
 <div class="tab-content" id="pills-tabContent">
     <!-- Profil Tab -->
-    <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
         <!-- Identitas Objek Pajak Card -->
         <div class="card mb-4">
             <div class="card bg-soft-secondary border-0 mb-0">
@@ -248,7 +251,7 @@
     </div>
 
     <!-- Lokasi Tab -->
-    <div class="tab-pane fade" id="pills-pembayaran" role="tabpanel" aria-labelledby="pills-pembayaran-tab">
+    <div class="tab-pane fade show active" id="pills-pembayaran" role="tabpanel" aria-labelledby="pills-pembayaran-tab">
         <div class="card mb-4">
             <div class="card bg-info-subtle border-0 mb-0">
                 <div class="card-header d-flex">

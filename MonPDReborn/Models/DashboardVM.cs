@@ -3,6 +3,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using System.Web.Mvc;
+using static MonPDReborn.Models.DataOP.ProfileOPVM;
 using static MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.MonitoringTahunanViewModels;
 
 namespace MonPDReborn.Models
@@ -245,6 +246,7 @@ namespace MonPDReborn.Models
 
             public class JumlahObjekPajak
             {
+                public int EnumPajak { get; set; }
                 public string JenisPajak { get; set; }
                 public decimal Tahun1_Awal { get; set; }
                 public decimal Tahun1_Tutup { get; set; }
@@ -1329,28 +1331,15 @@ namespace MonPDReborn.Models
 
                 var result = new List<ViewModel.JumlahObjekPajak>();
 
-                var tahunList = new[] { 2025, 2024, 2023, 2022, 2021 };
-
-                var pajakList = new[]
-                {
-                    EnumFactory.EPajak.MakananMinuman,
-                    EnumFactory.EPajak.JasaPerhotelan,
-                    EnumFactory.EPajak.JasaKesenianHiburan,
-                    EnumFactory.EPajak.JasaParkir,
-                    EnumFactory.EPajak.TenagaListrik,
-                    EnumFactory.EPajak.PBB,
-                    EnumFactory.EPajak.BPHTB,
-                    EnumFactory.EPajak.Reklame,
-                    EnumFactory.EPajak.AirTanah,
-                    EnumFactory.EPajak.OpsenPkb,
-                    EnumFactory.EPajak.OpsenBbnkb
-                };
+                var tahunList = Enumerable.Range(DateTime.Now.Year - 4, 5).Reverse().ToArray();
+                var pajakList = MonPDLib.General.Extension.ToEnumList<EnumFactory.EPajak>();
 
                 foreach (var pajak in pajakList)
                 {
                     var item = new ViewModel.JumlahObjekPajak
                     {
-                        JenisPajak = pajak.GetDescription()
+                        EnumPajak = (int)pajak.Value,
+                        JenisPajak = pajak.Description,
                     };
 
                     for (int i = 0; i < tahunList.Length; i++)
@@ -1360,7 +1349,7 @@ namespace MonPDReborn.Models
 
                         int awal = 0, tutup = 0, baru = 0, akhir = 0;
 
-                        switch (pajak)
+                        switch ((EnumFactory.EPajak)pajak.Value)
                         {
                             case EnumFactory.EPajak.MakananMinuman:
                                 awal = context.DbOpRestos.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
@@ -1412,9 +1401,14 @@ namespace MonPDReborn.Models
                                 break;
 
                             case EnumFactory.EPajak.BPHTB:
-                                awal = context.DbMonBphtbs.Count(x => x.Tahun == yearBefore);
-                                tutup = 0; // karena tidak ada data tutup di BPHTB
-                                baru = context.DbMonBphtbs.Count(x => x.Tahun == year);
+                                //awal = context.DbMonBphtbs.Count(x => x.Tahun == yearBefore);
+                                //tutup = 0; // karena tidak ada data tutup di BPHTB
+                                //baru = context.DbMonBphtbs.Count(x => x.Tahun == year);
+                                //akhir = awal + baru;
+
+                                awal = context.DbMonBphtbs.Count(x => x.Tahun == yearBefore && x.TglBayar.HasValue && x.TglBayar.Value.Year == yearBefore);
+                                tutup = 0;
+                                baru = context.DbMonBphtbs.Count(x => x.Tahun == year && x.TglBayar.HasValue && x.TglBayar.Value.Year == year);
                                 akhir = awal + baru;
                                 break;
 
@@ -1455,25 +1449,39 @@ namespace MonPDReborn.Models
                                 baru = 0;  // tidak ada kolom TglMulaiBukaOp di pola
                                 akhir = context.DbMonOpsenBbnkbs.Count(x => x.TahunPajakSspd == year);
                                 break;
-
                         }
 
                         switch (i)
                         {
                             case 0:
-                                item.Tahun1_Awal = awal; item.Tahun1_Tutup = tutup; item.Tahun1_Baru = baru; item.Tahun1_Akhir = akhir;
+                                item.Tahun1_Awal = awal;
+                                item.Tahun1_Tutup = tutup;
+                                item.Tahun1_Baru = baru;
+                                item.Tahun1_Akhir = akhir;
                                 break;
                             case 1:
-                                item.Tahun2_Awal = awal; item.Tahun2_Tutup = tutup; item.Tahun2_Baru = baru; item.Tahun2_Akhir = akhir;
+                                item.Tahun2_Awal = awal;
+                                item.Tahun2_Tutup = tutup;
+                                item.Tahun2_Baru = baru;
+                                item.Tahun2_Akhir = akhir;
                                 break;
                             case 2:
-                                item.Tahun3_Awal = awal; item.Tahun3_Tutup = tutup; item.Tahun3_Baru = baru; item.Tahun3_Akhir = akhir;
+                                item.Tahun3_Awal = awal;
+                                item.Tahun3_Tutup = tutup;
+                                item.Tahun3_Baru = baru;
+                                item.Tahun3_Akhir = akhir;
                                 break;
                             case 3:
-                                item.Tahun4_Awal = awal; item.Tahun4_Tutup = tutup; item.Tahun4_Baru = baru; item.Tahun4_Akhir = akhir;
+                                item.Tahun4_Awal = awal;
+                                item.Tahun4_Tutup = tutup;
+                                item.Tahun4_Baru = baru;
+                                item.Tahun4_Akhir = akhir;
                                 break;
                             case 4:
-                                item.Tahun5_Awal = awal; item.Tahun5_Tutup = tutup; item.Tahun5_Baru = baru; item.Tahun5_Akhir = akhir;
+                                item.Tahun5_Awal = awal;
+                                item.Tahun5_Tutup = tutup;
+                                item.Tahun5_Baru = baru;
+                                item.Tahun5_Akhir = akhir;
                                 break;
                         }
                     }
