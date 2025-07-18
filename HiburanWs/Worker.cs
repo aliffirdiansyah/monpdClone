@@ -828,7 +828,7 @@ WHERE NAMA_PAJAK_DAERAH='HIBURAN'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(T
                     new OracleParameter("NOP", item.Nop),
                     new OracleParameter("TAHUN", tahunBuku)
                             }).ToList();
-
+                        
                         if (pembayaranSspdList != null)
                         {
                             foreach (var itemSSPD in pembayaranSspdList)
