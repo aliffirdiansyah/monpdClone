@@ -479,6 +479,20 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => (x.Nop, x.Wilayah, x.PajakId))
                         .ToList()
                 );
+                
+                dataWilayahGabungan.AddRange(
+                    context.DbOpReklames
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = 0.ToString(),
+                            PajakId = 7m // Reklame
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
 
                 dataWilayahGabungan.AddRange(
                     context.DbOpPbbs
@@ -585,6 +599,21 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
                         .ToList()
                 );
+                
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonReklames
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            PajakId = 7m // Reklame
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
 
                 dataRealisasiGabungan.AddRange(
                     context.DbMonPbbs
@@ -601,53 +630,76 @@ namespace MonPDReborn.Models.AktivitasOP
                         .ToList()
                 );
 
-                foreach (var item in dataTargetWilayah)
+                var groupedByPajak = dataTargetWilayah
+                    .GroupBy(x => x.PajakId)
+                    .ToList();
+
+                foreach (var group in groupedByPajak)
                 {
-                    var nopUptb = dataWilayahGabungan
-                        .Where(x => Convert.ToInt32(x.Wilayah) == item.Uptb && x.PajakId == item.PajakId)
-                        .Select(x => x.Nop)
-                        .Distinct()
-                        .ToList();
-
-                    var totalRealisasi = dataRealisasiGabungan
-                        .Where(x => x.PajakId == item.PajakId && x.TglBayarPokok.Value.Month == currentMonth && nopUptb.Contains(x.Nop))
-                        .Sum(x => x.NominalPokokBayar);
-
-                    var realisasiPerLokasi = new RealisasiPerLokasi
-                    {
-                        Target = item.TotalTarget,
-                        Realisasi = totalRealisasi,
-                        Persen = item.TotalTarget > 0 ? (totalRealisasi / item.TotalTarget) * 100 : 0
-                    };
-
                     var dataDetail = new DataDetailRealisasi
                     {
-                        No = (int)item.PajakId,
-                        JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                        Bidang = new RealisasiPerLokasi(), // Bisa Anda isi nanti untuk total semua UPTB
+                        No = (int)group.Key,
+                        JenisPajak = ((EnumFactory.EPajak)group.Key).GetDescription(),
+                        UPTB1 = new RealisasiPerLokasi(),
+                        UPTB2 = new RealisasiPerLokasi(),
+                        UPTB3 = new RealisasiPerLokasi(),
+                        UPTB4 = new RealisasiPerLokasi(),
+                        UPTB5 = new RealisasiPerLokasi(),
+                        Bidang = new RealisasiPerLokasi() // jika ingin total semua UPTB
                     };
 
-                    switch (item.Uptb)
+                    foreach (var item in group)
                     {
-                        case 1:
-                            dataDetail.UPTB1 = realisasiPerLokasi;
-                            break;
-                        case 2:
-                            dataDetail.UPTB2 = realisasiPerLokasi;
-                            break;
-                        case 3:
-                            dataDetail.UPTB3 = realisasiPerLokasi;
-                            break;
-                        case 4:
-                            dataDetail.UPTB4 = realisasiPerLokasi;
-                            break;
-                        case 5:
-                            dataDetail.UPTB5 = realisasiPerLokasi;
-                            break;
+                        var nopUptb = dataWilayahGabungan
+                            .Where(x => Convert.ToInt32(x.Wilayah) == item.Uptb && x.PajakId == item.PajakId)
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        var totalRealisasi = dataRealisasiGabungan
+                            .Where(x => x.PajakId == item.PajakId && x.TglBayarPokok.Value.Month == currentMonth && nopUptb.Contains(x.Nop))
+                            .Sum(x => x.NominalPokokBayar);
+
+                        var lokasi = new RealisasiPerLokasi
+                        {
+                            Target = item.TotalTarget,
+                            Realisasi = totalRealisasi,
+                            Persen = item.TotalTarget > 0 ? (totalRealisasi / item.TotalTarget) * 100 : 0
+                        };
+
+                        switch (item.Uptb)
+                        {
+                            case 1:
+                                dataDetail.UPTB1 = lokasi;
+                                break;
+                            case 2:
+                                dataDetail.UPTB2 = lokasi;
+                                break;
+                            case 3:
+                                dataDetail.UPTB3 = lokasi;
+                                break;
+                            case 4:
+                                dataDetail.UPTB4 = lokasi;
+                                break;
+                            case 5:
+                                dataDetail.UPTB5 = lokasi;
+                                break;
+                        }
+
+                        // Hitung total per bidang (semua UPTB)
+                        dataDetail.Bidang.Target += item.TotalTarget;
+                        dataDetail.Bidang.Realisasi += totalRealisasi;
                     }
+
+                    // Hitung persentase Bidang
+                    dataDetail.Bidang.Persen = dataDetail.Bidang.Target > 0
+                        ? (dataDetail.Bidang.Realisasi / dataDetail.Bidang.Target) * 100
+                        : 0;
 
                     ret.Add(dataDetail);
                 }
+
+                
 
                 return ret;
 
