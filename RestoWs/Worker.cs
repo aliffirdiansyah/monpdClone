@@ -124,7 +124,7 @@ namespace RestoWs
             using (var _contSbyTax = DBClass.GetSurabayaTaxContext())
             {
                 var sql = @"
-                                                                                                                                                              SELECT  A.NOP,
+                  SELECT  A.NOP,
         C.NPWPD_NO NPWPD,
         C.NAMA NPWPD_NAMA,
         C.ALAMAT NPWPD_ALAMAT,
@@ -141,23 +141,22 @@ namespace RestoWs
         TGL_OP_TUTUP,
         TGL_MULAI_BUKA_OP,
         0 METODE_PENJUALAN,
-        B.BUKTI_BAYAR METODE_PEMBAYARAN,
-        B.JUMLAH_KARYAWAN,
-        CASE A.KATEGORI 
-            WHEN 60 THEN 38
-            WHEN 5 THEN 38
-            WHEN 61 THEN 38
-            WHEN 6 THEN 38            
-            ELSE 38
-        END AS KATEGORI_ID,
-        D.NAMA KATEGORI_NAMA,
+	    B.BUKTI_BAYAR METODE_PEMBAYARAN,
+	    B.JUMLAH_KARYAWAN,
+	    B.KAPASITAS_MEJA JUMLAH_MEJA,
+	    B.KAPASITAS_KURSI JUMLAH_KURSI,
+	    B.KAPASITAS_RUANGAN KAPASITAS_RUANGAN_ORANG,
+	    B.MAKSIMAL_PRODUKSI_HARI MAKSIMAL_PRODUKSI_PORSI_HARI,
+	    B.RATA_PENGUNJUNG_HARI RATA_TERJUAL_PORSI_HARI,
+	    CASE 
+	        WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
+	    ELSE 0
+	    END AS IS_TUTUP,
+        7 KATEGORI_ID,
+        'RESTORAN' KATEGORI_NAMA,
         sysdate INS_dATE, 
         'JOB' INS_BY,
         TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-        CASE 
-            WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
-        ELSE 0
-        END AS IS_TUTUP,
         'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
         '-'  AKUN  ,
         '-'  NAMA_AKUN         ,
@@ -173,7 +172,7 @@ namespace RestoWs
         '-'  NAMA_SUB_RINCIAN    ,
         '0' DIKELOLA,'0' PUNGUT_TARIF
 FROM OBJEK_PAJAK A
-JOIN OBJEK_PAJAK_RESTORAN B ON A.NOP = B.NOP
+JOIN OBJEK_PAJAK_RESTO B ON A.NOP = B.NOP
 JOIN NPWPD C ON A.NPWPD = C.NPWPD_no
 JOIN M_KATEGORI_PAJAK D ON D.ID = A.KATEGORI
 LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
@@ -568,10 +567,17 @@ FROM (
 SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Resto' PAJAK_NAMA,
               NVL(ALAMAT_OP, '-') ALAMAT_OP, '-'  ALAMAT_OP_NO,'-' ALAMAT_OP_RT,'-' ALAMAT_OP_RW,NVL(NOMOR_TELEPON, '-') TELP,
               NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT,TGL_TUTUP TGL_OP_TUTUP,
-              NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP, 0 METODE_PENJUALAN,        0 METODE_PEMBAYARAN,        0 JUMLAH_KARYAWAN,  
+              NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP,0 METODE_PENJUALAN,
+	                            0 METODE_PEMBAYARAN,
+	                            0 JUMLAH_KARYAWAN,
+	                            0 JUMLAH_MEJA,
+	                            0 JUMLAH_KURSI,
+	                            0 KAPASITAS_RUANGAN_ORANG,
+	                            0 MAKSIMAL_PRODUKSI_PORSI_HARI,
+	                            0 RATA_TERJUAL_PORSI_HARI,
               CASE                             
-                        WHEN NAMA_JENIS_PAJAK = 'RESTORAN' THEN 38                        
-            ELSE 38
+                        WHEN NAMA_JENIS_PAJAK = 'RESTORAN' THEN 7                        
+            ELSE 7
             END AS KATEGORI_ID,
             NAMA_JENIS_PAJAK   KATEGORI_NAMA,
              sysdate INS_dATE, 'JOB' INS_BY ,fk_wilayah_pajak WILAYAH_PAJAK   ,
@@ -662,7 +668,13 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                             newRow.KategoriId = item.KategoriId;
                             newRow.KategoriNama = item.KategoriNama;
                             newRow.MetodePembayaran = item.MetodePembayaran;
+                            newRow.MetodePenjualan = item.MetodePenjualan;
                             newRow.JumlahKaryawan = item.JumlahKaryawan;
+                            newRow.JumlahMeja = item.JumlahMeja;
+                            newRow.JumlahKursi = item.JumlahKursi;
+                            newRow.KapasitasRuanganOrang = item.KapasitasRuanganOrang;
+                            newRow.MaksimalProduksiPorsiHari = item.MaksimalProduksiPorsiHari;
+                            newRow.RataTerjualPorsiHari = item.RataTerjualPorsiHari;
                             newRow.InsDate = item.InsDate;
                             newRow.InsBy = item.InsBy;
                             newRow.IsTutup = item.IsTutup;
