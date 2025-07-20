@@ -1701,7 +1701,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1715,7 +1715,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1729,7 +1729,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1743,7 +1743,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1757,7 +1757,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1771,7 +1771,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.AirTanah,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1785,7 +1785,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.Reklame,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1799,7 +1799,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.PBB,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1813,7 +1813,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.BPHTB,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1827,7 +1827,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.OpsenPkb,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
@@ -1841,7 +1841,7 @@ namespace MonPDReborn.Models
                     {
                         JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
                         EnumPajak = (int)EnumFactory.EPajak.OpsenBbnkb,
-                        NominalPiutang1 = g.Where(x => x.TahunBuku <= currentYear - 3).Sum(x => x.Piutang),
+                        NominalPiutang1 = g.Where(x => x.TahunBuku == currentYear - 3).Sum(x => x.Piutang),
                         NominalPiutang2 = g.Where(x => x.TahunBuku == currentYear - 2).Sum(x => x.Piutang),
                         NominalPiutang3 = g.Where(x => x.TahunBuku == currentYear - 1).Sum(x => x.Piutang),
                         NominalPiutang4 = g.Where(x => x.TahunBuku == currentYear).Sum(x => x.Piutang)
