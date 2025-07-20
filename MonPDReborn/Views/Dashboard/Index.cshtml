@@ -1151,7 +1151,7 @@
 
         </script>
         <script>
-                                                function detailPiutangCellTemplate(cellElement, cellInfo) {
+            function detailPiutangCellTemplate(cellElement, cellInfo) {
                 const enumPajak = cellInfo.data.EnumPajak;
 
                 // Ambil tahun dari Caption kolom
@@ -1177,7 +1177,7 @@
 
 
 
-                        function ondetailPiutangClick(enumPajak, tahun) {
+            function ondetailPiutangClick(enumPajak, tahun) {
                 const $modal = $("#detailModal");
 
                 $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);

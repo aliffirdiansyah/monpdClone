@@ -46,6 +46,28 @@
             .CellTemplate(new JS("detailPiutangCellTemplate"));
 
         })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(x => x.JenisPajak)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Total")
+                .SummaryType(SummaryType.Sum);
+                items.AddFor(x => x.NominalPiutang1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+                items.AddFor(x => x.NominalPiutang2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+                items.AddFor(x => x.NominalPiutang3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+            });
+        })
         )
 </div>
 
