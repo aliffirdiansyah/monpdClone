@@ -479,7 +479,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => (x.Nop, x.Wilayah, x.PajakId))
                         .ToList()
                 );
-                
+
                 dataWilayahGabungan.AddRange(
                     context.DbOpReklames
                         .Where(x => x.TahunBuku == currentYear)
@@ -599,7 +599,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
                         .ToList()
                 );
-                
+
                 dataRealisasiGabungan.AddRange(
                     context.DbMonReklames
                         .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
@@ -638,7 +638,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 {
                     var dataDetail = new DataDetailRealisasi
                     {
-                        No = (int)group.Key,
+                        No = ret.Count + 1,
                         JenisPajak = ((EnumFactory.EPajak)group.Key).GetDescription(),
                         UPTB1 = new RealisasiPerLokasi(),
                         UPTB2 = new RealisasiPerLokasi(),
@@ -699,7 +699,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     ret.Add(dataDetail);
                 }
 
-                
+
 
                 return ret;
 

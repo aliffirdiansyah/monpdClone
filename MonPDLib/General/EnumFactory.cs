@@ -719,13 +719,13 @@ namespace MonPDLib.General
             [Description("PBJT atas Makanan dan/atau Minuman")]
             MakananMinuman = 1,
 
-            [Description("PBJT Atas Tenaga Listrik")]
+            [Description("PBJT atas Tenaga Listrik")]
             TenagaListrik = 2,
 
-            [Description("PBJT Atas Jasa Perhotelan")]
+            [Description("PBJT atas Jasa Perhotelan")]
             JasaPerhotelan = 3,
 
-            [Description("PBJT Atas Jasa Parkir")]
+            [Description("PBJT atas Jasa Parkir")]
             JasaParkir = 4,
 
             [Description("PBJT atas Jasa Kesenian dan Hiburan")]
