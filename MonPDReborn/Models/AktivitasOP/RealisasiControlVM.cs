@@ -4,6 +4,8 @@ using MonPDLib.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using static MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
@@ -66,7 +68,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataTargetAbt = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
                 var dataTargetOpsenPkb = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
                 var dataTargetOpsenBbnkb = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
-                
+
                 // TargetAKP
                 var dataTargetAKPMamin = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan == TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
                 var dataTargetAKPHotel = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan == TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Target);
@@ -79,9 +81,9 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataTargetAKPAbt = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan == TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
                 var dataTargetAKPOpsenPkb = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan == TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
                 var dataTargetAKPOpsenBbnkb = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan == TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
-                
+
                 // TargetSdBulanIni
-                var dataTargetAKPSdBulanIniMamin = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan <= TanggalCutOff.Month  && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
+                var dataTargetAKPSdBulanIniMamin = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan <= TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
                 var dataTargetAKPSdBulanIniHotel = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan <= TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Target);
                 var dataTargetAKPSdBulanIniHiburan = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan <= TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Target);
                 var dataTargetAKPSdBulanIniParkir = context.DbAkunTargetBulans.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan <= TanggalCutOff.Month && x.PajakId == (int)EnumFactory.EPajak.JasaParkir).Sum(x => x.Target);
@@ -105,7 +107,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataRealisasiSdBulaiIniAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiSdBulaiIniOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglSspd <= TanggalCutOff).Sum(x => x.JmlPokok);
                 var dataRealisasiSdBulaiIniOpsenBbnkb = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglSspd <= TanggalCutOff).Sum(x => x.JmlPokok);
-                
+
                 // RealisasiSdBulaiIni
                 var dataRealisasiMamin = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiHotel = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -128,20 +130,20 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         Realisasi = dataRealisasiMamin,
                         Persen = dataTargetAKPMamin > 0 ? (dataRealisasiMamin / dataTargetAKPMamin) * 100 : 0,
-                        AKP = dataTargetAKPMamin 
+                        AKP = dataTargetAKPMamin
 
                     },
                     PembayaranSDBI = new PembayaranDetailSDBI
                     {
                         AKP = dataTargetAKPSdBulanIniMamin,
-                        PersenAkpTarget = dataTargetAKPSdBulanIniMamin > 0 ? (dataTargetAKPSdBulanIniMamin / dataTargetMamin) * 100 : 0, 
+                        PersenAkpTarget = dataTargetAKPSdBulanIniMamin > 0 ? (dataTargetAKPSdBulanIniMamin / dataTargetMamin) * 100 : 0,
                         PersenAkpRealisasi = dataTargetAKPSdBulanIniMamin > 0 ? (dataRealisasiSdBulaiIniMamin / dataTargetAKPSdBulanIniMamin) * 100 : 0,
                         PersenTarget = dataRealisasiSdBulaiIniMamin > 0 ? (dataRealisasiSdBulaiIniMamin / dataTargetMamin) * 100 : 0,
                         Realisasi = dataRealisasiSdBulaiIniMamin,
                         Persen = dataTargetAKPSdBulanIniMamin > 0 ? (dataRealisasiSdBulaiIniMamin / dataTargetAKPSdBulanIniMamin) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 2,
@@ -164,7 +166,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniListrik > 0 ? (dataRealisasiSdBulaiIniListrik / dataTargetAKPSdBulanIniListrik) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 3,
@@ -187,7 +189,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniHotel > 0 ? (dataRealisasiSdBulaiIniHotel / dataTargetAKPSdBulanIniHotel) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 4,
@@ -210,7 +212,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniParkir > 0 ? (dataRealisasiSdBulaiIniParkir / dataTargetAKPSdBulanIniParkir) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 5,
@@ -233,7 +235,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniHiburan > 0 ? (dataRealisasiSdBulaiIniHiburan / dataTargetAKPSdBulanIniHiburan) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 6,
@@ -256,7 +258,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniAbt > 0 ? (dataRealisasiSdBulaiIniAbt / dataTargetAKPSdBulanIniAbt) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 7,
@@ -279,7 +281,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniReklame > 0 ? (dataRealisasiSdBulaiIniReklame / dataTargetAKPSdBulanIniReklame) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 8,
@@ -302,7 +304,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniPbb > 0 ? (dataRealisasiSdBulaiIniPbb / dataTargetAKPSdBulanIniPbb) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 9,
@@ -325,7 +327,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniBphtb > 0 ? (dataRealisasiSdBulaiIniBphtb / dataTargetAKPSdBulanIniBphtb) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 10,
@@ -348,7 +350,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Persen = dataTargetAKPSdBulanIniOpsenPkb > 0 ? (dataRealisasiSdBulaiIniOpsenPkb / dataTargetAKPSdBulanIniOpsenPkb) * 100 : 0,
                     }
                 });
-                
+
                 ret.Add(new DataRealisasi
                 {
                     No = 11,
@@ -376,6 +378,331 @@ namespace MonPDReborn.Models.AktivitasOP
             }
             public static List<DataDetailRealisasi> GetDataDetail()
             {
+                var ret = new List<DataDetailRealisasi>();
+                var context = DBClass.GetContext();
+                var currentYear = DateTime.Now.Year;
+                var currentMonth = DateTime.Now.Month;
+
+                var dataTargetWilayah = context.DbAkunTargetBulanUptbs
+                           .Where(x => x.TahunBuku == currentYear && x.Bulan <= currentMonth)
+                           .GroupBy(x => new { x.Uptb, x.PajakId })
+                           .Select(g => new
+                           {
+                               Uptb = g.Key.Uptb,
+                               PajakId = g.Key.PajakId,
+                               TotalTarget = g.Sum(x => x.Target)
+                           })
+                           .ToList();
+
+                var dataWilayahGabungan = new List<(string Nop, string Wilayah, decimal PajakId)>();
+
+                dataWilayahGabungan.AddRange(
+                    context.DbOpRestos
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+
+                dataWilayahGabungan.AddRange(
+                    context.DbOpHotels
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+
+                dataWilayahGabungan.AddRange(
+                    context.DbOpParkirs
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+
+                dataWilayahGabungan.AddRange(
+                    context.DbOpListriks
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+
+                dataWilayahGabungan.AddRange(
+                    context.DbOpHiburans
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+
+                dataWilayahGabungan.AddRange(
+                    context.DbOpAbts
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+                
+                dataWilayahGabungan.AddRange(
+                    context.DbOpReklames
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = 0.ToString(),
+                            PajakId = 7m // Reklame
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+
+                dataWilayahGabungan.AddRange(
+                    context.DbOpPbbs
+                        .Where(x => x.TahunBuku == currentYear)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            PajakId = 9m // PBB
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .ToList()
+                );
+                // Gabungkan data realisasi
+                var dataRealisasiGabungan = new List<(string Nop, DateTime? TglBayarPokok, decimal NominalPokokBayar, decimal PajakId)>();
+
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonRestos
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonHotels
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonParkirs
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonPpjs
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonHiburans
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonAbts
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+                
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonReklames
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            PajakId = 7m // Reklame
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+
+                dataRealisasiGabungan.AddRange(
+                    context.DbMonPbbs
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= currentMonth)
+                        .Select(x => new
+                        {
+                            x.Nop,
+                            x.TglBayarPokok,
+                            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                            x.PajakId
+                        })
+                        .ToList()
+                        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        .ToList()
+                );
+
+                var groupedByPajak = dataTargetWilayah
+                    .GroupBy(x => x.PajakId)
+                    .ToList();
+
+                foreach (var group in groupedByPajak)
+                {
+                    var dataDetail = new DataDetailRealisasi
+                    {
+                        No = (int)group.Key,
+                        JenisPajak = ((EnumFactory.EPajak)group.Key).GetDescription(),
+                        UPTB1 = new RealisasiPerLokasi(),
+                        UPTB2 = new RealisasiPerLokasi(),
+                        UPTB3 = new RealisasiPerLokasi(),
+                        UPTB4 = new RealisasiPerLokasi(),
+                        UPTB5 = new RealisasiPerLokasi(),
+                        Bidang = new RealisasiPerLokasi() // jika ingin total semua UPTB
+                    };
+
+                    foreach (var item in group)
+                    {
+                        var nopUptb = dataWilayahGabungan
+                            .Where(x => Convert.ToInt32(x.Wilayah) == item.Uptb && x.PajakId == item.PajakId)
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        var totalRealisasi = dataRealisasiGabungan
+                            .Where(x => x.PajakId == item.PajakId && x.TglBayarPokok.Value.Month == currentMonth && nopUptb.Contains(x.Nop))
+                            .Sum(x => x.NominalPokokBayar);
+
+                        var lokasi = new RealisasiPerLokasi
+                        {
+                            Target = item.TotalTarget,
+                            Realisasi = totalRealisasi,
+                            Persen = item.TotalTarget > 0 ? (totalRealisasi / item.TotalTarget) * 100 : 0
+                        };
+
+                        switch (item.Uptb)
+                        {
+                            case 1:
+                                dataDetail.UPTB1 = lokasi;
+                                break;
+                            case 2:
+                                dataDetail.UPTB2 = lokasi;
+                                break;
+                            case 3:
+                                dataDetail.UPTB3 = lokasi;
+                                break;
+                            case 4:
+                                dataDetail.UPTB4 = lokasi;
+                                break;
+                            case 5:
+                                dataDetail.UPTB5 = lokasi;
+                                break;
+                        }
+
+                        // Hitung total per bidang (semua UPTB)
+                        dataDetail.Bidang.Target += item.TotalTarget;
+                        dataDetail.Bidang.Realisasi += totalRealisasi;
+                    }
+
+                    // Hitung persentase Bidang
+                    dataDetail.Bidang.Persen = dataDetail.Bidang.Target > 0
+                        ? (dataDetail.Bidang.Realisasi / dataDetail.Bidang.Target) * 100
+                        : 0;
+
+                    ret.Add(dataDetail);
+                }
+
+                
+
+                return ret;
+
                 return new List<DataDetailRealisasi>
                 {
                     new() { No = 1, JenisPajak = "Pajak Hotel",

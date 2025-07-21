@@ -26,6 +26,7 @@ namespace MonPDLib
         public DbSet<DbOpHiburan> DbOpHiburans { get; set; }
         public DbSet<DbOpReklame> DbOpReklames { get; set; }
         public DbSet<DbOpResto> DbOpRestos { get; set; }
+        public DbSet<DbOpListrik> DbOpListriks { get; set; }
         public DbSet<DbOpParkir> DbOpParkirs { get; set; }
         public DbSet<OPSkpdHotel> OPSkpdHotels { get; set; }
         public DbSet<OPSkpdResto> OPSkpdRestos { get; set; }
@@ -52,6 +53,8 @@ namespace MonPDLib
             modelBuilder.Entity<DbOpPbb>().HasNoKey();
 
             modelBuilder.Entity<DbOpHiburan>().HasNoKey();
+
+            modelBuilder.Entity<DbOpListrik>().HasNoKey();
 
             modelBuilder.Entity<OPSkpdHotel>().HasNoKey();
 
