@@ -733,7 +733,7 @@ namespace MonPDLib.General
 
             [Description("Pajak Air Tanah")]
             AirTanah = 6,
-            [Description("Reklame")]
+            [Description("Pajak Reklame")]
             Reklame = 7,
             [Description("Pajak Bumi Bangunan")]
             PBB = 9,
