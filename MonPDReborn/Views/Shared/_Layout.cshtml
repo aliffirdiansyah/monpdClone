@@ -67,6 +67,61 @@
             text-transform: uppercase !important;
             background-color: #428bff !important;
         }
+        /* Judul menu */
+        .menu-title {
+            color: white !important;
+            font-weight: normal !important;
+            padding: 8px 12px !important;
+            display: block !important;
+        }
+        /* Menu utama */
+        .nav-link.menu-link {
+            color: #ffffff !important;
+            font-weight: normal !important;
+            padding: 8px 12px !important;
+            display: block !important;
+            border-radius: 4px !important;
+            background-color: transparent !important;
+            text-decoration: none !important;
+            transition: background-color 0.2s, color 0.2s !important;
+        }
+
+            .nav-link.menu-link:hover {
+                background-color: #5a9eff !important;
+                color: #ffffff !important;
+                text-decoration: none !important;
+            }
+
+            .nav-link.menu-link.active {
+                background-color: #428bff !important;
+                color: #3b5998 !important; /* Navy */
+                text-decoration: none !important;
+            }
+
+
+        /* === Submenu (nav-sm) === */
+
+        /* Semua nav-link di dalam submenu */
+        ul.nav-sm .nav-link {
+            color: #ffffff !important;
+            font-weight: normal !important;
+            padding: 6px 24px !important; /* indent */
+            display: block !important;
+            border-radius: 4px !important;
+            background-color: transparent !important;
+            text-decoration: none !important;
+            transition: background-color 0.2s, color 0.2s !important;
+        }
+
+            ul.nav-sm .nav-link:hover {
+                background-color: #5a9eff !important;
+                color: #ffffff !important;
+            }
+
+            ul.nav-sm .nav-link.active {
+                background-color: #428bff !important;
+                color: #3b5998 !important; /* Navy */
+            }
     </style>
 
 
