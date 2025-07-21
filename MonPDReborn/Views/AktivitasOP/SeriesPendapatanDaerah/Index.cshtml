@@ -62,6 +62,31 @@
             <div class="card-header d-flex align-items-center bg-header-color">
                 <div class="flex-grow-1">
                     <h5 class="card-title text-white fs-16 mb-0">
+                        <i class="mdi mdi-cash-plus align-middle me-1"></i> LAIN LAIN PENDAPATAN
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-light" title="Segarkan Data" onclick="loadShowLainLainPendapatan()">
+                        <i class="mdi mdi-refresh align-middle"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading-LainLainPendapatan" class="spinner-border text-primary my-3" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="ShowLainLainPendapatan"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center bg-header-color">
+                <div class="flex-grow-1">
+                    <h5 class="card-title text-white fs-16 mb-0">
                         <i class="mdi mdi-cash-plus align-middle me-1"></i> PENERIMAAN PEMBIAYAAN
                     </h5>
                 </div>
@@ -89,6 +114,7 @@
         $(document).ready(function () {
             loadShow();
             loadShowPendapatanTransfer();
+            loadShowLainLainPendapatan();
             loadShowPenerimaanPembiayaan();
         });
 
@@ -132,6 +158,26 @@
                 }
             });
         }
+
+        function loadShowLainLainPendapatan() {
+            $.ajax({
+                url: '@Url.Action("ShowLainLainPendapatan", "SeriesPendapatanDaerah")',
+                type: 'GET',
+                beforeSend: function () {
+                    $('#loading-LainLainPendapatan').show();
+                    $('#ShowLainLainPendapatan').hide();
+                },
+                success: function (result) {
+                    $('#loading-LainLainPendapatan').hide();
+                    $('#ShowLainLainPendapatan').html(result).show();
+                },
+                error: function () {
+                    $('#loading-LainLainPendapatan').hide();
+                    $('#ShowLainLainPendapatan').html('<div class="alert alert-danger text-center">❌ Gagal memuat data.</div>').show();
+                }
+            });
+        }
+        
 
         function loadShowPenerimaanPembiayaan() {
             $.ajax({

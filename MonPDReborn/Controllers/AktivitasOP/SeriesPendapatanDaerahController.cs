@@ -89,6 +89,27 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
+        public IActionResult ShowLainLainPendapatan()
+        {
+            try
+            {
+                var model = new SeriesPendapatanDaerahVM.ShowLainLainPendapatan();
+                return PartialView($"{URLView}_ShowLainLainPendapatan", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
         public IActionResult ShowPenerimaanPembiayaan()
         {
             try

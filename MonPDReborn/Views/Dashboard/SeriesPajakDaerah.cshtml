@@ -3,11 +3,13 @@
 
 @{
     var currentYear = DateTime.Now.Year;
-    var tahun1 = (currentYear-4).ToString();
-    var tahun2 = (currentYear-3).ToString();
-    var tahun3 = (currentYear-2).ToString();
-    var tahun4 = (currentYear-1).ToString();
-    var tahun5 = currentYear.ToString();
+    var tahun1 = (currentYear-6).ToString();
+    var tahun2 = (currentYear-5).ToString();
+    var tahun3 = (currentYear-4).ToString();
+    var tahun4 = (currentYear-3).ToString();
+    var tahun5 = (currentYear-2).ToString();
+    var tahun6 = (currentYear-1).ToString();
+    var tahun7 = currentYear.ToString();
 }
 
 @(
@@ -78,6 +80,24 @@
                 subColumns.AddFor(x => x.Realisasi5).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
                 subColumns.AddFor(x => x.Persentase5).Format("#,#0%").Caption("%");
             });
+
+        columns.Add()
+            .Caption(tahun6).Alignment(HorizontalAlignment.Center)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target6).Caption("TARGET").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Realisasi6).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Persentase6).Format("#,#0%").Caption("%");
+            });
+
+        columns.Add()
+            .Caption(tahun7).Alignment(HorizontalAlignment.Center)
+            .Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.Target7).Caption("TARGET").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Realisasi7).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
+                subColumns.AddFor(x => x.Persentase7).Format("#,#0%").Caption("%");
+            });
   
     })
     .Summary(s => {
@@ -138,6 +158,14 @@
             items.AddFor(x => x.Target5).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
             items.AddFor(x => x.Realisasi5).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
             items.AddFor(x => x.Persentase5).SummaryType(SummaryType.Custom).Name("Persen5").DisplayFormat("{0}%");
+
+            items.AddFor(x => x.Target6).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+            items.AddFor(x => x.Realisasi6).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+            items.AddFor(x => x.Persentase6).SummaryType(SummaryType.Custom).Name("Persen6").DisplayFormat("{0}%");
+
+            items.AddFor(x => x.Target7).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+            items.AddFor(x => x.Realisasi7).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+            items.AddFor(x => x.Persentase7).SummaryType(SummaryType.Custom).Name("Persen7").DisplayFormat("{0}%");
         });
     })
 )
