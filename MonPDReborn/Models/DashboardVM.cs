@@ -1336,6 +1336,9 @@ namespace MonPDReborn.Models
 
                 foreach (var pajak in pajakList)
                 {
+                    if ((EnumFactory.EPajak)pajak.Value == EnumFactory.EPajak.Semua)
+                        continue;
+
                     var item = new ViewModel.JumlahObjekPajak
                     {
                         EnumPajak = (int)pajak.Value,

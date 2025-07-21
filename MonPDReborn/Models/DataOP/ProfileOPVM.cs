@@ -2192,6 +2192,14 @@ namespace MonPDReborn.Models.DataOP
 
                 foreach (var pajak in pajakList)
                 {
+                   /* var item = new JmlObjekPajak
+                    {
+                        EnumPajak = (int)pajak.Value,
+                        JenisPajak = pajak.Description,
+                    };*/
+                    if ((EnumFactory.EPajak)pajak.Value == EnumFactory.EPajak.Semua)
+                        continue;
+
                     var item = new JmlObjekPajak
                     {
                         EnumPajak = (int)pajak.Value,
