@@ -74,54 +74,68 @@
             padding: 8px 12px !important;
             display: block !important;
         }
+
         /* Menu utama */
         .nav-link.menu-link {
             color: #ffffff !important;
             font-weight: normal !important;
-            padding: 8px 12px !important;
-            display: block !important;
-            border-radius: 4px !important;
             background-color: transparent !important;
             text-decoration: none !important;
             transition: background-color 0.2s, color 0.2s !important;
+            padding: 0.5rem 0.75rem !important;
         }
 
             .nav-link.menu-link:hover {
                 background-color: #5a9eff !important;
                 color: #ffffff !important;
-                text-decoration: none !important;
             }
 
             .nav-link.menu-link.active {
                 background-color: #428bff !important;
-                color: #3b5998 !important; /* Navy */
-                text-decoration: none !important;
+                color: #000000 !important;
             }
 
-
-        /* === Submenu (nav-sm) === */
-
-        /* Semua nav-link di dalam submenu */
-        ul.nav-sm .nav-link {
-            color: #ffffff !important;
-            font-weight: normal !important;
-            padding: 6px 24px !important; /* indent */
-            display: block !important;
-            border-radius: 4px !important;
-            background-color: transparent !important;
-            text-decoration: none !important;
-            transition: background-color 0.2s, color 0.2s !important;
+        /* Dropdown/Submenu */
+        .menu-dropdown {
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+            width: 100% !important;
         }
 
-            ul.nav-sm .nav-link:hover {
-                background-color: #5a9eff !important;
-                color: #ffffff !important;
+            .menu-dropdown ul.nav-sm {
+                padding-left: 0 !important;
+                margin-left: 0 !important;
+                list-style: none !important;
             }
 
-            ul.nav-sm .nav-link.active {
-                background-color: #428bff !important;
-                color: #3b5998 !important; /* Navy */
-            }
+                .menu-dropdown ul.nav-sm .nav-item {
+                    margin: 0 !important;
+                    /* Tambahkan indent agar submenu agak masuk */
+                    padding: 0rem 0.75rem 0rem 1.75rem !important;
+                    /*                 top   right bottom left */
+                }
+
+                .menu-dropdown ul.nav-sm .nav-link {
+                    color: #ffffff !important;
+                    font-weight: normal !important;
+                    background-color: transparent !important;
+                    text-decoration: none !important;
+                    transition: background-color 0.2s, color 0.2s !important;
+                    border-radius: 4px !important;
+                    display: block !important;
+                    
+                }
+
+                    .menu-dropdown ul.nav-sm .nav-link:hover {
+                        background-color: #5a9eff !important;
+                        color: #ffffff !important;
+                    }
+
+                    .menu-dropdown ul.nav-sm .nav-link.active {
+                        background-color: #428bff !important;
+                        color: #000000 !important;
+                    }
+
     </style>
 
 
