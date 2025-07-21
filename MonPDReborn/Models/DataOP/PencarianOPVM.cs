@@ -60,7 +60,9 @@ namespace MonPDReborn.Models.DataOP
                 }
                 var context = DBClass.GetContext();
                 var ret = new List<DataPencarianOp>();
-                var dataResto = context.DbOpRestos.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()))).Select(
+                var dataResto = context.DbOpRestos.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .OrderByDescending(x => x.TahunBuku)
+                    .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -74,10 +76,16 @@ namespace MonPDReborn.Models.DataOP
                             EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).ToList();
-                ret.AddRange(dataResto.Where(x => x.Tahun == DateTime.Now.Year));
+                    )
+                    .FirstOrDefault();
+                if (dataResto != null)
+                {
+                    ret.Add(dataResto);
+                }
 
-                var dataHotel = context.DbOpHotels.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()))).Select(
+                var dataHotel = context.DbOpHotels.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .OrderByDescending(x => x.TahunBuku)
+                    .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -91,10 +99,16 @@ namespace MonPDReborn.Models.DataOP
                             EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).ToList();
-                ret.AddRange(dataHotel.Where(x => x.Tahun == DateTime.Now.Year));
+                    ).FirstOrDefault();
 
-                var dataHiburan = context.DbOpHiburans.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()))).Select(
+                if (dataHotel != null)
+                {
+                    ret.Add(dataHotel);
+                }
+
+                var dataHiburan = context.DbOpHiburans.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .OrderByDescending(x => x.TahunBuku)
+                    .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -108,10 +122,17 @@ namespace MonPDReborn.Models.DataOP
                             EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).ToList();
-                ret.AddRange(dataHiburan.Where(x => x.Tahun == DateTime.Now.Year));
+                    ).FirstOrDefault();
 
-                var dataParkir = context.DbOpParkirs.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()))).Select(
+                if (dataHiburan != null)
+                {
+                    ret.Add(dataHiburan);
+                }
+
+
+                var dataParkir = context.DbOpParkirs.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .OrderByDescending(x => x.TahunBuku)
+                    .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -125,10 +146,16 @@ namespace MonPDReborn.Models.DataOP
                             EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).ToList();
-                ret.AddRange(dataParkir.Where(x => x.Tahun == DateTime.Now.Year));
+                    ).FirstOrDefault();
 
-                var dataListrik = context.DbOpListriks.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()))).Select(
+                if (dataParkir != null)
+                {
+                    ret.Add(dataParkir);
+                }
+
+                var dataListrik = context.DbOpListriks.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .OrderByDescending(x => x.TahunBuku)
+                    .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -142,10 +169,16 @@ namespace MonPDReborn.Models.DataOP
                             EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).ToList();
-                ret.AddRange(dataListrik.Where(x => x.Tahun == DateTime.Now.Year));
+                    ).FirstOrDefault();
 
-                var dataReklame = context.DbOpReklames.Where(x => x.Nop == keyword || x.Nama.Contains(keyword)).Select(
+                if (dataListrik != null)
+                {
+                    ret.Add(dataListrik);
+                }
+
+                var dataReklame = context.DbOpReklames.Where(x => x.Nop == keyword || x.Nama.Contains(keyword))
+                    .OrderByDescending(x => x.TahunBuku)
+                    .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -154,16 +187,21 @@ namespace MonPDReborn.Models.DataOP
                             JenisOp = x.NamaJenis,
                             KategoriOp = "Reklame",
                             JenisPenarikan = "",
-                            StatusNOP = "-",
+                            StatusNOP = "Buka",
                             Wilayah = "-",
                             EnumPajak = (int)EnumFactory.EPajak.Reklame,
                             Tahun = (int)DateTime.Now.Year
                         }
-                    ).ToList();
-                ret.AddRange(dataReklame.Where(x => x.Tahun == DateTime.Now.Year));
+                    ).FirstOrDefault();
 
+                if (dataReklame != null)
+                {
+                    ret.Add(dataReklame);
+                }
 
-                var dataAbt = context.DbOpAbts.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper()))).Select(
+                var dataAbt = context.DbOpAbts.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .OrderByDescending(x => x.TahunBuku)
+                    .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
@@ -172,14 +210,17 @@ namespace MonPDReborn.Models.DataOP
                             JenisOp = x.PajakNama,
                             KategoriOp = x.KategoriNama ?? "",
                             JenisPenarikan = "",
-                            StatusNOP = "-",
+                            StatusNOP = "Buka",
                             Wilayah = "-",
                             EnumPajak = (int)EnumFactory.EPajak.AirTanah,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).ToList();
-                ret.AddRange(dataAbt.Where(x => x.Tahun == DateTime.Now.Year));
+                    ).FirstOrDefault();
 
+                if (dataAbt != null)
+                {
+                    ret.Add(dataAbt);
+                }
 
                 return ret;
             }

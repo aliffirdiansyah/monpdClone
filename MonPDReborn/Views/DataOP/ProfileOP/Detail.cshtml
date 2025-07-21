@@ -163,10 +163,10 @@
                                     <span class="fw-semibold">Jumlah Karyawan</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.JumlahKaryawan</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between">
-                                    <span class="fw-semibold">MetodePembayaran</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.MetodePembayaran</span>
+                                    <span class="fw-semibold">Metode Pembayaran</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.MetodePembayaran</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between">
-                                    <span class="fw-semibold">MetodePenjualan</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.MetodePenjualan</span>
+                                    <span class="fw-semibold">Metode Penjualan</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.MetodePenjualan</span>
                                 </li>
                             </ul>
                         </div>
@@ -257,7 +257,7 @@
                 <div class="card-header d-flex">
                     <div class="flex-grow-1">
                         <h5 class="card-title fs-16 mb-0">
-                            🧾 PEMBAYARAN PAJAK @Model.Pajak.GetDescription() @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                            🧾 PEMBAYARAN PAJAK @Model.Pajak.GetDescription().ToUpper() @Model.DataDetail.IdentitasPajak.NamaObjekPajak
                         </h5>
 
                     </div>
