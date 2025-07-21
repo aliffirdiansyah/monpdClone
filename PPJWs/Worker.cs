@@ -1075,6 +1075,8 @@ WHERE NAMA_PAJAK_DAERAH='PPJ'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(TGL_S
                                     newRow.InsBy = "JOB";
                                     newRow.UpdDate = DateTime.Now;
                                     newRow.UpdBy = "JOB";
+                                    newRow.PeruntukanNama = "-";
+                                    newRow.SumberNama = "-";
 
 
                                     newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
