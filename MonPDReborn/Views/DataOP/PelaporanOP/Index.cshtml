@@ -25,8 +25,8 @@
                     </div>
 
                     <div class="col-lg-2">
-                        <button type="button" class="btn btn-success w-80">
-                            <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
+                        <button type="button" class="btn btn-custom w-80">
+                            <i class="bx bx-search-alt-2  me-1"></i> Terapkan Filter
                         </button>
                     </div>
 
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12">
+    <div class="col-lg-12" id="rekapCard">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
@@ -67,17 +67,18 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // pertama kali load: semua
+            // awal: sembunyikan semua card + kontainer Show
+            $('#rekapCard').hide();
+            $('#Show').hide();
 
             // ketika tombol Terapkan Filter diklik
-            $('.btn-success').on('click', function () {
+            $('.btn-custom').on('click', function () {
                 loadData();
             });
 
             function loadData() {
                 let jenisPajak = $('#SelectedPajak').val();
 
-                // jika kosong/null, set ke 0 (anggap 0 = semua)
                 if (!jenisPajak) {
                     jenisPajak = 0;
                 }
@@ -89,18 +90,28 @@
                         jenisPajak: jenisPajak
                     },
                     beforeSend: function () {
-                        $('#Show').html('<div class="text-muted">Memuat data...</div>');
+                        $('#Show').html(`
+                            <div class="d-flex justify-content-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        `);
+                        $('#rekapCard').show();
+                        $('#Show').show();
                     },
                     success: function (result) {
-                        $('#Show').html(result); 
+                        $('#Show').html(result).show();
                     },
                     error: function (xhr, status, error) {
                         console.error("Gagal memuat data _Show:", error);
-                        $('#Show').html('<div class="text-danger">Gagal memuat data.</div>');
+                        $('#Show').html('<div class="text-danger">Gagal memuat data.</div>').show();
                     }
                 });
             }
         });
+
+
 
 
         function onDetailClick(e) {

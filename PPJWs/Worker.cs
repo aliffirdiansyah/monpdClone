@@ -148,6 +148,16 @@ namespace PPJWs
             ELSE 58
         END AS KATEGORI_ID,
         D.NAMA KATEGORI_NAMA,
+        CASE A.KATEGORI 
+            WHEN 41 THEN 55
+            WHEN 42 THEN 58
+            WHEN 15 THEN 58
+            WHEN 16 THEN 55
+            WHEN 17 THEN 58
+            WHEN 18 THEN 55
+            ELSE 58
+        END AS PERUNTUKAN,
+        NVL(D.NAMA, '-') PERUNTUKAN_NAMA,
         sysdate INS_dATE, 
         'JOB' INS_BY,
         TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
@@ -265,6 +275,8 @@ WHERE A.NPWPD NOT IN (
                             newRow.InsBy = item.InsBy;
                             newRow.IsTutup = item.IsTutup;
                             newRow.WilayahPajak = item.WilayahPajak;
+                            newRow.Peruntukan = item.Peruntukan;
+                            newRow.PeruntukanNama = item.PeruntukanNama;
 
                             newRow.TahunBuku = tahunBuku;
                             var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
@@ -566,7 +578,19 @@ SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_
                         WHEN NAMA_JENIS_PAJAK = 'PPJ PLN' THEN 58
                 ELSE 58
             END AS KATEGORI_ID,
-            NAMA_JENIS_PAJAK   KATEGORI_NAMA,
+            NVL(NAMA_JENIS_PAJAK,'-') KATEGORI_NAMA,
+                CASE                             
+                        WHEN NAMA_JENIS_PAJAK = 'PPJ NON PLN' THEN 55
+                        WHEN NAMA_JENIS_PAJAK = 'PPJ PLN' THEN 58
+                ELSE 58
+            END AS PERUNTUKAN,
+            NVL(NAMA_JENIS_PAJAK, '-')   PERUNTUKAN_NAMA,
+                CASE                             
+                        WHEN NAMA_JENIS_PAJAK = 'PPJ NON PLN' THEN 55
+                        WHEN NAMA_JENIS_PAJAK = 'PPJ PLN' THEN 58
+                ELSE 58
+            END AS SUMBER,
+            NVL(NAMA_JENIS_PAJAK, '-')   SUMBER_NAMA,
              sysdate INS_dATE, 'JOB' INS_BY ,fk_wilayah_pajak WILAYAH_PAJAK   ,
             '-' AKUN,'-'  NAMA_AKUN,'-'  JENIS,'-'  NAMA_JENIS,'-'  OBJEK,'-'  NAMA_OBJEK,'-'  RINCIAN,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
@@ -658,6 +682,10 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                             newRow.InsBy = item.InsBy;
                             newRow.IsTutup = item.IsTutup;
                             newRow.WilayahPajak = item.WilayahPajak;
+                            newRow.Peruntukan = item.Peruntukan;
+                            newRow.PeruntukanNama = item.PeruntukanNama;
+                            newRow.Sumber = item.Sumber;
+                            newRow.SumberNama = item.SumberNama;
 
                             newRow.TahunBuku = tahunBuku;
                             var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
@@ -706,7 +734,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     {
                         var sqlKetetapan = @"SELECT *
 FROM (            
-SELECT FK_NOP NOP, TO_NUMBER(TAHUN_PAJAK) TAHUN,TO_NUMBER(BULAN_PAJAK) MASAPAJAK,100 SEQ,1 JENIS_KETETAPAN,TO_DATE(NVL(TGL_SPTPD_DISETOR,MP_AKHIR)) TGL_KETETAPAN,TO_DATE(TGL_JATUH_TEMPO) TGL_JATUH_TEMPO_BAYAR ,0 NILAI_PENGURANG,
+SELECT REPLACE(FK_NOP,'.','') NOP, TO_NUMBER(TAHUN_PAJAK) TAHUN,TO_NUMBER(BULAN_PAJAK) MASAPAJAK,100 SEQ,1 JENIS_KETETAPAN,TO_DATE(NVL(TGL_SPTPD_DISETOR,MP_AKHIR)) TGL_KETETAPAN,TO_DATE(TGL_JATUH_TEMPO) TGL_JATUH_TEMPO_BAYAR ,0 NILAI_PENGURANG,
             TO_NUMBER(KETETAPAN_TOTAL)  POKOK
 FROM VW_SIMPADA_SPTPD@LIHATHPPSERVER
 WHERE NAMA_PAJAK_DAERAH='PPJ' AND FK_NOP IS NOT NULL and REPLACE(FK_NOP,'.','')=:NOP
@@ -788,6 +816,8 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN       ";
                             newRow.InsBy = "JOB";
                             newRow.UpdDate = DateTime.Now;
                             newRow.UpdBy = "JOB";
+                            newRow.PeruntukanNama = "-";
+                            newRow.SumberNama = "-";
                             _contMonPd.DbMonPpjs.Add(newRow);
                             _contMonPd.SaveChanges();
                         }
@@ -1045,6 +1075,8 @@ WHERE NAMA_PAJAK_DAERAH='PPJ'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(TGL_S
                                     newRow.InsBy = "JOB";
                                     newRow.UpdDate = DateTime.Now;
                                     newRow.UpdBy = "JOB";
+                                    newRow.PeruntukanNama = "-";
+                                    newRow.SumberNama = "-";
 
 
                                     newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
@@ -1135,41 +1167,58 @@ WHERE NAMA_PAJAK_DAERAH='PPJ'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(TGL_S
             var ret = new List<string>();
             var c = DBClass.GetMonitoringDbContext();
             var connection = c.Database.GetDbConnection();
+
             if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();
             }
+
             try
             {
                 var command = connection.CreateCommand();
-                command.CommandText = @" SELECT  NAMAWP,ALAMAT
-                                    FROM PHRH_USER.npwpd_baru@LIHATHR
-                                    WHERE NPWPD=:NPWPD  AND ROWNUM=1";
+                command.CommandText = @"
+            SELECT NAMAWP, ALAMAT
+            FROM PHRH_USER.npwpd_baru@LIHATHR
+            WHERE NPWPD = :NPWPD AND ROWNUM = 1";
+
                 var param = command.CreateParameter();
                 param.ParameterName = "NPWPD";
                 param.Value = npwpd;
                 command.Parameters.Add(param);
-                var dr = command.ExecuteReader();
-                if (dr.Read())
+
+                using (var dr = command.ExecuteReader())
                 {
-                    ret.Add(dr.GetString(0));
-                    ret.Add(dr.GetString(1));
+                    if (dr.Read())
+                    {
+                        // NAMAWP
+                        var nama = dr.IsDBNull(0) || string.IsNullOrWhiteSpace(dr.GetString(0)) ? "-" : dr.GetString(0);
+                        // ALAMAT
+                        var alamat = dr.IsDBNull(1) || string.IsNullOrWhiteSpace(dr.GetString(1)) ? "-" : dr.GetString(1);
+
+                        ret.Add(nama);
+                        ret.Add(alamat);
+                    }
+                    else
+                    {
+                        ret.Add("-");
+                        ret.Add("-");
+                    }
                 }
-                else
-                {
-                    ret.Add("-");
-                    ret.Add("-");
-                }
-                dr.Close();
             }
             catch
             {
-
+                // Jika terjadi error tetap isi dengan "-"
+                ret.Add("-");
+                ret.Add("-");
+            }
+            finally
+            {
+                connection.Close();
             }
 
-            connection.Close();
             return ret;
         }
+
         private Helper.DbAkun? GetDbAkun(int tahun, int idPajak, int idKategori)
         {
             var _contMonPd = DBClass.GetContext();
