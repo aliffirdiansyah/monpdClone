@@ -214,16 +214,22 @@ namespace MonPDReborn.Models
                 public decimal Target3 { get; set; }
                 public decimal Target4 { get; set; }
                 public decimal Target5 { get; set; }
+                public decimal Target6 { get; set; }
+                public decimal Target7 { get; set; }
                 public decimal Realisasi1 { get; set; }
                 public decimal Realisasi2 { get; set; }
                 public decimal Realisasi3 { get; set; }
                 public decimal Realisasi4 { get; set; }
                 public decimal Realisasi5 { get; set; }
+                public decimal Realisasi6 { get; set; }
+                public decimal Realisasi7 { get; set; }
                 public decimal Persentase1 { get; set; }
                 public decimal Persentase2 { get; set; }
                 public decimal Persentase3 { get; set; }
                 public decimal Persentase4 { get; set; }
                 public decimal Persentase5 { get; set; }
+                public decimal Persentase6 { get; set; }
+                public decimal Persentase7 { get; set; }
             }
             public class JumlahObjekPajakTahunan
             {
@@ -763,230 +769,362 @@ namespace MonPDReborn.Models
                 var realisasiOpsenBbnkbMines4 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 4).Sum(x => x.JmlPokok);
                 #endregion
 
+                #region Mines5
+                var targetRestoMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
+                var realisasiRestoMines5 = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetHotelMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Target);
+                var realisasiHotelMines5 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetHiburanMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Target);
+                var realisasiHiburanMines5 = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetParkirMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.JasaParkir).Sum(x => x.Target);
+                var realisasiParkirMines5 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetListrikMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
+                var realisasiListrikMines5 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetPbbMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
+                var realisasiPbbMines5 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetBphtbMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
+                var realisasiBphtbMines5 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 5).Sum(x => x.Pokok) ?? 0;
+
+                var targetReklameMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
+                var realisasiReklameMines5 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetAbtMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
+                var realisasiAbtMines5 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear - 5).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetOpsenPkbMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
+                var realisasiOpsenPkbMines5 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear - 5).Sum(x => x.JmlPokok);
+
+                var targetOpsenBbnkbMines5 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 5 && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
+                var realisasiOpsenBbnkbMines5 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 5).Sum(x => x.JmlPokok);
+                #endregion
+
+                #region Mines6
+                var targetRestoMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
+                var realisasiRestoMines6 = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetHotelMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Target);
+                var realisasiHotelMines6 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetHiburanMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Target);
+                var realisasiHiburanMines6 = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetParkirMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.JasaParkir).Sum(x => x.Target);
+                var realisasiParkirMines6 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetListrikMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
+                var realisasiListrikMines6 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetPbbMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
+                var realisasiPbbMines6 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetBphtbMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
+                var realisasiBphtbMines6 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 6).Sum(x => x.Pokok) ?? 0;
+
+                var targetReklameMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
+                var realisasiReklameMines6 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetAbtMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
+                var realisasiAbtMines6 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear - 6).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var targetOpsenPkbMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
+                var realisasiOpsenPkbMines6 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear - 6).Sum(x => x.JmlPokok);
+
+                var targetOpsenBbnkbMines6 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 6 && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
+                var realisasiOpsenBbnkbMines6 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 6).Sum(x => x.JmlPokok);
+                #endregion
+
                 #region Ngisi Data
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
-                    Target5 = targetRestoNow,
-                    Realisasi5 = realisasiRestoNow,
-                    Persentase5 = targetRestoNow != 0 ? Math.Round(realisasiRestoNow / targetRestoNow * 100, 2) : 0,
-                    Target4 = targetRestoMines1,
-                    Realisasi4 = realisasiRestoMines1,
-                    Persentase4 = targetRestoMines1 != 0 ? Math.Round(realisasiRestoMines1 / targetRestoMines1 * 100, 2) : 0,
-                    Target3 = targetRestoMines2,
-                    Realisasi3 = realisasiRestoMines2,
-                    Persentase3 = targetRestoMines2 != 0 ? Math.Round(realisasiRestoMines2 / targetRestoMines2 * 100, 2) : 0,
-                    Target2 = targetRestoMines3,
-                    Realisasi2 = realisasiRestoMines3,
-                    Persentase2 = targetRestoMines3 != 0 ? Math.Round(realisasiRestoMines3 / targetRestoMines3 * 100, 2) : 0,
-                    Target1 = targetRestoMines4,
-                    Realisasi1 = realisasiRestoMines4,
-                    Persentase1 = targetRestoMines4 != 0 ? Math.Round(realisasiRestoMines4 / targetRestoMines4 * 100, 2) : 0,
+                    Target7 = targetRestoNow,
+                    Realisasi7 = realisasiRestoNow,
+                    Persentase7 = targetRestoNow != 0 ? Math.Round(realisasiRestoNow / targetRestoNow * 100, 2) : 0,
+                    Target6 = targetRestoMines1,
+                    Realisasi6 = realisasiRestoMines1,
+                    Persentase6 = targetRestoMines1 != 0 ? Math.Round(realisasiRestoMines1 / targetRestoMines1 * 100, 2) : 0,
+                    Target5 = targetRestoMines2,
+                    Realisasi5 = realisasiRestoMines2,
+                    Persentase5 = targetRestoMines2 != 0 ? Math.Round(realisasiRestoMines2 / targetRestoMines2 * 100, 2) : 0,
+                    Target4 = targetRestoMines3,
+                    Realisasi4 = realisasiRestoMines3,
+                    Persentase4 = targetRestoMines3 != 0 ? Math.Round(realisasiRestoMines3 / targetRestoMines3 * 100, 2) : 0,
+                    Target3 = targetRestoMines4,
+                    Realisasi3 = realisasiRestoMines4,
+                    Persentase3 = targetRestoMines4 != 0 ? Math.Round(realisasiRestoMines4 / targetRestoMines4 * 100, 2) : 0,
+                    Target2 = targetRestoMines5,
+                    Realisasi2 = realisasiRestoMines5,
+                    Persentase2 = targetRestoMines5 != 0 ? Math.Round(realisasiRestoMines5 / targetRestoMines5 * 100, 2) : 0,
+                    Target1 = targetRestoMines6,
+                    Realisasi1 = realisasiRestoMines6,
+                    Persentase1 = targetRestoMines6 != 0 ? Math.Round(realisasiRestoMines6 / targetRestoMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
-                    Target5 = targetListrikNow,
-                    Realisasi5 = realisasiListrikNow,
-                    Persentase5 = targetListrikNow != 0 ? Math.Round(realisasiListrikNow / targetListrikNow * 100, 2) : 0,
-                    Target4 = targetListrikMines1,
-                    Realisasi4 = realisasiListrikMines1,
-                    Persentase4 = targetListrikMines1 != 0 ? Math.Round(realisasiListrikMines1 / targetListrikMines1 * 100, 2) : 0,
-                    Target3 = targetListrikMines2,
-                    Realisasi3 = realisasiListrikMines2,
-                    Persentase3 = targetListrikMines2 != 0 ? Math.Round(realisasiListrikMines2 / targetListrikMines2 * 100, 2) : 0,
-                    Target2 = targetListrikMines3,
-                    Realisasi2 = realisasiListrikMines3,
-                    Persentase2 = targetListrikMines3 != 0 ? Math.Round(realisasiListrikMines3 / targetListrikMines3 * 100, 2) : 0,
-                    Target1 = targetListrikMines4,
-                    Realisasi1 = realisasiListrikMines4,
-                    Persentase1 = targetListrikMines4 != 0 ? Math.Round(realisasiListrikMines4 / targetListrikMines4 * 100, 2) : 0,
+                    Target7 = targetListrikNow,
+                    Realisasi7 = realisasiListrikNow,
+                    Persentase7 = targetListrikNow != 0 ? Math.Round(realisasiListrikNow / targetListrikNow * 100, 2) : 0,
+                    Target6 = targetListrikMines1,
+                    Realisasi6 = realisasiListrikMines1,
+                    Persentase6 = targetListrikMines1 != 0 ? Math.Round(realisasiListrikMines1 / targetListrikMines1 * 100, 2) : 0,
+                    Target5 = targetListrikMines2,
+                    Realisasi5 = realisasiListrikMines2,
+                    Persentase5 = targetListrikMines2 != 0 ? Math.Round(realisasiListrikMines2 / targetListrikMines2 * 100, 2) : 0,
+                    Target4 = targetListrikMines3,
+                    Realisasi4 = realisasiListrikMines3,
+                    Persentase4 = targetListrikMines3 != 0 ? Math.Round(realisasiListrikMines3 / targetListrikMines3 * 100, 2) : 0,
+                    Target3 = targetListrikMines4,
+                    Realisasi3 = realisasiListrikMines4,
+                    Persentase3 = targetListrikMines4 != 0 ? Math.Round(realisasiListrikMines4 / targetListrikMines4 * 100, 2) : 0,
+                    Target2 = targetListrikMines5,
+                    Realisasi2 = realisasiListrikMines5,
+                    Persentase2 = targetListrikMines5 != 0 ? Math.Round(realisasiListrikMines5 / targetListrikMines5 * 100, 2) : 0,
+                    Target1 = targetListrikMines6,
+                    Realisasi1 = realisasiListrikMines6,
+                    Persentase1 = targetListrikMines6 != 0 ? Math.Round(realisasiListrikMines6 / targetListrikMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
-                    Target5 = targetHotelNow,
-                    Realisasi5 = realisasiHotelNow,
-                    Persentase5 = targetHotelNow != 0 ? Math.Round(realisasiHotelNow / targetHotelNow * 100, 2) : 0,
-                    Target4 = targetHotelMines1,
-                    Realisasi4 = realisasiHotelMines1,
-                    Persentase4 = targetHotelMines1 != 0 ? Math.Round(realisasiHotelMines1 / targetHotelMines1 * 100, 2) : 0,
-                    Target3 = targetHotelMines2,
-                    Realisasi3 = realisasiHotelMines2,
-                    Persentase3 = targetHotelMines2 != 0 ? Math.Round(realisasiHotelMines2 / targetHotelMines2 * 100, 2) : 0,
-                    Target2 = targetHotelMines3,
-                    Realisasi2 = realisasiHotelMines3,
-                    Persentase2 = targetHotelMines3 != 0 ? Math.Round(realisasiHotelMines3 / targetHotelMines3 * 100, 2) : 0,
-                    Target1 = targetHotelMines4,
-                    Realisasi1 = realisasiHotelMines4,
-                    Persentase1 = targetHotelMines4 != 0 ? Math.Round(realisasiHotelMines4 / targetHotelMines4 * 100, 2) : 0,
+                    Target7 = targetHotelNow,
+                    Realisasi7 = realisasiHotelNow,
+                    Persentase7 = targetHotelNow != 0 ? Math.Round(realisasiHotelNow / targetHotelNow * 100, 2) : 0,
+                    Target6 = targetHotelMines1,
+                    Realisasi6 = realisasiHotelMines1,
+                    Persentase6 = targetHotelMines1 != 0 ? Math.Round(realisasiHotelMines1 / targetHotelMines1 * 100, 2) : 0,
+                    Target5 = targetHotelMines2,
+                    Realisasi5 = realisasiHotelMines2,
+                    Persentase5 = targetHotelMines2 != 0 ? Math.Round(realisasiHotelMines2 / targetHotelMines2 * 100, 2) : 0,
+                    Target4 = targetHotelMines3,
+                    Realisasi4 = realisasiHotelMines3,
+                    Persentase4 = targetHotelMines3 != 0 ? Math.Round(realisasiHotelMines3 / targetHotelMines3 * 100, 2) : 0,
+                    Target3 = targetHotelMines4,
+                    Realisasi3 = realisasiHotelMines4,
+                    Persentase3 = targetHotelMines4 != 0 ? Math.Round(realisasiHotelMines4 / targetHotelMines4 * 100, 2) : 0,
+                    Target2 = targetHotelMines5,
+                    Realisasi2 = realisasiHotelMines5,
+                    Persentase2 = targetHotelMines5 != 0 ? Math.Round(realisasiHotelMines5 / targetHotelMines5 * 100, 2) : 0,
+                    Target1 = targetHotelMines6,
+                    Realisasi1 = realisasiHotelMines6,
+                    Persentase1 = targetHotelMines6 != 0 ? Math.Round(realisasiHotelMines6 / targetHotelMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
-                    Target5 = targetParkirNow,
-                    Realisasi5 = realisasiParkirNow,
-                    Persentase5 = targetParkirNow != 0 ? Math.Round(realisasiParkirNow / targetParkirNow * 100, 2) : 0,
-                    Target4 = targetParkirMines1,
-                    Realisasi4 = realisasiParkirMines1,
-                    Persentase4 = targetParkirMines1 != 0 ? Math.Round(realisasiParkirMines1 / targetParkirMines1 * 100, 2) : 0,
-                    Target3 = targetParkirMines2,
-                    Realisasi3 = realisasiParkirMines2,
-                    Persentase3 = targetParkirMines2 != 0 ? Math.Round(realisasiParkirMines2 / targetParkirMines2 * 100, 2) : 0,
-                    Target2 = targetParkirMines3,
-                    Realisasi2 = realisasiParkirMines3,
-                    Persentase2 = targetParkirMines3 != 0 ? Math.Round(realisasiParkirMines3 / targetParkirMines3 * 100, 2) : 0,
-                    Target1 = targetParkirMines4,
-                    Realisasi1 = realisasiParkirMines4,
-                    Persentase1 = targetParkirMines4 != 0 ? Math.Round(realisasiParkirMines4 / targetParkirMines4 * 100, 2) : 0,
+                    Target7 = targetParkirNow,
+                    Realisasi7 = realisasiParkirNow,
+                    Persentase7 = targetParkirNow != 0 ? Math.Round(realisasiParkirNow / targetParkirNow * 100, 2) : 0,
+                    Target6 = targetParkirMines1,
+                    Realisasi6 = realisasiParkirMines1,
+                    Persentase6 = targetParkirMines1 != 0 ? Math.Round(realisasiParkirMines1 / targetParkirMines1 * 100, 2) : 0,
+                    Target5 = targetParkirMines2,
+                    Realisasi5 = realisasiParkirMines2,
+                    Persentase5 = targetParkirMines2 != 0 ? Math.Round(realisasiParkirMines2 / targetParkirMines2 * 100, 2) : 0,
+                    Target4 = targetParkirMines3,
+                    Realisasi4 = realisasiParkirMines3,
+                    Persentase4 = targetParkirMines3 != 0 ? Math.Round(realisasiParkirMines3 / targetParkirMines3 * 100, 2) : 0,
+                    Target3 = targetParkirMines4,
+                    Realisasi3 = realisasiParkirMines4,
+                    Persentase3 = targetParkirMines4 != 0 ? Math.Round(realisasiParkirMines4 / targetParkirMines4 * 100, 2) : 0,
+                    Target2 = targetParkirMines5,
+                    Realisasi2 = realisasiParkirMines5,
+                    Persentase2 = targetParkirMines5 != 0 ? Math.Round(realisasiParkirMines5 / targetParkirMines5 * 100, 2) : 0,
+                    Target1 = targetParkirMines6,
+                    Realisasi1 = realisasiParkirMines6,
+                    Persentase1 = targetParkirMines6 != 0 ? Math.Round(realisasiParkirMines6 / targetParkirMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
-                    Target5 = targetHiburanNow,
-                    Realisasi5 = realisasiHiburanNow,
-                    Persentase5 = targetHiburanNow != 0 ? Math.Round(realisasiHiburanNow / targetHiburanNow * 100, 2) : 0,
-                    Target4 = targetHiburanMines1,
-                    Realisasi4 = realisasiHiburanMines1,
-                    Persentase4 = targetHiburanMines1 != 0 ? Math.Round(realisasiHiburanMines1 / targetHiburanMines1 * 100, 2) : 0,
-                    Target3 = targetHiburanMines2,
-                    Realisasi3 = realisasiHiburanMines2,
-                    Persentase3 = targetHiburanMines2 != 0 ? Math.Round(realisasiHiburanMines2 / targetHiburanMines2 * 100, 2) : 0,
-                    Target2 = targetHiburanMines3,
-                    Realisasi2 = realisasiHiburanMines3,
-                    Persentase2 = targetHiburanMines3 != 0 ? Math.Round(realisasiHiburanMines3 / targetHiburanMines3 * 100, 2) : 0,
-                    Target1 = targetHiburanMines4,
-                    Realisasi1 = realisasiHiburanMines4,
-                    Persentase1 = targetHiburanMines4 != 0 ? Math.Round(realisasiHiburanMines4 / targetHiburanMines4 * 100, 2) : 0,
+                    Target7 = targetHiburanNow,
+                    Realisasi7 = realisasiHiburanNow,
+                    Persentase7 = targetHiburanNow != 0 ? Math.Round(realisasiHiburanNow / targetHiburanNow * 100, 2) : 0,
+                    Target6 = targetHiburanMines1,
+                    Realisasi6 = realisasiHiburanMines1,
+                    Persentase6 = targetHiburanMines1 != 0 ? Math.Round(realisasiHiburanMines1 / targetHiburanMines1 * 100, 2) : 0,
+                    Target5 = targetHiburanMines2,
+                    Realisasi5 = realisasiHiburanMines2,
+                    Persentase5 = targetHiburanMines2 != 0 ? Math.Round(realisasiHiburanMines2 / targetHiburanMines2 * 100, 2) : 0,
+                    Target4 = targetHiburanMines3,
+                    Realisasi4 = realisasiHiburanMines3,
+                    Persentase4 = targetHiburanMines3 != 0 ? Math.Round(realisasiHiburanMines3 / targetHiburanMines3 * 100, 2) : 0,
+                    Target3 = targetHiburanMines4,
+                    Realisasi3 = realisasiHiburanMines4,
+                    Persentase3 = targetHiburanMines4 != 0 ? Math.Round(realisasiHiburanMines4 / targetHiburanMines4 * 100, 2) : 0,
+                    Target2 = targetHiburanMines5,
+                    Realisasi2 = realisasiHiburanMines5,
+                    Persentase2 = targetHiburanMines5 != 0 ? Math.Round(realisasiHiburanMines5 / targetHiburanMines5 * 100, 2) : 0,
+                    Target1 = targetHiburanMines6,
+                    Realisasi1 = realisasiHiburanMines6,
+                    Persentase1 = targetHiburanMines6 != 0 ? Math.Round(realisasiHiburanMines6 / targetHiburanMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
-                    Target5 = targetAbtNow,
-                    Realisasi5 = realisasiAbtNow,
-                    Persentase5 = targetAbtNow != 0 ? Math.Round(realisasiAbtNow / targetAbtNow * 100, 2) : 0,
-                    Target4 = targetAbtMines1,
-                    Realisasi4 = realisasiAbtMines1,
-                    Persentase4 = targetAbtMines1 != 0 ? Math.Round(realisasiAbtMines1 / targetAbtMines1 * 100, 2) : 0,
-                    Target3 = targetAbtMines2,
-                    Realisasi3 = realisasiAbtMines2,
-                    Persentase3 = targetAbtMines2 != 0 ? Math.Round(realisasiAbtMines2 / targetAbtMines2 * 100, 2) : 0,
-                    Target2 = targetAbtMines3,
-                    Realisasi2 = realisasiAbtMines3,
-                    Persentase2 = targetAbtMines3 != 0 ? Math.Round(realisasiAbtMines3 / targetAbtMines3 * 100, 2) : 0,
-                    Target1 = targetAbtMines4,
-                    Realisasi1 = realisasiAbtMines4,
-                    Persentase1 = targetAbtMines4 != 0 ? Math.Round(realisasiAbtMines4 / targetAbtMines4 * 100, 2) : 0,
+                    Target7 = targetAbtNow,
+                    Realisasi7 = realisasiAbtNow,
+                    Persentase7 = targetAbtNow != 0 ? Math.Round(realisasiAbtNow / targetAbtNow * 100, 2) : 0,
+                    Target6 = targetAbtMines1,
+                    Realisasi6 = realisasiAbtMines1,
+                    Persentase6 = targetAbtMines1 != 0 ? Math.Round(realisasiAbtMines1 / targetAbtMines1 * 100, 2) : 0,
+                    Target5 = targetAbtMines2,
+                    Realisasi5 = realisasiAbtMines2,
+                    Persentase5 = targetAbtMines2 != 0 ? Math.Round(realisasiAbtMines2 / targetAbtMines2 * 100, 2) : 0,
+                    Target4 = targetAbtMines3,
+                    Realisasi4 = realisasiAbtMines3,
+                    Persentase4 = targetAbtMines3 != 0 ? Math.Round(realisasiAbtMines3 / targetAbtMines3 * 100, 2) : 0,
+                    Target3 = targetAbtMines4,
+                    Realisasi3 = realisasiAbtMines4,
+                    Persentase3 = targetAbtMines4 != 0 ? Math.Round(realisasiAbtMines4 / targetAbtMines4 * 100, 2) : 0,
+                    Target2 = targetAbtMines5,
+                    Realisasi2 = realisasiAbtMines5,
+                    Persentase2 = targetAbtMines5 != 0 ? Math.Round(realisasiAbtMines5 / targetAbtMines5 * 100, 2) : 0,
+                    Target1 = targetAbtMines6,
+                    Realisasi1 = realisasiAbtMines6,
+                    Persentase1 = targetAbtMines6 != 0 ? Math.Round(realisasiAbtMines6 / targetAbtMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
-                    Target5 = targetReklameNow,
-                    Realisasi5 = realisasiReklameNow,
-                    Persentase5 = targetReklameNow != 0 ? Math.Round(realisasiReklameNow / targetReklameNow * 100, 2) : 0,
-                    Target4 = targetReklameMines1,
-                    Realisasi4 = realisasiReklameMines1,
-                    Persentase4 = targetReklameMines1 != 0 ? Math.Round(realisasiReklameMines1 / targetReklameMines1 * 100, 2) : 0,
-                    Target3 = targetReklameMines2,
-                    Realisasi3 = realisasiReklameMines2,
-                    Persentase3 = targetReklameMines2 != 0 ? Math.Round(realisasiReklameMines2 / targetReklameMines2 * 100, 2) : 0,
-                    Target2 = targetReklameMines3,
-                    Realisasi2 = realisasiReklameMines3,
-                    Persentase2 = targetReklameMines3 != 0 ? Math.Round(realisasiReklameMines3 / targetReklameMines3 * 100, 2) : 0,
-                    Target1 = targetReklameMines4,
-                    Realisasi1 = realisasiReklameMines4,
-                    Persentase1 = targetReklameMines4 != 0 ? Math.Round(realisasiReklameMines4 / targetReklameMines4 * 100, 2) : 0,
+                    Target7 = targetReklameNow,
+                    Realisasi7 = realisasiReklameNow,
+                    Persentase7 = targetReklameNow != 0 ? Math.Round(realisasiReklameNow / targetReklameNow * 100, 2) : 0,
+                    Target6 = targetReklameMines1,
+                    Realisasi6 = realisasiReklameMines1,
+                    Persentase6 = targetReklameMines1 != 0 ? Math.Round(realisasiReklameMines1 / targetReklameMines1 * 100, 2) : 0,
+                    Target5 = targetReklameMines2,
+                    Realisasi5 = realisasiReklameMines2,
+                    Persentase5 = targetReklameMines2 != 0 ? Math.Round(realisasiReklameMines2 / targetReklameMines2 * 100, 2) : 0,
+                    Target4 = targetReklameMines3,
+                    Realisasi4 = realisasiReklameMines3,
+                    Persentase4 = targetReklameMines3 != 0 ? Math.Round(realisasiReklameMines3 / targetReklameMines3 * 100, 2) : 0,
+                    Target3 = targetReklameMines4,
+                    Realisasi3 = realisasiReklameMines4,
+                    Persentase3 = targetReklameMines4 != 0 ? Math.Round(realisasiReklameMines4 / targetReklameMines4 * 100, 2) : 0,
+                    Target2 = targetReklameMines5,
+                    Realisasi2 = realisasiReklameMines5,
+                    Persentase2 = targetReklameMines5 != 0 ? Math.Round(realisasiReklameMines5 / targetReklameMines5 * 100, 2) : 0,
+                    Target1 = targetReklameMines6,
+                    Realisasi1 = realisasiReklameMines6,
+                    Persentase1 = targetReklameMines6 != 0 ? Math.Round(realisasiReklameMines6 / targetReklameMines6 * 100, 2) : 0,
                 });
 
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
-                    Target5 = targetPbbNow,
-                    Realisasi5 = realisasiPbbNow,
-                    Persentase5 = targetPbbNow != 0 ? Math.Round(realisasiPbbNow / targetPbbNow * 100, 2) : 0,
-                    Target4 = targetPbbMines1,
-                    Realisasi4 = realisasiPbbMines1,
-                    Persentase4 = targetPbbMines1 != 0 ? Math.Round(realisasiPbbMines1 / targetPbbMines1 * 100, 2) : 0,
-                    Target3 = targetPbbMines2,
-                    Realisasi3 = realisasiPbbMines2,
-                    Persentase3 = targetPbbMines2 != 0 ? Math.Round(realisasiPbbMines2 / targetPbbMines2 * 100, 2) : 0,
-                    Target2 = targetPbbMines3,
-                    Realisasi2 = realisasiPbbMines3,
-                    Persentase2 = targetPbbMines3 != 0 ? Math.Round(realisasiPbbMines3 / targetPbbMines3 * 100, 2) : 0,
-                    Target1 = targetPbbMines4,
-                    Realisasi1 = realisasiPbbMines4,
-                    Persentase1 = targetPbbMines4 != 0 ? Math.Round(realisasiPbbMines4 / targetPbbMines4 * 100, 2) : 0,
+                    Target7 = targetPbbNow,
+                    Realisasi7 = realisasiPbbNow,
+                    Persentase7 = targetPbbNow != 0 ? Math.Round(realisasiPbbNow / targetPbbNow * 100, 2) : 0,
+                    Target6 = targetPbbMines1,
+                    Realisasi6 = realisasiPbbMines1,
+                    Persentase6 = targetPbbMines1 != 0 ? Math.Round(realisasiPbbMines1 / targetPbbMines1 * 100, 2) : 0,
+                    Target5 = targetPbbMines2,
+                    Realisasi5 = realisasiPbbMines2,
+                    Persentase5 = targetPbbMines2 != 0 ? Math.Round(realisasiPbbMines2 / targetPbbMines2 * 100, 2) : 0,
+                    Target4 = targetPbbMines3,
+                    Realisasi4 = realisasiPbbMines3,
+                    Persentase4 = targetPbbMines3 != 0 ? Math.Round(realisasiPbbMines3 / targetPbbMines3 * 100, 2) : 0,
+                    Target3 = targetPbbMines4,
+                    Realisasi3 = realisasiPbbMines4,
+                    Persentase3 = targetPbbMines4 != 0 ? Math.Round(realisasiPbbMines4 / targetPbbMines4 * 100, 2) : 0,
+                    Target2 = targetPbbMines5,
+                    Realisasi2 = realisasiPbbMines5,
+                    Persentase2 = targetPbbMines5 != 0 ? Math.Round(realisasiPbbMines5 / targetPbbMines5 * 100, 2) : 0,
+                    Target1 = targetPbbMines6,
+                    Realisasi1 = realisasiPbbMines6,
+                    Persentase1 = targetPbbMines6 != 0 ? Math.Round(realisasiPbbMines6 / targetPbbMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
-                    Target5 = targetBphtbNow,
-                    Realisasi5 = realisasiBphtbNow,
-                    Persentase5 = targetBphtbNow != 0 ? Math.Round(realisasiBphtbNow / targetBphtbNow * 100, 2) : 0,
-                    Target4 = targetBphtbMines1,
-                    Realisasi4 = realisasiBphtbMines1,
-                    Persentase4 = targetBphtbMines1 != 0 ? Math.Round(realisasiBphtbMines1 / targetBphtbMines1 * 100, 2) : 0,
-                    Target3 = targetBphtbMines2,
-                    Realisasi3 = realisasiBphtbMines2,
-                    Persentase3 = targetBphtbMines2 != 0 ? Math.Round(realisasiBphtbMines2 / targetBphtbMines2 * 100, 2) : 0,
-                    Target2 = targetBphtbMines3,
-                    Realisasi2 = realisasiBphtbMines3,
-                    Persentase2 = targetBphtbMines3 != 0 ? Math.Round(realisasiBphtbMines3 / targetBphtbMines3 * 100, 2) : 0,
-                    Target1 = targetBphtbMines4,
-                    Realisasi1 = realisasiBphtbMines4,
-                    Persentase1 = targetBphtbMines4 != 0 ? Math.Round(realisasiBphtbMines4 / targetBphtbMines4 * 100, 2) : 0,
+                    Target7 = targetBphtbNow,
+                    Realisasi7 = realisasiBphtbNow,
+                    Persentase7 = targetBphtbNow != 0 ? Math.Round(realisasiBphtbNow / targetBphtbNow * 100, 2) : 0,
+                    Target6 = targetBphtbMines1,
+                    Realisasi6 = realisasiBphtbMines1,
+                    Persentase6 = targetBphtbMines1 != 0 ? Math.Round(realisasiBphtbMines1 / targetBphtbMines1 * 100, 2) : 0,
+                    Target5 = targetBphtbMines2,
+                    Realisasi5 = realisasiBphtbMines2,
+                    Persentase5 = targetBphtbMines2 != 0 ? Math.Round(realisasiBphtbMines2 / targetBphtbMines2 * 100, 2) : 0,
+                    Target4 = targetBphtbMines3,
+                    Realisasi4 = realisasiBphtbMines3,
+                    Persentase4 = targetBphtbMines3 != 0 ? Math.Round(realisasiBphtbMines3 / targetBphtbMines3 * 100, 2) : 0,
+                    Target3 = targetBphtbMines4,
+                    Realisasi3 = realisasiBphtbMines4,
+                    Persentase3 = targetBphtbMines4 != 0 ? Math.Round(realisasiBphtbMines4 / targetBphtbMines4 * 100, 2) : 0,
+                    Target2 = targetBphtbMines5,
+                    Realisasi2 = realisasiBphtbMines5,
+                    Persentase2 = targetBphtbMines5 != 0 ? Math.Round(realisasiBphtbMines5 / targetBphtbMines5 * 100, 2) : 0,
+                    Target1 = targetBphtbMines6,
+                    Realisasi1 = realisasiBphtbMines6,
+                    Persentase1 = targetBphtbMines6 != 0 ? Math.Round(realisasiBphtbMines6 / targetBphtbMines6 * 100, 2) : 0,
                 });
-
-                
-
-                
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
-                    Target5 = targetOpsenPkbNow,
-                    Realisasi5 = realisasiOpsenPkbNow,
-                    Persentase5 = targetOpsenPkbNow != 0 ? Math.Round(realisasiOpsenPkbNow / targetOpsenPkbNow * 100, 2) : 0,
-                    Target4 = targetOpsenPkbMines1,
-                    Realisasi4 = realisasiOpsenPkbMines1,
-                    Persentase4 = targetOpsenPkbMines1 != 0 ? Math.Round(realisasiOpsenPkbMines1 / targetOpsenPkbMines1 * 100, 2) : 0,
-                    Target3 = targetOpsenPkbMines2,
-                    Realisasi3 = realisasiOpsenPkbMines2,
-                    Persentase3 = targetOpsenPkbMines2 != 0 ? Math.Round(realisasiOpsenPkbMines2 / targetOpsenPkbMines2 * 100, 2) : 0,
-                    Target2 = targetOpsenPkbMines3,
-                    Realisasi2 = realisasiOpsenPkbMines3,
-                    Persentase2 = targetOpsenPkbMines3 != 0 ? Math.Round(realisasiOpsenPkbMines3 / targetOpsenPkbMines3 * 100, 2) : 0,
-                    Target1 = targetOpsenPkbMines4,
-                    Realisasi1 = realisasiOpsenPkbMines4,
-                    Persentase1 = targetOpsenPkbMines4 != 0 ? Math.Round(realisasiOpsenPkbMines4 / targetOpsenPkbMines4 * 100, 2) : 0,
+                    Target7 = targetOpsenPkbNow,
+                    Realisasi7 = realisasiOpsenPkbNow,
+                    Persentase7 = targetOpsenPkbNow != 0 ? Math.Round(realisasiOpsenPkbNow / targetOpsenPkbNow * 100, 2) : 0,
+                    Target6 = targetOpsenPkbMines1,
+                    Realisasi6 = realisasiOpsenPkbMines1,
+                    Persentase6 = targetOpsenPkbMines1 != 0 ? Math.Round(realisasiOpsenPkbMines1 / targetOpsenPkbMines1 * 100, 2) : 0,
+                    Target5 = targetOpsenPkbMines2,
+                    Realisasi5 = realisasiOpsenPkbMines2,
+                    Persentase5 = targetOpsenPkbMines2 != 0 ? Math.Round(realisasiOpsenPkbMines2 / targetOpsenPkbMines2 * 100, 2) : 0,
+                    Target4 = targetOpsenPkbMines3,
+                    Realisasi4 = realisasiOpsenPkbMines3,
+                    Persentase4 = targetOpsenPkbMines3 != 0 ? Math.Round(realisasiOpsenPkbMines3 / targetOpsenPkbMines3 * 100, 2) : 0,
+                    Target3 = targetOpsenPkbMines4,
+                    Realisasi3 = realisasiOpsenPkbMines4,
+                    Persentase3 = targetOpsenPkbMines4 != 0 ? Math.Round(realisasiOpsenPkbMines4 / targetOpsenPkbMines4 * 100, 2) : 0,
+                    Target2 = targetOpsenPkbMines5,
+                    Realisasi2 = realisasiOpsenPkbMines5,
+                    Persentase2 = targetOpsenPkbMines5 != 0 ? Math.Round(realisasiOpsenPkbMines5 / targetOpsenPkbMines5 * 100, 2) : 0,
+                    Target1 = targetOpsenPkbMines6,
+                    Realisasi1 = realisasiOpsenPkbMines6,
+                    Persentase1 = targetOpsenPkbMines6 != 0 ? Math.Round(realisasiOpsenPkbMines6 / targetOpsenPkbMines6 * 100, 2) : 0,
                 });
 
                 result.Add(new ViewModel.SeriesPajakDaerah
                 {
                     JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
-                    Target5 = targetOpsenBbnkbNow,
-                    Realisasi5 = realisasiOpsenBbnkbNow,
-                    Persentase5 = targetOpsenBbnkbNow != 0 ? Math.Round(realisasiOpsenBbnkbNow / targetOpsenBbnkbNow * 100, 2) : 0,
-                    Target4 = targetOpsenBbnkbMines1,
-                    Realisasi4 = realisasiOpsenBbnkbMines1,
-                    Persentase4 = targetOpsenBbnkbMines1 != 0 ? Math.Round(realisasiOpsenBbnkbMines1 / targetOpsenBbnkbMines1 * 100, 2) : 0,
-                    Target3 = targetOpsenBbnkbMines2,
-                    Realisasi3 = realisasiOpsenBbnkbMines2,
-                    Persentase3 = targetOpsenBbnkbMines2 != 0 ? Math.Round(realisasiOpsenBbnkbMines2 / targetOpsenBbnkbMines2 * 100, 2) : 0,
-                    Target2 = targetOpsenBbnkbMines3,
-                    Realisasi2 = realisasiOpsenBbnkbMines3,
-                    Persentase2 = targetOpsenBbnkbMines3 != 0 ? Math.Round(realisasiOpsenBbnkbMines3 / targetOpsenBbnkbMines3 * 100, 2) : 0,
-                    Target1 = targetOpsenBbnkbMines4,
-                    Realisasi1 = realisasiOpsenBbnkbMines4,
-                    Persentase1 = targetOpsenBbnkbMines4 != 0 ? Math.Round(realisasiOpsenBbnkbMines4 / targetOpsenBbnkbMines4 * 100, 2) : 0,
+                    Target7 = targetOpsenBbnkbNow,
+                    Realisasi7 = realisasiOpsenBbnkbNow,
+                    Persentase7 = targetOpsenBbnkbNow != 0 ? Math.Round(realisasiOpsenBbnkbNow / targetOpsenBbnkbNow * 100, 2) : 0,
+                    Target6 = targetOpsenBbnkbMines1,
+                    Realisasi6 = realisasiOpsenBbnkbMines1,
+                    Persentase6 = targetOpsenBbnkbMines1 != 0 ? Math.Round(realisasiOpsenBbnkbMines1 / targetOpsenBbnkbMines1 * 100, 2) : 0,
+                    Target5 = targetOpsenBbnkbMines2,
+                    Realisasi5 = realisasiOpsenBbnkbMines2,
+                    Persentase5 = targetOpsenBbnkbMines2 != 0 ? Math.Round(realisasiOpsenBbnkbMines2 / targetOpsenBbnkbMines2 * 100, 2) : 0,
+                    Target4 = targetOpsenBbnkbMines3,
+                    Realisasi4 = realisasiOpsenBbnkbMines3,
+                    Persentase4 = targetOpsenBbnkbMines3 != 0 ? Math.Round(realisasiOpsenBbnkbMines3 / targetOpsenBbnkbMines3 * 100, 2) : 0,
+                    Target3 = targetOpsenBbnkbMines4,
+                    Realisasi3 = realisasiOpsenBbnkbMines4,
+                    Persentase3 = targetOpsenBbnkbMines4 != 0 ? Math.Round(realisasiOpsenBbnkbMines4 / targetOpsenBbnkbMines4 * 100, 2) : 0,
+                    Target2 = targetOpsenBbnkbMines5,
+                    Realisasi2 = realisasiOpsenBbnkbMines5,
+                    Persentase2 = targetOpsenBbnkbMines5 != 0 ? Math.Round(realisasiOpsenBbnkbMines5 / targetOpsenBbnkbMines5 * 100, 2) : 0,
+                    Target1 = targetOpsenBbnkbMines6,
+                    Realisasi1 = realisasiOpsenBbnkbMines6,
+                    Persentase1 = targetOpsenBbnkbMines6 != 0 ? Math.Round(realisasiOpsenBbnkbMines6 / targetOpsenBbnkbMines6 * 100, 2) : 0,
                 });
                 #endregion
 
