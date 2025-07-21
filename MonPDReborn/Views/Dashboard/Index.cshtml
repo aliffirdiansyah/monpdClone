@@ -954,7 +954,7 @@
         </div>
     </div>
     <div class="card-body">
-        
+
     </div>
 </div> *@
 
@@ -978,7 +978,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header d-flex bg-header-color align-items-center" >
+            <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h5 class="card-title text-dark fs-16 mb-0">
                         <i class="mdi mdi-file-chart align-middle me-1"></i> SERIES PAJAK DAERAH
@@ -1005,7 +1005,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card card-height-100">
-            <div class="card-header d-flex bg-header-color align-items-center" >
+            <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1 mb-0">
                     <h5 class="card-title text-dark">
                         <i class="mdi mdi-chart-bar align-middle me-1"></i>JUMLAH OBJEK PAJAK
@@ -1056,650 +1056,617 @@
             </div>
         </div>
     </div>
-    @* <div class="row">
     <div class="col-lg-12">
         <div class="card card-height-100">
-                <div class="card-header d-flex bg-header-color align-items-center" >
+            <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
-                    <h5 class="card-title">
-                        <h5 class="card-title fs-16 text-dark mb-0">
-                            <i class="mdi mdi-domain align-middle me-1"></i> DATA KONTROL (POTENSI OP)
-                        </h5>
+                    <h5 class="card-title fs-16 text-dark mb-0">
+                        <i class="mdi mdi-cash-multiple align-middle me-1"></i> PIUTANG
                     </h5>
                 </div>
                 <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-light">
-                        <i class="ri-file-list-3-line align-middle"></i>
-                        Detail
-                    </button>
-                    <button class="btn btn-sm btn-outline-light" onclick="fnDataKontrolPotensiOp()">
+                    <button class="btn btn-sm btn-outline-light" onclick="fnDataPiutang()">
                         <i class="mdi mdi-refresh align-middle"></i>
                         Refresh
                     </button>
                 </div>
             </div>
             <div class="card-body">
-                <div class="text-center">
-                    <div id="loading2-DataKontrolPotensiOp" class="spinner-border text-primary" style="display: none">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div id="DataKontrolPotensiOp"></div>
-            </div>
-        </div>
-    </div>
-</div> *@
+                <h4 class="card-title fs-16 mb-3">
+                    Data Piutang
+                </h4>
 
-        <div class="col-lg-12">
-            <div class="card card-height-100">
-                <div class="card-header d-flex bg-header-color align-items-center" >
-                    <div class="flex-grow-1">
-                        <h5 class="card-title fs-16 text-dark mb-0">
-                            <i class="mdi mdi-cash-multiple align-middle me-1"></i> PIUTANG
-                        </h5>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <button class="btn btn-sm btn-outline-light" onclick="fnDataPiutang()">
-                            <i class="mdi mdi-refresh align-middle"></i>
-                            Refresh
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title fs-16 mb-3">
-                        Data Piutang
-                    </h4>
-
-                    <div class="text-center mb-4">
-                        <div class="text-center">
-                            <div id="loading2-DataPiutang" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="DataPiutang" class="mb-5"></div>
-                    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-xl modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Detail</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Isi modal akan diisi lewat JS -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-
-            </div>
-        </div>
-
-        <div class="col-lg-12">
-            <div class="card card-height-100">
-                <div class="card-header d-flex bg-header-color align-items-center" >
-                    <div class="flex-grow-1">
-                        <h5 class="card-title fs-16 text-dark mb-0">
-                            <i class="mdi mdi-account-cash-outline align-middle me-1"></i> MUTASI
-                        </h5>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <button class="btn btn-sm btn-outline-light" onclick="fnDataMutasi()">
-                            <i class="mdi mdi-refresh align-middle"></i>
-                            Refresh
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title fs-16 mb-3">
-                        Data Mutasi
-                    </h4>
-
-                    <div class="text-center mb-4">
-                        <div class="text-center">
-                            <div id="loading2-DataMutasi" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="DataMutasi"></div>
-                </div>
-
-            </div>
-        </div>
-
-    @section Scripts {
-        <script>
-            function getChartColorsArray(chartId) {
-                if (document.getElementById(chartId) !== null) {
-                    var colors = document.getElementById(chartId).getAttribute("data-colors");
-                    colors = JSON.parse(colors);
-                    return colors.map(function (value) {
-                        var newValue = value.replace(" ", "");
-                        if (newValue.indexOf(",") === -1) {
-                            var color = getComputedStyle(document.documentElement).getPropertyValue(newValue);
-                            if (color) return color;
-                            else return newValue;;
-                        } else {
-                            var val = value.split(',');
-                            if (val.length == 2) {
-                                var rgbaColor = getComputedStyle(document.documentElement).getPropertyValue(val[0]);
-                                rgbaColor = "rgba(" + rgbaColor + "," + val[1] + ")";
-                                return rgbaColor;
-                            } else {
-                                return newValue;
-                            }
-                        }
-                    });
-                }
-            }
-            var swiper = new Swiper(".pajakSlider", {
-                slidesPerView: 1,
-                spaceBetween: 24,
-                loop: true, // <--- ini penting
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                    },
-                    1600: {
-                        slidesPerView: 4,
-                    },
-                },
-            });
-                    //  Line chart datalabel
-            var linechartDatalabelColors = getChartColorsArray("line_chart_datalabel");
-            var options = {
-                chart: {
-                    height: 500,
-                    type: 'line',
-                    zoom: {
-                        enabled: false
-                    },
-                    toolbar: {
-                        show: false
-                    }
-                },
-                colors: linechartDatalabelColors,
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    width: [3, 3],
-                    curve: 'straight'
-                },
-                series: [{
-                    name: "Target",
-                    data: [@(Model.ChartData.Target1), @(Model.ChartData.Target2), @(Model.ChartData.Target3), @(Model.ChartData.Target4), @(Model.ChartData.Target5), @(Model.ChartData.Target6), @(Model.ChartData.Target7), @(Model.ChartData.Target8), @(Model.ChartData.Target9), @(Model.ChartData.Target10), @(Model.ChartData.Target11), @(Model.ChartData.Target12)]
-                }, {
-                    name: "Realisasi",
-                    data: [@(Model.ChartData.Realisasi1), @(Model.ChartData.Realisasi2), @(Model.ChartData.Realisasi3), @(Model.ChartData.Realisasi4), @(Model.ChartData.Realisasi5), @(Model.ChartData.Realisasi6), @(Model.ChartData.Realisasi7), @(Model.ChartData.Realisasi8), @(Model.ChartData.Realisasi9), @(Model.ChartData.Realisasi10), @(Model.ChartData.Realisasi11), @(Model.ChartData.Realisasi12)]
-                }],
-                title: {
-                    text: 'Target & Realisasi PAD 2025',
-                    align: 'left',
-                    style: {
-                        fontWeight: 500,
-                    },
-                },
-                grid: {
-                    row: {
-                        colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
-                        opacity: 0.2
-                    },
-                    borderColor: '#f1f1f1'
-                },
-                markers: {
-                    style: 'inverted',
-                    size: 6
-                },
-                xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
-                    title: {
-                        text: 'Bulan'
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'Nominal'
-                    },
-                    labels: {
-                        formatter: function (val) {
-                            return 'Rp' + val.toLocaleString('id-ID');
-                        }
-                    }
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return 'Rp' + val.toLocaleString('id-ID');
-                        }
-                    }
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    floating: true,
-                    offsetY: -25,
-                    offsetX: -5
-                },
-                responsive: [{
-                    breakpoint: 600,
-                    options: {
-                        chart: {
-                            toolbar: {
-                                show: false
-                            }
-                        },
-                        legend: {
-                            show: false
-                        },
-                    }
-                }]
-            }
-
-            var chart = new ApexCharts(
-                document.querySelector("#line_chart_datalabel"),
-                options
-            );
-
-            chart.render();
-        </script>
-        <script>
-
-            $(document).ready(function () {
-                fnSeriesPajakDaerah();
-                fnJumlahObjekPajakTahunan();
-                fnPemasanganAlatRekamDetail();
-                fnPemasanganAlatRekamSeries();
-                fnPemeriksaanPajak();
-                fnPengedokanPajak();
-                fnDataKontrolPotensiOp();
-                fnDataPiutang();
-                fnDataMutasi();
-            });
-
-            function fnSeriesPajakDaerah()
-            {
-                $.ajax({
-                  url: '@(Url.Action("SeriesPajakDaerah"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-SeriesPajakDaerah').show();
-                     $('#SeriesPajakDaerah').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-SeriesPajakDaerah').hide();
-                            $('#SeriesPajakDaerah').show();
-                            $('#SeriesPajakDaerah').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-SeriesPajakDaerah').hide();
-                     $('#SeriesPajakDaerah').hide();
-                     $('#SeriesPajakDaerah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnJumlahObjekPajakTahunan()
-            {
-                $.ajax({
-                  url: '@(Url.Action("JumlahObjekPajakTahunan"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-JumlahObjekPajakTahunan').show();
-                     $('#JumlahObjekPajakTahunan').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-JumlahObjekPajakTahunan').hide();
-                            $('#JumlahObjekPajakTahunan').show();
-                            $('#JumlahObjekPajakTahunan').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-JumlahObjekPajakTahunan').hide();
-                     $('#JumlahObjekPajakTahunan').hide();
-                     $('#JumlahObjekPajakTahunan').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnJumlahObjekPajakSeries()
-            {
-                $.ajax({
-                  url: '@(Url.Action("JumlahObjekPajak"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-JumlahObjekPajakSeries').show();
-                     $('#JumlahObjekPajakSeries').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-JumlahObjekPajakSeries').hide();
-                            $('#JumlahObjekPajakSeries').show();
-                            $('#JumlahObjekPajakSeries').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-JumlahObjekPajakSeries').hide();
-                     $('#JumlahObjekPajakSeries').hide();
-                     $('#JumlahObjekPajakSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnPemasanganAlatRekamDetail()
-            {
-                $.ajax({
-                  url: '@(Url.Action("PemasanganAlatRekamDetail"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-PemasanganAlatRekamDetail').show();
-                     $('#PemasanganAlatRekamDetail').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-PemasanganAlatRekamDetail').hide();
-                            $('#PemasanganAlatRekamDetail').show();
-                            $('#PemasanganAlatRekamDetail').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-PemasanganAlatRekamDetail').hide();
-                     $('#PemasanganAlatRekamDetail').hide();
-                     $('#PemasanganAlatRekamDetail').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnPemasanganAlatRekamSeries()
-            {
-                $.ajax({
-                  url: '@(Url.Action("PemasanganAlatRekamSeries"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-PemasanganAlatRekamSeries').show();
-                     $('#PemasanganAlatRekamSeries').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-PemasanganAlatRekamSeries').hide();
-                            $('#PemasanganAlatRekamSeries').show();
-                            $('#PemasanganAlatRekamSeries').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-PemasanganAlatRekamSeries').hide();
-                     $('#PemasanganAlatRekamSeries').hide();
-                     $('#PemasanganAlatRekamSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnPemeriksaanPajak()
-            {
-                $.ajax({
-                  url: '@(Url.Action("PemeriksaanPajak"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-PemeriksaanPajak').show();
-                     $('#PemeriksaanPajak').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-PemeriksaanPajak').hide();
-                            $('#PemeriksaanPajak').show();
-                            $('#PemeriksaanPajak').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-PemeriksaanPajak').hide();
-                     $('#PemeriksaanPajak').hide();
-                     $('#PemeriksaanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnPengedokanPajak()
-            {
-                $.ajax({
-                  url: '@(Url.Action("PengedokanPajak"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-PengedokanPajak').show();
-                     $('#PengedokanPajak').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-PengedokanPajak').hide();
-                            $('#PengedokanPajak').show();
-                            $('#PengedokanPajak').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-PengedokanPajak').hide();
-                     $('#PengedokanPajak').hide();
-                     $('#PengedokanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnDataKontrolPotensiOp()
-            {
-                $.ajax({
-                  url: '@(Url.Action("DataKontrolPotensiOp"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-DataKontrolPotensiOp').show();
-                     $('#DataKontrolPotensiOp').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-DataKontrolPotensiOp').hide();
-                            $('#DataKontrolPotensiOp').show();
-                            $('#DataKontrolPotensiOp').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-DataKontrolPotensiOp').hide();
-                     $('#DataKontrolPotensiOp').hide();
-                     $('#DataKontrolPotensiOp').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnDataPiutang()
-            {
-                $.ajax({
-                  url: '@(Url.Action("DataPiutang"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-DataPiutang').show();
-                     $('#DataPiutang').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-DataPiutang').hide();
-                            $('#DataPiutang').show();
-                            $('#DataPiutang').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-DataPiutang').hide();
-                     $('#DataPiutang').hide();
-                     $('#DataPiutang').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-            function fnDataMutasi()
-            {
-                $.ajax({
-                  url: '@(Url.Action("DataMutasi"))',
-                  type: 'GET',
-                  beforeSend: function () {
-                     $('#loading2-DataMutasi').show();
-                     $('#DataMutasi').hide();
-                  },
-                  success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-DataMutasi').hide();
-                            $('#DataMutasi').show();
-                            $('#DataMutasi').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                  },
-                  error: function (xhr, status, error) {
-                     $('#loading2-DataMutasi').hide();
-                     $('#DataMutasi').hide();
-                     $('#DataMutasi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                  }
-               });
-            }
-
-        </script>
-        <script>
-            function detailPiutangCellTemplate(cellElement, cellInfo) {
-                const enumPajak = cellInfo.data.EnumPajak;
-
-                // Ambil tahun dari Caption kolom
-                const tahun = parseInt(cellInfo.column.caption);
-
-                const button = $('<button>')
-                    .addClass('btn btn-sm btn-outline-primary me-2')
-                    .attr('title', 'Lihat Detail')
-                    .html('<i class="ri-search-line"></i>')
-                    .on('click', function () {
-                        ondetailPiutangClick(enumPajak, tahun);
-                    });
-
-                const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID'));
-
-                const wrapper = $('<div>')
-                    .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                    .append(button)
-                    .append(span);
-
-                $(cellElement).append(wrapper);
-            }
-
-
-
-            function ondetailPiutangClick(enumPajak, tahun) {
-                const $modal = $("#staticBackdropLargeScrollable");
-
-                $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);
-                $modal.find(".modal-body").html(`
-                    <div class="text-center my-3">
-                        <div class="spinner-border text-primary" role="status">
+                <div class="text-center mb-4">
+                    <div class="text-center">
+                        <div id="loading2-DataPiutang" class="spinner-border text-primary" style="display: none">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
-                `);
+                </div>
 
-                $modal.modal("show");
-
-                $.ajax({
-                    url: '/Dashboard/DetailPiutang',
-                    type: 'GET',
-                    data: {
-                        jenisPajak: enumPajak, // perbaikan: pakai jenisPajak di server
-                        tahun: tahun
-                    },
-                    success: function (response) {
-                        $modal.find(".modal-body").html(response);
-                    },
-                    error: function () {
-                        $modal.find(".modal-body").html(`
-                            <div class="alert alert-danger">
-                                Gagal memuat detail data.
+                <div id="DataPiutang" class="mb-5"></div>
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                        `);
+                            <div class="modal-body">
+                                <!-- Isi modal akan diisi lewat JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card card-height-100">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h5 class="card-title fs-16 text-dark mb-0">
+                        <i class="mdi mdi-account-cash-outline align-middle me-1"></i> MUTASI
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-light" onclick="fnDataMutasi()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title fs-16 mb-3">
+                    Data Mutasi
+                </h4>
+
+                <div class="text-center mb-4">
+                    <div class="text-center">
+                        <div id="loading2-DataMutasi" class="spinner-border text-primary" style="display: none">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="DataMutasi"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function getChartColorsArray(chartId) {
+            if (document.getElementById(chartId) !== null) {
+                var colors = document.getElementById(chartId).getAttribute("data-colors");
+                colors = JSON.parse(colors);
+                return colors.map(function (value) {
+                    var newValue = value.replace(" ", "");
+                    if (newValue.indexOf(",") === -1) {
+                        var color = getComputedStyle(document.documentElement).getPropertyValue(newValue);
+                        if (color) return color;
+                        else return newValue;;
+                    } else {
+                        var val = value.split(',');
+                        if (val.length == 2) {
+                            var rgbaColor = getComputedStyle(document.documentElement).getPropertyValue(val[0]);
+                            rgbaColor = "rgba(" + rgbaColor + "," + val[1] + ")";
+                            return rgbaColor;
+                        } else {
+                            return newValue;
+                        }
                     }
                 });
             }
+        }
+        var swiper = new Swiper(".pajakSlider", {
+            slidesPerView: 1,
+            spaceBetween: 24,
+            loop: true, // <--- ini penting
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+                1600: {
+                    slidesPerView: 4,
+                },
+            },
+        });
+                //  Line chart datalabel
+        var linechartDatalabelColors = getChartColorsArray("line_chart_datalabel");
+        var options = {
+            chart: {
+                height: 500,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: linechartDatalabelColors,
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                width: [3, 3],
+                curve: 'straight'
+            },
+            series: [{
+                name: "Target",
+                data: [@(Model.ChartData.Target1), @(Model.ChartData.Target2), @(Model.ChartData.Target3), @(Model.ChartData.Target4), @(Model.ChartData.Target5), @(Model.ChartData.Target6), @(Model.ChartData.Target7), @(Model.ChartData.Target8), @(Model.ChartData.Target9), @(Model.ChartData.Target10), @(Model.ChartData.Target11), @(Model.ChartData.Target12)]
+            }, {
+                name: "Realisasi",
+                data: [@(Model.ChartData.Realisasi1), @(Model.ChartData.Realisasi2), @(Model.ChartData.Realisasi3), @(Model.ChartData.Realisasi4), @(Model.ChartData.Realisasi5), @(Model.ChartData.Realisasi6), @(Model.ChartData.Realisasi7), @(Model.ChartData.Realisasi8), @(Model.ChartData.Realisasi9), @(Model.ChartData.Realisasi10), @(Model.ChartData.Realisasi11), @(Model.ChartData.Realisasi12)]
+            }],
+            title: {
+                text: 'Target & Realisasi PAD 2025',
+                align: 'left',
+                style: {
+                    fontWeight: 500,
+                },
+            },
+            grid: {
+                row: {
+                    colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.2
+                },
+                borderColor: '#f1f1f1'
+            },
+            markers: {
+                style: 'inverted',
+                size: 6
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
+                title: {
+                    text: 'Bulan'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Nominal'
+                },
+                labels: {
+                    formatter: function (val) {
+                        return 'Rp' + val.toLocaleString('id-ID');
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return 'Rp' + val.toLocaleString('id-ID');
+                    }
+                }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                floating: true,
+                offsetY: -25,
+                offsetX: -5
+            },
+            responsive: [{
+                breakpoint: 600,
+                options: {
+                    chart: {
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    legend: {
+                        show: false
+                    },
+                }
+            }]
+        }
+
+        var chart = new ApexCharts(
+            document.querySelector("#line_chart_datalabel"),
+            options
+        );
+
+        chart.render();
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            fnSeriesPajakDaerah();
+            fnJumlahObjekPajakTahunan();
+            fnPemasanganAlatRekamDetail();
+            fnPemasanganAlatRekamSeries();
+            fnPemeriksaanPajak();
+            fnPengedokanPajak();
+            fnDataKontrolPotensiOp();
+            fnDataPiutang();
+            fnDataMutasi();
+        });
+
+        function fnSeriesPajakDaerah()
+        {
+            $.ajax({
+              url: '@(Url.Action("SeriesPajakDaerah"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-SeriesPajakDaerah').show();
+                 $('#SeriesPajakDaerah').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-SeriesPajakDaerah').hide();
+                        $('#SeriesPajakDaerah').show();
+                        $('#SeriesPajakDaerah').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-SeriesPajakDaerah').hide();
+                 $('#SeriesPajakDaerah').hide();
+                 $('#SeriesPajakDaerah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnJumlahObjekPajakTahunan()
+        {
+            $.ajax({
+              url: '@(Url.Action("JumlahObjekPajakTahunan"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-JumlahObjekPajakTahunan').show();
+                 $('#JumlahObjekPajakTahunan').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-JumlahObjekPajakTahunan').hide();
+                        $('#JumlahObjekPajakTahunan').show();
+                        $('#JumlahObjekPajakTahunan').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-JumlahObjekPajakTahunan').hide();
+                 $('#JumlahObjekPajakTahunan').hide();
+                 $('#JumlahObjekPajakTahunan').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnJumlahObjekPajakSeries()
+        {
+            $.ajax({
+              url: '@(Url.Action("JumlahObjekPajak"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-JumlahObjekPajakSeries').show();
+                 $('#JumlahObjekPajakSeries').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-JumlahObjekPajakSeries').hide();
+                        $('#JumlahObjekPajakSeries').show();
+                        $('#JumlahObjekPajakSeries').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-JumlahObjekPajakSeries').hide();
+                 $('#JumlahObjekPajakSeries').hide();
+                 $('#JumlahObjekPajakSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemasanganAlatRekamDetail()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemasanganAlatRekamDetail"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemasanganAlatRekamDetail').show();
+                 $('#PemasanganAlatRekamDetail').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemasanganAlatRekamDetail').hide();
+                        $('#PemasanganAlatRekamDetail').show();
+                        $('#PemasanganAlatRekamDetail').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemasanganAlatRekamDetail').hide();
+                 $('#PemasanganAlatRekamDetail').hide();
+                 $('#PemasanganAlatRekamDetail').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemasanganAlatRekamSeries()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemasanganAlatRekamSeries"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemasanganAlatRekamSeries').show();
+                 $('#PemasanganAlatRekamSeries').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemasanganAlatRekamSeries').hide();
+                        $('#PemasanganAlatRekamSeries').show();
+                        $('#PemasanganAlatRekamSeries').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemasanganAlatRekamSeries').hide();
+                 $('#PemasanganAlatRekamSeries').hide();
+                 $('#PemasanganAlatRekamSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemeriksaanPajak()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemeriksaanPajak"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemeriksaanPajak').show();
+                 $('#PemeriksaanPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemeriksaanPajak').hide();
+                        $('#PemeriksaanPajak').show();
+                        $('#PemeriksaanPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemeriksaanPajak').hide();
+                 $('#PemeriksaanPajak').hide();
+                 $('#PemeriksaanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPengedokanPajak()
+        {
+            $.ajax({
+              url: '@(Url.Action("PengedokanPajak"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PengedokanPajak').show();
+                 $('#PengedokanPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PengedokanPajak').hide();
+                        $('#PengedokanPajak').show();
+                        $('#PengedokanPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PengedokanPajak').hide();
+                 $('#PengedokanPajak').hide();
+                 $('#PengedokanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataKontrolPotensiOp()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataKontrolPotensiOp"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataKontrolPotensiOp').show();
+                 $('#DataKontrolPotensiOp').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataKontrolPotensiOp').hide();
+                        $('#DataKontrolPotensiOp').show();
+                        $('#DataKontrolPotensiOp').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataKontrolPotensiOp').hide();
+                 $('#DataKontrolPotensiOp').hide();
+                 $('#DataKontrolPotensiOp').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataPiutang()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataPiutang"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataPiutang').show();
+                 $('#DataPiutang').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataPiutang').hide();
+                        $('#DataPiutang').show();
+                        $('#DataPiutang').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataPiutang').hide();
+                 $('#DataPiutang').hide();
+                 $('#DataPiutang').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataMutasi()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataMutasi"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataMutasi').show();
+                 $('#DataMutasi').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataMutasi').hide();
+                        $('#DataMutasi').show();
+                        $('#DataMutasi').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataMutasi').hide();
+                 $('#DataMutasi').hide();
+                 $('#DataMutasi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+    </script>
+    <script>
+        function detailPiutangCellTemplate(cellElement, cellInfo) {
+            const enumPajak = cellInfo.data.EnumPajak;
+
+            // Ambil tahun dari Caption kolom
+            const tahun = parseInt(cellInfo.column.caption);
+
+            const button = $('<button>')
+                .addClass('btn btn-sm btn-outline-primary me-2')
+                .attr('title', 'Lihat Detail')
+                .html('<i class="ri-search-line"></i>')
+                .on('click', function () {
+                    ondetailPiutangClick(enumPajak, tahun);
+                });
+
+            const span = $('<span>').text((cellInfo.value || 0).toLocaleString('id-ID'));
+
+            const wrapper = $('<div>')
+                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
+                .append(button)
+                .append(span);
+
+            $(cellElement).append(wrapper);
+        }
+
+
+
+        function ondetailPiutangClick(enumPajak, tahun) {
+            const $modal = $("#staticBackdropLargeScrollable");
+
+            $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+
+            $modal.modal("show");
+
+            $.ajax({
+                url: '/Dashboard/DetailPiutang',
+                type: 'GET',
+                data: {
+                    jenisPajak: enumPajak, // perbaikan: pakai jenisPajak di server
+                    tahun: tahun
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
 
 
 
 
 
-        </script>
+    </script>
     }
