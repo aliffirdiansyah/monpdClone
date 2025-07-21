@@ -4,8 +4,14 @@
     Layout = "_LayoutLogin";
 }
 
-<div class="card shadow rounded-4 p-4" style="width: 100%; max-width: 400px;">
-    <h3 class="text-center mb-4">Login</h3>
+<div class="card shadow rounded-4 p-4 mt-4 text-white" 
+     style="width: 100%; max-width: 400px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);">
+    <h3 class="text-center text-white mb-4">Login</h3>
 
     @if (TempData["ERROR_LOGIN"] != null)
     {
