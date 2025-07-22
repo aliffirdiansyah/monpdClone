@@ -127,6 +127,32 @@
                                 </span>
                             </text>); *@
                     })
+                    .Summary(s =>
+                    {
+                        s.TotalItems(items =>
+                        {
+                            items.Add()
+                                .Column("UPTB")
+                                .SummaryType(SummaryType.Sum)
+                                .DisplayFormat("Total");
+
+                            items.Add()
+                                .Column("Target")
+                                .SummaryType(SummaryType.Sum)
+                                .ValueFormat("#,##0")
+                                .DisplayFormat("Rp {0}")
+                                .Alignment(HorizontalAlignment.Right);
+
+                            items.Add()
+                                .Column("Realisasi")
+                                .SummaryType(SummaryType.Sum)
+                                .ValueFormat("#,##0")
+                                .DisplayFormat("Rp {0}")
+                                .Alignment(HorizontalAlignment.Right);
+
+                                
+                        });
+                    })
         )
                 </div>
             </div>
@@ -201,6 +227,32 @@
                                             <i class="bx <%= icon %>"></i> <%= data.Tren %>%
                                         </span>
                                     </text>); *@
+                            })
+                            .Summary(s =>
+                            {
+                                s.TotalItems(items =>
+                                {
+                                    items.Add()
+                                        .Column("JenisPajak")
+                                        .SummaryType(SummaryType.Sum)
+                                        .DisplayFormat("Total");
+
+                                    items.Add()
+                                        .Column("Target")
+                                        .SummaryType(SummaryType.Sum)
+                                        .ValueFormat("#,##0")
+                                        .DisplayFormat("Rp {0}")
+                                        .Alignment(HorizontalAlignment.Right);
+
+                                    items.Add()
+                                        .Column("Realisasi")
+                                        .SummaryType(SummaryType.Sum)
+                                        .ValueFormat("#,##0")
+                                        .DisplayFormat("Rp {0}")
+                                        .Alignment(HorizontalAlignment.Right);
+
+                                
+                                });
                             })
                         )
                 </div>

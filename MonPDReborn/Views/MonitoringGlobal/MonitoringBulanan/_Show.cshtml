@@ -64,34 +64,73 @@
                         .Width(120)
                         )
                 </div>
-                @(Html.DevExtreme().DataGrid<BulananPajak>()
-                    .ID("gridAkpNow")
-                    .DataSource(Model.BulananPajakList)
-                    .ShowBorders(true)
-                    .ShowColumnLines(true)
-                    .ShowRowLines(true)
-                    .RowAlternationEnabled(true)
-                    .ColumnAutoWidth(true)
-                    .Paging(p => p.Enabled(false))
-                    .HeaderFilter(h => h.Visible(false))
-                    .SearchPanel(sp => sp.Visible(false))
-                    .Columns(columns =>
-                    {
-                        columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
+                @(
+                    Html.DevExtreme().DataGrid<BulananPajak>()
+                        .ID("gridAkpNow")
+                        .DataSource(Model.BulananPajakList)
+                        .ShowBorders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .RowAlternationEnabled(true)
+                        .ColumnAutoWidth(true)
+                        .Paging(p => p.Enabled(false))
+                        .HeaderFilter(h => h.Visible(false))
+                        .SearchPanel(sp => sp.Visible(false))
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
-                        columns.AddFor(c => c.AkpTarget).Caption("Target")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Center);
+                            columns.AddFor(c => c.AkpTarget).Caption("Target")
+                            .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
 
-                        columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Center);
+                            columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                            .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
 
-                        columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
-                        .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
-                        .Alignment(HorizontalAlignment.Center);
+                            columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                            .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                            .Alignment(HorizontalAlignment.Right);
 
-                        columns.AddFor(c => c.Selisih).Caption("Selisih")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Center);
-                    })
+                            columns.AddFor(c => c.Selisih).Caption("Selisih")
+                            .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        })
+                        .Summary(s =>
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                            });
+                        })
                     )
             </div>
 
@@ -144,6 +183,44 @@
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
                         .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
                     })
+                    .Summary(s =>
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                            });
+                        })
                     )
             </div>
         </div>
@@ -195,6 +272,44 @@
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
                         .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
                     })
+                    .Summary(s =>
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                            });
+                        })
                     )
             </div>
             <div class="col-lg-6">
@@ -244,6 +359,44 @@
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
                         .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
                     })
+                    .Summary(s =>
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                            });
+                        })
                     )
             </div>
         </div>
