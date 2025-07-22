@@ -1,6 +1,7 @@
 ﻿@using MonPDReborn.Models.AktivitasOP
 @model RealisasiControlVM.Detail
 
+
 <div class="table-responsive">
     <table class="table table-bordered table-striped table-sm">
         <thead>
@@ -56,6 +57,85 @@
                 </tr>
             }
         </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2" class="text-center">TOTAL</th>
+
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB1.Target).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB1.Realisasi).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @(Model.DataDetailList.Count > 0
+                                        ? (Model.DataDetailList.Sum(x => x.UPTB1.Realisasi) / Model.DataDetailList.Sum(x => x.UPTB1.Target) * 100).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB2.Target).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB2.Realisasi).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @(Model.DataDetailList.Count > 0
+                                        ? (Model.DataDetailList.Sum(x => x.UPTB2.Realisasi) / Model.DataDetailList.Sum(x => x.UPTB2.Target) * 100).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB3.Target).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB3.Realisasi).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @(Model.DataDetailList.Count > 0
+                                        ? (Model.DataDetailList.Sum(x => x.UPTB3.Realisasi) / Model.DataDetailList.Sum(x => x.UPTB3.Target) * 100).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB4.Target).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB4.Realisasi).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @(Model.DataDetailList.Count > 0
+                                        ? (Model.DataDetailList.Sum(x => x.UPTB4.Realisasi) / Model.DataDetailList.Sum(x => x.UPTB4.Target) * 100).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB5.Target).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.UPTB5.Realisasi).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @(Model.DataDetailList.Count > 0
+                                        ? (Model.DataDetailList.Sum(x => x.UPTB5.Realisasi) / Model.DataDetailList.Sum(x => x.UPTB5.Target) * 100).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.Bidang.Target).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @Model.DataDetailList.Sum(x => x.Bidang.Realisasi).ToString("#,##0")
+                </th>
+                <th class="text-end">
+                    @(Model.DataDetailList.Count > 0
+                                        ? (Model.DataDetailList.Sum(x => x.Bidang.Realisasi) / Model.DataDetailList.Sum(x => x.Bidang.Target) * 100).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+            </tr>
+        </tfoot>
+
+
     </table>
 
 </div>
