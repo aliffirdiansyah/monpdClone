@@ -28,13 +28,13 @@
             .DataField("OPAwal")
             .Caption("OP Awal")
             .CellTemplate(@<text>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <button class="btn btn-sm btn-outline-primary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAwal', '<%- data.Tahun %>')"
-                            title="Lihat Detail">
-                        <i class="ri-search-line"></i>
-                    </button>
-                    <span><%- (value || 0).toLocaleString('id-ID') %></span>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                       class="value-link text-decoration-none"
+                       onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAwal', '<%- data.Tahun %>')"
+                       title="Lihat Detail">
+                        <%- (value || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpAwal");
@@ -43,13 +43,13 @@
             .DataField("JmlOpTutupPermanen").Format("#,##0")
             .Caption("OP Tutup")
             .CellTemplate(@<text>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <button class="btn btn-sm btn-outline-secondary me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpTutupPermanen', '<%- data.Tahun %>')"
-                            title="Lihat Detail">
-                        <i class="ri-search-line"></i>
-                    </button>
-                    <span><%- (data.JmlOpTutupPermanen || 0).toLocaleString('id-ID') %></span>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                        class="value-link text-decoration-none"
+                        onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpTutupPermanen', '<%- data.Tahun %>')"
+                        title="Lihat Detail">
+                        <%- (value || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpTutupPermanen");
@@ -58,13 +58,13 @@
             .DataField("JmlOpBaru").Format("#,##0")
             .Caption("OP Baru")
             .CellTemplate(@<text>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <button class="btn btn-sm btn-outline-success me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpBaru', '<%- data.Tahun %>')"
-                            title="Lihat Detail">
-                        <i class="ri-search-line"></i>
-                    </button>
-                    <span><%- (data.JmlOpBaru || 0).toLocaleString('id-ID') %></span>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                        class="value-link text-decoration-none"
+                        onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpBaru', '<%- data.Tahun %>')"
+                        title="Lihat Detail">
+                        <%- (value || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpBaru");
@@ -74,13 +74,13 @@
             .DataField("JmlOpAkhir").Format("#,##0")
             .Caption("OP Akhir")
             .CellTemplate(@<text>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <button class="btn btn-sm btn-outline-info me-2"
-                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAkhir', '<%- data.Tahun %>')"
-                            title="Lihat Detail">
-                        <i class="ri-search-line"></i>
-                    </button>
-                    <span><%- (data.JmlOpAkhir || 0).toLocaleString('id-ID') %></span>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                        class="value-link text-decoration-none"
+                        onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAkhir', '<%- data.Tahun %>')"
+                        title="Lihat Detail">
+                        <%- (value || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JmlOpAkhir");
