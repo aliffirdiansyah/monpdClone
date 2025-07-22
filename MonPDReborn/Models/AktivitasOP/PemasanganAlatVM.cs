@@ -4,10 +4,11 @@
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
-
-            public int TotalTerpasang { get; set; }
-            public int TotalBelumTerpasang { get; set; }
+            public DashboardData Data { get; set; } = new();
+            public Index()
+            {
+                Data = Method.GetDashboardData();
+            }
         }
 
         public class Show
@@ -36,6 +37,22 @@
 
         public class Method
         {
+            public static DashboardData GetDashboardData()
+            {
+                var allData = GetAllData(); // Ambil data master
+                var dashboard = new DashboardData
+                {
+                    HotelTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Hotel")?.Terpasang2024 ?? 0,
+                    HotelTotal = allData.FirstOrDefault(x => x.JenisPajak == "Hotel")?.JumlahOP ?? 0,
+                    RestoTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Restoran")?.Terpasang2024 ?? 0,
+                    RestoTotal = allData.FirstOrDefault(x => x.JenisPajak == "Restoran")?.JumlahOP ?? 0,
+                    HiburanTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Hiburan")?.Terpasang2024 ?? 0,
+                    HiburanTotal = allData.FirstOrDefault(x => x.JenisPajak == "Hiburan")?.JumlahOP ?? 0,
+                    ParkirTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Parkir")?.Terpasang2024 ?? 0,
+                    ParkirTotal = allData.FirstOrDefault(x => x.JenisPajak == "Parkir")?.JumlahOP ?? 0
+                };
+                return dashboard;
+            }
             public static List<DataPemasanganAlat> GetDataPemasanganAlatList(string keyword)
             {
                 var allData = GetAllData();
@@ -141,10 +158,22 @@
 
         }
 
+        public class DashboardData
+        {
+            public int HotelTerpasang { get; set; }
+            public int HotelTotal { get; set; }
+            public int RestoTerpasang { get; set; }
+            public int RestoTotal { get; set; }
+            public int HiburanTerpasang { get; set; }
+            public int HiburanTotal { get; set; }
+            public int ParkirTerpasang { get; set; }
+            public int ParkirTotal { get; set; }
+        }
         public class DataPemasanganAlat
         {
             public int No { get; set; }
             public string JenisPajak { get; set; } = null!;
+            public int JumlahOP { get; set; }
             public int Terpasang2021 { get; set; }
             public int BelumTerpasang2021 { get; set; }
             public int Terpasang2022 { get; set; }
@@ -153,6 +182,8 @@
             public int BelumTerpasang2023 { get; set; }
             public int Terpasang2024 { get; set; }
             public int BelumTerpasang2024 { get; set; }
+
+            public List<DataPemasanganAlat>? DetailItems { get; set; }
         }
 
         public class DetailPemasanganAlat
