@@ -89,7 +89,7 @@ namespace MonPDReborn.Controllers.DataOP
                 {
                     JenisPajak = jenisPajak,
                     Kategori = kategori,
-                    DataPotensiList = Models.DataOP.ProfilePotensiOPVM.Method.GetDataPotensiList(jenisPajak, kategori)
+                   /* DataPotensiList = Models.DataOP.ProfilePotensiOPVM.Method.GetDataPotensiList(jenisPajak, kategori)*/
                 };
 
                 return PartialView($"{URLView}_{actionName}", model);
