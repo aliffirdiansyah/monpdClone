@@ -25,7 +25,7 @@ namespace MonPDReborn.Models.DataOP
             public ShowRekap(string jenisPajak)
             {
 
-                DataRekapPotensi = Method.GetRekapPotensiList(jenisPajak);
+                DataRekapPotensi = Method.GetDataPotensiList(jenisPajak);
             }
         }
 
@@ -98,7 +98,7 @@ namespace MonPDReborn.Models.DataOP
                 return dashboardData;
             }
 
-            public static List<DataPotensi> GetDataPotensiList(string jenisPajak, string kategori)
+            public static List<DataPotensi> GetDataPotensiList()
             {
                 var ret = new List<DataPotensi>();
                 var context = DBClass.GetContext();
