@@ -12,10 +12,10 @@
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
-                    <h4 class="card-title text-white fs-16 mb-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
                         Dashboard Monitoring Penagihan Pajak
                     </h4>
-                    <p class="text-muted mb-0">Ringkasan data penagihan pajak daerah</p>
+                    <p class="text-dark mb-0">Ringkasan data penagihan pajak daerah</p>
                 </div>
             </div>
             <div class="card-body">
@@ -51,7 +51,7 @@
                     </div>
                     <div class="text-start">
                         <h3 class="mb-0 fw-bold">@Model.Data.JmlPenagihan.ToString("C")</h3>
-                        <small class="text-muted">Total Penagihan</small>
+                        <small class="text-dark">Total Penagihan</small>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="text-start">
                         <h3 class="mb-0 fw-bold">@Model.Data.PenagihanAktif</h3>
-                        <small class="text-muted">Penagihan SPTPD Aktif</small>
+                        <small class="text-dark">Penagihan SPTPD Aktif</small>
                     </div>
                 </div>
 
@@ -84,7 +84,7 @@
                     </div>
                     <div class="text-start">
                         <h3 class="mb-0 fw-bold">@Model.Data.TotalPenerimaan.ToString("C")</h3>
-                        <small class="text-muted">Total Penerimaan Penagihan</small>
+                        <small class="text-dark">Total Penerimaan Penagihan</small>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
-                    <h4 class="card-title text-white fs-16 mb-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
                         Rekap Data WP yang Harus Ditagih
                     </h4>
                 </div>
@@ -145,7 +145,7 @@
                     type: 'GET',
                     data: { JenisPajak: jenisPajak },
                     beforeSend: function () {
-                        $('#Show').html('<div class="text-muted">Memuat data...</div>');
+                        $('#Show').html('<div class="text-dark">Memuat data...</div>');
                     },
                     success: function (result) {
                         $('#Show').html(result);
