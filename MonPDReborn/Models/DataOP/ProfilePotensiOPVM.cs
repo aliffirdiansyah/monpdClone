@@ -25,7 +25,7 @@ namespace MonPDReborn.Models.DataOP
             public ShowRekap(string jenisPajak)
             {
 
-                DataRekapPotensi = Method.GetDataPotensiList(jenisPajak);
+                DataRekapPotensi = Method.GetRekapPotensiList();
             }
         }
 
@@ -52,7 +52,7 @@ namespace MonPDReborn.Models.DataOP
             {
                 JenisPajak = jenisPajak;
                 Kategori = kategori;
-                DataPotensiList = Method.GetDataPotensiList(jenisPajak, kategori);
+                //DataPotensiList = Method.GetDataPotensiList(jenisPajak, kategori);
             }
         }
         public class Detail
@@ -98,9 +98,9 @@ namespace MonPDReborn.Models.DataOP
                 return dashboardData;
             }
 
-            public static List<DataPotensi> GetDataPotensiList()
+            public static List<RekapPotensi> GetRekapPotensiList()
             {
-                var ret = new List<DataPotensi>();
+                var ret = new List<RekapPotensi>();
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
 
@@ -209,7 +209,7 @@ namespace MonPDReborn.Models.DataOP
                 var realisasiOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 2).Sum(x => x.JmlPokok);
                 #endregion
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                     Target3 = targetRestoNow,
@@ -220,7 +220,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiRestoMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                     Target3 = targetListrikNow,
@@ -231,7 +231,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiListrikMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                     Target3 = targetHotelNow,
@@ -242,7 +242,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiHotelMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
                     Target3 = targetParkirNow,
@@ -253,7 +253,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiParkirMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                     Target3 = targetHiburanNow,
@@ -264,7 +264,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiHiburanMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
                     Target3 = targetAbtNow,
@@ -275,7 +275,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiAbtMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                     Target3 = targetReklameNow,
@@ -286,7 +286,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiReklameMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                     Target3 = targetPbbNow,
@@ -297,7 +297,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiPbbMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                     Target3 = targetBphtbNow,
@@ -308,7 +308,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiBphtbMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
                     Target3 = targetOpsenPkbNow,
@@ -319,7 +319,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi1 = realisasiOpsenPkbMines2
                 });
 
-                ret.Add(new DataPotensi
+                ret.Add(new RekapPotensi
                 {
                     JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
                     Target3 = targetOpsenBbnkbNow,
