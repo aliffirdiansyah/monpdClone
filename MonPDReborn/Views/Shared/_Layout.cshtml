@@ -101,7 +101,15 @@
             margin-left: 0 !important;
             width: 100% !important;
         }
-
+        [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item {
+            color: #ffffff !important;
+            font-weight: normal !important;
+            background-color: transparent !important;
+            text-decoration: none !important;
+            transition: background-color 0.2s, color 0.2s !important;
+            border-radius: 4px !important;
+            display: block !important;
+        }
             .menu-dropdown ul.nav-sm {
                 padding-left: 0 !important;
                 margin-left: 0 !important;
@@ -110,9 +118,7 @@
 
                 .menu-dropdown ul.nav-sm .nav-item {
                     margin: 0 !important;
-                    /* Tambahkan indent agar submenu agak masuk */
                     padding: 0rem 0.75rem 0rem 1.75rem !important;
-                    /*                 top   right bottom left */
                 }
 
                 .menu-dropdown ul.nav-sm .nav-link {
@@ -123,7 +129,6 @@
                     transition: background-color 0.2s, color 0.2s !important;
                     border-radius: 4px !important;
                     display: block !important;
-                    
                 }
 
                     .menu-dropdown ul.nav-sm .nav-link:hover {
