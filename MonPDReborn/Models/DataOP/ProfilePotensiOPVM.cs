@@ -1,6 +1,7 @@
 ﻿using MonPDLib;
 using MonPDLib.General;
 using MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM;
+using System.Globalization;
 using static MonPDReborn.Models.DashboardVM;
 
 namespace MonPDReborn.Models.DataOP
@@ -35,9 +36,9 @@ namespace MonPDReborn.Models.DataOP
             public string JenisPajak { get; set; } = string.Empty;
 
             public ShowDetail() { }
-            public ShowDetail(string jenisPajak)
+            public ShowDetail(EnumFactory.EPajak jenisPajak)
             {
-                JenisPajak = jenisPajak;
+                JenisPajak = jenisPajak.GetDescription();
                 DataDetailPotensi = Method.GetDetailPotensiList(jenisPajak);
             }
         }
@@ -217,7 +218,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetRestoMines1,
                     Realisasi2 = realisasiRestoMines1,
                     Target1 = targetRestoMines2,
-                    Realisasi1 = realisasiRestoMines2
+                    Realisasi1 = realisasiRestoMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -228,7 +230,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetListrikMines1,
                     Realisasi2 = realisasiListrikMines1,
                     Target1 = targetListrikMines2,
-                    Realisasi1 = realisasiListrikMines2
+                    Realisasi1 = realisasiListrikMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -239,7 +242,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetHotelMines1,
                     Realisasi2 = realisasiHotelMines1,
                     Target1 = targetHotelMines2,
-                    Realisasi1 = realisasiHotelMines2
+                    Realisasi1 = realisasiHotelMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -250,7 +254,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetParkirMines1,
                     Realisasi2 = realisasiParkirMines1,
                     Target1 = targetParkirMines2,
-                    Realisasi1 = realisasiParkirMines2
+                    Realisasi1 = realisasiParkirMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -261,7 +266,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetHiburanMines1,
                     Realisasi2 = realisasiHiburanMines1,
                     Target1 = targetHiburanMines2,
-                    Realisasi1 = realisasiHiburanMines2
+                    Realisasi1 = realisasiHiburanMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -272,7 +278,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetAbtMines1,
                     Realisasi2 = realisasiAbtMines1,
                     Target1 = targetAbtMines2,
-                    Realisasi1 = realisasiAbtMines2
+                    Realisasi1 = realisasiAbtMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -283,7 +290,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetReklameMines1,
                     Realisasi2 = realisasiReklameMines1,
                     Target1 = targetReklameMines2,
-                    Realisasi1 = realisasiReklameMines2
+                    Realisasi1 = realisasiReklameMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -294,7 +302,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetPbbMines1,
                     Realisasi2 = realisasiPbbMines1,
                     Target1 = targetPbbMines2,
-                    Realisasi1 = realisasiPbbMines2
+                    Realisasi1 = realisasiPbbMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -305,7 +314,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetBphtbMines1,
                     Realisasi2 = realisasiBphtbMines1,
                     Target1 = targetBphtbMines2,
-                    Realisasi1 = realisasiBphtbMines2
+                    Realisasi1 = realisasiBphtbMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -316,7 +326,8 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetOpsenPkbMines1,
                     Realisasi2 = realisasiOpsenPkbMines1,
                     Target1 = targetOpsenPkbMines2,
-                    Realisasi1 = realisasiOpsenPkbMines2
+                    Realisasi1 = realisasiOpsenPkbMines2,
+                    TotalPotensi = 0
                 });
 
                 ret.Add(new RekapPotensi
@@ -327,8 +338,83 @@ namespace MonPDReborn.Models.DataOP
                     Target2 = targetOpsenBbnkbMines1,
                     Realisasi2 = realisasiOpsenBbnkbMines1,
                     Target1 = targetOpsenBbnkbMines2,
-                    Realisasi1 = realisasiOpsenBbnkbMines2
+                    Realisasi1 = realisasiOpsenBbnkbMines2,
+                    TotalPotensi = 0
                 });
+
+                return ret;
+            }
+
+            public static List<DetailPotensi> GetDetailPotensiList(EnumFactory.EPajak jenisPajak)
+            {
+                var ret = new List<DetailPotensi>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)jenisPajak)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+
+                switch (jenisPajak)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        //foreach (var kat in kategoriList)
+                        //{
+                        //    var targetKategori = context.PotensiCtrlRestorans
+                        //        .Where(x => x.Jenis == kat.Id)
+                        //        .Select(x => new
+                        //        {
+                        //            Target1 = x.,
+                        //            Realisasi1 = x.Realisasi1,
+                        //            Target2 = x.Target2,
+                        //            Realisasi2 = x.Realisasi2,
+                        //            Target3 = x.Target3,
+                        //            Realisasi3 = x.Realisasi3,
+                        //            TotalPotensi = x.TotalPotensi
+                        //        })
+                        //        .FirstOrDefault();
+                        //    ret.Add(new DetailPotensi
+                        //    {
+                        //        JenisPajak = jenisPajak.GetDescription(),
+                        //        Kategori = kat.Nama,
+                        //        Target1 = ,
+                        //        Realisasi1 = ,
+                        //        Target2 = ,
+                        //        Realisasi2 = ,
+                        //        Target3 = ,
+                        //        Realisasi3 = ,
+                        //        TotalPotensi = ,
+                        //    });
+                        //}
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
+                    default:
+                        break;
+                }
 
                 return ret;
             }
@@ -424,80 +510,7 @@ namespace MonPDReborn.Models.DataOP
                 // tambahkan sebanyak yang kamu perlukan
             };
 
-            public static List<RekapPotensi> GetRekapPotensiList(string jenisPajak)
-            {
-                var allData = GetRekapPotensi();
 
-                if (string.IsNullOrWhiteSpace(jenisPajak))
-                    return allData;
-
-                return allData
-                    .Where(d => d.JenisPajak != null && d.JenisPajak.Contains(jenisPajak, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-
-            private static List<RekapPotensi> GetRekapPotensi()
-            {
-                return new List<RekapPotensi>
-                {
-                     new RekapPotensi
-                    {
-                        JenisPajak = "Hotel",
-                        Target1 = 10_000_000,
-                        Realisasi1 = 8_500_000,
-                        Target2 = 12_000_000,
-                        Realisasi2 = 11_000_000,
-                        Target3 = 15_000_000,
-                        Realisasi3 = 14_500_000,
-                        TotalPotensi = 16_500_000
-                    },
-                    new RekapPotensi
-                    {
-                        JenisPajak = "Restoran",
-                        Target1 = 8_000_000,
-                        Realisasi1 = 6_750_000,
-                        Target2 = 9_000_000,
-                        Realisasi2 = 8_250_000,
-                        Target3 = 10_000_000,
-                        Realisasi3 = 9_200_000,
-                        TotalPotensi = 16_500_000
-                    },
-                    new RekapPotensi
-                    {
-                        JenisPajak = "Hiburan",
-                        Target1 = 5_000_000,
-                        Realisasi1 = 4_000_000,
-                        Target2 = 6_000_000,
-                        Realisasi2 = 5_200_000,
-                        Target3 = 7_000_000,
-                        Realisasi3 = 6_800_000,
-                        TotalPotensi = 16_500_000
-                    },
-                    new RekapPotensi
-                    {
-                        JenisPajak = "Parkir",
-                        Target1 = 3_000_000,
-                        Realisasi1 = 2_500_000,
-                        Target2 = 3_500_000,
-                        Realisasi2 = 3_000_000,
-                        Target3 = 4_000_000,
-                        Realisasi3 = 3_750_000,
-                        TotalPotensi = 16_500_000
-                    }
-                };
-            }
-
-            public static List<DetailPotensi> GetDetailPotensiList(string jenisPajak)
-            {
-                var allData = GetDetailPotensi();
-
-                if (string.IsNullOrWhiteSpace(jenisPajak))
-                    return allData;
-
-                return allData
-                    .Where(d => d.JenisPajak != null && d.JenisPajak.Contains(jenisPajak, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
 
             private static List<DetailPotensi> GetDetailPotensi()
             {
