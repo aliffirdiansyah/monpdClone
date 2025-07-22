@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
 using MonPDLib;
 using MonPDLib.General;
+using System.Globalization;
 using System.Linq.Dynamic.Core;
 
 namespace MonPDReborn.Models.DataOP
@@ -529,7 +530,12 @@ namespace MonPDReborn.Models.DataOP
                 var ret = new List<RekapDetail>();
                 var kategoriList = context.MKategoriPajaks
                     .Where(x => x.PajakId == (int)JenisPajak)
-                    .Select(x => new { x.Id, x.Nama })
+                    .ToList() // pindah ke memory agar bisa pakai ToTitleCase
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
                     .ToList();
 
                 switch (JenisPajak)
@@ -1319,9 +1325,14 @@ namespace MonPDReborn.Models.DataOP
                 var ret = new List<SeriesDetail>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)JenisPajak)
-                    .Select(x => new { x.Id, x.Nama })
-                    .ToList();
+    .Where(x => x.PajakId == (int)JenisPajak)
+    .ToList() // pindah ke memory agar bisa pakai ToTitleCase
+    .Select(x => new 
+    {
+        x.Id,
+        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+    })
+    .ToList();
                 var currentYear = DateTime.Now.Year;
 
                 switch (JenisPajak)

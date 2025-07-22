@@ -319,7 +319,7 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-sm-6">
+    <div class="col-lg-4 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #FF00FF; height:87%;">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -358,7 +358,7 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-sm-6">
+    <div class="col-lg-4 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #FFB347; height:87%;">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -397,7 +397,7 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-sm-6">
+    <div class="col-lg-4 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #374151; height:87%;">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -436,24 +436,25 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-sm-6">
-        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #FF3131; height:87%;">
+    <div class="col-lg-12 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #5EA8A4; height:87%;">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center">
-                        <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:rgba(255, 49, 49, 0.2)">
-                            <i class="ri-funds-line" style="font-size: 20px; line-height: 1; color:#FF3131;"></i>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:background-color: rgba(175, 212, 210, 0.2);">
+                            <i class="ri-funds-line" style="font-size: 20px; line-height: 1; color:#5EA8A4;"></i>
                         </div>
                         <h6 class="mb-0 fs-16 fw-bold">
                             TOTAL SEMUA PAJAK
                         </h6>
                     </div>
-                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.TotalPersentase%</h6>
+                    <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="bx bx-calendar-check me-1"></i>
+                            @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                        </span>
+                    </div>
                 </div>
-
-                <!-- ApexCharts radial -->
-                <div id="gradient_radialbar" data-colors='["#FF3131"]' class="apex-charts" dir="ltr"></div>
-
                 <div class="row text-muted mb-2">
                     <div class="col">
                         <small>Target</small><br>
@@ -464,13 +465,17 @@
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.TotalRealisasi.ToString("n0")</span>
                     </div>
                 </div>
-
-                <div class="border-top pt-2 d-flex justify-content-between align-items-center">
-                    <span>
-                        <i class="bx bx-calendar-check me-1"></i>
-                        @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("id-ID"))
-                    </span>
+                <hr />
+                <!-- ApexCharts radial -->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div id="gradient_radialbar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div id="simple_dount_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]'></div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -1600,8 +1605,6 @@
            });
         }
 
-    </script>
-    <script>
         function detailPiutangCellTemplate(cellElement, cellInfo) {
             const enumPajak = cellInfo.data.EnumPajak;
 
@@ -1662,46 +1665,172 @@
             });
         }
 
-    </script>
-    
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const chartEl = document.querySelector("#gradient_radialbar");
-            const colors = chartEl.getAttribute("data-colors");
-            const parsedColors = colors ? JSON.parse(colors) : ["#FF3131"];
+        function getChartColorsArray(id) {
+            if (document.getElementById(id) !== null) {
+                let colors = document.getElementById(id).getAttribute("data-colors");
+                colors = JSON.parse(colors);
 
+                return colors.map(function (value) {
+                    let val = value.replace(" ", "");
+                    if (val.indexOf(",") === -1) {
+                        return getComputedStyle(document.documentElement).getPropertyValue(val) || val;
+                    } else {
+                        let valSplit = value.split(",");
+                        if (valSplit.length === 2) {
+                            return "rgba(" + getComputedStyle(document.documentElement).getPropertyValue(valSplit[0]) + "," + valSplit[1] + ")";
+                        }
+                        return val;
+                    }
+                });
+            }
+        }
+
+        var chartRadialbarGradientColors = getChartColorsArray("gradient_radialbar");
+
+        if (chartRadialbarGradientColors) {
             var options = {
+                series: [@Model.Data.TotalPersentase.ToString("n2").Replace(",", ".")],
                 chart: {
-                    height: 120,
-                    type: 'radialBar'
+                    height: 450,
+                    type: "radialBar",
+                    toolbar: { show: false }
                 },
                 plotOptions: {
                     radialBar: {
+                        startAngle: -135,
+                        endAngle: 225,
                         hollow: {
-                            size: '60%'
+                            margin: 0,
+                            size: "70%"
+                        },
+                        track: {
+                            strokeWidth: "67%",
+                            margin: 0
                         },
                         dataLabels: {
+                            show: true,
                             name: {
-                                show: false
+                                show: true,
+                                fontSize: "24px",
+                                fontWeight: 600,
+                                offsetY: 40, // jarak dari tengah
+                                color: "#666"
                             },
                             value: {
-                                fontSize: '16px',
-                                fontWeight: 600,
-                                offsetY: 5,
+                                offsetY: -10, // geser ke atas dari tengah
                                 formatter: function (val) {
-                                    return val + "%";
-                                }
+                                    return parseFloat(val).toFixed(2) + " %";
+                                },
+                                color: "#111",
+                                fontSize: "28px",
+                                fontWeight: 700,
+                                show: true
                             }
                         }
                     }
                 },
-                series: [@Model.Data.TotalPersentase],
-                colors: parsedColors,
-                labels: ['Realisasi']
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shade: "dark",
+                        type: "horizontal",
+                        shadeIntensity: 0.5,
+                        gradientToColors: chartRadialbarGradientColors,
+                        inverseColors: true,
+                        opacityFrom: 1,
+                        opacityTo: 1,
+                        stops: [0, 100]
+                    }
+                },
+                stroke: {
+                    lineCap: "round"
+                },
+                labels: ["Total Persentase"]
             };
 
-            var chart = new ApexCharts(chartEl, options);
+            var chart = new ApexCharts(document.querySelector("#gradient_radialbar"), options);
             chart.render();
-        });
+        }
+
+
+        var chartDonutBasicColors = getChartColorsArray("simple_dount_chart");
+
+        if (chartDonutBasicColors) {
+            var seriesData = [
+                @Model.Data.PersentaseHotel.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseMamin.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseHiburan.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseListrik.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseParkir.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseReklame.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseAbt.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentasePbb.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseBphtb.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseOpsenPkb.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseOpsenBbnkb.ToString("n2").Replace(",", ".")
+            ];
+
+            var labelData = [
+                "@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())",
+                "@(EnumFactory.EPajak.MakananMinuman.GetDescription())",
+                "@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())",
+                "@(EnumFactory.EPajak.TenagaListrik.GetDescription())",
+                "@(EnumFactory.EPajak.JasaParkir.GetDescription())",
+                "@(EnumFactory.EPajak.Reklame.GetDescription())",
+                "@(EnumFactory.EPajak.AirTanah.GetDescription())",
+                "@(EnumFactory.EPajak.PBB.GetDescription())",
+                "@(EnumFactory.EPajak.BPHTB.GetDescription())",
+                "@(EnumFactory.EPajak.OpsenPkb.GetDescription())",
+                "@(EnumFactory.EPajak.OpsenBbnkb.GetDescription())"
+            ];
+
+            var total = 100;
+
+            var options = {
+                series: seriesData,
+                chart: {
+                    height: 400,
+                    type: "donut"
+                },
+                labels: labelData,
+                legend: {
+                    position: "right",
+                    offsetY: 50,
+                    offsetX: -20, // mendekatkan ke chart
+                    fontWeight: 600, // tebal
+                    fontSize: "13px",
+                    formatter: function (seriesName, opts) {
+                        var value = opts.w.globals.series[opts.seriesIndex];
+                        var percent = total > 0 ? ((value / total) * 100).toFixed(2) : 0;
+                        return seriesName + ": " + percent + " %";
+                    },
+                    labels: {
+                        useSeriesColors: false
+                    },
+                    itemMargin: {
+                        horizontal: 0,
+                        vertical: 2
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val, opts) {
+                        var value = opts.w.globals.series[opts.seriesIndex];
+                        return value.toFixed(2) + " %";
+                    },
+                    style: {
+                        fontWeight: "bold"
+                    },
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                colors: chartDonutBasicColors.slice(0, 11)
+            };
+
+            var chart = new ApexCharts(document.querySelector("#simple_dount_chart"), options);
+            chart.render();
+        }
+
     </script>
     }
