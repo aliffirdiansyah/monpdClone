@@ -5,6 +5,12 @@
     ViewData["Title"] = "Dashboard";
 }
 
+<style>
+    .apexcharts-legend.apexcharts-align-center {
+        justify-content: flex-start !important; /* Rata kiri */
+        text-align: left !important;
+    }</style>
+
 <div class="row g-2 mb-3">
 
     <div class="col-lg-3 col-sm-6">
@@ -468,11 +474,11 @@
                 <hr />
                 <!-- ApexCharts radial -->
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
                         <div id="gradient_radialbar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                     </div>
-                    <div class="col-lg-6">
-                        <div id="simple_dount_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]'></div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div id="simple_dount_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]' class="apex-charts w-100" dir="ltr"></div>
                     </div>
                 </div>
 
@@ -1691,7 +1697,7 @@
             var options = {
                 series: [@Model.Data.TotalPersentase.ToString("n2").Replace(",", ".")],
                 chart: {
-                    height: 450,
+                    height: 400,
                     type: "radialBar",
                     toolbar: { show: false }
                 },
@@ -1745,6 +1751,26 @@
                 stroke: {
                     lineCap: "round"
                 },
+                responsive: [
+                {
+                breakpoint: 1200, // jika layar < 992px
+                options: {
+                    chart: {
+                        height: 300
+                    },
+                    legend: {
+                        position: "bottom", // pindahkan legend ke bawah
+                        offsetX: 0,
+                        offsetY: 10,
+                        fontSize: "25px",
+                        itemMargin: {
+                            horizontal: 5,
+                            vertical: 2
+                        }
+                    }
+                }
+            }
+            ],
                 labels: ["Total Persentase"]
             };
 
@@ -1786,47 +1812,67 @@
 
             var total = 100;
 
-            var options = {
-                series: seriesData,
-                chart: {
-                    height: 400,
-                    type: "donut"
+                    var options = {
+            series: seriesData,
+            chart: {
+                height: 500,
+                type: "donut"
+            },
+            labels: labelData,
+            legend: {
+                position: "right", // default desktop
+                offsetY: 50,
+                offsetX: -20,
+                fontWeight: 600,
+                fontSize: "13px",
+                formatter: function (seriesName, opts) {
+                    var value = opts.w.globals.series[opts.seriesIndex];
+                    var percent = total > 0 ? ((value / total) * 100).toFixed(2) : 0;
+                    return seriesName + ": " + percent + " %";
                 },
-                labels: labelData,
+                labels: {
+                    useSeriesColors: false
+                },
+                itemMargin: {
+                    horizontal: 0,
+                    vertical: 2
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val, opts) {
+                    var value = opts.w.globals.series[opts.seriesIndex];
+                    return value.toFixed(2) + " %";
+                },
+                style: {
+                    fontWeight: "bold"
+                },
+                dropShadow: {
+                    enabled: false
+                }
+            },
+            responsive: [
+                    {
+            breakpoint: 1200, // jika layar < 992px
+            options: {
+                chart: {
+                    height: 500
+                },
                 legend: {
-                    position: "right",
-                    offsetY: 50,
-                    offsetX: -20, // mendekatkan ke chart
-                    fontWeight: 600, // tebal
-                    fontSize: "13px",
-                    formatter: function (seriesName, opts) {
-                        var value = opts.w.globals.series[opts.seriesIndex];
-                        var percent = total > 0 ? ((value / total) * 100).toFixed(2) : 0;
-                        return seriesName + ": " + percent + " %";
-                    },
-                    labels: {
-                        useSeriesColors: false
-                    },
+                    position: "bottom", // pindahkan legend ke bawah
+                    offsetX: 0,
+                    offsetY: 10,
+                    fontSize: "5px",
                     itemMargin: {
-                        horizontal: 0,
+                        horizontal: 5,
                         vertical: 2
                     }
-                },
-                dataLabels: {
-                    enabled: true,
-                    formatter: function (val, opts) {
-                        var value = opts.w.globals.series[opts.seriesIndex];
-                        return value.toFixed(2) + " %";
-                    },
-                    style: {
-                        fontWeight: "bold"
-                    },
-                    dropShadow: {
-                        enabled: false
-                    }
-                },
-                colors: chartDonutBasicColors.slice(0, 11)
-            };
+                }
+            }
+        }
+            ],
+            colors: chartDonutBasicColors.slice(0, 11)
+        };
 
             var chart = new ApexCharts(document.querySelector("#simple_dount_chart"), options);
             chart.render();
