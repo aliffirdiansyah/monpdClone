@@ -18,16 +18,16 @@ public partial class PotensiCtrlAirTanah
 
     [Key]
     [Column("KD_PAJAK")]
-    [Precision(1)]
-    public bool KdPajak { get; set; }
+    [Precision(10)]
+    public int KdPajak { get; set; }
 
     [Column("STATUS")]
-    [Precision(1)]
-    public bool Status { get; set; }
+    [Precision(10)]
+    public int Status { get; set; }
 
     [Column("JENIS")]
-    [Precision(1)]
-    public bool Jenis { get; set; }
+    [Precision(10)]
+    public int Jenis { get; set; }
 
     [Column("VOL_PENGGUNAAN", TypeName = "NUMBER(10,2)")]
     public decimal VolPenggunaan { get; set; }
