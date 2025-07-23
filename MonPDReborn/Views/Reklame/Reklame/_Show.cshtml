@@ -9,35 +9,197 @@
         .ShowColumnLines(true)
         .ShowRowLines(true)
         .RowAlternationEnabled(true)
-        .AllowColumnResizing(true)
         .ColumnAutoWidth(true)
-        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false).Placeholder("Cari..."))
-        .FilterRow(f => f.Visible(true))
-        .HeaderFilter(h => h.Visible(true))
         .Paging(p => p.PageSize(10))
-        .Pager(pager =>
-        {
-            pager.ShowPageSizeSelector(true);
-            pager.AllowedPageSizes(new[] { 5, 10, 20 });
-            pager.ShowInfo(true);
-        })
         .Columns(columns => {
-            columns.AddFor(m => m.NamaJalan).Caption("Nama Jalan");
-            columns.AddFor(m => m.Kecamatan).Caption("Kecamatan");
-            columns.AddFor(m => m.TotalReklame).Caption("Total").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Insidentil).Caption("Insidentil").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.PermanenKecil).Caption("Permanen < 8m").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.PermanenBesar).Caption("Permanen > 8m").Alignment(HorizontalAlignment.Center);
+            // Kolom Kunci
+            columns.AddFor(m => m.KelasJalan).Caption("KELAS JALAN").Width(120).Fixed(true);
+            columns.AddFor(m => m.NamaJalan).Caption("NAMA JALAN").Width(180).Fixed(true);
+
+            // --- STRUKTUR BARU DENGAN 3 TINGKAT HEADER ---
+
+            // Grup Kolom INSIDENTIL
+            columns.Add().Caption("INSIDENTIL").Alignment(HorizontalAlignment.Center)
+                .Columns(insidentil => {
+                    
+                    // Sub-Grup EXPIRED
+                    insidentil.Add().Caption("EXPIRED").Alignment(HorizontalAlignment.Center)
+                        .Columns(expired => {
+                            expired.AddFor(m => m.InsidentilBongkar).Caption("BONGKAR")
+                            .CellTemplate(@<text>
+                                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                                    <a href="javascript:void(0);"
+                                       class="value-link text-decoration-none"
+                                       onclick="showDetailModal('<%- data.NamaJalan %>')"
+                                       title="Lihat Detail">
+                                        <%- (value || 0).toLocaleString('id-ID') %>
+                                    </a>
+                                </div>
+                            </text>);
+                            expired.AddFor(m => m.InsidentilBelumBongkar).Caption("BLM BONGKAR")
+                            .CellTemplate(@<text>
+                                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                                    <a href="javascript:void(0);"
+                                       class="value-link text-decoration-none"
+                                       onclick="showDetailModal('<%- data.NamaJalan %>')"
+                                       title="Lihat Detail">
+                                        <%- (value || 0).toLocaleString('id-ID') %>
+                                    </a>
+                                </div>
+                            </text>);
+                        });
+
+                    insidentil.AddFor(m => m.InsidentilAktif).Caption("AKTIF")
+                    .CellTemplate(@<text>
+                        <div style="display: flex; align-items: center; justify-content: flex-end;">
+                            <a href="javascript:void(0);"
+                               class="value-link text-decoration-none"
+                               onclick="showDetailModal('<%- data.NamaJalan %>')"
+                               title="Lihat Detail">
+                                <%- (value || 0).toLocaleString('id-ID') %>
+                            </a>
+                        </div>
+                    </text>);
+                    insidentil.AddFor(m => m.InsidentilJumlah).Caption("JML")
+                    .CellTemplate(@<text>
+                        <div style="display: flex; align-items: center; justify-content: flex-end;">
+                            <a href="javascript:void(0);"
+                               class="value-link text-decoration-none"
+                               onclick="showDetailModal('<%- data.NamaJalan %>')"
+                               title="Lihat Detail">
+                                <%- (value || 0).toLocaleString('id-ID') %>
+                            </a>
+                        </div>
+                    </text>);
+                });
             
-            columns.Add()
-                .Caption("Aksi")
-                .Width(80)
-                .Alignment(HorizontalAlignment.Center)
-                .CellTemplate(@<text>
-                    <button class="btn btn-sm btn-outline-primary" onclick="showDetailModal('<%= data.NamaJalan %>')">
-                        <i class="ri-search-line"></i>
-                    </button>
-                </text>);
+            // Grup Kolom JENIS PERMANENT
+            columns.Add().Caption("PERMANEN").Alignment(HorizontalAlignment.Center)
+                .Columns(permanen => {
+                    
+                    // Sub-Grup EXPIRED
+                    permanen.Add().Caption("EXPIRED").Alignment(HorizontalAlignment.Center)
+                        .Columns(expired => {
+                            expired.AddFor(m => m.PermanenBongkar).Caption("BONGKAR")
+                            .CellTemplate(@<text>
+                                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                                    <a href="javascript:void(0);"
+                                       class="value-link text-decoration-none"
+                                       onclick="showDetailModal('<%- data.NamaJalan %>')"
+                                       title="Lihat Detail">
+                                        <%- (value || 0).toLocaleString('id-ID') %>
+                                    </a>
+                                </div>
+                            </text>);
+                            expired.AddFor(m => m.PermanenBelumBongkar).Caption("BLM BONGKAR")
+                            .CellTemplate(@<text>
+                                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                                    <a href="javascript:void(0);"
+                                       class="value-link text-decoration-none"
+                                       onclick="showDetailModal('<%- data.NamaJalan %>')"
+                                       title="Lihat Detail">
+                                        <%- (value || 0).toLocaleString('id-ID') %>
+                                    </a>
+                                </div>
+                            </text>);
+                        });
+
+                    permanen.AddFor(m => m.PermanenAktif).Caption("AKTIF")
+                    .CellTemplate(@<text>
+                        <div style="display: flex; align-items: center; justify-content: flex-end;">
+                            <a href="javascript:void(0);"
+                               class="value-link text-decoration-none"
+                               onclick="showDetailModal('<%- data.NamaJalan %>')"
+                               title="Lihat Detail">
+                                <%- (value || 0).toLocaleString('id-ID') %>
+                            </a>
+                        </div>
+                    </text>);
+                    permanen.AddFor(m => m.PermanenJumlah).Caption("JML")
+                    .CellTemplate(@<text>
+                        <div style="display: flex; align-items: center; justify-content: flex-end;">
+                            <a href="javascript:void(0);"
+                               class="value-link text-decoration-none"
+                               onclick="showDetailModal('<%- data.NamaJalan %>')"
+                               title="Lihat Detail">
+                                <%- (value || 0).toLocaleString('id-ID') %>
+                            </a>
+                        </div>
+                    </text>);
+                });
+
+            // Grup Kolom TERBATAS
+            columns.Add().Caption("PERMANEN").Alignment(HorizontalAlignment.Center)
+                .Columns(terbatas => {
+                    
+                    // Sub-Grup EXPIRED
+                    terbatas.Add().Caption("EXPIRED").Alignment(HorizontalAlignment.Center)
+                        .Columns(expired => {
+                            expired.AddFor(m => m.TerbatasBongkar).Caption("BONGKAR")
+                            .CellTemplate(@<text>
+                                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                                    <a href="javascript:void(0);"
+                                       class="value-link text-decoration-none"
+                                       onclick="showDetailModal('<%- data.NamaJalan %>')"
+                                       title="Lihat Detail">
+                                        <%- (value || 0).toLocaleString('id-ID') %>
+                                    </a>
+                                </div>
+                            </text>);
+                            expired.AddFor(m => m.TerbatasBelumBongkar).Caption("BLM BONGKAR")
+                            .CellTemplate(@<text>
+                                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                                    <a href="javascript:void(0);"
+                                       class="value-link text-decoration-none"
+                                       onclick="showDetailModal('<%- data.NamaJalan %>')"
+                                       title="Lihat Detail">
+                                        <%- (value || 0).toLocaleString('id-ID') %>
+                                    </a>
+                                </div>
+                            </text>);
+                        });
+
+                    terbatas.AddFor(m => m.TerbatasAktif).Caption("AKTIF")
+                    .CellTemplate(@<text>
+                        <div style="display: flex; align-items: center; justify-content: flex-end;">
+                            <a href="javascript:void(0);"
+                               class="value-link text-decoration-none"
+                               onclick="showDetailModal('<%- data.NamaJalan %>')"
+                               title="Lihat Detail">
+                                <%- (value || 0).toLocaleString('id-ID') %>
+                            </a>
+                        </div>
+                    </text>);
+                    terbatas.AddFor(m => m.TerbatasJumlah).Caption("JML")
+                    .CellTemplate(@<text>
+                        <div style="display: flex; align-items: center; justify-content: flex-end;">
+                            <a href="javascript:void(0);"
+                               class="value-link text-decoration-none"
+                               onclick="showDetailModal('<%- data.NamaJalan %>')"
+                               title="Lihat Detail">
+                                <%- (value || 0).toLocaleString('id-ID') %>
+                            </a>
+                        </div>
+                    </text>);
+                });
         })
-        )
+        .Summary(s => {
+            // Bagian summary tidak perlu diubah karena nama properti datanya tetap sama
+            s.TotalItems(items => {
+                items.AddFor(m => m.NamaJalan).SummaryType(SummaryType.Count).DisplayFormat("JUMLAH");
+                items.AddFor(m => m.InsidentilBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.InsidentilBelumBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.InsidentilAktif).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.InsidentilJumlah).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.PermanenBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.PermanenBelumBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.PermanenAktif).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.PermanenJumlah).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.TerbatasBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.TerbatasBelumBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.TerbatasAktif).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.TerbatasJumlah).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+            });
+        })
+    )
 </div>
