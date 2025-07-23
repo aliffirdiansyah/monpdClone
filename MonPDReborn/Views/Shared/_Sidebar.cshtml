@@ -118,7 +118,7 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link"
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")"
                        href="@Url.Action("Index", "Dashboard")" role="button">
                         <i class=" bx bx-home  me-1 align-middle"></i><span data-key="t-pendataanObjek">Dashboard</span>
                     </a>
@@ -131,37 +131,37 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link"
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerah" ? "active" : "")"
                        href="@Url.Action("Index", "SeriesPendapatanDaerah")" role="button">
                         <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerah">Series Pendapatan Daerah</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link"
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PendataanObjekPajak" ? "active" : "")"
                        href="@Url.Action("Index", "PendataanObjekPajak")" role="button">
                         <i class="bx bx-folder-open me-1 align-middle"></i><span data-key="t-pendataanObjek">Pengedokan Pajak</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link"
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PemeriksaanPajak" ? "active" : "")"
                        href="@Url.Action("Index", "PemeriksaanPajak")" role="button">
                         <i class="bx bx-search-alt-2 me-1 align-middle"></i><span data-key="t-pemeriksaanPajak">Pemeriksaan Pajak</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link"
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PemasanganAlat" ? "active" : "")"
                        href="@Url.Action("Index", "PemasanganAlat")" role="button">
                         <i class="bx bx-cog me-1 align-middle"></i><span data-key="t-pemasanganAlat">Alat Rekam Online</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link"
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ReklameSummary" ? "active" : "")"
                        href="@Url.Action("Index", "ReklameSummary")" role="button">
                         <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-reklamesummary">Reklame Summary</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link"
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "RealisasiControl" ? "active" : "")"
                        href="@Url.Action("Index", "RealisasiControl")" role="button" target="_blank">
                         <i class=" bx bx-book-reader   me-1 align-middle"></i><span data-key="t-realisasiControl">Realisasi Control</span>
                     </a>
