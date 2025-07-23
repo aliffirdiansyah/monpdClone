@@ -66,6 +66,17 @@ namespace MonPDReborn.Controllers.DataOP
             var data = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList((EnumFactory.EPajak)JenisPajak);
             return DataSourceLoader.Load(data, load_options);
         }
+        [HttpGet]
+        public async Task<object> GetDataPotensi(DataSourceLoadOptions load_options, int JenisPajak, int kategori)
+        {
+            await Task.Delay(1000);
+
+            var data = Models.DataOP.ProfilePotensiOPVM.Method.GetDataPotensiList(
+                (EnumFactory.EPajak)JenisPajak, kategori
+            );
+
+            return DataSourceLoader.Load(data, load_options);
+        }
         //public IActionResult ShowDetail(int jenisPajak)
         //{
         //    try
@@ -90,16 +101,11 @@ namespace MonPDReborn.Controllers.DataOP
         //        return Json(response);
         //    }
         //}
-        public IActionResult ShowData(string jenisPajak, string kategori)
+        public IActionResult ShowData(int jenisPajak, int kategori)
         {
             try
             {
-                var model = new Models.DataOP.ProfilePotensiOPVM.ShowData
-                {
-                    JenisPajak = jenisPajak,
-                    Kategori = kategori,
-                   /* DataPotensiList = Models.DataOP.ProfilePotensiOPVM.Method.GetDataPotensiList(jenisPajak, kategori)*/
-                };
+                var model = new Models.DataOP.ProfilePotensiOPVM.ShowData((EnumFactory.EPajak)jenisPajak, kategori);
 
                 return PartialView($"{URLView}_{actionName}", model);
             }

@@ -206,64 +206,6 @@
         </div>
     </div>
 
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-1">
-                        Laporkan Pelanggaran
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <form action="#" method="post">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="namaPelapor" class="form-label">Nama Pelapor</label>
-                            <input type="text" class="form-control" id="namaPelapor" placeholder="Masukkan nama Anda">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="nomorTelepon" class="form-label">Nomor Telepon</label>
-                            <input type="text" class="form-control" id="nomorTelepon" placeholder="Masukkan nomor telepon aktif">
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="lokasiPelanggaran" class="form-label">Lokasi Pelanggaran</label>
-                        <input type="text" class="form-control" id="lokasiPelanggaran" placeholder="Contoh: Jl. Ahmad Yani (depan Graha Pena)">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="jenisPelanggaran" class="form-label">Jenis Pelanggaran</label>
-                        <select class="form-select" id="jenisPelanggaran">
-                            <option selected>Pilih Jenis Pelanggaran...</option>
-                            <option value="1">Reklame Tidak Berizin</option>
-                            <option value="2">Pajak Reklame Sudah Habis</option>
-                            <option value="3">Konstruksi Membahayakan</option>
-                            <option value="4">Isi Konten Tidak Sesuai</option>
-                            <option value="5">Lainnya</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="deskripsiPelanggaran" class="form-label">Deskripsi Pelanggaran</label>
-                        <textarea class="form-control" id="deskripsiPelanggaran" rows="4" placeholder="Jelaskan detail pelanggaran di sini..."></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="fotoBukti" class="form-label">Unggah Foto Bukti (Opsional)</label>
-                        <input class="form-control" type="file" id="fotoBukti">
-                    </div>
-
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-success w-100">
-                            <i class="ri-send-plane-fill me-1"></i> Kirim Laporan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 </div>
 
@@ -311,20 +253,75 @@
         }
 
         // Fungsi untuk menampilkan modal detail
-        function showDetailModal(namaJalan) {
-            const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
+        // function showDetailModal(namaJalan) {
+        //     const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
+
+        //     $('#detailModal').modal('show');
+        //     Tampilkan spinner di modal
+        //     $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+        //     Ambil konten detail via AJAX
+        //     $.get(url, function (data) {
+        //         $('#detailModalContent').html(data);
+        //     }).fail(function() {
+        //          $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
+        //     });
+        // }
+
+        function showDetailModal(kategori, status, namaJalan) {
+            const url = '@Url.Action("Detail", "Reklame")'
+                + '?kategori=' + encodeURIComponent(kategori)
+                + '&status=' + encodeURIComponent(status)
+                + '&jalan=' + encodeURIComponent(namaJalan);
 
             $('#detailModal').modal('show');
+
             // Tampilkan spinner di modal
-            $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+            $('#detailModalContent').html(`
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary"></div>
+                </div>
+            `);
 
             // Ambil konten detail via AJAX
             $.get(url, function (data) {
                 $('#detailModalContent').html(data);
-            }).fail(function() {
-                 $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
+            }).fail(function () {
+                $('#detailModalContent').html(`
+                    <p class="text-danger p-5">Gagal memuat detail.</p>
+                `);
             });
         }
+
+
+                function detailReklameCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            const [kategori, statusRaw] = cellInfo.column.dataField.split('.');
+            const status = statusRaw;  // sudah dalam bentuk 'ExpiredBongkar', dsb.
+            const jalan = cellInfo.data.NamaJalan;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    showDetailModal(kategori, status, jalan);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+
 
     </script>
 }
