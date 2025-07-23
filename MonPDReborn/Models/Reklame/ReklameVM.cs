@@ -265,6 +265,7 @@ namespace MonPDReborn.Models.Reklame
                 var ret = new List<DetailData>();
                 var context = DBClass.GetContext();
 
+                //insidentil
                 if (status == "JENIS INSIDENTIL EXPIRED BONGKAR")
                 {
                     var insidentilDataExpBongkar = context.DbMonReklames
@@ -288,6 +289,7 @@ namespace MonPDReborn.Models.Reklame
                         TglSelesai = r.TglAkhirBerlaku.Value
                     })
                     .ToList();
+                    ret.AddRange(insidentilDataExpBongkar);
                 }
                 if (status == "JENIS INSIDENTIL EXPIRED BLM BONGKAR")
                 {
@@ -311,10 +313,11 @@ namespace MonPDReborn.Models.Reklame
                         TglSelesai = r.TglAkhirBerlaku.Value
                     })
                     .ToList();
+                    ret.AddRange(insidentilDataExpBlmBongkar);
                 }
                 if (status == "JENIS INSIDENTIL AKTIF")
                 {
-                    var data = context.DbMonReklames
+                    var insidentilDataAktif = context.DbMonReklames
                         .Where(r =>
                             r.FlagPermohonan == "INSIDENTIL" &&
                             r.TglAkhirBerlaku.HasValue &&
@@ -334,11 +337,12 @@ namespace MonPDReborn.Models.Reklame
                             TglSelesai = r.TglAkhirBerlaku.Value
                         })
                         .ToList();
+                    ret.AddRange(insidentilDataAktif);
                 }
-
+                //permanen
                 if (status == "JENIS PERMANEN EXPIRED BONGKAR")
                 {
-                    var insidentilDataExpBongkar = context.DbMonReklames
+                    var permanenDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "PERMANEN" &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
@@ -359,10 +363,11 @@ namespace MonPDReborn.Models.Reklame
                         TglSelesai = r.TglAkhirBerlaku.Value
                     })
                     .ToList();
+                    ret.AddRange(permanenDataExpBongkar);
                 }
                 if (status == "JENIS PERMANEN EXPIRED BLM BONGKAR")
                 {
-                    var insidentilDataExpBlmBongkar = context.DbMonReklames
+                    var permanenDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "PERMANEN" &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
@@ -382,10 +387,11 @@ namespace MonPDReborn.Models.Reklame
                         TglSelesai = r.TglAkhirBerlaku.Value
                     })
                     .ToList();
+                    ret.AddRange(permanenDataExpBlmBongkar);
                 }
                 if (status == "JENIS PERMANEN AKTIF")
                 {
-                    var data = context.DbMonReklames
+                    var permanenDataAktif = context.DbMonReklames
                         .Where(r =>
                             r.FlagPermohonan == "PERMANEN" &&
                             r.TglAkhirBerlaku.HasValue &&
@@ -405,11 +411,13 @@ namespace MonPDReborn.Models.Reklame
                             TglSelesai = r.TglAkhirBerlaku.Value
                         })
                         .ToList();
+                    ret.AddRange(permanenDataAktif);
                 }
 
+                //terbatas
                 if (status == "JENIS TERBATAS EXPIRED BONGKAR")
                 {
-                    var insidentilDataExpBongkar = context.DbMonReklames
+                    var terbatasDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "TERBATAS" &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
@@ -430,10 +438,11 @@ namespace MonPDReborn.Models.Reklame
                         TglSelesai = r.TglAkhirBerlaku.Value
                     })
                     .ToList();
+                    ret.AddRange(terbatasDataExpBongkar);
                 }
                 if (status == "JENIS TERBATAS EXPIRED BLM BONGKAR")
                 {
-                    var insidentilDataExpBlmBongkar = context.DbMonReklames
+                    var terbatasDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "TERBATAS" &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
@@ -453,10 +462,11 @@ namespace MonPDReborn.Models.Reklame
                         TglSelesai = r.TglAkhirBerlaku.Value
                     })
                     .ToList();
+                    ret.AddRange(terbatasDataExpBlmBongkar);
                 }
                 if (status == "JENIS TERBATAS AKTIF")
                 {
-                    var data = context.DbMonReklames
+                    var terbatasDataAktif = context.DbMonReklames
                         .Where(r =>
                             r.FlagPermohonan == "TERBATAS" &&
                             r.TglAkhirBerlaku.HasValue &&
@@ -476,6 +486,7 @@ namespace MonPDReborn.Models.Reklame
                             TglSelesai = r.TglAkhirBerlaku.Value
                         })
                         .ToList();
+                    ret.AddRange(terbatasDataAktif);
                 }
 
                 return ret;
