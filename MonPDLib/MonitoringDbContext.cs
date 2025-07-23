@@ -38,7 +38,11 @@ namespace MonPDLib
         public DbSet<OpOpsenSkpdPkb> OpOpsenSkpdPkbs { get; set; }
         public DbSet<OpOpsenSkpdBbnkb> OpOpsenSkpdBbnkbs { get; set; }
         public DbSet<OpSkpdSspdReklame> OpSkpdSspdReklames { get; set; }
-        public DbSet<SSPDPbjt> SSPDPbjts { get; set; }
+
+        public DbSet<DbMonReklameEmail> DbMonReklameEmails { get; set; }
+        public DbSet<DbMonReklameSurat> DbMonReklameSurats { get; set; }
+        public DbSet<DbMonReklameSuratTegur> DbMonReklameSuratTegurs { get; set; }
+        public DbSet<DbMonReklameSuratTegurDok> DbMonReklameSuratTegurDoks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -77,6 +81,11 @@ namespace MonPDLib
             modelBuilder.Entity<OpSkpdSspdReklame>().HasNoKey();
 
             modelBuilder.Entity<SSPDPbjt>().HasNoKey();
+
+            modelBuilder.Entity<DbMonReklameEmail>().HasNoKey();
+            modelBuilder.Entity<DbMonReklameSurat>().HasNoKey();
+            modelBuilder.Entity<DbMonReklameSuratTegur>().HasNoKey();
+            modelBuilder.Entity<DbMonReklameSuratTegurDok>().HasNoKey();
         }
     }
 }

@@ -101,9 +101,8 @@ public partial class DbMonReklameSuratTegur
     [Unicode(false)]
     public string NamaJenis { get; set; } = null!;
 
-    [Column("TAHUN_PAJAK")]
-    [Precision(4)]
-    public byte TahunPajak { get; set; }
+    [Column("TAHUN_PAJAK", TypeName = "NUMBER(38)")]
+    public decimal TahunPajak { get; set; }
 
     [Column("MASA1", TypeName = "DATE")]
     public DateTime? Masa1 { get; set; }
