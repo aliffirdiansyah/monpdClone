@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+/* Membuat header DevExtreme DataGrid rata tengah vertikal & horizontal */
+.dx-datagrid-headers .dx-datagrid-text-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
