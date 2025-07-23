@@ -144,27 +144,30 @@ namespace MonPDReborn.Models.Reklame
 
                 var insidentilData = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
-                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                r.TglAkhirBerlaku.HasValue &&
+                                r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value <= tglAkhir)
                     .Select(r => new
                     {
-                        KelasJalanId = r.KelasJalan,
                         NoFormulir = r.NoFormulir,
                         KelasJalan = r.KelasJalan,
                         NamaJalan = r.NamaJalan,
-                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF"
+                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                        UpayaId = context.TUpayaReklames
+                            .Where(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                            .Select(t => (int?)t.Id)
+                            .FirstOrDefault() ?? 0
                     })
+                    .ToList()
                     .GroupBy(r => r.Status)
                     .Select(g => new
                     {
                         KelasJalan = g.First().KelasJalan,
                         NamaJalan = g.First().NamaJalan,
+                        NoFormulir = g.First().NoFormulir,
                         Status = g.Key,
                         Jml = g.Count(),
-                        UpayaId = context.TUpayaReklames
-                            .Where(t => t.NoFormulir == g.First().NoFormulir && t.IdUpaya == 2)
-                            .Select(t => (int?)t.Id ?? 0)
-                            .FirstOrDefault()
+                        UpayaId = g.First().UpayaId
                     })
                     .ToList();
 
