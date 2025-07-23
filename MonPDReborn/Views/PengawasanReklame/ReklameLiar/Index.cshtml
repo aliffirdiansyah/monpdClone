@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="col-lg-2">
-                        <button type="button" class="btn btn-success w-80">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-80">
                             <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
                         </button>
                     </div>
@@ -122,16 +122,15 @@
     <script>
         // Saat halaman siap, langsung panggil fungsi untuk memuat data tabel
         $(document).ready(function () {
-            fnShow();
+            // Langsung panggil klik tombol filter untuk memuat data awal
+            // dengan tahun default yang sudah terpasang di SelectBox.
+            $('#btnTerapkanFilter').click();
         });
 
-        // Event handler untuk tombol filter
+        // Beri ID pada tombol Anda
         $('#btnTerapkanFilter').on('click', function() {
-            // Ambil nilai tahun yang dipilih
             const selectedTahun = $('#selectTahun').dxSelectBox('instance').option('value');
-            // Panggil kembali fnShow dengan nilai filter baru
             fnShow(selectedTahun);
-
         });
 
 
@@ -142,7 +141,7 @@
                 url: '@Url.Action("Show", "ReklameLiar")', // Pastikan Controller 'ReklameLiar'
                 type: 'GET',
                 data: {
-                    tahun: tahun || new Date().getFullYear() // Jika tahun kosong, kirim tahun sekarang
+                    tahun: tahun
 
                 },
                 beforeSend: function () {

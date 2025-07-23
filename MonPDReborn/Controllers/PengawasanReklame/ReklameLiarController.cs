@@ -41,7 +41,7 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
-        public IActionResult Show(int tahun)
+        public IActionResult Show(int? tahun)
         {
             try
             {
