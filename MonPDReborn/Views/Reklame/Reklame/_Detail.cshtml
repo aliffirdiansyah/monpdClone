@@ -1,113 +1,94 @@
-﻿@model MonPDReborn.Models.Reklame.ReklameVM.Detail
+﻿@model MonPDReborn.Models.Reklame.ReklameVM.DetailReklame
 
-<div class="modal-header">
-    <h5 class="modal-title">Detail Reklame di @Model.NamaJalan</h5>
+@{
+    var data = Model.DataDetailList.FirstOrDefault();
+}
+    <div class="modal-header">
+        <h5 class="modal-title">Detail Reklame di  </h5>
     
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-</div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+    </div>
 
 <div class="modal-body">
-    
-    <div class="mb-1">
-        <div class="row g-3 mb-1">
-            <div class="col-lg">
-                <div class="card shadow-sm rounded-xl">
-                    <div class="card-body">
+   @if (data != null)
+{
+<div class="mb-1">
+    <div class="row g-3 mb-1">
+        <div class="col-lg">
+            <div class="card shadow-sm rounded-xl">
+                <div class="card-body">
 
-                        <h5 class="fw-bold fs-16 mb-3">Informasi Jalan</h5>
+                    <h5 class="fw-bold fs-16 mb-3">Informasi Jalan</h5>
 
-                        <hr class="mt-0 mb-3">
+                    <hr class="mt-0 mb-3">
 
-                        <div class="d-flex justify-content-between mb-2">
-                            <p class="fw-semibold mb-0">Nama Jalan:</p>
-                            <p class="fw-bold mb-0">Jl. Kutai</p>
-                        </div>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <p class="fw-semibold mb-0">Kecamatan:</p>
-                            <p class="fw-bold mb-0 text-end">Gayungan</p>
-                        </div>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <p class="fw-semibold mb-0">Kategori Jalan:</p>
-                            <p class="fw-bold mb-0">Jalan Protokol</p>
-                        </div>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <p class="fw-semibold mb-0">Jumlah Reklame Permanen Aktif: </p>
-                            <p class="fw-bold mb-0">20</p>
-                        </div>
-
+                    <div class="d-flex justify-content-between mb-2">
+                        <p class="fw-semibold mb-0">Kelas Jalan:</p>
+                        <p class="fw-bold mb-0 text-end">@data.KelasJalan</p>
                     </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <p class="fw-semibold mb-0">Nama Jalan:</p>
+                        <p class="fw-bold mb-0">@data.NamaJalan</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <p class="fw-semibold mb-0">Status:</p>
+                        <p class="fw-bold mb-0">@data.Kategori</p>
+                    </div>
+
                 </div>
             </div>
         </div>
-
-        <div class="row g-3 mb-1">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-success text-white d-flex align-items-center">
-                        <i class="ri-map-pin-2-line fs-4 me-2"></i>
-                        <h5 class="mb-0 text-white">Detail Tunggakan per Jenis Pajak & Tahun Buku</h5>
-                    </div>
-                    <div class="card-body fw-semibold">
-                        <div class="table-responsive">
-                            @(
-                                Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.DataReklame>()
-                                .ID("reklameDetailGrid")
-                                .DataSource(Model.DataReklameDetailList) // Mengambil data dari Model
-                                .KeyExpr("TitikLokasi", "Penyelenggara") // Kombinasi kunci jika tidak ada yg unik
-                                .ShowBorders(true)
-                                .ShowColumnLines(true)
-                                .ShowRowLines(true)
-                                .RowAlternationEnabled(true)
-                                .AllowColumnResizing(true)
-                                .ColumnAutoWidth(true)
-                                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false).Placeholder("Cari..."))
-                                .FilterRow(f => f.Visible(true))
-                                .HeaderFilter(h => h.Visible(true))
-                                .Paging(p => p.PageSize(10))
-                                .Pager(pager =>
-                                {
-                                    pager.ShowPageSizeSelector(true);
-                                    pager.AllowedPageSizes(new[] { 5, 10, 20 });
-                                    pager.ShowInfo(true);
-                                })
-                                .Columns(columns => {
-                                    columns.AddFor(m => m.TitikLokasi).Caption("ALAMAT");
-                                    columns.AddFor(m => m.Jenis).Caption("ISI REKLAME")
-                                    .CellTemplate(@<text>
-                                        <%
-                                            var jenis = data.Jenis;
-                                            var colorClass = "badge "; // Kelas dasar
-
-                                            // Logika untuk memilih warna badge
-                                            if (jenis === "Permanen > 8m") {
-                                                colorClass += "bg-primary"; // Biru
-                                            } else if (jenis === "Permanen < 8m") {
-                                                colorClass += "bg-info text-dark"; // Biru muda
-                                            } else if (jenis === "Insidentil") {
-                                                colorClass += "bg-success"; // Hijau
-                                            } else {
-                                                colorClass += "bg-secondary"; // Warna default jika ada jenis lain
-                                            }
-                                        %>
-                                        <span class="<%= colorClass %>"><%= jenis %></span>
-                                    </text>);
-                                    columns.AddFor(m => m.Ukuran).Caption("JENIS").Alignment(HorizontalAlignment.Center);
-                                    columns.AddFor(m => m.Penyelenggara).Caption("KATEGORI");
-                                    columns.AddFor(m => m.MasaBerlaku).Caption("Masa TAYANG");
-                                    columns.AddFor(m => m.MasaBerlaku).Caption("SISA");
-                                    columns.AddFor(m => m.MasaBerlaku).Caption("UKURAN");
-                                    columns.AddFor(m => m.MasaBerlaku).Caption("PAJAK");
-                                })
-                                )
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
+}
+    <div class="row g-3 mb-1">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-success text-white d-flex align-items-center">
+                    <i class="ri-map-pin-2-line fs-4 me-2"></i>
+                    <h5 class="mb-0 text-white">Detail Tunggakan per Jenis Pajak & Tahun Buku</h5>
+                </div>
+                <div class="card-body fw-semibold">
+                    <div class="table-responsive">
+                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.DetailData>()
+                            .ID("detailreklameGrid")
+                            .DataSource(Model.DataDetailList)
+                            .ShowBorders(true)
+                            .ShowColumnLines(true)
+                            .ShowColumnHeaders(true)
+                            .AllowColumnResizing(true)
+                            .ShowRowLines(true)
+                            .ColumnAutoWidth(true)
+                            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                            .FilterRow(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                            .Paging(p => p.PageSize(10))
+                            .Pager(pager =>
+                            {
+                                pager.ShowPageSizeSelector(true);
+                                pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                                pager.ShowInfo(true);
+                            })
+                            .Columns(columns => {
+                                columns.AddFor(m => m.AlamatReklame).Caption("Alamat Reklame");
+                                columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
+                                columns.AddFor(m => m.JenisReklame).Caption("Jenis Reklame");
+                                columns.AddFor(m => m.KategoriReklame).Caption("Kategori Reklame");
+                                columns.AddFor(m => m.TglMulai).Caption("Tanggal Mulai").Format("dd/MM/yyyy");
+                                columns.AddFor(m => m.TglSelesai).Caption("Tanggal Selesai").Format("dd/MM/yyyy");
+                                columns.AddFor(m => m.SisaHari).Caption("Sisa Hari");
+                                columns.AddFor(m => m.Ukuran).Caption("Ukuran");
+                                columns.AddFor(m => m.Pajak).Caption("Pajak").Format("#,##0");
+                            })
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 

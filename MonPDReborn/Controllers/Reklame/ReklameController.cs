@@ -87,7 +87,11 @@ namespace MonPDReborn.Controllers.Reklame
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(kategori) || string.IsNullOrWhiteSpace(status) || string.IsNullOrWhiteSpace(jalan))
+                    return BadRequest("Invalid parameters.");
+
                 var model = new Models.Reklame.ReklameVM.DetailReklame(kategori, status, jalan);
+                //return PartialView("_Detail", model);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
