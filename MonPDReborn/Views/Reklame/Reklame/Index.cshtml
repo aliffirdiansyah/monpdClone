@@ -233,7 +233,7 @@
             });
         }
 
-        function GetDetailJalan(kelasJalan, namaJalan, status)
+        function GetDetailJalan(kelasJalan, namaJalan, status, jenisReklame)
         {
             const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
             const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
@@ -245,10 +245,15 @@
                 url: '@Url.Action("Detail", "Reklame")',
                 type: "GET",
                 data: {
-                    kelasJalan, namaJalan, status, tglAwal, tglAkhir
+                    kelasJalan, namaJalan, status, jenisReklame, tglAwal, tglAkhir
                 },
                 beforeSend: function () {
                     $("#loader").show();
+
+                    // Bersihkan modal sebelum isi data baru
+                    const $modal = $("#staticBackdropLargeScrollable");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
                 },
                 success: function (resp)
                 {
@@ -266,34 +271,34 @@
 
         }
 
-                        function detailReklameCellTemplate(cellElement, cellInfo) {
-            const value = cellInfo.value ?? 0;
+        // function detailReklameCellTemplate(cellElement, cellInfo) {
+        //     const value = cellInfo.value ?? 0;
 
-            const [kategori, statusRaw] = cellInfo.column.dataField.split('.');
-            const status = statusRaw;
+        //     const [kategori, statusRaw] = cellInfo.column.dataField.split('.');
+        //     const status = statusRaw;
 
-            const jalan = cellInfo.data.NamaJalan;
-            const kelasJalan = cellInfo.data.KelasJalan;  // AMBIL dari data baris
+        //     const jalan = cellInfo.data.NamaJalan;
+        //     const kelasJalan = cellInfo.data.KelasJalanId;  // AMBIL dari data baris
 
-            const $link = $('<a>')
-                .addClass('value-link text-decoration-none')
-                .attr('href', 'javascript:void(0);')
-                .attr('title', 'Lihat Detail')
-                .text(value.toLocaleString('id-ID'))
-                .on('click', () => {
-                    GetDetailJalan(kelasJalan, jalan, status);
-                });
+        //     const $link = $('<a>')
+        //         .addClass('value-link text-decoration-none')
+        //         .attr('href', 'javascript:void(0);')
+        //         .attr('title', 'Lihat Detail')
+        //         .text(value.toLocaleString('id-ID'))
+        //         .on('click', () => {
+        //             GetDetailJalan(kelasJalan, jalan, status, jenisReklame);
+        //         });
 
-            const $wrapper = $('<div>')
-                .css({
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end'
-                })
-                .append($link);
+        //     const $wrapper = $('<div>')
+        //         .css({
+        //             display: 'flex',
+        //             alignItems: 'center',
+        //             justifyContent: 'flex-end'
+        //         })
+        //         .append($link);
 
-            $(cellElement).append($wrapper);
-        }
+        //     $(cellElement).append($wrapper);
+        // }
 
 
 

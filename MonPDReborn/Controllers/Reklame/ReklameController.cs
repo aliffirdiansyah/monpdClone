@@ -74,7 +74,7 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
-        public IActionResult Detail(string kelasJalan, string namaJalan, string status, string tglAwal, string tglAkhir)
+        public IActionResult Detail(string kelasJalan, string namaJalan, string status, string jenisReklame, string tglAwal, string tglAkhir)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace MonPDReborn.Controllers.Reklame
                 if (string.IsNullOrWhiteSpace(kelasJalan) || string.IsNullOrWhiteSpace(status) || string.IsNullOrWhiteSpace(namaJalan))
                     return BadRequest("Invalid parameters.");
 
-                var model = new Models.Reklame.ReklameVM.DetailReklame(kelasJalan, namaJalan, status, tanggalAwal.AddDays(1), tanggalAkhir);
+                var model = new Models.Reklame.ReklameVM.DetailReklame(kelasJalan, namaJalan, status, jenisReklame, tanggalAwal.AddDays(1), tanggalAkhir);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

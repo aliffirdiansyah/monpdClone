@@ -56,9 +56,9 @@ namespace MonPDReborn.Models.Reklame
         {
             public List<DetailData> DataDetailList { get; set; } = new();
 
-            public DetailReklame(string kelasJalan, string namaJalan, string status, DateTime tglAwal, DateTime tglAkhir)
+            public DetailReklame(string kelasJalan, string namaJalan, string status, string jenisReklame, DateTime tglAwal, DateTime tglAkhir)
             {
-                DataDetailList = Method.GetDetailDataReklame(kelasJalan, namaJalan, status, tglAwal, tglAkhir);
+                DataDetailList = Method.GetDetailDataReklame(kelasJalan, namaJalan, status, jenisReklame, tglAwal, tglAkhir);
             }
 
         }
@@ -236,18 +236,21 @@ namespace MonPDReborn.Models.Reklame
                         NamaJalan = key.NamaJalan,
                         Isidentil = new KategoriReklame
                         {
+                            JenisReklame = "INSIDENTIL",
                             ExpiredBongkar = insidentil.Count(x => x.Status == "EXPIRED" && x.UpayaId != 0),
                             ExpiredBlmBongkar = insidentil.Count(x => x.Status == "EXPIRED" && x.UpayaId == 0),
                             Aktif = insidentil.Count(x => x.Status == "AKTIF")
                         },
                         Permanen = new KategoriReklame
                         {
+                            JenisReklame = "PERMANEN",
                             ExpiredBongkar = permanen.Count(x => x.Status == "EXPIRED" && x.UpayaId != 0),
                             ExpiredBlmBongkar = permanen.Count(x => x.Status == "EXPIRED" && x.UpayaId == 0),
                             Aktif = permanen.Count(x => x.Status == "AKTIF")
                         },
                         Terbatas = new KategoriReklame
                         {
+                            JenisReklame = "TERBATAS",
                             ExpiredBongkar = terbatas.Count(x => x.Status == "EXPIRED" && x.UpayaId == 1),
                             ExpiredBlmBongkar = terbatas.Count(x => x.Status == "EXPIRED" && x.UpayaId == 0),
                             Aktif = terbatas.Count(x => x.Status == "AKTIF")
@@ -260,75 +263,25 @@ namespace MonPDReborn.Models.Reklame
                 return ret;
             }
 
-            public static List<DetailData> GetDetailDataReklame(string kelasJalan, string namaJalan, string status, DateTime tglAwal, DateTime tglAkhir)
+            public static List<DetailData> GetDetailDataReklame(string kelasJalan, string namaJalan, string status, string jenisReklame, DateTime tglAwal, DateTime tglAkhir)
             {
                 var ret = new List<DetailData>();
                 var context = DBClass.GetContext();
 
                 //insidentil
-                if (status == "ExpiredBongkar")
+                if(jenisReklame == "INSIDENTIL")
                 {
-                    var insidentilDataExpBongkar = context.DbMonReklames
-                    .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
-                                r.TglAkhirBerlaku.Value < DateTime.Today &&
-                                context.TUpayaReklames
-                                    .Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
-                                )
-                    .Select(r => new DetailData
+                    if (status == "ExpiredBongkar")
                     {
-                        KelasJalan = r.KelasJalan,
-                        NamaJalan = r.NamaJalan,
-                        AlamatReklame = r.Alamat,
-                        IsiReklame = r.IsiReklame,
-                        JenisReklame = r.Jenis,
-                        Kategori = r.KategoriKetetapan,
-                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                        KategoriReklame = r.FlagPermohonan,
-                        TglMulai = r.TglMulaiBerlaku.Value,
-                        TglSelesai = r.TglAkhirBerlaku.Value
-                    })
-                    .ToList();
-                    ret.AddRange(insidentilDataExpBongkar);
-                }
-                if (status == "ExpiredBlmBongkar")
-                {
-                    var insidentilDataExpBlmBongkar = context.DbMonReklames
-                    .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
-                                r.TglAkhirBerlaku.Value < DateTime.Today &&
-                                !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
-                                )
-                    .Select(r => new DetailData
-                    {
-                        KelasJalan = r.KelasJalan,
-                        NamaJalan = r.NamaJalan,
-                        AlamatReklame = r.Alamat,
-                        IsiReklame = r.IsiReklame,
-                        JenisReklame = r.Jenis,
-                        Kategori = r.KategoriKetetapan,
-                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                        KategoriReklame = r.FlagPermohonan,
-                        TglMulai = r.TglMulaiBerlaku.Value,
-                        TglSelesai = r.TglAkhirBerlaku.Value
-                    })
-                    .ToList();
-                    ret.AddRange(insidentilDataExpBlmBongkar);
-                }
-                if (status == "Aktif")
-                {
-                    var insidentilDataAktif = context.DbMonReklames
-                        .Where(r =>
-                            r.FlagPermohonan == "INSIDENTIL" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                            r.TglAkhirBerlaku.HasValue &&
-                            r.TglAkhirBerlaku.Value >= tglAwal &&
-                            r.TglAkhirBerlaku.Value < DateTime.Today)
+                        var insidentilDataExpBongkar = context.DbMonReklames
+                        .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                    r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                    r.TglAkhirBerlaku.Value < DateTime.Today &&
+                                    context.TUpayaReklames
+                                        .Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                                    )
                         .Select(r => new DetailData
                         {
                             KelasJalan = r.KelasJalan,
@@ -343,72 +296,75 @@ namespace MonPDReborn.Models.Reklame
                             TglSelesai = r.TglAkhirBerlaku.Value
                         })
                         .ToList();
-                    ret.AddRange(insidentilDataAktif);
+                        ret.AddRange(insidentilDataExpBongkar);
+                    }
+                    if (status == "ExpiredBlmBongkar")
+                    {
+                        var insidentilDataExpBlmBongkar = context.DbMonReklames
+                        .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                    r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                    r.TglAkhirBerlaku.Value < DateTime.Today &&
+                                    !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                                    )
+                        .Select(r => new DetailData
+                        {
+                            KelasJalan = r.KelasJalan,
+                            NamaJalan = r.NamaJalan,
+                            AlamatReklame = r.Alamat,
+                            IsiReklame = r.IsiReklame,
+                            JenisReklame = r.Jenis,
+                            Kategori = r.KategoriKetetapan,
+                            Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            KategoriReklame = r.FlagPermohonan,
+                            TglMulai = r.TglMulaiBerlaku.Value,
+                            TglSelesai = r.TglAkhirBerlaku.Value
+                        })
+                        .ToList();
+                        ret.AddRange(insidentilDataExpBlmBongkar);
+                    }
+                    if (status == "Aktif")
+                    {
+                        var insidentilDataAktif = context.DbMonReklames
+                            .Where(r =>
+                                r.FlagPermohonan == "INSIDENTIL" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                r.TglAkhirBerlaku.HasValue &&
+                                r.TglAkhirBerlaku.Value >= tglAwal &&
+                                r.TglAkhirBerlaku.Value < DateTime.Today)
+                            .Select(r => new DetailData
+                            {
+                                KelasJalan = r.KelasJalan,
+                                NamaJalan = r.NamaJalan,
+                                AlamatReklame = r.Alamat,
+                                IsiReklame = r.IsiReklame,
+                                JenisReklame = r.Jenis,
+                                Kategori = r.KategoriKetetapan,
+                                Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                                KategoriReklame = r.FlagPermohonan,
+                                TglMulai = r.TglMulaiBerlaku.Value,
+                                TglSelesai = r.TglAkhirBerlaku.Value
+                            })
+                            .ToList();
+                        ret.AddRange(insidentilDataAktif);
+                    }
                 }
                 //permanen
-                if (status == "ExpiredBongkar")
+                else if (jenisReklame == "PERMANEN")
                 {
-                    var permanenDataExpBongkar = context.DbMonReklames
-                    .Where(r => r.FlagPermohonan == "PERMANEN" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
-                                r.TglAkhirBerlaku.Value < DateTime.Today &&
-                                context.TUpayaReklames
-                                    .Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
-                                )
-                    .Select(r => new DetailData
+                    if (status == "ExpiredBongkar")
                     {
-                        KelasJalan = r.KelasJalan,
-                        NamaJalan = r.NamaJalan,
-                        AlamatReklame = r.Alamat,
-                        IsiReklame = r.IsiReklame,
-                        JenisReklame = r.Jenis,
-                        Kategori = r.KategoriKetetapan,
-                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                        KategoriReklame = r.FlagPermohonan,
-                        TglMulai = r.TglMulaiBerlaku.Value,
-                        TglSelesai = r.TglAkhirBerlaku.Value
-                    })
-                    .ToList();
-                    ret.AddRange(permanenDataExpBongkar);
-                }
-                if (status == "ExpiredBlmBongkar")
-                {
-                    var permanenDataExpBlmBongkar = context.DbMonReklames
-                    .Where(r => r.FlagPermohonan == "PERMANEN" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
-                                r.TglAkhirBerlaku.Value < DateTime.Today &&
-                                !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
-                                )
-                    .Select(r => new DetailData
-                    {
-                        KelasJalan = r.KelasJalan,
-                        NamaJalan = r.NamaJalan,
-                        AlamatReklame = r.Alamat,
-                        IsiReklame = r.IsiReklame,
-                        JenisReklame = r.Jenis,
-                        Kategori = r.KategoriKetetapan,
-                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                        KategoriReklame = r.FlagPermohonan,
-                        TglMulai = r.TglMulaiBerlaku.Value,
-                        TglSelesai = r.TglAkhirBerlaku.Value
-                    })
-                    .ToList();
-                    ret.AddRange(permanenDataExpBlmBongkar);
-                }
-                if (status == "Aktif")
-                {
-                    var permanenDataAktif = context.DbMonReklames
-                        .Where(r =>
-                            r.FlagPermohonan == "PERMANEN" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                            r.TglAkhirBerlaku.HasValue &&
-                            r.TglAkhirBerlaku.Value >= tglAwal &&
-                            r.TglAkhirBerlaku.Value < DateTime.Today)
+                        var permanenDataExpBongkar = context.DbMonReklames
+                        .Where(r => r.FlagPermohonan == "PERMANEN" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                    r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                    r.TglAkhirBerlaku.Value < DateTime.Today &&
+                                    context.TUpayaReklames
+                                        .Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                                    )
                         .Select(r => new DetailData
                         {
                             KelasJalan = r.KelasJalan,
@@ -423,73 +379,18 @@ namespace MonPDReborn.Models.Reklame
                             TglSelesai = r.TglAkhirBerlaku.Value
                         })
                         .ToList();
-                    ret.AddRange(permanenDataAktif);
-                }
-
-                //terbatas
-                if (status == "ExpiredBongkar")
-                {
-                    var terbatasDataExpBongkar = context.DbMonReklames
-                    .Where(r => r.FlagPermohonan == "TERBATAS" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
-                                r.TglAkhirBerlaku.Value < DateTime.Today &&
-                                context.TUpayaReklames
-                                    .Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
-                                )
-                    .Select(r => new DetailData
+                        ret.AddRange(permanenDataExpBongkar);
+                    }
+                    if (status == "ExpiredBlmBongkar")
                     {
-                        KelasJalan = r.KelasJalan,
-                        NamaJalan = r.NamaJalan,
-                        AlamatReklame = r.Alamat,
-                        IsiReklame = r.IsiReklame,
-                        JenisReklame = r.Jenis,
-                        Kategori = r.KategoriKetetapan,
-                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                        KategoriReklame = r.FlagPermohonan,
-                        TglMulai = r.TglMulaiBerlaku.Value,
-                        TglSelesai = r.TglAkhirBerlaku.Value
-                    })
-                    .ToList();
-                    ret.AddRange(terbatasDataExpBongkar);
-                }
-                if (status == "ExpiredBlmBongkar")
-                {
-                    var terbatasDataExpBlmBongkar = context.DbMonReklames
-                    .Where(r => r.FlagPermohonan == "TERBATAS" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
-                                r.TglAkhirBerlaku.Value < DateTime.Today &&
-                                !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
-                                )
-                    .Select(r => new DetailData
-                    {
-                        KelasJalan = r.KelasJalan,
-                        NamaJalan = r.NamaJalan,
-                        AlamatReklame = r.Alamat,
-                        IsiReklame = r.IsiReklame,
-                        JenisReklame = r.Jenis,
-                        Kategori = r.KategoriKetetapan,
-                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                        KategoriReklame = r.FlagPermohonan,
-                        TglMulai = r.TglMulaiBerlaku.Value,
-                        TglSelesai = r.TglAkhirBerlaku.Value
-                    })
-                    .ToList();
-                    ret.AddRange(terbatasDataExpBlmBongkar);
-                }
-                if (status == "Aktif")
-                {
-                    var terbatasDataAktif = context.DbMonReklames
-                        .Where(r =>
-                            r.FlagPermohonan == "TERBATAS" &&
-                                r.KelasJalan == kelasJalan &&
-                                r.NamaJalan == namaJalan &&
-                            r.TglAkhirBerlaku.HasValue &&
-                            r.TglAkhirBerlaku.Value >= tglAwal &&
-                            r.TglAkhirBerlaku.Value < DateTime.Today)
+                        var permanenDataExpBlmBongkar = context.DbMonReklames
+                        .Where(r => r.FlagPermohonan == "PERMANEN" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                    r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                    r.TglAkhirBerlaku.Value < DateTime.Today &&
+                                    !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                                    )
                         .Select(r => new DetailData
                         {
                             KelasJalan = r.KelasJalan,
@@ -504,7 +405,117 @@ namespace MonPDReborn.Models.Reklame
                             TglSelesai = r.TglAkhirBerlaku.Value
                         })
                         .ToList();
-                    ret.AddRange(terbatasDataAktif);
+                        ret.AddRange(permanenDataExpBlmBongkar);
+                    }
+                    if (status == "Aktif")
+                    {
+                        var permanenDataAktif = context.DbMonReklames
+                            .Where(r =>
+                                r.FlagPermohonan == "PERMANEN" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                r.TglAkhirBerlaku.HasValue &&
+                                r.TglAkhirBerlaku.Value >= tglAwal &&
+                                r.TglAkhirBerlaku.Value < DateTime.Today)
+                            .Select(r => new DetailData
+                            {
+                                KelasJalan = r.KelasJalan,
+                                NamaJalan = r.NamaJalan,
+                                AlamatReklame = r.Alamat,
+                                IsiReklame = r.IsiReklame,
+                                JenisReklame = r.Jenis,
+                                Kategori = r.KategoriKetetapan,
+                                Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                                KategoriReklame = r.FlagPermohonan,
+                                TglMulai = r.TglMulaiBerlaku.Value,
+                                TglSelesai = r.TglAkhirBerlaku.Value
+                            })
+                            .ToList();
+                        ret.AddRange(permanenDataAktif);
+                    }
+                }
+                else if (jenisReklame == "TERBATAS")
+                {
+                    //terbatas
+                    if (status == "ExpiredBongkar")
+                    {
+                        var terbatasDataExpBongkar = context.DbMonReklames
+                        .Where(r => r.FlagPermohonan == "TERBATAS" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                    r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                    r.TglAkhirBerlaku.Value < DateTime.Today &&
+                                    context.TUpayaReklames
+                                        .Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                                    )
+                        .Select(r => new DetailData
+                        {
+                            KelasJalan = r.KelasJalan,
+                            NamaJalan = r.NamaJalan,
+                            AlamatReklame = r.Alamat,
+                            IsiReklame = r.IsiReklame,
+                            JenisReklame = r.Jenis,
+                            Kategori = r.KategoriKetetapan,
+                            Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            KategoriReklame = r.FlagPermohonan,
+                            TglMulai = r.TglMulaiBerlaku.Value,
+                            TglSelesai = r.TglAkhirBerlaku.Value
+                        })
+                        .ToList();
+                        ret.AddRange(terbatasDataExpBongkar);
+                    }
+                    if (status == "ExpiredBlmBongkar")
+                    {
+                        var terbatasDataExpBlmBongkar = context.DbMonReklames
+                        .Where(r => r.FlagPermohonan == "TERBATAS" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                    r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                    r.TglAkhirBerlaku.Value < DateTime.Today &&
+                                    !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                                    )
+                        .Select(r => new DetailData
+                        {
+                            KelasJalan = r.KelasJalan,
+                            NamaJalan = r.NamaJalan,
+                            AlamatReklame = r.Alamat,
+                            IsiReklame = r.IsiReklame,
+                            JenisReklame = r.Jenis,
+                            Kategori = r.KategoriKetetapan,
+                            Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            KategoriReklame = r.FlagPermohonan,
+                            TglMulai = r.TglMulaiBerlaku.Value,
+                            TglSelesai = r.TglAkhirBerlaku.Value
+                        })
+                        .ToList();
+                        ret.AddRange(terbatasDataExpBlmBongkar);
+                    }
+                    if (status == "Aktif")
+                    {
+                        var terbatasDataAktif = context.DbMonReklames
+                            .Where(r =>
+                                r.FlagPermohonan == "TERBATAS" &&
+                                    r.KelasJalan == kelasJalan &&
+                                    r.NamaJalan == namaJalan &&
+                                r.TglAkhirBerlaku.HasValue &&
+                                r.TglAkhirBerlaku.Value >= tglAwal &&
+                                r.TglAkhirBerlaku.Value < DateTime.Today)
+                            .Select(r => new DetailData
+                            {
+                                KelasJalan = r.KelasJalan,
+                                NamaJalan = r.NamaJalan,
+                                AlamatReklame = r.Alamat,
+                                IsiReklame = r.IsiReklame,
+                                JenisReklame = r.Jenis,
+                                Kategori = r.KategoriKetetapan,
+                                Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                                KategoriReklame = r.FlagPermohonan,
+                                TglMulai = r.TglMulaiBerlaku.Value,
+                                TglSelesai = r.TglAkhirBerlaku.Value
+                            })
+                            .ToList();
+                        ret.AddRange(terbatasDataAktif);
+                    }
                 }
 
                 return ret;
@@ -567,6 +578,7 @@ namespace MonPDReborn.Models.Reklame
 
     public class KategoriReklame
     {
+        public string JenisReklame { get; set; }
         public int ExpiredBongkar { get; set; }
         public int ExpiredBlmBongkar { get; set; }
         public int Aktif { get; set; }
