@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using SixLabors.Fonts.Tables.TrueType;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
@@ -244,6 +245,10 @@ namespace MonPDReborn.Models.Reklame
                     row.NamaJalan = item.NamaJalan;
                     row.KelasJalanId = item.KelasJalan;
 
+                    if (row.NamaJalan=="WIYUNG")
+                    {
+                        var AA = 1;
+                    }
                     var rowInsidentilExp = insidentilData.SingleOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED");
                     if (rowInsidentilExp != null)
                     {
@@ -373,54 +378,58 @@ namespace MonPDReborn.Models.Reklame
                     }
                     if (status == "ExpiredBlmBongkar")
                     {
-                        var insidentilDataExpBlmBongkar = context.DbMonReklames
-                        .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
-                                    r.KelasJalan == kelasJalan &&
-                                    r.NamaJalan == namaJalan &&
-                                    r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
-                                    !(r.TglAkhirBerlaku.Value < DateTime.Today)
-                                    )
-                        .Select(r => new DetailData
-                        {
-                            KelasJalan = r.KelasJalan,
-                            NamaJalan = r.NamaJalan,
-                            AlamatReklame = r.Alamat,
-                            IsiReklame = r.IsiReklame,
-                            JenisReklame = r.Jenis,
-                            Kategori = r.KategoriKetetapan,
-                            Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                            KategoriReklame = r.FlagPermohonan,
-                            TglMulai = r.TglMulaiBerlaku.Value,
-                            TglSelesai = r.TglAkhirBerlaku.Value
-                        })
-                        .ToList();
-                        ret.AddRange(insidentilDataExpBlmBongkar);
+                        //var insidentilDataExpBlmBongkar = context.DbMonReklames
+                        //.Where(r => r.FlagPermohonan == "INSIDENTIL" &&
+                        //            r.KelasJalan == kelasJalan &&
+                        //            r.NamaJalan == namaJalan &&
+                        //            r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                        //            !(r.TglAkhirBerlaku.Value < DateTime.Today)
+                        //            )
+                        //.Select(r => new DetailData
+                        //{
+                        //    KelasJalan = r.KelasJalan,
+                        //    NamaJalan = r.NamaJalan,
+                        //    AlamatReklame = r.Alamat,
+                        //    IsiReklame = r.IsiReklame,
+                        //    JenisReklame = r.Jenis,
+                        //    Kategori = r.KategoriKetetapan,
+                        //    Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
+                        //    KategoriReklame = r.FlagPermohonan,
+                        //    TglMulai = r.TglMulaiBerlaku.Value,
+                        //    TglSelesai = r.TglAkhirBerlaku.Value
+                        //})
+                        //.ToList();
+                        //ret.AddRange(insidentilDataExpBlmBongkar);
                     }
                     if (status == "Aktif")
                     {
                         var insidentilDataAktif = context.DbMonReklames
-                            .Where(r =>
-                                r.FlagPermohonan == "INSIDENTIL" &&
-                                    r.KelasJalan == kelasJalan &&
-                                    r.NamaJalan == namaJalan &&
-                                r.TglAkhirBerlaku.HasValue &&
-                                r.TglAkhirBerlaku.Value >= tglAwal &&
-                                !(r.TglAkhirBerlaku.Value < DateTime.Today)
-                            )
-                            .Select(r => new DetailData
-                            {
-                                KelasJalan = r.KelasJalan,
-                                NamaJalan = r.NamaJalan,
-                                AlamatReklame = r.Alamat,
-                                IsiReklame = r.IsiReklame,
-                                JenisReklame = r.Jenis,
-                                Kategori = r.KategoriKetetapan,
-                                Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF",
-                                KategoriReklame = r.FlagPermohonan,
-                                TglMulai = r.TglMulaiBerlaku.Value,
-                                TglSelesai = r.TglAkhirBerlaku.Value
-                            })
-                            .ToList();
+    .Where(r =>
+        r.FlagPermohonan == "INSIDENTIL" &&
+        r.TglAkhirBerlaku.HasValue &&
+        r.TglAkhirBerlaku.Value.Date >= tglAwal.Date &&
+        r.TglAkhirBerlaku.Value.Date <= tglAkhir.Date &&
+        r.TglAkhirBerlaku.Value.Date >= DateTime.Today &&
+        r.KelasJalan == kelasJalan &&
+        r.NamaJalan == namaJalan
+    )
+    .Select(r => new
+    {
+        r.NoFormulir,
+        r.KelasJalan,
+        r.NamaJalan,
+        AlamatReklame = r.Alamat, // Jika nama properti di model berbeda
+        IsiReklame = r.IsiReklame,
+        NmJenis = r.NmJenis,
+        JenisProduk = r.JenisProduk,
+        Status = r.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+        r.FlagPermohonan,
+        TglMulai = r.TglMulaiBerlaku,
+        TglAkhir = r.TglAkhirBerlaku
+    })
+    .ToList();
+                        var detRowIn = new DetailData();
+                        detRowIn.NamaJalan= ['w']
                         ret.AddRange(insidentilDataAktif);
                     }
                 }
