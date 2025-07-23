@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
-using static MonPDReborn.Lib.General.ResponseBase;
 using MonPDReborn.Models.DataOP;
+using static MonPDReborn.Lib.General.ResponseBase;
 
 
 namespace MonPDReborn.Controllers.DataOP
@@ -57,13 +58,13 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
-        public IActionResult ShowDetail(string jenisPajak)
+        public IActionResult ShowDetail(EnumFactory.EPajak jenisPajak)
         {
             try
             {
                 var model = new Models.DataOP.ProfilePotensiOPVM.ShowDetail
                 {
-                    JenisPajak = jenisPajak,
+                   /* JenisPajak = jenisPajak,*/
                     DataDetailPotensi = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList(jenisPajak)
                 };
                 return PartialView($"{URLView}_{actionName}", model);
