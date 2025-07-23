@@ -71,25 +71,29 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                     }
                     switch (item.Tahun)
                     {
-                        case 2021:
+                        case 2020:
                             existing.Target1 = item.JumlahTarget ?? 0;
                             existing.Realisasi1 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2022:
+                        case 2021:
                             existing.Target2 = item.JumlahTarget ?? 0;
                             existing.Realisasi2 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2023:
+                        case 2022:
                             existing.Target3 = item.JumlahTarget ?? 0;
                             existing.Realisasi3 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2024:
+                        case 2023:
                             existing.Target4 = item.JumlahTarget ?? 0;
                             existing.Realisasi4 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2025:
+                        case 2024:
                             existing.Target5 = item.JumlahTarget ?? 0;
                             existing.Realisasi5 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2025:
+                            existing.Target6 = item.JumlahTarget ?? 0;
+                            existing.Realisasi6 = item.JumlahRealisasi ?? 0;
                             break;
                     }
                 }
@@ -262,6 +266,9 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
+            public decimal Target6 { get; set; }
+            public decimal Realisasi6 { get; set; }
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
         }
 
         public class PendapatanTransfer
@@ -329,5 +336,31 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
         }
+
+        public class PendapatanTotal
+        {
+            public string Uraian { get; set; } = "";
+
+            public decimal Target1 { get; set; }
+            public decimal Realisasi1 { get; set; }
+            public decimal Persentase1 => Target1 > 0 ? (Realisasi1 / Target1) * 100 : 0;
+
+            public decimal Target2 { get; set; }
+            public decimal Realisasi2 { get; set; }
+            public decimal Persentase2 => Target2 > 0 ? (Realisasi2 / Target2) * 100 : 0;
+
+            public decimal Target3 { get; set; }
+            public decimal Realisasi3 { get; set; }
+            public decimal Persentase3 => Target3 > 0 ? (Realisasi3 / Target3) * 100 : 0;
+
+            public decimal Target4 { get; set; }
+            public decimal Realisasi4 { get; set; }
+            public decimal Persentase4 => Target4 > 0 ? (Realisasi4 / Target4) * 100 : 0;
+
+            public decimal Target5 { get; set; }
+            public decimal Realisasi5 { get; set; }
+            public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
+        }
+
     }
 }

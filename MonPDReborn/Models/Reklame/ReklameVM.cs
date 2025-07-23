@@ -60,6 +60,15 @@ namespace MonPDReborn.Models.Reklame
             }
         }
 
+        public class ShowData
+        {
+            public List<RekapData> DataRekap { get; set; } = new();
+            public ShowData()
+            {
+                DataRekap = Method.GetRekapDataReklame();
+            }
+        }
+
         public class Method
         {
             public static DashboardData GetDashboardData()
@@ -131,6 +140,105 @@ namespace MonPDReborn.Models.Reklame
                     new DataReklame { TitikLokasi = "Area Parkir Stadion GBT", Jenis = "Insidentil", Ukuran = "3m x 5m", Penyelenggara = "Konser Musik Nasional", MasaBerlaku = "01 Agu s/d 03 Agu 2025" }
                 };
             }
+
+            public static List<RekapData> GetRekapDataReklame()
+            {
+                return new List<RekapData>()
+                {
+                    new RekapData
+                    {
+                        KelasJalan = "Kelas 1",
+                        NamaJalan = "KUTAI",
+                        Isidentil = new KategoriReklame
+                        {
+                            ExpiredBongkar = 3,
+                            ExpiredBlmBongkar = 6,
+                            Aktif = 5
+                        },
+                        Permanen = new KategoriReklame
+                        {
+                            ExpiredBongkar = 2,
+                            ExpiredBlmBongkar = 4,
+                            Aktif = 7
+                        },
+                        Terbatas = new KategoriReklame
+                        {
+                            ExpiredBongkar = 1,
+                            ExpiredBlmBongkar = 3,
+                            Aktif = 4
+                        }
+                    },
+                    new RekapData
+                    {
+                        KelasJalan = "Kelas 2",
+                        NamaJalan = "SUDIRMAN",
+                        Isidentil = new KategoriReklame
+                        {
+                            ExpiredBongkar = 5,
+                            ExpiredBlmBongkar = 2,
+                            Aktif = 3
+                        },
+                        Permanen = new KategoriReklame
+                        {
+                            ExpiredBongkar = 3,
+                            ExpiredBlmBongkar = 5,
+                            Aktif = 6
+                        },
+                        Terbatas = new KategoriReklame
+                        {
+                            ExpiredBongkar = 2,
+                            ExpiredBlmBongkar = 4,
+                            Aktif = 2
+                        }
+                    }
+                };
+            }
+
+            public static List<DetailData> GetDetailDataReklame()
+            {
+                return new List<DetailData>()
+                {
+                    new DetailData
+                    {
+                        KelasJalan = "Kelas 1",
+                        NamaJalan = "KUTAI",
+                        AlamatReklame = "Jl. Kutai No.1",
+                        IsiReklame = "Promo Diskon Besar",
+                        JenisReklame = "Insidentil",
+                        TglMulai = new DateTime(2025, 1, 1),
+                        TglSelesai = new DateTime(2025, 2, 1),
+                        SisaHari = DateTime.Today.AddDays(10),
+                        Ukuran = "3x4 m",
+                        Pajak = 500_000
+                    },
+                    new DetailData
+                    {
+                        KelasJalan = "Kelas 1",
+                        NamaJalan = "KUTAI",
+                        AlamatReklame = "Jl. Kutai No.2",
+                        IsiReklame = "Launching Produk Baru",
+                        JenisReklame = "Permanent",
+                        TglMulai = new DateTime(2024, 12, 1),
+                        TglSelesai = new DateTime(2025, 12, 1),
+                        SisaHari = DateTime.Today.AddDays(300),
+                        Ukuran = "4x6 m",
+                        Pajak = 1_200_000
+                    },
+                    new DetailData
+                    {
+                        KelasJalan = "Kelas 2",
+                        NamaJalan = "SUDIRMAN",
+                        AlamatReklame = "Jl. Sudirman No.10",
+                        IsiReklame = "Event Konser Musik",
+                        JenisReklame = "Terbatas",
+                        TglMulai = new DateTime(2025, 3, 15),
+                        TglSelesai = new DateTime(2025, 3, 30),
+                        SisaHari = DateTime.Today.AddDays(45),
+                        Ukuran = "2x3 m",
+                        Pajak = 300_000
+                    }
+                };
+            }
         }
     }
 
@@ -177,4 +285,36 @@ namespace MonPDReborn.Models.Reklame
         public int PelanggaranTerdeteksi { get; set; }
     }
 
+    public class RekapData
+    {
+        public string KelasJalan { get; set; } = null!;
+        public string NamaJalan { get; set; } = null!;
+
+        public KategoriReklame Isidentil { get; set; } = new();
+        public KategoriReklame Permanen { get; set; } = new();
+        public KategoriReklame Terbatas { get; set; } = new();
+    }
+
+    public class KategoriReklame
+    {
+        public int ExpiredBongkar { get; set; }
+        public int ExpiredBlmBongkar { get; set; }
+        public int Aktif { get; set; }
+        public int Jumlah => ExpiredBongkar + ExpiredBlmBongkar + Aktif;
+    }
+
+    public class DetailData
+    {
+        public string KelasJalan { get; set; } = null!;
+        public string NamaJalan { get; set; } = null!;
+        public string AlamatReklame { get; set; } = null!;
+        public string IsiReklame { get; set; } = null!;
+        public string JenisReklame { get; set; } = null!;
+        public DateTime TglMulai { get; set; }
+        public DateTime TglSelesai { get; set; }
+        public DateTime SisaHari { get; set; }
+        public string Ukuran { get; set; } = null!;
+        public decimal Pajak { get; set; }
+    }
+    
 }
