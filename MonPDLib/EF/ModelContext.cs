@@ -77,6 +77,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbRekamRestoran> DbRekamRestorans { get; set; }
 
+    public virtual DbSet<DetailUpayaReklame> DetailUpayaReklames { get; set; }
+
     public virtual DbSet<MFasilita> MFasilitas { get; set; }
 
     public virtual DbSet<MJenisKendaraan> MJenisKendaraans { get; set; }
@@ -87,7 +89,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MPajak> MPajaks { get; set; }
 
+    public virtual DbSet<MTindakanReklame> MTindakanReklames { get; set; }
+
     public virtual DbSet<MTipekamarhotel> MTipekamarhotels { get; set; }
+
+    public virtual DbSet<MUpayaReklame> MUpayaReklames { get; set; }
 
     public virtual DbSet<MUserLogin> MUserLogins { get; set; }
 
@@ -253,13 +259,15 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
+    public virtual DbSet<TUpayaReklame> TUpayaReklames { get; set; }
+
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
 
     public virtual DbSet<XxxDbMonReklameUpayaDok> XxxDbMonReklameUpayaDoks { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -733,6 +741,15 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<MTindakanReklame>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("M_TINDAKAN_REKLAME_PK");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE\n");
+
+            entity.HasOne(d => d.IdUpayaNavigation).WithMany(p => p.MTindakanReklames).HasConstraintName("M_TINDAKAN_REKLAME_R01");
+        });
+
         modelBuilder.Entity<MTipekamarhotel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("M_TIPEKAMARHOTEL_PK");
@@ -741,6 +758,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Aktif).HasDefaultValueSql("1                     ");
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<MUpayaReklame>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("M_UPAYA_REKLAME_PK");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE\n");
         });
 
         modelBuilder.Entity<MUserLogin>(entity =>
@@ -1525,6 +1549,11 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<TUpayaReklame>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("T_UPAYA_REKLAME_PK");
         });
 
         modelBuilder.Entity<XxxDbMonReklameUpayaDok>(entity =>
