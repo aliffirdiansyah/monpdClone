@@ -266,12 +266,14 @@
 
         }
 
-        function detailReklameCellTemplate(cellElement, cellInfo) {
+                        function detailReklameCellTemplate(cellElement, cellInfo) {
             const value = cellInfo.value ?? 0;
 
             const [kategori, statusRaw] = cellInfo.column.dataField.split('.');
-            const status = statusRaw;  // sudah dalam bentuk 'ExpiredBongkar', dsb.
+            const status = statusRaw;
+
             const jalan = cellInfo.data.NamaJalan;
+            const kelasJalan = cellInfo.data.KelasJalan;  // AMBIL dari data baris
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
@@ -279,7 +281,7 @@
                 .attr('title', 'Lihat Detail')
                 .text(value.toLocaleString('id-ID'))
                 .on('click', () => {
-                    showDetailModal(kategori, status, jalan);
+                    GetDetailJalan(kelasJalan, jalan, status);
                 });
 
             const $wrapper = $('<div>')
@@ -292,6 +294,8 @@
 
             $(cellElement).append($wrapper);
         }
+
+
 
 
 
