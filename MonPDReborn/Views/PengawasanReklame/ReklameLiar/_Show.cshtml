@@ -1,0 +1,64 @@
+﻿@model MonPDReborn.Models.PengawasanReklame.ReklameLiarVM.Show
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.ReklameLiarVM.RekapBulanan>()
+        .ID("reklameLiarGrid")
+        .DataSource(Model.DataRekap)
+        .KeyExpr("NamaJalan", "Jenis") // Kombinasi kunci unik
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(5)) // Mengatur paging
+        .Pager(pager => {
+            pager.DisplayMode(GridPagerDisplayMode.Full);
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+            pager.ShowInfo(true);
+            pager.ShowNavigationButtons(true);
+        })
+        .Columns(columns => {
+            columns.AddFor(m => m.NamaJalan).Width(180).Fixed(true);
+            columns.AddFor(m => m.KelasJalan).Width(100).Alignment(HorizontalAlignment.Center)
+                .CellTemplate(@<text>
+                    <span class="badge bg-danger bg-opacity-25 text-danger fw-semibold fs-12"><%- value %></span>
+                </text>);
+
+            columns.AddFor(m => m.Jenis).Width(120);
+            
+            // Kolom untuk setiap bulan
+            columns.AddFor(m => m.Jan).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Feb).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Mar).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Apr).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Mei).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Jun).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Jul).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Agu).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Sep).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Okt).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Nov).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Des).Alignment(HorizontalAlignment.Center);
+
+            columns.AddFor(m => m.Total).Alignment(HorizontalAlignment.Center).CssClass("fw-bold");
+        })
+        .Summary(s => {
+            s.TotalItems(items => {
+                items.AddFor(m => m.Jenis).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
+                items.AddFor(m => m.Jan).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Feb).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Mar).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Apr).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Mei).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Jun).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Jul).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Agu).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Sep).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Okt).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Nov).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Des).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}");
+                items.AddFor(m => m.Total).SummaryType(SummaryType.Sum).DisplayFormat("{0:N0}").CssClass("fw-bold");
+            });
+        })
+    )
+</div>
