@@ -30,12 +30,13 @@
         columns.Add()
             .Caption("Jumlah OP")
             .CellTemplate(@<text>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span><%- data.JumlahOP %></span>
-                    <button class="btn btn-sm btn-outline-primary ms-2"
-                            onclick="onJumlahOPClick('<%- data.Kategori %>', <%- data.JumlahOP %>)">
-                        Detail
-                    </button>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                        class="value-link text-decoration-none"
+                                      onclick="onJumlahOPClick('<%- data.Kategori %>', <%- data.JumlahOP %>)"
+                        title="Lihat Detail">
+                        <%- (data.JumlahOP || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.JumlahOP");
@@ -43,12 +44,13 @@
         columns.Add()
             .Caption("Terpasang TS")
             .CellTemplate(@<text>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span><%- data.TerpasangTS %></span>
-                    <button class="btn btn-sm btn-outline-success ms-2"
-                            onclick="onTerpasangTSClick('<%- data.Kategori %>', <%- data.TerpasangTS %>)">
-                        Detail
-                    </button>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                       class="value-link text-decoration-none"
+                       onclick="onTerpasangTSClick('<%- data.Kategori %>', <%- data.TerpasangTS %>)"
+                       title="Lihat Detail">
+                        <%- (data.TerpasangTS || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.TerpasangTS");
@@ -56,12 +58,13 @@
         columns.Add()
             .Caption("Terpasang TB")
             .CellTemplate(@<text>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span><%- data.TerpasangTB %></span>
-                    <button class="btn btn-sm btn-outline-warning ms-2"
-                            onclick="onTerpasangTBClick('<%- data.Kategori %>', <%- data.TerpasangTB %>)">
-                        Detail
-                    </button>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                       class="value-link text-decoration-none"
+                       onclick="onTerpasangTBClick('<%- data.Kategori %>', <%- data.TerpasangTB %>)"
+                       title="Lihat Detail">
+                        <%- (data.TerpasangTB || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.TerpasangTB");
@@ -69,12 +72,13 @@
         columns.Add()
             .Caption("Terpasang SB")
             .CellTemplate(@<text>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span><%- data.TerpasangSB %></span>
-                    <button class="btn btn-sm btn-outline-danger ms-2"
-                            onclick="onTerpasangSBClick('<%- data.Kategori %>', <%- data.TerpasangSB %>)">
-                        Detail
-                    </button>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <a href="javascript:void(0);"
+                       class="value-link text-decoration-none"
+                       onclick="onTerpasangSBClick('<%- data.Kategori %>', <%- data.TerpasangSB %>)"
+                       title="Lihat Detail">
+                        <%- (data.TerpasangSB || 0).toLocaleString('id-ID') %>
+                    </a>
                 </div>
             </text>)
             .CalculateCellValue("data => data.TerpasangSB");
