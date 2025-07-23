@@ -133,6 +133,11 @@
         $(document).ready(function () {
             fnShowRekap("");
            // loadDetail("");  // Panggil semua data detail saat pertama load
+           var grid = $("#dataPotensiGrid").dxDataGrid("instance");
+            if (grid) {
+                grid.option("columnAutoWidth", true);
+                grid.refresh(); // ini aman, tidak menghapus data
+            }
         });
 
 
@@ -206,6 +211,13 @@
                 }
             });
         }
+        function onDataGridContentLoad() {
+            $("#loading2-DataPotensi").show();
+
+        }
+        function onDataGridContentReady() {
+            $("#loading2-DataPotensi").hide();
+        }
 
         function onDetailClick(e) {
             // Pastikan tidak submit default tombol
@@ -219,15 +231,13 @@
                 return;
             }
 
-            const jenisPajak = data.JenisPajak;
-            const kategori = data.Kategori;
+            const jenisPajak = data.EnumPajak;
+            const kategori = data.EnumKategori;
 
             if (!jenisPajak || !kategori) {
                 DevExpress.ui.notify("Jenis Pajak atau Kategori kosong", "error", 2000);
                 return;
             }
-
-            console.log("onDetailClick:", jenisPajak, kategori);
 
             // Tampilkan loader
             $("#loader").show();
@@ -236,7 +246,7 @@
 
             // Panggil server
             $.ajax({
-                url: '/ProfilePotensiOP/ShowData', // ganti dengan nama action & controller yg benar
+                url: '/ProfilePotensiOP/ShowData',
                 type: 'GET',
                 data: {
                     JenisPajak: jenisPajak,
@@ -246,9 +256,10 @@
                     $("#loader").hide();
 
                     if (response.Status === undefined) {
-                        $modal.find(".modal-title").html("Detail WP");
+                        $modal.find(".modal-title").html("Detail Potensi");
                         $modal.find(".modal-body").html(response);
                         $modal.modal('show');
+                        
                     } else {
                         Swal.fire({
                             icon: 'warning',
