@@ -103,10 +103,11 @@ namespace HotelWs
             // do fill db op HOTEL
             if (IsGetDBOp())
             {
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                {
-                    FillOP(i);
-                }
+                FillOP(2025);
+                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                //{
+                //    FillOP(i);
+                //}
             }
 
             MailHelper.SendMail(
@@ -558,7 +559,12 @@ WHERE A.NPWPD NOT IN (
 FROM (
 SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Perhotelan' PAJAK_NAMA,
               NVL(ALAMAT_OP, '-') ALAMAT_OP, '-'  ALAMAT_OP_NO,'-' ALAMAT_OP_RT,'-' ALAMAT_OP_RW,NVL(NOMOR_TELEPON, '-') TELP,
-              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT,TGL_TUTUP TGL_OP_TUTUP,
+              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT, CASE
+              WHEN TGL_TUTUP IS NULL THEN NULL 
+              WHEN TO_CHAR(TGL_TUTUP,'YYYY') <= 1990 THEN NULL
+              ELSE
+              TGL_TUTUP
+              END  TGL_OP_TUTUP,
               NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP, 0 METODE_PENJUALAN,        0 METODE_PEMBAYARAN,        0 JUMLAH_KARYAWAN,  
               CASE                             
                         WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG TIGA' THEN 14
@@ -581,7 +587,7 @@ SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
 WHERE NAMA_PAJAK_DAERAH='HOTEL' AND A.FK_NOP IS NOT NULL
 )
-WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN)
+WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN) OR  TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
                     ";
 
                 var result = _contMonitoringDB.Set<DbOpHotel>().FromSqlRaw(sql, new[] {

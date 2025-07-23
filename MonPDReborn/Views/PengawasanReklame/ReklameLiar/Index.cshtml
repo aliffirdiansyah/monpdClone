@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="col-lg-2">
-                        <button type="button" class="btn btn-success w-80">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-80">
                             <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
                         </button>
                     </div>
@@ -51,7 +51,7 @@
                 <div>
                     <div class="text-uppercase fw-bold">Total Reklame Liar</div>
                     <div class="fs-1 fw-semibold">xxx</div>
-                    <small class="text-muted"><span class="text-danger fw-bold">xx %</span> dari target</small>
+                    <small class="text-muted"><span class="text-danger fw-bold">xx %</span> dari tahun lalu</small>
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@
                 <div>
                     <div class="text-uppercase fw-bold">Semester I (Jan - Jun)</div>
                     <div class="fs-1 fw-semibold">xxx</div>
-                    <small class="text-muted"><span class="text-success fw-bold">xx %</span> dari target</small>
+                    <small class="text-muted"><span class="text-success fw-bold">xx %</span> dari tahun lalu</small>
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@
                 <div>
                     <div class="text-uppercase fw-bold">Semester II (Jul - Des)</div>
                     <div class="fs-1 fw-semibold">xxx</div>
-                    <small class="text-muted"><span class="text-success fw-bold">xx %</span> dari target</small>
+                    <small class="text-muted"><span class="text-success fw-bold">xx %</span> dari tahun lalu</small>
                 </div>
             </div>
         </div>
@@ -122,16 +122,15 @@
     <script>
         // Saat halaman siap, langsung panggil fungsi untuk memuat data tabel
         $(document).ready(function () {
-            fnShow();
+            // Langsung panggil klik tombol filter untuk memuat data awal
+            // dengan tahun default yang sudah terpasang di SelectBox.
+            $('#btnTerapkanFilter').click();
         });
 
-        // Event handler untuk tombol filter
+        // Beri ID pada tombol Anda
         $('#btnTerapkanFilter').on('click', function() {
-            // Ambil nilai tahun yang dipilih
             const selectedTahun = $('#selectTahun').dxSelectBox('instance').option('value');
-            // Panggil kembali fnShow dengan nilai filter baru
             fnShow(selectedTahun);
-
         });
 
 
@@ -142,7 +141,7 @@
                 url: '@Url.Action("Show", "ReklameLiar")', // Pastikan Controller 'ReklameLiar'
                 type: 'GET',
                 data: {
-                    tahun: tahun || new Date().getFullYear() // Jika tahun kosong, kirim tahun sekarang
+                    tahun: tahun
 
                 },
                 beforeSend: function () {
@@ -161,6 +160,43 @@
                 }
             });
 
+        }
+
+        function detailReklameCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+            const jalan = cellInfo.data.NamaJalan;
+            const jenis = cellInfo.data.Jenis;
+            const bulan = cellInfo.column.dataField; // "Jan", "Feb", dll.
+
+            const $link = $('<a>').addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => showDetailModal(jalan, jenis, bulan));
+            $(cellElement).append($link);
+        }
+
+        function showDetailModal(jalan, jenis, bulan, jumlah) {
+            // Parameter yang dikirim: jalan, kategori (jenis), status (bulan)
+            const url = '@Url.Action("Detail", "ReklameLiar")'
+                + '?jalan=' + encodeURIComponent(jalan)
+                + '&kategori=' + encodeURIComponent(jenis)
+                + '&status=' + encodeURIComponent(bulan);
+
+            const $modal = $('#detailModal');
+            const $modalContent = $('#detailModalContent');
+
+            $modal.modal('show');
+            $modalContent.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+            $.get(url, function (data) {
+                $modalContent.html(data);
+            }).fail(function() {
+                 $modalContent.html('<p class="text-danger p-5 text-center">Gagal memuat detail.</p>');
+            });
         }
 
     </script>
