@@ -232,59 +232,115 @@
                 }
             });
         }
+                function GetDetailJalan(kelasJalan, namaJalan, status, jenisReklame) {
+            const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
+            const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
 
-        function showDetailModal(kategori, status, namaJalan) {
-            const url = '@Url.Action("Detail", "Reklame")'
-                + '?kategori=' + encodeURIComponent(kategori)
-                + '&status=' + encodeURIComponent(status)
-                + '&jalan=' + encodeURIComponent(namaJalan);
+            const tglAwal = tglAwalDate ? tglAwalDate.toISOString().split('T')[0] : '';
+            const tglAkhir = tglAkhirDate ? tglAkhirDate.toISOString().split('T')[0] : '';
 
-            $('#detailModal').modal('show');
+            $.ajax({
+                url: '@Url.Action("Detail", "Reklame")',
+                type: "GET",
+                data: { kelasJalan, namaJalan, status, jenisReklame, tglAwal, tglAkhir },
+                beforeSend: function () {
+                    $("#loader").show();
 
-            // Tampilkan spinner di modal
-            $('#detailModalContent').html(`
-                <div class="text-center p-5">
-                    <div class="spinner-border text-primary"></div>
-                </div>
-            `);
-
-            // Ambil konten detail via AJAX
-            $.get(url, function (data) {
-                $('#detailModalContent').html(data);
-            }).fail(function () {
-                $('#detailModalContent').html(`
-                    <p class="text-danger p-5">Gagal memuat detail.</p>
-                `);
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
+                },
+                success: function (response) {
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Data Detail Reklame Jalan " + namaJalan);
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    $modal.find(".modal-title").html("Error");
+                    $modal.find(".modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
             });
         }
 
+        // function GetDetailJalan(kelasJalan, namaJalan, status, jenisReklame)
+        // {
+        //     const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
+        //     const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
 
-                function detailReklameCellTemplate(cellElement, cellInfo) {
-            const value = cellInfo.value ?? 0;
+        //     Format ke yyyy-MM-dd
+        //     const tglAwal = tglAwalDate ? tglAwalDate.toISOString().split('T')[0] : '';
+        //     const tglAkhir = tglAkhirDate ? tglAkhirDate.toISOString().split('T')[0] : '';
+        //     $.ajax({
+        //         url: '@Url.Action("Detail", "Reklame")',
+        //         type: "GET",
+        //         data: {
+        //             kelasJalan, namaJalan, status, jenisReklame, tglAwal, tglAkhir
+        //         },
+        //         beforeSend: function () {
+        //             $("#loader").show();
 
-            const [kategori, statusRaw] = cellInfo.column.dataField.split('.');
-            const status = statusRaw;  // sudah dalam bentuk 'ExpiredBongkar', dsb.
-            const jalan = cellInfo.data.NamaJalan;
+                   
+        //         },
+        //         success: function (resp)
+        //         {
+        //             $("#loader").hide();
+        //             $("#staticBackdropLargeScrollableCenter .modal-title").html("Data Detail Reklame Jalan " + namaJalan);
+        //             $("#staticBackdropLargeScrollableCenter .modal-body").html(resp);
+        //             $("#staticBackdropLargeScrollableCenter").modal('show');
+        //         },
+        //         error: function (xhr) {
+        //             $("#loader").hide();
+        //             alert("Internal Server Error", '', 'Information!', 1);
+        //             $('#modal-danger').modal({ backdrop: 'static', keyboard: false, show: true })
+        //         }
+        //     });
 
-            const $link = $('<a>')
-                .addClass('value-link text-decoration-none')
-                .attr('href', 'javascript:void(0);')
-                .attr('title', 'Lihat Detail')
-                .text(value.toLocaleString('id-ID'))
-                .on('click', () => {
-                    showDetailModal(kategori, status, jalan);
-                });
+        // }
 
-            const $wrapper = $('<div>')
-                .css({
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end'
-                })
-                .append($link);
+        // function detailReklameCellTemplate(cellElement, cellInfo) {
+        //     const value = cellInfo.value ?? 0;
 
-            $(cellElement).append($wrapper);
-        }
+        //     const [kategori, statusRaw] = cellInfo.column.dataField.split('.');
+        //     const status = statusRaw;
+
+        //     const jalan = cellInfo.data.NamaJalan;
+        //     const kelasJalan = cellInfo.data.KelasJalanId;  // AMBIL dari data baris
+
+        //     const $link = $('<a>')
+        //         .addClass('value-link text-decoration-none')
+        //         .attr('href', 'javascript:void(0);')
+        //         .attr('title', 'Lihat Detail')
+        //         .text(value.toLocaleString('id-ID'))
+        //         .on('click', () => {
+        //             GetDetailJalan(kelasJalan, jalan, status, jenisReklame);
+        //         });
+
+        //     const $wrapper = $('<div>')
+        //         .css({
+        //             display: 'flex',
+        //             alignItems: 'center',
+        //             justifyContent: 'flex-end'
+        //         })
+        //         .append($link);
+
+        //     $(cellElement).append($wrapper);
+        // }
+
+
 
 
 

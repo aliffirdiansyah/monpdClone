@@ -52,13 +52,13 @@ namespace MonPDReborn.Models.PengawasanReklame
                     new RekapBulanan { TahunData = 2025, NamaJalan = "JL. IMAM BONJOL", KelasJalan = "2", Jenis = "Baliho", Jan = 7, Feb = 6, Mar = 8, Apr = 5, Mei = 7, Jun = 6, Jul = 8, Agu = 9, Sep = 7, Okt = 6, Nov = 8, Des = 9 }
                 };
 
-                // Jika tidak ada tahun yang dipilih (null), tampilkan semua data
+                // Jika tidak ada tahun yang dipilih, tampilkan data tahun sekarang sebagai default
                 if (!tahun.HasValue)
                 {
-                    return allData;
+                    return allData.Where(d => d.TahunData == DateTime.Now.Year).ToList();
                 }
 
-                // Jika ada tahun yang dipilih, filter berdasarkan tahun
+                // Jika ada tahun yang dipilih, filter berdasarkan tahun tersebut
                 return allData.Where(d => d.TahunData == tahun.Value).ToList();
             }
             public static InfoJalan GetInfoJalan(string namaJalan, string jenis, string bulan)
@@ -91,11 +91,11 @@ namespace MonPDReborn.Models.PengawasanReklame
             {
                 // Logika dummy: mengembalikan data seolah-olah difilter
                 return new List<DetailData> {
-            new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 62", Jenis = "Atap", TanggalBongkar = new DateTime(2026, 1, 5) },
-            new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 200", Jenis = "Dinding", TanggalBongkar = new DateTime(2026, 1, 28) },
-            new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 192", Jenis = "Konstruksi Khusus", TanggalBongkar = new DateTime(2026, 4, 4) },
-            new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 179", Jenis = "Atap", TanggalBongkar = new DateTime(2026, 12, 29) }
-        };
+                    new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 62", Jenis = "Atap", TanggalBongkar = new DateTime(2026, 1, 5) },
+                    new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 200", Jenis = "Dinding", TanggalBongkar = new DateTime(2026, 1, 28) },
+                    new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 192", Jenis = "Konstruksi Khusus", TanggalBongkar = new DateTime(2026, 4, 4) },
+                    new DetailData { NamaJalan = jalan, KelasJalan = "1", AlamatReklame = $"{jalan} No. 179", Jenis = "Atap", TanggalBongkar = new DateTime(2026, 12, 29) }
+                };
             }
         }
 
