@@ -6,15 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("NoformS", "TglUpaya", "Seq")]
-[Table("DB_MON_REKLAME_UPAYA_DOK")]
-public partial class DbMonReklameUpayaDok
+[PrimaryKey("NoFormulir", "TglUpaya", "Seq")]
+[Table("XXX_DB_MON_REKLAME_UPAYA_DOK")]
+public partial class XxxDbMonReklameUpayaDok
 {
     [Key]
-    [Column("NOFORM_S")]
+    [Column("NO_FORMULIR")]
     [StringLength(50)]
     [Unicode(false)]
-    public string NoformS { get; set; } = null!;
+    public string NoFormulir { get; set; } = null!;
 
     [Key]
     [Column("TGL_UPAYA", TypeName = "DATE")]
