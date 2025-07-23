@@ -74,37 +74,21 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
-
-        /*public IActionResult ShowData()
+        public IActionResult Detail(string kelasJalan, string namaJalan, string status, string tglAwal, string tglAkhir)
         {
             try
             {
-                var model = new Models.Reklame.ReklameVM.ShowData();
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }*/
+                // Parsing string ke DateTime (format: yyyy-MM-dd)
+                if (!DateTime.TryParse(tglAwal, out var tanggalAwal))
+                    throw new ArgumentException("Format Tanggal Awal tidak valid.");
 
-        public IActionResult Detail(string kategori, string status, string jalan)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(kategori) || string.IsNullOrWhiteSpace(status) || string.IsNullOrWhiteSpace(jalan))
+                if (!DateTime.TryParse(tglAkhir, out var tanggalAkhir))
+                    throw new ArgumentException("Format Tanggal Akhir tidak valid.");
+
+                if (string.IsNullOrWhiteSpace(kelasJalan) || string.IsNullOrWhiteSpace(status) || string.IsNullOrWhiteSpace(namaJalan))
                     return BadRequest("Invalid parameters.");
 
-                var model = new Models.Reklame.ReklameVM.DetailReklame(kategori, status, jalan);
-                //return PartialView("_Detail", model);
+                var model = new Models.Reklame.ReklameVM.DetailReklame(kelasJalan, namaJalan, status, tanggalAwal.AddDays(1), tanggalAkhir);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
