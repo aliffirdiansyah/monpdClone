@@ -10,12 +10,13 @@ namespace MonPDReborn.Models.Reklame
             public DashboardData Data { get; set; } = new();
             // Properti untuk menampung nilai yang dipilih dari filter
             public int SelectedJalan { get; set; }
-            public int SelectedKecamatan { get; set; }
+            public int SelectedKelasJalan { get; set; }
             public int SelectedJenisReklame { get; set; }
+            public DateTime[] SelectedDateRange { get; set; }
 
             // Properti untuk mengisi data ke dalam dropdown
             public List<SelectListItem> JalanList { get; set; } = new();
-            public List<SelectListItem> KecamatanList { get; set; } = new();
+            public List<SelectListItem> KelasJalanList { get; set; } = new();
             public List<SelectListItem> JenisReklameList { get; set; } = new();
 
             public Index()
@@ -27,8 +28,8 @@ namespace MonPDReborn.Models.Reklame
                 JalanList.Add(new SelectListItem { Value = "1", Text = "Jl. Ahmad Yani" });
                 JalanList.Add(new SelectListItem { Value = "2", Text = "Jl. Basuki Rahmat" });
 
-                KecamatanList.Add(new SelectListItem { Value = "1", Text = "Gayungan" });
-                KecamatanList.Add(new SelectListItem { Value = "2", Text = "Tegalsari" });
+                KelasJalanList.Add(new SelectListItem { Value = "1", Text = "Gayungan" });
+                KelasJalanList.Add(new SelectListItem { Value = "2", Text = "Tegalsari" });
 
                 JenisReklameList.Add(new SelectListItem { Value = "1", Text = "Insidentil" });
                 JenisReklameList.Add(new SelectListItem { Value = "2", Text = "Permanen < 8m" });
@@ -83,23 +84,30 @@ namespace MonPDReborn.Models.Reklame
             // Method BARU untuk membuat data ringkasan per jalan
             public static List<ReklamePerJalan> GetDataReklamePerJalan()
             {
-                // Ambil semua data detail sebagai sumber
-                var semuaReklame = GetAllDataReklame();
-
-                // Kelompokkan berdasarkan nama jalan dan hitung
-                var ringkasan = semuaReklame
-                    .GroupBy(r => r.TitikLokasi.Split('(')[0].Trim()) // Mengambil nama jalan saja
-                    .Select(g => new ReklamePerJalan
-                    {
-                        NamaJalan = g.Key,
-                        Kecamatan = "Contoh Kecamatan", // Ganti dengan data asli jika ada
-                        TotalReklame = g.Count(),
-                        Insidentil = g.Count(r => r.Jenis == "Insidentil"),
-                        PermanenKecil = g.Count(r => r.Jenis == "Permanen < 8m"),
-                        PermanenBesar = g.Count(r => r.Jenis == "Permanen > 8m")
-                    }).ToList();
-
-                return ringkasan;
+                return new List<ReklamePerJalan>
+        {
+            new ReklamePerJalan
+            {
+                NamaJalan = "Jl. KUTAI", KelasJalan = "Kelas I",
+                InsidentilBongkar = 3, InsidentilBelumBongkar = 0, InsidentilAktif = 5,
+                PermanenBongkar = 8, PermanenBelumBongkar = 2, PermanenAktif = 10,
+                TerbatasBongkar = 1, TerbatasBelumBongkar = 1, TerbatasAktif = 2,
+            },
+            new ReklamePerJalan
+            {
+                NamaJalan = "Jl. AHMAD YANI", KelasJalan = "Kelas II",
+                InsidentilBongkar = 5, InsidentilBelumBongkar = 2, InsidentilAktif = 10,
+                PermanenBongkar = 15, PermanenBelumBongkar = 5, PermanenAktif = 20,
+                TerbatasBongkar = 3, TerbatasBelumBongkar = 0, TerbatasAktif = 4,
+            },
+            new ReklamePerJalan
+            {
+                NamaJalan = "Jl. BASUKI RAHMAT", KelasJalan = "Kelas III",
+                InsidentilBongkar = 2, InsidentilBelumBongkar = 1, InsidentilAktif = 8,
+                PermanenBongkar = 10, PermanenBelumBongkar = 3, PermanenAktif = 15,
+                TerbatasBongkar = 2, TerbatasBelumBongkar = 2, TerbatasAktif = 5,
+            }
+        };
             }
 
             // Method BARU untuk memfilter data detail berdasarkan jalan
@@ -129,12 +137,27 @@ namespace MonPDReborn.Models.Reklame
     // Model BARU untuk tabel ringkasan
     public class ReklamePerJalan
     {
+        // Properti Kunci
         public string NamaJalan { get; set; } = null!;
-        public string Kecamatan { get; set; } = null!;
-        public int TotalReklame { get; set; }
-        public int Insidentil { get; set; }
-        public int PermanenKecil { get; set; }
-        public int PermanenBesar { get; set; }
+        public string KelasJalan { get; set; } = null!; // Kelas Jalan diganti KelasJalan agar sesuai data
+
+        // Properti untuk grup INSIDENTIL
+        public int InsidentilBongkar { get; set; }
+        public int InsidentilBelumBongkar { get; set; }
+        public int InsidentilAktif { get; set; }
+        public int InsidentilJumlah => InsidentilBongkar + InsidentilBelumBongkar + InsidentilAktif;
+
+        // Properti untuk grup JENIS PERMANENT
+        public int PermanenBongkar { get; set; }
+        public int PermanenBelumBongkar { get; set; }
+        public int PermanenAktif { get; set; }
+        public int PermanenJumlah => PermanenBongkar + PermanenBelumBongkar + PermanenAktif;
+
+        // Properti untuk grup TERBATAS
+        public int TerbatasBongkar { get; set; }
+        public int TerbatasBelumBongkar { get; set; }
+        public int TerbatasAktif { get; set; }
+        public int TerbatasJumlah => TerbatasBongkar + TerbatasBelumBongkar + TerbatasAktif;
     }
 
     // Model untuk setiap baris data reklame detail (yang sudah ada)
