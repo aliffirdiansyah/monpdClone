@@ -27,18 +27,18 @@
             columns.AddFor(m => m.Jenis).Width(120);
             
             // Kolom untuk setiap bulan
-            columns.AddFor(m => m.Jan).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Feb).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Mar).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Apr).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Mei).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Jun).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Jul).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Agu).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Sep).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Okt).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Nov).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Des).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Jan).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Feb).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Mar).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Apr).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Mei).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Jun).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Jul).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Agu).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Sep).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Okt).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Nov).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
+            columns.AddFor(m => m.Des).Alignment(HorizontalAlignment.Center).CellTemplate(new JS("detailReklameCellTemplate"));
 
             columns.AddFor(m => m.Total).Alignment(HorizontalAlignment.Center).CssClass("fw-bold");
         })

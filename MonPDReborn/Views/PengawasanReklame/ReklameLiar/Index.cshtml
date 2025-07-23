@@ -163,6 +163,43 @@
 
         }
 
+        function detailReklameCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+            const jalan = cellInfo.data.NamaJalan;
+            const jenis = cellInfo.data.Jenis;
+            const bulan = cellInfo.column.dataField; // "Jan", "Feb", dll.
+
+            const $link = $('<a>').addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => showDetailModal(jalan, jenis, bulan));
+            $(cellElement).append($link);
+        }
+
+        function showDetailModal(jalan, jenis, bulan, jumlah) {
+            // Parameter yang dikirim: jalan, kategori (jenis), status (bulan)
+            const url = '@Url.Action("Detail", "ReklameLiar")'
+                + '?jalan=' + encodeURIComponent(jalan)
+                + '&kategori=' + encodeURIComponent(jenis)
+                + '&status=' + encodeURIComponent(bulan);
+
+            const $modal = $('#detailModal');
+            const $modalContent = $('#detailModalContent');
+
+            $modal.modal('show');
+            $modalContent.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+            $.get(url, function (data) {
+                $modalContent.html(data);
+            }).fail(function() {
+                 $modalContent.html('<p class="text-danger p-5 text-center">Gagal memuat detail.</p>');
+            });
+        }
+
     </script>
 
 }
