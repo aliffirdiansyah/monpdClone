@@ -32,25 +32,13 @@
 
             <div class="card-body">
                 <div class="row g-3 align-items-center">
-                    @* <div class="col-lg-5 col-md-12">
-                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedJalan)
-                                                .ID("selectJalan")
-                                                .DataSource(Model.JalanList)
-                                                .ValueExpr("Value")
-                                                .DisplayExpr("Text")
-                                                .SearchEnabled(true)
-                                                .Placeholder("Semua Nama Jalan")
-                                                .StylingMode(EditorStylingMode.Outlined)
-                                                )
-                    </div> *@
-
+                   
                     <div class="col-lg col-md-6">
                         @(Html.DevExtreme().DateBoxFor(x=>x.TglAwal)
                                                 .ID("tanggalAwal")
                                                 .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal Awal") // Menggantikan <label>
-                                                .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
-                                                .Value(DateTime.Now) // Nilai default: hari ini
+                                                .Placeholder("Tanggal Awal")
+                                                .StylingMode(EditorStylingMode.Outlined)
                                                 )
                     </div>
 
@@ -58,13 +46,13 @@
                         @(Html.DevExtreme().DateBoxFor(x => x.TglAkhir)
                                                 .ID("tanggalAkhir")
                                                 .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal Akhir") // Menggantikan <label>
-                                                .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
+                                                .Placeholder("Tanggal Akhir")
+                                                .StylingMode(EditorStylingMode.Outlined)
                                                 )
                     </div>
 
                     <div class="col-lg-2 col-md-12">
-                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100" onclick="fnShow()">
                             <i class="ri-filter-3-line me-1"></i> Terapkan
                         </button>
                     </div>
@@ -212,61 +200,38 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Biarkan kosong untuk "Semua Nama Jalan"
-            $('#selectJalan').dxSelectBox('instance').option('value', null);
-
-            // 2. Atur default untuk DateBox
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = today.getMonth(); // Bulan dimulai dari 0 (Januari = 0)
-
-            const tanggalAwal = new Date(yyyy, mm, 1);
-            const tanggalAkhir = new Date(yyyy, mm + 1, 0);
-
-            $('#tanggalAwal').dxDateBox('instance').option('value', tanggalAwal);
-            $('#tanggalAkhir').dxDateBox('instance').option('value', tanggalAkhir);
-
-            // Langsung panggil klik tombol untuk memuat data awal dengan filter default
-            $('#btnTerapkanFilter').click();
             fnShow();
         });
 
-        // Event handler untuk tombol filter
-        $('#btnTerapkanFilter').on('click', function() {
-            // Ambil nilai dari semua filter
-            const selectedJalan = $('#selectJalan').dxSelectBox('instance').option('value');
-            const tglAwal = $('#tanggalAwal').dxDateBox('instance').option('value');
-            const tglAkhir = $('#tanggalAkhir').dxDateBox('instance').option('value');
 
-            fnShow(selectedJalan, tglAwal, tglAkhir);
-        });
-
-        // Fungsi untuk memuat tabel ringkasan utama
         function fnShow() {
+            const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
+            const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
+
+            // Format ke yyyy-MM-dd
+            const tglAwal = tglAwalDate ? tglAwalDate.toISOString().split('T')[0] : '';
+            const tglAkhir = tglAkhirDate ? tglAkhirDate.toISOString().split('T')[0] : '';
             $.ajax({
-                url: '@Url.Action("Show", "Reklame")',
-                beforeSend: function () { $('#loading-Show').show(); },
-                success: function (result) { $('#Show').html(result); },
-                error: function () { $('#Show').html('<p class="text-danger">Gagal memuat data.</p>'); },
-                complete: function() { $('#loading-Show').hide(); }
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: {
+                    TglAwal: tglAwal,
+                    TglAkhir: tglAkhir
+                },
+                beforeSend: function () {
+                    $('#loading2-Show').show();  
+                    $('#Show').hide();
+                },
+                success: function (response) {
+                    $('#loading2-Show').hide();
+                    $('#Show').show().html(response);
+                },
+                error: function (xhr) {
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<p class="text-danger">⚠ Gagal memuat data. Silakan coba lagi.</p>');
+                }
             });
         }
-
-        // Fungsi untuk menampilkan modal detail
-        // function showDetailModal(namaJalan) {
-        //     const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
-
-        //     $('#detailModal').modal('show');
-        //     Tampilkan spinner di modal
-        //     $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
-
-        //     Ambil konten detail via AJAX
-        //     $.get(url, function (data) {
-        //         $('#detailModalContent').html(data);
-        //     }).fail(function() {
-        //          $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
-        //     });
-        // }
 
         function showDetailModal(kategori, status, namaJalan) {
             const url = '@Url.Action("Detail", "Reklame")'
