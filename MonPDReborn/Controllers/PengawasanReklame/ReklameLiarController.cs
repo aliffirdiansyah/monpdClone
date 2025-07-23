@@ -41,11 +41,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
-        public IActionResult Show()
+        public IActionResult Show(int tahun)
         {
             try
             {
-                var model = new Models.PengawasanReklame.ReklameLiarVM.Show();
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Show(tahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -62,26 +62,26 @@ namespace MonPDReborn.Controllers.PengawasanReklame
             }
         }
 
-        public IActionResult Detail()
-        {
-            try
-            {
-                var model = new Models.PengawasanReklame.ReklameLiarVM.Detail();
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
+        //public IActionResult Detail()
+        //{
+        //    try
+        //    {
+        //        var model = new Models.PengawasanReklame.ReklameLiarVM.Detail();
+        //        return PartialView($"{URLView}_{actionName}", model);
+        //    }
+        //    catch (ArgumentException e)
+        //    {
+        //        response.Status = StatusEnum.Error;
+        //        response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+        //        return Json(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Status = StatusEnum.Error;
+        //        response.Message = "⚠ Server Error: Internal Server Error";
+        //        return Json(response);
+        //    }
+        //}
 
 
     }
