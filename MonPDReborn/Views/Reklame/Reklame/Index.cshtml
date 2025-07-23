@@ -286,20 +286,75 @@
         }
 
         // Fungsi untuk menampilkan modal detail
-        function showDetailModal(namaJalan) {
-            const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
+        // function showDetailModal(namaJalan) {
+        //     const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
+
+        //     $('#detailModal').modal('show');
+        //     Tampilkan spinner di modal
+        //     $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+        //     Ambil konten detail via AJAX
+        //     $.get(url, function (data) {
+        //         $('#detailModalContent').html(data);
+        //     }).fail(function() {
+        //          $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
+        //     });
+        // }
+
+        function showDetailModal(kategori, status, namaJalan) {
+            const url = '@Url.Action("Detail", "Rekap")'
+                + '?kategori=' + encodeURIComponent(kategori)
+                + '&status=' + encodeURIComponent(status)
+                + '&jalan=' + encodeURIComponent(namaJalan);
 
             $('#detailModal').modal('show');
+
             // Tampilkan spinner di modal
-            $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+            $('#detailModalContent').html(`
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary"></div>
+                </div>
+            `);
 
             // Ambil konten detail via AJAX
             $.get(url, function (data) {
                 $('#detailModalContent').html(data);
-            }).fail(function() {
-                 $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
+            }).fail(function () {
+                $('#detailModalContent').html(`
+                    <p class="text-danger p-5">Gagal memuat detail.</p>
+                `);
             });
         }
+
+
+        function detailReklameCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            const kategori = cellInfo.column.captionParent;  // misalnya "INSIDENTIL"
+            const status = cellInfo.column.caption;          // misalnya "EXPIRED BONGKAR"
+            const jalan = cellInfo.data.NamaJalan;           // dari data row
+
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    showDetailModal(kategori, status, jalan);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
 
     </script>
 }

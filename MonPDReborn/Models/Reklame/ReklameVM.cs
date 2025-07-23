@@ -69,6 +69,25 @@ namespace MonPDReborn.Models.Reklame
             }
         }
 
+        public class DetailReklame
+        {
+            public List<DetailData> DataDetail { get; set; } = new();
+
+            public DetailReklame(string kategori, string status, string jalan)
+            {
+                // Ambil semua dummy
+                var allData = Method.GetDetailDataReklame();
+
+                // Filter sesuai parameter
+                DataDetail = allData
+                    .Where(x =>
+                        string.Equals(x.KategoriReklame, kategori, StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(x.NamaJalan, jalan, StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToList();
+            }
+        }
+
         public class Method
         {
             public static DashboardData GetDashboardData()
@@ -204,7 +223,8 @@ namespace MonPDReborn.Models.Reklame
                         NamaJalan = "KUTAI",
                         AlamatReklame = "Jl. Kutai No.1",
                         IsiReklame = "Promo Diskon Besar",
-                        JenisReklame = "Insidentil",
+                        JenisReklame = "Spanduk",
+                        KategoriReklame = "Rokok",
                         TglMulai = new DateTime(2025, 1, 1),
                         TglSelesai = new DateTime(2025, 2, 1),
                         SisaHari = DateTime.Today.AddDays(10),
@@ -217,7 +237,8 @@ namespace MonPDReborn.Models.Reklame
                         NamaJalan = "KUTAI",
                         AlamatReklame = "Jl. Kutai No.2",
                         IsiReklame = "Launching Produk Baru",
-                        JenisReklame = "Permanent",
+                        JenisReklame = "Spanduk",
+                        KategoriReklame = "Rokok",
                         TglMulai = new DateTime(2024, 12, 1),
                         TglSelesai = new DateTime(2025, 12, 1),
                         SisaHari = DateTime.Today.AddDays(300),
@@ -230,7 +251,8 @@ namespace MonPDReborn.Models.Reklame
                         NamaJalan = "SUDIRMAN",
                         AlamatReklame = "Jl. Sudirman No.10",
                         IsiReklame = "Event Konser Musik",
-                        JenisReklame = "Terbatas",
+                        JenisReklame = "Spanduk",
+                        KategoriReklame = "Non Rokok",
                         TglMulai = new DateTime(2025, 3, 15),
                         TglSelesai = new DateTime(2025, 3, 30),
                         SisaHari = DateTime.Today.AddDays(45),
@@ -310,6 +332,7 @@ namespace MonPDReborn.Models.Reklame
         public string AlamatReklame { get; set; } = null!;
         public string IsiReklame { get; set; } = null!;
         public string JenisReklame { get; set; } = null!;
+        public string KategoriReklame { get; set; } = null!;
         public DateTime TglMulai { get; set; }
         public DateTime TglSelesai { get; set; }
         public DateTime SisaHari { get; set; }
