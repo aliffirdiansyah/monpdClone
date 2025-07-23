@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using System.Globalization;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
@@ -204,55 +206,73 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public static List<ReklamePermanen> GetReklamePermanen(int tahun)
             {
-                var all = GetAllReklamePermanen();
+                var ret = new List<ReklamePermanen>();
+                var context = DBClass.GetContext();
 
-                return all
-                    .Where(x => x.Tahun == tahun)
+
+                var dataReklame = context.DbMonReklames
+                    .Where(x => x.FlagPermohonan == "PERMANEN")
                     .ToList();
+
+                var dataReklamePanjang = dataReklame.Where(x => x.NoFormulirLama != null).ToList();
+
+                for (int bulan = 1; bulan <= 12; bulan++)
+                {
+                    var jmlHari = DateTime.DaysInMonth(tahun, bulan);
+                    var tglServer = new DateTime(tahun, bulan, jmlHari);
+                    if (tglServer.Year == DateTime.Now.Year && tglServer.Month == DateTime.Now.Month)
+                    {
+                        tglServer = new DateTime(tahun, bulan, DateTime.Now.Day);
+                    }
+
+                    ret.Add(new ReklamePermanen
+                    {
+                        Bulan = new DateTime(2025, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Tahun = tahun,
+                        SKPDJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Count(),
+                        NilaiJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Sum(q => q.Nilaipajak) ?? 0,
+                        SKPDBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Count(),
+                        NilaiBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Sum(q => q.Nilaipajak) ?? 0,
+                        SKPDPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan && (!x.TglJtempoSkpd.HasValue)).Count(),
+                        NilaiPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan).Sum(q => q.Nilaipajak) ?? 0,
+                        //SKPDBlmPanjang
+                        //NilaiBlmPanjang
+                        //SKPDKB
+                        //NilaiKB
+                        //SKPDBlmKB
+                        //NilaiBlmKB  
+                        //Bulan
+                        //Tahun
+                        //SKPDJT  //jumlah objek yang tgl akhir berlakunya ada di tahun 2025 dengan pengkategorian berdasarkan bulan tgl akhir berlaku
+                        //NilaiJT  //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                        //SKPDBlmJT //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                        //NilaiBlmJT //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                        //SKPDPanjang //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
+                        //NilaiPanjang //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                        //SKPDBlmPanjang //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                        //NilaiBlmPanjang //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                        //SKPDKB //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
+                        //NilaiKB //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                        //SKPDBlmKB //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                        //NilaiBlmKB  //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                    });
+                }
+
+                return ret;
+
             }
 
             public static List<TerbatasReklame> GetTerbatasReklame(int tahun)
             {
-                var all = GetAllTerbatasReklame();
-
-                return all
-                    .Where(x => x.Tahun == tahun)
-                    .ToList();
+                var ret = new List<TerbatasReklame>();
+                return ret;
             }
 
             public static List<IsidentilReklame> GetIsidentilReklame(int tahun)
             {
-                var all = GetAllIsidentilReklame();
-
-                return all
-                    .Where(x => x.Tahun == tahun)
-                    .ToList();
+                var ret = new List<IsidentilReklame>();
+                return ret;
             }
-
-            public static List<ReklamePermanen> GetAllReklamePermanen()
-            {
-                return new List<ReklamePermanen>
-                {
-                    new ReklamePermanen { Bulan = "Januari", Tahun = 2025, SKPDJT = 10, NilaiJT = 1000000, SKPDBlmJT = 5, NilaiBlmJT = 500000, SKPDPanjang = 8, NilaiPanjang = 800000, SKPDBlmPanjang = 4, NilaiBlmPanjang = 400000, SKPDKB = 6, NilaiKB = 600000, SKPDBlmKB = 3, NilaiBlmKB = 300000 },
-                };
-            }
-
-            public static List<TerbatasReklame> GetAllTerbatasReklame()
-            {
-                return new List<TerbatasReklame>
-                {
-                    new TerbatasReklame { Bulan = "Februari", Tahun = 2025, SKPDJT = 12, NilaiJT = 1200000, SKPDBlmJT = 6, NilaiBlmJT = 600000, SKPDPanjang = 9, NilaiPanjang = 900000, SKPDBlmPanjang = 4, NilaiBlmPanjang = 400000, SKPDKB = 7, NilaiKB = 700000, SKPDBlmKB = 3, NilaiBlmKB = 300000 },
-                };
-            }
-
-            public static List<IsidentilReklame> GetAllIsidentilReklame()
-            {
-                return new List<IsidentilReklame>
-                {
-                    new IsidentilReklame { Bulan = "Maret", Tahun = 2025, SKPDKB = 8, NilaiKB = 800000, SKPDBlmKB = 4, NilaiBlmKB = 400000 },
-                };
-            }
-
             // Detail Reklame Permanen
             public static List<PermanenJT> GetPermanenJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
             {
