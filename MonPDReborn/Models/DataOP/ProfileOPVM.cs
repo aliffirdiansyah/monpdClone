@@ -586,7 +586,7 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        foreach (var kat in kategoriList)
+                        foreach (var kat in kategoriList.OrderBy(x => x.Id).ToList())
                         {
                             var OpHotelTutup = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
                             var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kat.Id);
@@ -1325,14 +1325,14 @@ namespace MonPDReborn.Models.DataOP
                 var ret = new List<SeriesDetail>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-    .Where(x => x.PajakId == (int)JenisPajak)
-    .ToList() // pindah ke memory agar bisa pakai ToTitleCase
-    .Select(x => new 
-    {
-        x.Id,
-        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
-    })
-    .ToList();
+                    .Where(x => x.PajakId == (int)JenisPajak)
+                    .ToList() // pindah ke memory agar bisa pakai ToTitleCase
+                    .Select(x => new 
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
                 var currentYear = DateTime.Now.Year;
 
                 switch (JenisPajak)
@@ -1386,7 +1386,7 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        foreach (var kat in kategoriList)
+                        foreach (var kat in kategoriList.OrderBy(x => x.Id).ToList())
                         {
                             var OpHotelNow = context.DbOpHotels.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.KategoriId == kat.Id);
                             var OpHotelMines1 = context.DbOpHotels.Count(x => x.TahunBuku == currentYear - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear - 1) && x.KategoriId == kat.Id);

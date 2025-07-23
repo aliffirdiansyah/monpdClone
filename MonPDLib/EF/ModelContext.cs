@@ -191,6 +191,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PotensiCtrlRestoran> PotensiCtrlRestorans { get; set; }
 
+    public virtual DbSet<PotensiCtrlTarget> PotensiCtrlTargets { get; set; }
+
     public virtual DbSet<SetLastRun> SetLastRuns { get; set; }
 
     public virtual DbSet<SetYearJobScan> SetYearJobScans { get; set; }
@@ -1325,6 +1327,12 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Nop).IsFixedLength();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
             entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<PotensiCtrlTarget>(entity =>
+        {
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
         });
 
         modelBuilder.Entity<SetLastRun>(entity =>
