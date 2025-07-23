@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MonPDLib;
 using SixLabors.Fonts.Tables.TrueType;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.Reklame
 {
@@ -10,40 +11,18 @@ namespace MonPDReborn.Models.Reklame
         public class Index
         {
             public DashboardData Data { get; set; } = new();
-            // Properti untuk menampung nilai yang dipilih dari filter
-            //public int SelectedJalan { get; set; }
-            //public int SelectedKelasJalan { get; set; }
             public int SelectedJenisReklame { get; set; }
             public DateTime[] SelectedDateRange { get; set; }
-
             public DateTime TglAwal { get; set; }
             public DateTime TglAkhir { get; set; }
-            // Properti untuk mengisi data ke dalam dropdown
-            //public List<SelectListItem> JalanList { get; set; } = new();
-            //public List<SelectListItem> KelasJalanList { get; set; } = new();
-            //public List<SelectListItem> JenisReklameList { get; set; } = new();
-
             public Index()
             {
                 Data = Method.GetDashboardData();
                 var tglskr = DateTime.Now;
                 TglAwal = new DateTime(tglskr.Year, 1, 1);
                 TglAkhir = tglskr;
-
-                // Contoh pengisian data statis:
-                //JalanList.Add(new SelectListItem { Value = "1", Text = "Jl. Ahmad Yani" });
-                //JalanList.Add(new SelectListItem { Value = "2", Text = "Jl. Basuki Rahmat" });
-
-                //KelasJalanList.Add(new SelectListItem { Value = "1", Text = "Gayungan" });
-                //KelasJalanList.Add(new SelectListItem { Value = "2", Text = "Tegalsari" });
-
-                //JenisReklameList.Add(new SelectListItem { Value = "1", Text = "Insidentil" });
-                //JenisReklameList.Add(new SelectListItem { Value = "2", Text = "Permanen < 8m" });
-                //JenisReklameList.Add(new SelectListItem { Value = "3", Text = "Permanen > 8m" });
             }
         }
-
-        // Kelas untuk menampung data yang akan ditampilkan di View
         public class Show
         {
             public List<ReklamePerJalan> DataReklamePerJalanList { get; set; } = new();
@@ -52,8 +31,6 @@ namespace MonPDReborn.Models.Reklame
                 DataReklamePerJalanList = Method.GetDataReklamePerJalan();
             }
         }
-
-        // Model untuk partial view Detail.cshtml (tabel detail di modal)
         public class Detail
         {
             public List<DataReklame> DataReklameDetailList { get; set; } = new();
@@ -174,59 +151,111 @@ namespace MonPDReborn.Models.Reklame
                 var ret = new List<RekapData>();
                 var context = DBClass.GetContext();
 
-                //var data = context.
+                var insidentilData = context.DbMonReklames
+                    .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
+                                r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
+                                r.TglAkhirBerlaku.Value <= tglAkhir)
+                    .Select(r => new
+                    {
+                        KelasJalan = string.Concat("Kelas ", r.KelasJalan),
+                        NamaJalan = r.NamaJalan,
+                        Status = r.TglAkhirBerlaku.Value < DateTime.Today ? "EXPIRED" : "AKTIF"
+                    })
+                    .GroupBy(r => r.Status)
+                    .Select(g => new
+                    {
+                        KelasJalan = g.First().KelasJalan,
+                        NamaJalan = g.First().NamaJalan,
+                        Status = g.Key,
+                        Jml = g.Count()
+                    })
+                    .ToList();
+
+                var permanenData = context.DbMonReklames
+                    .Where(r => r.FlagPermohonan == "PERMANEN" &&
+                                r.TglAkhirBerlaku.HasValue &&
+                                r.TglAkhirBerlaku.Value.Date >= tglAwal.Date &&
+                                r.TglAkhirBerlaku.Value.Date <= tglAkhir.Date)
+                    .Select(r => new
+                    {
+                        KelasJalan = string.Concat("Kelas ", r.KelasJalan),
+                        NamaJalan = r.NamaJalan,
+                        r.NoFormulir,
+                        Status = r.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                        Upaya = context.TUpayaReklames
+                            .Where(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                            .Select(t => (int?)t.Id ?? 0)
+                            .FirstOrDefault()
+                    })
+                    .ToList();
+
+                var terbatasData = context.DbMonReklames
+                    .Where(r => r.FlagPermohonan == "TERBATAS" &&
+                                r.TglAkhirBerlaku.HasValue &&
+                                r.TglAkhirBerlaku.Value.Date >= tglAwal.Date &&
+                                r.TglAkhirBerlaku.Value.Date <= tglAkhir.Date)
+                    .Select(r => new
+                    {
+                        KelasJalan = string.Concat("Kelas ", r.KelasJalan),
+                        NamaJalan = r.NamaJalan,
+                        r.NoFormulir,
+                        Status = r.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                        UpayaId = context.TUpayaReklames
+                            .Where(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
+                            .Select(t => (int?)t.Id ?? 0)
+                            .FirstOrDefault()
+                    })
+                    .ToList();
+
+                var allKeys = insidentilData
+                    .Select(x => new { x.KelasJalan, x.NamaJalan })
+                    .Concat(permanenData.Select(x => new { x.KelasJalan, x.NamaJalan }))
+                    .Concat(terbatasData.Select(x => new { x.KelasJalan, x.NamaJalan }))
+                    .Distinct()
+                    .ToList();
+
+                foreach (var key in allKeys)
+                {
+                    var insidentil = insidentilData
+                        .Where(x => x.KelasJalan == key.KelasJalan && x.NamaJalan == key.NamaJalan)
+                        .ToList();
+
+                    var permanen = permanenData
+                        .Where(x => x.KelasJalan == key.KelasJalan && x.NamaJalan == key.NamaJalan)
+                        .ToList();
+
+                    var terbatas = terbatasData
+                        .Where(x => x.KelasJalan == key.KelasJalan && x.NamaJalan == key.NamaJalan)
+                        .ToList();
+
+                    var item = new RekapData
+                    {
+                        KelasJalan = key.KelasJalan,
+                        NamaJalan = key.NamaJalan,
+                        Isidentil = new KategoriReklame
+                        {
+                            ExpiredBongkar = insidentil.Count(x => x.Status == "EXPIRED"), // diasumsikan semua EXPIRED sudah bongkar
+                            ExpiredBlmBongkar = 0, // tidak bisa diketahui
+                            Aktif = insidentil.Count(x => x.Status == "AKTIF")
+                        },
+                        Permanen = new KategoriReklame
+                        {
+                            ExpiredBongkar = permanen.Count(x => x.Status == "EXPIRED" && x.Upaya == 1),
+                            ExpiredBlmBongkar = permanen.Count(x => x.Status == "EXPIRED" && x.Upaya == 0),
+                            Aktif = permanen.Count(x => x.Status == "AKTIF")
+                        },
+                        Terbatas = new KategoriReklame
+                        {
+                            ExpiredBongkar = terbatas.Count(x => x.Status == "EXPIRED" && x.UpayaId == 1),
+                            ExpiredBlmBongkar = terbatas.Count(x => x.Status == "EXPIRED" && x.UpayaId == 0),
+                            Aktif = terbatas.Count(x => x.Status == "AKTIF")
+                        }
+                    };
+
+                    ret.Add(item);
+                }
 
                 return ret;
-
-                return new List<RekapData>()
-                {
-                    new RekapData
-                    {
-                        KelasJalan = "Kelas 1",
-                        NamaJalan = "KUTAI",
-                        Isidentil = new KategoriReklame
-                        {
-                            ExpiredBongkar = 3,
-                            ExpiredBlmBongkar = 6,
-                            Aktif = 5
-                        },
-                        Permanen = new KategoriReklame
-                        {
-                            ExpiredBongkar = 2,
-                            ExpiredBlmBongkar = 4,
-                            Aktif = 7
-                        },
-                        Terbatas = new KategoriReklame
-                        {
-                            ExpiredBongkar = 1,
-                            ExpiredBlmBongkar = 3,
-                            Aktif = 4
-                        }
-                    },
-                    new RekapData
-                    {
-                        KelasJalan = "Kelas 2",
-                        NamaJalan = "SUDIRMAN",
-                        Isidentil = new KategoriReklame
-                        {
-                            ExpiredBongkar = 5,
-                            ExpiredBlmBongkar = 2,
-                            Aktif = 3
-                        },
-                        Permanen = new KategoriReklame
-                        {
-                            ExpiredBongkar = 3,
-                            ExpiredBlmBongkar = 5,
-                            Aktif = 6
-                        },
-                        Terbatas = new KategoriReklame
-                        {
-                            ExpiredBongkar = 2,
-                            ExpiredBlmBongkar = 4,
-                            Aktif = 2
-                        }
-                    }
-                };
             }
 
             public static List<DetailData> GetDetailDataReklame()

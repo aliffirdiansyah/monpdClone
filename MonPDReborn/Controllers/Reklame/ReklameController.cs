@@ -41,10 +41,23 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
-        public IActionResult Show(Models.Reklame.ReklameVM.Index input)
+        public IActionResult Show(string tglAwal, string tglAkhir)
         {
             try
             {
+                // Parsing string ke DateTime (format: yyyy-MM-dd)
+                if (!DateTime.TryParse(tglAwal, out var tanggalAwal))
+                    throw new ArgumentException("Format Tanggal Awal tidak valid.");
+
+                if (!DateTime.TryParse(tglAkhir, out var tanggalAkhir))
+                    throw new ArgumentException("Format Tanggal Akhir tidak valid.");
+
+                var input = new Models.Reklame.ReklameVM.Index
+                {
+                    TglAwal = tanggalAwal.AddDays(1),
+                    TglAkhir = tanggalAkhir
+                };
+
                 var model = new Models.Reklame.ReklameVM.ShowData(input);
                 return PartialView($"{URLView}_{actionName}", model);
             }
