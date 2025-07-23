@@ -41,11 +41,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
-        public IActionResult Show()
+        public IActionResult Show(int tahun)
         {
             try
             {
-                var model = new Models.PengawasanReklame.ReklameLiarVM.Show();
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Show(tahun);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -62,11 +62,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
             }
         }
 
-        public IActionResult Detail()
+        public IActionResult Detail(string jalan, string jenis, string bulan)
         {
             try
             {
-                var model = new Models.PengawasanReklame.ReklameLiarVM.Detail();
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Detail( jalan,  jenis,  bulan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

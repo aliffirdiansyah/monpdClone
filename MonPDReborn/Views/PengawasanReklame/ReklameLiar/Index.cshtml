@@ -1,5 +1,205 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MonPDReborn.Models.PengawasanReklame.ReklameLiarVM.Index
+@using DevExtreme.AspNet.Mvc
+
 @{
+    ViewData["Title"] = "Detail Reklame";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Dashboard Kontrol Reklame Liar
+                    </h4>
+
+                    <p class="text-dark mb-0">Monitoring dan Pengendalian Reklame Tidak Berizin</p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row mt-3 ms-0">
+                    <div class="col-lg-3 col-md-6">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTahun)
+                                                .ID("selectTahun")
+                                                .DataSource(Enumerable.Range(2021, 5).Select(y => y.ToString())) // Membuat daftar [2021, 2022, 2023, 2024, 2025]
+                                                .Value(DateTime.Now.Year) // Nilai default: tahun sekarang
+                                                .Placeholder("Pilih Tahun")
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                )
+                    </div>
+
+                    <div class="col-lg-2">
+                        <button type="button" class="btn btn-success w-80">
+                            <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Dashboard baru *@
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body d-flex align-items-center">
+                <div class="fs-1 text-danger me-3"><i class="bx bx-bar-chart-alt-2"></i></div>
+                <div>
+                    <div class="text-uppercase fw-bold">Total Reklame Liar</div>
+                    <div class="fs-1 fw-semibold">xxx</div>
+                    <small class="text-muted"><span class="text-danger fw-bold">xx %</span> dari target</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body d-flex align-items-center">
+                <div class="fs-1 text-primary me-3"><i class="bx bx-calendar-check"></i></div>
+                <div>
+                    <div class="text-uppercase fw-bold">Semester I (Jan - Jun)</div>
+                    <div class="fs-1 fw-semibold">xxx</div>
+                    <small class="text-muted"><span class="text-success fw-bold">xx %</span> dari target</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body d-flex align-items-center">
+                <div class="fs-1 text-success me-3"><i class="bx bx-calendar-check"></i></div>
+                <div>
+                    <div class="text-uppercase fw-bold">Semester II (Jul - Des)</div>
+                    <div class="fs-1 fw-semibold">xxx</div>
+                    <small class="text-muted"><span class="text-success fw-bold">xx %</span> dari target</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-1">
+                        Daftar Titik Reklame
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+
+                <div class="modal fade" id="detailModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script>
+        // Saat halaman siap, langsung panggil fungsi untuk memuat data tabel
+        $(document).ready(function () {
+            fnShow();
+        });
+
+        // Event handler untuk tombol filter
+        $('#btnTerapkanFilter').on('click', function() {
+            // Ambil nilai tahun yang dipilih
+            const selectedTahun = $('#selectTahun').dxSelectBox('instance').option('value');
+            // Panggil kembali fnShow dengan nilai filter baru
+            fnShow(selectedTahun);
+
+        });
+
+
+        // Fungsi untuk memuat tabel, sekarang menerima parameter tahun (opsional)
+
+        function fnShow(tahun) {
+            $.ajax({
+                url: '@Url.Action("Show", "ReklameLiar")', // Pastikan Controller 'ReklameLiar'
+                type: 'GET',
+                data: {
+                    tahun: tahun || new Date().getFullYear() // Jika tahun kosong, kirim tahun sekarang
+
+                },
+                beforeSend: function () {
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+
+                success: function (result) {
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
+                },
+
+                error: function () {
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger text-center">❌ Gagal memuat data.</div>').show();
+                }
+            });
+
+        }
+
+        function detailReklameCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+            const jalan = cellInfo.data.NamaJalan;
+            const jenis = cellInfo.data.Jenis;
+            const bulan = cellInfo.column.dataField; // "Jan", "Feb", dll.
+
+            const $link = $('<a>').addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => showDetailModal(jalan, jenis, bulan));
+            $(cellElement).append($link);
+        }
+
+        function showDetailModal(jalan, jenis, bulan, jumlah) {
+            // Parameter yang dikirim: jalan, kategori (jenis), status (bulan)
+            const url = '@Url.Action("Detail", "ReklameLiar")'
+                + '?jalan=' + encodeURIComponent(jalan)
+                + '&kategori=' + encodeURIComponent(jenis)
+                + '&status=' + encodeURIComponent(bulan);
+
+            const $modal = $('#detailModal');
+            const $modalContent = $('#detailModalContent');
+
+            $modal.modal('show');
+            $modalContent.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+            $.get(url, function (data) {
+                $modalContent.html(data);
+            }).fail(function() {
+                 $modalContent.html('<p class="text-danger p-5 text-center">Gagal memuat detail.</p>');
+            });
+        }
+
+    </script>
+
 }
