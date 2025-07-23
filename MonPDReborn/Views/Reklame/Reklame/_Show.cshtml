@@ -14,7 +14,6 @@
         .ColumnAutoWidth(true)
         .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
         .FilterRow(f => f.Visible(true))
-        .HeaderFilter(h => h.Visible(true))
         .Sorting(s => s.Mode(GridSortingMode.Multiple))
         .Paging(p => p.PageSize(10))
         .Pager(pager =>
@@ -25,8 +24,17 @@
         })
         .Columns(columns => {
             // Kolom Kunci
-            columns.AddFor(m => m.KelasJalan).Caption("KELAS JALAN").Width(120).Fixed(true);
-            columns.AddFor(m => m.NamaJalan).Caption("NAMA JALAN").Width(180).Fixed(true);
+            columns.AddFor(m => m.KelasJalan)
+            .Caption("KELAS JALAN")
+            .Width(120)
+            .Fixed(true)
+            .AllowHeaderFiltering(true); // ✅
+
+            columns.AddFor(m => m.NamaJalan)
+            .Caption("NAMA JALAN")
+            .Width(180)
+            .Fixed(true)
+            .AllowHeaderFiltering(true); // ✅
 
             @* columns.Add().Caption("JENIS INSIDENTIL").Alignment(HorizontalAlignment.Center).Columns(sub => {
                 sub.AddFor(x => x.Isidentil.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));;
