@@ -22,14 +22,13 @@ public partial class PotensiCtrlHiburan
     [Unicode(false)]
     public string KdPajak { get; set; } = null!;
 
-    [Required]
     [Column("STATUS")]
-    [Precision(1)]
-    public bool? Status { get; set; }
+    [Precision(10)]
+    public int Status { get; set; }
 
     [Column("JENIS")]
-    [Precision(2)]
-    public byte Jenis { get; set; }
+    [Precision(10)]
+    public int Jenis { get; set; }
 
     [Column("KAP_KURSI_STUDIO")]
     [Precision(10)]

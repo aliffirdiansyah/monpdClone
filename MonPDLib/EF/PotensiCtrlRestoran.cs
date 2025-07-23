@@ -18,17 +18,16 @@ public partial class PotensiCtrlRestoran
 
     [Key]
     [Column("KD_PAJAK")]
-    [Precision(1)]
-    public bool KdPajak { get; set; }
+    [Precision(10)]
+    public int KdPajak { get; set; }
 
-    [Required]
     [Column("STATUS")]
-    [Precision(1)]
-    public bool? Status { get; set; }
+    [Precision(10)]
+    public int Status { get; set; }
 
     [Column("JENIS")]
-    [Precision(2)]
-    public byte Jenis { get; set; }
+    [Precision(10)]
+    public int Jenis { get; set; }
 
     [Column("KAP_KURSI")]
     [Precision(10)]

@@ -27,7 +27,7 @@ public partial class DbOpParkir
     public string NpwpdNama { get; set; } = null!;
 
     [Column("NPWPD_ALAMAT")]
-    [StringLength(100)]
+    [StringLength(250)]
     [Unicode(false)]
     public string NpwpdAlamat { get; set; } = null!;
 
