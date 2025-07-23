@@ -4,10 +4,11 @@
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
-
-            public int TotalTerpasang { get; set; }
-            public int TotalBelumTerpasang { get; set; }
+            public DashboardData Data { get; set; } = new();
+            public Index()
+            {
+                Data = Method.GetDashboardData();
+            }
         }
 
         public class Show
@@ -36,6 +37,22 @@
 
         public class Method
         {
+            public static DashboardData GetDashboardData()
+            {
+                var allData = GetAllData(); // Ambil data master
+                var dashboard = new DashboardData
+                {
+                    HotelTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Hotel")?.Terpasang2024 ?? 0,
+                    HotelTotal = allData.FirstOrDefault(x => x.JenisPajak == "Hotel")?.JumlahOP ?? 0,
+                    RestoTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Restoran")?.Terpasang2024 ?? 0,
+                    RestoTotal = allData.FirstOrDefault(x => x.JenisPajak == "Restoran")?.JumlahOP ?? 0,
+                    HiburanTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Hiburan")?.Terpasang2024 ?? 0,
+                    HiburanTotal = allData.FirstOrDefault(x => x.JenisPajak == "Hiburan")?.JumlahOP ?? 0,
+                    ParkirTerpasang = allData.FirstOrDefault(x => x.JenisPajak == "Parkir")?.Terpasang2024 ?? 0,
+                    ParkirTotal = allData.FirstOrDefault(x => x.JenisPajak == "Parkir")?.JumlahOP ?? 0
+                };
+                return dashboard;
+            }
             public static List<DataPemasanganAlat> GetDataPemasanganAlatList(string keyword)
             {
                 var allData = GetAllData();
@@ -49,15 +66,55 @@
 
             private static List<DataPemasanganAlat> GetAllData()
             {
-                return new List<DataPemasanganAlat>
+                // 1. Ambil semua data detail kategori sebagai sumber utama
+                var semuaKategori = GetSubDetailData();
+
+                // 2. Kelompokkan data detail berdasarkan JenisPajak (Hotel, Restoran, dll)
+                var groupedData = semuaKategori.GroupBy(x => x.JenisPajak);
+
+                // 3. Buat list untuk hasil akhir (data master)
+                var masterList = new List<DataPemasanganAlat>();
+                int masterId = 1;
+
+                foreach (var group in groupedData)
                 {
-                    new DataPemasanganAlat{No = 1, JenisPajak = "Hotel",     Terpasang2021 = 10, BelumTerpasang2021 = 2, Terpasang2022 = 15, BelumTerpasang2022 = 3, Terpasang2023 = 18, BelumTerpasang2023 = 1, Terpasang2024 = 20, BelumTerpasang2024 = 0},
-                    new DataPemasanganAlat{No = 2, JenisPajak = "Restoran",  Terpasang2021 = 9,  BelumTerpasang2021 = 3, Terpasang2022 = 14, BelumTerpasang2022 = 4, Terpasang2023 = 17, BelumTerpasang2023 = 2, Terpasang2024 = 19, BelumTerpasang2024 = 1},
-                    new DataPemasanganAlat{No = 3, JenisPajak = "Parkir",    Terpasang2021 = 8,  BelumTerpasang2021 = 1, Terpasang2022 = 12, BelumTerpasang2022 = 2, Terpasang2023 = 14, BelumTerpasang2023 = 3, Terpasang2024 = 16, BelumTerpasang2024 = 2},
-                    new DataPemasanganAlat{No = 4, JenisPajak = "PBB",       Terpasang2021 = 7,  BelumTerpasang2021 = 2, Terpasang2022 = 10, BelumTerpasang2022 = 3, Terpasang2023 = 13, BelumTerpasang2023 = 1, Terpasang2024 = 15, BelumTerpasang2024 = 1},
-                    new DataPemasanganAlat{No = 5, JenisPajak = "Reklame",   Terpasang2021 = 6,  BelumTerpasang2021 = 1, Terpasang2022 = 9,  BelumTerpasang2022 = 2, Terpasang2023 = 11, BelumTerpasang2023 = 1, Terpasang2024 = 13, BelumTerpasang2024 = 0},
-                    new DataPemasanganAlat{No = 6, JenisPajak = "PPJ",       Terpasang2021 = 5,  BelumTerpasang2021 = 0, Terpasang2022 = 8,  BelumTerpasang2022 = 1, Terpasang2023 = 10, BelumTerpasang2023 = 1, Terpasang2024 = 12, BelumTerpasang2024 = 1},
-                };
+                    // Buat list anak/detail untuk setiap grup
+                    var detailItems = group.Select((item, index) => new DataPemasanganAlat
+                    {
+                        No = (masterId * 100) + index + 1, // Buat ID unik untuk anak
+                        JenisPajak = item.Kategori, // Anak menampilkan Kategori
+                        JumlahOP = item.JumlahOP,
+                        Terpasang2023 = item.TerpasangTS + item.TerpasangTB + item.TerpasangSB,
+                        BelumTerpasang2023 = item.JumlahOP - (item.TerpasangTS + item.TerpasangTB + item.TerpasangSB),
+                        // Tambahkan data dummy untuk tahun lain jika perlu
+                        Terpasang2021 = item.JumlahOP - 5,
+                        BelumTerpasang2021 = 5,
+                        Terpasang2022 = item.JumlahOP - 3,
+                        BelumTerpasang2022 = 3,
+                        Terpasang2024 = item.JumlahOP - 1,
+                        BelumTerpasang2024 = 1
+                    }).ToList();
+
+                    // Buat baris master/induk
+                    var masterItem = new DataPemasanganAlat
+                    {
+                        No = masterId++,
+                        JenisPajak = group.Key, // Induk menampilkan JenisPajak
+                        JumlahOP = detailItems.Sum(x => x.JumlahOP),
+                        Terpasang2021 = detailItems.Sum(x => x.Terpasang2021),
+                        BelumTerpasang2021 = detailItems.Sum(x => x.BelumTerpasang2021),
+                        Terpasang2022 = detailItems.Sum(x => x.Terpasang2022),
+                        BelumTerpasang2022 = detailItems.Sum(x => x.BelumTerpasang2022),
+                        Terpasang2023 = detailItems.Sum(x => x.Terpasang2023),
+                        BelumTerpasang2023 = detailItems.Sum(x => x.BelumTerpasang2023),
+                        Terpasang2024 = detailItems.Sum(x => x.Terpasang2024),
+                        BelumTerpasang2024 = detailItems.Sum(x => x.BelumTerpasang2024),
+                        DetailItems = detailItems
+                    };
+                    masterList.Add(masterItem);
+                }
+
+                return masterList;
             }
 
             public static List<DetailPemasanganAlat> GetDetailData(string jenisPajak)
@@ -82,7 +139,11 @@
                     new() { JenisPajak = "Restoran", Kategori = "Wilayah Timur",  JumlahOP = 5, TerpasangTS = 3, TerpasangTB = 1, TerpasangSB = 1 },
                     new() { JenisPajak = "Restoran", Kategori = "Wilayah Barat",  JumlahOP = 3, TerpasangTS = 2, TerpasangTB = 1, TerpasangSB = 0 },
                     new() { JenisPajak = "Parkir", Kategori = "Wilayah Timur",  JumlahOP = 2, TerpasangTS = 1, TerpasangTB = 1, TerpasangSB = 0 },
-                    new() { JenisPajak = "Parkir", Kategori = "Wilayah Barat",  JumlahOP = 4, TerpasangTS = 3, TerpasangTB = 0, TerpasangSB = 1 }
+                    new() { JenisPajak = "Parkir", Kategori = "Wilayah Barat",  JumlahOP = 4, TerpasangTS = 3, TerpasangTB = 0, TerpasangSB = 1 },
+                    new() { JenisPajak = "Hiburan", Kategori = "Bioskop", JumlahOP = 8, TerpasangTS = 8, TerpasangTB = 0, TerpasangSB = 0 },
+                    new() { JenisPajak = "Hiburan", Kategori = "Karaoke", JumlahOP = 12, TerpasangTS = 10, TerpasangTB = 2, TerpasangSB = 0 },
+                    new() { JenisPajak = "Hiburan", Kategori = "Billiard", JumlahOP = 15, TerpasangTS = 10, TerpasangTB = 3, TerpasangSB = 2 },
+                    new() { JenisPajak = "Hiburan", Kategori = "Panti Pijat", JumlahOP = 20, TerpasangTS = 15, TerpasangTB = 5, TerpasangSB = 0 }
                 };
             }
 
@@ -135,16 +196,39 @@
                     new() { Kategori = "Hotel Non Bintang", NamaOP = "Griya Tamu Cempaka", Alamat = "Jl. Cempaka", NOP = "317105000000029", TanggalPemasangan = new DateTime(2025, 5, 5), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = true, IsTerpasangSB = false},
                     new() { Kategori = "Hotel Non Bintang", NamaOP = "Homestay Mawar", Alamat = "Jl. Karang Tengah", NOP = "317106000000030", TanggalPemasangan = new DateTime(2025, 5, 7), JenisPajak = "Hotel", IsTerpasangTS =false, IsTerpasangTB = false, IsTerpasangSB = true },
 
+                    new() { Kategori = "Bioskop", NamaOP = "XXI Tunjungan Plaza", Alamat = "Jl. Basuki Rahmat", NOP = "350101001001001", TanggalPemasangan = new DateTime(2023, 5, 10), JenisPajak = "Hiburan", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+                    new() { Kategori = "Bioskop", NamaOP = "CGV Marvell City", Alamat = "Jl. Ngagel", NOP = "350101001002002", TanggalPemasangan = new DateTime(2023, 6, 15), JenisPajak = "Hiburan", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
+        
+                    // Data untuk Kategori Karaoke
+                    new() { Kategori = "Karaoke", NamaOP = "NAV Karaoke", Alamat = "Jl. Mayjend Sungkono", NOP = "350202002003003", TanggalPemasangan = new DateTime(2024, 1, 20), JenisPajak = "Hiburan", IsTerpasangTS = true, IsTerpasangTB = true, IsTerpasangSB = false},
+                    new() { Kategori = "Karaoke", NamaOP = "Happy Puppy", Alamat = "Jl. HR Muhammad", NOP = "350202002004004", TanggalPemasangan = new DateTime(2024, 2, 25), JenisPajak = "Hiburan", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
 
+                    // Data untuk Kategori Billiard
+                    new() { Kategori = "Billiard", NamaOP = "Strike Billiard", Alamat = "Jl. Tidar", NOP = "350303003005005", TanggalPemasangan = new DateTime(2023, 8, 8), JenisPajak = "Hiburan", IsTerpasangTS = true, IsTerpasangTB = true, IsTerpasangSB = true},
+        
+                    // Data untuk Kategori Panti Pijat
+                    new() { Kategori = "Panti Pijat", NamaOP = "Kokuo Reflexology", Alamat = "Jl. Tunjungan", NOP = "350404004006006", TanggalPemasangan = new DateTime(2024, 3, 3), JenisPajak = "Hiburan", IsTerpasangTS = true, IsTerpasangTB = false, IsTerpasangSB = false},
                 };
             }
 
         }
 
+        public class DashboardData
+        {
+            public int HotelTerpasang { get; set; }
+            public int HotelTotal { get; set; }
+            public int RestoTerpasang { get; set; }
+            public int RestoTotal { get; set; }
+            public int HiburanTerpasang { get; set; }
+            public int HiburanTotal { get; set; }
+            public int ParkirTerpasang { get; set; }
+            public int ParkirTotal { get; set; }
+        }
         public class DataPemasanganAlat
         {
             public int No { get; set; }
             public string JenisPajak { get; set; } = null!;
+            public int JumlahOP { get; set; }
             public int Terpasang2021 { get; set; }
             public int BelumTerpasang2021 { get; set; }
             public int Terpasang2022 { get; set; }
@@ -153,6 +237,8 @@
             public int BelumTerpasang2023 { get; set; }
             public int Terpasang2024 { get; set; }
             public int BelumTerpasang2024 { get; set; }
+
+            public List<DataPemasanganAlat>? DetailItems { get; set; }
         }
 
         public class DetailPemasanganAlat

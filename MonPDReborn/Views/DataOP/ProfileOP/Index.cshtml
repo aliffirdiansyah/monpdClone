@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
-                    <h4 class="card-title text-white fs-16 mb-0">
+                    <h4 class="card-title text-dark fs-16 mb-0">
                         Dashboard Profil Objek Pajak
                     </h4>
                 </div>
@@ -173,60 +173,110 @@
             });
         }
 
-                        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
-            const jenisPajak = cellInfo.data.EnumPajak;
-            const kategori = cellInfo.data.KategoriId;
-            const tahunKey = cellInfo.column.dataField;
+          function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+             const jenisPajak = cellInfo.data.EnumPajak;
+             const kategori = cellInfo.data.KategoriId;
+             const tahunKey = cellInfo.column.dataField;
 
-            const mapping = {
-                'Tahun1_Awal': { tahun: 2021, status: 'JmlOpAwal' },
-                'Tahun1_Baru': { tahun: 2021, status: 'JmlOpBaru' },
-                'Tahun1_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
-                'Tahun1_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
+             const mapping = {
+                 'Tahun5_Awal': { tahun: 2021, status: 'JmlOpAwal' },
+                 'Tahun5_Baru': { tahun: 2021, status: 'JmlOpBaru' },
+                 'Tahun5_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
+                 'Tahun5_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
 
-                'Tahun2_Awal': { tahun: 2022, status: 'JmlOpAwal' },
-                'Tahun2_Baru': { tahun: 2022, status: 'JmlOpBaru' },
-                'Tahun2_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
-                'Tahun2_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
+                 'Tahun4_Awal': { tahun: 2022, status: 'JmlOpAwal' },
+                 'Tahun4_Baru': { tahun: 2022, status: 'JmlOpBaru' },
+                 'Tahun4_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
+                 'Tahun4_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
 
-                'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
-                'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
-                'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
-                'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
+                 'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
+                 'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
+                 'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
+                 'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
 
-                'Tahun4_Awal': { tahun: 2024, status: 'JmlOpAwal' },
-                'Tahun4_Baru': { tahun: 2024, status: 'JmlOpBaru' },
-                'Tahun4_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
-                'Tahun4_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
+                 'Tahun2_Awal': { tahun: 2024, status: 'JmlOpAwal' },
+                 'Tahun2_Baru': { tahun: 2024, status: 'JmlOpBaru' },
+                 'Tahun2_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
+                 'Tahun2_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
 
-                'Tahun5_Awal': { tahun: 2025, status: 'JmlOpAwal' },
-                'Tahun5_Baru': { tahun: 2025, status: 'JmlOpBaru' },
-                'Tahun5_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
-                'Tahun5_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
-            };
+                 'Tahun1_Awal': { tahun: 2025, status: 'JmlOpAwal' },
+                 'Tahun1_Baru': { tahun: 2025, status: 'JmlOpBaru' },
+                 'Tahun1_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
+                 'Tahun1_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
+             };
 
-            const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
+             const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
 
-            const $button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', 'Lihat Detail')
-                .html('<i class="ri-search-line"></i>')
-                .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
+              const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
 
-            const $span = $('<span>').text(
-                (cellInfo.value ?? 0).toLocaleString('id-ID')
-            );
+             const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const $wrapper = $('<div>')
-                .css({
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                })
-                .append([$button, $span]);
+             $(cellElement).append($wrapper);
+         }
 
-            $(cellElement).append($wrapper);
-        }
+        // function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+        //     const jenisPajak = cellInfo.data.EnumPajak;
+        //     const kategori = cellInfo.data.KategoriId;
+        //     const tahunKey = cellInfo.column.dataField;
+
+        //      const mapping = {
+        //          'Tahun1_Awal': { tahun: 2021, status: 'JmlOpAwal' },
+        //          'Tahun1_Baru': { tahun: 2021, status: 'JmlOpBaru' },
+        //          'Tahun1_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
+        //          'Tahun1_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
+
+        //          'Tahun2_Awal': { tahun: 2022, status: 'JmlOpAwal' },
+        //          'Tahun2_Baru': { tahun: 2022, status: 'JmlOpBaru' },
+        //          'Tahun2_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
+        //          'Tahun2_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
+
+        //          'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
+        //          'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
+        //          'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
+        //          'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
+
+        //          'Tahun4_Awal': { tahun: 2024, status: 'JmlOpAwal' },
+        //          'Tahun4_Baru': { tahun: 2024, status: 'JmlOpBaru' },
+        //          'Tahun4_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
+        //          'Tahun4_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
+
+        //          'Tahun5_Awal': { tahun: 2025, status: 'JmlOpAwal' },
+        //          'Tahun5_Baru': { tahun: 2025, status: 'JmlOpBaru' },
+        //          'Tahun5_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
+        //          'Tahun5_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
+        //      };
+
+        //      const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
+
+            // const $link = $('<a>')
+            //     .addClass('value-link text-decoration-none')
+            //     .attr('href', 'javascript:void(0);')
+            //     .attr('title', 'Lihat Detail')
+            //     .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+            //     .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
+
+            // const $wrapper = $('<div>')
+            //     .css({
+            //         display: 'flex',
+            //         alignItems: 'center',
+            //         justifyContent: 'flex-end'
+            //     })
+            //     .append($link);
+
+            // $(cellElement).append($wrapper);
+        // }
+
 
 
         function fnShowSeries()

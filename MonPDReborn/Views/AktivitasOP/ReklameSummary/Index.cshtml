@@ -11,12 +11,12 @@
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 text-white mb-0">
+                    <h4 class="card-title fs-16 text-dark mb-0">
                         <i class="bx bx-bar-chart-alt me-2"></i> Reklame Summary
                     </h4>
                 </div>
                 <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-outline-light" title="Segarkan Reklame Summary" onclick="">
+                    <button class="btn btn-sm btn-outline-dark" title="Segarkan Reklame Summary" onclick="">
                         <i class="mdi mdi-refresh align-middle"></i> Refresh
                     </button>
                 </div>
@@ -100,22 +100,23 @@
             const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
             const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', `Lihat Detail ${skpdBlmJT}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    loadDetailJT(tahun, bulan, skpdBlmJT);
-                });
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => loadDetailJT(tahun, bulan, skpdBlmJT));
 
-            const span = $('<span>').text(skpdBlmJT);
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(span)
-                .append(button);
+             $(cellElement).append($wrapper);
 
-            $(cellElement).append(wrapper);
         }
 
         function skpdPermanenBPCellTemplate(cellElement, cellInfo) {
@@ -123,22 +124,23 @@
             const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
             const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', `Lihat Detail ${skpdBlmPanjang}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    loadDetailBP(tahun, bulan, skpdBlmPanjang);
-                });
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => loadDetailBP(tahun, bulan, skpdBlmPanjang));
 
-            const span = $('<span>').text(skpdBlmPanjang);
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(span)
-                .append(button);
+             $(cellElement).append($wrapper);
 
-            $(cellElement).append(wrapper);
         }
 
         function skpdPermanenKBCellTemplate(cellElement, cellInfo) {
@@ -146,22 +148,23 @@
             const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
             const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', `Lihat Detail ${skpdKB}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    loadDetailKB(tahun, bulan, skpdKB);
-                });
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => loadDetailKB(tahun, bulan, skpdKB));
 
-            const span = $('<span>').text(skpdKB);
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(span)
-                .append(button);
+             $(cellElement).append($wrapper);
 
-            $(cellElement).append(wrapper);
         }
 
         //button Terbatas Reklame
@@ -170,22 +173,23 @@
             const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
             const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', `Lihat Detail ${skpdBlmJT}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    loadDetailTerbatasJT(tahun, bulan, skpdBlmJT);
-                });
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => loadDetailTerbatasJT(tahun, bulan, skpdBlmJT));
 
-            const span = $('<span>').text(skpdBlmJT);
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(span)
-                .append(button);
+             $(cellElement).append($wrapper);
 
-            $(cellElement).append(wrapper);
         }
 
         function skpdTerbatasBPCellTemplate(cellElement, cellInfo) {
@@ -193,22 +197,23 @@
             const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
             const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', `Lihat Detail ${skpdBlmPanjang}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    loadDetailTerbatasBP(tahun, bulan, skpdBlmPanjang);
-                });
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => loadDetailTerbatasBP(tahun, bulan, skpdBlmPanjang));
 
-            const span = $('<span>').text(skpdBlmPanjang);
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(span)
-                .append(button);
+             $(cellElement).append($wrapper);
 
-            $(cellElement).append(wrapper);
         }
 
         function skpdTerbatasKBCellTemplate(cellElement, cellInfo) {
@@ -216,22 +221,23 @@
             const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
             const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', `Lihat Detail ${skpdKB}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    loadDetailTerbatasKB(tahun, bulan, skpdKB);
-                });
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => loadDetailTerbatasKB(tahun, bulan, skpdKB));
 
-            const span = $('<span>').text(skpdKB);
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(span)
-                .append(button);
+             $(cellElement).append($wrapper);
 
-            $(cellElement).append(wrapper);
         }
 
         // Ketetapan Baru Reklame
@@ -240,22 +246,24 @@
             const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
             const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
-                .attr('title', `Lihat Detail ${skpdKB}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    loadDetailIsidentilKB(tahun, bulan, skpdKB);
-                });
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => loadDetailIsidentilKB(tahun, bulan, skpdKB));
 
-            const span = $('<span>').text(skpdKB);
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
 
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(span)
-                .append(button);
+             $(cellElement).append($wrapper);
 
-            $(cellElement).append(wrapper);
+           
         }
 
     </script>

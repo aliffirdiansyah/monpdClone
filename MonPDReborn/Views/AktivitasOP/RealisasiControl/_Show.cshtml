@@ -40,6 +40,56 @@
                 </tr>
             }
         </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2" class="text-center">TOTAL</th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.Target).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranBulanIni.AKP).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranBulanIni.Realisasi).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranBulanIni.Persen).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranSDBI.AKP).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranSDBI.Realisasi).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranSDBI.PersenAkpTarget).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranSDBI.PersenAkpRealisasi).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranSDBI.PersenTarget).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+            </tr>
+        </tfoot>
+
     </table>
 
 </div>

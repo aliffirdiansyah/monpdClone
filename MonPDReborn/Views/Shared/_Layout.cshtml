@@ -63,11 +63,11 @@
     <style>
         .dx-datagrid-headers .dx-header-row > td {
             font-weight: bold !important;
-            color: white !important;
+            color: black !important;
             text-transform: uppercase !important;
-            background-color: #5EA8A4 !important;
+            background-color: #CDDACB !important;
         }
-        /* Judul menu */
+
         .menu-title {
             color: white !important;
             font-weight: normal !important;
@@ -75,11 +75,9 @@
             display: block !important;
         }
 
-        /* Menu utama */
         .nav-link.menu-link {
             color: #ffffff !important;
             font-weight: normal !important;
-            background-color: transparent !important;
             text-decoration: none !important;
             transition: background-color 0.2s, color 0.2s !important;
             padding: 0.5rem 0.75rem !important;
@@ -95,16 +93,14 @@
                 color: #1E2640 !important;
             }
 
-        /* Dropdown/Submenu */
-        .menu-dropdown {
+        /* .menu-dropdown {
             padding-left: 0 !important;
             margin-left: 0 !important;
             width: 100% !important;
-        }
+        } */
         [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item {
             color: #ffffff !important;
             font-weight: normal !important;
-            background-color: transparent !important;
             text-decoration: none !important;
             transition: background-color 0.2s, color 0.2s !important;
             border-radius: 4px !important;
@@ -124,7 +120,6 @@
                 .menu-dropdown ul.nav-sm .nav-link {
                     color: #ffffff !important;
                     font-weight: normal !important;
-                    background-color: transparent !important;
                     text-decoration: none !important;
                     transition: background-color 0.2s, color 0.2s !important;
                     border-radius: 4px !important;
@@ -138,8 +133,32 @@
 
                     .menu-dropdown ul.nav-sm .nav-link.active {
                         background-color: #5EA8A4 !important;
-                        color: #1E2640 !important;
+                    color: #1E2640 !important;
                     }
+
+        [data-layout=vertical][data-sidebar-size=sm] .menu-dropdown.collapse {
+            background-color: #5EA8A4 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 4px;
+            z-index: 2050; 
+        }
+
+            [data-layout=vertical][data-sidebar-size=sm] .menu-dropdown.collapse ul.nav-sm .nav-link {
+                color: #ffffff !important;
+            }
+
+                [data-layout=vertical][data-sidebar-size=sm] .menu-dropdown.collapse ul.nav-sm .nav-link.active {
+                    background-color: #5EA8A4 !important;
+                    color: #1E2640 !important;
+                }
+
+                [data-layout=vertical][data-sidebar-size=sm] .menu-dropdown.collapse ul.nav-sm .nav-link:hover {
+                    background-color: #AFD4D2 !important;
+                    color: #ffffff !important;
+                }
+
+
 
     </style>
 
@@ -265,7 +284,7 @@
             background: linear-gradient(135deg, #F31559, #0802A3);
         }
         .bg-header-color{
-            background: rgba(59, 130, 246, 0.2);
+            background-color: rgba(94, 168, 164, 0.5);
         }
 
         .text-responsive {
@@ -278,9 +297,22 @@
         }
 
         .btn-custom {
-            background: linear-gradient(135deg, #0802A3, #F31559 );
-            color: white;
+            background-color: rgba(94, 168, 164, 0.5);
+            color: black;
         }
+
+        .value-link {
+            color: #0d6efd; /* Bootstrap primary blue */
+            transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+            .value-link:hover {
+                color: #084298; /* darker shade on hover */
+                text-decoration: underline;
+            }
+
     </style>
     <style>
         
