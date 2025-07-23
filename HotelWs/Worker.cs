@@ -595,7 +595,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     // DATA OP
                     try
                     {
-                        if (item.Nop== "357802200290100001")
+                        if (item.Nop == "357802200290100001")
                         {
                             var kk = 1;
                         }
@@ -1111,7 +1111,7 @@ WHERE NAMA_PAJAK_DAERAH='HOTEL' AND REPLACE(FK_NOP,'.','')=:NOP  AND TO_CHAR(TGL
             }
             Console.WriteLine(" ");
         }
-    
+
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
@@ -1169,7 +1169,7 @@ WHERE NAMA_PAJAK_DAERAH='HOTEL' AND REPLACE(FK_NOP,'.','')=:NOP  AND TO_CHAR(TGL
                 command.Parameters.Add(param);
                 var dr = command.ExecuteReader();
                 if (dr.Read())
-                {                    
+                {
                     ret.Add(dr.GetString(0));
                     ret.Add(dr.GetString(1));
                 }

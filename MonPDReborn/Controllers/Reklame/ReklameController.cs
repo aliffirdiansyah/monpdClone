@@ -41,11 +41,11 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
-        public IActionResult Show()
+        public IActionResult Show(Models.Reklame.ReklameVM.Index input)
         {
             try
             {
-                var model = new Models.Reklame.ReklameVM.ShowData();
+                var model = new Models.Reklame.ReklameVM.ShowData(input);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

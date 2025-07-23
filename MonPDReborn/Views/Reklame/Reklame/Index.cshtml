@@ -32,7 +32,7 @@
 
             <div class="card-body">
                 <div class="row g-3 align-items-center">
-                    <div class="col-lg-5 col-md-12">
+                    @* <div class="col-lg-5 col-md-12">
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedJalan)
                                                 .ID("selectJalan")
                                                 .DataSource(Model.JalanList)
@@ -42,10 +42,10 @@
                                                 .Placeholder("Semua Nama Jalan")
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 )
-                    </div>
+                    </div> *@
 
                     <div class="col-lg col-md-6">
-                        @(Html.DevExtreme().DateBox()
+                        @(Html.DevExtreme().DateBoxFor(x=>x.TglAwal)
                                                 .ID("tanggalAwal")
                                                 .Type(DateBoxType.Date)
                                                 .Placeholder("Tanggal Awal") // Menggantikan <label>
@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="col-lg col-md-6">
-                        @(Html.DevExtreme().DateBox()
+                        @(Html.DevExtreme().DateBoxFor(x => x.TglAkhir)
                                                 .ID("tanggalAkhir")
                                                 .Type(DateBoxType.Date)
                                                 .Placeholder("Tanggal Akhir") // Menggantikan <label>

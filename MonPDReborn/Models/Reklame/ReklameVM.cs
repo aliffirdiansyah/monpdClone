@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MonPDLib;
+using SixLabors.Fonts.Tables.TrueType;
 
 namespace MonPDReborn.Models.Reklame
 {
@@ -9,31 +11,35 @@ namespace MonPDReborn.Models.Reklame
         {
             public DashboardData Data { get; set; } = new();
             // Properti untuk menampung nilai yang dipilih dari filter
-            public int SelectedJalan { get; set; }
-            public int SelectedKelasJalan { get; set; }
+            //public int SelectedJalan { get; set; }
+            //public int SelectedKelasJalan { get; set; }
             public int SelectedJenisReklame { get; set; }
             public DateTime[] SelectedDateRange { get; set; }
 
+            public DateTime TglAwal { get; set; }
+            public DateTime TglAkhir { get; set; }
             // Properti untuk mengisi data ke dalam dropdown
-            public List<SelectListItem> JalanList { get; set; } = new();
-            public List<SelectListItem> KelasJalanList { get; set; } = new();
-            public List<SelectListItem> JenisReklameList { get; set; } = new();
+            //public List<SelectListItem> JalanList { get; set; } = new();
+            //public List<SelectListItem> KelasJalanList { get; set; } = new();
+            //public List<SelectListItem> JenisReklameList { get; set; } = new();
 
             public Index()
             {
                 Data = Method.GetDashboardData();
+                var tglskr = DateTime.Now;
+                TglAwal = new DateTime(tglskr.Year, 1, 1);
+                TglAkhir = tglskr;
 
-                
                 // Contoh pengisian data statis:
-                JalanList.Add(new SelectListItem { Value = "1", Text = "Jl. Ahmad Yani" });
-                JalanList.Add(new SelectListItem { Value = "2", Text = "Jl. Basuki Rahmat" });
+                //JalanList.Add(new SelectListItem { Value = "1", Text = "Jl. Ahmad Yani" });
+                //JalanList.Add(new SelectListItem { Value = "2", Text = "Jl. Basuki Rahmat" });
 
-                KelasJalanList.Add(new SelectListItem { Value = "1", Text = "Gayungan" });
-                KelasJalanList.Add(new SelectListItem { Value = "2", Text = "Tegalsari" });
+                //KelasJalanList.Add(new SelectListItem { Value = "1", Text = "Gayungan" });
+                //KelasJalanList.Add(new SelectListItem { Value = "2", Text = "Tegalsari" });
 
-                JenisReklameList.Add(new SelectListItem { Value = "1", Text = "Insidentil" });
-                JenisReklameList.Add(new SelectListItem { Value = "2", Text = "Permanen < 8m" });
-                JenisReklameList.Add(new SelectListItem { Value = "3", Text = "Permanen > 8m" });
+                //JenisReklameList.Add(new SelectListItem { Value = "1", Text = "Insidentil" });
+                //JenisReklameList.Add(new SelectListItem { Value = "2", Text = "Permanen < 8m" });
+                //JenisReklameList.Add(new SelectListItem { Value = "3", Text = "Permanen > 8m" });
             }
         }
 
@@ -63,9 +69,9 @@ namespace MonPDReborn.Models.Reklame
         public class ShowData
         {
             public List<RekapData> DataRekap { get; set; } = new();
-            public ShowData()
+            public ShowData(Index input)
             {
-                DataRekap = Method.GetRekapDataReklame();
+                DataRekap = Method.GetRekapDataReklame(input.TglAwal, input.TglAkhir);
             }
         }
 
@@ -163,8 +169,15 @@ namespace MonPDReborn.Models.Reklame
             }
 
 
-            public static List<RekapData> GetRekapDataReklame()
+            public static List<RekapData> GetRekapDataReklame(DateTime tglAwal, DateTime tglAkhir)
             {
+                var ret = new List<RekapData>();
+                var context = DBClass.GetContext();
+
+                //var data = context.
+
+                return ret;
+
                 return new List<RekapData>()
                 {
                     new RekapData
@@ -352,5 +365,5 @@ namespace MonPDReborn.Models.Reklame
         public string Ukuran { get; set; } = null!;
         public decimal Pajak { get; set; }
     }
-    
+
 }
