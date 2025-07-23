@@ -1,43 +1,59 @@
-﻿@model MonPDReborn.Models.Reklame.ReklameVM.Show
+﻿@model MonPDReborn.Models.Reklame.ReklameVM.ShowData
 
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.ReklamePerJalan>()
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.RekapData>()
         .ID("reklameSummaryGrid")
-        .DataSource(Model.DataReklamePerJalanList)
-        .KeyExpr("NamaJalan")
+        .DataSource(Model.DataRekap)
+        @* .KeyExpr("NamaJalan") *@
         .ShowBorders(true)
         .ShowColumnLines(true)
         .ShowRowLines(true)
         .RowAlternationEnabled(true)
-        .AllowColumnResizing(true)
         .ColumnAutoWidth(true)
-        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false).Placeholder("Cari..."))
-        .FilterRow(f => f.Visible(true))
-        .HeaderFilter(h => h.Visible(true))
         .Paging(p => p.PageSize(10))
-        .Pager(pager =>
-        {
-            pager.ShowPageSizeSelector(true);
-            pager.AllowedPageSizes(new[] { 5, 10, 20 });
-            pager.ShowInfo(true);
-        })
         .Columns(columns => {
-            columns.AddFor(m => m.NamaJalan).Caption("Nama Jalan");
-            columns.AddFor(m => m.Kecamatan).Caption("Kecamatan");
-            columns.AddFor(m => m.TotalReklame).Caption("Total").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Insidentil).Caption("Insidentil").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.PermanenKecil).Caption("Permanen < 8m").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.PermanenBesar).Caption("Permanen > 8m").Alignment(HorizontalAlignment.Center);
-            
-            columns.Add()
-                .Caption("Aksi")
-                .Width(80)
-                .Alignment(HorizontalAlignment.Center)
-                .CellTemplate(@<text>
-                    <button class="btn btn-sm btn-outline-primary" onclick="showDetailModal('<%= data.NamaJalan %>')">
-                        <i class="ri-search-line"></i>
-                    </button>
-                </text>);
+            // Kolom Kunci
+            columns.AddFor(m => m.KelasJalan).Caption("KELAS JALAN").Width(120).Fixed(true);
+            columns.AddFor(m => m.NamaJalan).Caption("NAMA JALAN").Width(180).Fixed(true);
+
+            columns.Add().Caption("JENIS INSIDENTIL").Alignment(HorizontalAlignment.Center).Columns(sub => {
+                sub.AddFor(x => x.Isidentil.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));;
+                sub.AddFor(x => x.Isidentil.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));;
+                sub.AddFor(x => x.Isidentil.Aktif).Caption("AKTIF").CellTemplate(new JS("detailReklameCellTemplate"));;
+                sub.AddFor(x => x.Isidentil.Jumlah).Caption("JUMLAH").CellTemplate(new JS("detailReklameCellTemplate"));;
+            });
+
+            columns.Add().Caption("JENIS PERMANEN").Alignment(HorizontalAlignment.Center).Columns(sub => {
+                sub.AddFor(x => x.Permanen.ExpiredBongkar).Caption("EXPIRED BONGKAR");
+                sub.AddFor(x => x.Permanen.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR");
+                sub.AddFor(x => x.Permanen.Aktif).Caption("AKTIF");
+                sub.AddFor(x => x.Permanen.Jumlah).Caption("JUMLAH");
+            });
+
+            columns.Add().Caption("JENIS TERBATAS").Alignment(HorizontalAlignment.Center).Columns(sub => {
+                sub.AddFor(x => x.Terbatas.ExpiredBongkar).Caption("EXPIRED BONGKAR");
+                sub.AddFor(x => x.Terbatas.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR");
+                sub.AddFor(x => x.Terbatas.Aktif).Caption("AKTIF");
+                sub.AddFor(x => x.Terbatas.Jumlah).Caption("JUMLAH");
+            });
         })
-        )
+        .Summary(s => {
+          
+            s.TotalItems(items => {
+                items.AddFor(m => m.NamaJalan).SummaryType(SummaryType.Count).DisplayFormat("JUMLAH");
+                items.AddFor(m => m.Isidentil.ExpiredBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Isidentil.ExpiredBlmBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Isidentil.Aktif).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Isidentil.Jumlah).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Permanen.ExpiredBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Permanen.ExpiredBlmBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Permanen.Aktif).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Permanen.Jumlah).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Terbatas.ExpiredBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Terbatas.ExpiredBlmBongkar).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Terbatas.Aktif).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Terbatas.Jumlah).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            });
+        })
+    )
 </div>

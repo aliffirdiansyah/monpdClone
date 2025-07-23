@@ -43,6 +43,18 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklame> DbMonReklames { get; set; }
 
+    public virtual DbSet<DbMonReklameEmail> DbMonReklameEmails { get; set; }
+
+    public virtual DbSet<DbMonReklameSurat> DbMonReklameSurats { get; set; }
+
+    public virtual DbSet<DbMonReklameSuratTegur> DbMonReklameSuratTegurs { get; set; }
+
+    public virtual DbSet<DbMonReklameSuratTegurDok> DbMonReklameSuratTegurDoks { get; set; }
+
+    public virtual DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
+
+    public virtual DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
+
     public virtual DbSet<DbMonResto> DbMonRestos { get; set; }
 
     public virtual DbSet<DbOpAbt> DbOpAbts { get; set; }
@@ -237,13 +249,17 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TSeriesTargetP> TSeriesTargetPs { get; set; }
 
+    public virtual DbSet<TSuratReklameTeguranFile> TSuratReklameTeguranFiles { get; set; }
+
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    public virtual DbSet<XxxDbMonReklameUpayaDok> XxxDbMonReklameUpayaDoks { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -523,6 +539,39 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KodeObyek).IsFixedLength();
             entity.Property(e => e.NoKetetapan).HasDefaultValueSql("'-' ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonReklameEmail>(entity =>
+        {
+            entity.HasKey(e => new { e.NoFormulir, e.TglKirimEmail }).HasName("DB_MON_REKLAME_EMAIL_PK");
+        });
+
+        modelBuilder.Entity<DbMonReklameSurat>(entity =>
+        {
+            entity.HasKey(e => new { e.Agenda, e.Bidang, e.Klasifikasi, e.KodeDokumen, e.Pajak, e.TahunSurat }).HasName("DB_MON_REKLAME_SURAT_PK");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+            entity.Property(e => e.Status).HasDefaultValueSql("1 ");
+        });
+
+        modelBuilder.Entity<DbMonReklameSuratTegur>(entity =>
+        {
+            entity.HasKey(e => new { e.Klasifikasi, e.TahunSurat, e.Pajak, e.KodeDokumen, e.Bidang, e.Agenda }).HasName("DB_MON_REKLAME_SURAT_TEGUR_PK");
+        });
+
+        modelBuilder.Entity<DbMonReklameSuratTegurDok>(entity =>
+        {
+            entity.HasKey(e => new { e.Klasifikasi, e.TahunSurat, e.Pajak, e.KodeDokumen, e.Bidang, e.Agenda }).HasName("REKLAME_TEGUR_DOK_PK");
+        });
+
+        modelBuilder.Entity<DbMonReklameUpaya>(entity =>
+        {
+            entity.HasKey(e => new { e.NoFormulir, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_PK");
+        });
+
+        modelBuilder.Entity<DbMonReklameUpayaDok>(entity =>
+        {
+            entity.HasKey(e => new { e.NoformS, e.TglUpaya, e.Seq }).HasName("PK_DETAIL_UPLOAD_REKLAME");
         });
 
         modelBuilder.Entity<DbMonResto>(entity =>
@@ -1465,12 +1514,22 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.TahunBuku, e.KelompokRek, e.JenisRek, e.ObyekRek, e.RincianRek, e.SubrincianRek }).HasName("PK_PAD_TARGET_REKLAME");
         });
 
+        modelBuilder.Entity<TSuratReklameTeguranFile>(entity =>
+        {
+            entity.HasKey(e => new { e.Klasifikasi, e.TahunSurat, e.Pajak, e.KodeDokumen, e.Bidang, e.Agenda }).HasName("PK_TSURATREKLAMETEGURANFILE");
+        });
+
         modelBuilder.Entity<TTeguranSptpd>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("T_TEGURAN_SPTPD_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<XxxDbMonReklameUpayaDok>(entity =>
+        {
+            entity.HasKey(e => new { e.NoFormulir, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_DOK_PK");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");

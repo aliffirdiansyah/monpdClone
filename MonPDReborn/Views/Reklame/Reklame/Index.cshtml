@@ -32,39 +32,35 @@
 
             <div class="card-body">
                 <div class="row g-3 align-items-center">
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-5 col-md-12">
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedJalan)
-                            .ID("selectJalan")
-                            .DataSource(Model.JalanList) // Mengambil dari Model.JalanList
-                            .ValueExpr("Value")
-                            .DisplayExpr("Text")
-                            .SearchEnabled(true)
-                            .Placeholder("Semua Nama Jalan")
-                            .StylingMode(EditorStylingMode.Outlined)
-                            )
+                                                .ID("selectJalan")
+                                                .DataSource(Model.JalanList)
+                                                .ValueExpr("Value")
+                                                .DisplayExpr("Text")
+                                                .SearchEnabled(true)
+                                                .Placeholder("Semua Nama Jalan")
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                )
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedKecamatan)
-                            .ID("selectKecamatan")
-                            .DataSource(Model.KecamatanList) // Mengambil dari Model.KecamatanList
-                            .ValueExpr("Value")
-                            .DisplayExpr("Text")
-                            .SearchEnabled(true)
-                            .Placeholder("Semua Kecamatan")
-                            .StylingMode(EditorStylingMode.Outlined)
-                            )
+                    <div class="col-lg col-md-6">
+                        @(Html.DevExtreme().DateBox()
+                                                .ID("tanggalAwal")
+                                                .Type(DateBoxType.Date)
+                                                .Placeholder("Tanggal Awal") // Menggantikan <label>
+                                                .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
+                                                .Value(DateTime.Now) // Nilai default: hari ini
+                                                )
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedJenisReklame)
-                            .ID("selectJenisReklame")
-                            .DataSource(Model.JenisReklameList) // Mengambil dari Model.JenisReklameList
-                            .ValueExpr("Value")
-                            .DisplayExpr("Text")
-                            .Placeholder("Semua Jenis Reklame")
-                            .StylingMode(EditorStylingMode.Outlined)
-                            )
+                    <div class="col-lg col-md-6">
+                        @(Html.DevExtreme().DateBox()
+                                                .ID("tanggalAkhir")
+                                                .Type(DateBoxType.Date)
+                                                .Placeholder("Tanggal Akhir") // Menggantikan <label>
+                                                .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
+                                                )
                     </div>
 
                     <div class="col-lg-2 col-md-12">
@@ -79,56 +75,99 @@
     </div>
 
     @* Dashboard baru *@
-    <div class="col-lg-4">
-        <div class="card shadow-sm rounded-xl p-3 text-center">
-            <div class="card-body">
-                <div class="d-flex justify-content-start align-items-center mb-2">
-                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
-                        <i class=" ri-advertisement-line text-success fs-1"></i>
+    <div class="col-lg-4 mb-3">
+        <div class="card shadow-sm border-0 card-animate">
+            <div class="card-body d-flex align-items-center">
+                <!-- Logo Besar -->
+                <div class="flex-shrink-0 me-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="ri-bar-chart-line fs-1"></i>
                     </div>
-                    <div class="text-start">
-                        <h5 class="text-muted">Total Reklame</h5>
-                        <h4 class="mb-0 fw-bold text-success">@Model.Data.TotalReklame.ToString("N0")</h4>
+                </div>
 
-                        <small class="text-muted"><span class="text-success fw-bold">xx%</span> dari bulan lalu</small>
+                <!-- Teks Kanan -->
+                <div class="flex-grow-1">
+                    <h4 class="fw-bold text-primary mb-2">Reklame Insidentil</h4>
 
+                    <div class="mb-2">
+                        <span class="text-muted">Total:</span>
+                        <span class="fw-semibold float-end">XX</span>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="text-muted">Aktif:</span>
+                        <span class="fw-semibold float-end">XX</span>
+                    </div>
+
+                    <div>
+                        <span class="text-muted">Expire:</span>
+                        <span class="fw-semibold float-end">XX</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-4">
-        <div class="card shadow-sm rounded-xl p-3 text-center">
-            <div class="card-body">
-                <div class="d-flex justify-content-start align-items-center mb-2">
-                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
-                        <i class="ri-road-map-line text-primary fs-1"></i>
+    <div class="col-lg-4 mb-3">
+        <div class="card shadow-sm border-0 card-animate">
+            <div class="card-body d-flex align-items-center">
+                <!-- Logo Besar -->
+                <div class="flex-shrink-0 me-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="ri-bar-chart-line fs-1"></i>
                     </div>
-                    <div class="text-start">
-                        <h5 class="text-muted">Jalan Dengan Reklame</h5>
-                        <h4 class="mb-0 fw-bold text-primary">@Model.Data.JalanDenganReklame.ToString("N0")</h4>
+                </div>
 
-                        <small class="text-muted"><span class="text-success fw-bold">xx%</span> dari bulan lalu</small>
+                <!-- Teks Kanan -->
+                <div class="flex-grow-1">
+                    <h4 class="fw-bold text-primary mb-2">Reklame Permanen</h4>
 
+                    <div class="mb-2">
+                        <span class="text-muted">Total:</span>
+                        <span class="fw-semibold float-end">XX</span>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="text-muted">Aktif:</span>
+                        <span class="fw-semibold float-end">XX</span>
+                    </div>
+
+                    <div>
+                        <span class="text-muted">Expire:</span>
+                        <span class="fw-semibold float-end">XX</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-4">
-        <div class="card shadow-sm rounded-xl p-3 text-center">
-            <div class="card-body">
-                <div class="d-flex justify-content-start align-items-center mb-2">
-                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
-                        <i class="ri-error-warning-line text-danger fs-1"></i>
+    <div class="col-lg-4 mb-3">
+        <div class="card shadow-sm border-0 card-animate">
+            <div class="card-body d-flex align-items-center">
+                <!-- Logo Besar -->
+                <div class="flex-shrink-0 me-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="ri-bar-chart-line fs-1"></i>
                     </div>
-                    <div class="text-start">
-                        <h5 class="text-muted">Pelanggaran Terdeteksi</h5>
-                        <h4 class="mb-0 fw-bold text-danger">@Model.Data.PelanggaranTerdeteksi.ToString("N0")</h4>
+                </div>
 
-                        <small class="text-muted"><span class="text-danger fw-bold">xx%</span> dari bulan lalu</small>
+                <!-- Teks Kanan -->
+                <div class="flex-grow-1">
+                    <h4 class="fw-bold text-primary mb-2">Reklame Terbatas</h4>
+
+                    <div class="mb-2">
+                        <span class="text-muted">Total:</span>
+                        <span class="fw-semibold float-end">XX</span>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="text-muted">Aktif:</span>
+                        <span class="fw-semibold float-end">XX</span>
+                    </div>
+
+                    <div>
+                        <span class="text-muted">Expire:</span>
+                        <span class="fw-semibold float-end">XX</span>
                     </div>
                 </div>
             </div>
@@ -230,6 +269,36 @@
 
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            // Biarkan kosong untuk "Semua Nama Jalan"
+            $('#selectJalan').dxSelectBox('instance').option('value', null);
+
+            // 2. Atur default untuk DateBox
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = today.getMonth(); // Bulan dimulai dari 0 (Januari = 0)
+
+            const tanggalAwal = new Date(yyyy, mm, 1);
+            const tanggalAkhir = new Date(yyyy, mm + 1, 0);
+
+            $('#tanggalAwal').dxDateBox('instance').option('value', tanggalAwal);
+            $('#tanggalAkhir').dxDateBox('instance').option('value', tanggalAkhir);
+
+            // Langsung panggil klik tombol untuk memuat data awal dengan filter default
+            $('#btnTerapkanFilter').click();
+            fnShow();
+        });
+
+        // Event handler untuk tombol filter
+        $('#btnTerapkanFilter').on('click', function() {
+            // Ambil nilai dari semua filter
+            const selectedJalan = $('#selectJalan').dxSelectBox('instance').option('value');
+            const tglAwal = $('#tanggalAwal').dxDateBox('instance').option('value');
+            const tglAkhir = $('#tanggalAkhir').dxDateBox('instance').option('value');
+
+            fnShow(selectedJalan, tglAwal, tglAkhir);
+        });
+
         // Fungsi untuk memuat tabel ringkasan utama
         function fnShow() {
             $.ajax({
@@ -242,24 +311,75 @@
         }
 
         // Fungsi untuk menampilkan modal detail
-        function showDetailModal(namaJalan) {
-            const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
+        // function showDetailModal(namaJalan) {
+        //     const url = '@Url.Action("Detail", "Reklame")' + '?namaJalan=' + encodeURIComponent(namaJalan);
+
+        //     $('#detailModal').modal('show');
+        //     Tampilkan spinner di modal
+        //     $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+        //     Ambil konten detail via AJAX
+        //     $.get(url, function (data) {
+        //         $('#detailModalContent').html(data);
+        //     }).fail(function() {
+        //          $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
+        //     });
+        // }
+
+        function showDetailModal(kategori, status, namaJalan) {
+            const url = '@Url.Action("Detail", "Rekap")'
+                + '?kategori=' + encodeURIComponent(kategori)
+                + '&status=' + encodeURIComponent(status)
+                + '&jalan=' + encodeURIComponent(namaJalan);
 
             $('#detailModal').modal('show');
+
             // Tampilkan spinner di modal
-            $('#detailModalContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+            $('#detailModalContent').html(`
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary"></div>
+                </div>
+            `);
 
             // Ambil konten detail via AJAX
             $.get(url, function (data) {
                 $('#detailModalContent').html(data);
-            }).fail(function() {
-                 $('#detailModalContent').html('<p class="text-danger p-5">Gagal memuat detail.</p>');
+            }).fail(function () {
+                $('#detailModalContent').html(`
+                    <p class="text-danger p-5">Gagal memuat detail.</p>
+                `);
             });
         }
 
-        // Memuat tabel ringkasan saat halaman dibuka
-        $(document).ready(function() {
-            fnShow();
-        });
+
+        function detailReklameCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            const kategori = cellInfo.column.captionParent;  // misalnya "INSIDENTIL"
+            const status = cellInfo.column.caption;          // misalnya "EXPIRED BONGKAR"
+            const jalan = cellInfo.data.NamaJalan;           // dari data row
+
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    showDetailModal(kategori, status, jalan);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+
     </script>
 }

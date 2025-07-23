@@ -37,6 +37,7 @@ namespace MonPDLib.General
             DBOPLISTRIK, 
             DBOPPBB,
             DBOPREKLAME,
+            DBOPREKLAMESURAT,
             DBNPWPD, 
         }
         public enum EStatePemeriksaanSkpdKbJabatan

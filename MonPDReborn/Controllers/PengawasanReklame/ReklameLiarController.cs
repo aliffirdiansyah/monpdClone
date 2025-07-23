@@ -2,22 +2,22 @@
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 
-namespace MonPDReborn.Controllers.Reklame
+namespace MonPDReborn.Controllers.PengawasanReklame
 {
-    public class ReklameController : BaseController
+    public class ReklameLiarController : BaseController
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<ReklameController> _logger;
+        private readonly ILogger<ReklameLiarController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         ResponseBase response = new ResponseBase();
-        public ReklameController(ILogger<ReklameController> logger)
+        public ReklameLiarController(ILogger<ReklameLiarController> logger)
         {
-            URLView = string.Concat("../Reklame/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../PengawasanReklame/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
         public IActionResult Index()
@@ -25,7 +25,7 @@ namespace MonPDReborn.Controllers.Reklame
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.Reklame.ReklameVM.Index();
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -45,7 +45,7 @@ namespace MonPDReborn.Controllers.Reklame
         {
             try
             {
-                var model = new Models.Reklame.ReklameVM.ShowData();
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Show();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -62,32 +62,11 @@ namespace MonPDReborn.Controllers.Reklame
             }
         }
 
-        /*public IActionResult ShowData()
+        public IActionResult Detail()
         {
             try
             {
-                var model = new Models.Reklame.ReklameVM.ShowData();
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }*/
-
-        public IActionResult Detail(string kategori, string status, string jalan)
-        {
-            try
-            {
-                var model = new Models.Reklame.ReklameVM.DetailReklame(kategori, status, jalan);
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Detail();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
