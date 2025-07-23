@@ -270,6 +270,8 @@ namespace MonPDReborn.Models.Reklame
                 {
                     var insidentilDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
                                 context.TUpayaReklames
@@ -295,6 +297,8 @@ namespace MonPDReborn.Models.Reklame
                 {
                     var insidentilDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
                                 !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
@@ -320,9 +324,11 @@ namespace MonPDReborn.Models.Reklame
                     var insidentilDataAktif = context.DbMonReklames
                         .Where(r =>
                             r.FlagPermohonan == "INSIDENTIL" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                             r.TglAkhirBerlaku.HasValue &&
                             r.TglAkhirBerlaku.Value >= tglAwal &&
-                            r.TglAkhirBerlaku.Value < DateTime.Today) 
+                            r.TglAkhirBerlaku.Value < DateTime.Today)
                         .Select(r => new DetailData
                         {
                             KelasJalan = r.KelasJalan,
@@ -344,6 +350,8 @@ namespace MonPDReborn.Models.Reklame
                 {
                     var permanenDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "PERMANEN" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
                                 context.TUpayaReklames
@@ -369,6 +377,8 @@ namespace MonPDReborn.Models.Reklame
                 {
                     var permanenDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "PERMANEN" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
                                 !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
@@ -394,6 +404,8 @@ namespace MonPDReborn.Models.Reklame
                     var permanenDataAktif = context.DbMonReklames
                         .Where(r =>
                             r.FlagPermohonan == "PERMANEN" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                             r.TglAkhirBerlaku.HasValue &&
                             r.TglAkhirBerlaku.Value >= tglAwal &&
                             r.TglAkhirBerlaku.Value < DateTime.Today)
@@ -419,6 +431,8 @@ namespace MonPDReborn.Models.Reklame
                 {
                     var terbatasDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "TERBATAS" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
                                 context.TUpayaReklames
@@ -444,6 +458,8 @@ namespace MonPDReborn.Models.Reklame
                 {
                     var terbatasDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "TERBATAS" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                                 r.TglAkhirBerlaku.HasValue && r.TglAkhirBerlaku.Value >= tglAwal &&
                                 r.TglAkhirBerlaku.Value < DateTime.Today &&
                                 !context.TUpayaReklames.Any(t => t.NoFormulir == r.NoFormulir && t.IdUpaya == 2)
@@ -469,6 +485,8 @@ namespace MonPDReborn.Models.Reklame
                     var terbatasDataAktif = context.DbMonReklames
                         .Where(r =>
                             r.FlagPermohonan == "TERBATAS" &&
+                                r.KelasJalan == kelasJalan &&
+                                r.NamaJalan == namaJalan &&
                             r.TglAkhirBerlaku.HasValue &&
                             r.TglAkhirBerlaku.Value >= tglAwal &&
                             r.TglAkhirBerlaku.Value < DateTime.Today)
