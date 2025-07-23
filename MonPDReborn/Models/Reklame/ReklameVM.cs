@@ -266,7 +266,7 @@ namespace MonPDReborn.Models.Reklame
                 var context = DBClass.GetContext();
 
                 //insidentil
-                if (status == "JENIS INSIDENTIL EXPIRED BONGKAR")
+                if (status == "ExpiredBongkar")
                 {
                     var insidentilDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
@@ -291,7 +291,7 @@ namespace MonPDReborn.Models.Reklame
                     .ToList();
                     ret.AddRange(insidentilDataExpBongkar);
                 }
-                if (status == "JENIS INSIDENTIL EXPIRED BLM BONGKAR")
+                if (status == "ExpiredBlmBongkar")
                 {
                     var insidentilDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "INSIDENTIL" &&
@@ -315,7 +315,7 @@ namespace MonPDReborn.Models.Reklame
                     .ToList();
                     ret.AddRange(insidentilDataExpBlmBongkar);
                 }
-                if (status == "JENIS INSIDENTIL AKTIF")
+                if (status == "Aktif")
                 {
                     var insidentilDataAktif = context.DbMonReklames
                         .Where(r =>
@@ -340,7 +340,7 @@ namespace MonPDReborn.Models.Reklame
                     ret.AddRange(insidentilDataAktif);
                 }
                 //permanen
-                if (status == "JENIS PERMANEN EXPIRED BONGKAR")
+                if (status == "ExpiredBongkar")
                 {
                     var permanenDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "PERMANEN" &&
@@ -365,7 +365,7 @@ namespace MonPDReborn.Models.Reklame
                     .ToList();
                     ret.AddRange(permanenDataExpBongkar);
                 }
-                if (status == "JENIS PERMANEN EXPIRED BLM BONGKAR")
+                if (status == "ExpiredBlmBongkar")
                 {
                     var permanenDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "PERMANEN" &&
@@ -389,7 +389,7 @@ namespace MonPDReborn.Models.Reklame
                     .ToList();
                     ret.AddRange(permanenDataExpBlmBongkar);
                 }
-                if (status == "JENIS PERMANEN AKTIF")
+                if (status == "Aktif")
                 {
                     var permanenDataAktif = context.DbMonReklames
                         .Where(r =>
@@ -415,7 +415,7 @@ namespace MonPDReborn.Models.Reklame
                 }
 
                 //terbatas
-                if (status == "JENIS TERBATAS EXPIRED BONGKAR")
+                if (status == "ExpiredBongkar")
                 {
                     var terbatasDataExpBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "TERBATAS" &&
@@ -440,7 +440,7 @@ namespace MonPDReborn.Models.Reklame
                     .ToList();
                     ret.AddRange(terbatasDataExpBongkar);
                 }
-                if (status == "JENIS TERBATAS EXPIRED BLM BONGKAR")
+                if (status == "ExpiredBlmBongkar")
                 {
                     var terbatasDataExpBlmBongkar = context.DbMonReklames
                     .Where(r => r.FlagPermohonan == "TERBATAS" &&
@@ -464,7 +464,7 @@ namespace MonPDReborn.Models.Reklame
                     .ToList();
                     ret.AddRange(terbatasDataExpBlmBongkar);
                 }
-                if (status == "JENIS TERBATAS AKTIF")
+                if (status == "Aktif")
                 {
                     var terbatasDataAktif = context.DbMonReklames
                         .Where(r =>

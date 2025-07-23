@@ -20,20 +20,20 @@
                 sub.AddFor(x => x.Isidentil.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));;
                 sub.AddFor(x => x.Isidentil.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));;
                 sub.AddFor(x => x.Isidentil.Aktif).Caption("AKTIF").CellTemplate(new JS("detailReklameCellTemplate"));;
-                sub.AddFor(x => x.Isidentil.Jumlah).Caption("JUMLAH").CellTemplate(new JS("detailReklameCellTemplate"));;
+                sub.AddFor(x => x.Isidentil.Jumlah).Caption("JUMLAH");
             });
 
             columns.Add().Caption("JENIS PERMANEN").Alignment(HorizontalAlignment.Center).Columns(sub => {
-                sub.AddFor(x => x.Permanen.ExpiredBongkar).Caption("EXPIRED BONGKAR");
-                sub.AddFor(x => x.Permanen.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR");
-                sub.AddFor(x => x.Permanen.Aktif).Caption("AKTIF");
+                sub.AddFor(x => x.Permanen.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
+                sub.AddFor(x => x.Permanen.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
+                sub.AddFor(x => x.Permanen.Aktif).Caption("AKTIF").CellTemplate(new JS("detailReklameCellTemplate"));
                 sub.AddFor(x => x.Permanen.Jumlah).Caption("JUMLAH");
             });
 
             columns.Add().Caption("JENIS TERBATAS").Alignment(HorizontalAlignment.Center).Columns(sub => {
-                sub.AddFor(x => x.Terbatas.ExpiredBongkar).Caption("EXPIRED BONGKAR");
-                sub.AddFor(x => x.Terbatas.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR");
-                sub.AddFor(x => x.Terbatas.Aktif).Caption("AKTIF");
+                sub.AddFor(x => x.Terbatas.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
+                sub.AddFor(x => x.Terbatas.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
+                sub.AddFor(x => x.Terbatas.Aktif).Caption("AKTIF").CellTemplate(new JS("detailReklameCellTemplate"));
                 sub.AddFor(x => x.Terbatas.Jumlah).Caption("JUMLAH");
             });
         })
