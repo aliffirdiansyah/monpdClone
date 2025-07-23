@@ -103,10 +103,11 @@ namespace HotelWs
             // do fill db op HOTEL
             if (IsGetDBOp())
             {
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                {
-                    FillOP(i);
-                }
+                FillOP(2025);
+                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                //{
+                //    FillOP(i);
+                //}
             }
 
             MailHelper.SendMail(
@@ -554,11 +555,16 @@ WHERE A.NPWPD NOT IN (
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
             {
                 var sql = @"
-                                                                                   SELECT *
+SELECT *
 FROM (
-SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Perhotelan' PAJAK_NAMA,
+SELECT NVL(REPLACE(A.FK_NOP, '.', ''), '-') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Perhotelan' PAJAK_NAMA,
               NVL(ALAMAT_OP, '-') ALAMAT_OP, '-'  ALAMAT_OP_NO,'-' ALAMAT_OP_RT,'-' ALAMAT_OP_RW,NVL(NOMOR_TELEPON, '-') TELP,
-              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT,TGL_TUTUP TGL_OP_TUTUP,
+              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT, CASE
+              WHEN TGL_TUTUP IS NULL THEN NULL 
+              WHEN TO_CHAR(TGL_TUTUP,'YYYY') <= 1990 THEN NULL
+              ELSE
+              TGL_TUTUP
+              END  TGL_OP_TUTUP,
               NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP, 0 METODE_PENJUALAN,        0 METODE_PEMBAYARAN,        0 JUMLAH_KARYAWAN,  
               CASE                             
                         WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG TIGA' THEN 14
@@ -581,12 +587,68 @@ SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
 WHERE NAMA_PAJAK_DAERAH='HOTEL' AND A.FK_NOP IS NOT NULL
 )
-WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN)
+WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN) OR  TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
                     ";
 
                 var result = _contMonitoringDB.Set<DbOpHotel>().FromSqlRaw(sql, new[] {
                     new OracleParameter("TAHUN", tahunBuku)
                 }).ToList();
+
+                var sqlKetetapan = @"SELECT *
+                    FROM ( 
+                    SELECT  NVL(NOP, '-') NOP, TO_NUMBER(TAHUN) TAHUN,TO_NUMBER(MASAPAJAK) MASAPAJAK,100 SEQ,1 JENIS_KETETAPAN,TO_DATE(NVL(TANGGALENTRY,MASAPAJAKAKHIR)) TGL_KETETAPAN,TO_DATE(TANGGALJATUHTEMPO) TGL_JATUH_TEMPO_BAYAR ,0 NILAI_PENGURANG,
+                                TO_NUMBER(PAJAK_TERUTANG)  POKOK
+                    FROM
+                    (
+                    select  NO_SPTPD, A.NPWPD, IDAYAT, 
+                            TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
+                            RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
+                            A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
+                    from PHRH_USER.sptpd_new@LIHATHR A
+                    JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HOTEL'
+                    WHERE STATUS=0
+                    UNION ALL
+                    select KD_BILL,NPWPD,KODEREKENING,
+                            TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
+                            PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
+                    from sptpd_payment@LIHATBONANG A
+                    JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HOTEL'
+                    where STATUS_HAPUS=0
+                    ))
+                    WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             
+                    ";
+
+                var ketetapanMonitoringDb = _contMonitoringDB.Set<OPSkpdHotel>()
+                    .FromSqlRaw(sqlKetetapan, new[] {
+                                new OracleParameter("TAHUN", tahunBuku.ToString())
+                    }).ToList();
+
+                var sqlRealisasi = @"SELECT  ID_SSPD,   id_sspd  KODE_BILL, 
+            '-' NO_KETETAPAN, 
+            0 JENIS_PEMBAYARAN,
+            3 JENIS_PAJAK,
+            1 JENIS_KETETAPAN, 
+            TO_DATE(MP_AKHIR) JATUH_TEMPO, 
+            NVL(REPLACE(FK_NOP,'.',''), '-') NOP,
+            TO_NUMBER( BULAN_PAJAK) MASA, 
+            TO_NUMBER(TAHUN_PAJAK) TAHUN, 
+           TO_NUMBER(JML_POKOK) NOMINAL_POKOK, 
+           TO_NUMBER(JML_DENDA) NOMINAL_SANKSI,
+           0 NOMINAL_ADMINISTRASI, 
+           0 NOMINAL_LAINYA,
+           0 PENGURANG_POKOK, 
+           0 PENGURANG_SANKSI,
+           '-' REFF_PENGURANG_POKOK,'-'   REFF_PENGURANG_SANKSI,'-'   AKUN_POKOK,'-'   AKUN_SANKSI,'-'   AKUN_ADMINISTRASI, 
+                                '-'  AKUN_LAINNYA,'-'   AKUN_PENGURANG_POKOK,'-'   AKUN_PENGURANG_SANKSI,'-'  INVOICE_NUMBER,TO_DATE(TGL_SETORAN) TRANSACTION_DATE, 
+                                '-'  NO_NTPD,1  STATUS_NTPD,SYSDATE  REKON_DATE,'-'   REKON_BY,'-'   REKON_REFF,100 SEQ_KETETAPAN,SYSDATE INS_DATE           
+FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR@LIHATHR A
+WHERE NAMA_PAJAK_DAERAH='HOTEL'  AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN  ";
+
+                var pembayaranSspdList = _contMonitoringDB.Set<SSPD>()
+                    .FromSqlRaw(sqlRealisasi, new[] {
+                    new OracleParameter("TAHUN", tahunBuku)
+                    }).ToList();
+
                 var _contMonPd = DBClass.GetContext();
                 int jmlData = result.Count;
                 int index = 0;
@@ -595,10 +657,6 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     // DATA OP
                     try
                     {
-                        if (item.Nop== "357802200290100001")
-                        {
-                            var kk = 1;
-                        }
                         var sourceRow = _contMonPd.DbOpHotels.SingleOrDefault(x => x.Nop == item.Nop && x.TahunBuku == tahunBuku);
                         if (sourceRow != null)
                         {
@@ -714,36 +772,9 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     // ketetapan 
                     try
                     {
-                        var sqlKetetapan = @"SELECT *
-FROM ( 
-SELECT  NOP, TO_NUMBER(TAHUN) TAHUN,TO_NUMBER(MASAPAJAK) MASAPAJAK,100 SEQ,1 JENIS_KETETAPAN,TO_DATE(NVL(TANGGALENTRY,MASAPAJAKAKHIR)) TGL_KETETAPAN,TO_DATE(TANGGALJATUHTEMPO) TGL_JATUH_TEMPO_BAYAR ,0 NILAI_PENGURANG,
-            TO_NUMBER(PAJAK_TERUTANG)  POKOK
-FROM
-(
-select  NO_SPTPD, A.NPWPD, IDAYAT, 
-        TAHUN, MASAPAJAK,MASAPAJAKAWAL, MASAPAJAKAKHIR, OMSET, 
-        RUMUS_PROSEN, PAJAK_TERUTANG + PAJAK_TERUTANG1 PAJAK_TERUTANG,
-        A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
-from PHRH_USER.sptpd_new@LIHATHR A
-JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HOTEL'
-WHERE STATUS=0 AND REPLACE(A.NOP,'.','')=:NOP
-UNION ALL
-select KD_BILL,NPWPD,KODEREKENING,
-        TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
-        PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
-from sptpd_payment@LIHATBONANG A
-JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HOTEL'
-where STATUS_HAPUS=0 AND REPLACE(A.NOP,'.','')=:NOP
-))
-WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
-
-                        var ketetapanMonitoringDb = _contMonitoringDB.Set<OPSkpdHotel>()
-                            .FromSqlRaw(sqlKetetapan, new[] {
-                                new OracleParameter("NOP", item.Nop),
-                                new OracleParameter("TAHUN", tahunBuku.ToString())
-                            }).ToList();
+                        
                         var dbAkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)item.KategoriId);
-                        foreach (var itemKetetapan in ketetapanMonitoringDb)
+                        foreach (var itemKetetapan in ketetapanMonitoringDb.Where(x => x.NOP == item.Nop).ToList())
                         {
                             string nop = item.Nop;
                             int tahunPajak = itemKetetapan.TAHUN;
@@ -825,36 +856,11 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
                     // realisasi
                     try
                     {
-                        var sqlRealisasi = @"SELECT  ID_SSPD,   id_sspd  KODE_BILL, 
-            '-' NO_KETETAPAN, 
-            0 JENIS_PEMBAYARAN,
-            3 JENIS_PAJAK,
-            1 JENIS_KETETAPAN, 
-            TO_DATE(MP_AKHIR) JATUH_TEMPO, 
-            REPLACE(FK_NOP,'.','') NOP,
-            TO_NUMBER( BULAN_PAJAK) MASA, 
-            TO_NUMBER(TAHUN_PAJAK) TAHUN, 
-           TO_NUMBER(JML_POKOK) NOMINAL_POKOK, 
-           TO_NUMBER(JML_DENDA) NOMINAL_SANKSI,
-           0 NOMINAL_ADMINISTRASI, 
-           0 NOMINAL_LAINYA,
-           0 PENGURANG_POKOK, 
-           0 PENGURANG_SANKSI,
-           '-' REFF_PENGURANG_POKOK,'-'   REFF_PENGURANG_SANKSI,'-'   AKUN_POKOK,'-'   AKUN_SANKSI,'-'   AKUN_ADMINISTRASI, 
-                                '-'  AKUN_LAINNYA,'-'   AKUN_PENGURANG_POKOK,'-'   AKUN_PENGURANG_SANKSI,'-'  INVOICE_NUMBER,TO_DATE(TGL_SETORAN) TRANSACTION_DATE, 
-                                '-'  NO_NTPD,1  STATUS_NTPD,SYSDATE  REKON_DATE,'-'   REKON_BY,'-'   REKON_REFF,100 SEQ_KETETAPAN,SYSDATE INS_DATE           
-FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR@LIHATHR A
-WHERE NAMA_PAJAK_DAERAH='HOTEL' AND REPLACE(FK_NOP,'.','')=:NOP  AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN  ";
-
-                        var pembayaranSspdList = _contMonitoringDB.Set<SSPD>()
-                            .FromSqlRaw(sqlRealisasi, new[] {
-                    new OracleParameter("NOP", item.Nop),
-                    new OracleParameter("TAHUN", tahunBuku)
-                            }).ToList();
+                        
 
                         if (pembayaranSspdList != null)
                         {
-                            foreach (var itemSSPD in pembayaranSspdList)
+                            foreach (var itemSSPD in pembayaranSspdList.Where(x => x.NOP == item.Nop).ToList())
                             {
                                 var ketetapan = _contMonPd.DbMonHotels.SingleOrDefault(x => x.Nop == itemSSPD.NOP &&
                                                                                         x.TahunPajakKetetapan == itemSSPD.TAHUN &&

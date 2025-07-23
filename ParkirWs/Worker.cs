@@ -102,10 +102,11 @@ namespace ParkirWs
             // do fill db op PARKIR
             if (IsGetDBOp())
             {
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                {
-                    FillOP(i);
-                }
+                FillOP(2024);
+                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                //{
+                //    FillOP(i);
+                //}
             }
 
             MailHelper.SendMail(
@@ -556,7 +557,7 @@ WHERE A.NPWPD NOT IN (
                 var sql = @"
                                                                                    SELECT *
 FROM (
-SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Parkir' PAJAK_NAMA,
+SELECT NVL(REPLACE(A.FK_NOP, '.', ''), '-') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Parkir' PAJAK_NAMA,
               NVL(ALAMAT_OP, '-') ALAMAT_OP, '-'  ALAMAT_OP_NO,'-' ALAMAT_OP_RT,'-' ALAMAT_OP_RW,NVL(NOMOR_TELEPON, '-') TELP,
               NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT,TGL_TUTUP TGL_OP_TUTUP,
               NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP, 0 METODE_PENJUALAN,        0 METODE_PEMBAYARAN,        0 JUMLAH_KARYAWAN,  
@@ -708,7 +709,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     {
                         var sqlKetetapan = @"SELECT *
 FROM (            
-SELECT REPLACE(FK_NOP,'.','') NOP, TO_NUMBER(TAHUN_PAJAK) TAHUN,TO_NUMBER(BULAN_PAJAK) MASAPAJAK,100 SEQ,1 JENIS_KETETAPAN,TO_DATE(NVL(TGL_SPTPD_DISETOR,MP_AKHIR)) TGL_KETETAPAN,TO_DATE(TGL_JATUH_TEMPO) TGL_JATUH_TEMPO_BAYAR ,0 NILAI_PENGURANG,
+SELECT NVL(REPLACE(FK_NOP,'.',''),'-') NOP, TO_NUMBER(TAHUN_PAJAK) TAHUN,TO_NUMBER(BULAN_PAJAK) MASAPAJAK,100 SEQ,1 JENIS_KETETAPAN,TO_DATE(NVL(TGL_SPTPD_DISETOR,MP_AKHIR)) TGL_KETETAPAN,TO_DATE(TGL_JATUH_TEMPO) TGL_JATUH_TEMPO_BAYAR ,0 NILAI_PENGURANG,
             TO_NUMBER(KETETAPAN_TOTAL)  POKOK
 FROM VW_SIMPADA_SPTPD@LIHATHPPSERVER
 WHERE NAMA_PAJAK_DAERAH='PARKIR' AND FK_NOP IS NOT NULL and REPLACE(FK_NOP,'.','')=:NOP
@@ -812,7 +813,7 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
             5 JENIS_PAJAK,
             1 JENIS_KETETAPAN, 
             TO_DATE(MP_AKHIR) JATUH_TEMPO, 
-            REPLACE(FK_NOP,'.','') NOP,
+            NVL(REPLACE(FK_NOP,'.',''),'-') NOP,
             TO_NUMBER( BULAN_PAJAK) MASA, 
             TO_NUMBER(TAHUN_PAJAK) TAHUN, 
            TO_NUMBER(JML_POKOK) NOMINAL_POKOK, 
