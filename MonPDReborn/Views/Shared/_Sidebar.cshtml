@@ -154,12 +154,7 @@
                         <i class="bx bx-cog me-1 align-middle"></i><span data-key="t-pemasanganAlat">Alat Rekam Online</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ReklameSummary" ? "active" : "")"
-                       href="@Url.Action("Index", "ReklameSummary")" role="button">
-                        <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-reklamesummary">Reklame Summary</span>
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "RealisasiControl" ? "active" : "")"
                        href="@Url.Action("Index", "RealisasiControl")" role="button" target="_blank">
@@ -289,6 +284,30 @@
                             </li>
                         </ul>
                     </div>
+                </li>
+            </ul>
+        </div>
+        <div class="container-fluid">
+            <div id="two-column-menu"></div>
+            <ul class="navbar-nav" id="navbar-nav">
+                <li class="menu-title"><span data-key="t-laporanStrategis">Pengawasan Reklame</span></li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ReklameSummary" ? "active" : "")"
+                       href="@Url.Action("Index", "ReklameSummary")" role="button">
+                        <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-reklamesummary">Reklame Summary</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reklame" ? "active" : "")"
+                       href="@Url.Action("Index", "Reklame")" role="button">
+                        <i class=" bx bx-archive me-1 align-middle"></i><span data-key="t-reklame">Kontrol Reklame</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ReklameLiar" ? "active" : "")"
+                       href="@Url.Action("Index", "ReklameLiar")" role="button">
+                        <i class="bx bx-calendar-exclamation me-1 align-middle"></i><span data-key="t-reklameLiar">Reklame Liar</span>
+                    </a>
                 </li>
             </ul>
         </div>
