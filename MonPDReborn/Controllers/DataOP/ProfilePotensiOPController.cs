@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models.DataOP;
@@ -58,30 +60,36 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
-        public IActionResult ShowDetail(EnumFactory.EPajak jenisPajak)
+        [HttpGet]
+        public object GetDetailPotensi(DataSourceLoadOptions load_options, int JenisPajak)
         {
-            try
-            {
-                var model = new Models.DataOP.ProfilePotensiOPVM.ShowDetail
-                {
-                   /* JenisPajak = jenisPajak,*/
-                    DataDetailPotensi = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList(jenisPajak)
-                };
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
+            var data = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList((EnumFactory.EPajak)JenisPajak);
+            return DataSourceLoader.Load(data, load_options);
         }
+        //public IActionResult ShowDetail(int jenisPajak)
+        //{
+        //    try
+        //    {
+        //        var model = new Models.DataOP.ProfilePotensiOPVM.ShowDetail
+        //        {
+        //           /* JenisPajak = jenisPajak,*/
+        //            DataDetailPotensi = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList((EnumFactory.EPajak)jenisPajak)
+        //        };
+        //        return PartialView($"{URLView}_{actionName}", model);
+        //    }
+        //    catch (ArgumentException e)
+        //    {
+        //        response.Status = StatusEnum.Error;
+        //        response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+        //        return Json(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Status = StatusEnum.Error;
+        //        response.Message = "⚠ Server Error: Internal Server Error";
+        //        return Json(response);
+        //    }
+        //}
         public IActionResult ShowData(string jenisPajak, string kategori)
         {
             try
