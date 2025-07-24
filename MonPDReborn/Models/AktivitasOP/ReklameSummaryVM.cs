@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.InkML;
+﻿using DevExpress.XtraRichEdit.Import.Html;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
@@ -477,6 +478,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var upaya = context.MUpayaReklames.Where(x => x.Id == NewRowUpaya.IdUpaya).SingleOrDefault().Upaya;
                 var newUpaya = new MonPDLib.EF.TUpayaReklame
                 {
+                    Id = MonPDLib.General.Utility.GetMaxValueSpecifyColumn<MonPDLib.EF.TUpayaReklame>(context, null, "Id") + 1,
                     NoFormulir = NewRowUpaya.NoFormulir,
                     IdUpaya = NewRowUpaya.IdUpaya,
                     Upaya = upaya ?? "-",
