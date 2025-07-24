@@ -652,8 +652,8 @@ namespace MonPDReborn.Models.AktivitasOP
             //    }
 
             //    return ret;
+            //    //}
             //}
-        }
             public static void SimpanUpaya(DetailUpaya.NewRow NewRowUpaya)
             {
                 var context = DBClass.GetContext();
