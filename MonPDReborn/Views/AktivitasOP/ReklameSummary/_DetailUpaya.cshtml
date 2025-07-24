@@ -23,17 +23,17 @@
         <div class="tab-content text-muted">
             <div class="tab-pane active" id="input-upaya" role="tabpanel">
                 <form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
+                    @Html.HiddenFor(m => m.Data.NewRowUpaya.NoFormulir)
                     <div class="mb-3">
                         <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
                             .ID("cbUpaya")
                             .ValueExpr("Value")
                             .DisplayExpr("Text")
-                            .DataSource(d => d.Mvc().Controller("ReklameSummary").LoadAction("GetDataList").Key("filter"))
+                            .DataSource(d => d.Mvc().Controller("ReklameSummary").LoadAction("GetUpaya"))
                             .OnValueChanged("fnReloadTindakan")
                             .SearchExpr("Text")
                             .SearchEnabled(true)
-                            .MinSearchLength(3)
                             )
                     </div>
 
@@ -41,12 +41,9 @@
                         <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
                             .ID("cbNop")
-                            .ValueExpr("ObjekPajak.EncryptedNop")
-                            .DisplayExpr("InfoNOP")
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
                             .DataSource(x => x.Mvc().Controller("SPTPD").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
-                            .OnValueChanged("fnReloadData")
-                            .DataSourceOptions(m => m.Group("NamaPajak"))
-                            .Grouped(true)
                             .SearchEnabled(true)
                             )
                     </div>

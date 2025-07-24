@@ -9,6 +9,7 @@ using MonPDReborn.Lib.General;
 using System.Drawing;
 using System.Globalization;
 using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.AktivitasOP.ReklameSummaryVM;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
@@ -113,39 +114,43 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
         [HttpGet]
-        public IActionResult GetDataList(DataSourceLoadOptions loadOptions)
+        public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions)
         {
+            List<UpayaCbView> TindakanList = new();
             var context = DBClass.GetContext();
 
-            var upayaList = context.MUpayaReklames
-                .Select(x => new {
-                    Value = x.Id,
-                    Text = x.Upaya
+            var upaya = await context.MUpayaReklames.ToListAsync();
+
+            foreach (var item in upaya)
+            {
+
+                TindakanList.Add(new UpayaCbView()
+                {
+                    Value = (int)item.Id,
+                    Text = item.Upaya ?? string.Empty,
                 });
-
-            return Json(DataSourceLoader.Load(upayaList, loadOptions));
+            }
+            return DataSourceLoader.Load(TindakanList, loadOptions);
         }
+        [HttpGet]
+        public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
+        {
+            List<TindakanCbView> TindakanList = new();
+            var context = DBClass.GetContext();
 
-        //[HttpGet]
-        //public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
-        //{
-        //    List<dynamic> TindakanList = new();
-        //    var context = DBClass.GetContext();
+            var upaya = await context.MTindakanReklames.Where(x => x.IdUpaya == idUpaya).ToListAsync();
 
-        //    var upaya = await context.MTindakanReklames.Where(x => x.IdUpaya.Value == idUpaya).ToList();
+            foreach (var item in upaya)
+            {
 
-        //    foreach (var item in opList.Where(x => x.Pajak != EnumFactory.EPajak.AirTanah))
-        //    {
-
-        //        NopList.Add(new NOPView()
-        //        {
-        //            ObjekPajak = item,
-        //            NamaPajak = item.Pajak.GetDescription(),
-        //            InfoNOP = item.GetFormattedNOP() + "[" + item.Nama + "]"
-        //        });
-        //    }
-        //    return DataSourceLoader.Load(NopList, loadOptions);
-        //}
+                TindakanList.Add(new TindakanCbView()
+                {
+                    Value = (int)item.Id,
+                    Text = item.Tindakan ?? string.Empty,
+                });
+            }
+            return DataSourceLoader.Load(TindakanList, loadOptions);
+        }
         //Simpan Upaya
         [HttpPost]
         public IActionResult SimpanUpaya(Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya input)

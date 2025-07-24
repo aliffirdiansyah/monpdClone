@@ -95,7 +95,15 @@
                 simpanUpaya();
             });
         });
+        function fnGetParamsTindakan() {
+            return { idUpaya: function () { return $('#cbUpaya').dxSelectBox("instance").option('value') } }
+        }
+        function fnReloadTindakan() {
+            $("#cbTindakan").dxSelectBox("instance").option("value", null);
+            var selectBoxDataSource = $("#cbTindakan").dxSelectBox("instance").getDataSource();
+            selectBoxDataSource.load();
 
+        }
         function simpanUpaya() {
             var formData = new FormData($('#formUpaya')[0]);
 

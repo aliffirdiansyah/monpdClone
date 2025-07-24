@@ -56,7 +56,6 @@ namespace MonPDReborn.Models.AktivitasOP
             public int SelectedUpaya { get; set; }
             public int SelectedTindakan { get; set; }
             public IFormFile Lampiran { get; set; } = null!;
-            public List<SelectListItem> UpayaList { get; set; } = new();
             public GetDetailUpaya() { }
             public GetDetailUpaya(string noFormulir, int tahun, int bulan)
             {
@@ -65,14 +64,10 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 var context = DBClass.GetContext();
                 Data.NoFormulir = noFormulir;
+                Data.NewRowUpaya.NoFormulir = noFormulir;
                 Data.NewRowUpaya.TglUpaya = DateTime.Now;
 
-                UpayaList = context.MUpayaReklames.Select(x => new SelectListItem
-                {
-                    Value = x.Id.ToString(),
-                    Text = x.Upaya
-                }).ToList();
-
+                
                 Data.DataUpayaList = context.TUpayaReklames
                 .Where(x => x.NoFormulir == noFormulir)
                 .Select(x => new DetailUpaya.DataUpaya
@@ -84,33 +79,28 @@ namespace MonPDReborn.Models.AktivitasOP
                 })
                 .ToList();
 
-                var tahunPajak = tahun.ToString();
-                var masaPajak = bulan.ToString("D2");
-
-                var infoReklame = context.DbOpReklames
-                    .Where(x => x.NoFormulir == noFormulir)
-                    .Select(x => new DetailUpaya.InfoReklame
-                    {
-                        IsiReklame = x.IsiReklame,
-                        AlamatReklame = x.Alamat,
-                        JenisReklame = x.FlagPermohonan,
-                        Panjang = x.Panjang ?? 0,
-                        Lebar = x.Lebar ?? 0,
-                        Luas = x.Luas ?? 0,
-                        Tinggi = x.Ketinggian ?? 0,
-                        TglMulaiBerlaku = x.TglMulaiBerlaku.HasValue ? x.TglMulaiBerlaku.Value : DateTime.MinValue,
-                        TglAkhirBerlaku = x.TglAkhirBerlaku.HasValue ? x.TglAkhirBerlaku.Value : DateTime.MinValue,
-                        TahunPajak = tahunPajak,
-                        MasaPajak = masaPajak
-                    })
-                    .OrderByDescending(x => x.TglAkhirBerlaku)
-                    .FirstOrDefault();
-                if (infoReklame != null)
-                {
-                    Data.InfoReklameUpaya = infoReklame;
-                }
-
-                
+                //var infoReklame = context.DbOpReklames
+                //    .Where(x => x.NoFormulir == noFormulir)
+                //    .Select(x => new DetailUpaya.InfoReklame
+                //    {
+                //        IsiReklame = x.IsiReklame,
+                //        AlamatReklame = x.Alamat,
+                //        JenisReklame = x.FlagPermohonan,
+                //        Panjang = x.Panjang ?? 0,
+                //        Lebar = x.Lebar ?? 0,
+                //        Luas = x.Luas ?? 0,
+                //        Tinggi = x.Ketinggian ?? 0,
+                //        TglMulaiBerlaku = x.TglMulaiBerlaku.HasValue ? x.TglMulaiBerlaku.Value : DateTime.MinValue,
+                //        TglAkhirBerlaku = x.TglAkhirBerlaku.HasValue ? x.TglAkhirBerlaku.Value : DateTime.MinValue,
+                //        TahunPajak = tahunPajak,
+                //        MasaPajak = masaPajak
+                //    })
+                //    .OrderByDescending(x => x.TglAkhirBerlaku)
+                //    .FirstOrDefault();
+                //if (infoReklame != null)
+                //{
+                //    Data.InfoReklameUpaya = infoReklame;
+                //}
             }
         }
 
@@ -778,7 +768,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Panjang = reklame.Panjang ?? 0,
                         Lebar = reklame.Lebar ?? 0,
                         Luas = reklame.Luas ?? 0,
-                      //  Tinggi = reklame.T ?? 0,
+                        Tinggi = reklame.Ketinggian ?? 0,
                         TglMulaiBerlaku = reklame.TglMulaiBerlaku ?? DateTime.MinValue,
                         TglAkhirBerlaku = reklame.TglAkhirBerlaku ?? DateTime.MinValue,
                         TahunPajak = reklame.TahunA?.ToString() ?? "-",
@@ -793,6 +783,16 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
+        public class UpayaCbView
+        {
+            public int Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+        public class TindakanCbView
+        {
+            public int Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
         public class ReklamePermanen
         {
             public string BulanNama { get; set; } = null!;
