@@ -1,7 +1,5 @@
 ﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya
 
-
-
 <div class="card">
     <div class="card-body">
         <div class="mb-4">
@@ -24,36 +22,53 @@
 
         <div class="tab-content text-muted">
             <div class="tab-pane active" id="input-upaya" role="tabpanel">
-                <form method="post" enctype="multipart/form-data">
+                <form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label class="form-label">Jenis Upaya</label>
-                        <select class="form-select" name="JenisUpaya">
-                            <option value="">~ Pilih Upaya ~</option>
-                            <!-- opsi dropdown diisi di controller -->
-                        </select>
+                        <label asp-for="Data.NewRowUpaya.IdUpaya" class="form-label">Jenis Upaya</label>
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
+                            .ID("cbUpaya")
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .DataSource(d => d.Mvc().Controller("ReklameSummary").LoadAction("GetDataList").Key("filter"))
+                            .OnValueChanged("fnReloadTindakan")
+                            .SearchExpr("Text")
+                            .SearchEnabled(true)
+                            .MinSearchLength(3)
+                            )
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Keterangan</label>
-                        <select class="form-select" name="Keterangan">
-                            <option value="">~ Pilih Keterangan ~</option>
-                            <!-- opsi dropdown diisi di controller -->
-                        </select>
+                        <label asp-for="Data.NewRowUpaya.Keterangan" class="form-label">Keterangan</label>
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
+                            .ID("cbNop")
+                            .ValueExpr("ObjekPajak.EncryptedNop")
+                            .DisplayExpr("InfoNOP")
+                            .DataSource(x => x.Mvc().Controller("SPTPD").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
+                            .OnValueChanged("fnReloadData")
+                            .DataSourceOptions(m => m.Group("NamaPajak"))
+                            .Grouped(true)
+                            .SearchEnabled(true)
+                            )
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Petugas</label>
-                        <input type="text" class="form-control" name="Petugas" />
+                        <label asp-for="Data.NewRowUpaya.NamaPetugas" class="form-label">Petugas</label>
+                        @Html.TextBoxFor(m => m.Data.NewRowUpaya.NamaPetugas, new { @class = "form-control" })
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Tanggal Upaya</label>
-                        <input type="date" class="form-control" name="TanggalUpaya" />
+                        <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
+                        @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
+                            .Type(DateBoxType.Date)
+                            .DisplayFormat("dd MMM yyyy")
+                            .Value(DateTime.Today)
+                            .Name("NewRowUpaya.TglUpaya")
+                            .ID("NewRowUpaya_TglUpaya"))
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Lampiran</label>
-                        <input type="file" class="form-control" name="Lampiran" />
+                        <input type="file" class="form-control" name="Lampiran" id="Lampiran" accept=".jpg,.jpeg,.png,.pdf" />
                         <small class="form-text text-muted">
                             Hanya file gambar (.jpg, .jpeg, .png) dan PDF yang diperbolehkan.
                         </small>
@@ -159,3 +174,51 @@
     </div>
 
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#formUpaya').on('submit', function (e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '@Url.Action("SimpanUpaya", "Reklame")',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $("#loader").show()
+                    },
+                    complete: function () { $("#loader").hide(); },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                           
+                            $('#formUpaya')[0].reset();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Terjadi kesalahan saat mengirim data.'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

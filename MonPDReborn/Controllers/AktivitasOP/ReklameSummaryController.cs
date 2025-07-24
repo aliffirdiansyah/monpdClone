@@ -3,6 +3,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using System.Drawing;
@@ -134,11 +135,34 @@ namespace MonPDReborn.Controllers.Aktivitas
         [HttpPost]
         public IActionResult SimpanUpaya(Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya input)
         {
-            return Json(new ResponseBase
+            try
             {
-                Status = StatusEnum.Error,
-                Message = "Fitur ini belum tersedia."
-            });
+                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
+                {
+                    NoFormulir = input.Data.NoFormulir,
+                    IdUpaya = input.SelectedUpaya,
+                    IdTindakan = input.SelectedTindakan,
+                    NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
+                    TglUpaya = input.Data.NewRowUpaya.TglUpaya,
+                };
+                Models.AktivitasOP.ReklameSummaryVM.Method.SimpanUpaya(model);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using System.Globalization;
 using System.Web.Mvc;
@@ -43,7 +44,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 Data = Method.GetDetailSummary(tahun, bulan, jenis, kategori);
             }
         }
-        
+
         // Detail Upaya
 
         public class GetDetailUpaya
@@ -51,6 +52,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public DetailUpaya Data { get; set; } = new();
             public int SelectedUpaya { get; set; }
             public int SelectedTindakan { get; set; }
+            public IFormFile Lampiran { get; set; } = null!;
             public List<SelectListItem> UpayaList { get; set; } = new();
             public GetDetailUpaya() { }
             public GetDetailUpaya(string noFormulir, int tahun, int bulan)
@@ -65,7 +67,16 @@ namespace MonPDReborn.Models.AktivitasOP
                     Text = x.Upaya
                 }).ToList();
 
+                Data.DataUpayaList = context.TUpayaReklames.Include(x => x.TglUpaya)
+                    .Where(x => x.NoFormulir == noFormulir)
+                    .Select(x => new DetailUpaya.DataUpaya
+                    {
+                        NoFormulir = x.NoFormulir,
+                        NamaUpaya = x.Upaya,
+                        Keterangan = x.Tindakan,
+                        TglUpaya = x.TglUpaya.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
 
+                    }).ToList();
                 // panggil GetDetailUpaya
                 //Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);
             }
@@ -415,6 +426,41 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return ret;
             }
+            public static void SimpanUpaya(DetailUpaya.NewRow NewRowUpaya)
+            {
+                var context = DBClass.GetContext();
+                if (NewRowUpaya.IdUpaya == 0)
+                {
+                    throw new ArgumentException("Upaya tidak boleh kosong.");
+                }
+                if (NewRowUpaya.IdTindakan == 0)
+                {
+                    throw new ArgumentException("Keterangan tidak boleh kosong.");
+                }
+                if (NewRowUpaya.TglUpaya == null || NewRowUpaya.TglUpaya == DateTime.MinValue)
+                {
+                    throw new ArgumentException("Tanggal Upaya tidak boleh kosong.");
+                }
+                if (string.IsNullOrEmpty(NewRowUpaya.NamaPetugas))
+                {
+                    throw new ArgumentException("Nama Petugas tidak boleh kosong.");
+                }
+                var tindakan = context.MTindakanReklames.Where(x => x.Id == NewRowUpaya.IdTindakan && x.IdUpaya == NewRowUpaya.IdUpaya).SingleOrDefault().Tindakan;
+                var upaya = context.MUpayaReklames.Where(x => x.Id == NewRowUpaya.IdUpaya).SingleOrDefault().Upaya;
+                var newUpaya = new MonPDLib.EF.TUpayaReklame
+                {
+                    NoFormulir = NewRowUpaya.NoFormulir,
+                    IdUpaya = NewRowUpaya.IdUpaya,
+                    Upaya = upaya ?? "-",
+                    IdTindakan = NewRowUpaya.IdTindakan,
+                    Tindakan = tindakan ?? "-",
+                    TglUpaya = NewRowUpaya.TglUpaya,
+                    Petugas = NewRowUpaya.NamaPetugas,
+                    //Lampiran = detailUpaya.NewRowUpaya.Lampiran
+                };
+                context.TUpayaReklames.Add(newUpaya);
+                context.SaveChanges();
+            }
         }
 
         public class ReklamePermanen
@@ -498,8 +544,9 @@ namespace MonPDReborn.Models.AktivitasOP
             public List<DataUpaya> DataUpayaList { get; set; } = new();
             public class NewRow
             {
+                public string NoFormulir { get; set; } = null!;
                 public int IdUpaya { get; set; }
-                public string Keterangan { get; set; } = null!;
+                public int IdTindakan { get; set; }
                 public string NamaPetugas { get; set; } = null!;
                 public DateTime TglUpaya { get; set; }
                 public byte[] Lampiran { get; set; } = null!;
@@ -511,6 +558,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 public string NamaUpaya { get; set; } = null!;
                 public string Keterangan { get; set; } = null!;
                 public string Petugas { get; set; } = null!;
+                public string Lampiran { get; set; } = null!;
             }
             public class InfoReklame
             {
