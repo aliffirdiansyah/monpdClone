@@ -300,7 +300,18 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 Func<MvReklameSummary, bool> predicate = x => false;
 
-                if (jenis == 1 && kategori == 3)
+                // Filter sesuai kombinasi jenis dan kategori
+                if (jenis == 1 && kategori == 1)
+                {
+                    predicate = x => x.Tahun == tahun && x.Bulan == bulan && x.NoFormulir != null &&
+                                     !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis;
+                }
+                else if (jenis == 1 && kategori == 2)
+                {
+                    predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
+                                     !string.IsNullOrEmpty(x.NoFormulirA) && x.IdFlagPermohonan == jenis;
+                }
+                else if (jenis == 1 && kategori == 3)
                 {
                     predicate = x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null &&
                                      !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis;
@@ -312,40 +323,55 @@ namespace MonPDReborn.Models.AktivitasOP
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 2)
                 {
-                    predicate = x => x.Tahun == tahun && x.Bulan == bulan && !string.IsNullOrEmpty(x.NoFormulirA) &&
-                                     x.IdFlagPermohonan == jenis;
+                    predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
+                                string.IsNullOrEmpty(x.NoFormulirA) &&
+                                x.IdFlagPermohonan == jenis;
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 3)
                 {
-                    predicate = x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null &&
-                                     !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis;
+                    predicate = x => x.IdFlagPermohonanA == jenis &&
+                                 x.TahunA == tahun &&
+                                 x.BulanA == bulan &&
+                                 !x.TglBayarPokokA.HasValue;
                 }
 
-                ret = data.Where(predicate).Select(x => new DetailSummary
+                // Proyeksikan hasil sesuai kategori (perbaikan NoFormulir dan JumlahUpaya)
+                ret = data.Where(predicate).Select(x =>
                 {
-                    Bulan = bulan,
-                    BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-                    Tahun = tahun,
-                    NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-                    Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-                    AlamatOP = x.Alamatreklame ?? string.Empty,
-                    IsiReklame = x.IsiReklame ?? string.Empty,
-                    AkhirBerlaku = x.TglAkhirBerlaku.HasValue
-                        ? string.Concat(x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")), " (BELUM TERBAYAR)")
-                        : string.Empty,
-                    MasaTahunPajak = (x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.HasValue)
-                        ? $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})"
-                        : string.Empty,
-                    JumlahNilai = x.PajakPokok ?? 0,
-                    InformasiEmail = string.Empty,
-                    JumlahUpaya = upayaGrouped
-                        .Where(f => f.Key == x.NoFormulir)
+                    string noFormulirDigunakan = kategori == 2 ? x.NoFormulirA : x.NoFormulir;
+                    string tampilFormulir = !string.IsNullOrEmpty(noFormulirDigunakan)
+                        ? $"{noFormulirDigunakan} ({x.FlagPermohonan})"
+                        : string.Empty;
+
+                    string jumlahUpaya = upayaGrouped
+                        .Where(f => f.Key == noFormulirDigunakan)
                         .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-                        .FirstOrDefault() ?? "0"
+                        .FirstOrDefault() ?? "0";
+
+                    return new DetailSummary
+                    {
+                        Bulan = bulan,
+                        BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Tahun = tahun,
+                        NoFormulir = tampilFormulir,
+                        Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                        AlamatOP = x.Alamatreklame ?? string.Empty,
+                        IsiReklame = x.IsiReklame ?? string.Empty,
+                        AkhirBerlaku = x.TglAkhirBerlaku.HasValue
+                            ? $"{x.TglAkhirBerlaku.Value:dd MMM yyyy} (BELUM TERBAYAR)"
+                            : string.Empty,
+                        MasaTahunPajak = (x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.HasValue)
+                            ? $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})"
+                            : string.Empty,
+                        JumlahNilai = x.PajakPokok ?? 0,
+                        InformasiEmail = string.Empty,
+                        JumlahUpaya = jumlahUpaya
+                    };
                 }).ToList();
 
                 return ret;
             }
+
             //public static List<DetailSummary> GetDetailSummary(int tahun, int bulan, int jenis, int kategori)
             //{
             //    var ret = new List<DetailSummary>();
