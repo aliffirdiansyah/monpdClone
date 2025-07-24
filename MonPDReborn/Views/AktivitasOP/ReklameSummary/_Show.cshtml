@@ -299,13 +299,13 @@
                             columns.AddFor(m => m.Bulan).Caption("Bulan");
                             columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPDKB).Caption("SKPD");
-                                    subColumns.AddFor(m => m.NilaiKB).Caption("Nilai").Format("#,##0");
-                                    subColumns.AddFor(m => m.SKPDBlmKB)
+                                    subColumns.AddFor(m => m.SKPD).Caption("SKPD");
+                                    subColumns.AddFor(m => m.Nilai).Caption("Nilai").Format("#,##0");
+                                    subColumns.AddFor(m => m.SKPDBlmByr)
                                                 .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmKB")
                                                 .CellTemplate(new JS("skpdKBCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum Bayar").Format("#,#0%");
+                                    subColumns.AddFor(m => m.NilaiBlmByr).Caption("Nilai Belum Bayar").Format("#,#0%");
                                  });
                             columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
                             
@@ -316,16 +316,16 @@
                                 items.AddFor(m => m.Bulan)
                                      .SummaryType(SummaryType.Sum)
                                      .DisplayFormat("Total");
-                                items.AddFor(m => m.SKPDKB)
+                                items.AddFor(m => m.SKPD)
                                      .SummaryType(SummaryType.Sum)
                                      .DisplayFormat("{0}");
-                                items.AddFor(m => m.NilaiKB)
+                                items.AddFor(m => m.Nilai)
                                      .SummaryType(SummaryType.Sum)
                                      .DisplayFormat("{0}");
-                                items.AddFor(m => m.SKPDBlmKB)
+                                items.AddFor(m => m.SKPDBlmByr)
                                      .SummaryType(SummaryType.Sum)
                                      .DisplayFormat("{0}");
-                                items.AddFor(m => m.NilaiBlmKB)
+                                items.AddFor(m => m.NilaiBlmByr)
                                      .SummaryType(SummaryType.Sum)
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.Potensi)

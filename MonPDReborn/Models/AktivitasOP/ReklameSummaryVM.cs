@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using System.Globalization;
 
@@ -208,55 +209,95 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 var ret = new List<ReklamePermanen>();
                 var context = DBClass.GetContext();
+                
+                var dataPer = context.MvReklameSummaries
+                        .Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun).ToList();
+                //SKPDJT  //jumlah objek yang tgl akhir berlakunya ada di tahun 2025 dengan pengkategorian berdasarkan bulan tgl akhir berlaku
+                //        //NilaiJT  //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                //        //SKPDBlmJT //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //NilaiBlmJT //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
 
 
-                var dataReklame = context.DbMonReklames
-                    .Where(x => x.FlagPermohonan == "PERMANEN")
-                    .ToList();
-
-                var dataReklamePanjang = dataReklame.Where(x => x.NoFormulirLama != null).ToList();
-
-                for (int bulan = 1; bulan <= 12; bulan++)
+                //        //SKPDPanjang //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
+                //        //NilaiPanjang //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                //        //SKPDBlmPanjang //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //NilaiBlmPanjang //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //SKPDKB //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
+                //        //NilaiKB //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                //        //SKPDBlmKB //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //NilaiBlmKB  //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                for (int i = 1; i <= 12; i++)
                 {
-                    var jmlHari = DateTime.DaysInMonth(tahun, bulan);
-                    var tglServer = new DateTime(tahun, bulan, jmlHari);
-                    if (tglServer.Year == DateTime.Now.Year && tglServer.Month == DateTime.Now.Month)
+                    var currentDate = new DateTime(tahun, i, 1);
+                    ret.Add(new ReklamePermanen()
                     {
-                        tglServer = new DateTime(tahun, bulan, DateTime.Now.Day);
-                    }
-
-                    ret.Add(new ReklamePermanen
-                    {
-                        Bulan = new DateTime(2025, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Bulan = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Tahun = tahun,
-                        SKPDJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Count(),
-                        NilaiJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Sum(q => q.Nilaipajak) ?? 0,
-                        SKPDBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Count(),
-                        NilaiBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Sum(q => q.Nilaipajak) ?? 0,
-                        SKPDPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan && (!x.TglJtempoSkpd.HasValue)).Count(),
-                        NilaiPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan).Sum(q => q.Nilaipajak) ?? 0,
-                        //SKPDBlmPanjang
-                        //NilaiBlmPanjang
-                        //SKPDKB
-                        //NilaiKB
-                        //SKPDBlmKB
-                        //NilaiBlmKB  
-                        //Bulan
-                        //Tahun
-                        //SKPDJT  //jumlah objek yang tgl akhir berlakunya ada di tahun 2025 dengan pengkategorian berdasarkan bulan tgl akhir berlaku
-                        //NilaiJT  //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                        //SKPDBlmJT //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                        //NilaiBlmJT //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
-                        //SKPDPanjang //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
-                        //NilaiPanjang //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                        //SKPDBlmPanjang //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                        //NilaiBlmPanjang //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
-                        //SKPDKB //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
-                        //NilaiKB //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                        //SKPDBlmKB //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                        //NilaiBlmKB  //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                        SKPDJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null).Count(),
+                        NilaiJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        
+
+                        SKPDPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i).Count(),
+                        NilaiPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Count(),
+                        NilaiKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
                     });
                 }
+
+                //var dataReklame = context.DbMonReklames
+                //    .Where(x => x.FlagPermohonan == "PERMANEN")
+                //    .ToList();
+
+                //var dataReklamePanjang = dataReklame.Where(x => x.NoFormulirLama != null).ToList();
+
+                //for (int bulan = 1; bulan <= 12; bulan++)
+                //{
+                //    var jmlHari = DateTime.DaysInMonth(tahun, bulan);
+                //    var tglServer = new DateTime(tahun, bulan, jmlHari);
+                //    if (tglServer.Year == DateTime.Now.Year && tglServer.Month == DateTime.Now.Month)
+                //    {
+                //        tglServer = new DateTime(tahun, bulan, DateTime.Now.Day);
+                //    }
+
+                //    ret.Add(new ReklamePermanen
+                //    {
+                //        Bulan = new DateTime(2025, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                //        Tahun = tahun,
+                //        SKPDJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Count(),
+                //        NilaiJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Sum(q => q.Nilaipajak) ?? 0,
+                //        SKPDBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Count(),
+                //        NilaiBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Sum(q => q.Nilaipajak) ?? 0,
+                //        SKPDPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan && (!x.TglJtempoSkpd.HasValue)).Count(),
+                //        NilaiPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan).Sum(q => q.Nilaipajak) ?? 0,
+                //        //SKPDBlmPanjang
+                //        //NilaiBlmPanjang
+                //        //SKPDKB
+                //        //NilaiKB
+                //        //SKPDBlmKB
+                //        //NilaiBlmKB  
+                //        //Bulan
+                //        //Tahun
+                //        //SKPDJT  //jumlah objek yang tgl akhir berlakunya ada di tahun 2025 dengan pengkategorian berdasarkan bulan tgl akhir berlaku
+                //        //NilaiJT  //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                //        //SKPDBlmJT //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //NilaiBlmJT //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //SKPDPanjang //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
+                //        //NilaiPanjang //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                //        //SKPDBlmPanjang //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //NilaiBlmPanjang //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //SKPDKB //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
+                //        //NilaiKB //nilai ketetapan berdasarkan bulan tgl akhir berlaku
+                //        //SKPDBlmKB //tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //        //NilaiBlmKB  //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                //    });
+                //}
 
                 return ret;
 
@@ -265,6 +306,33 @@ namespace MonPDReborn.Models.AktivitasOP
             public static List<TerbatasReklame> GetTerbatasReklame(int tahun)
             {
                 var ret = new List<TerbatasReklame>();
+                var context = DBClass.GetContext();
+                var dataTer = context.MvReklameSummaries.
+                    Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun).ToList();
+
+                for (int i = 1; i <= 12; i++)
+                {
+                    ret.Add(new TerbatasReklame()
+                    {
+                        Bulan = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Tahun = tahun,
+                        SKPDJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null).Count(),
+                        NilaiJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+
+
+                        SKPDPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i).Count(),
+                        NilaiPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Count(),
+                        NilaiKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
+                    });
+                }
                 return ret;
             }
 
@@ -273,8 +341,21 @@ namespace MonPDReborn.Models.AktivitasOP
                 var ret = new List<IsidentilReklame>();
                 var context = DBClass.GetContext();
 
-                //var dataIns = context.reklamesum
+                var dataIns = context.MvReklameSummaries.
+                    Where(x => x.IdFlagPermohonan == 1 && x.Tahun == tahun).ToList();
 
+                for (int i = 1; i <= 12; i++)
+                {
+                    ret.Add(new IsidentilReklame
+                    {
+                        Bulan = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Tahun = tahun,
+                        SKPD = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null).Count(),
+                        Nilai = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmByr = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmByr = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
+                    });
+                }
                 return ret;
             }
             // Detail Reklame Permanen
@@ -535,11 +616,11 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public string Bulan { get; set; } = null!;
             public int Tahun { get; set; }
-            public int SKPDKB { get; set; }
-            public decimal NilaiKB { get; set; }
-            public int SKPDBlmKB { get; set; }
-            public decimal NilaiBlmKB { get; set; }
-            public decimal Potensi => NilaiBlmKB;
+            public int SKPD { get; set; }
+            public decimal Nilai { get; set; }
+            public int SKPDBlmByr { get; set; }
+            public decimal NilaiBlmByr { get; set; }
+            public decimal Potensi => NilaiBlmByr;
         }
 
         public class PermanenJT
