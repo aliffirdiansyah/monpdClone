@@ -269,8 +269,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         Jenis = 1, // Jenis 1 untuk Insidentil
                         SKPD = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null).Count(),
                         Nilai = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !x.TglBayarPokokA.HasValue).Count(),
-                        NilaiBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !x.TglBayarPokokA.HasValue).Sum(x => x.PajakPokokA) ?? 0
+                        SKPDBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !(x.TglBayarPokokA.HasValue)).ToList().Count,
+                        NilaiBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !(x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokokA) ?? 0
                     });
                 }
                 return ret;
