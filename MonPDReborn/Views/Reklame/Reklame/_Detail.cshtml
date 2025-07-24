@@ -3,11 +3,6 @@
 @{
     var data = Model.DataDetailList.FirstOrDefault();
 }
-    <div class="modal-header">
-        <h5 class="modal-title">Detail Reklame di  </h5>
-    
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-    </div>
 
 <div class="modal-body">
    @if (data != null)
@@ -77,10 +72,16 @@
                                 columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
                                 columns.AddFor(m => m.JenisReklame).Caption("Jenis Reklame");
                                 columns.AddFor(m => m.KategoriReklame).Caption("Kategori Reklame");
-                                columns.AddFor(m => m.TglMulai).Caption("Tanggal Mulai").Format("dd/MM/yyyy");
-                                columns.AddFor(m => m.TglSelesai).Caption("Tanggal Selesai").Format("dd/MM/yyyy");
-                                columns.AddFor(m => m.SisaHari).Caption("Sisa Hari");
-                                columns.AddFor(m => m.Ukuran).Caption("Ukuran");
+                                columns.Add()
+    .Caption("Tanggal")
+    .CellTemplate(@<text>
+        @{
+            var mulai = data.TglMulai != null ? ((DateTime)data.TglMulai).ToString("dd/MM/yyyy") : "-";
+            var selesai = data.TglSelesai != null ? ((DateTime)data.TglSelesai).ToString("dd/MM/yyyy") : "-";
+        }
+        <span>@mulai - @selesai</span>
+    </text>);
+
                                 columns.AddFor(m => m.Pajak).Caption("Pajak").Format("#,##0");
                             })
                         )
