@@ -256,21 +256,28 @@ namespace MonPDReborn.Models.AktivitasOP
                 var ret = new List<IsidentilReklame>();
                 var context = DBClass.GetContext();
 
-                var dataIns = context.MvReklameSummaries.
-                    Where(x => x.IdFlagPermohonanA == 1 && x.TahunA == tahun).ToList();
+                var dataIns = context.MvReklameSummaries
+                    .Where(x => x.IdFlagPermohonanA == 1 && x.TahunA == tahun)
+                    .ToList();
 
                 for (int i = 1; i <= 12; i++)
                 {
+                    var dataRekIns = dataIns.Where(x => x.BulanA == i).AsQueryable();
+                    int skpd = dataRekIns.Count();
+                    decimal nilai = dataRekIns.Sum(q => q.PajakPokokA) ?? 0;
+                    int skpdBlmByr = dataRekIns.Where(x => x.NominalPokokBayarA == null).Count();
+                    decimal nilaiBlmByr = dataRekIns.Where(x => x.NominalPokokBayarA == null).Sum(q => q.PajakPokokA) ?? 0;
+
                     ret.Add(new IsidentilReklame
                     {
                         BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Bulan = i,
                         Tahun = tahun,
                         Jenis = 1, // Jenis 1 untuk Insidentil
-                        SKPD = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null).Count(),
-                        Nilai = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !(x.TglBayarPokokA.HasValue)).ToList().Count,
-                        NilaiBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !(x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokokA) ?? 0
+                        SKPD = skpd,
+                        Nilai = nilai,
+                        SKPDBlmByr = skpdBlmByr,
+                        NilaiBlmByr = nilaiBlmByr
                     });
                 }
                 return ret;
