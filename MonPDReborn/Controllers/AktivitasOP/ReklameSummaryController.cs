@@ -7,6 +7,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using System.Drawing;
+using System.Globalization;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.Aktivitas
@@ -111,6 +112,20 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+        [HttpGet]
+        public IActionResult GetDataList(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+
+            var upayaList = context.MUpayaReklames
+                .Select(x => new {
+                    Value = x.Id,
+                    Text = x.Upaya
+                });
+
+            return Json(DataSourceLoader.Load(upayaList, loadOptions));
+        }
+
         //[HttpGet]
         //public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
         //{

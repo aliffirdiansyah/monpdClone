@@ -137,6 +137,34 @@
                 }
             });
         }
+                function fnReloadTindakan(e) {
+            const selectedUpayaId = e.value;
+
+            console.log("Upaya dipilih:", selectedUpayaId); // cek value
+
+            const grid = $("#gridTindakan").dxDataGrid("instance");
+
+            if (!grid) {
+                console.error("Grid tidak ditemukan!");
+                return;
+            }
+
+            grid.option("dataSource", new DevExpress.data.CustomStore({
+                load: function () {
+                    return $.getJSON("/ReklameSummary/GetTindakan", {
+                        upayaId: selectedUpayaId
+                    }).then(data => {
+                        console.log("Data diterima:", data); // pastikan data ada
+                        return data;
+                    }).catch(err => {
+                        console.error("Gagal load data:", err);
+                    });
+                }
+            }));
+
+            grid.refresh();
+        }
+
     </script>
     <script>
                 function getKategoriFromColumn(columnName) {
@@ -385,37 +413,7 @@
         //     window.open(url, '_blank');
         // }
 
-        function loadDetailBP(tahun, bulan, skpdBlmPanjang) {
-            const url = `/ReklameSummary/DetailPermanenBP?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmPanjang=${encodeURIComponent(skpdBlmPanjang)}`;
-            window.open(url, '_blank');
-        }
-
-        function loadDetailKB(tahun, bulan, skpdKB) {
-            const url = `/ReklameSummary/DetailPermanenKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
-            window.open(url, '_blank');
-        }
-
-        // function Terbatas Reklame
-        function loadDetailTerbatasJT(tahun, bulan, skpdBlmJT) {
-            const url = `/ReklameSummary/DetailTerbatasJT?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmJT=${encodeURIComponent(skpdBlmJT)}`;
-            window.open(url, '_blank');
-        }
-
-        function loadDetailTerbatasBP(tahun, bulan, skpdBlmPanjang) {
-            const url = `/ReklameSummary/DetailTerbatasBP?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmPanjang=${encodeURIComponent(skpdBlmPanjang)}`;
-            window.open(url, '_blank');
-        }
-
-        function loadDetailTerbatasKB(tahun, bulan, skpdKB) {
-            const url = `/ReklameSummary/DetailTerbatasKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
-            window.open(url, '_blank');
-        }
-
-        // function
-        function loadDetailIsidentilKB(tahun, bulan, skpdKB) {
-            const url = `/ReklameSummary/DetailIsidentilKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
-            window.open(url, '_blank');
-        }
+        
 
     </script>
 }

@@ -62,7 +62,7 @@
                            columns.AddFor(m => m.MasaTahunPajak).Caption("Tahun Pajak");
                            columns.AddFor(m => m.JumlahNilai).Caption("Jumlah Nilai").Format("#,##0");
                            columns.AddFor(m => m.InformasiEmail).Caption("Informasi Email");
-                           columns.AddFor(m => m.JumlahNilai).Caption("Jumlah Upaya");
+                           columns.AddFor(m => m.JumlahUpaya).Caption("Jumlah Upaya");
                            columns.Add()
                                 .Type(GridCommandColumnType.Buttons)
                                 .Buttons(b =>
@@ -97,23 +97,70 @@
 @section Scripts
 {
     <script>
-         function onDetailClick(e) {
-            const noFormulir = e.row.data.NoFormulir;
+        //  function onDetailClick(e) {
+        //     const noFormulir = e.row.data.NoFormulir;
 
-            const $modal = $('#detailModal');
-            const $content = $('#detailModalContent');
+        //     const $modal = $('#detailModal');
+        //     const $content = $('#detailModalContent');
 
-            $content.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+        //     $content.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
 
-            $modal.modal('show');
+        //     $modal.modal('show');
 
-            $.get('/ReklameSummary/Detail', { noFormulir: noFormulir })
-                .done(function (html) {
-                    $content.html(html);
-                })
-                .fail(function () {
-                    $content.html('<div class="text-danger text-center p-3">Gagal memuat detail.</div>');
-                });
+        //     $.get('/ReklameSummary/DetailUpaya', { noFormulir: noFormulir })
+        //         .done(function (html) {
+        //             $content.html(html);
+        //         })
+        //         .fail(function () {
+        //             $content.html('<div class="text-danger text-center p-3">Gagal memuat detail.</div>');
+        //         });
+        // }
+
+                                     function onDetailClick(e) {
+            const noFormulir = (e.row.data.NoFormulir || '').split(' ')[0];
+            const tahun = e.row.data.Tahun || new Date().getFullYear();
+            const bulan = e.row.data.Bulan || new Date().getMonth() + 1;
+
+            $.ajax({
+                url: '/ReklameSummary/DetailUpaya',
+                type: 'GET',
+                data: { noFormulir, tahun, bulan },
+                beforeSend: function () {
+                    $("#loader").show();
+
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
+                },
+                success: function (response) {
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Detail Upaya – " + noFormulir);
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    $modal.find(".modal-title").html("Error");
+                    $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
         }
+
+
+
+
+
     </script>
 }

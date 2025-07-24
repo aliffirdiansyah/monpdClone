@@ -60,6 +60,9 @@ namespace MonPDReborn.Models.AktivitasOP
             public GetDetailUpaya() { }
             public GetDetailUpaya(string noFormulir, int tahun, int bulan)
             {
+                // panggil GetDetailUpaya
+                Data = Method.GetDetailUpaya(noFormulir, tahun, bulan);
+
                 var context = DBClass.GetContext();
                 Data.NoFormulir = noFormulir;
                 Data.NewRowUpaya.TglUpaya = DateTime.Now;
@@ -70,16 +73,16 @@ namespace MonPDReborn.Models.AktivitasOP
                     Text = x.Upaya
                 }).ToList();
 
-                Data.DataUpayaList = context.TUpayaReklames.Include(x => x.TglUpaya)
-                    .Where(x => x.NoFormulir == noFormulir)
-                    .Select(x => new DetailUpaya.DataUpaya
-                    {
-                        NoFormulir = x.NoFormulir,
-                        NamaUpaya = x.Upaya,
-                        Keterangan = x.Tindakan,
-                        TglUpaya = x.TglUpaya.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-
-                    }).ToList();
+                Data.DataUpayaList = context.TUpayaReklames
+                .Where(x => x.NoFormulir == noFormulir)
+                .Select(x => new DetailUpaya.DataUpaya
+                {
+                    NoFormulir = x.NoFormulir,
+                    NamaUpaya = x.Upaya,
+                    Keterangan = x.Tindakan,
+                    TglUpaya = x.TglUpaya.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                })
+                .ToList();
 
                 var tahunPajak = tahun.ToString();
                 var masaPajak = bulan.ToString("D2");
@@ -107,8 +110,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     Data.InfoReklameUpaya = infoReklame;
                 }
 
-                // panggil GetDetailUpaya
-                //Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);
+                
             }
         }
 
@@ -287,13 +289,16 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Select(x => new { x.NoFormulir, x.Upaya })
                     .ToList();
 
+                // ✅ NORMALISASI key saat GroupBy (pakai Trim + ToLower)
                 var upayaGrouped = upaya
-                    .GroupBy(x => x.NoFormulir)
+                    .Where(x => !string.IsNullOrWhiteSpace(x.NoFormulir))
+                    .GroupBy(x => x.NoFormulir.Trim().ToLower())
                     .ToDictionary(g => g.Key, g => g.Select(u => u.Upaya).ToList());
+
 
                 Func<MvReklameSummary, bool> predicate = x => false;
 
-                // Filter sesuai kombinasi jenis dan kategori
+                // (Filter: tidak diubah)
                 if (jenis == 1 && kategori == 1)
                 {
                     predicate = x => x.Tahun == tahun && x.Bulan == bulan && x.NoFormulir != null &&
@@ -311,13 +316,13 @@ namespace MonPDReborn.Models.AktivitasOP
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 1)
                 {
-                    predicate = x => x.Tahun == tahun && x.Bulan == bulan && x.NoFormulir != null &&
+                    predicate = x => x.Tahun == tahun && x.Bulan == bulan && !string.IsNullOrWhiteSpace(x.NoFormulir) &&
                                      !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis;
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 2)
                 {
                     predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
-                                string.IsNullOrEmpty(x.NoFormulirA) &&
+                                !string.IsNullOrEmpty(x.NoFormulirA) &&
                                 x.IdFlagPermohonan == jenis;
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 3)
@@ -328,18 +333,23 @@ namespace MonPDReborn.Models.AktivitasOP
                                  !x.TglBayarPokokA.HasValue;
                 }
 
-                // Proyeksikan hasil sesuai kategori (perbaikan NoFormulir dan JumlahUpaya)
+                // ✅ Proyeksikan hasil dengan normalisasi kunci NoFormulir
                 ret = data.Where(predicate).Select(x =>
                 {
                     string noFormulirDigunakan = kategori == 2 ? x.NoFormulirA : x.NoFormulir;
+
                     string tampilFormulir = !string.IsNullOrEmpty(noFormulirDigunakan)
                         ? $"{noFormulirDigunakan} ({x.FlagPermohonan})"
                         : string.Empty;
 
-                    string jumlahUpaya = upayaGrouped
-                        .Where(f => f.Key == noFormulirDigunakan)
-                        .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-                        .FirstOrDefault() ?? "0";
+                    // ✅ Gunakan TryGetValue agar aman & efisien
+                    var key = x.NoFormulir?.Trim().ToLower(); // normalize
+
+                    string jumlahUpaya = "0";
+                    if (!string.IsNullOrEmpty(key) && upayaGrouped.TryGetValue(key, out var upayaList))
+                    {
+                        jumlahUpaya = $"{upayaList.Count}x: {string.Join(", ", upayaList)}";
+                    }
 
                     return new DetailSummary
                     {
@@ -364,6 +374,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return ret;
             }
+
 
             //public static List<DetailSummary> GetDetailSummary(int tahun, int bulan, int jenis, int kategori)
             //{
@@ -715,6 +726,63 @@ namespace MonPDReborn.Models.AktivitasOP
                 };
                 context.TUpayaReklames.Add(newUpaya);
                 context.SaveChanges();
+            }
+            public static DetailUpaya GetDetailUpaya(string noFormulir, int tahun, int bulan)
+            {
+                var context = DBClass.GetContext();
+
+                // Ambil data reklame yang cocok
+                var reklame = context.MvReklameSummaries
+                    .FirstOrDefault(x =>
+                        (x.NoFormulir == noFormulir || x.NoFormulirA == noFormulir) &&
+                        (x.Tahun == tahun || x.TahunA == tahun) &&
+                        (x.Bulan == bulan || x.BulanA == bulan)
+                    );
+
+                if (reklame == null)
+                    return null;
+
+                // Ambil data upaya
+                var upayaList = context.TUpayaReklames
+                    .Where(x => x.NoFormulir == noFormulir)
+                    .OrderByDescending(x => x.TglUpaya)
+                    .ToList();
+
+                var dataUpayaList = upayaList.Select(x => new DetailUpaya.DataUpaya
+                {
+                    NoFormulir = x.NoFormulir,
+                    TglUpaya = x.TglUpaya.ToString("dd/MM/yyyy"),
+                    NamaUpaya = x.Upaya,
+                    Keterangan = x.Tindakan,
+                    Petugas = x.Petugas,
+                   // Lampiran = x. != null ? "Tersedia" : "Tidak Ada"
+                }).ToList();
+
+                var model = new DetailUpaya
+                {
+                    Tahun = tahun,
+                    Bulan = bulan,
+                    NoFormulir = noFormulir,
+                    InfoReklameUpaya = new DetailUpaya.InfoReklame
+                    {
+                        IsiReklame = reklame.IsiReklame ?? "-",
+                        AlamatReklame = reklame.Alamatreklame ?? "-",
+                        JenisReklame = reklame.NmJenis ?? "-",
+                        Panjang = reklame.Panjang ?? 0,
+                        Lebar = reklame.Lebar ?? 0,
+                        Luas = reklame.Luas ?? 0,
+                      //  Tinggi = reklame.T ?? 0,
+                        TglMulaiBerlaku = reklame.TglMulaiBerlaku ?? DateTime.MinValue,
+                        TglAkhirBerlaku = reklame.TglAkhirBerlaku ?? DateTime.MinValue,
+                        TahunPajak = reklame.TahunA?.ToString() ?? "-",
+                        MasaPajak = (reklame.TglMulaiBerlaku.HasValue && reklame.TglAkhirBerlaku.HasValue)
+                            ? $"{reklame.TglMulaiBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))} - {reklame.TglAkhirBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))}"
+                            : "-"
+                    },
+                    DataUpayaList = dataUpayaList
+                };
+
+                return model;
             }
         }
 
