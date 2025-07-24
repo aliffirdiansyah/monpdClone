@@ -1,4 +1,4 @@
-﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.DetailSummary
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.GetDetailSummary
 
 @{
     ViewData["Title"] = "Reklame Isidentil Ketetapan Baru";
@@ -58,11 +58,11 @@
                            columns.AddFor(m => m.Nama).Caption("Nama (Nama Perusahaan)");
                            columns.AddFor(m => m.AlamatOP).Caption("Alamat OP");
                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
-                           columns.AddFor(m => m.Status).Caption("AKR Berlaku (Status)");
-                           columns.AddFor(m => m.TahunPajak).Caption("Tahun Pajak");
+                           columns.AddFor(m => m.AkhirBerlaku).Caption("AKR Berlaku (Status)");
+                           columns.AddFor(m => m.MasaTahunPajak).Caption("Tahun Pajak");
                            columns.AddFor(m => m.JumlahNilai).Caption("Jumlah Nilai").Format("#,##0");
-                           columns.AddFor(m => m.Email).Caption("Informasi Email");
-                           columns.AddFor(m => m.JmlUpaya).Caption("Jumlah Upaya");
+                           columns.AddFor(m => m.InformasiEmail).Caption("Informasi Email");
+                           columns.AddFor(m => m.JumlahNilai).Caption("Jumlah Upaya");
                            columns.Add()
                                 .Type(GridCommandColumnType.Buttons)
                                 .Buttons(b =>

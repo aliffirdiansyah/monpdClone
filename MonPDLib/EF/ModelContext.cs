@@ -749,7 +749,9 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE\n");
 
-            entity.HasOne(d => d.IdUpayaNavigation).WithMany(p => p.MTindakanReklames).HasConstraintName("M_TINDAKAN_REKLAME_R01");
+            entity.HasOne(d => d.IdUpayaNavigation).WithMany(p => p.MTindakanReklames)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("M_TINDAKAN_REKLAME_R01");
         });
 
         modelBuilder.Entity<MTipekamarhotel>(entity =>

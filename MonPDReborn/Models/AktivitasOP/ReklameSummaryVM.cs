@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using System.Globalization;
+using System.Web.Mvc;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
@@ -48,10 +49,22 @@ namespace MonPDReborn.Models.AktivitasOP
         public class GetDetailUpaya
         {
             public DetailUpaya Data { get; set; } = new();
+            public int SelectedUpaya { get; set; }
+            public int SelectedTindakan { get; set; }
+            public List<SelectListItem> UpayaList { get; set; } = new();
             public GetDetailUpaya() { }
             public GetDetailUpaya(string noFormulir, int tahun, int bulan)
             {
+                var context = DBClass.GetContext();
                 Data.NoFormulir = noFormulir;
+                Data.NewRowUpaya.TglUpaya = DateTime.Now;
+
+                UpayaList = context.MUpayaReklames.Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Upaya
+                }).ToList();
+
 
                 // panggil GetDetailUpaya
                 //Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);

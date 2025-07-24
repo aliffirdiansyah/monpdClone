@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExpress.Xpo;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using System.Drawing;
 using static MonPDReborn.Lib.General.ResponseBase;
@@ -104,6 +109,36 @@ namespace MonPDReborn.Controllers.Aktivitas
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
+        }
+        //[HttpGet]
+        //public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
+        //{
+        //    List<dynamic> TindakanList = new();
+        //    var context = DBClass.GetContext();
+
+        //    var upaya = await context.MTindakanReklames.Where(x => x.IdUpaya.Value == idUpaya).ToList();
+
+        //    foreach (var item in opList.Where(x => x.Pajak != EnumFactory.EPajak.AirTanah))
+        //    {
+
+        //        NopList.Add(new NOPView()
+        //        {
+        //            ObjekPajak = item,
+        //            NamaPajak = item.Pajak.GetDescription(),
+        //            InfoNOP = item.GetFormattedNOP() + "[" + item.Nama + "]"
+        //        });
+        //    }
+        //    return DataSourceLoader.Load(NopList, loadOptions);
+        //}
+        //Simpan Upaya
+        [HttpPost]
+        public IActionResult SimpanUpaya(Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya input)
+        {
+            return Json(new ResponseBase
+            {
+                Status = StatusEnum.Error,
+                Message = "Fitur ini belum tersedia."
+            });
         }
     }
 }
