@@ -99,6 +99,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
 
+    public virtual DbSet<MvReklameSummary> MvReklameSummaries { get; set; }
+
     public virtual DbSet<MvSeriesPendapatan> MvSeriesPendapatans { get; set; }
 
     public virtual DbSet<MvSeriesTargetP> MvSeriesTargetPs { get; set; }
@@ -776,6 +778,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvReklameSummary>(entity =>
+        {
+            entity.ToView("MV_REKLAME_SUMMARY");
         });
 
         modelBuilder.Entity<MvSeriesPendapatan>(entity =>

@@ -271,6 +271,10 @@ namespace MonPDReborn.Models.AktivitasOP
             public static List<IsidentilReklame> GetIsidentilReklame(int tahun)
             {
                 var ret = new List<IsidentilReklame>();
+                var context = DBClass.GetContext();
+
+                //var dataIns = context.reklamesum
+
                 return ret;
             }
             // Detail Reklame Permanen
