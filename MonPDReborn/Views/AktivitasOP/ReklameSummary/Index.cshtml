@@ -90,7 +90,53 @@
                 });
 
             }
+            $('#formUpaya').on('submit', function (e) {
+                e.preventDefault();
+                simpanUpaya();
+            });
         });
+
+        function simpanUpaya() {
+            var formData = new FormData($('#formUpaya')[0]);
+
+            $.ajax({
+                url: '@Url.Action("SimpanUpaya", "Reklame")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message
+                        });
+
+                        $('#formUpaya')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
     </script>
     <script>
 

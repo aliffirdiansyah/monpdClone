@@ -73,9 +73,8 @@
                             Hanya file gambar (.jpg, .jpeg, .png) dan PDF yang diperbolehkan.
                         </small>
                     </div>
-
                     <div class="mb-3 text-end">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-primary" onclick="simpanUpaya()">Simpan</button>
                     </div>
                 </form>
             </div>
@@ -174,51 +173,3 @@
     </div>
 
 </div>
-
-@section Scripts{
-    <script>
-        $(document).ready(function () {
-            $('#formUpaya').on('submit', function (e) {
-                e.preventDefault();
-
-                var formData = new FormData(this);
-
-                $.ajax({
-                    url: '@Url.Action("SimpanUpaya", "Reklame")',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function () {
-                        $("#loader").show()
-                    },
-                    complete: function () { $("#loader").hide(); },
-                    success: function (response) {
-                        if (response.status === 1) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-                           
-                            $('#formUpaya')[0].reset();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: response.message
-                            });
-                        }
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Terjadi kesalahan saat mengirim data.'
-                        });
-                    }
-                });
-            });
-        });
-    </script>
-}
