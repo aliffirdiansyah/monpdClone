@@ -34,156 +34,15 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
-        //Detail Reklame Permanen
-        public class DetailPermanenJT
+        public class GetDetailSummary
         {
-            public int Tahun { get; set; }
-            public string? Bulan { get; set; }
-            public int? SkpdBlmJT { get; set; }
-
-            public List<PermanenJT> Data { get; set; } = new();
-
-            public DetailPermanenJT() { }
-
-            public DetailPermanenJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
+            public List<DetailSummary> Data { get; set; } = new();
+            public GetDetailSummary(int tahun, int bulan, int jenis, int kategori)
             {
-                Tahun = tahun;
-                Bulan = bulan;
-                SkpdBlmJT = skpdBlmJT;
-
-                // Panggil GetPermanenJT
-                Data = Method.GetPermanenJT(tahun, bulan, skpdBlmJT);
+                Data = Method.GetDetailSummary(tahun, bulan, jenis, kategori);
             }
         }
-
-        public class DetailPermanenBP
-        {
-            public int Tahun { get; set; }
-            public string? Bulan { get; set; }
-            public int? SkpdBlmPanjang { get; set; }
-
-            public List<PermanenBP> Data { get; set; } = new();
-
-            public DetailPermanenBP() { }
-
-            public DetailPermanenBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-            {
-                Tahun = tahun;
-                Bulan = bulan;
-                SkpdBlmPanjang = skpdBlmPanjang;
-
-                // Panggil GetPermanenJT
-                Data = Method.GetPermanenBP(tahun, bulan, skpdBlmPanjang);
-            }
-        }
-
-        public class DetailPermanenKB
-        {
-            public int Tahun { get; set; }
-            public string? Bulan { get; set; }
-            public int? SkpdBlmKB { get; set; }
-
-            public List<PermanenKB> Data { get; set; } = new();
-
-            public DetailPermanenKB() { }
-
-            public DetailPermanenKB(int tahun, string? bulan = null, int? skpdKB = null)
-            {
-                Tahun = tahun;
-                Bulan = bulan;
-                SkpdBlmKB = skpdKB;
-
-                // Panggil GetPermanenJT
-                Data = Method.GetPermanenKB(tahun, bulan, skpdKB);
-            }
-        }
-
-        //Detail Reklame Terbatas
-        public class DetailTerbatasJT
-        {
-            public int Tahun { get; set; }
-            public string? Bulan { get; set; }
-            public int? SkpdBlmJT { get; set; }
-
-            public List<TerbatasJT> Data { get; set; } = new();
-
-            public DetailTerbatasJT() { }
-
-            public DetailTerbatasJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
-            {
-                Tahun = tahun;
-                Bulan = bulan;
-                SkpdBlmJT = skpdBlmJT;
-
-                // Panggil GetTerbatasJT
-                Data = Method.GetTerbatasJT(tahun, bulan, skpdBlmJT);
-            }
-        }
-
-        public class DetailTerbatasBP
-        {
-            public int Tahun { get; set; }
-            public string? Bulan { get; set; }
-            public int? SkpdBlmPanjang { get; set; }
-
-            public List<TerbatasBP> Data { get; set; } = new();
-
-            public DetailTerbatasBP() { }
-
-            public DetailTerbatasBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-            {
-                Tahun = tahun;
-                Bulan = bulan;
-                SkpdBlmPanjang = skpdBlmPanjang;
-
-                // Panggil GetPermanenJT
-                Data = Method.GetTerbatasBP(tahun, bulan, skpdBlmPanjang);
-            }
-        }
-
-        public class DetailTerbatasKB
-        {
-            public int Tahun { get; set; }
-            public string? Bulan { get; set; }
-            public int? SkpdBlmKB { get; set; }
-
-            public List<TerbatasKB> Data { get; set; } = new();
-
-            public DetailTerbatasKB() { }
-
-            public DetailTerbatasKB(int tahun, string? bulan = null, int? skpdKB = null)
-            {
-                Tahun = tahun;
-                Bulan = bulan;
-                SkpdBlmKB = skpdKB;
-
-                // Panggil GetTerbatasJT
-                Data = Method.GetTerbatasKB(tahun, bulan, skpdKB);
-            }
-        }
-
-        //Detail Isidentil
-        public class DetailIsidentilKB
-        {
-            public int Tahun { get; set; }
-            public string? Bulan { get; set; }
-            public int? SkpdBlmKB { get; set; }
-
-            public List<IsidentilKB> Data { get; set; } = new();
-
-            public DetailIsidentilKB() { }
-
-            public DetailIsidentilKB(int tahun, string? bulan = null, int? skpdKB = null)
-            {
-                Tahun = tahun;
-                Bulan = bulan;
-                SkpdBlmKB = skpdKB;
-
-                // Panggil GetTerbatasJT
-                Data = Method.GetIsidentilKB(tahun, bulan, skpdKB);
-            }
-        }
-
+        
         // Detail Upaya
 
         public class Detail
@@ -199,7 +58,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 NoFormulir = noFormulir;
 
                 // panggil GetDetailUpaya
-                Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);
+                //Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);
             }
         }
 
@@ -209,95 +68,37 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 var ret = new List<ReklamePermanen>();
                 var context = DBClass.GetContext();
-                
-                var dataPer = context.MvReklameSummaries
-                        .Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun).ToList();
-                //SKPDJT  //jumlah objek yang tgl akhir berlakunya ada di tahun 2025 dengan pengkategorian berdasarkan bulan tgl akhir berlaku
-                //        //NilaiJT  //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                //        //SKPDBlmJT //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //NilaiBlmJT //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
 
-
-                //        //SKPDPanjang //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
-                //        //NilaiPanjang //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                //        //SKPDBlmPanjang //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //NilaiBlmPanjang //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //SKPDKB //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
-                //        //NilaiKB //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                //        //SKPDBlmKB //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //NilaiBlmKB  //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
+                var dataPer = context.MvReklameSummaries.AsQueryable();
                 for (int i = 1; i <= 12; i++)
                 {
                     var currentDate = new DateTime(tahun, i, 1);
                     ret.Add(new ReklamePermanen()
                     {
-                        Bulan = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Bulan = i,
                         Tahun = tahun,
-                        SKPDJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null).Count(),
-                        NilaiJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmJT = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
-                        
+                        Jenis = 2, // Jenis 2 untuk Permanen
 
-                        SKPDPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i).Count(),
-                        NilaiPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmPanjang = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
+                        NilaiJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
 
-                        SKPDKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Count(),
-                        NilaiKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmKB = dataPer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
+                        SKPDBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Count(),
+                        NilaiPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDBlmPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Count(),
+                        NilaiBlmPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Count(),
+                        NilaiKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Count(),
+                        NilaiBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokok) ?? 0
                     });
                 }
-
-                //var dataReklame = context.DbMonReklames
-                //    .Where(x => x.FlagPermohonan == "PERMANEN")
-                //    .ToList();
-
-                //var dataReklamePanjang = dataReklame.Where(x => x.NoFormulirLama != null).ToList();
-
-                //for (int bulan = 1; bulan <= 12; bulan++)
-                //{
-                //    var jmlHari = DateTime.DaysInMonth(tahun, bulan);
-                //    var tglServer = new DateTime(tahun, bulan, jmlHari);
-                //    if (tglServer.Year == DateTime.Now.Year && tglServer.Month == DateTime.Now.Month)
-                //    {
-                //        tglServer = new DateTime(tahun, bulan, DateTime.Now.Day);
-                //    }
-
-                //    ret.Add(new ReklamePermanen
-                //    {
-                //        Bulan = new DateTime(2025, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-                //        Tahun = tahun,
-                //        SKPDJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Count(),
-                //        NilaiJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month).Sum(q => q.Nilaipajak) ?? 0,
-                //        SKPDBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Count(),
-                //        NilaiBlmJT = dataReklame.Where(x => x.TglKetetapan <= DateTime.Now && x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value > tglServer && x.TglAkhirBerlaku.Value.Month == tglServer.Month && (!x.TglBayarPokok.HasValue)).Sum(q => q.Nilaipajak) ?? 0,
-                //        SKPDPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan && (!x.TglJtempoSkpd.HasValue)).Count(),
-                //        NilaiPanjang = dataReklamePanjang.Where(x => x.TglMulaiBerlaku.Value.Month == bulan).Sum(q => q.Nilaipajak) ?? 0,
-                //        //SKPDBlmPanjang
-                //        //NilaiBlmPanjang
-                //        //SKPDKB
-                //        //NilaiKB
-                //        //SKPDBlmKB
-                //        //NilaiBlmKB  
-                //        //Bulan
-                //        //Tahun
-                //        //SKPDJT  //jumlah objek yang tgl akhir berlakunya ada di tahun 2025 dengan pengkategorian berdasarkan bulan tgl akhir berlaku
-                //        //NilaiJT  //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                //        //SKPDBlmJT //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //NilaiBlmJT //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //SKPDPanjang //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
-                //        //NilaiPanjang //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                //        //SKPDBlmPanjang //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //NilaiBlmPanjang //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //SKPDKB //skpd baru di bulan itu dengan no formulir lama yang tanggal akhir berlakunya = yang pertama tadi
-                //        //NilaiKB //nilai ketetapan berdasarkan bulan tgl akhir berlaku
-                //        //SKPDBlmKB //tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //        //NilaiBlmKB  //nilai tidak ada tanggal bayar... dan masih belum jatuh tempo
-                //    });
-                //}
 
                 return ret;
 
@@ -307,30 +108,34 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 var ret = new List<TerbatasReklame>();
                 var context = DBClass.GetContext();
-                var dataTer = context.MvReklameSummaries.
-                    Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun).ToList();
+                var dataTer = context.MvReklameSummaries.AsQueryable();
 
                 for (int i = 1; i <= 12; i++)
                 {
                     ret.Add(new TerbatasReklame()
                     {
-                        Bulan = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Bulan = i,
                         Tahun = tahun,
-                        SKPDJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null).Count(),
-                        NilaiJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmJT = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        Jenis = 3, // Jenis 3 untuk Terbatas
 
+                        SKPDJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
+                        NilaiJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
 
-                        SKPDPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i).Count(),
-                        NilaiPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmPanjang = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglAkhirBerlaku.Value.Month < i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
 
-                        SKPDKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Count(),
-                        NilaiKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmKB = dataTer.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglMulaiBerlaku.Value.Month >= i && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
+                        SKPDPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Count(),
+                        NilaiPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDBlmPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Count(),
+                        NilaiBlmPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Count(),
+                        NilaiKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
+
+                        SKPDBlmKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Count(),
+                        NilaiBlmKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokok) ?? 0
                     });
                 }
                 return ret;
@@ -342,240 +147,272 @@ namespace MonPDReborn.Models.AktivitasOP
                 var context = DBClass.GetContext();
 
                 var dataIns = context.MvReklameSummaries.
-                    Where(x => x.IdFlagPermohonan == 1 && x.Tahun == tahun).ToList();
+                    Where(x => x.IdFlagPermohonanA == 1 && x.TahunA == tahun).ToList();
 
                 for (int i = 1; i <= 12; i++)
                 {
                     ret.Add(new IsidentilReklame
                     {
-                        Bulan = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Bulan = i,
                         Tahun = tahun,
-                        SKPD = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null).Count(),
-                        Nilai = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmByr = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmByr = dataIns.Where(x => x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
+                        Jenis = 1, // Jenis 1 untuk Insidentil
+                        SKPD = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null).Count(),
+                        Nilai = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
                     });
                 }
                 return ret;
             }
             // Detail Reklame Permanen
-            public static List<PermanenJT> GetPermanenJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
+            public static List<DetailSummary> GetDetailSummary(int tahun, int bulan, int jenis, int kategori)
             {
-                var all = GetAllPermanenJT(); // ambil semua data dummy misalnya
+                var ret = new List<DetailSummary>();
+                var context = DBClass.GetContext();
 
-                var query = all.Where(x => x.Tahun == tahun);
+                // Jenis Permohonan:
+                // 1 = Insidentil
+                // 2 = Permanen
+                // 3 = Terbatas
 
-                if (!string.IsNullOrWhiteSpace(bulan))
+                //NO EMAIL:
+                //kategori //2 = PJ BelumPerpanjangan
+
+                //1 = JT Belumbayar
+                //2 = PJ BelumPerpanjangan
+                //3 = KB BelumBayar  || INSIDENTIL PASTI 3 PASTI FLAG_PERMOHONAN_A
+
+                var data = context.MvReklameSummaries.AsQueryable();
+                //.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.IdFlagPermohonan == jenis)
+                //.ToList();
+                var upaya = context.TUpayaReklames
+                .Select(x => new
                 {
-                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
+                    x.NoFormulir,
+                    x.Upaya
+                })
+                .ToList();
+
+                var upayaGrouped = upaya
+                    .GroupBy(x => x.NoFormulir)
+                    .ToDictionary(g => g.Key, g => g.Select(u => u.Upaya).ToList());
+
+                if (jenis == 1) //Insidentil
+                {
+                    if (kategori == 3)
+                    {
+                        // KB BelumBayar atau INSIDENTIL
+                        ret = data
+                            .Where(x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis)
+                            .Select(x => new DetailSummary
+                            {
+                                Bulan = bulan,
+                                BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                Tahun = tahun,
+                                NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
+                                Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                                AlamatOP = x.Alamatreklame ?? string.Empty,
+                                IsiReklame = x.IsiReklame ?? string.Empty,
+                                AkhirBerlaku = string.Concat(
+                                    x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                                    " (BELUM TERBAYAR)"
+                                ),
+                                MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
+                                JumlahNilai = x.PajakPokok ?? 0,
+                                InformasiEmail = string.Empty,
+                                JumlahUpaya = upayaGrouped
+                                    .Where(f => f.Key == x.NoFormulir)
+                                    .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
+                                    .FirstOrDefault() ?? "0"
+                            })
+                            .ToList();
+                    }
+                }
+                else if (jenis == 2) //Permanen
+                {
+                    if (kategori == 1)
+                    {
+                        // JT Belumbayar
+                        ret = data
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis)
+                            .Select(x => new DetailSummary
+                            {
+                                Bulan = bulan,
+                                BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                Tahun = tahun,
+                                NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
+                                Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                                AlamatOP = x.Alamatreklame ?? string.Empty,
+                                IsiReklame = x.IsiReklame ?? string.Empty,
+                                AkhirBerlaku = string.Concat(
+                                    x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                                    " (BELUM TERBAYAR)"
+                                ),
+                                MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
+                                JumlahNilai = x.PajakPokok ?? 0,
+                                InformasiEmail = string.Empty,
+                                JumlahUpaya = upayaGrouped
+                                    .Where(f => f.Key == x.NoFormulir)
+                                    .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
+                                    .FirstOrDefault() ?? "0"
+                            })
+                            .ToList();
+                    }
+                    else if (kategori == 2)
+                    {
+                        // PJ BelumPerpanjangan
+                        ret = data
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && (!string.IsNullOrEmpty(x.NoFormulirA)) && x.IdFlagPermohonan == jenis)
+                            .Select(x => new DetailSummary
+                            {
+                                Bulan = bulan,
+                                BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                Tahun = tahun,
+                                NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
+                                Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                                AlamatOP = x.Alamatreklame ?? string.Empty,
+                                IsiReklame = x.IsiReklame ?? string.Empty,
+                                AkhirBerlaku = string.Concat(
+                                    x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                                    " (BELUM TERBAYAR)"
+                                ),
+                                MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
+                                JumlahNilai = x.PajakPokok ?? 0,
+                                InformasiEmail = string.Empty,
+                                JumlahUpaya = upayaGrouped
+                                    .Where(f => f.Key == x.NoFormulir)
+                                    .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
+                                    .FirstOrDefault() ?? "0"
+                            })
+                            .ToList();
+                    }
+                    else if (kategori == 3)
+                    {
+                        // KB BelumBayar atau INSIDENTIL
+                        ret = data
+                            .Where(x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis)
+                            .Select(x => new DetailSummary
+                            {
+                                Bulan = bulan,
+                                BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                Tahun = tahun,
+                                NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
+                                Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                                AlamatOP = x.Alamatreklame ?? string.Empty,
+                                IsiReklame = x.IsiReklame ?? string.Empty,
+                                AkhirBerlaku = string.Concat(
+                                    x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                                    " (BELUM TERBAYAR)"
+                                ),
+                                MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
+                                JumlahNilai = x.PajakPokok ?? 0,
+                                InformasiEmail = string.Empty,
+                                JumlahUpaya = upayaGrouped
+                                    .Where(f => f.Key == x.NoFormulir)
+                                    .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
+                                    .FirstOrDefault() ?? "0"
+                            })
+                            .ToList();
+                    }
+                }
+                else if (jenis == 3) //Terbatas
+                {
+                    if (kategori == 1)
+                    {
+                        // JT Belumbayar
+                        ret = data
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis)
+                            .Select(x => new DetailSummary
+                            {
+                                Bulan = bulan,
+                                BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                Tahun = tahun,
+                                NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
+                                Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                                AlamatOP = x.Alamatreklame ?? string.Empty,
+                                IsiReklame = x.IsiReklame ?? string.Empty,
+                                AkhirBerlaku = string.Concat(
+                                    x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                                    " (BELUM TERBAYAR)"
+                                ),
+                                MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
+                                JumlahNilai = x.PajakPokok ?? 0,
+                                InformasiEmail = string.Empty,
+                                JumlahUpaya = upayaGrouped
+                                    .Where(f => f.Key == x.NoFormulir)
+                                    .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
+                                    .FirstOrDefault() ?? "0"
+                            })
+                            .ToList();
+                    }
+                    else if (kategori == 2)
+                    {
+                        // PJ BelumPerpanjangan
+                        ret = data
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && (!string.IsNullOrEmpty(x.NoFormulirA)) && x.IdFlagPermohonan == jenis)
+                            .Select(x => new DetailSummary
+                            {
+                                Bulan = bulan,
+                                BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                Tahun = tahun,
+                                NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
+                                Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                                AlamatOP = x.Alamatreklame ?? string.Empty,
+                                IsiReklame = x.IsiReklame ?? string.Empty,
+                                AkhirBerlaku = string.Concat(
+                                    x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                                    " (BELUM TERBAYAR)"
+                                ),
+                                MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
+                                JumlahNilai = x.PajakPokok ?? 0,
+                                InformasiEmail = string.Empty,
+                                JumlahUpaya = upayaGrouped
+                                    .Where(f => f.Key == x.NoFormulir)
+                                    .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
+                                    .FirstOrDefault() ?? "0"
+                            })
+                            .ToList();
+                    }
+                    else if (kategori == 3)
+                    {
+                        // KB BelumBayar atau INSIDENTIL
+                        ret = data
+                             .Where(x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis)
+                             .Select(x => new DetailSummary
+                             {
+                                 Bulan = bulan,
+                                 BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                                 Tahun = tahun,
+                                 NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
+                                 Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
+                                 AlamatOP = x.Alamatreklame ?? string.Empty,
+                                 IsiReklame = x.IsiReklame ?? string.Empty,
+                                 AkhirBerlaku = string.Concat(
+                                     x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                                     " (BELUM TERBAYAR)"
+                                 ),
+                                 MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
+                                 JumlahNilai = x.PajakPokok ?? 0,
+                                 InformasiEmail = string.Empty,
+                                 JumlahUpaya = upayaGrouped
+                                     .Where(f => f.Key == x.NoFormulir)
+                                     .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
+                                     .FirstOrDefault() ?? "0"
+                             })
+                             .ToList();
+                    }
                 }
 
-                if (skpdBlmJT.HasValue)
-                {
-                    query = query.Where(x => x.SKPDBlmJT == skpdBlmJT.Value);
-                }
-
-                return query.ToList();
+                return ret;
             }
-
-            public static List<PermanenJT> GetAllPermanenJT()
-            {
-                return new List<PermanenJT>
-                {
-                    new PermanenJT { Bulan = "Januari", Tahun = 2025, SKPDBlmJT = 5, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, Email = "contact@reklamejaya.co.id", JmlUpaya = 1 },
-                };
-            }
-
-            public static List<PermanenBP> GetPermanenBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-            {
-                var all = GetAllPermanenBP(); // ambil semua data dummy misalnya
-
-                var query = all.Where(x => x.Tahun == tahun);
-
-                if (!string.IsNullOrWhiteSpace(bulan))
-                {
-                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (skpdBlmPanjang.HasValue)
-                {
-                    query = query.Where(x => x.SKPDBlmPanjang == skpdBlmPanjang.Value);
-                }
-
-                return query.ToList();
-            }
-
-            public static List<PermanenBP> GetAllPermanenBP()
-            {
-                return new List<PermanenBP>
-                {
-                    new PermanenBP { Bulan = "Januari", Tahun = 2025, SKPDBlmPanjang = 4, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
-                };
-            }
-
-            public static List<PermanenKB> GetPermanenKB(int tahun, string? bulan = null, int? skpdKB = null)
-            {
-                var all = GetAllPermanenKB(); // ambil semua data dummy misalnya
-
-                var query = all.Where(x => x.Tahun == tahun);
-
-                if (!string.IsNullOrWhiteSpace(bulan))
-                {
-                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (skpdKB.HasValue)
-                {
-                    query = query.Where(x => x.SKPDBlmKB == skpdKB.Value);
-                }
-
-                return query.ToList();
-            }
-
-            public static List<PermanenKB> GetAllPermanenKB()
-            {
-                return new List<PermanenKB>
-                {
-                    new PermanenKB { Bulan = "Januari", Tahun = 2025, SKPDBlmKB = 3, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
-                };
-            }
-            // DetailTerbatas Reklame
-            public static List<TerbatasJT> GetTerbatasJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
-            {
-                var all = GetAllTerbatasJT(); // ambil semua data dummy misalnya
-
-                var query = all.Where(x => x.Tahun == tahun);
-
-                if (!string.IsNullOrWhiteSpace(bulan))
-                {
-                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (skpdBlmJT.HasValue)
-                {
-                    query = query.Where(x => x.SKPDBlmJT == skpdBlmJT.Value);
-                }
-
-                return query.ToList();
-            }
-
-            private static List<TerbatasJT> GetAllTerbatasJT()
-            {
-                return new List<TerbatasJT>
-                {
-                    new TerbatasJT {  Bulan = "Februari", Tahun = 2025, SKPDBlmJT = 6, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, Email = "contact@reklamejaya.co.id", JmlUpaya = 1 },
-                };
-            }
-
-            public static List<TerbatasBP> GetTerbatasBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-            {
-                var all = GetAllTerbatasBP(); // ambil semua data dummy misalnya
-
-                var query = all.Where(x => x.Tahun == tahun);
-
-                if (!string.IsNullOrWhiteSpace(bulan))
-                {
-                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (skpdBlmPanjang.HasValue)
-                {
-                    query = query.Where(x => x.SKPDBlmPanjang == skpdBlmPanjang.Value);
-                }
-
-                return query.ToList();
-            }
-
-            public static List<TerbatasBP> GetAllTerbatasBP()
-            {
-                return new List<TerbatasBP>
-                {
-                    new TerbatasBP { Bulan = "Februari", Tahun = 2025, SKPDBlmPanjang = 4, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
-                };
-            }
-
-            public static List<TerbatasKB> GetTerbatasKB(int tahun, string? bulan = null, int? skpdKB = null)
-            {
-                var all = GetAllTerbatasKB(); // ambil semua data dummy misalnya
-
-                var query = all.Where(x => x.Tahun == tahun);
-
-                if (!string.IsNullOrWhiteSpace(bulan))
-                {
-                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (skpdKB.HasValue)
-                {
-                    query = query.Where(x => x.SKPDBlmKB == skpdKB.Value);
-                }
-
-                return query.ToList();
-            }
-
-            public static List<TerbatasKB> GetAllTerbatasKB()
-            {
-                return new List<TerbatasKB>
-                {
-                    new TerbatasKB { Bulan = "Februari", Tahun = 2025, SKPDBlmKB = 3, NoFormulir = "FM-2025-0001", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
-                };
-            }
-
-            // Isidentil Reklame
-            public static List<IsidentilKB> GetIsidentilKB(int tahun, string? bulan = null, int? skpdKB = null)
-            {
-                var all = GetAllIsidentilKB(); // ambil semua data dummy misalnya
-
-                var query = all.Where(x => x.Tahun == tahun);
-
-                if (!string.IsNullOrWhiteSpace(bulan))
-                {
-                    query = query.Where(x => string.Equals(x.Bulan, bulan, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (skpdKB.HasValue)
-                {
-                    query = query.Where(x => x.SKPDBlmKB == skpdKB.Value);
-                }
-
-                return query.ToList();
-            }
-
-            public static List<IsidentilKB> GetAllIsidentilKB()
-            {
-                return new List<IsidentilKB>
-                {
-                    new IsidentilKB { Bulan = "Maret", Tahun = 2025, SKPDBlmKB = 4, NoFormulir = "FM-2025-0021", Nama = "PT Reklame Jaya", AlamatOP = "Jl. Merdeka No. 123", IsiReklame = "Promo Awal Tahun", Status = "Belum Lunas", TahunPajak = new DateTime(2025, 1, 1), JumlahNilai = 15000000m, JmlUpaya = 1 },
-                };
-            }
-
-            // Detail Upaya
-            public static List<DetailUpaya> GetDetailUpaya(string noFormulir)
-            {
-                var all = GetAllDetailUpaya(); // ambil semua data dummy misalnya
-
-                if (string.IsNullOrWhiteSpace(noFormulir))
-                    return all;
-
-                return all
-                    .Where(x => x.NoFormulir != null && x.NoFormulir.Contains(noFormulir, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-
-            private static List<DetailUpaya> GetAllDetailUpaya()
-            {
-                return new List<DetailUpaya>
-                {
-                     new DetailUpaya {Tahun = 2025, NoFormulir = "FM-2025-0001", AlamatReklame = "Jl. Merdeka No. 10", JenisReklame = "Billboard", Panjang = 5, Lebar = 3, Luas = 15, Tinggi = 4, TglMulai = new DateTime(2025, 1, 1), TglSelesai = new DateTime(2025, 12, 31), TglUpaya = DateTime.Now, Upaya = "Peringatan Tertulis", Keterangan = "Pemasangan tanpa izin", Petugas = "Budi Santoso"},
-                };
-            }
-
-
         }
 
         public class ReklamePermanen
         {
-            public string Bulan { get; set; } = null!;
+            public string BulanNama { get; set; } = null!;
+            public int Jenis { get; set; }
+            public int Bulan { get; set; }
             public int Tahun { get; set; }
             public int SKPDJT { get; set; }
             public decimal NilaiJT { get; set; }
@@ -595,7 +432,9 @@ namespace MonPDReborn.Models.AktivitasOP
 
         public class TerbatasReklame
         {
-            public string Bulan { get; set; } = null!;
+            public string BulanNama { get; set; } = null!;
+            public int Jenis { get; set; }
+            public int Bulan { get; set; }
             public int Tahun { get; set; }
             public int SKPDJT { get; set; }
             public decimal NilaiJT { get; set; }
@@ -614,7 +453,9 @@ namespace MonPDReborn.Models.AktivitasOP
 
         public class IsidentilReklame
         {
-            public string Bulan { get; set; } = null!;
+            public string BulanNama { get; set; } = null!;
+            public int Jenis { get; set; }
+            public int Bulan { get; set; }
             public int Tahun { get; set; }
             public int SKPD { get; set; }
             public decimal Nilai { get; set; }
@@ -623,132 +464,55 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal Potensi => NilaiBlmByr;
         }
 
-        public class PermanenJT
+        public class DetailSummary
         {
-            public string Bulan { get; set; } = null!;
+            public string BulanNama { get; set; } = null!;
+            public int Bulan { get; set; }
             public int Tahun { get; set; }
-            public int SKPDBlmJT { get; set; }
             public string NoFormulir { get; set; } = null!;
             public string Nama { get; set; } = null!;
             public string AlamatOP { get; set; } = null!;
             public string IsiReklame { get; set; } = null!;
-            public string Status { get; set; } = null!;
-            public DateTime TahunPajak { get; set; }
+            public string AkhirBerlaku { get; set; } = null!;
+            public string MasaTahunPajak { get; set; } = null!;
             public decimal JumlahNilai { get; set; }
-            public string Email { get; set; } = null!;
-            public int JmlUpaya { get; set; }
+            public string? InformasiEmail { get; set; }
+            public string JumlahUpaya { get; set; } = null!;
         }
-        public class PermanenBP
-        {
-            public string Bulan { get; set; } = null!;
-            public int Tahun { get; set; }
-            public int SKPDBlmPanjang { get; set; }
-            public string NoFormulir { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string AlamatOP { get; set; } = null!;
-            public string IsiReklame { get; set; } = null!;
-            public string Status { get; set; } = null!;
-            public DateTime TahunPajak { get; set; }
-            public decimal JumlahNilai { get; set; }
-            public int JmlUpaya { get; set; }
-        }
-
-        public class PermanenKB
-        {
-            public string Bulan { get; set; } = null!;
-            public int Tahun { get; set; }
-            public int SKPDBlmKB { get; set; }
-            public string NoFormulir { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string AlamatOP { get; set; } = null!;
-            public string IsiReklame { get; set; } = null!;
-            public string Status { get; set; } = null!;
-            public DateTime TahunPajak { get; set; }
-            public decimal JumlahNilai { get; set; }
-            public string Email { get; set; } = null!;
-            public int JmlUpaya { get; set; }
-        }
-
-        public class TerbatasJT
-        {
-            public string Bulan { get; set; } = null!;
-            public int Tahun { get; set; }
-            public int SKPDBlmJT { get; set; }
-            public string NoFormulir { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string AlamatOP { get; set; } = null!;
-            public string IsiReklame { get; set; } = null!;
-            public string Status { get; set; } = null!;
-            public DateTime TahunPajak { get; set; }
-            public decimal JumlahNilai { get; set; }
-            public string Email { get; set; } = null!;
-            public int JmlUpaya { get; set; }
-        }
-
-        public class TerbatasBP
-        {
-            public string Bulan { get; set; } = null!;
-            public int Tahun { get; set; }
-            public int SKPDBlmPanjang { get; set; }
-            public string NoFormulir { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string AlamatOP { get; set; } = null!;
-            public string IsiReklame { get; set; } = null!;
-            public string Status { get; set; } = null!;
-            public DateTime TahunPajak { get; set; }
-            public decimal JumlahNilai { get; set; }
-            public int JmlUpaya { get; set; }
-        }
-
-        public class TerbatasKB
-        {
-            public string Bulan { get; set; } = null!;
-            public int Tahun { get; set; }
-            public int SKPDBlmKB { get; set; }
-            public string NoFormulir { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string AlamatOP { get; set; } = null!;
-            public string IsiReklame { get; set; } = null!;
-            public string Status { get; set; } = null!;
-            public DateTime TahunPajak { get; set; }
-            public decimal JumlahNilai { get; set; }
-            public string Email { get; set; } = null!;
-            public int JmlUpaya { get; set; }
-        }
-
-        public class IsidentilKB
-        {
-            public string Bulan { get; set; } = null!;
-            public int Tahun { get; set; }
-            public int SKPDBlmKB { get; set; }
-            public string NoFormulir { get; set; } = null!;
-            public string Nama { get; set; } = null!;
-            public string AlamatOP { get; set; } = null!;
-            public string IsiReklame { get; set; } = null!;
-            public string Status { get; set; } = null!;
-            public DateTime TahunPajak { get; set; }
-            public decimal JumlahNilai { get; set; }
-            public string Email { get; set; } = null!;
-            public int JmlUpaya { get; set; }
-        }
-
         public class DetailUpaya
         {
+            public int Bulan { get; set; }
             public int Tahun { get; set; }
             public string NoFormulir { get; set; } = null!;
-            public string IsiReklame { get; set; } = null!;
-            public string AlamatReklame { get; set; } = null!;
-            public string JenisReklame { get; set; } = null!;
-            public decimal Panjang { get; set; }
-            public decimal Lebar { get; set; }
-            public decimal Luas { get; set; }
-            public decimal Tinggi { get; set; }
-            public DateTime TglMulai { get; set; }
-            public DateTime TglSelesai { get; set; }
-            public DateTime TglUpaya { get; set; }
-            public string Upaya { get; set; } = null!;
-            public string Keterangan { get; set; } = null!;
-            public string Petugas { get; set; } = null!;
+            public class NewRow
+            {
+                public int IdUpaya { get; set; }
+                public string Keterangan { get; set; } = null!;
+                public string NamaPetugas { get; set; } = null!;
+                public DateTime TglUpaya { get; set; }
+                public byte[] Lampiran { get; set; } = null!;
+            }
+            public class DataUpaya
+            {
+                public string NoFormulir { get; set; } = null!;
+                public string TglUpaya { get; set; } = null!;
+                public string NamaUpaya { get; set; } = null!;
+                public string Keterangan { get; set; } = null!;
+                public string Petugas { get; set; } = null!;
+            }
+            public class InfoReklame
+            {
+                public string IsiReklame { get; set; } = null!;
+                public string AlamatReklame { get; set; } = null!;
+                public string JenisReklame { get; set; } = null!;
+                public decimal Panjang { get; set; }
+                public decimal Lebar { get; set; }
+                public decimal Luas { get; set; }
+                public decimal Tinggi { get; set; }
+                public DateTime TglMulaiBerlaku { get; set; }
+                public DateTime TglAkhirBerlaku { get; set; }
+                public string MasaTahunPajak { get; set; } = null!;
+            }
         }
     }
 }
