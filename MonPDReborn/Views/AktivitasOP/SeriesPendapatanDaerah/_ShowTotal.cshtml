@@ -1,4 +1,5 @@
-﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.Show
+﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.ShowTotal
+
 @{
     var currentYear = DateTime.Now.Year;
     var tahun1 = (currentYear - 4).ToString();
@@ -8,8 +9,8 @@
     var tahun5 = currentYear.ToString();
 }
 
-@(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.PendapatanAsliDaerah>()
-    .ID("SeriesPendapatanDaerah")
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.RingkasanPendapatan>()
+    .ID("GridRingkasanPendapatan") // ID unik untuk grid baru
     .DataSource(Model.Data)
     .KeyExpr("ID")
     .ShowBorders(true)
@@ -23,12 +24,10 @@
     .HeaderFilter(h => h.Visible(true))
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
     .AllowColumnResizing(true)
-    .Paging(p => p.Enabled(false)) 
     .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
     .OnExporting("exportGrid")
     .Columns(columns =>
     {
-        // Definisi kolom untuk grid utama
         columns.AddFor(x => x.Uraian).CssClass("fw-bold").Caption("URAIAN").Fixed(true);
 
         columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(sub => {
@@ -36,7 +35,6 @@
             sub.AddFor(x => x.Realisasi1).Caption("REALISASI").Format("#,##0");
             sub.AddFor(x => x.Persentase1).Caption("%").Format("#,##0.00'%'");
         });
-
         columns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(sub => {
             sub.AddFor(x => x.Target2).Caption("TARGET").Format("#,##0");
             sub.AddFor(x => x.Realisasi2).Caption("REALISASI").Format("#,##0");

@@ -149,12 +149,12 @@
                 beforeSend: function () {
                     $("#loader").show();
 
-                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
                     $modal.find(".modal-title").text("");
                     $modal.find(".modal-body").html("");
                 },
                 success: function (response) {
-                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
                     if (response.Status === undefined) {
                         $modal.find(".modal-title").html("Data Detail Reklame Jalan " + namaJalan);
                         $modal.find(".modal-body").html(response);
@@ -168,7 +168,7 @@
                     }
                 },
                 error: function () {
-                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
                     $modal.find(".modal-title").html("Error");
                     $modal.find(".modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
                     $modal.modal('show');
