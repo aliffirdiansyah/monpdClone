@@ -90,62 +90,9 @@
                 });
 
             }
-            $('#formUpaya').on('submit', function (e) {
-                e.preventDefault();
-                simpanUpaya();
-            });
+            
         });
-        function fnGetParamsTindakan() {
-            return { idUpaya: function () { return $('#cbUpaya').dxSelectBox("instance").option('value') } }
-        }
-        function fnReloadTindakan() {
-            $("#cbTindakan").dxSelectBox("instance").option("value", null);
-            var selectBoxDataSource = $("#cbTindakan").dxSelectBox("instance").getDataSource();
-            selectBoxDataSource.load();
-
-        }
-        function simpanUpaya() {
-            var formData = new FormData($('#formUpaya')[0]);
-
-            $.ajax({
-                url: '@Url.Action("SimpanUpaya", "Reklame")',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $("#loader").show();
-                },
-                complete: function () {
-                    $("#loader").hide();
-                },
-                success: function (response) {
-                    if (response.status === 1) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message
-                        });
-
-                        $('#formUpaya')[0].reset();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: response.message
-                        });
-                    }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Terjadi kesalahan saat mengirim data.'
-                    });
-                }
-            });
-        }
-                function fnReloadTindakan(e) {
+        function fnReloadTindakan(e) {
             const selectedUpayaId = e.value;
 
             console.log("Upaya dipilih:", selectedUpayaId); // cek value

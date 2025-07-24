@@ -27,4 +27,8 @@ public partial class DbMonReklameUpayaDok
     [Column("SEQ")]
     [Precision(10)]
     public int Seq { get; set; }
+
+    [ForeignKey("NoformS, TglUpaya, Seq")]
+    [InverseProperty("DbMonReklameUpayaDok")]
+    public virtual DbMonReklameUpaya DbMonReklameUpaya { get; set; } = null!;
 }

@@ -12,17 +12,17 @@
             <div class="card-header d-flex">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-0">
-                        Isidentil
+                        @@JENISREKLAME
                     </h4>
                 </div>
             </div>
             <div class="card-body">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-2">
-                        Kategori : Ketetapan Baru SKPD Belum Bayar
+                        Kategori : @@KATEGORI_TERPILIH
                     </h4>
                     <h4 class="card-title fs-16 mb-1">
-                        Jenis : Isidentil
+                        Jenis : @@JENISREKLAME
                     </h4>
                 </div>
                 <div class="table-responsive">
@@ -54,7 +54,7 @@
                        )
                        .Columns(columns =>
                        {
-                           columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir");
+                           columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir").Fixed(true);
                            columns.AddFor(m => m.Nama).Caption("Nama (Nama Perusahaan)");
                            columns.AddFor(m => m.AlamatOP).Caption("Alamat OP");
                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
@@ -97,26 +97,85 @@
 @section Scripts
 {
     <script>
-        //  function onDetailClick(e) {
-        //     const noFormulir = e.row.data.NoFormulir;
+        $(document).ready(function () {
+            $('#formUpaya').on('submit', function (e) {
+                e.preventDefault();
+                simpanUpaya();
+            });
+        });
+        function fnGetParamsTindakan() {
+            return { idUpaya: function () { return $('#cbUpaya').dxSelectBox("instance").option('value') } }
+        }
+        function fnReloadTindakan() {
+            $("#cbTindakan").dxSelectBox("instance").option("value", null);
+            var selectBoxDataSource = $("#cbTindakan").dxSelectBox("instance").getDataSource();
+            selectBoxDataSource.load();
 
-        //     const $modal = $('#detailModal');
-        //     const $content = $('#detailModalContent');
+        }
+        function simpanUpaya() {
+            var formData = new FormData($('#formUpaya')[0]);
 
-        //     $content.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+            $.ajax({
+                url: '@Url.Action("SimpanUpaya", "ReklameSummary")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
 
-        //     $modal.modal('show');
+                        $('#formUpaya')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var base64 = cellInfo.data.Lampiran;
+            var mime = 'image/png'; // atau 'image/jpeg' / 'application/pdf'
 
-        //     $.get('/ReklameSummary/DetailUpaya', { noFormulir: noFormulir })
-        //         .done(function (html) {
-        //             $content.html(html);
-        //         })
-        //         .fail(function () {
-        //             $content.html('<div class="text-danger text-center p-3">Gagal memuat detail.</div>');
-        //         });
-        // }
+            if (base64 && base64.length > 100) {
+                var dataUrl = 'data:' + mime + ';base64,' + base64;
 
-                                     function onDetailClick(e) {
+                $('<a>')
+                    .attr('href', dataUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', dataUrl)
+                            .addClass('img-thumbnail')
+                            .css({ height: '50px', width: 'auto', cursor: 'zoom-in' })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
+        }
+        function onDetailClick(e) {
             const noFormulir = (e.row.data.NoFormulir || '').split(' ')[0];
             const tahun = e.row.data.Tahun || new Date().getFullYear();
             const bulan = e.row.data.Bulan || new Date().getMonth() + 1;
@@ -128,12 +187,12 @@
                 beforeSend: function () {
                     $("#loader").show();
 
-                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
                     $modal.find(".modal-title").text("");
                     $modal.find(".modal-body").html("");
                 },
                 success: function (response) {
-                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
                     if (response.Status === undefined) {
                         $modal.find(".modal-title").html("Detail Upaya – " + noFormulir);
                         $modal.find(".modal-body").html(response);
@@ -147,7 +206,7 @@
                     }
                 },
                 error: function () {
-                    const $modal = $("#staticBackdropLargeScrollableCenter");
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
                     $modal.find(".modal-title").html("Error");
                     $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
                     $modal.modal('show');
@@ -157,10 +216,5 @@
                 }
             });
         }
-
-
-
-
-
     </script>
 }

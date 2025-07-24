@@ -67,17 +67,17 @@ namespace MonPDReborn.Models.AktivitasOP
                 Data.NewRowUpaya.NoFormulir = noFormulir;
                 Data.NewRowUpaya.TglUpaya = DateTime.Now;
 
-                
-                Data.DataUpayaList = context.TUpayaReklames
-                .Where(x => x.NoFormulir == noFormulir)
-                .Select(x => new DetailUpaya.DataUpaya
-                {
-                    NoFormulir = x.NoFormulir,
-                    NamaUpaya = x.Upaya,
-                    Keterangan = x.Tindakan,
-                    TglUpaya = x.TglUpaya.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-                })
-                .ToList();
+
+                //Data.DataUpayaList = context.DbMonReklameUpayas
+                //.Where(x => x.NoFormulir == noFormulir)
+                //.Select(x => new DetailUpaya.DataUpaya
+                //{
+                //    NoFormulir = x.NoFormulir,
+                //    NamaUpaya = x.Upaya,
+                //    Keterangan = x.Tindakan,
+                //    TglUpaya = x.TglUpaya.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
+                //})
+                //.ToList();
 
                 //var infoReklame = context.DbOpReklames
                 //    .Where(x => x.NoFormulir == noFormulir)
@@ -282,7 +282,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 var data = context.MvReklameSummaries.AsQueryable();
 
-                var upaya = context.TUpayaReklames
+                var upaya = context.DbMonReklameUpayas
                     .Select(x => new { x.NoFormulir, x.Upaya })
                     .ToList();
 
@@ -380,7 +380,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
             //    var data = context.MvReklameSummaries.AsQueryable();
 
-            //    var upaya = context.TUpayaReklames
+            //    var upaya = context.DbMonReklameUpayas
             //        .Select(x => new { x.NoFormulir, x.Upaya })
             //        .ToList();
 
@@ -467,7 +467,7 @@ namespace MonPDReborn.Models.AktivitasOP
             //    var data = context.MvReklameSummaries.AsQueryable();
             //    //.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.IdFlagPermohonan == jenis)
             //    //.ToList();
-            //    var upaya = context.TUpayaReklames
+            //    var upaya = context.DbMonReklameUpayas
             //    .Select(x => new
             //    {
             //        x.NoFormulir,
@@ -707,21 +707,37 @@ namespace MonPDReborn.Models.AktivitasOP
                 {
                     throw new ArgumentException("Nama Petugas tidak boleh kosong.");
                 }
+                if (NewRowUpaya.Lampiran == null && NewRowUpaya.Lampiran.Length <= 0)
+                {
+                    throw new ArgumentException("lampiran foto tidak boleh kosong.");
+                }
                 var tindakan = context.MTindakanReklames.Where(x => x.Id == NewRowUpaya.IdTindakan && x.IdUpaya == NewRowUpaya.IdUpaya).SingleOrDefault().Tindakan;
                 var upaya = context.MUpayaReklames.Where(x => x.Id == NewRowUpaya.IdUpaya).SingleOrDefault().Upaya;
-                var newUpaya = new MonPDLib.EF.TUpayaReklame
+
+                var seq = context.DbMonReklameUpayas
+                    .Where(x => x.NoFormulir == NewRowUpaya.NoFormulir)
+                    .Select(x => x.Seq)
+                    .Count() + 1;
+                var newUpaya = new MonPDLib.EF.DbMonReklameUpaya
                 {
-                    Id = MonPDLib.General.Utility.GetMaxValueSpecifyColumn<MonPDLib.EF.TUpayaReklame>(context, null, "Id") + 1,
+                    //= MonPDLib.General.Utility.GetMaxValueSpecifyColumn<MonPDLib.EF.TUpayaReklame>(context, null, "Id") + 1,
                     NoFormulir = NewRowUpaya.NoFormulir,
-                    IdUpaya = NewRowUpaya.IdUpaya,
+                    Seq = seq,
                     Upaya = upaya ?? "-",
-                    IdTindakan = NewRowUpaya.IdTindakan,
-                    Tindakan = tindakan ?? "-",
+                    Keterangan = tindakan ?? "-",
                     TglUpaya = NewRowUpaya.TglUpaya,
                     Petugas = NewRowUpaya.NamaPetugas,
                     //Lampiran = detailUpaya.NewRowUpaya.Lampiran
                 };
-                context.TUpayaReklames.Add(newUpaya);
+
+                var newUpayaDok = new MonPDLib.EF.DbMonReklameUpayaDok
+                {
+                    NoformS = NewRowUpaya.NoFormulir,
+                    Seq = seq,
+                    Gambar = NewRowUpaya.Lampiran
+                };
+                context.DbMonReklameUpayas.Add(newUpaya);
+                context.DbMonReklameUpayaDoks.Add(newUpayaDok);
                 context.SaveChanges();
             }
             public static DetailUpaya GetDetailUpaya(string noFormulir, int tahun, int bulan)
@@ -740,7 +756,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     return null;
 
                 // Ambil data upaya
-                var upayaList = context.TUpayaReklames
+                var upayaList = context.DbMonReklameUpayas.Include(x => x.DbMonReklameUpayaDok)
                     .Where(x => x.NoFormulir == noFormulir)
                     .OrderByDescending(x => x.TglUpaya)
                     .ToList();
@@ -750,9 +766,9 @@ namespace MonPDReborn.Models.AktivitasOP
                     NoFormulir = x.NoFormulir,
                     TglUpaya = x.TglUpaya.ToString("dd/MM/yyyy"),
                     NamaUpaya = x.Upaya,
-                    Keterangan = x.Tindakan,
+                    Keterangan = x.Keterangan,
                     Petugas = x.Petugas,
-                   // Lampiran = x. != null ? "Tersedia" : "Tidak Ada"
+                    Lampiran = x.DbMonReklameUpayaDok.Gambar != null ? Convert.ToBase64String(x.DbMonReklameUpayaDok.Gambar) : null
                 }).ToList();
 
                 var model = new DetailUpaya
@@ -771,7 +787,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tinggi = reklame.Ketinggian ?? 0,
                         TglMulaiBerlaku = reklame.TglMulaiBerlaku ?? DateTime.MinValue,
                         TglAkhirBerlaku = reklame.TglAkhirBerlaku ?? DateTime.MinValue,
-                        TahunPajak = reklame.TahunA?.ToString() ?? "-",
+                        TahunPajak = reklame.TahunA?.ToString() ?? reklame.Tahun.Value.ToString(),
                         MasaPajak = (reklame.TglMulaiBerlaku.HasValue && reklame.TglAkhirBerlaku.HasValue)
                             ? $"{reklame.TglMulaiBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))} - {reklame.TglAkhirBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))}"
                             : "-"
@@ -889,7 +905,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 public string NamaUpaya { get; set; } = null!;
                 public string Keterangan { get; set; } = null!;
                 public string Petugas { get; set; } = null!;
-                public string Lampiran { get; set; } = null!;
+                public string Lampiran { get; set; }
             }
             public class InfoReklame
             {

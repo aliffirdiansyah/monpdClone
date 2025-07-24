@@ -40,10 +40,10 @@
                     <div class="mb-3">
                         <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
-                            .ID("cbNop")
+                            .ID("cbTindakan")
                             .ValueExpr("Value")
                             .DisplayExpr("Text")
-                            .DataSource(x => x.Mvc().Controller("SPTPD").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
+                            .DataSource(x => x.Mvc().Controller("ReklameSummary").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
                             .SearchEnabled(true)
                             )
                     </div>
@@ -58,17 +58,16 @@
                         @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
                             .Type(DateBoxType.Date)
                             .DisplayFormat("dd MMM yyyy")
-                            .Value(DateTime.Today)
-                            .Name("NewRowUpaya.TglUpaya")
-                            .ID("NewRowUpaya_TglUpaya"))
+                            .Value(DateTime.Today))
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Lampiran</label>
-                        <input type="file" class="form-control" name="Lampiran" id="Lampiran" accept=".jpg,.jpeg,.png,.pdf" />
+                        <label asp-for="Lampiran" class="form-label"></label>
+                        <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
                         <small class="form-text text-muted">
-                            Hanya file gambar (.jpg, .jpeg, .png) dan PDF yang diperbolehkan.
+                            Hanya file gambar (.jpg, .jpeg, .png).
                         </small>
+                        <span asp-validation-for="Lampiran" class="text-danger"></span>
                     </div>
                     <div class="mb-3 text-end">
                         <button type="button" class="btn btn-primary" onclick="simpanUpaya()">Simpan</button>
@@ -159,6 +158,9 @@
                 .Columns(columns =>
                 {
                     columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir");
+                    columns.Add()
+                    .Caption("Lampiran")
+                    .CellTemplate(new JS("lampiranCellTemplate"));
                     columns.AddFor(m => m.TglUpaya).Caption("Tanggal Upaya").Format("dd MMM yyyy");
                     columns.AddFor(m => m.NamaUpaya).Caption("Upaya");
                     columns.AddFor(m => m.Keterangan).Caption("Keterangan");

@@ -116,40 +116,32 @@ namespace MonPDReborn.Controllers.Aktivitas
         [HttpGet]
         public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions)
         {
-            List<UpayaCbView> TindakanList = new();
             var context = DBClass.GetContext();
 
-            var upaya = await context.MUpayaReklames.ToListAsync();
-
-            foreach (var item in upaya)
-            {
-
-                TindakanList.Add(new UpayaCbView()
+            // EF Core query langsung, tanpa ToListAsync
+            var query = context.MUpayaReklames
+                .Select(item => new UpayaCbView
                 {
                     Value = (int)item.Id,
-                    Text = item.Upaya ?? string.Empty,
+                    Text = item.Upaya ?? string.Empty
                 });
-            }
-            return DataSourceLoader.Load(TindakanList, loadOptions);
+
+            return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
         }
         [HttpGet]
         public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
         {
-            List<TindakanCbView> TindakanList = new();
             var context = DBClass.GetContext();
 
-            var upaya = await context.MTindakanReklames.Where(x => x.IdUpaya == idUpaya).ToListAsync();
-
-            foreach (var item in upaya)
-            {
-
-                TindakanList.Add(new TindakanCbView()
+            var query = context.MTindakanReklames
+                .Where(x => x.IdUpaya == idUpaya)
+                .Select(item => new TindakanCbView
                 {
                     Value = (int)item.Id,
-                    Text = item.Tindakan ?? string.Empty,
+                    Text = item.Tindakan ?? string.Empty
                 });
-            }
-            return DataSourceLoader.Load(TindakanList, loadOptions);
+
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
         //Simpan Upaya
         [HttpPost]
@@ -157,15 +149,24 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                var kont = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
+                if (input.Lampiran != null && input.Lampiran.Length > 0)
                 {
-                    NoFormulir = input.Data.NoFormulir,
+                    using (var ms = new MemoryStream())
+                    {
+                        input.Lampiran.CopyTo(ms);
+                        input.Data.NewRowUpaya.Lampiran = ms.ToArray(); // ✅ inilah yang kamu maksud
+                    }
+                }
+                var insert = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
+                {
+                    NoFormulir = input.Data.NewRowUpaya.NoFormulir,
                     IdUpaya = input.SelectedUpaya,
                     IdTindakan = input.SelectedTindakan,
                     NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
                     TglUpaya = input.Data.NewRowUpaya.TglUpaya,
+                    Lampiran = input.Data.NewRowUpaya.Lampiran,
                 };
-                Models.AktivitasOP.ReklameSummaryVM.Method.SimpanUpaya(kont);
+                Models.AktivitasOP.ReklameSummaryVM.Method.SimpanUpaya(insert);
 
                 response.Status = StatusEnum.Success;
                 response.Message = "Data Berhasil Disimpan";

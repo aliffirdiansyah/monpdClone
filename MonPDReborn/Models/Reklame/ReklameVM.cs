@@ -172,7 +172,7 @@ namespace MonPDReborn.Models.Reklame
     where a.FlagPermohonan == "PERMANEN"
           && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
           && a.TglAkhirBerlaku.Value.Date <= tglAkhir.Date
-    join b in context.TUpayaReklames.Where(u => u.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(u => u.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     select new
@@ -183,7 +183,7 @@ namespace MonPDReborn.Models.Reklame
         Status = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date
                  ? "EXPIRED"
                  : "AKTIF",
-        Id = b != null ? b.Id : (decimal?)null
+        Id = b != null ? b.Seq : (decimal?)null
     }
 ).ToList();
 
@@ -192,7 +192,7 @@ namespace MonPDReborn.Models.Reklame
     where a.FlagPermohonan == "TERBATAS"
           && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
           && a.TglAkhirBerlaku.Value.Date <= tglAkhir.Date
-    join b in context.TUpayaReklames.Where(u => u.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(u => u.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     select new
@@ -203,7 +203,7 @@ namespace MonPDReborn.Models.Reklame
         Status = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date
                  ? "EXPIRED"
                  : "AKTIF",
-        Id = b != null ? b.Id : (decimal?)null
+        Id = b != null ? b.Seq : (decimal?)null
     }
 ).ToList();
 
@@ -436,7 +436,7 @@ namespace MonPDReborn.Models.Reklame
                     {                        
                        var permanenDataExpBongkar = (
     from a in  context.DbMonReklames
-    join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     where a.FlagPermohonan == "PERMANEN"
@@ -484,7 +484,7 @@ namespace MonPDReborn.Models.Reklame
                     {                        
                          var permanenDataExpBlmBongkar = (
     from a in context.DbMonReklames
-    join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     where a.FlagPermohonan == "PERMANEN"
@@ -532,7 +532,7 @@ namespace MonPDReborn.Models.Reklame
                     {                        
                          var permanenDataAktif = (
     from a in context.DbMonReklames
-    join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     where a.FlagPermohonan == "PERMANEN"
@@ -584,7 +584,7 @@ namespace MonPDReborn.Models.Reklame
                     {
                         var permanenDataExpBongkar = (
      from a in context.DbMonReklames
-     join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+     join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
          on a.NoFormulir equals b.NoFormulir into gj
      from b in gj.DefaultIfEmpty()
      where a.FlagPermohonan == "TERBATAS"
@@ -632,7 +632,7 @@ namespace MonPDReborn.Models.Reklame
                     {
                         var permanenDataExpBlmBongkar = (
    from a in context.DbMonReklames
-   join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+   join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
        on a.NoFormulir equals b.NoFormulir into gj
    from b in gj.DefaultIfEmpty()
    where a.FlagPermohonan == "TERBATAS"
@@ -680,7 +680,7 @@ namespace MonPDReborn.Models.Reklame
                     {
                         var permanenDataAktif = (
    from a in context.DbMonReklames
-   join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+   join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
        on a.NoFormulir equals b.NoFormulir into gj
    from b in gj.DefaultIfEmpty()
    where a.FlagPermohonan == "TERBATAS"
