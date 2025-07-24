@@ -137,7 +137,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
+                var kont = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
                 {
                     NoFormulir = input.Data.NoFormulir,
                     IdUpaya = input.SelectedUpaya,
@@ -145,7 +145,7 @@ namespace MonPDReborn.Controllers.Aktivitas
                     NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
                     TglUpaya = input.Data.NewRowUpaya.TglUpaya,
                 };
-                Models.AktivitasOP.ReklameSummaryVM.Method.SimpanUpaya(model);
+                Models.AktivitasOP.ReklameSummaryVM.Method.SimpanUpaya(kont);
 
                 response.Status = StatusEnum.Success;
                 response.Message = "Data Berhasil Disimpan";
