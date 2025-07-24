@@ -45,17 +45,13 @@ namespace MonPDReborn.Models.AktivitasOP
         
         // Detail Upaya
 
-        public class Detail
+        public class GetDetailUpaya
         {
-            public string? NoFormulir { get; set; }
-
-            public List<DetailUpaya> Data { get; set; } = new();
-
-            public Detail() { }
-
-            public Detail(string? noFormulir)
+            public DetailUpaya Data { get; set; } = new();
+            public GetDetailUpaya() { }
+            public GetDetailUpaya(string noFormulir, int tahun, int bulan)
             {
-                NoFormulir = noFormulir;
+                Data.NoFormulir = noFormulir;
 
                 // panggil GetDetailUpaya
                 //Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);
@@ -484,6 +480,9 @@ namespace MonPDReborn.Models.AktivitasOP
             public int Bulan { get; set; }
             public int Tahun { get; set; }
             public string NoFormulir { get; set; } = null!;
+            public NewRow NewRowUpaya { get; set; } = new NewRow();
+            public InfoReklame InfoReklameUpaya { get; set; } = new InfoReklame();
+            public List<DataUpaya> DataUpayaList { get; set; } = new();
             public class NewRow
             {
                 public int IdUpaya { get; set; }
@@ -511,7 +510,8 @@ namespace MonPDReborn.Models.AktivitasOP
                 public decimal Tinggi { get; set; }
                 public DateTime TglMulaiBerlaku { get; set; }
                 public DateTime TglAkhirBerlaku { get; set; }
-                public string MasaTahunPajak { get; set; } = null!;
+                public string TahunPajak { get; set; } = null!;
+                public string MasaPajak { get; set; } = null!;
             }
         }
     }
