@@ -24,7 +24,7 @@
             <div class="tab-pane active" id="input-upaya" role="tabpanel">
                 <form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label asp-for="Data.NewRowUpaya.IdUpaya" class="form-label">Jenis Upaya</label>
+                        <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
                             .ID("cbUpaya")
                             .ValueExpr("Value")
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Data.NewRowUpaya.Keterangan" class="form-label">Keterangan</label>
+                        <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
                             .ID("cbNop")
                             .ValueExpr("ObjekPajak.EncryptedNop")

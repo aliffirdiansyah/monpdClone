@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using System.Globalization;
 using System.Web.Mvc;
+using static MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.MonitoringTahunanViewModels;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
@@ -77,6 +78,33 @@ namespace MonPDReborn.Models.AktivitasOP
                         TglUpaya = x.TglUpaya.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
 
                     }).ToList();
+
+                var tahunPajak = tahun.ToString();
+                var masaPajak = bulan.ToString("D2");
+
+                var infoReklame = context.DbOpReklames
+                    .Where(x => x.NoFormulir == noFormulir)
+                    .Select(x => new DetailUpaya.InfoReklame
+                    {
+                        IsiReklame = x.IsiReklame,
+                        AlamatReklame = x.Alamat,
+                        JenisReklame = x.FlagPermohonan,
+                        Panjang = x.Panjang ?? 0,
+                        Lebar = x.Lebar ?? 0,
+                        Luas = x.Luas ?? 0,
+                        Tinggi = x.Ketinggian ?? 0,
+                        TglMulaiBerlaku = x.TglMulaiBerlaku.HasValue ? x.TglMulaiBerlaku.Value : DateTime.MinValue,
+                        TglAkhirBerlaku = x.TglAkhirBerlaku.HasValue ? x.TglAkhirBerlaku.Value : DateTime.MinValue,
+                        TahunPajak = tahunPajak,
+                        MasaPajak = masaPajak
+                    })
+                    .OrderByDescending(x => x.TglAkhirBerlaku)
+                    .FirstOrDefault();
+                if (infoReklame != null)
+                {
+                    Data.InfoReklameUpaya = infoReklame;
+                }
+
                 // panggil GetDetailUpaya
                 //Data = Method.GetDetailUpaya(noFormulir ?? string.Empty);
             }
