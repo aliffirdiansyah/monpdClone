@@ -206,7 +206,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         NilaiKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
 
                         SKPDBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Count(),
-                        NilaiBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokok) ?? 0
+                        NilaiBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokokA) ?? 0
                     });
                 }
 
@@ -245,7 +245,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         NilaiKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
 
                         SKPDBlmKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Count(),
-                        NilaiBlmKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokok) ?? 0
+                        NilaiBlmKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokokA) ?? 0
                     });
                 }
                 return ret;
@@ -267,10 +267,10 @@ namespace MonPDReborn.Models.AktivitasOP
                         Bulan = i,
                         Tahun = tahun,
                         Jenis = 1, // Jenis 1 untuk Insidentil
-                        SKPD = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null).Count(),
-                        Nilai = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
-                        SKPDBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
-                        NilaiBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0
+                        SKPD = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null).Count(),
+                        Nilai = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !x.TglBayarPokokA.HasValue).Count(),
+                        NilaiBlmByr = dataIns.Where(x => x.BulanA == i && x.NoFormulirA != null && !x.TglBayarPokokA.HasValue).Sum(x => x.PajakPokokA) ?? 0
                     });
                 }
                 return ret;

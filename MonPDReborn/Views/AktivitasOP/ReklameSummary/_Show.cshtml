@@ -27,7 +27,7 @@
                             .FilterRow(f => f.Visible(true))
                             .HeaderFilter(h => h.Visible(true))
                             .Sorting(s => s.Mode(GridSortingMode.Multiple))
-                        .Paging(p => p.PageSize(10))
+                        .Paging(p => p.PageSize(20))
                         .Pager(p => p
                             .ShowPageSizeSelector(true)
                             .AllowedPageSizes(new[] { 10, 20, 50 })
@@ -40,7 +40,7 @@
                         )
                         .Columns(columns =>
                         {
-                            columns.AddFor(m => m.Bulan).Caption("Bulan").Fixed(true);
+                            columns.AddFor(m => m.BulanNama).Caption("Bulan").Fixed(true);
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");
@@ -85,42 +85,55 @@
                                      .DisplayFormat("Total");
                                 items.AddFor(m => m.SKPDJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.Potensi)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 
                             });
@@ -155,7 +168,7 @@
                             .FilterRow(f => f.Visible(true))
                             .HeaderFilter(h => h.Visible(true))
                             .Sorting(s => s.Mode(GridSortingMode.Multiple))
-                        .Paging(p => p.PageSize(10))
+                        .Paging(p => p.PageSize(20))
                         .Pager(p => p
                             .ShowPageSizeSelector(true)
                             .AllowedPageSizes(new[] { 10, 20, 50 })
@@ -168,7 +181,7 @@
                         )
                         .Columns(columns =>
                         {
-                            columns.AddFor(m => m.Bulan).Caption("Bulan").Fixed(true);
+                            columns.AddFor(m => m.BulanNama).Caption("Bulan").Fixed(true);
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");
@@ -213,42 +226,55 @@
                                      .DisplayFormat("Total");
                                 items.AddFor(m => m.SKPDJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmJT)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmPanjang)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmKB)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.Potensi)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 
                             });
@@ -263,7 +289,7 @@
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title text-dark fs-16 mb-0">
-                        Isidentil
+                        Insidentil
                     </h4>
                 </div>
             </div>
@@ -283,7 +309,7 @@
                             .FilterRow(f => f.Visible(true))
                             .HeaderFilter(h => h.Visible(true))
                             .Sorting(s => s.Mode(GridSortingMode.Multiple))
-                        .Paging(p => p.PageSize(10))
+                        .Paging(p => p.PageSize(20))
                         .Pager(p => p
                             .ShowPageSizeSelector(true)
                             .AllowedPageSizes(new[] { 10, 20, 50 })
@@ -296,7 +322,7 @@
                         )
                         .Columns(columns =>
                         {
-                            columns.AddFor(m => m.Bulan).Caption("Bulan");
+                            columns.AddFor(m => m.BulanNama).Caption("Bulan");
                             columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
                                     subColumns.AddFor(m => m.SKPD).Caption("SKPD");
@@ -305,7 +331,7 @@
                                                 .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmKB")
                                                 .CellTemplate(new JS("skpdKBCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmByr).Caption("Nilai Belum Bayar").Format("#,#0%");
+                                    subColumns.AddFor(m => m.NilaiBlmByr).Caption("Nilai Belum Bayar").Format("#,##0");
                                  });
                             columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
                             
@@ -318,18 +344,23 @@
                                      .DisplayFormat("Total");
                                 items.AddFor(m => m.SKPD)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.Nilai)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmByr)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmByr)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.Potensi)
                                      .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 
                             });
