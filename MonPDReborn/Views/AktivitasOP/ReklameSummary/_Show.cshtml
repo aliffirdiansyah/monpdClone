@@ -43,7 +43,7 @@
                             columns.AddFor(m => m.BulanNama).Caption("Bulan").Fixed(true);
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");
+                                    subColumns.AddFor(m => m.SKPDJT).Caption("SKPD").Format("#,##0");
                                     subColumns.AddFor(m => m.NilaiJT).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmJT)
                                                 .Caption("SKPD Belum Bayar")
@@ -53,7 +53,7 @@
                                  });
                             columns.Add().Caption("Perpanjangan").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPDPanjang).Caption("SKPD");
+                                    subColumns.AddFor(m => m.SKPDPanjang).Caption("SKPD").Format("#,##0");
                                     subColumns.AddFor(m => m.NilaiPanjang).Caption("Nilai").Format("#,##0");
                                  });
                             columns.Add().Caption("Belum Perpanjang").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
@@ -66,7 +66,7 @@
                                  });
                             columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPDKB).Caption("SKPD");
+                                    subColumns.AddFor(m => m.SKPDKB).Caption("SKPD").Format("#,##0");
                                     subColumns.AddFor(m => m.NilaiKB).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmKB)
                                                 .Caption("SKPD Belum Bayar")
@@ -184,7 +184,7 @@
                             columns.AddFor(m => m.BulanNama).Caption("Bulan").Fixed(true);
                             columns.Add().Caption("Jatuh Tempo").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPDJT).Caption("SKPD");
+                                    subColumns.AddFor(m => m.SKPDJT).Caption("SKPD").Format("#,##0");
                                     subColumns.AddFor(m => m.NilaiJT).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmJT)
                                                 .Caption("SKPD Belum Bayar")
@@ -194,7 +194,7 @@
                                  });
                             columns.Add().Caption("Perpanjangan").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPDPanjang).Caption("SKPD");
+                                    subColumns.AddFor(m => m.SKPDPanjang).Caption("SKPD").Format("#,##0");
                                     subColumns.AddFor(m => m.NilaiPanjang).Caption("Nilai").Format("#,##0");
                                  });
                             columns.Add().Caption("Belum Perpanjang").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
@@ -207,7 +207,7 @@
                                  });
                             columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPDKB).Caption("SKPD");
+                                    subColumns.AddFor(m => m.SKPDKB).Caption("SKPD").Format("#,##0");
                                     subColumns.AddFor(m => m.NilaiKB).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmKB)
                                                 .Caption("SKPD Belum Bayar")
@@ -325,7 +325,7 @@
                             columns.AddFor(m => m.BulanNama).Caption("Bulan");
                             columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                                 {
-                                    subColumns.AddFor(m => m.SKPD).Caption("SKPD");
+                            subColumns.AddFor(m => m.SKPD).Caption("SKPD").Format("#,##0");
                                     subColumns.AddFor(m => m.Nilai).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmByr)
                                                 .Caption("SKPD Belum Bayar")
