@@ -122,7 +122,7 @@
 
     </script>
     <script>
-                function getKategoriFromColumn(columnName) {
+        function getKategoriFromColumn(columnName) {
             switch (columnName) {
                 case 'SKPDBlmJT': return 1;
                 case 'SKPDBlmPanjang': return 2;
@@ -131,7 +131,7 @@
             }
         }
 
-                function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
+        function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
             const jumlah = cellInfo.value ?? 0;
             const tahun = cellInfo.data.Tahun;
             const bulan = cellInfo.data.Bulan;
@@ -165,7 +165,7 @@
             const jenis = cellInfo.data.Jenis;
 
             const namaKolom = cellInfo.column.dataField;
-            const kategori = getKategoriFromColumn(namaKolom); // Mapping dari nama kolom ke kategori
+            const kategori = getKategoriFromColumn(namaKolom); //Mapping dari nama kolom ke kategori
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
@@ -184,6 +184,8 @@
 
             $(cellElement).append($wrapper);
         }
+
+                 
 
         // function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
         //     const jumlah = cellInfo.value ?? 0;

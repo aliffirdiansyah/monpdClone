@@ -86,7 +86,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Bulan = i,
                         Tahun = tahun,
-                        Jenis = 3, // Jenis 3 untuk Terbatas
+                        Jenis = 2, // Jenis 3 untuk Terbatas
 
                         SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
                         NilaiJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
