@@ -329,8 +329,7 @@
                                     subColumns.AddFor(m => m.Nilai).Caption("Nilai").Format("#,##0");
                                     subColumns.AddFor(m => m.SKPDBlmByr)
                                                 .Caption("SKPD Belum Bayar")
-                                                .DataField("SKPDBlmKB")
-                                                .CellTemplate(new JS("skpdPermanenJTCellTemplate"));
+                                                .CellTemplate(new JS("skpdPermanenJTCellTemplate2"));
                                     subColumns.AddFor(m => m.NilaiBlmByr).Caption("Nilai Belum Bayar").Format("#,##0");
                                  });
                             columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
