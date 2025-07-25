@@ -90,6 +90,15 @@ public partial class MvReklameSummary
     [Column("NOMINAL_POKOK_BAYAR", TypeName = "NUMBER")]
     public decimal? NominalPokokBayar { get; set; }
 
+    [Column("SILANG", TypeName = "NUMBER")]
+    public decimal? Silang { get; set; }
+
+    [Column("BONGKAR", TypeName = "NUMBER")]
+    public decimal? Bongkar { get; set; }
+
+    [Column("BANTIP", TypeName = "NUMBER")]
+    public decimal? Bantip { get; set; }
+
     [Column("NO_FORMULIR_A")]
     [StringLength(20)]
     [Unicode(false)]
@@ -178,4 +187,13 @@ public partial class MvReklameSummary
 
     [Column("NOMINAL_POKOK_BAYAR_A", TypeName = "NUMBER")]
     public decimal? NominalPokokBayarA { get; set; }
+
+    [Column("SILANG_A", TypeName = "NUMBER")]
+    public decimal? SilangA { get; set; }
+
+    [Column("BONGKAR_A", TypeName = "NUMBER")]
+    public decimal? BongkarA { get; set; }
+
+    [Column("BANTIP_A", TypeName = "NUMBER")]
+    public decimal? BantipA { get; set; }
 }
