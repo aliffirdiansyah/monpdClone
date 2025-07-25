@@ -99,6 +99,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
 
+    public virtual DbSet<MvReklameSum> MvReklameSums { get; set; }
+
     public virtual DbSet<MvReklameSummary> MvReklameSummaries { get; set; }
 
     public virtual DbSet<MvSeriesPendapatan> MvSeriesPendapatans { get; set; }
@@ -261,11 +263,7 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
-    public virtual DbSet<TUpayaReklame> TUpayaReklames { get; set; }
-
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
-
-    public virtual DbSet<XxxDbMonReklameUpayaDok> XxxDbMonReklameUpayaDoks { get; set; }
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -582,6 +580,10 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbMonReklameUpayaDok>(entity =>
         {
             entity.HasKey(e => new { e.NoformS, e.TglUpaya, e.Seq }).HasName("PK_DETAIL_UPLOAD_REKLAME");
+
+            entity.HasOne(d => d.DbMonReklameUpaya).WithOne(p => p.DbMonReklameUpayaDok)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DB_MON_UPAYA_FK");
         });
 
         modelBuilder.Entity<DbMonResto>(entity =>
@@ -749,7 +751,9 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE\n");
 
-            entity.HasOne(d => d.IdUpayaNavigation).WithMany(p => p.MTindakanReklames).HasConstraintName("M_TINDAKAN_REKLAME_R01");
+            entity.HasOne(d => d.IdUpayaNavigation).WithMany(p => p.MTindakanReklames)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("M_TINDAKAN_REKLAME_R01");
         });
 
         modelBuilder.Entity<MTipekamarhotel>(entity =>
@@ -778,6 +782,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvReklameSum>(entity =>
+        {
+            entity.ToView("MV_REKLAME_SUM");
         });
 
         modelBuilder.Entity<MvReklameSummary>(entity =>
@@ -1556,16 +1565,6 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
-        });
-
-        modelBuilder.Entity<TUpayaReklame>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("T_UPAYA_REKLAME_PK");
-        });
-
-        modelBuilder.Entity<XxxDbMonReklameUpayaDok>(entity =>
-        {
-            entity.HasKey(e => new { e.NoFormulir, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_DOK_PK");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");

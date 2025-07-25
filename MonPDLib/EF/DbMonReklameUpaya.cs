@@ -39,4 +39,7 @@ public partial class DbMonReklameUpaya
     [Column("SEQ")]
     [Precision(10)]
     public int Seq { get; set; }
+
+    [InverseProperty("DbMonReklameUpaya")]
+    public virtual DbMonReklameUpayaDok? DbMonReklameUpayaDok { get; set; }
 }

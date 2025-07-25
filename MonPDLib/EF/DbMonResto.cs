@@ -27,7 +27,7 @@ public partial class DbMonResto
     public string NpwpdNama { get; set; } = null!;
 
     [Column("NPWPD_ALAMAT")]
-    [StringLength(100)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NpwpdAlamat { get; set; } = null!;
 

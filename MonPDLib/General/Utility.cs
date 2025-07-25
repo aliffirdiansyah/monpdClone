@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +34,24 @@ namespace MonPDLib.General
                 Tahun4 = tahunList[3],
                 Tahun5 = tahunList[4],
             };
+        }
+        public static int GetMaxValueSpecifyColumn<T>(DbContext ctx, Expression<Func<T, bool>>? expression, string propertyNameEntityEf = "Id")
+        where T : class
+        {
+            var query = ctx.Set<T>().AsQueryable();
+            if (expression != null)
+            {
+                query = query.Where(expression);
+            }
+            var propertyinfo = typeof(T).GetProperty(propertyNameEntityEf);
+            if (propertyinfo == null)
+            {
+                throw new ArgumentException($"Property '{propertyNameEntityEf}' not found in entity '{typeof(T).Name}'.");
+            }
+            var maxEntity = query.Select(entity => new { Value = propertyinfo.GetValue(entity) })
+                     .AsEnumerable() // Switch to client-side evaluation
+                     .Max(x => (int?)x.Value);
+            return maxEntity ?? 0;
         }
     }
 

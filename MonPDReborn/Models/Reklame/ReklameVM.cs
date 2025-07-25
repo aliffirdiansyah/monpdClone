@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
+using MonPDLib.EF;
 using SixLabors.Fonts.Tables.TrueType;
 using System.Collections.Generic;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
@@ -166,75 +167,45 @@ namespace MonPDReborn.Models.Reklame
                     })
                     .ToList();
 
-                var permanenData = context.DbMonReklames
-    .Where(r => r.FlagPermohonan == "PERMANEN" &&
-                r.TglAkhirBerlaku.HasValue &&
-                r.TglAkhirBerlaku.Value.Date >= tglAwal.Date &&
-                r.TglAkhirBerlaku.Value.Date <= tglAkhir.Date)
-    .Select(r => new
+                var permanenData = (
+    from a in context.DbMonReklames
+    where a.FlagPermohonan == "PERMANEN"
+          && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
+          && a.TglAkhirBerlaku.Value.Date <= tglAkhir.Date
+    join b in context.DbMonReklameUpayas.Where(u => u.Upaya == "PEMBONGKARAN")
+        on a.NoFormulir equals b.NoFormulir into gj
+    from b in gj.DefaultIfEmpty()
+    select new
     {
-        r.KelasJalan,
-        r.NamaJalan,
-        Status = r.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
-        r.NoFormulir
-    })
-    .GroupJoin(
-        context.TUpayaReklames.Where(t => t.IdUpaya == 2),
-        reklame => reklame.NoFormulir,
-        upaya => upaya.NoFormulir,
-        (reklame, upayaGroup) => new
-        {
-            reklame.KelasJalan,
-            reklame.NamaJalan,
-            reklame.Status,
-            UpayaId = upayaGroup.Select(u => (int?)u.Id).FirstOrDefault()
-        }
-    )
-    .GroupBy(x => new { x.KelasJalan, x.NamaJalan, x.Status })
-    .Select(g => new
-    {
-        g.Key.KelasJalan,
-        g.Key.NamaJalan,
-        g.Key.Status,
-        BlmBongkar = g.Count(x => x.UpayaId == null),
-        SudahBongkar = g.Count(x => x.UpayaId != null)
-    })
-    .ToList();
+        a.NoFormulir,
+        a.KelasJalan,
+        a.NamaJalan,
+        Status = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date
+                 ? "EXPIRED"
+                 : "AKTIF",
+        Id = b != null ? b.Seq : (decimal?)null
+    }
+).ToList();
 
-                var terbatasData = context.DbMonReklames
-    .Where(r => r.FlagPermohonan == "TERBATAS" &&
-                r.TglAkhirBerlaku.HasValue &&
-                r.TglAkhirBerlaku.Value.Date >= tglAwal.Date &&
-                r.TglAkhirBerlaku.Value.Date <= tglAkhir.Date)
-    .Select(r => new
+                var terbatasData = (
+    from a in context.DbMonReklames
+    where a.FlagPermohonan == "TERBATAS"
+          && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
+          && a.TglAkhirBerlaku.Value.Date <= tglAkhir.Date
+    join b in context.DbMonReklameUpayas.Where(u => u.Upaya == "PEMBONGKARAN")
+        on a.NoFormulir equals b.NoFormulir into gj
+    from b in gj.DefaultIfEmpty()
+    select new
     {
-        r.KelasJalan,
-        r.NamaJalan,
-        Status = r.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
-        r.NoFormulir
-    })
-    .GroupJoin(
-        context.TUpayaReklames.Where(t => t.IdUpaya == 2),
-        reklame => reklame.NoFormulir,
-        upaya => upaya.NoFormulir,
-        (reklame, upayaGroup) => new
-        {
-            reklame.KelasJalan,
-            reklame.NamaJalan,
-            reklame.Status,
-            UpayaId = upayaGroup.Select(u => (int?)u.Id).FirstOrDefault()
-        }
-    )
-    .GroupBy(x => new { x.KelasJalan, x.NamaJalan, x.Status })
-    .Select(g => new
-    {
-        g.Key.KelasJalan,
-        g.Key.NamaJalan,
-        g.Key.Status,
-        BlmBongkar = g.Count(x => x.UpayaId == null),
-        SudahBongkar = g.Count(x => x.UpayaId != null)
-    })
-    .ToList();
+        a.NoFormulir,
+        a.KelasJalan,
+        a.NamaJalan,
+        Status = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date
+                 ? "EXPIRED"
+                 : "AKTIF",
+        Id = b != null ? b.Seq : (decimal?)null
+    }
+).ToList();
 
                 var jalanList = context.DbMonReklames.Where(x => x.TglMulaiBerlaku.Value.Date >= tglAwal.Date && x.TglMulaiBerlaku.Value.Date <= tglAkhir.Date).Select(x => new { x.KelasJalan, x.NamaJalan }).Distinct().ToList();
 
@@ -246,7 +217,7 @@ namespace MonPDReborn.Models.Reklame
                     row.NamaJalan = item.NamaJalan;
                     row.KelasJalanId = item.KelasJalan;
 
-                    if (row.NamaJalan == "WIYUNG")
+                    if (row.NamaJalan == "EMBONG MALANG")
                     {
                         var AA = 1;
                     }
@@ -262,29 +233,15 @@ namespace MonPDReborn.Models.Reklame
                         row.Isidentil.Aktif = rowInsidentilAktif.Jml;
                     }
 
-                    var rowPermanenExpBlmBongkar = permanenData.SingleOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED");
-                    if (rowPermanenExpBlmBongkar != null)
-                    {
-                        row.Permanen.ExpiredBlmBongkar = rowPermanenExpBlmBongkar.BlmBongkar;
-                        row.Permanen.ExpiredBongkar = rowPermanenExpBlmBongkar.SudahBongkar;
-                    }
-                    var rowPermanenAktif = permanenData.SingleOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "AKTIF");
-                    if (rowPermanenAktif != null)
-                    {
-                        row.Permanen.Aktif = rowPermanenAktif.SudahBongkar + rowPermanenAktif.BlmBongkar;
-                    }
+                    row.Permanen.ExpiredBlmBongkar = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue == false).Count();
+                    row.Permanen.ExpiredBongkar = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue).Count();
+                    row.Permanen.Aktif = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "AKTIF").Count();
 
-                    var rowTerbatasExpBlmBongkar = terbatasData.SingleOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED");
-                    if (rowTerbatasExpBlmBongkar != null)
-                    {
-                        row.Terbatas.ExpiredBlmBongkar = rowTerbatasExpBlmBongkar.BlmBongkar;
-                        row.Terbatas.ExpiredBongkar = rowTerbatasExpBlmBongkar.SudahBongkar;
-                    }
-                    var rowTerbatasAktif = terbatasData.SingleOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "AKTIF");
-                    if (rowTerbatasAktif != null)
-                    {
-                        row.Terbatas.Aktif = rowTerbatasAktif.SudahBongkar + rowTerbatasAktif.BlmBongkar;
-                    }
+
+                    row.Terbatas.ExpiredBlmBongkar = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue == false).Count();
+                    row.Terbatas.ExpiredBongkar = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue).Count();
+                    row.Terbatas.Aktif = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "AKTIF").Count();
+
                     ret.Add(row);
                 }
 
@@ -479,7 +436,7 @@ namespace MonPDReborn.Models.Reklame
                     {                        
                        var permanenDataExpBongkar = (
     from a in  context.DbMonReklames
-    join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     where a.FlagPermohonan == "PERMANEN"
@@ -527,7 +484,7 @@ namespace MonPDReborn.Models.Reklame
                     {                        
                          var permanenDataExpBlmBongkar = (
     from a in context.DbMonReklames
-    join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     where a.FlagPermohonan == "PERMANEN"
@@ -575,7 +532,7 @@ namespace MonPDReborn.Models.Reklame
                     {                        
                          var permanenDataAktif = (
     from a in context.DbMonReklames
-    join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+    join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
         on a.NoFormulir equals b.NoFormulir into gj
     from b in gj.DefaultIfEmpty()
     where a.FlagPermohonan == "PERMANEN"
@@ -627,7 +584,7 @@ namespace MonPDReborn.Models.Reklame
                     {
                         var permanenDataExpBongkar = (
      from a in context.DbMonReklames
-     join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+     join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
          on a.NoFormulir equals b.NoFormulir into gj
      from b in gj.DefaultIfEmpty()
      where a.FlagPermohonan == "TERBATAS"
@@ -675,7 +632,7 @@ namespace MonPDReborn.Models.Reklame
                     {
                         var permanenDataExpBlmBongkar = (
    from a in context.DbMonReklames
-   join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+   join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
        on a.NoFormulir equals b.NoFormulir into gj
    from b in gj.DefaultIfEmpty()
    where a.FlagPermohonan == "TERBATAS"
@@ -723,7 +680,7 @@ namespace MonPDReborn.Models.Reklame
                     {
                         var permanenDataAktif = (
    from a in context.DbMonReklames
-   join b in context.TUpayaReklames.Where(b => b.IdUpaya == 2)
+   join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
        on a.NoFormulir equals b.NoFormulir into gj
    from b in gj.DefaultIfEmpty()
    where a.FlagPermohonan == "TERBATAS"

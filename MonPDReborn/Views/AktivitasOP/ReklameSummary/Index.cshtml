@@ -90,34 +90,123 @@
                 });
 
             }
+            
         });
+        function fnReloadTindakan(e) {
+            const selectedUpayaId = e.value;
+
+            console.log("Upaya dipilih:", selectedUpayaId); // cek value
+
+            const grid = $("#gridTindakan").dxDataGrid("instance");
+
+            if (!grid) {
+                console.error("Grid tidak ditemukan!");
+                return;
+            }
+
+            grid.option("dataSource", new DevExpress.data.CustomStore({
+                load: function () {
+                    return $.getJSON("/ReklameSummary/GetTindakan", {
+                        upayaId: selectedUpayaId
+                    }).then(data => {
+                        console.log("Data diterima:", data); // pastikan data ada
+                        return data;
+                    }).catch(err => {
+                        console.error("Gagal load data:", err);
+                    });
+                }
+            }));
+
+            grid.refresh();
+        }
+
     </script>
     <script>
+                function getKategoriFromColumn(columnName) {
+            switch (columnName) {
+                case 'SKPDBlmJT': return 1;
+                case 'SKPDBlmPanjang': return 2;
+                case 'SKPDBlmKB': return 3;
+                default: return 0; // fallback
+            }
+        }
 
-        //button Permanen Reklame
-        function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
-            const skpdBlmJT = cellInfo.value;  // isi kolom SKPDBlmJT
-            const tahun = cellInfo.data.Tahun;  // pastikan data source punya Tahun
-            const bulan = cellInfo.data.Bulan;  // pastikan data source punya Bulan
+                function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+
+            const namaKolom = cellInfo.column.dataField;
+            const kategori = getKategoriFromColumn(namaKolom); // Mapping dari nama kolom ke kategori
 
             const $link = $('<a>')
-                 .addClass('value-link text-decoration-none')
-                 .attr('href', 'javascript:void(0);')
-                 .attr('title', 'Lihat Detail')
-                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                 .on('click', () => loadDetailJT(tahun, bulan, skpdBlmJT));
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => loadDetailJT(tahun, bulan, jenis, kategori));
 
             const $wrapper = $('<div>')
-                 .css({
-                     display: 'flex',
-                     alignItems: 'center',
-                     justifyContent: 'flex-end'
-                 })
-                 .append($link);
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
 
-             $(cellElement).append($wrapper);
-
+            $(cellElement).append($wrapper);
         }
+
+        // function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
+        //     const jumlah = cellInfo.value ?? 0;
+        //     const tahun = cellInfo.data.Tahun;
+        //     const bulan = cellInfo.data.Bulan;
+        //     const jenis = cellInfo.data.Jenis;
+        // const kategori = cellInfo.data.Kategori;
+
+        //     const $link = $('<a>')
+        //         .addClass('value-link text-decoration-none')
+        //         .attr('href', 'javascript:void(0);')
+        //         .attr('title', 'Lihat Detail')
+        //         .text(jumlah.toLocaleString('id-ID'))
+        //         .on('click', () => loadDetailJT(tahun, bulan, jenis, kategori));
+
+        //     const $wrapper = $('<div>')
+        //         .css({
+        //             display: 'flex',
+        //             alignItems: 'center',
+        //             justifyContent: 'flex-end'
+        //         })
+        //         .append($link);
+
+        //     $(cellElement).append($wrapper);
+        // }
+
+        //button Permanen Reklame
+        // function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
+        //     const skpdBlmJT = cellInfo.value;  
+        //     const tahun = cellInfo.data.Tahun;  
+        //     const bulan = cellInfo.data.Bulan;  
+
+        //     const $link = $('<a>')
+        //          .addClass('value-link text-decoration-none')
+        //          .attr('href', 'javascript:void(0);')
+        //          .attr('title', 'Lihat Detail')
+        //          .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+        //          .on('click', () => loadDetailJT(tahun, bulan, skpdBlmJT));
+
+        //     const $wrapper = $('<div>')
+        //          .css({
+        //              display: 'flex',
+        //              alignItems: 'center',
+        //              justifyContent: 'flex-end'
+        //          })
+        //          .append($link);
+
+        //      $(cellElement).append($wrapper);
+
+        // }
 
         function skpdPermanenBPCellTemplate(cellElement, cellInfo) {
             const skpdBlmPanjang = cellInfo.value;  // isi kolom SKPDBlmJT
@@ -268,44 +357,18 @@
 
     </script>
     <script>
+                function loadDetailJT(tahun, bulan, jenis, kategori) {
+            const url = `/ReklameSummary/DetailSummary?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+            window.open(url, '_blank');
+        }
 
         // function Permanen Reklame
-        function loadDetailJT(tahun, bulan, skpdBlmJT) {
-            const url = `/ReklameSummary/DetailPermanenJT?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmJT=${encodeURIComponent(skpdBlmJT)}`;
-            window.open(url, '_blank');
-        }
+        // function loadDetailJT(tahun, bulan, skpdBlmJT) {
+        //     const url = `/ReklameSummary/DetailPermanenJT?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmJT=${encodeURIComponent(skpdBlmJT)}`;
+        //     window.open(url, '_blank');
+        // }
 
-        function loadDetailBP(tahun, bulan, skpdBlmPanjang) {
-            const url = `/ReklameSummary/DetailPermanenBP?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmPanjang=${encodeURIComponent(skpdBlmPanjang)}`;
-            window.open(url, '_blank');
-        }
-
-        function loadDetailKB(tahun, bulan, skpdKB) {
-            const url = `/ReklameSummary/DetailPermanenKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
-            window.open(url, '_blank');
-        }
-
-        // function Terbatas Reklame
-        function loadDetailTerbatasJT(tahun, bulan, skpdBlmJT) {
-            const url = `/ReklameSummary/DetailTerbatasJT?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmJT=${encodeURIComponent(skpdBlmJT)}`;
-            window.open(url, '_blank');
-        }
-
-        function loadDetailTerbatasBP(tahun, bulan, skpdBlmPanjang) {
-            const url = `/ReklameSummary/DetailTerbatasBP?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdBlmPanjang=${encodeURIComponent(skpdBlmPanjang)}`;
-            window.open(url, '_blank');
-        }
-
-        function loadDetailTerbatasKB(tahun, bulan, skpdKB) {
-            const url = `/ReklameSummary/DetailTerbatasKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
-            window.open(url, '_blank');
-        }
-
-        // function
-        function loadDetailIsidentilKB(tahun, bulan, skpdKB) {
-            const url = `/ReklameSummary/DetailIsidentilKB?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&skpdKB=${encodeURIComponent(skpdKB)}`;
-            window.open(url, '_blank');
-        }
+        
 
     </script>
 }

@@ -46,6 +46,15 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             }
         }
 
+        public class ShowTotal
+        {
+            public List<RingkasanPendapatan> Data { get; set; } = new();
+            public ShowTotal()
+            {
+                Data = Method.GetDataRingkasanList();
+            }
+        }
+
         public static class Method
         {
             public static List<PendapatanAsliDaerah> GetDataPendapatanAsliDaerahList()
@@ -71,29 +80,26 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                     }
                     switch (item.Tahun)
                     {
-                        case 2020:
+                        
+                        case 2021:
                             existing.Target1 = item.JumlahTarget ?? 0;
                             existing.Realisasi1 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2021:
+                        case 2022:
                             existing.Target2 = item.JumlahTarget ?? 0;
                             existing.Realisasi2 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2022:
+                        case 2023:
                             existing.Target3 = item.JumlahTarget ?? 0;
                             existing.Realisasi3 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2023:
+                        case 2024:
                             existing.Target4 = item.JumlahTarget ?? 0;
                             existing.Realisasi4 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2024:
+                        case 2025:
                             existing.Target5 = item.JumlahTarget ?? 0;
                             existing.Realisasi5 = item.JumlahRealisasi ?? 0;
-                            break;
-                        case 2025:
-                            existing.Target6 = item.JumlahTarget ?? 0;
-                            existing.Realisasi6 = item.JumlahRealisasi ?? 0;
                             break;
                     }
                 }
@@ -246,6 +252,102 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
 
                 return ret;
             }
+            public static List<RingkasanPendapatan> GetDataRingkasanList()
+            {
+                var result = new List<RingkasanPendapatan>();
+
+                // 1. Pendapatan Asli Daerah
+                var listPAD = GetDataPendapatanAsliDaerahList();
+                var totalPAD = new RingkasanPendapatan
+                {
+                    Uraian = "Pendapatan Asli Daerah",
+                    Target1 = listPAD.Sum(x => x.Target1),
+                    Realisasi1 = listPAD.Sum(x => x.Realisasi1),
+                    Target2 = listPAD.Sum(x => x.Target2),
+                    Realisasi2 = listPAD.Sum(x => x.Realisasi2),
+                    Target3 = listPAD.Sum(x => x.Target3),
+                    Realisasi3 = listPAD.Sum(x => x.Realisasi3),
+                    Target4 = listPAD.Sum(x => x.Target4),
+                    Realisasi4 = listPAD.Sum(x => x.Realisasi4),
+                    Target5 = listPAD.Sum(x => x.Target5),
+                    Realisasi5 = listPAD.Sum(x => x.Realisasi5),
+                };
+                result.Add(totalPAD);
+
+                // 2. Pendapatan Transfer
+                var listTransfer = GetDataPendapatanTransferList();
+                var totalTransfer = new RingkasanPendapatan
+                {
+                    Uraian = "Pendapatan Transfer",
+                    Target1 = listTransfer.Sum(x => x.Target1),
+                    Realisasi1 = listTransfer.Sum(x => x.Realisasi1),
+                    Target2 = listTransfer.Sum(x => x.Target2),
+                    Realisasi2 = listTransfer.Sum(x => x.Realisasi2),
+                    Target3 = listTransfer.Sum(x => x.Target3),
+                    Realisasi3 = listTransfer.Sum(x => x.Realisasi3),
+                    Target4 = listTransfer.Sum(x => x.Target4),
+                    Realisasi4 = listTransfer.Sum(x => x.Realisasi4),
+                    Target5 = listTransfer.Sum(x => x.Target5),
+                    Realisasi5 = listTransfer.Sum(x => x.Realisasi5),
+                };
+                result.Add(totalTransfer);
+
+                // 3. Lain-lain Pendapatan Daerah yang Sah
+                var listLain = GetDataLainLainPendapatanList();
+                var totalLain = new RingkasanPendapatan
+                {
+                    Uraian = "Lain-lain Pendapatan Daerah yang Sah",
+                    Target1 = listLain.Sum(x => x.Target1),
+                    Realisasi1 = listLain.Sum(x => x.Realisasi1),
+                    Target2 = listLain.Sum(x => x.Target2),
+                    Realisasi2 = listLain.Sum(x => x.Realisasi2),
+                    Target3 = listLain.Sum(x => x.Target3),
+                    Realisasi3 = listLain.Sum(x => x.Realisasi3),
+                    Target4 = listLain.Sum(x => x.Target4),
+                    Realisasi4 = listLain.Sum(x => x.Realisasi4),
+                    Target5 = listLain.Sum(x => x.Target5),
+                    Realisasi5 = listLain.Sum(x => x.Realisasi5),
+                };
+                result.Add(totalLain);
+
+                // 4. Penerimaan Pembiayaan
+                var listPembiayaan = GetDataPenerimaanPembiayaanList();
+                var totalPembiayaan = new RingkasanPendapatan
+                {
+                    Uraian = "Penerimaan Pembiayaan",
+                    Target1 = listPembiayaan.Sum(x => x.Target1),
+                    Realisasi1 = listPembiayaan.Sum(x => x.Realisasi1),
+                    Target2 = listPembiayaan.Sum(x => x.Target2),
+                    Realisasi2 = listPembiayaan.Sum(x => x.Realisasi2),
+                    Target3 = listPembiayaan.Sum(x => x.Target3),
+                    Realisasi3 = listPembiayaan.Sum(x => x.Realisasi3),
+                    Target4 = listPembiayaan.Sum(x => x.Target4),
+                    Realisasi4 = listPembiayaan.Sum(x => x.Realisasi4),
+                    Target5 = listPembiayaan.Sum(x => x.Target5),
+                    Realisasi5 = listPembiayaan.Sum(x => x.Realisasi5),
+                };
+                result.Add(totalPembiayaan);
+
+                // 5. TOTAL
+                var totalAll = new RingkasanPendapatan
+                {
+                    Uraian = "TOTAL",
+                    Target1 = result.Sum(x => x.Target1),
+                    Realisasi1 = result.Sum(x => x.Realisasi1),
+                    Target2 = result.Sum(x => x.Target2),
+                    Realisasi2 = result.Sum(x => x.Realisasi2),
+                    Target3 = result.Sum(x => x.Target3),
+                    Realisasi3 = result.Sum(x => x.Realisasi3),
+                    Target4 = result.Sum(x => x.Target4),
+                    Realisasi4 = result.Sum(x => x.Realisasi4),
+                    Target5 = result.Sum(x => x.Target5),
+                    Realisasi5 = result.Sum(x => x.Realisasi5),
+                };
+                result.Add(totalAll);
+
+                return result;
+            }
+
         }
         public class PendapatanAsliDaerah
         {
@@ -266,9 +368,9 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
-            public decimal Target6 { get; set; }
+           /* public decimal Target6 { get; set; }
             public decimal Realisasi6 { get; set; }
-            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;*/
         }
 
         public class PendapatanTransfer
@@ -361,6 +463,31 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
         }
+        public class RingkasanPendapatan
+        {
+            public string Uraian { get; set; } = "";
+
+            public decimal Target1 { get; set; }
+            public decimal Realisasi1 { get; set; }
+            public decimal Persentase1 => Target1 == 0 ? 0 : Realisasi1 / Target1 * 100;
+
+            public decimal Target2 { get; set; }
+            public decimal Realisasi2 { get; set; }
+            public decimal Persentase2 => Target2 == 0 ? 0 : Realisasi2 / Target2 * 100;
+
+            public decimal Target3 { get; set; }
+            public decimal Realisasi3 { get; set; }
+            public decimal Persentase3 => Target3 == 0 ? 0 : Realisasi3 / Target3 * 100;
+
+            public decimal Target4 { get; set; }
+            public decimal Realisasi4 { get; set; }
+            public decimal Persentase4 => Target4 == 0 ? 0 : Realisasi4 / Target4 * 100;
+
+            public decimal Target5 { get; set; }
+            public decimal Realisasi5 { get; set; }
+            public decimal Persentase5 => Target5 == 0 ? 0 : Realisasi5 / Target5 * 100;
+        }
+
 
     }
 }

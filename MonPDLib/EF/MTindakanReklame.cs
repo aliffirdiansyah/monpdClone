@@ -14,7 +14,7 @@ public partial class MTindakanReklame
     public decimal Id { get; set; }
 
     [Column("ID_UPAYA", TypeName = "NUMBER")]
-    public decimal? IdUpaya { get; set; }
+    public decimal IdUpaya { get; set; }
 
     [Column("TINDAKAN")]
     [StringLength(500)]
@@ -26,5 +26,5 @@ public partial class MTindakanReklame
 
     [ForeignKey("IdUpaya")]
     [InverseProperty("MTindakanReklames")]
-    public virtual MUpayaReklame? IdUpayaNavigation { get; set; }
+    public virtual MUpayaReklame IdUpayaNavigation { get; set; } = null!;
 }

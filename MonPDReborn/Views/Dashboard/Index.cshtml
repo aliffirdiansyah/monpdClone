@@ -443,12 +443,12 @@
     </div>
 
     <div class="col-lg-12 col-sm-6">
-        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #5EA8A4; height:87%;">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #39FF14; height:87%;">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center">
                         <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:background-color: rgba(175, 212, 210, 0.2);">
-                            <i class="ri-funds-line" style="font-size: 20px; line-height: 1; color:#5EA8A4;"></i>
+                            <i class="ri-funds-line" style="font-size: 20px; line-height: 1; color:#39FF14;"></i>
                         </div>
                         <h6 class="mb-0 fs-16 fw-bold">
                             TOTAL SEMUA PAJAK
@@ -463,12 +463,12 @@
                 </div>
                 <div class="row text-muted mb-2">
                     <div class="col">
-                        <small>Target</small><br>
-                        <span class="fw-bold fs-15">Rp @Model.Data.TotalTarget.ToString("n0")</span>
+                        <span class="fs-16">Realisasi</span><br>
+                        <span class="fw-bold fs-18 text-dark">Rp @Model.Data.TotalRealisasi.ToString("n0")</span>
                     </div>
                     <div class="col text-end">
-                        <small>Realisasi</small><br>
-                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.TotalRealisasi.ToString("n0")</span>
+                        <span class="fs-16">Terget</span><br>
+                        <span class="fw-bold fs-18">Rp @Model.Data.TotalTarget.ToString("n0")</span>
                     </div>
                 </div>
                 <hr />
@@ -1639,7 +1639,7 @@
 
 
         function ondetailPiutangClick(enumPajak, tahun) {
-            const $modal = $("#staticBackdropLargeScrollable");
+            const $modal = $("#staticBackdropExtraLargeScrollableCenter");
 
             $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);
             $modal.find(".modal-body").html(`

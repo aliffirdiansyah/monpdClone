@@ -5,6 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Views\AktivitasOP\ReklameSummary\_DetailIsidentilKB.cshtml" />
+    <Content Remove="Views\AktivitasOP\ReklameSummary\_DetailPermanenBP.cshtml" />
+    <Content Remove="Views\AktivitasOP\ReklameSummary\_DetailPermanenJT.cshtml" />
+    <Content Remove="Views\AktivitasOP\ReklameSummary\_DetailPermanenKB.cshtml" />
+    <Content Remove="Views\AktivitasOP\ReklameSummary\_DetailTerbatasBP.cshtml" />
+    <Content Remove="Views\AktivitasOP\ReklameSummary\_DetailTerbatasJT.cshtml" />
+    <Content Remove="Views\AktivitasOP\ReklameSummary\_DetailTerbatasKB.cshtml" />
     <Content Remove="Views\EvaluasiTarget\KontrolPembayaran\_ShowHotel.cshtml" />
     <Content Remove="Views\EvaluasiTarget\KontrolPembayaran\_ShowRestoran.cshtml" />
   </ItemGroup>

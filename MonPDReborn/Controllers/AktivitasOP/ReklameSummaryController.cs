@@ -1,6 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExpress.Xpo;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using MonPDLib.EF;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using System.Drawing;
+using System.Globalization;
 using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.AktivitasOP.ReklameSummaryVM;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
@@ -63,11 +72,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
         // Detail Reklame Permanen
-        public IActionResult DetailPermanenJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
+        public IActionResult DetailSummary(int tahun, int bulan, int jenis, int kategori)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailPermanenJT(tahun, bulan, skpdBlmJT);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailSummary(tahun, bulan, jenis, kategori);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -83,143 +92,12 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-
-        public IActionResult DetailPermanenBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-        {
-            try
-            {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailPermanenBP(tahun, bulan, skpdBlmPanjang);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-
-        public IActionResult DetailPermanenKB(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-        {
-            try
-            {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailPermanenKB(tahun, bulan, skpdBlmPanjang);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-
-        //Detail Reklame Terbatas
-
-        public IActionResult DetailTerbatasJT(int tahun, string? bulan = null, int? skpdBlmJT = null)
-        {
-            try
-            {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailTerbatasJT(tahun, bulan, skpdBlmJT);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-
-        public IActionResult DetailTerbatasBP(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-        {
-            try
-            {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailTerbatasBP(tahun, bulan, skpdBlmPanjang);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-
-        public IActionResult DetailTerbatasKB(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-        {
-            try
-            {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailTerbatasKB(tahun, bulan, skpdBlmPanjang);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-
-        // Detail Reklame Ketetapan Baru
-
-        public IActionResult DetailIsidentilKB(int tahun, string? bulan = null, int? skpdBlmPanjang = null)
-        {
-            try
-            {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.DetailIsidentilKB(tahun, bulan, skpdBlmPanjang);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException e)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
-                return Json(response);
-            }
-        }
-
         // Detail Upaya
-        public IActionResult Detail(string? noFormulir)
+        public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.Detail(noFormulir);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya(noFormulir, tahun, bulan);
                 return PartialView("../AktivitasOP/ReklameSummary/_DetailUpaya", model);
             }
             catch (ArgumentException e)
@@ -234,6 +112,78 @@ namespace MonPDReborn.Controllers.Aktivitas
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
+        }
+        [HttpGet]
+        public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+
+            // EF Core query langsung, tanpa ToListAsync
+            var query = context.MUpayaReklames
+                .Select(item => new UpayaCbView
+                {
+                    Value = (int)item.Id,
+                    Text = item.Upaya ?? string.Empty
+                });
+
+            return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        [HttpGet]
+        public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
+        {
+            var context = DBClass.GetContext();
+
+            var query = context.MTindakanReklames
+                .Where(x => x.IdUpaya == idUpaya)
+                .Select(item => new TindakanCbView
+                {
+                    Value = (int)item.Id,
+                    Text = item.Tindakan ?? string.Empty
+                });
+
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        //Simpan Upaya
+        [HttpPost]
+        public IActionResult SimpanUpaya(Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya input)
+        {
+            try
+            {
+                if (input.Lampiran != null && input.Lampiran.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        input.Lampiran.CopyTo(ms);
+                        input.Data.NewRowUpaya.Lampiran = ms.ToArray(); // ✅ inilah yang kamu maksud
+                    }
+                }
+                var insert = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
+                {
+                    NoFormulir = input.Data.NewRowUpaya.NoFormulir,
+                    IdUpaya = input.SelectedUpaya,
+                    IdTindakan = input.SelectedTindakan,
+                    NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
+                    TglUpaya = input.Data.NewRowUpaya.TglUpaya,
+                    Lampiran = input.Data.NewRowUpaya.Lampiran,
+                };
+                Models.AktivitasOP.ReklameSummaryVM.Method.SimpanUpaya(insert);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
         }
     }
 }
