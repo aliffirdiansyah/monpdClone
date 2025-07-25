@@ -132,7 +132,7 @@
         }
 
                 function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
-            const jumlah = cellInfo.value ?? 0;
+            const jumlah = cellInfo.data.SKPDBlmByr;
             const tahun = cellInfo.data.Tahun;
             const bulan = cellInfo.data.Bulan;
             const jenis = cellInfo.data.Jenis;
@@ -144,7 +144,7 @@
                 .addClass('value-link text-decoration-none')
                 .attr('href', 'javascript:void(0);')
                 .attr('title', 'Lihat Detail')
-                .text(jumlah.toLocaleString('id-ID'))
+                .text(jumlah)
                 .on('click', () => loadDetailJT(tahun, bulan, jenis, kategori));
 
             const $wrapper = $('<div>')
