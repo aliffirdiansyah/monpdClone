@@ -213,7 +213,7 @@
                                                 .Caption("SKPD Belum Bayar")
                                                 .DataField("SKPDBlmKB")
                                                 .CellTemplate(new JS("skpdPermanenJTCellTemplate"));
-                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum Bayar").Format("#,#0%");
+                                    subColumns.AddFor(m => m.NilaiBlmKB).Caption("Nilai Belum Bayar").Format("#,##0");
                                  });
                             columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
                             

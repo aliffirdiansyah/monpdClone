@@ -130,10 +130,11 @@ namespace HotelWs
             //HPPOPProcess(tahunBuku);
 
             // ketetapan 
-            HPPKetetapanProcess(tahunBuku);
+            //HPPKetetapanProcess(tahunBuku);
 
             // realisasi
-            //HPPRealisasiProcess(tahunBuku);
+            HPPRealisasiProcess(tahunBuku);
+
             Console.WriteLine(" ");
         }
 
@@ -752,10 +753,25 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
             {
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
-                var sqlKetetapan = @"SELECT *
+                var sqlKetetapan = @"SELECT 	NOP,
+		TAHUN,
+		MASAPAJAK,
+		100 SEQ,
+		1 JENIS_KETETAPAN,
+		MAX(TGL_KETETAPAN) TGL_KETETAPAN,
+		MAX(TGL_JATUH_TEMPO_BAYAR) TGL_JATUH_TEMPO_BAYAR,
+		0 NILAI_PENGURANG,
+		SUM(POKOK) POKOK
 FROM ( 
-SELECT  NOP, TO_NUMBER(TAHUN) TAHUN,TO_NUMBER(MASAPAJAK) MASAPAJAK,100 SEQ,1 JENIS_KETETAPAN,TO_DATE(NVL(TANGGALENTRY,MASAPAJAKAKHIR)) TGL_KETETAPAN,TO_DATE(TANGGALJATUHTEMPO) TGL_JATUH_TEMPO_BAYAR ,0 NILAI_PENGURANG,
-            TO_NUMBER(PAJAK_TERUTANG)  POKOK
+SELECT  NOP, 
+		TO_NUMBER(TAHUN) TAHUN,
+		TO_NUMBER(MASAPAJAK) MASAPAJAK,
+		100 SEQ,
+		1 JENIS_KETETAPAN,
+		TO_DATE(NVL(TANGGALENTRY,MASAPAJAKAKHIR)) TGL_KETETAPAN,
+		TO_DATE(TANGGALJATUHTEMPO) TGL_JATUH_TEMPO_BAYAR ,
+		0 NILAI_PENGURANG,
+		TO_NUMBER(PAJAK_TERUTANG)  POKOK
 FROM
 (
 select  NO_SPTPD, A.NPWPD, IDAYAT, 
@@ -764,16 +780,18 @@ select  NO_SPTPD, A.NPWPD, IDAYAT,
         A.NOP, NPWPD2, TANGGALJATUHTEMPO, TANGGALENTRY, A.MODIDATE, TEMPATENTRY, PENGENTRY, A.KETERANGAN,'MANUAL' JENIS_LAPOR
 from PHRH_USER.sptpd_new@LIHATHR A
 JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HOTEL'
-WHERE STATUS=0 
+WHERE STATUS=0 AND TO_CHAR(TO_DATE(NVL(TANGGALENTRY,MASAPAJAKAKHIR)),'YYYY')=:TAHUN
 UNION ALL
 select KD_BILL,NPWPD,KODEREKENING,
         TAHUNPAJAK,MASAPAJAK,PERIODE_AWAL,PERIODE_AKHIR,0 OMSET,
         PROSEN,PAJAK,A.NOP,NPWPD NPWPD2,JATUH_TEMPO,A.CREATEDATE,A.CREATEDATE,'ONLINE','-','-','ONLINE' JENIS_LAPOR 
 from sptpd_payment@LIHATBONANG A
 JOIN PHRH_USER.NOP_BARU@LIHATHR B ON A.NOP=B.NOP AND JENISUSAHA='HOTEL'
-where STATUS_HAPUS=0 
-))
-WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
+where STATUS_HAPUS=0 AND TO_CHAR(TO_DATE(NVL(A.CREATEDATE,PERIODE_AKHIR)),'YYYY')=:TAHUN
+)) A
+GROUP BY NOP,
+		TAHUN,
+		MASAPAJAK             ";
 
                 var ketetapanMonitoringDb = _contMonitoringDB.Set<OPSkpdHotel>()
                     .FromSqlRaw(sqlKetetapan, new[] {
@@ -808,11 +826,11 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
                     }
 
 
-                    //if (rowMonHotel != null)
-                    //{
-                    //    _contMonPd.DbMonHotels.Remove(rowMonHotel);
-                    //    _contMonPd.SaveChanges();
-                    //}
+                    if (rowMonHotel != null)
+                    {
+                        _contMonPd.DbMonHotels.Remove(rowMonHotel);
+                        _contMonPd.SaveChanges();
+                    }
 
                     var newRow = new DbMonHotel();
                     newRow.Nop = OP.Nop;
@@ -868,7 +886,6 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
                 }
             }
             catch (Exception ex)
-            
             {
                
             }
@@ -880,26 +897,62 @@ WHERE  TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN             ";
             {
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
-                var sqlRealisasi = @"SELECT  ID_SSPD,   id_sspd  KODE_BILL, 
-            '-' NO_KETETAPAN, 
-            0 JENIS_PEMBAYARAN,
-            3 JENIS_PAJAK,
-            1 JENIS_KETETAPAN, 
-            TO_DATE(MP_AKHIR) JATUH_TEMPO, 
-            REPLACE(FK_NOP,'.','') NOP,
-            TO_NUMBER( BULAN_PAJAK) MASA, 
-            TO_NUMBER(TAHUN_PAJAK) TAHUN, 
-           TO_NUMBER(JML_POKOK) NOMINAL_POKOK, 
-           TO_NUMBER(JML_DENDA) NOMINAL_SANKSI,
-           0 NOMINAL_ADMINISTRASI, 
-           0 NOMINAL_LAINYA,
-           0 PENGURANG_POKOK, 
-           0 PENGURANG_SANKSI,
-           '-' REFF_PENGURANG_POKOK,'-'   REFF_PENGURANG_SANKSI,'-'   AKUN_POKOK,'-'   AKUN_SANKSI,'-'   AKUN_ADMINISTRASI, 
-                                '-'  AKUN_LAINNYA,'-'   AKUN_PENGURANG_POKOK,'-'   AKUN_PENGURANG_SANKSI,'-'  INVOICE_NUMBER,TO_DATE(TGL_SETORAN) TRANSACTION_DATE, 
-                                '-'  NO_NTPD,1  STATUS_NTPD,SYSDATE  REKON_DATE,'-'   REKON_BY,'-'   REKON_REFF,100 SEQ_KETETAPAN,SYSDATE INS_DATE           
-FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR@LIHATHR A
-WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN  ";
+                var sqlRealisasi = @"SELECT 	NOP, 
+		MASA, 
+		TAHUN, 
+		'-' ID_SSPD,
+        '-' KODE_BILL,
+        0 JENIS_PEMBAYARAN,
+        3 JENIS_PAJAK,
+        1 JENIS_KETETAPAN,
+		MAX(JATUH_TEMPO) AS JATUH_TEMPO,
+		SUM(NOMINAL_POKOK) NOMINAL_POKOK,
+		SUM(NOMINAL_SANKSI) NOMINAL_SANKSI,
+'-' NO_KETETAPAN,
+        0 NOMINAL_ADMINISTRASI, 
+        0 NOMINAL_LAINYA,
+        0 PENGURANG_POKOK, 
+        0 PENGURANG_SANKSI,
+        '-' REFF_PENGURANG_POKOK,
+        '-'   REFF_PENGURANG_SANKSI,
+        '-'   AKUN_POKOK,
+        '-'   AKUN_SANKSI,
+        '-'   AKUN_ADMINISTRASI, 
+        '-'  AKUN_LAINNYA,
+        '-'   AKUN_PENGURANG_POKOK,
+        '-'   AKUN_PENGURANG_SANKSI,
+        '-'  INVOICE_NUMBER, 
+        MAX(TRANSACTION_DATE) TRANSACTION_DATE, 
+        '-'  NO_NTPD,
+        1  STATUS_NTPD,
+        SYSDATE  REKON_DATE,
+        '-'   REKON_BY,
+        '-'   REKON_REFF,
+        100 SEQ_KETETAPAN,
+        SYSDATE INS_DATE           
+FROM (
+	SELECT  ID_SSPD,   id_sspd  KODE_BILL, 
+	            '-' NO_KETETAPAN, 
+	            0 JENIS_PEMBAYARAN,
+	            3 JENIS_PAJAK,
+	            1 JENIS_KETETAPAN, 
+	            TO_DATE(MP_AKHIR) JATUH_TEMPO, 
+	            REPLACE(FK_NOP,'.','') NOP,
+	            TO_NUMBER( BULAN_PAJAK) MASA, 
+	            TO_NUMBER(TAHUN_PAJAK) TAHUN, 
+	           TO_NUMBER(JML_POKOK) NOMINAL_POKOK, 
+	           TO_NUMBER(JML_DENDA) NOMINAL_SANKSI,
+	           0 NOMINAL_ADMINISTRASI, 
+	           0 NOMINAL_LAINYA,
+	           0 PENGURANG_POKOK, 
+	           0 PENGURANG_SANKSI,
+	           '-' REFF_PENGURANG_POKOK,'-'   REFF_PENGURANG_SANKSI,'-'   AKUN_POKOK,'-'   AKUN_SANKSI,'-'   AKUN_ADMINISTRASI, 
+	                                '-'  AKUN_LAINNYA,'-'   AKUN_PENGURANG_POKOK,'-'   AKUN_PENGURANG_SANKSI,'-'  INVOICE_NUMBER,TO_DATE(TGL_SETORAN) TRANSACTION_DATE, 
+	                                '-'  NO_NTPD,1  STATUS_NTPD,SYSDATE  REKON_DATE,'-'   REKON_BY,'-'   REKON_REFF,100 SEQ_KETETAPAN,SYSDATE INS_DATE           
+	FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR@LIHATHR A
+	WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN
+) A
+GROUP BY NOP, MASA, TAHUN  ";
 
                 var pembayaranSspdList = _contMonitoringDB.Set<SSPD>()
                     .FromSqlRaw(sqlRealisasi, new[] {
@@ -913,13 +966,13 @@ WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN  ";
                     foreach (var itemSSPD in pembayaranSspdList)
                     {
                         var OP = _contMonPd.DbOpHotels.First(x => x.Nop == itemSSPD.NOP.Replace(".", ""));
-                        var ketetapan = _contMonPd.DbMonHotels.SingleOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
+                        var ketetapan = _contMonPd.DbMonHotels.FirstOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
                                                                                 x.TahunPajakKetetapan == itemSSPD.TAHUN &&
                                                                                 x.MasaPajakKetetapan == itemSSPD.MASA &&
                                                                                 x.SeqPajakKetetapan == itemSSPD.SEQ_KETETAPAN);
                         if (ketetapan == null)
                         {
-                            ketetapan = _contMonPd.DbMonHotels.SingleOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
+                            ketetapan = _contMonPd.DbMonHotels.FirstOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
                                                                                 x.TahunPajakKetetapan == itemSSPD.TAHUN &&
                                                                                 x.MasaPajakKetetapan == itemSSPD.MASA &&
                                                                                 x.SeqPajakKetetapan == 101);
@@ -976,7 +1029,7 @@ WHERE NAMA_PAJAK_DAERAH='HOTEL' AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN  ";
                                 }
                             }
 
-                            ketetapan.NominalPokokBayar = ketetapan.NominalPokokBayar + itemSSPD.NOMINAL_POKOK;
+                            ketetapan.NominalPokokBayar = (ketetapan.NominalPokokBayar ?? 0) + itemSSPD.NOMINAL_POKOK;
                             ketetapan.AkunPokokBayar = akunBayar;
                             ketetapan.Kelompok = kelompokBayar;
                             ketetapan.JenisPokokBayar = jenisBayar;
