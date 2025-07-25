@@ -62,45 +62,11 @@ namespace MonPDReborn.Models.AktivitasOP
                 // panggil GetDetailUpaya
                 Data = Method.GetDetailUpaya(noFormulir, tahun, bulan);
 
-                var context = DBClass.GetContext();
+                
                 Data.NoFormulir = noFormulir;
                 Data.NewRowUpaya.NoFormulir = noFormulir;
                 Data.NewRowUpaya.TglUpaya = DateTime.Now;
 
-
-                //Data.DataUpayaList = context.DbMonReklameUpayas
-                //.Where(x => x.NoFormulir == noFormulir)
-                //.Select(x => new DetailUpaya.DataUpaya
-                //{
-                //    NoFormulir = x.NoFormulir,
-                //    NamaUpaya = x.Upaya,
-                //    Keterangan = x.Tindakan,
-                //    TglUpaya = x.TglUpaya.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-                //})
-                //.ToList();
-
-                //var infoReklame = context.DbOpReklames
-                //    .Where(x => x.NoFormulir == noFormulir)
-                //    .Select(x => new DetailUpaya.InfoReklame
-                //    {
-                //        IsiReklame = x.IsiReklame,
-                //        AlamatReklame = x.Alamat,
-                //        JenisReklame = x.FlagPermohonan,
-                //        Panjang = x.Panjang ?? 0,
-                //        Lebar = x.Lebar ?? 0,
-                //        Luas = x.Luas ?? 0,
-                //        Tinggi = x.Ketinggian ?? 0,
-                //        TglMulaiBerlaku = x.TglMulaiBerlaku.HasValue ? x.TglMulaiBerlaku.Value : DateTime.MinValue,
-                //        TglAkhirBerlaku = x.TglAkhirBerlaku.HasValue ? x.TglAkhirBerlaku.Value : DateTime.MinValue,
-                //        TahunPajak = tahunPajak,
-                //        MasaPajak = masaPajak
-                //    })
-                //    .OrderByDescending(x => x.TglAkhirBerlaku)
-                //    .FirstOrDefault();
-                //if (infoReklame != null)
-                //{
-                //    Data.InfoReklameUpaya = infoReklame;
-                //}
             }
         }
 
@@ -342,12 +308,18 @@ namespace MonPDReborn.Models.AktivitasOP
                     // ✅ Gunakan TryGetValue agar aman & efisien
                     var key = x.NoFormulir?.Trim().ToLower(); // normalize
 
+                    var email = context.DbMonReklameEmails
+                        .Where(e => e.NoFormulir == noFormulirDigunakan)
+                        .Select(e => e.Email)
+                        .FirstOrDefault();
+                    string informasiEmail = !string.IsNullOrEmpty(email) ? email : string.Empty;
+
                     string jumlahUpaya = "0";
                     if (!string.IsNullOrEmpty(key) && upayaGrouped.TryGetValue(key, out var upayaList))
                     {
                         jumlahUpaya = $"{upayaList.Count}x: {string.Join(", ", upayaList)}";
                     }
-
+                    
                     return new DetailSummary
                     {
                         Bulan = bulan,
@@ -364,7 +336,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             ? $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})"
                             : string.Empty,
                         JumlahNilai = x.PajakPokok ?? 0,
-                        InformasiEmail = string.Empty,
+                        InformasiEmail = informasiEmail,
                         JumlahUpaya = jumlahUpaya
                     };
                 }).ToList();
