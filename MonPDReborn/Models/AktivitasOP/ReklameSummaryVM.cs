@@ -555,26 +555,21 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Where(x => x.NoFormulir == NewRowUpaya.NoFormulir)
                     .Select(x => x.Seq)
                     .Count() + 1;
-                var newUpaya = new MonPDLib.EF.DbMonReklameUpaya
-                {
-                    //= MonPDLib.General.Utility.GetMaxValueSpecifyColumn<MonPDLib.EF.TUpayaReklame>(context, null, "Id") + 1,
-                    NoFormulir = NewRowUpaya.NoFormulir,
-                    Seq = seq,
-                    Upaya = upaya ?? "-",
-                    Keterangan = tindakan ?? "-",
-                    TglUpaya = NewRowUpaya.TglUpaya,
-                    Petugas = NewRowUpaya.NamaPetugas,
-                    //Lampiran = detailUpaya.NewRowUpaya.Lampiran
-                };
 
-                var newUpayaDok = new MonPDLib.EF.DbMonReklameUpayaDok
-                {
-                    NoformS = NewRowUpaya.NoFormulir,
-                    Seq = seq,
-                    Gambar = NewRowUpaya.Lampiran
-                };
+
+                var newUpaya = new MonPDLib.EF.DbMonReklameUpaya();
+                newUpaya.DbMonReklameUpayaDok = new DbMonReklameUpayaDok();
+
+                newUpaya.NoFormulir = NewRowUpaya.NoFormulir;
+                newUpaya.Seq = seq;
+                newUpaya.TglUpaya = NewRowUpaya.TglUpaya;
+                newUpaya.Upaya = upaya ?? "-";
+                newUpaya.Keterangan = tindakan ?? "-";
+                newUpaya.Petugas = NewRowUpaya.NamaPetugas;
+                newUpaya.DbMonReklameUpayaDok.Gambar = NewRowUpaya.Lampiran;
+
+
                 context.DbMonReklameUpayas.Add(newUpaya);
-                context.DbMonReklameUpayaDoks.Add(newUpayaDok);
                 context.SaveChanges();
             }
             public static DetailUpaya GetDetailUpaya(string noFormulir, int tahun, int bulan)
