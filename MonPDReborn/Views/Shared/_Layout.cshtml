@@ -66,12 +66,17 @@
             color: black !important;
             text-transform: uppercase !important;
             background-color: #CDDACB !important;
-            /* border: 1px solid black !important; */
+            border: 1px solid black !important;
         }
 
         .dx-datagrid .dx-header-row > td {
             vertical-align: middle !important;
             text-align: center !important;
+            border-collapse: collapse !important;
+        }
+
+        .dx-datagrid-headers .dx-header-row > th:empty {
+            border-bottom: none !important;
         }
 
         /* 
