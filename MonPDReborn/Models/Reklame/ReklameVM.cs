@@ -223,7 +223,7 @@ namespace MonPDReborn.Models.Reklame
                             AlamatReklame = x.Alamatreklame,
                             Kategori = "-",
                             JenisReklame = x.FlagPermohonan,
-                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
                             KategoriReklame = x.NmJenis,
                             KelasJalan = x.KelasJalan,
                             NamaJalan = x.NamaJalan,
@@ -270,7 +270,7 @@ namespace MonPDReborn.Models.Reklame
                             AlamatReklame = x.Alamatreklame,
                             Kategori = "-",
                             JenisReklame = x.FlagPermohonan,
-                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
                             KategoriReklame = x.NmJenis,
                             KelasJalan = x.KelasJalan,
                             NamaJalan = x.NamaJalan,
@@ -295,7 +295,7 @@ namespace MonPDReborn.Models.Reklame
                             AlamatReklame = x.Alamatreklame,
                             Kategori = "-",
                             JenisReklame = x.FlagPermohonan,
-                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
                             KategoriReklame = x.NmJenis,
                             KelasJalan = x.KelasJalan,
                             NamaJalan = x.NamaJalan,
@@ -309,7 +309,10 @@ namespace MonPDReborn.Models.Reklame
                 else if (jenis == "WajibBongkar")
                 {
                     ret = context.MvReklameSummaries
-                        .Where(x => x.TglAkhirBerlaku >= tglCutOff
+                        .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan
+                             && x.TglAkhirBerlaku >= tglCutOff
                             && x.TglAkhirBerlaku <= tglAkhir
                             && x.NoFormulirA == null)
                         .Select(x => new DetailData
@@ -317,7 +320,7 @@ namespace MonPDReborn.Models.Reklame
                             AlamatReklame = x.Alamatreklame,
                             Kategori = "-",
                             JenisReklame = x.FlagPermohonan,
-                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
                             KategoriReklame = x.NmJenis,
                             KelasJalan = x.KelasJalan,
                             NamaJalan = x.NamaJalan,
@@ -331,7 +334,10 @@ namespace MonPDReborn.Models.Reklame
                 else if (jenis == "Bongkar")
                 {
                     ret = context.MvReklameSummaries
-                        .Where(x => x.TglAkhirBerlaku >= tglCutOff
+                        .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan
+                             && x.TglAkhirBerlaku >= tglCutOff
                             && x.TglAkhirBerlaku <= tglAkhir
                             && x.NoFormulirA == null
                             && x.Bongkar != 0)
@@ -340,7 +346,7 @@ namespace MonPDReborn.Models.Reklame
                             AlamatReklame = x.Alamatreklame,
                             Kategori = "-",
                             JenisReklame = x.FlagPermohonan,
-                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
                             KategoriReklame = x.NmJenis,
                             KelasJalan = x.KelasJalan,
                             NamaJalan = x.NamaJalan,
@@ -366,7 +372,7 @@ namespace MonPDReborn.Models.Reklame
                             AlamatReklame = x.Alamatreklame,
                             Kategori = "-",
                             JenisReklame = x.FlagPermohonan,
-                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
                             KategoriReklame = x.NmJenis,
                             KelasJalan = x.KelasJalan,
                             NamaJalan = x.NamaJalan,
