@@ -1,4 +1,5 @@
-﻿@model MonPDReborn.Models.Reklame.ReklameVM.DetailReklame
+﻿@using System.Globalization
+@model MonPDReborn.Models.Reklame.ReklameVM.DetailReklame
 
 @{
     var data = Model.DataDetailList.FirstOrDefault();
@@ -75,8 +76,8 @@
                                 .Caption("Tanggal")
                                 .CellTemplate(@<text>
                                     @{
-                                        var mulai = data.TglMulai != null ? ((DateTime)data.TglMulai).ToString("dd/MM/yyyy") : "-";
-                                        var selesai = data.TglSelesai != null ? ((DateTime)data.TglSelesai).ToString("dd/MM/yyyy") : "-";
+                                        var mulai = data.TglMulai != null ? ((DateTime)data.TglMulai).ToString("dd MMM yyyy", new CultureInfo("id-ID")) : "-";
+                                        var selesai = data.TglSelesai != null ? ((DateTime)data.TglSelesai).ToString("dd MMM yyyy", new CultureInfo("id-ID")) : "-";
                                     }
                                     <span>@mulai - @selesai</span>
                                 </text>);
