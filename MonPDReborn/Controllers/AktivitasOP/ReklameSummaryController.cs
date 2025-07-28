@@ -192,12 +192,16 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
+                if (input.Lampiran = null && input.Lampiran.Length <= 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
                 if (input.Lampiran != null && input.Lampiran.Length > 0)
                 {
                     using (var ms = new MemoryStream())
                     {
                         input.Lampiran.CopyTo(ms);
-                        input.Data.NewRowUpaya.Lampiran = ms.ToArray(); // ✅ inilah yang kamu maksud
+                        input.Data.NewRowUpaya.Lampiran = ms.ToArray();
                     }
                 }
                 var insert = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
