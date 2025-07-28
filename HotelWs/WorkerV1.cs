@@ -419,9 +419,9 @@ namespace HotelWs
                         }
                     }
                     catch (Exception ex)
-                    {
-
-                    }
+            {
+                Console.WriteLine($"Error processing NOP {ex.Message}");
+            }
 
                     //                    // realisasi
                     try
@@ -557,7 +557,7 @@ namespace HotelWs
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
