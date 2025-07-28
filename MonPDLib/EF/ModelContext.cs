@@ -45,6 +45,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameEmail> DbMonReklameEmails { get; set; }
 
+    public virtual DbSet<DbMonReklameLiar> DbMonReklameLiars { get; set; }
+
     public virtual DbSet<DbMonReklameSurat> DbMonReklameSurats { get; set; }
 
     public virtual DbSet<DbMonReklameSuratTegur> DbMonReklameSuratTegurs { get; set; }
@@ -100,6 +102,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
 
     public virtual DbSet<MvReklameRekapJalan> MvReklameRekapJalans { get; set; }
+
+    public virtual DbSet<MvReklameRekapLiar> MvReklameRekapLiars { get; set; }
 
     public virtual DbSet<MvReklameSum> MvReklameSums { get; set; }
 
@@ -556,6 +560,11 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.NoFormulir, e.TglKirimEmail }).HasName("DB_MON_REKLAME_EMAIL_PK");
         });
 
+        modelBuilder.Entity<DbMonReklameLiar>(entity =>
+        {
+            entity.HasKey(e => new { e.Nor, e.TanggalSkSilang }).HasName("PK_REKLAME_LIAR");
+        });
+
         modelBuilder.Entity<DbMonReklameSurat>(entity =>
         {
             entity.HasKey(e => new { e.Agenda, e.Bidang, e.Klasifikasi, e.KodeDokumen, e.Pajak, e.TahunSurat }).HasName("DB_MON_REKLAME_SURAT_PK");
@@ -791,6 +800,11 @@ public partial class ModelContext : DbContext
             entity.ToView("MV_REKLAME_REKAP_JALAN");
 
             entity.Property(e => e.KelasJalan).IsFixedLength();
+        });
+
+        modelBuilder.Entity<MvReklameRekapLiar>(entity =>
+        {
+            entity.ToView("MV_REKLAME_REKAP_LIAR");
         });
 
         modelBuilder.Entity<MvReklameSum>(entity =>
