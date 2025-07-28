@@ -1,0 +1,101 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.ShowIsidentil
+
+<div class="table-responsive">
+    @(
+                    Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.IsidentilReklame>()
+                        .ID("isidentilReklameGrid")
+                        .DataSource(Model.IsidentilReklameList)
+                        .ShowBorders(true)
+                        .ShowColumnHeaders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .AllowColumnResizing(true)
+                        .RowAlternationEnabled(true)
+                        .ColumnAutoWidth(true)
+                            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                            .FilterRow(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(20))
+                        .Pager(p => p
+                            .ShowPageSizeSelector(true)
+                            .AllowedPageSizes(new[] { 10, 20, 50 })
+                            .ShowInfo(true)
+                        )
+                        .SearchPanel(sp => sp
+                            .Visible(true)
+                            .Width(240)
+                            .Placeholder("Cari...")
+                        )
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                            columns.Add().Caption("KETETAPAN BARU").Alignment(HorizontalAlignment.Center).Columns(kb =>
+                            {
+                                kb.AddFor(m => m.SKPD).Caption("SKPD").Format("#,##0");
+                                kb.AddFor(m => m.Nilai).Caption("NILAI").Format("#,##0");
+    
+                                kb.Add().Caption("BELUM BAYAR").Alignment(HorizontalAlignment.Center).Columns(bk =>
+                                {
+                                    bk.AddFor(m => m.SKPDBlmByr).Caption("SKPD").Format("#,##0").CellTemplate(new JS("skpdPermanenJTCellTemplate2"));
+                                    bk.AddFor(m => m.NilaiBlmByr).Caption("NILAI").Format("#,##0");
+                                    bk.AddFor(m => m.JmlSilang).Caption("SILANG").Format("#,##0");
+                                    bk.AddFor(m => m.JmlBongkar).Caption("BONGKAR").Format("#,##0");
+                                    bk.AddFor(m => m.JmlBantip).Caption("BANTIP").Format("#,##0");
+                                });
+                            });
+                            @* columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                                {
+                            subColumns.AddFor(m => m.SKPD).Caption("SKPD").Format("#,##0");
+                                    subColumns.AddFor(m => m.Nilai).Caption("Nilai").Format("#,##0");
+                                    subColumns.AddFor(m => m.SKPDBlmByr)
+                                                .Caption("SKPD Belum Bayar")
+                                                .CellTemplate(new JS("skpdPermanenJTCellTemplate2"));
+                                    subColumns.AddFor(m => m.NilaiBlmByr).Caption("Nilai Belum Bayar").Format("#,##0");
+                                 }); *@
+                            columns.AddFor(m => m.Potensi).Caption("Total Potensi").Format("#,##0");
+                            
+                        })
+                        .Summary(summary => {
+                            summary.TotalItems(items =>
+                            {
+                                items.AddFor(m => m.Bulan)
+                                     .SummaryType(SummaryType.Sum)
+                                     .DisplayFormat("Total");
+                                items.AddFor(m => m.SKPD)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.Nilai)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.SKPDBlmByr)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.NilaiBlmByr)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.JmlSilang)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.JmlBongkar)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.JmlBantip)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.Potensi)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                
+                            });
+                        })
+                    )
+</div>

@@ -1,10 +1,10 @@
-﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.Show
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.ShowTerbatas
 
 <div class="table-responsive">
     @(
-    Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.ReklamePermanen>()
-        .ID("permanenReklameGrid")
-        .DataSource(Model.ReklamePermanenList)
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.TerbatasReklame>()
+        .ID("terbatasReklameGrid")
+        .DataSource(Model.TerbatasReklameList)
         .ShowBorders(true)
         .ShowColumnHeaders(true)
         .ShowColumnLines(true)
@@ -37,7 +37,6 @@
                 // SKPD & NILAI di bagian awal
                 jt.AddFor(m => m.SKPDJT).Caption("SKPD").Format("#,##0");
                 jt.AddFor(m => m.NilaiJT).Caption("NILAI").Format("#,##0");
-
 
                 // BELUM BAYAR
                 jt.Add().Caption("BELUM BAYAR").Alignment(HorizontalAlignment.Center).Columns(bb =>
