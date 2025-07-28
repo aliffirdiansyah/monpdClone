@@ -192,7 +192,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                if (input.Lampiran = null && input.Lampiran.Length <= 0)
+                if (input.Lampiran == null && input.Lampiran.Length <= 0)
                 {
                     throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
                 }
