@@ -74,21 +74,15 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
-        public IActionResult Detail(string kelasJalan, string namaJalan, string status, string jenisReklame, string tglAwal, string tglAkhir)
+        public IActionResult Detail(int idFlagPer, string namaJalan, string jenis)
         {
             try
             {
-                // Parsing string ke DateTime (format: yyyy-MM-dd)
-                if (!DateTime.TryParse(tglAwal, out var tanggalAwal))
-                    throw new ArgumentException("Format Tanggal Awal tidak valid.");
-
-                if (!DateTime.TryParse(tglAkhir, out var tanggalAkhir))
-                    throw new ArgumentException("Format Tanggal Akhir tidak valid.");
-
-                if (string.IsNullOrWhiteSpace(kelasJalan) || string.IsNullOrWhiteSpace(status) || string.IsNullOrWhiteSpace(namaJalan))
+                
+                if (string.IsNullOrWhiteSpace(namaJalan) || string.IsNullOrWhiteSpace(jenis) )
                     return BadRequest("Invalid parameters.");
 
-                var model = new Models.Reklame.ReklameVM.DetailReklame(kelasJalan, namaJalan, status, jenisReklame, tanggalAwal.AddDays(1), tanggalAkhir);
+                var model = new Models.Reklame.ReklameVM.DetailReklame(idFlagPer, namaJalan, jenis);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

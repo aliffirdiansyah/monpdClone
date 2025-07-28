@@ -26,14 +26,15 @@
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title text-dark fs-16 mb-1">
-                        Cari Informasi Reklame
+                        Informasi Reklame
                     </h4>
                 </div>
             </div>
 
             <div class="card-body">
                 <div class="row g-3 align-items-center">
-                    <h3>Tgl CutOff : @DateTime.Now.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                    <h3>
+                        Tgl CutOff : @DateTime.Now.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
                     </h3>
                     @* <div class="col-lg col-md-6">
                         @(Html.DevExtreme().DateBoxFor(x=>x.TglAwal)
@@ -53,11 +54,11 @@
                                                 )
                     </div> *@
 
-                    <div class="col-lg-2 col-md-12">
+                    @* <div class="col-lg-2 col-md-12">
                         <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100" onclick="fnShow()">
                             <i class="ri-filter-3-line me-1"></i> Terapkan
                         </button>
-                    </div>
+                    </div> *@
 
                 </div>
             </div>
@@ -114,7 +115,6 @@
             $.ajax({
                 url: '@Url.Action("Show")',
                 type: 'GET',
-                data: { },
                 beforeSend: function () {
                     $('#loading2-Show').show();  
                     $('#Show').hide();
@@ -129,17 +129,11 @@
                 }
             });
         }
-                function GetDetailJalan(kelasJalan, namaJalan, status, jenisReklame) {
-            const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
-            const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
-
-            const tglAwal = tglAwalDate ? tglAwalDate.toISOString().split('T')[0] : '';
-            const tglAkhir = tglAkhirDate ? tglAkhirDate.toISOString().split('T')[0] : '';
-
+        function GetDetailJalan(idFlagPer, namaJalan, jenis) {
             $.ajax({
                 url: '@Url.Action("Detail", "Reklame")',
                 type: "GET",
-                data: { kelasJalan, namaJalan, status, jenisReklame, tglAwal, tglAkhir },
+                data: { idFlagPer, namaJalan, jenis },
                 beforeSend: function () {
                     $("#loader").show();
 
