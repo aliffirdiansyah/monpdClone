@@ -320,7 +320,7 @@ WHERE A.NPWPD NOT IN (
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
 
                     // ketetapan sbytax
@@ -416,9 +416,9 @@ WHERE A.NPWPD NOT IN (
                         }
                     }
                     catch (Exception ex)
-                    {
-
-                    }
+            {
+                Console.WriteLine($"Error processing NOP {ex.Message}");
+            }
 
                     //                    // realisasi
                     try
@@ -553,9 +553,9 @@ WHERE A.NPWPD NOT IN (
 
                     }
                     catch (Exception ex)
-                    {
-
-                    }
+            {
+                Console.WriteLine($"Error processing NOP {ex.Message}");
+            }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
                     Console.Write($"\rDB_OP_HIBURAN SBYTAX TAHUN {tahunBuku} JML OP {jmlData} : {item.Nop}  {persen:F2}%   ");
@@ -724,6 +724,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                         var kkk = item.Nop;
                     }
                     _contMonPd.SaveChanges();
@@ -863,7 +864,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"Error processing NOP {ex.Message}");
             }
         }
 
@@ -927,7 +928,7 @@ FROM (
                                 '-'  AKUN_LAINNYA,'-'   AKUN_PENGURANG_POKOK,'-'   AKUN_PENGURANG_SANKSI,'-'  INVOICE_NUMBER,TO_DATE(TGL_SETORAN) TRANSACTION_DATE, 
                                 '-'  NO_NTPD,1  STATUS_NTPD,SYSDATE  REKON_DATE,'-'   REKON_BY,'-'   REKON_REFF,100 SEQ_KETETAPAN,SYSDATE INS_DATE                                                                 
 FROM VW_SIMPADA_SSPD@LIHATHPPSERVER
-WHERE NAMA_PAJAK_DAERAH='HIBURAN'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN
+WHERE NAMA_PAJAK_DAERAH='HIBURAN'  AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN
 ) A
 GROUP BY NOP, MASA, TAHUN  ";
 
@@ -1193,7 +1194,7 @@ GROUP BY NOP, MASA, TAHUN  ";
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"Error processing NOP {ex.Message}");
             }
         }
 

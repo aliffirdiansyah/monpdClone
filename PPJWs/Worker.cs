@@ -79,7 +79,6 @@ namespace PPJWs
                 }
             }
         }
-
         private async Task DoWorkNewMeta(CancellationToken stoppingToken)
         {
             var tglServer = DateTime.Now;
@@ -116,17 +115,15 @@ namespace PPJWs
             null
             );
         }
-
-
         private void FillOP(int tahunBuku)
         {
             Console.WriteLine("");
 
-            // SURABAYA TAX PROCESS
-            SBYTaxProcess(tahunBuku);
+            //// SURABAYA TAX PROCESS
+            //SBYTaxProcess(tahunBuku);
 
-            // HPP PROCESS
-            HPPOPProcess(tahunBuku);
+            //// HPP PROCESS
+            //HPPOPProcess(tahunBuku);
 
             // ketetapan 
             HPPKetetapanProcess(tahunBuku);
@@ -136,7 +133,6 @@ namespace PPJWs
 
             Console.WriteLine(" ");
         }
-
         private void SBYTaxProcess(int tahunBuku)
         {
             using (var _contSbyTax = DBClass.GetSurabayaTaxContext())
@@ -337,7 +333,7 @@ WHERE A.NPWPD NOT IN (
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
 
                     // ketetapan sbytax
@@ -434,7 +430,7 @@ WHERE A.NPWPD NOT IN (
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
 
                     //                    // realisasi
@@ -571,7 +567,7 @@ WHERE A.NPWPD NOT IN (
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
@@ -582,7 +578,6 @@ WHERE A.NPWPD NOT IN (
                 }
             }
         }
-
         private void HPPOPProcess(int tahunBuku)
         {
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
@@ -751,7 +746,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     catch (Exception ex)
                     {
-                        var kkk = item.Nop;
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
                     _contMonPd.SaveChanges();
                     index++;
@@ -763,7 +758,6 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                 }
             }
         }
-
         private void HPPKetetapanProcess(int tahunBuku)
         {
             var kkk = new OPSkpdListrik();
@@ -898,10 +892,9 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"Error processing NOP {ex.Message}");
             }
         }
-
         private void HPPRealisasiProcess(int tahunBuku)
         {
             try
@@ -962,7 +955,7 @@ FROM (
                                 '-'  AKUN_LAINNYA,'-'   AKUN_PENGURANG_POKOK,'-'   AKUN_PENGURANG_SANKSI,'-'  INVOICE_NUMBER,TO_DATE(TGL_SETORAN) TRANSACTION_DATE, 
                                 '-'  NO_NTPD,1  STATUS_NTPD,SYSDATE  REKON_DATE,'-'   REKON_BY,'-'   REKON_REFF,100 SEQ_KETETAPAN,SYSDATE INS_DATE                                                                 
 FROM VW_SIMPADA_SSPD@LIHATHPPSERVER
-WHERE NAMA_PAJAK_DAERAH='PPJ'  AND REPLACE(FK_NOP,'.','')=:NOP AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN
+WHERE NAMA_PAJAK_DAERAH='PPJ'  AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN
 ) A
 GROUP BY NOP, MASA, TAHUN  ";
 
@@ -1229,10 +1222,9 @@ GROUP BY NOP, MASA, TAHUN  ";
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"Error processing NOP {ex.Message}");
             }
         }
-
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
@@ -1268,7 +1260,6 @@ GROUP BY NOP, MASA, TAHUN  ";
             _contMonPd.SaveChanges();
             return true;
         }
-
         public static List<string> GetInfoWPHPP(string npwpd)
         {
             var ret = new List<string>();
@@ -1481,7 +1472,6 @@ GROUP BY NOP, MASA, TAHUN  ";
             }
 
         }
-
         private Helper.DbAkun GetDbAkunPokok(int tahun, int idPajak, string nop)
         {
             var _contMonPd = DBClass.GetContext();
@@ -1526,7 +1516,6 @@ GROUP BY NOP, MASA, TAHUN  ";
             }
 
         }
-
         private Helper.DbAkun GetDbAkunSanksi(int tahun, int idPajak, string nop)
         {
             var _contMonPd = DBClass.GetContext();
@@ -1571,7 +1560,6 @@ GROUP BY NOP, MASA, TAHUN  ";
             }
 
         }
-
         private Helper.DbAkun GetDbAkunKenaikan(int tahun, int idPajak, string nop)
         {
             var _contMonPd = DBClass.GetContext();

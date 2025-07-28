@@ -129,7 +129,7 @@ namespace ParkirWs
             //HPPOPProcess(tahunBuku);
 
             // ketetapan 
-            HPPKetetapanProcess(tahunBuku);
+            //HPPKetetapanProcess(tahunBuku);
 
             // realisasi
             HPPRealisasiProcess(tahunBuku);
@@ -320,7 +320,7 @@ WHERE A.NPWPD NOT IN (
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
 
                     // ketetapan sbytax
@@ -416,9 +416,9 @@ WHERE A.NPWPD NOT IN (
                         }
                     }
                     catch (Exception ex)
-                    {
-
-                    }
+            {
+                Console.WriteLine($"Error processing NOP {ex.Message}");
+            }
 
                     //                    // realisasi
                     try
@@ -553,9 +553,9 @@ WHERE A.NPWPD NOT IN (
 
                     }
                     catch (Exception ex)
-                    {
-
-                    }
+            {
+                Console.WriteLine($"Error processing NOP {ex.Message}");
+            }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
                     Console.Write($"\rDB_OP_PARKIR SBYTAX TAHUN {tahunBuku} JML OP {jmlData} : {item.Nop}  {persen:F2}%   ");
@@ -1136,6 +1136,8 @@ GROUP BY NOP, MASA, TAHUN  ";
                                 newRow.NamaRincian = OP.NamaRincian;
                                 newRow.SubRincian = OP.SubRincian;
                                 newRow.NamaSubRincian = OP.NamaSubRincian;
+                                newRow.Dikelola = OP.Dikelola;
+                                newRow.PungutTarif = OP.PungutTarif;
                                 newRow.TahunPajakKetetapan = itemSSPD.TAHUN;
                                 newRow.MasaPajakKetetapan = itemSSPD.MASA;
                                 newRow.SeqPajakKetetapan = 101;
