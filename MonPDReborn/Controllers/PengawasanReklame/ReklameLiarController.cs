@@ -41,11 +41,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
-        public IActionResult Show(int? tahun)
+        public IActionResult Show()
         {
             try
             {
-                var model = new Models.PengawasanReklame.ReklameLiarVM.Show(tahun);
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Show();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

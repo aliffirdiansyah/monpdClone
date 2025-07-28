@@ -50,6 +50,7 @@
                         @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.DetailData>()
                             .ID("detailreklameGrid")
                             .DataSource(Model.DataDetailList)
+                            .NoDataText("Tidak Ada Data")
                             .ShowBorders(true)
                             .ShowColumnLines(true)
                             .ShowColumnHeaders(true)
@@ -73,14 +74,20 @@
                                 columns.AddFor(m => m.JenisReklame).Caption("Jenis Reklame");
                                 columns.AddFor(m => m.KategoriReklame).Caption("Kategori Reklame");
                                 columns.Add()
-                                .Caption("Tanggal")
-                                .CellTemplate(@<text>
-                                    @{
+                                    .Caption("Tanggal")
+                                    .CellTemplate(
+                                    @<text>
+                                        @if (data != null)
+                                        {
                                         var mulai = data.TglMulai != null ? ((DateTime)data.TglMulai).ToString("dd MMM yyyy", new CultureInfo("id-ID")) : "-";
                                         var selesai = data.TglSelesai != null ? ((DateTime)data.TglSelesai).ToString("dd MMM yyyy", new CultureInfo("id-ID")) : "-";
-                                    }
-                                    <span>@mulai - @selesai</span>
-                                </text>);
+                                        <span>@mulai - @selesai</span>
+                                        }
+                                        else
+                                        {
+                                        <span>-</span>
+                                        }
+                                    </text>);
 
                                 columns.AddFor(m => m.Pajak).Caption("Pajak").Format("#,##0");
                             })

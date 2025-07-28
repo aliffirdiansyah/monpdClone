@@ -331,6 +331,58 @@ namespace MonPDReborn.Models.Reklame
                         })
                         .ToList();
                 }
+                else if (idFlagPer == 1 && jenis == "Bongkar")
+                {
+                    ret = context.MvReklameSummaries
+                        .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan
+                             && x.TglAkhirBerlaku >= tglCutOff
+                            && x.TglAkhirBerlaku <= tglAkhir
+                            && x.NoFormulirA == null
+                            && x.Bongkar == 0)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+                }
+                else if (idFlagPer == 1 && jenis == "BlmBongkar")
+                {
+                    ret = context.MvReklameSummaries
+                         .Where(x => x.Tahun == tglCutOff.Year
+                            && x.IdFlagPermohonan == idFlagPer
+                            && x.NamaJalan == namaJalan
+                            && x.TglAkhirBerlaku >= tglCutOff
+                            && x.TglAkhirBerlaku <= tglAkhir
+                            && x.NoFormulirA == null
+                            && x.Bongkar != 0)
+                       .Select(x => new DetailData
+                       {
+                           AlamatReklame = x.Alamatreklame,
+                           Kategori = "-",
+                           JenisReklame = x.FlagPermohonan,
+                           IsiReklame = x.IsiReklame ?? x.IsiReklameA,
+                           KategoriReklame = x.NmJenis,
+                           KelasJalan = x.KelasJalan,
+                           NamaJalan = x.NamaJalan,
+                           Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                           TglMulai = x.TglMulaiBerlaku.Value,
+                           TglSelesai = x.TglAkhirBerlaku.Value,
+                           Pajak = x.PajakPokok.Value
+                       })
+                       .ToList();
+                }
                 else if (jenis == "Bongkar")
                 {
                     ret = context.MvReklameSummaries
