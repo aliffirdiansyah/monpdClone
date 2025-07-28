@@ -25,8 +25,6 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Show
         {
             public List<ReklamePermanen> ReklamePermanenList { get; set; } = new();
-            public List<TerbatasReklame> TerbatasReklameList { get; set; } = new();
-            public List<IsidentilReklame> IsidentilReklameList { get; set; } = new();
             public int Tahun { get; set; }
             public Show() { }
 
@@ -34,7 +32,28 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 Tahun = tahun;
                 ReklamePermanenList = Method.GetReklamePermanen(tahun);
+            }
+        }
+        public class ShowTerbatas
+        {
+            public List<TerbatasReklame> TerbatasReklameList { get; set; } = new();
+            public int Tahun { get; set; }
+
+            public ShowTerbatas(int tahun)
+            {
+                Tahun = tahun;
                 TerbatasReklameList = Method.GetTerbatasReklame(tahun);
+
+            }
+        }
+        public class ShowIsidentil
+        {
+            public List<IsidentilReklame> IsidentilReklameList { get; set; } = new();
+            public int Tahun { get; set; }
+
+            public ShowIsidentil(int tahun)
+            {
+                Tahun = tahun;
                 IsidentilReklameList = Method.GetIsidentilReklame(tahun);
             }
         }
@@ -243,8 +262,13 @@ namespace MonPDReborn.Models.AktivitasOP
                 }
                 else if (jenis == 1 && kategori == 3)
                 {
-                    predicate = x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null &&
-                                     !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis;
+                    predicate = x => x.IdFlagPermohonanA == jenis &&
+                                 x.TahunA == tahun &&
+                                 x.BulanA == bulan &&
+                                 !x.NominalPokokBayarA.HasValue;
+                    /*predicate = x => x.TahunA == tahun && x.BulanA == bulan &&
+                                     !x.NominalPokokBayarA.HasValue &&
+                                     x.IdFlagPermohonanA == jenis;*/
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 1)
                 {
@@ -254,8 +278,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 else if ((jenis == 2 || jenis == 3) && kategori == 2)
                 {
                     predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
-                                !string.IsNullOrEmpty(x.NoFormulirA) &&
-                                x.IdFlagPermohonan == jenis;
+                                     string.IsNullOrEmpty(x.NoFormulirA) && x.IdFlagPermohonan == jenis;
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 3)
                 {
@@ -268,20 +291,23 @@ namespace MonPDReborn.Models.AktivitasOP
                 // ✅ Proyeksikan hasil dengan normalisasi kunci NoFormulir
                 ret = data.Where(predicate).Select(x =>
                 {
-                    string noFormulirDigunakan = kategori == 2 ? x.NoFormulirA : x.NoFormulir;
+                    string noFormulirDigunakan = (kategori == 3) ? x.NoFormulirA : x.NoFormulir;
+
+                    string flag = (kategori == 3) ? x.FlagPermohonanA : x.FlagPermohonan;
 
                     string tampilFormulir = !string.IsNullOrEmpty(noFormulirDigunakan)
-                        ? $"{noFormulirDigunakan} ({x.FlagPermohonan})"
+                        ? $"{noFormulirDigunakan} ({flag})"
                         : string.Empty;
 
-                    // ✅ Gunakan TryGetValue agar aman & efisien
-                    var key = x.NoFormulir?.Trim().ToLower(); // normalize
+                    var key = noFormulirDigunakan?.Trim().ToLower();
 
                     var email = context.DbMonReklameEmails
                         .Where(e => e.NoFormulir == noFormulirDigunakan)
                         .Select(e => e.Email)
                         .FirstOrDefault();
+
                     string informasiEmail = !string.IsNullOrEmpty(email) ? email : string.Empty;
+
 
                     string jumlahUpaya = "0";
                     if (!string.IsNullOrEmpty(key) && upayaGrouped.TryGetValue(key, out var upayaList))
@@ -295,16 +321,32 @@ namespace MonPDReborn.Models.AktivitasOP
                         BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Tahun = tahun,
                         NoFormulir = tampilFormulir,
-                        Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-                        AlamatOP = x.Alamatreklame ?? string.Empty,
-                        IsiReklame = x.IsiReklame ?? string.Empty,
-                        AkhirBerlaku = x.TglAkhirBerlaku.HasValue
-                            ? $"{x.TglAkhirBerlaku.Value:dd MMM yyyy} (BELUM TERBAYAR)"
-                            : string.Empty,
-                        MasaTahunPajak = (x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.HasValue)
-                            ? $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})"
-                            : string.Empty,
-                        JumlahNilai = x.PajakPokok ?? 0,
+                        Nama = (kategori == 3)
+                            ? string.Concat(x.NamaA ?? "", " (", x.NamaPerusahaanA ?? "", ")")
+                            : string.Concat(x.Nama ?? "", " (", x.NamaPerusahaan ?? "", ")"),
+
+                        AlamatOP = (kategori == 3)
+                            ? x.AlamatreklameA ?? string.Empty
+                            : x.Alamatreklame ?? string.Empty,
+
+                        IsiReklame = (kategori == 3)
+                            ? x.IsiReklameA ?? string.Empty
+                            : x.IsiReklame ?? string.Empty,
+
+                        AkhirBerlaku = (kategori == 3 && x.TglAkhirBerlakuA.HasValue)
+                            ? $"{x.TglAkhirBerlakuA.Value:dd MMM yyyy} (BELUM TERBAYAR)"
+                            : (x.TglAkhirBerlaku.HasValue ? $"{x.TglAkhirBerlaku.Value:dd MMM yyyy} (BELUM TERBAYAR)" : string.Empty),
+
+                        MasaTahunPajak = (kategori == 3 && x.TglMulaiBerlakuA.HasValue && x.TglAkhirBerlakuA.HasValue)
+                            ? $"{x.TahunA} ({x.TglMulaiBerlakuA.Value:dd MMM yyyy} - {x.TglAkhirBerlakuA.Value:dd MMM yyyy})"
+                            : (x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.HasValue
+                            ? $"{x.Tahun} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})"
+                            : string.Empty),
+
+                        JumlahNilai = (kategori == 3)
+                            ? x.PajakPokokA ?? 0
+                            : x.PajakPokok ?? 0,
+
                         InformasiEmail = informasiEmail,
                         JumlahUpaya = jumlahUpaya
                     };
@@ -608,6 +650,64 @@ namespace MonPDReborn.Models.AktivitasOP
                 // Ambil data reklame yang cocok
                 var reklame = context.MvReklameSummaries
                     .FirstOrDefault(x =>
+                        (x.NoFormulir == noFormulir && x.Tahun == tahun && x.Bulan == bulan) ||
+                        (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan)
+                    );
+
+                if (reklame == null)
+                    return null;
+
+                // Ambil data upaya (pencocokan ke dua kemungkinan NoFormulir juga)
+                var upayaList = context.DbMonReklameUpayas
+                    .Include(x => x.DbMonReklameUpayaDok)
+                    .Where(x => x.NoFormulir == reklame.NoFormulir || x.NoFormulir == reklame.NoFormulirA)
+                    .OrderByDescending(x => x.TglUpaya)
+                    .ToList();
+
+                var dataUpayaList = upayaList.Select(x => new DetailUpaya.DataUpaya
+                {
+                    NoFormulir = x.NoFormulir,
+                    TglUpaya = x.TglUpaya.ToString("dd/MM/yyyy"),
+                    NamaUpaya = x.Upaya,
+                    Keterangan = x.Keterangan,
+                    Petugas = x.Petugas,
+                    Lampiran = x.DbMonReklameUpayaDok.Gambar != null ? Convert.ToBase64String(x.DbMonReklameUpayaDok.Gambar) : null
+                }).ToList();
+
+                var model = new DetailUpaya
+                {
+                    Tahun = tahun,
+                    Bulan = bulan,
+                    NoFormulir = noFormulir,
+                    InfoReklameUpaya = new DetailUpaya.InfoReklame
+                    {
+                        IsiReklame = reklame.IsiReklame ?? "-",
+                        AlamatReklame = reklame.Alamatreklame ?? "-",
+                        JenisReklame = reklame.NmJenis ?? "-",
+                        Panjang = reklame.Panjang ?? 0,
+                        Lebar = reklame.Lebar ?? 0,
+                        Luas = reklame.Luas ?? 0,
+                        Tinggi = reklame.Ketinggian ?? 0,
+                        TglMulaiBerlaku = reklame.TglMulaiBerlaku ?? DateTime.MinValue,
+                        TglAkhirBerlaku = reklame.TglAkhirBerlaku ?? DateTime.MinValue,
+                        TahunPajak = reklame.TahunA?.ToString() ?? reklame.Tahun?.ToString() ?? "-",
+                        MasaPajak = (reklame.TglMulaiBerlaku.HasValue && reklame.TglAkhirBerlaku.HasValue)
+                            ? $"{reklame.TglMulaiBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))} - {reklame.TglAkhirBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))}"
+                            : "-"
+                    },
+                    DataUpayaList = dataUpayaList
+                };
+
+                return model;
+            }
+
+            /*public static DetailUpaya GetDetailUpaya(string noFormulir, int tahun, int bulan)
+            {
+                var context = DBClass.GetContext();
+
+                // Ambil data reklame yang cocok
+                var reklame = context.MvReklameSummaries
+                    .FirstOrDefault(x =>
                         (x.NoFormulir == noFormulir || x.NoFormulirA == noFormulir) &&
                         (x.Tahun == tahun || x.TahunA == tahun) &&
                         (x.Bulan == bulan || x.BulanA == bulan)
@@ -657,7 +757,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 };
 
                 return model;
-            }
+            }*/
         }
 
         public class UpayaCbView

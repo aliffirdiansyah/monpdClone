@@ -99,6 +99,16 @@ public partial class MvReklameSummary
     [Column("BANTIP", TypeName = "NUMBER")]
     public decimal? Bantip { get; set; }
 
+    [Column("KELAS_JALAN")]
+    [StringLength(1)]
+    [Unicode(false)]
+    public string? KelasJalan { get; set; }
+
+    [Column("NAMA_JALAN")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? NamaJalan { get; set; }
+
     [Column("NO_FORMULIR_A")]
     [StringLength(20)]
     [Unicode(false)]
@@ -196,4 +206,14 @@ public partial class MvReklameSummary
 
     [Column("BANTIP_A", TypeName = "NUMBER")]
     public decimal? BantipA { get; set; }
+
+    [Column("KELAS_JALAN_A")]
+    [StringLength(1)]
+    [Unicode(false)]
+    public string? KelasJalanA { get; set; }
+
+    [Column("NAMA_JALAN_A")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? NamaJalanA { get; set; }
 }
