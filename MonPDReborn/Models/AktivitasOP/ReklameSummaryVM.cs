@@ -615,7 +615,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 {
                     throw new ArgumentException("Nama Petugas tidak boleh kosong.");
                 }
-                if (NewRowUpaya.Lampiran == null && NewRowUpaya.Lampiran.Length <= 0)
+                if (NewRowUpaya.Lampiran == null || NewRowUpaya.Lampiran.Length <= 0)
                 {
                     throw new ArgumentException("lampiran foto tidak boleh kosong.");
                 }
@@ -653,7 +653,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         (x.NoFormulir == noFormulir && x.Tahun == tahun && x.Bulan == bulan) ||
                         (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan)
                     );
-
+                bool isFormulirA = reklame.NoFormulirA == noFormulir;
                 if (reklame == null)
                     return null;
 
@@ -674,6 +674,8 @@ namespace MonPDReborn.Models.AktivitasOP
                     Lampiran = x.DbMonReklameUpayaDok.Gambar != null ? Convert.ToBase64String(x.DbMonReklameUpayaDok.Gambar) : null
                 }).ToList();
 
+                
+
                 var model = new DetailUpaya
                 {
                     Tahun = tahun,
@@ -681,19 +683,23 @@ namespace MonPDReborn.Models.AktivitasOP
                     NoFormulir = noFormulir,
                     InfoReklameUpaya = new DetailUpaya.InfoReklame
                     {
-                        IsiReklame = reklame.IsiReklame ?? "-",
-                        AlamatReklame = reklame.Alamatreklame ?? "-",
-                        JenisReklame = reklame.NmJenis ?? "-",
-                        Panjang = reklame.Panjang ?? 0,
-                        Lebar = reklame.Lebar ?? 0,
-                        Luas = reklame.Luas ?? 0,
-                        Tinggi = reklame.Ketinggian ?? 0,
-                        TglMulaiBerlaku = reklame.TglMulaiBerlaku ?? DateTime.MinValue,
-                        TglAkhirBerlaku = reklame.TglAkhirBerlaku ?? DateTime.MinValue,
-                        TahunPajak = reklame.TahunA?.ToString() ?? reklame.Tahun?.ToString() ?? "-",
-                        MasaPajak = (reklame.TglMulaiBerlaku.HasValue && reklame.TglAkhirBerlaku.HasValue)
+                        IsiReklame = isFormulirA ? reklame.IsiReklameA ?? "-" : reklame.IsiReklame ?? "-",
+                        AlamatReklame = isFormulirA ? reklame.AlamatreklameA ?? "-" : reklame.Alamatreklame ?? "-",
+                        JenisReklame = isFormulirA ? reklame.NmJenisA ?? "-" : reklame.NmJenis ?? "-",
+                        Panjang = isFormulirA ? reklame.PanjangA ?? 0 : reklame.Panjang ?? 0,
+                        Lebar = isFormulirA ? reklame.LebarA ?? 0 : reklame.Lebar ?? 0,
+                        Luas = isFormulirA ? reklame.LuasA ?? 0 : reklame.Luas ?? 0,
+                        Tinggi = isFormulirA ? reklame.KetinggianA ?? 0 : reklame.Ketinggian ?? 0,
+                        TglMulaiBerlaku = isFormulirA ? reklame.TglMulaiBerlakuA ?? DateTime.MinValue : reklame.TglMulaiBerlaku ?? DateTime.MinValue,
+                        TglAkhirBerlaku = isFormulirA ? reklame.TglAkhirBerlakuA ?? DateTime.MinValue : reklame.TglAkhirBerlaku ?? DateTime.MinValue,
+                        TahunPajak = isFormulirA
+                        ? reklame.TahunA?.ToString() ?? "-"
+                        : reklame.Tahun?.ToString() ?? "-",
+                                            MasaPajak = (isFormulirA && reklame.TglMulaiBerlakuA.HasValue && reklame.TglAkhirBerlakuA.HasValue)
+                        ? $"{reklame.TglMulaiBerlakuA.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))} - {reklame.TglAkhirBerlakuA.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))}"
+                        : (reklame.TglMulaiBerlaku.HasValue && reklame.TglAkhirBerlaku.HasValue
                             ? $"{reklame.TglMulaiBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))} - {reklame.TglAkhirBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))}"
-                            : "-"
+                            : "-")
                     },
                     DataUpayaList = dataUpayaList
                 };

@@ -257,22 +257,24 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 var result = new List<RingkasanPendapatan>();
 
                 // 1. Pendapatan Asli Daerah
-                var listPAD = GetDataPendapatanAsliDaerahList();
-                var totalPAD = new RingkasanPendapatan
+                var pendapatanList = GetDataPendapatanAsliDaerahList();
+
+                var ringkasan = new RingkasanPendapatan
                 {
                     Uraian = "Pendapatan Asli Daerah",
-                    Target1 = listPAD.Sum(x => x.Target1),
-                    Realisasi1 = listPAD.Sum(x => x.Realisasi1),
-                    Target2 = listPAD.Sum(x => x.Target2),
-                    Realisasi2 = listPAD.Sum(x => x.Realisasi2),
-                    Target3 = listPAD.Sum(x => x.Target3),
-                    Realisasi3 = listPAD.Sum(x => x.Realisasi3),
-                    Target4 = listPAD.Sum(x => x.Target4),
-                    Realisasi4 = listPAD.Sum(x => x.Realisasi4),
-                    Target5 = listPAD.Sum(x => x.Target5),
-                    Realisasi5 = listPAD.Sum(x => x.Realisasi5),
+                    Target1 = pendapatanList.Sum(x => x.Target1),
+                    Realisasi1 = pendapatanList.Sum(x => x.Realisasi1),
+                    Target2 = pendapatanList.Sum(x => x.Target2),
+                    Realisasi2 = pendapatanList.Sum(x => x.Realisasi2),
+                    Target3 = pendapatanList.Sum(x => x.Target3),
+                    Realisasi3 = pendapatanList.Sum(x => x.Realisasi3),
+                    Target4 = pendapatanList.Sum(x => x.Target4),
+                    Realisasi4 = pendapatanList.Sum(x => x.Realisasi4),
+                    Target5 = pendapatanList.Sum(x => x.Target5),
+                    Realisasi5 = pendapatanList.Sum(x => x.Realisasi5)
                 };
-                result.Add(totalPAD);
+
+                return new List<RingkasanPendapatan> { ringkasan };
 
                 // 2. Pendapatan Transfer
                 var listTransfer = GetDataPendapatanTransferList();
