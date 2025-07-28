@@ -131,7 +131,7 @@ namespace RestoWs
             //HPPOPProcess(tahunBuku);
 
             // ketetapan 
-            HPPKetetapanProcess(tahunBuku);
+            //HPPKetetapanProcess(tahunBuku);
 
             // realisasi
             HPPRealisasiProcess(tahunBuku);
@@ -963,248 +963,251 @@ GROUP BY NOP, MASA, TAHUN  ";
                     int index = 0;
                     foreach (var itemSSPD in pembayaranSspdList)
                     {
-                        var OP = _contMonPd.DbOpRestos.First(x => x.Nop == itemSSPD.NOP.Replace(".", ""));
-                        var ketetapan = _contMonPd.DbMonRestos.FirstOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
-                                                                                x.TahunPajakKetetapan == itemSSPD.TAHUN &&
-                                                                                x.MasaPajakKetetapan == itemSSPD.MASA &&
-                                                                                x.SeqPajakKetetapan == itemSSPD.SEQ_KETETAPAN);
-                        if (ketetapan == null)
+                        var OP = _contMonPd.DbOpRestos.FirstOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", ""));
+                        if(OP != null)
                         {
-                            ketetapan = _contMonPd.DbMonRestos.FirstOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
-                                                                                x.TahunPajakKetetapan == itemSSPD.TAHUN &&
-                                                                                x.MasaPajakKetetapan == itemSSPD.MASA &&
-                                                                                x.SeqPajakKetetapan == 101);
-                        }
-                        if (ketetapan != null)
-                        {
-                            string akunBayar = "-";
-                            string kelompokBayar = "-";
-                            string jenisBayar = "-";
-                            string objekBayar = "-";
-                            string rincianBayar = "-";
-                            string subrincianBayar = "-";
-
-                            var getAkun = GetDbAkun(tahunBuku, KDPajak, (int)OP.KategoriId);
-                            if (getAkun != null)
+                            var ketetapan = _contMonPd.DbMonRestos.FirstOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
+                                                                                    x.TahunPajakKetetapan == itemSSPD.TAHUN &&
+                                                                                    x.MasaPajakKetetapan == itemSSPD.MASA &&
+                                                                                    x.SeqPajakKetetapan == itemSSPD.SEQ_KETETAPAN);
+                            if (ketetapan == null)
                             {
-                                akunBayar = getAkun.Akun;
-                                kelompokBayar = getAkun.Kelompok;
-                                jenisBayar = getAkun.Jenis;
-                                objekBayar = getAkun.Objek;
-                                rincianBayar = getAkun.Rincian;
-                                subrincianBayar = getAkun.SubRincian;
+                                ketetapan = _contMonPd.DbMonRestos.FirstOrDefault(x => x.Nop == itemSSPD.NOP.Replace(".", "") &&
+                                                                                    x.TahunPajakKetetapan == itemSSPD.TAHUN &&
+                                                                                    x.MasaPajakKetetapan == itemSSPD.MASA &&
+                                                                                    x.SeqPajakKetetapan == 101);
                             }
-
-                            string akunSanksi = "-";
-                            string kelompokSanksi = "-";
-                            string jenisSanksi = "-";
-                            string objekSanksi = "-";
-                            string rincianSanksi = "-";
-                            string subrincianSanksi = "-";
-
-                            var getAkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
-                            if (getAkunSanksi != null)
+                            if (ketetapan != null)
                             {
-                                akunSanksi = getAkunSanksi.Akun;
-                                kelompokSanksi = getAkunSanksi.Kelompok;
-                                jenisSanksi = getAkunSanksi.Jenis;
-                                objekSanksi = getAkunSanksi.Objek;
-                                rincianSanksi = getAkunSanksi.Rincian;
-                                subrincianSanksi = getAkunSanksi.SubRincian;
-                            }
+                                string akunBayar = "-";
+                                string kelompokBayar = "-";
+                                string jenisBayar = "-";
+                                string objekBayar = "-";
+                                string rincianBayar = "-";
+                                string subrincianBayar = "-";
+
+                                var getAkun = GetDbAkun(tahunBuku, KDPajak, (int)OP.KategoriId);
+                                if (getAkun != null)
+                                {
+                                    akunBayar = getAkun.Akun;
+                                    kelompokBayar = getAkun.Kelompok;
+                                    jenisBayar = getAkun.Jenis;
+                                    objekBayar = getAkun.Objek;
+                                    rincianBayar = getAkun.Rincian;
+                                    subrincianBayar = getAkun.SubRincian;
+                                }
+
+                                string akunSanksi = "-";
+                                string kelompokSanksi = "-";
+                                string jenisSanksi = "-";
+                                string objekSanksi = "-";
+                                string rincianSanksi = "-";
+                                string subrincianSanksi = "-";
+
+                                var getAkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
+                                if (getAkunSanksi != null)
+                                {
+                                    akunSanksi = getAkunSanksi.Akun;
+                                    kelompokSanksi = getAkunSanksi.Kelompok;
+                                    jenisSanksi = getAkunSanksi.Jenis;
+                                    objekSanksi = getAkunSanksi.Objek;
+                                    rincianSanksi = getAkunSanksi.Rincian;
+                                    subrincianSanksi = getAkunSanksi.SubRincian;
+                                }
 
 
 
-                            if (!ketetapan.TglBayarPokok.HasValue)
-                            {
-                                ketetapan.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
-                            }
-                            else
-                            {
-                                if (ketetapan.TglBayarPokok.Value < itemSSPD.TRANSACTION_DATE)
+                                if (!ketetapan.TglBayarPokok.HasValue)
                                 {
                                     ketetapan.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
                                 }
-                            }
+                                else
+                                {
+                                    if (ketetapan.TglBayarPokok.Value < itemSSPD.TRANSACTION_DATE)
+                                    {
+                                        ketetapan.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
+                                    }
+                                }
 
-                            ketetapan.NominalPokokBayar = (ketetapan.NominalPokokBayar ?? 0) + itemSSPD.NOMINAL_POKOK;
-                            ketetapan.AkunPokokBayar = akunBayar;
-                            ketetapan.Kelompok = kelompokBayar;
-                            ketetapan.JenisPokokBayar = jenisBayar;
-                            ketetapan.ObjekPokokBayar = objekBayar;
-                            ketetapan.RincianPokokBayar = rincianBayar;
-                            ketetapan.SubRincianPokokBayar = subrincianBayar;
+                                ketetapan.NominalPokokBayar = (ketetapan.NominalPokokBayar ?? 0) + itemSSPD.NOMINAL_POKOK;
+                                ketetapan.AkunPokokBayar = akunBayar;
+                                ketetapan.Kelompok = kelompokBayar;
+                                ketetapan.JenisPokokBayar = jenisBayar;
+                                ketetapan.ObjekPokokBayar = objekBayar;
+                                ketetapan.RincianPokokBayar = rincianBayar;
+                                ketetapan.SubRincianPokokBayar = subrincianBayar;
 
-                            if (!ketetapan.TglBayarSanksi.HasValue)
-                            {
-                                ketetapan.TglBayarSanksi = itemSSPD.TRANSACTION_DATE;
-                            }
-                            else
-                            {
-                                if (ketetapan.TglBayarSanksi.Value < itemSSPD.TRANSACTION_DATE)
+                                if (!ketetapan.TglBayarSanksi.HasValue)
                                 {
                                     ketetapan.TglBayarSanksi = itemSSPD.TRANSACTION_DATE;
                                 }
-                            }
+                                else
+                                {
+                                    if (ketetapan.TglBayarSanksi.Value < itemSSPD.TRANSACTION_DATE)
+                                    {
+                                        ketetapan.TglBayarSanksi = itemSSPD.TRANSACTION_DATE;
+                                    }
+                                }
 
-                            ketetapan.NominalSanksiBayar = ketetapan.NominalSanksiBayar + itemSSPD.NOMINAL_SANKSI;
-                            ketetapan.AkunSanksiBayar = akunSanksi;
-                            ketetapan.KelompokSanksiBayar = kelompokSanksi;
-                            ketetapan.JenisSanksiBayar = jenisSanksi;
-                            ketetapan.ObjekSanksiBayar = objekSanksi;
-                            ketetapan.RincianSanksiBayar = rincianSanksi;
-                            ketetapan.SubRincianSanksiBayar = subrincianSanksi;
+                                ketetapan.NominalSanksiBayar = ketetapan.NominalSanksiBayar + itemSSPD.NOMINAL_SANKSI;
+                                ketetapan.AkunSanksiBayar = akunSanksi;
+                                ketetapan.KelompokSanksiBayar = kelompokSanksi;
+                                ketetapan.JenisSanksiBayar = jenisSanksi;
+                                ketetapan.ObjekSanksiBayar = objekSanksi;
+                                ketetapan.RincianSanksiBayar = rincianSanksi;
+                                ketetapan.SubRincianSanksiBayar = subrincianSanksi;
 
 
-                            if (!ketetapan.TglBayarSanksiKenaikan.HasValue)
-                            {
-                                ketetapan.TglBayarSanksiKenaikan = itemSSPD.TRANSACTION_DATE;
-                            }
-                            else
-                            {
-                                if (ketetapan.TglBayarSanksiKenaikan.Value < itemSSPD.TRANSACTION_DATE)
+                                if (!ketetapan.TglBayarSanksiKenaikan.HasValue)
                                 {
                                     ketetapan.TglBayarSanksiKenaikan = itemSSPD.TRANSACTION_DATE;
                                 }
-                            }
-
-                            ketetapan.NominalSanksiBayar = ketetapan.NominalSanksiKenaikanBayar + itemSSPD.NOMINAL_ADMINISTRASI;
-                            ketetapan.AkunSanksiBayar = akunSanksi;
-                            ketetapan.KelompokSanksiBayar = kelompokSanksi;
-                            ketetapan.JenisSanksiBayar = jenisSanksi;
-                            ketetapan.ObjekSanksiBayar = objekSanksi;
-                            ketetapan.RincianSanksiBayar = rincianSanksi;
-                            ketetapan.SubRincianSanksiBayar = subrincianSanksi;
-                            _contMonPd.SaveChanges();
-                        }
-                        else
-                        {
-                            bool isOPTutup = false;
-                            if (OP.TglOpTutup.HasValue)
-                            {
-                                if (OP.TglOpTutup.Value.Date.Year <= tahunBuku)
+                                else
                                 {
-                                    isOPTutup = true;
+                                    if (ketetapan.TglBayarSanksiKenaikan.Value < itemSSPD.TRANSACTION_DATE)
+                                    {
+                                        ketetapan.TglBayarSanksiKenaikan = itemSSPD.TRANSACTION_DATE;
+                                    }
                                 }
 
+                                ketetapan.NominalSanksiBayar = ketetapan.NominalSanksiKenaikanBayar + itemSSPD.NOMINAL_ADMINISTRASI;
+                                ketetapan.AkunSanksiBayar = akunSanksi;
+                                ketetapan.KelompokSanksiBayar = kelompokSanksi;
+                                ketetapan.JenisSanksiBayar = jenisSanksi;
+                                ketetapan.ObjekSanksiBayar = objekSanksi;
+                                ketetapan.RincianSanksiBayar = rincianSanksi;
+                                ketetapan.SubRincianSanksiBayar = subrincianSanksi;
+                                _contMonPd.SaveChanges();
                             }
-
-
-                            string akunBayar = "-";
-                            string kelompokBayar = "-";
-                            string jenisBayar = "-";
-                            string objekBayar = "-";
-                            string rincianBayar = "-";
-                            string subrincianBayar = "-";
-
-                            var getAkun = GetDbAkun(tahunBuku, KDPajak, (int)OP.KategoriId);
-                            if (getAkun != null)
+                            else
                             {
-                                akunBayar = getAkun.Akun;
-                                kelompokBayar = getAkun.Kelompok;
-                                jenisBayar = getAkun.Jenis;
-                                objekBayar = getAkun.Objek;
-                                rincianBayar = getAkun.Rincian;
-                                subrincianBayar = getAkun.SubRincian;
+                                bool isOPTutup = false;
+                                if (OP.TglOpTutup.HasValue)
+                                {
+                                    if (OP.TglOpTutup.Value.Date.Year <= tahunBuku)
+                                    {
+                                        isOPTutup = true;
+                                    }
+
+                                }
+
+
+                                string akunBayar = "-";
+                                string kelompokBayar = "-";
+                                string jenisBayar = "-";
+                                string objekBayar = "-";
+                                string rincianBayar = "-";
+                                string subrincianBayar = "-";
+
+                                var getAkun = GetDbAkun(tahunBuku, KDPajak, (int)OP.KategoriId);
+                                if (getAkun != null)
+                                {
+                                    akunBayar = getAkun.Akun;
+                                    kelompokBayar = getAkun.Kelompok;
+                                    jenisBayar = getAkun.Jenis;
+                                    objekBayar = getAkun.Objek;
+                                    rincianBayar = getAkun.Rincian;
+                                    subrincianBayar = getAkun.SubRincian;
+                                }
+
+                                string akunSanksi = "-";
+                                string kelompokSanksi = "-";
+                                string jenisSanksi = "-";
+                                string objekSanksi = "-";
+                                string rincianSanksi = "-";
+                                string subrincianSanksi = "-";
+
+                                var getAkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
+                                if (getAkunSanksi != null)
+                                {
+                                    akunSanksi = getAkunSanksi.Akun;
+                                    kelompokSanksi = getAkunSanksi.Kelompok;
+                                    jenisSanksi = getAkunSanksi.Jenis;
+                                    objekSanksi = getAkunSanksi.Objek;
+                                    rincianSanksi = getAkunSanksi.Rincian;
+                                    subrincianSanksi = getAkunSanksi.SubRincian;
+                                }
+
+
+                                var newRow = new DbMonResto();
+                                newRow.Nop = OP.Nop;
+                                newRow.Npwpd = OP.Npwpd;
+                                newRow.NpwpdNama = OP.NpwpdNama;
+                                newRow.NpwpdAlamat = OP.NpwpdAlamat;
+                                newRow.PajakId = OP.PajakId;
+                                newRow.PajakNama = OP.PajakNama;
+                                newRow.NamaOp = OP.NamaOp;
+                                newRow.AlamatOp = OP.AlamatOp;
+                                newRow.AlamatOpKdLurah = OP.AlamatOpKdLurah;
+                                newRow.AlamatOpKdCamat = OP.AlamatOpKdCamat;
+                                newRow.TglOpTutup = OP.TglOpTutup;
+                                newRow.TglMulaiBukaOp = OP.TglMulaiBukaOp;
+                                newRow.IsTutup = isOPTutup ? 1 : 0;
+                                newRow.KategoriId = OP.KategoriId;
+                                newRow.KategoriNama = OP.KategoriNama;
+                                newRow.TahunBuku = tahunBuku;
+                                newRow.Akun = OP.Akun;
+                                newRow.NamaAkun = OP.NamaAkun;
+                                newRow.Jenis = OP.Jenis;
+                                newRow.NamaJenis = OP.NamaJenis;
+                                newRow.Objek = OP.Objek;
+                                newRow.NamaObjek = OP.NamaObjek;
+                                newRow.Rincian = OP.Rincian;
+                                newRow.NamaRincian = OP.NamaRincian;
+                                newRow.SubRincian = OP.SubRincian;
+                                newRow.NamaSubRincian = OP.NamaSubRincian;
+                                newRow.TahunPajakKetetapan = itemSSPD.TAHUN;
+                                newRow.MasaPajakKetetapan = itemSSPD.MASA;
+                                newRow.SeqPajakKetetapan = 101;
+                                newRow.KategoriKetetapan = "4";
+                                newRow.TglKetetapan = itemSSPD.TRANSACTION_DATE;
+                                newRow.TglJatuhTempoBayar = itemSSPD.JATUH_TEMPO;
+                                newRow.PokokPajakKetetapan = itemSSPD.NOMINAL_POKOK;
+                                newRow.PengurangPokokKetetapan = 0;
+                                newRow.AkunKetetapan = akunBayar;
+                                newRow.KelompokKetetapan = kelompokBayar;
+                                newRow.JenisKetetapan = jenisBayar;
+                                newRow.ObjekKetetapan = objekBayar;
+                                newRow.RincianKetetapan = rincianBayar;
+                                newRow.SubRincianKetetapan = subrincianBayar;
+                                newRow.InsDate = DateTime.Now;
+                                newRow.InsBy = "JOB";
+                                newRow.UpdDate = DateTime.Now;
+                                newRow.UpdBy = "JOB";
+
+
+                                newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
+                                newRow.AkunPokokBayar = akunBayar;
+                                newRow.Kelompok = kelompokBayar;
+                                newRow.JenisPokokBayar = jenisBayar;
+                                newRow.ObjekPokokBayar = objekBayar;
+                                newRow.RincianPokokBayar = rincianBayar;
+                                newRow.SubRincianPokokBayar = subrincianBayar;
+                                newRow.TglBayarSanksi = itemSSPD.TRANSACTION_DATE;
+                                newRow.NominalSanksiBayar = itemSSPD.NOMINAL_SANKSI;
+                                newRow.AkunSanksiBayar = akunSanksi;
+                                newRow.KelompokSanksiBayar = kelompokSanksi;
+                                newRow.JenisSanksiBayar = jenisSanksi;
+                                newRow.ObjekSanksiBayar = objekSanksi;
+                                newRow.RincianSanksiBayar = rincianSanksi;
+                                newRow.SubRincianSanksiBayar = subrincianSanksi;
+                                newRow.TglBayarSanksiKenaikan = itemSSPD.TRANSACTION_DATE;
+
+                                newRow.NominalSanksiBayar = itemSSPD.NOMINAL_ADMINISTRASI;
+                                newRow.AkunSanksiBayar = akunSanksi;
+                                newRow.KelompokSanksiBayar = kelompokSanksi;
+                                newRow.JenisSanksiBayar = jenisSanksi;
+                                newRow.ObjekSanksiBayar = objekSanksi;
+                                newRow.RincianSanksiBayar = rincianSanksi;
+                                newRow.SubRincianSanksiBayar = subrincianSanksi;
+                                _contMonPd.DbMonRestos.Add(newRow);
+                                _contMonPd.SaveChanges();
                             }
-
-                            string akunSanksi = "-";
-                            string kelompokSanksi = "-";
-                            string jenisSanksi = "-";
-                            string objekSanksi = "-";
-                            string rincianSanksi = "-";
-                            string subrincianSanksi = "-";
-
-                            var getAkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
-                            if (getAkunSanksi != null)
-                            {
-                                akunSanksi = getAkunSanksi.Akun;
-                                kelompokSanksi = getAkunSanksi.Kelompok;
-                                jenisSanksi = getAkunSanksi.Jenis;
-                                objekSanksi = getAkunSanksi.Objek;
-                                rincianSanksi = getAkunSanksi.Rincian;
-                                subrincianSanksi = getAkunSanksi.SubRincian;
-                            }
-
-
-                            var newRow = new DbMonResto();
-                            newRow.Nop = OP.Nop;
-                            newRow.Npwpd = OP.Npwpd;
-                            newRow.NpwpdNama = OP.NpwpdNama;
-                            newRow.NpwpdAlamat = OP.NpwpdAlamat;
-                            newRow.PajakId = OP.PajakId;
-                            newRow.PajakNama = OP.PajakNama;
-                            newRow.NamaOp = OP.NamaOp;
-                            newRow.AlamatOp = OP.AlamatOp;
-                            newRow.AlamatOpKdLurah = OP.AlamatOpKdLurah;
-                            newRow.AlamatOpKdCamat = OP.AlamatOpKdCamat;
-                            newRow.TglOpTutup = OP.TglOpTutup;
-                            newRow.TglMulaiBukaOp = OP.TglMulaiBukaOp;
-                            newRow.IsTutup = isOPTutup ? 1 : 0;
-                            newRow.KategoriId = OP.KategoriId;
-                            newRow.KategoriNama = OP.KategoriNama;
-                            newRow.TahunBuku = tahunBuku;
-                            newRow.Akun = OP.Akun;
-                            newRow.NamaAkun = OP.NamaAkun;
-                            newRow.Jenis = OP.Jenis;
-                            newRow.NamaJenis = OP.NamaJenis;
-                            newRow.Objek = OP.Objek;
-                            newRow.NamaObjek = OP.NamaObjek;
-                            newRow.Rincian = OP.Rincian;
-                            newRow.NamaRincian = OP.NamaRincian;
-                            newRow.SubRincian = OP.SubRincian;
-                            newRow.NamaSubRincian = OP.NamaSubRincian;
-                            newRow.TahunPajakKetetapan = itemSSPD.TAHUN;
-                            newRow.MasaPajakKetetapan = itemSSPD.MASA;
-                            newRow.SeqPajakKetetapan = 101;
-                            newRow.KategoriKetetapan = "4";
-                            newRow.TglKetetapan = itemSSPD.TRANSACTION_DATE;
-                            newRow.TglJatuhTempoBayar = itemSSPD.JATUH_TEMPO;
-                            newRow.PokokPajakKetetapan = itemSSPD.NOMINAL_POKOK;
-                            newRow.PengurangPokokKetetapan = 0;
-                            newRow.AkunKetetapan = akunBayar;
-                            newRow.KelompokKetetapan = kelompokBayar;
-                            newRow.JenisKetetapan = jenisBayar;
-                            newRow.ObjekKetetapan = objekBayar;
-                            newRow.RincianKetetapan = rincianBayar;
-                            newRow.SubRincianKetetapan = subrincianBayar;
-                            newRow.InsDate = DateTime.Now;
-                            newRow.InsBy = "JOB";
-                            newRow.UpdDate = DateTime.Now;
-                            newRow.UpdBy = "JOB";
-
-
-                            newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
-                            newRow.AkunPokokBayar = akunBayar;
-                            newRow.Kelompok = kelompokBayar;
-                            newRow.JenisPokokBayar = jenisBayar;
-                            newRow.ObjekPokokBayar = objekBayar;
-                            newRow.RincianPokokBayar = rincianBayar;
-                            newRow.SubRincianPokokBayar = subrincianBayar;
-                            newRow.TglBayarSanksi = itemSSPD.TRANSACTION_DATE;
-                            newRow.NominalSanksiBayar = itemSSPD.NOMINAL_SANKSI;
-                            newRow.AkunSanksiBayar = akunSanksi;
-                            newRow.KelompokSanksiBayar = kelompokSanksi;
-                            newRow.JenisSanksiBayar = jenisSanksi;
-                            newRow.ObjekSanksiBayar = objekSanksi;
-                            newRow.RincianSanksiBayar = rincianSanksi;
-                            newRow.SubRincianSanksiBayar = subrincianSanksi;
-                            newRow.TglBayarSanksiKenaikan = itemSSPD.TRANSACTION_DATE;
-
-                            newRow.NominalSanksiBayar = itemSSPD.NOMINAL_ADMINISTRASI;
-                            newRow.AkunSanksiBayar = akunSanksi;
-                            newRow.KelompokSanksiBayar = kelompokSanksi;
-                            newRow.JenisSanksiBayar = jenisSanksi;
-                            newRow.ObjekSanksiBayar = objekSanksi;
-                            newRow.RincianSanksiBayar = rincianSanksi;
-                            newRow.SubRincianSanksiBayar = subrincianSanksi;
-                            _contMonPd.DbMonRestos.Add(newRow);
-                            _contMonPd.SaveChanges();
+                            index++;
+                            double persen = ((double)index / jmlData) * 100;
+                            Console.Write($"\rDB_REALISASI_RESTORAN HPP TAHUN {tahunBuku} JML OP {jmlData} : {OP.Nop}  {persen:F2}%   ");
+                            Thread.Sleep(50);
                         }
-                        index++;
-                        double persen = ((double)index / jmlData) * 100;
-                        Console.Write($"\rDB_REALISASI_RESTORAN HPP TAHUN {tahunBuku} JML OP {jmlData} : {OP.Nop}  {persen:F2}%   ");
-                        Thread.Sleep(50);
                     }
                 }
 
