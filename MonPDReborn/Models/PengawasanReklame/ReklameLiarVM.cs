@@ -89,9 +89,9 @@ namespace MonPDReborn.Models.PengawasanReklame
                     AlamatReklame = x.AlamatReklame ?? "",
                     Jenis = x.Jenis ?? "",
                     TanggalSilang = x.TanggalSkSilang,
-                    TanggalBantib = x.TanggalBantib ?? DateTime.MinValue,
-                    TanggalBongkar = x.TanggalBongkar ?? DateTime.MinValue,
-                    TanggalSkBongkar = x.TanggalSkBongkar ?? DateTime.MinValue
+                    TanggalBantib = x.TanggalBantib.Value,
+                    TanggalBongkar = x.TanggalBongkar.Value,
+                    TanggalSkBongkar = x.TanggalSkBongkar.Value
                 }).ToList();
 
                 var ret = new InfoJalan
