@@ -88,10 +88,10 @@ namespace MonPDReborn.Models.PengawasanReklame
                     NamaJalan = x.NamaJalan ?? "",
                     AlamatReklame = x.AlamatReklame ?? "",
                     Jenis = x.Jenis ?? "",
-                    TanggalSilang = x.TanggalSkSilang,
-                    TanggalBantib = x.TanggalBantib.Value,
-                    TanggalBongkar = x.TanggalBongkar.Value,
-                    TanggalSkBongkar = x.TanggalSkBongkar.Value
+                    TanggalSilang = x.TanggalSkSilang.ToString("dd MMMM yyyy", new CultureInfo("id-ID")),
+                    TanggalBantib = x.TanggalBantib.HasValue ? x.TanggalBantib.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-",
+                    TanggalBongkar = x.TanggalBongkar.HasValue ? x.TanggalBongkar.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-",
+                    TanggalSkBongkar = x.TanggalSkBongkar.HasValue ? x.TanggalSkBongkar.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-"
                 }).ToList();
 
                 var ret = new InfoJalan
@@ -135,10 +135,10 @@ namespace MonPDReborn.Models.PengawasanReklame
             public string NamaJalan { get; set; } = null!;
             public string AlamatReklame { get; set; } = null!;
             public string Jenis { get; set; } = null!;
-            public DateTime TanggalSilang { get; set; }
-            public DateTime TanggalBantib { get; set; }
-            public DateTime? TanggalBongkar { get; set; }
-            public DateTime? TanggalSkBongkar { get; set; }
+            public string TanggalSilang { get; set; }
+            public string TanggalBantib { get; set; }
+            public string TanggalBongkar { get; set; }
+            public string TanggalSkBongkar { get; set; }
         }
 
         public class InfoJalan
