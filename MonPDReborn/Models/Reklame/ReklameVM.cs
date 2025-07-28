@@ -5,6 +5,8 @@ using MonPDLib;
 using MonPDLib.EF;
 using SixLabors.Fonts.Tables.TrueType;
 using System.Collections.Generic;
+using System.Drawing;
+using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.Reklame
@@ -49,16 +51,19 @@ namespace MonPDReborn.Models.Reklame
         public class ShowData
         {
             public List<RekapData> DataRekap { get; set; } = new();
-            public ShowData(Index input)
+            public ShowData()
             {
-                DataRekap = Method.GetRekapDataReklame(input.TglAwal, input.TglAkhir);
+                DataRekap = Method.GetRekapDataReklame();
             }
         }
 
         public class DetailReklame
         {
             public List<DetailData> DataDetailList { get; set; } = new();
-
+            public DetailReklame(int idFlagPer, string namaJalan, string jenis)
+            {
+                DataDetailList = Method.GetDetailDataReklame(idFlagPer, namaJalan, jenis);
+            }
             public DetailReklame(string kelasJalan, string namaJalan, string status, string jenisReklame, DateTime tglAwal, DateTime tglAkhir)
             {
                 DataDetailList = Method.GetDetailDataReklame(kelasJalan, namaJalan, status, jenisReklame, tglAwal, tglAkhir);
@@ -139,6 +144,243 @@ namespace MonPDReborn.Models.Reklame
                 };
             }
 
+            public static List<RekapData> GetRekapDataReklame()
+            {
+                var ret = new List<RekapData>();
+                var context = DBClass.GetContext();
+                var tglCutOff = new DateTime(DateTime.Now.Year, 1, 1); // Tanggal awal tahun
+                var tglAkhir = DateTime.Now;
+
+                var jalanList = context.DbMonReklames.Where(x => x.TglMulaiBerlaku.Value.Date >= tglCutOff.Date && x.TglMulaiBerlaku.Value.Date <= tglAkhir.Date).Select(x => new { x.KelasJalan, x.NamaJalan }).Distinct().ToList();
+
+                var insidentilData = context.MvReklameRekapJalans.Where(x => x.IdFlagPermohonan == 1).ToList();
+                var permanenData = context.MvReklameRekapJalans.Where(x => x.IdFlagPermohonan == 2).ToList();
+                var terbatasData = context.MvReklameRekapJalans.Where(x => x.IdFlagPermohonan == 3).ToList();
+
+                foreach (var item in jalanList)
+                {
+                    var row = new RekapData();
+                    row.KelasJalan = "Kelas " + item.KelasJalan;
+                    row.NamaJalan = item.NamaJalan;
+                    row.KelasJalanId = item.KelasJalan;
+
+                    // INSIDENTIL
+                    var ins = insidentilData.FirstOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan);
+                    row.Insidentil.Aktif = ins?.Aktif ?? 0;
+                    row.Insidentil.Expired = ins?.Expire ?? 0;
+                    row.Insidentil.Perpanjangan = ins?.Perpanjangan ?? 0;
+                    row.Insidentil.WajibBongkar = ins?.WajibBongkar ?? 0;
+                    row.Insidentil.Bongkar = ins?.Bongkar ?? 0;
+                    row.Insidentil.BlmBongkar = ins?.BlmBongkar ?? 0;
+
+                    // PERMANEN
+                    var per = permanenData.FirstOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan);
+                    row.Permanen.Aktif = per?.Aktif ?? 0;
+                    row.Permanen.Expired = per?.Expire ?? 0;
+                    row.Permanen.Perpanjangan = per?.Perpanjangan ?? 0;
+                    row.Permanen.WajibBongkar = per?.WajibBongkar ?? 0;
+                    row.Permanen.Bongkar = per?.Bongkar ?? 0;
+                    row.Permanen.BlmBongkar = per?.BlmBongkar ?? 0;
+
+                    // TERBATAS
+                    var terb = terbatasData.FirstOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan);
+                    row.Terbatas.Aktif = terb?.Aktif ?? 0;
+                    row.Terbatas.Expired = terb?.Expire ?? 0;
+                    row.Terbatas.Perpanjangan = terb?.Perpanjangan ?? 0;
+                    row.Terbatas.WajibBongkar = terb?.WajibBongkar ?? 0;
+                    row.Terbatas.Bongkar = terb?.Bongkar ?? 0;
+                    row.Terbatas.BlmBongkar = terb?.BlmBongkar ?? 0;
+
+                    ret.Add(row);
+                }
+
+                return ret;
+            }
+
+            public static List<DetailData> GetDetailDataReklame(int idFlagPer, string namaJalan, string jenis)
+            {
+                var ret = new List<DetailData>();
+                var context = DBClass.GetContext();
+                var tglCutOff = new DateTime(DateTime.Now.Year, 1, 1); // Tanggal awal tahun
+                var tglAkhir = DateTime.Now;
+
+                //Total
+                //Aktif
+                //Expired
+                //Perpanjangan
+                //WajibBongkar
+                //Bongkar
+                //BlmBongkar
+
+                if (jenis == "Total")
+                {
+                    ret = context.MvReklameSummaries
+                        .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+                }
+                else if (jenis == "Aktif")
+                {
+                    ret = context.MvReklameSummaries
+                        .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan
+                             && x.TglAkhirBerlaku >= tglAkhir)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame ?? x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+
+                }
+                else if (jenis == "Expired")
+                {
+                    ret = context.MvReklameSummaries
+                        .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan
+                             && x.TglAkhirBerlaku < tglAkhir)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+                }
+                else if (jenis == "Perpanjangan")
+                {
+                    ret = context.MvReklameSummaries
+                        .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan
+                             && x.TglAkhirBerlaku >= tglCutOff
+                             && x.TglAkhirBerlaku <= tglAkhir
+                             && x.NoFormulirA != null)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+                }
+                else if (jenis == "WajibBongkar")
+                {
+                    ret = context.MvReklameSummaries
+                        .Where(x => x.TglAkhirBerlaku >= tglCutOff
+                            && x.TglAkhirBerlaku <= tglAkhir
+                            && x.NoFormulirA == null)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+                }
+                else if (jenis == "Bongkar")
+                {
+                    ret = context.MvReklameSummaries
+                        .Where(x => x.TglAkhirBerlaku >= tglCutOff
+                            && x.TglAkhirBerlaku <= tglAkhir
+                            && x.NoFormulirA == null
+                            && x.Bongkar != 0)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+                }
+                else if (jenis == "BlmBongkar")
+                {
+                    ret = context.MvReklameSummaries
+                          .Where(x => x.Tahun == tglCutOff.Year
+                             && x.IdFlagPermohonan == idFlagPer
+                             && x.NamaJalan == namaJalan
+                             && x.TglAkhirBerlaku >= tglCutOff
+                             && x.TglAkhirBerlaku <= tglAkhir
+                             && x.NoFormulirA == null
+                             && x.Bongkar == 0)
+                        .Select(x => new DetailData
+                        {
+                            AlamatReklame = x.Alamatreklame,
+                            Kategori = "-",
+                            JenisReklame = x.FlagPermohonan,
+                            IsiReklame = x.IsiReklame??x.IsiReklameA,
+                            KategoriReklame = x.NmJenis,
+                            KelasJalan = x.KelasJalan,
+                            NamaJalan = x.NamaJalan,
+                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
+                            TglMulai = x.TglMulaiBerlaku.Value,
+                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            Pajak = x.PajakPokok.Value
+                        })
+                        .ToList();
+                }
+
+                return ret;
+
+            }
 
             public static List<RekapData> GetRekapDataReklame(DateTime tglAwal, DateTime tglAkhir)
             {
@@ -187,25 +429,25 @@ namespace MonPDReborn.Models.Reklame
                 }
             ).ToList();
 
-                            var terbatasData = (
-                from a in context.DbMonReklames
-                where a.FlagPermohonan == "TERBATAS"
-                      && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
-                      && a.TglAkhirBerlaku.Value.Date <= tglAkhir.Date
-                join b in context.DbMonReklameUpayas.Where(u => u.Upaya == "PEMBONGKARAN")
-                    on a.NoFormulir equals b.NoFormulir into gj
-                from b in gj.DefaultIfEmpty()
-                select new
-                {
-                    a.NoFormulir,
-                    a.KelasJalan,
-                    a.NamaJalan,
-                    Status = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date
-                             ? "EXPIRED"
-                             : "AKTIF",
-                    Id = b != null ? b.Seq : (decimal?)null
-                }
-            ).ToList();
+                var terbatasData = (
+    from a in context.DbMonReklames
+    where a.FlagPermohonan == "TERBATAS"
+          && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
+          && a.TglAkhirBerlaku.Value.Date <= tglAkhir.Date
+    join b in context.DbMonReklameUpayas.Where(u => u.Upaya == "PEMBONGKARAN")
+        on a.NoFormulir equals b.NoFormulir into gj
+    from b in gj.DefaultIfEmpty()
+    select new
+    {
+        a.NoFormulir,
+        a.KelasJalan,
+        a.NamaJalan,
+        Status = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date
+                 ? "EXPIRED"
+                 : "AKTIF",
+        Id = b != null ? b.Seq : (decimal?)null
+    }
+).ToList();
 
                 var jalanList = context.DbMonReklames.Where(x => x.TglMulaiBerlaku.Value.Date >= tglAwal.Date && x.TglMulaiBerlaku.Value.Date <= tglAkhir.Date).Select(x => new { x.KelasJalan, x.NamaJalan }).Distinct().ToList();
 
@@ -224,22 +466,22 @@ namespace MonPDReborn.Models.Reklame
                     var rowInsidentilExp = insidentilData.SingleOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED");
                     if (rowInsidentilExp != null)
                     {
-                        row.Isidentil.ExpiredBongkar = rowInsidentilExp.Jml;
-                        row.Isidentil.ExpiredBlmBongkar = 0;
+                        row.Insidentil.Bongkar = rowInsidentilExp.Jml;
+                        row.Insidentil.BlmBongkar = 0;
                     }
                     var rowInsidentilAktif = insidentilData.SingleOrDefault(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "AKTIF");
                     if (rowInsidentilAktif != null)
                     {
-                        row.Isidentil.Aktif = rowInsidentilAktif.Jml;
+                        row.Insidentil.Aktif = rowInsidentilAktif.Jml;
                     }
 
-                    row.Permanen.ExpiredBlmBongkar = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue == false).Count();
-                    row.Permanen.ExpiredBongkar = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue).Count();
+                    row.Permanen.BlmBongkar = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue == false).Count();
+                    row.Permanen.Bongkar = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue).Count();
                     row.Permanen.Aktif = permanenData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "AKTIF").Count();
 
 
-                    row.Terbatas.ExpiredBlmBongkar = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue == false).Count();
-                    row.Terbatas.ExpiredBongkar = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue).Count();
+                    row.Terbatas.BlmBongkar = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue == false).Count();
+                    row.Terbatas.Bongkar = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "EXPIRED" && x.Id.HasValue).Count();
                     row.Terbatas.Aktif = terbatasData.Where(x => x.KelasJalan == item.KelasJalan && x.NamaJalan == item.NamaJalan && x.Status == "AKTIF").Count();
 
                     ret.Add(row);
@@ -310,7 +552,7 @@ namespace MonPDReborn.Models.Reklame
                 if (jenisReklame == "INSIDENTIL")
                 {
                     if (status == "ExpiredBongkar")
-                    {                        
+                    {
 
                         var insidentilDataExpBongkar = context.DbMonReklames
                         .Where(r =>
@@ -328,7 +570,7 @@ namespace MonPDReborn.Models.Reklame
                             r.KelasJalan,
                             r.NamaJalan,
                             r.PokokPajakKetetapan,
-                            r.Alamatreklame, 
+                            r.Alamatreklame,
                             r.IsiReklame,
                             r.NmJenis,
                             r.JenisProduk,
@@ -352,7 +594,7 @@ namespace MonPDReborn.Models.Reklame
                                 Status = item.Status,
                                 TglMulai = item.TglMulai.Value,
                                 TglSelesai = item.TglAkhir.Value,
-                                Pajak=item.PokokPajakKetetapan.Value
+                                Pajak = item.PokokPajakKetetapan.Value
                             });
                         }
                     }
@@ -433,35 +675,35 @@ namespace MonPDReborn.Models.Reklame
                 else if (jenisReklame == "PERMANEN")
                 {
                     if (status == "ExpiredBongkar")
-                    {                        
-                       var permanenDataExpBongkar = (
-                            from a in  context.DbMonReklames
-                            join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
-                                on a.NoFormulir equals b.NoFormulir into gj
-                            from b in gj.DefaultIfEmpty()
-                            where a.FlagPermohonan == "PERMANEN"
-                                && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
-                                && a.TglAkhirBerlaku <= tglAkhir.Date
-                                && a.KelasJalan == kelasJalan
-                                && a.NamaJalan == namaJalan
-                                && b != null
-                                && a.TglAkhirBerlaku < DateTime.Now.Date
-                            select new
-                            {
-                                a.NoFormulir,
-                                a.KelasJalan,
-                                a.NamaJalan,
-                                a.PokokPajakKetetapan,
-                                a.Alamatreklame,
-                                a.IsiReklame,
-                                a.NmJenis,
-                                a.JenisProduk,
-                                STATUS = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date ? "EXPIRED" : "AKTIF",
-                                a.FlagPermohonan,
-                                a.TglMulaiBerlaku,
-                                a.TglAkhirBerlaku        
-                            }
-                        ).ToList();
+                    {
+                        var permanenDataExpBongkar = (
+                             from a in context.DbMonReklames
+                             join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
+                                 on a.NoFormulir equals b.NoFormulir into gj
+                             from b in gj.DefaultIfEmpty()
+                             where a.FlagPermohonan == "PERMANEN"
+                                 && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
+                                 && a.TglAkhirBerlaku <= tglAkhir.Date
+                                 && a.KelasJalan == kelasJalan
+                                 && a.NamaJalan == namaJalan
+                                 && b != null
+                                 && a.TglAkhirBerlaku < DateTime.Now.Date
+                             select new
+                             {
+                                 a.NoFormulir,
+                                 a.KelasJalan,
+                                 a.NamaJalan,
+                                 a.PokokPajakKetetapan,
+                                 a.Alamatreklame,
+                                 a.IsiReklame,
+                                 a.NmJenis,
+                                 a.JenisProduk,
+                                 STATUS = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date ? "EXPIRED" : "AKTIF",
+                                 a.FlagPermohonan,
+                                 a.TglMulaiBerlaku,
+                                 a.TglAkhirBerlaku
+                             }
+                         ).ToList();
                         foreach (var item in permanenDataExpBongkar)
                         {
                             ret.Add(new DetailData()
@@ -481,35 +723,35 @@ namespace MonPDReborn.Models.Reklame
                         }
                     }
                     if (status == "ExpiredBlmBongkar")
-                    {                        
-                         var permanenDataExpBlmBongkar = (
-                            from a in context.DbMonReklames
-                            join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
-                                on a.NoFormulir equals b.NoFormulir into gj
-                            from b in gj.DefaultIfEmpty()
-                            where a.FlagPermohonan == "PERMANEN"
-                                && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
-                                && a.TglAkhirBerlaku <= tglAkhir.Date
-                                && a.KelasJalan == kelasJalan
-                                && a.NamaJalan == namaJalan
-                                && b == null
-                                && a.TglAkhirBerlaku < DateTime.Now.Date
-                            select new
-                            {
-                                a.NoFormulir,
-                                a.KelasJalan,
-                                a.NamaJalan,
-                                a.Alamatreklame,
-                                a.IsiReklame,
-                                a.NmJenis,
-                                a.JenisProduk,
-                                a.PokokPajakKetetapan,
-                                STATUS = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date ? "EXPIRED" : "AKTIF",
-                                a.FlagPermohonan,
-                                a.TglMulaiBerlaku,
-                                a.TglAkhirBerlaku
-                            }
-                        ).ToList();
+                    {
+                        var permanenDataExpBlmBongkar = (
+                           from a in context.DbMonReklames
+                           join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
+                               on a.NoFormulir equals b.NoFormulir into gj
+                           from b in gj.DefaultIfEmpty()
+                           where a.FlagPermohonan == "PERMANEN"
+                               && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
+                               && a.TglAkhirBerlaku <= tglAkhir.Date
+                               && a.KelasJalan == kelasJalan
+                               && a.NamaJalan == namaJalan
+                               && b == null
+                               && a.TglAkhirBerlaku < DateTime.Now.Date
+                           select new
+                           {
+                               a.NoFormulir,
+                               a.KelasJalan,
+                               a.NamaJalan,
+                               a.Alamatreklame,
+                               a.IsiReklame,
+                               a.NmJenis,
+                               a.JenisProduk,
+                               a.PokokPajakKetetapan,
+                               STATUS = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date ? "EXPIRED" : "AKTIF",
+                               a.FlagPermohonan,
+                               a.TglMulaiBerlaku,
+                               a.TglAkhirBerlaku
+                           }
+                       ).ToList();
                         foreach (var item in permanenDataExpBlmBongkar)
                         {
                             ret.Add(new DetailData()
@@ -529,35 +771,35 @@ namespace MonPDReborn.Models.Reklame
                         }
                     }
                     if (status == "Aktif")
-                    {                        
-                         var permanenDataAktif = (
-                            from a in context.DbMonReklames
-                            join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
-                                on a.NoFormulir equals b.NoFormulir into gj
-                            from b in gj.DefaultIfEmpty()
-                            where a.FlagPermohonan == "PERMANEN"
-                                && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
-                                && a.TglAkhirBerlaku <= tglAkhir.Date
-                                && a.KelasJalan == kelasJalan
-                                && a.NamaJalan == namaJalan
-                                && b == null
-                                && a.TglAkhirBerlaku >= DateTime.Now.Date
-                            select new
-                            {
-                                a.NoFormulir,
-                                a.KelasJalan,
-                                a.NamaJalan,
-                                a.Alamatreklame,
-                                a.IsiReklame,
-                                a.PokokPajakKetetapan,
-                                a.NmJenis,
-                                a.JenisProduk,
-                                STATUS = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date ? "EXPIRED" : "AKTIF",
-                                a.FlagPermohonan,
-                                a.TglMulaiBerlaku,
-                                a.TglAkhirBerlaku
-                            }
-                        ).ToList();
+                    {
+                        var permanenDataAktif = (
+                           from a in context.DbMonReklames
+                           join b in context.DbMonReklameUpayas.Where(b => b.Upaya == "PEMBONGKARAN")
+                               on a.NoFormulir equals b.NoFormulir into gj
+                           from b in gj.DefaultIfEmpty()
+                           where a.FlagPermohonan == "PERMANEN"
+                               && a.TglAkhirBerlaku.Value.Date >= tglAwal.Date
+                               && a.TglAkhirBerlaku <= tglAkhir.Date
+                               && a.KelasJalan == kelasJalan
+                               && a.NamaJalan == namaJalan
+                               && b == null
+                               && a.TglAkhirBerlaku >= DateTime.Now.Date
+                           select new
+                           {
+                               a.NoFormulir,
+                               a.KelasJalan,
+                               a.NamaJalan,
+                               a.Alamatreklame,
+                               a.IsiReklame,
+                               a.PokokPajakKetetapan,
+                               a.NmJenis,
+                               a.JenisProduk,
+                               STATUS = a.TglAkhirBerlaku.Value.Date < DateTime.Now.Date ? "EXPIRED" : "AKTIF",
+                               a.FlagPermohonan,
+                               a.TglMulaiBerlaku,
+                               a.TglAkhirBerlaku
+                           }
+                       ).ToList();
                         foreach (var item in permanenDataAktif)
                         {
                             ret.Add(new DetailData()
@@ -779,7 +1021,7 @@ namespace MonPDReborn.Models.Reklame
         public string KelasJalan { get; set; } = null!;
         public string NamaJalan { get; set; } = null!;
 
-        public KategoriReklame Isidentil { get; set; } = new();
+        public KategoriReklame Insidentil { get; set; } = new();
         public KategoriReklame Permanen { get; set; } = new();
         public KategoriReklame Terbatas { get; set; } = new();
     }
@@ -787,11 +1029,13 @@ namespace MonPDReborn.Models.Reklame
     public class KategoriReklame
     {
         public string JenisReklame { get; set; }
-        public int Expired { get; set; }
-        public int ExpiredBongkar { get; set; }
-        public int ExpiredBlmBongkar { get; set; }
-        public int Aktif { get; set; }
-        public int Jumlah => ExpiredBongkar + ExpiredBlmBongkar + Aktif;
+        public decimal Aktif { get; set; }
+        public decimal Expired { get; set; }
+        public decimal Perpanjangan { get; set; }
+        public decimal WajibBongkar { get; set; }
+        public decimal Bongkar { get; set; }
+        public decimal BlmBongkar { get; set; }
+        public decimal Jumlah => Aktif + Expired + Perpanjangan + WajibBongkar + Bongkar + BlmBongkar;
     }
 
     public class DetailData

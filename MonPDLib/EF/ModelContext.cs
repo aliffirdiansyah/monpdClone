@@ -99,6 +99,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
 
+    public virtual DbSet<MvReklameRekapJalan> MvReklameRekapJalans { get; set; }
+
     public virtual DbSet<MvReklameSum> MvReklameSums { get; set; }
 
     public virtual DbSet<MvReklameSummary> MvReklameSummaries { get; set; }
@@ -265,10 +267,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
-*/
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("MONPD");
@@ -784,6 +786,13 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
         });
 
+        modelBuilder.Entity<MvReklameRekapJalan>(entity =>
+        {
+            entity.ToView("MV_REKLAME_REKAP_JALAN");
+
+            entity.Property(e => e.KelasJalan).IsFixedLength();
+        });
+
         modelBuilder.Entity<MvReklameSum>(entity =>
         {
             entity.ToView("MV_REKLAME_SUM");
@@ -792,6 +801,9 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MvReklameSummary>(entity =>
         {
             entity.ToView("MV_REKLAME_SUMMARY");
+
+            entity.Property(e => e.KelasJalan).IsFixedLength();
+            entity.Property(e => e.KelasJalanA).IsFixedLength();
         });
 
         modelBuilder.Entity<MvSeriesPendapatan>(entity =>
