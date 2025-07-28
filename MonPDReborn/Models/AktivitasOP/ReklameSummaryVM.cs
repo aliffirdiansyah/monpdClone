@@ -86,10 +86,14 @@ namespace MonPDReborn.Models.AktivitasOP
                         BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Bulan = i,
                         Tahun = tahun,
-                        Jenis = 2, // Jenis 2 untuk Permanen
+                        Jenis = 2, // Jenis 3 untuk Terbatas
 
                         SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
                         NilaiJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
+
+                        JmlBantipJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.Bantip) ?? 0,
+                        JmlSilangJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.Silang) ?? 0,
+                        JmlBongkarJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.Bongkar) ?? 0,
 
                         SKPDBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
                         NilaiBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
@@ -97,11 +101,19 @@ namespace MonPDReborn.Models.AktivitasOP
                         SKPDPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Count(),
                         NilaiPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.PajakPokok) ?? 0,
 
+                        JmlBantipPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.Bantip) ?? 0,
+                        JmlSilangPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.Silang) ?? 0,
+                        JmlBongkarPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.Bongkar) ?? 0,
+
                         SKPDBlmPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Count(),
                         NilaiBlmPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Sum(x => x.PajakPokok) ?? 0,
 
                         SKPDKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Count(),
                         NilaiKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
+
+                        JmlBantipKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BantipA) ?? 0,
+                        JmlSilangKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.SilangA) ?? 0,
+                        JmlBongkarKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BongkarA) ?? 0,
 
                         SKPDBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Count(),
                         NilaiBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokokA) ?? 0
@@ -130,17 +142,29 @@ namespace MonPDReborn.Models.AktivitasOP
                         SKPDJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
                         NilaiJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
 
+                        JmlBantipJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.Bantip) ?? 0,
+                        JmlSilangJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.Silang) ?? 0,
+                        JmlBongkarJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.Bongkar) ?? 0,
+
                         SKPDBlmJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
                         NilaiBlmJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
 
                         SKPDPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Count(),
                         NilaiPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.PajakPokok) ?? 0,
 
+                        JmlBantipPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.Bantip) ?? 0,
+                        JmlSilangPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.Silang) ?? 0,
+                        JmlBongkarPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && (!string.IsNullOrEmpty(x.NoFormulirA))).Sum(x => x.Bongkar) ?? 0,
+
                         SKPDBlmPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Count(),
                         NilaiBlmPanjang = dataTer.Where(x => x.IdFlagPermohonan == 3 && string.IsNullOrEmpty(x.NoFormulirA) && x.Tahun == tahun && x.Bulan == i).Sum(x => x.PajakPokok) ?? 0,
 
                         SKPDKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Count(),
                         NilaiKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
+
+                        JmlBantipKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BantipA) ?? 0,
+                        JmlSilangKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.SilangA) ?? 0,
+                        JmlBongkarKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BongkarA) ?? 0,
 
                         SKPDBlmKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Count(),
                         NilaiBlmKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue)).Sum(x => x.PajakPokokA) ?? 0
@@ -163,6 +187,11 @@ namespace MonPDReborn.Models.AktivitasOP
                     var dataRekIns = dataIns.Where(x => x.BulanA == i).AsQueryable();
                     int skpd = dataRekIns.Count();
                     decimal nilai = dataRekIns.Sum(q => q.PajakPokokA) ?? 0;
+
+                    decimal JmlBantip = dataRekIns.Sum(q => q.BantipA) ?? 0;
+                    decimal JmlSilang = dataRekIns.Sum(q => q.SilangA) ?? 0;
+                    decimal JmlBongkar = dataRekIns.Sum(q => q.BongkarA) ?? 0;
+
                     int skpdBlmByr = dataRekIns.Where(x => x.NominalPokokBayarA == null).Count();
                     decimal nilaiBlmByr = dataRekIns.Where(x => x.NominalPokokBayarA == null).Sum(q => q.PajakPokokA) ?? 0;
 
@@ -660,6 +689,16 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal NilaiKB { get; set; }
             public int SKPDBlmKB { get; set; }
             public decimal NilaiBlmKB { get; set; }
+
+            public decimal JmlBantipJT { get; set; }
+            public decimal JmlSilangJT { get; set; }
+            public decimal JmlBongkarJT { get; set; }
+            public decimal JmlBantipPanjang { get; set; }
+            public decimal JmlSilangPanjang { get; set; }
+            public decimal JmlBongkarPanjang { get; set; }
+            public decimal JmlBantipKB { get; set; }
+            public decimal JmlSilangKB { get; set; }
+            public decimal JmlBongkarKB { get; set; }
             public decimal Potensi => NilaiBlmJT + NilaiBlmPanjang + NilaiBlmKB;
 
         }
@@ -682,6 +721,16 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal NilaiKB { get; set; }
             public int SKPDBlmKB { get; set; }
             public decimal NilaiBlmKB { get; set; }
+
+            public decimal JmlBantipJT { get; set; }
+            public decimal JmlSilangJT { get; set; }
+            public decimal JmlBongkarJT { get; set; }
+            public decimal JmlBantipPanjang { get; set; }
+            public decimal JmlSilangPanjang { get; set; }
+            public decimal JmlBongkarPanjang { get; set; }
+            public decimal JmlBantipKB { get; set; }
+            public decimal JmlSilangKB { get; set; }
+            public decimal JmlBongkarKB { get; set; }
             public decimal Potensi => NilaiBlmJT + NilaiBlmPanjang + NilaiBlmKB;
         }
 
@@ -695,6 +744,10 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal Nilai { get; set; }
             public int SKPDBlmByr { get; set; }
             public decimal NilaiBlmByr { get; set; }
+
+            public decimal JmlBantip { get; set; }
+            public decimal JmlSilang { get; set; }
+            public decimal JmlBongkar { get; set; }
             public decimal Potensi => NilaiBlmByr;
         }
 

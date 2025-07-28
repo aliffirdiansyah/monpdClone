@@ -138,103 +138,92 @@
             .Fixed(true)
             .AllowHeaderFiltering(true); // ✅
 
-            @* columns.Add().Caption("JENIS INSIDENTIL").Alignment(HorizontalAlignment.Center).Columns(sub => {
-                sub.AddFor(x => x.Isidentil.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));;
-                sub.AddFor(x => x.Isidentil.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));;
-                sub.AddFor(x => x.Isidentil.Aktif).Caption("AKTIF").CellTemplate(new JS("detailReklameCellTemplate"));;
-                sub.AddFor(x => x.Isidentil.Jumlah).Caption("JUMLAH");
-            });
-
-            columns.Add().Caption("JENIS PERMANEN").Alignment(HorizontalAlignment.Center).Columns(sub => {
-                sub.AddFor(x => x.Permanen.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
-                sub.AddFor(x => x.Permanen.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
-                sub.AddFor(x => x.Permanen.Aktif).Caption("AKTIF").CellTemplate(new JS("detailReklameCellTemplate"));
-                sub.AddFor(x => x.Permanen.Jumlah).Caption("JUMLAH");
-            });
-
-            columns.Add().Caption("JENIS TERBATAS").Alignment(HorizontalAlignment.Center).Columns(sub => {
-                sub.AddFor(x => x.Terbatas.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
-                sub.AddFor(x => x.Terbatas.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(new JS("detailReklameCellTemplate"));
-                sub.AddFor(x => x.Terbatas.Aktif).Caption("AKTIF").CellTemplate(new JS("detailReklameCellTemplate"));
-                sub.AddFor(x => x.Terbatas.Jumlah).Caption("JUMLAH");
-            }); *@
 
             columns.Add().Caption("JENIS INSIDENTIL").Alignment(HorizontalAlignment.Center).Columns(sub =>
-    {
-                sub.AddFor(x => x.Isidentil.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBongkar','INSIDENTIL')">
-            <%= data.Isidentil.ExpiredBongkar %>
-        </a>
-                    </text>
-                );
-                sub.AddFor(x => x.Isidentil.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBlmBongkar','INSIDENTIL')">
-            <%= data.Isidentil.ExpiredBlmBongkar %>
-        </a>
-                    </text>
-                );
-                sub.AddFor(x => x.Isidentil.Aktif).Caption("AKTIF").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','Aktif','INSIDENTIL')">
-            <%= data.Isidentil.Aktif %>
-        </a>
-                    </text>
-                );
+            {
                 sub.AddFor(x => x.Isidentil.Jumlah).Caption("JUMLAH");
+                sub.AddFor(x => x.Isidentil.Aktif).Caption("AKTIF").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','Aktif','INSIDENTIL')">
+                    <%= data.Isidentil.Aktif %>
+                </a>
+                            </text>
+                        );
+                sub.Add().Caption("EXPIRED");
+                sub.AddFor(x => x.Isidentil.ExpiredBongkar).Caption("EX WAJIB BONGKAR").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBongkar','INSIDENTIL')">
+                    <%= data.Isidentil.ExpiredBongkar %>
+                </a>
+                            </text>
+                        );
+                sub.AddFor(x => x.Isidentil.ExpiredBlmBongkar).Caption("EX PERPANJANGAN").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBlmBongkar','INSIDENTIL')">
+                    <%= data.Isidentil.ExpiredBlmBongkar %>
+                </a>
+                            </text>
+                        );
+                
+                
             });
 
             columns.Add().Caption("JENIS PERMANEN").Alignment(HorizontalAlignment.Center).Columns(sub =>
             {
-                sub.AddFor(x => x.Permanen.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBongkar','PERMANEN')">
-            <%= data.Permanen.ExpiredBongkar %>
-        </a>
-                    </text>
-                );
-                sub.AddFor(x => x.Permanen.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBlmBongkar','PERMANEN')">
-            <%= data.Permanen.ExpiredBlmBongkar %>
-        </a>
-                    </text>
-                );
-                sub.AddFor(x => x.Permanen.Aktif).Caption("AKTIF").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','Aktif','PERMANEN')">
-            <%= data.Permanen.Aktif %>
-        </a>
-                    </text>
-                );
                 sub.AddFor(x => x.Permanen.Jumlah).Caption("JUMLAH");
+                sub.AddFor(x => x.Permanen.Aktif).Caption("AKTIF").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','Aktif','PERMANEN')">
+                    <%= data.Permanen.Aktif %>
+                </a>
+                            </text>
+                        );
+                sub.Add().Caption("EXPIRED");
+                sub.AddFor(x => x.Permanen.ExpiredBongkar).Caption("EX WAJIB BONGKAR").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBongkar','PERMANEN')">
+                    <%= data.Permanen.ExpiredBongkar %>
+                </a>
+                            </text>
+                        );
+                sub.AddFor(x => x.Permanen.ExpiredBlmBongkar).Caption("EX PERPANJANGAN").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBlmBongkar','PERMANEN')">
+                    <%= data.Permanen.ExpiredBlmBongkar %>
+                </a>
+                            </text>
+                        );
+                
+                
             });
 
             columns.Add().Caption("JENIS TERBATAS").Alignment(HorizontalAlignment.Center).Columns(sub =>
             {
-                sub.AddFor(x => x.Terbatas.ExpiredBongkar).Caption("EXPIRED BONGKAR").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBongkar','TERBATAS')">
-            <%= data.Terbatas.ExpiredBongkar %>
-        </a>
-                    </text>
-                );
-                sub.AddFor(x => x.Terbatas.ExpiredBlmBongkar).Caption("EXPIRED BLM BONGKAR").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBlmBongkar','TERBATAS')">
-            <%= data.Terbatas.ExpiredBlmBongkar %>
-        </a>
-                    </text>
-                );
-                sub.AddFor(x => x.Terbatas.Aktif).Caption("AKTIF").CellTemplate(
-                    @<text>
-        <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','Aktif','TERBATAS')">
-            <%= data.Terbatas.Aktif %>
-        </a>
-                    </text>
-                );
                 sub.AddFor(x => x.Terbatas.Jumlah).Caption("JUMLAH");
+                sub.AddFor(x => x.Terbatas.Aktif).Caption("AKTIF").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','Aktif','TERBATAS')">
+                    <%= data.Terbatas.Aktif %>
+                </a>
+                            </text>
+                        );
+                sub.Add().Caption("EXPIRED");
+                sub.AddFor(x => x.Terbatas.ExpiredBongkar).Caption("EX WAJIB BONGKAR").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBongkar','TERBATAS')">
+                    <%= data.Terbatas.ExpiredBongkar %>
+                </a>
+                            </text>
+                        );
+                sub.AddFor(x => x.Terbatas.ExpiredBlmBongkar).Caption("EX PERPANJANGAN").CellTemplate(
+                            @<text>
+                <a href="javascript:void(0)" onclick="GetDetailJalan('<%= data.KelasJalanId %>','<%= data.NamaJalan %>','ExpiredBlmBongkar','TERBATAS')">
+                    <%= data.Terbatas.ExpiredBlmBongkar %>
+                </a>
+                            </text>
+                        );
+                
+                
             });
         })
         .Summary(s => {
