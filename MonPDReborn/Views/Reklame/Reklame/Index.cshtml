@@ -1,5 +1,6 @@
 ﻿@model MonPDReborn.Models.Reklame.ReklameVM.Index
 @using DevExtreme.AspNet.Mvc
+@using System.Globalization
 
 @{
     ViewData["Title"] = "Detail Reklame";
@@ -32,8 +33,9 @@
 
             <div class="card-body">
                 <div class="row g-3 align-items-center">
-                   
-                    <div class="col-lg col-md-6">
+                    <h3>Tgl CutOff : @DateTime.Now.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                    </h3>
+                    @* <div class="col-lg col-md-6">
                         @(Html.DevExtreme().DateBoxFor(x=>x.TglAwal)
                                                 .ID("tanggalAwal")
                                                 .Type(DateBoxType.Date)
@@ -49,7 +51,7 @@
                                                 .Placeholder("Tanggal Akhir")
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 )
-                    </div>
+                    </div> *@
 
                     <div class="col-lg-2 col-md-12">
                         <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100" onclick="fnShow()">
@@ -108,19 +110,11 @@
 
 
         function fnShow() {
-            const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
-            const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
-
-            // Format ke yyyy-MM-dd
-            const tglAwal = tglAwalDate ? tglAwalDate.toISOString().split('T')[0] : '';
-            const tglAkhir = tglAkhirDate ? tglAkhirDate.toISOString().split('T')[0] : '';
+            
             $.ajax({
                 url: '@Url.Action("Show")',
                 type: 'GET',
-                data: {
-                    TglAwal: tglAwal,
-                    TglAkhir: tglAkhir
-                },
+                data: { },
                 beforeSend: function () {
                     $('#loading2-Show').show();  
                     $('#Show').hide();

@@ -49,9 +49,9 @@ namespace MonPDReborn.Models.Reklame
         public class ShowData
         {
             public List<RekapData> DataRekap { get; set; } = new();
-            public ShowData(Index input)
+            public ShowData()
             {
-                DataRekap = Method.GetRekapDataReklame(input.TglAwal, input.TglAkhir);
+                DataRekap = Method.GetRekapDataReklame();
             }
         }
 
@@ -139,7 +139,12 @@ namespace MonPDReborn.Models.Reklame
                 };
             }
 
+            public static List<RekapData> GetRekapDataReklame()
+            {
+                var ret = new List<RekapData>();
 
+                return ret;
+            }
             public static List<RekapData> GetRekapDataReklame(DateTime tglAwal, DateTime tglAkhir)
             {
                 var ret = new List<RekapData>();
