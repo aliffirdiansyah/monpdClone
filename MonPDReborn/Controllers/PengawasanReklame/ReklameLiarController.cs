@@ -62,11 +62,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
             }
         }
 
-        public IActionResult Detail(string jalan, string jenis, string bulan)
+        public IActionResult Detail(string namaJalan, string kelasJalan, int bulan)
         {
             try
             {
-                var model = new Models.PengawasanReklame.ReklameLiarVM.Detail( jalan,  jenis,  bulan);
+                var model = new Models.PengawasanReklame.ReklameLiarVM.Detail(namaJalan, kelasJalan, bulan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

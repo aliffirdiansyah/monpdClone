@@ -1,33 +1,31 @@
 ﻿@model MonPDReborn.Models.PengawasanReklame.ReklameLiarVM.Detail
 
-<div class="modal-header">
-    <h5 class="modal-title">Detail Reklame Liar - @Model.DataJalan.Bulan @Model.DataJalan.Tahun</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-</div>
-<div class="modal-body">
-    <div class="d-flex justify-content-between mb-3">
-        <div>
-            <p class="mb-0 text-muted">Bulan</p>
-            <h5 class="mb-0">@Model.DataJalan.Bulan @Model.DataJalan.Tahun</h5>
-        </div>
-        <div class="text-end">
-            <p class="mb-0 text-muted">Jumlah Reklame</p>
-            <h5 class="mb-0 text-primary">@Model.DataJalan.JumlahReklame</h5>
-        </div>
+<div class="container-fluid">
+    <div>
+        <p class="mb-0 text-muted">Bulan</p>
+        <h5 class="mb-0">@Model.DataDetail.Bulan @Model.DataDetail.Tahun</h5>
+    </div>
+    <div class="text-end mb-3">
+        <p class="mb-0 text-muted">Jumlah Reklame</p>
+        <h5 class="mb-0 text-primary">@Model.DataDetail.JumlahReklame</h5>
     </div>
     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.ReklameLiarVM.DetailData>()
         .ID("reklameLiarDetailGrid")
-        .DataSource(Model.DataDetail)
+        .DataSource(Model.DataDetail.DetailDataList)
         .KeyExpr("AlamatReklame")
         .ShowBorders(true)
         .ShowColumnLines(true)
         .Paging(p => p.PageSize(5))
-        .Columns(columns => {
+        .Columns(columns =>
+        {
             columns.AddFor(m => m.KelasJalan).Alignment(HorizontalAlignment.Center);
             columns.AddFor(m => m.NamaJalan);
             columns.AddFor(m => m.AlamatReklame);
             columns.AddFor(m => m.Jenis);
-            columns.AddFor(m => m.TanggalBongkar).DataType(GridColumnDataType.Date).Format("d MMMM yyyy");
+            columns.AddFor(m => m.TanggalSilang).DataType(GridColumnDataType.Date).Format("dd MMMM yyyy");
+            columns.AddFor(m => m.TanggalBantib).DataType(GridColumnDataType.Date).Format("dd MMMM yyyy");
+            columns.AddFor(m => m.TanggalBongkar).DataType(GridColumnDataType.Date).Format("dd MMMM yyyy");
+            columns.AddFor(m => m.TanggalSkBongkar).DataType(GridColumnDataType.Date).Format("dd MMMM yyyy");
         })
-    )
+        )
 </div>

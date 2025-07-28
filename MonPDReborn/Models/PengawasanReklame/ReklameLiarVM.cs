@@ -2,6 +2,7 @@
 using MonPDReborn.Models.Reklame;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace MonPDReborn.Models.PengawasanReklame
@@ -27,12 +28,11 @@ namespace MonPDReborn.Models.PengawasanReklame
         // Untuk Partial View _Detail.cshtml (modal)
         public class Detail
         {
-            public InfoJalan DataJalan { get; set; } = new();
-            public List<DetailData> DataDetail { get; set; } = new();
+            public InfoJalan DataDetail { get; set; } = new();
 
-            public Detail(string jalan, string kategori, string status)
+            public Detail(string namaJalan, string kelasJalan, int bulan)
             {
-                DataDetail = Method.GetDetailDataReklame(jalan, kategori, status);
+                DataDetail = Method.GetDetailDataReklame(kelasJalan, namaJalan, bulan);
             }
         }
 
@@ -45,16 +45,63 @@ namespace MonPDReborn.Models.PengawasanReklame
                 var context = DBClass.GetContext();
                 var tahun = DateTime.Now.Year;
 
-
+                ret = context.MvReklameRekapLiars
+                    .Select(x => new RekapBulanan()
+                    {
+                        TahunData = tahun,
+                        NamaJalan = x.NamaJalan ?? "",
+                        KelasJalan = x.KelasJalan ?? "",
+                        Jenis = x.Jenis ?? "",
+                        Jan = x.Jan ?? 0,
+                        Feb = x.Feb ?? 0,
+                        Mar = x.Mar ?? 0,
+                        Apr = x.Apr ?? 0,
+                        Mei = x.Mei ?? 0,
+                        Jun = x.Jun ?? 0,
+                        Jul = x.Jul ?? 0,
+                        Agu = x.Agt ?? 0,
+                        Sep = x.Sep ?? 0,
+                        Okt = x.Okt ?? 0,
+                        Nov = x.Nov ?? 0,
+                        Des = x.Des ?? 0
+                    })
+                    .ToList();
 
                 return ret;
             }
-            public static List<DetailData> GetDetailDataReklame(string jalan, string jenis, string bulan)
+            public static InfoJalan GetDetailDataReklame(string kelasJalan, string namaJalan, int bulan)
             {
-                var ret = new List<DetailData>();
                 var context = DBClass.GetContext();
+                var currentYear = DateTime.Now.Year;
 
+                var data = context.DbMonReklameLiars
+                    .Where(x => x.KelasJalan == kelasJalan
+                             && x.NamaJalan == namaJalan
+                             && x.TanggalSkSilang.Month == bulan)
+                    .ToList();
 
+                var jumlahReklame = data.Count;
+
+                var detailDataList = data.Select(x => new DetailData()
+                {
+                    KelasJalan = x.KelasJalan ?? "",
+                    NamaJalan = x.NamaJalan ?? "",
+                    AlamatReklame = x.AlamatReklame ?? "",
+                    Jenis = x.Jenis ?? "",
+                    TanggalSilang = x.TanggalSkSilang,
+                    TanggalBantib = x.TanggalBantib ?? DateTime.MinValue,
+                    TanggalBongkar = x.TanggalBongkar ?? DateTime.MinValue,
+                    TanggalSkBongkar = x.TanggalSkBongkar ?? DateTime.MinValue
+                }).ToList();
+
+                var ret = new InfoJalan
+                {
+                    NamaJalan = namaJalan,
+                    Bulan = new DateTime(currentYear, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                    Tahun = currentYear.ToString(),
+                    JumlahReklame = jumlahReklame,
+                    DetailDataList = detailDataList
+                };
 
                 return ret;
             }
@@ -67,29 +114,31 @@ namespace MonPDReborn.Models.PengawasanReklame
             public string NamaJalan { get; set; } = null!;
             public string KelasJalan { get; set; } = null!;
             public string Jenis { get; set; } = null!;
-            public int Jan { get; set; }
-            public int Feb { get; set; }
-            public int Mar { get; set; }
-            public int Apr { get; set; }
-            public int Mei { get; set; }
-            public int Jun { get; set; }
-            public int Jul { get; set; }
-            public int Agu { get; set; }
-            public int Sep { get; set; }
-            public int Okt { get; set; }
-            public int Nov { get; set; }
-            public int Des { get; set; }
-            public int Total => Jan + Feb + Mar + Apr + Mei + Jun + Jul + Agu + Sep + Okt + Nov + Des;
+            public decimal Jan { get; set; }
+            public decimal Feb { get; set; }
+            public decimal Mar { get; set; }
+            public decimal Apr { get; set; }
+            public decimal Mei { get; set; }
+            public decimal Jun { get; set; }
+            public decimal Jul { get; set; }
+            public decimal Agu { get; set; }
+            public decimal Sep { get; set; }
+            public decimal Okt { get; set; }
+            public decimal Nov { get; set; }
+            public decimal Des { get; set; }
+            public decimal Total => Jan + Feb + Mar + Apr + Mei + Jun + Jul + Agu + Sep + Okt + Nov + Des;
         }
 
         public class DetailData
         {
-            public InfoJalan InfoJalan { get; set; } = new();
             public string KelasJalan { get; set; } = null!;
             public string NamaJalan { get; set; } = null!;
             public string AlamatReklame { get; set; } = null!;
             public string Jenis { get; set; } = null!;
-            public DateTime TanggalBongkar { get; set; }
+            public DateTime TanggalSilang { get; set; }
+            public DateTime TanggalBantib { get; set; }
+            public DateTime? TanggalBongkar { get; set; }
+            public DateTime? TanggalSkBongkar { get; set; }
         }
 
         public class InfoJalan
@@ -98,6 +147,7 @@ namespace MonPDReborn.Models.PengawasanReklame
             public string Bulan { get; set; } = "";
             public string Tahun { get; set; } = "";
             public int JumlahReklame { get; set; }
+            public List<DetailData> DetailDataList { get; set; } = new();
         }
     }
 }

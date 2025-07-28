@@ -45,19 +45,19 @@
         .Summary(s => {
             s.TotalItems(items => {
                 items.AddFor(m => m.Jenis).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
-                items.AddFor(m => m.Jan).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Feb).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Mar).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Apr).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Mei).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Jun).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Jul).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Agu).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Sep).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Okt).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Nov).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Des).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.Total).SummaryType(SummaryType.Sum).DisplayFormat("{0}").CssClass("fw-bold");
+                items.AddFor(m => m.Jan).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Feb).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Mar).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Apr).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Mei).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Jun).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Jul).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Agu).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Sep).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Okt).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Nov).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Des).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Total).SummaryType(SummaryType.Sum).DisplayFormat("{0}").CssClass("fw-bold").ValueFormat("#,##0");
             });
         })
     )

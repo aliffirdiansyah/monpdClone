@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <div class="card-body">
+            @* <div class="card-body">
                 <div class="row mt-3 ms-0">
                     <div class="col-lg-3 col-md-6">
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTahun)
@@ -39,7 +39,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> *@
         </div>
     </div>
 
@@ -124,14 +124,10 @@
         $(document).ready(function () {
             // Langsung panggil klik tombol filter untuk memuat data awal
             // dengan tahun default yang sudah terpasang di SelectBox.
-            $('#btnTerapkanFilter').click();
+            fnShow();
         });
 
-        // Beri ID pada tombol Anda
-        $('#btnTerapkanFilter').on('click', function() {
-            const selectedTahun = $('#selectTahun').dxSelectBox('instance').option('value');
-            fnShow(selectedTahun);
-        });
+        
 
 
         // Fungsi untuk memuat tabel, sekarang menerima parameter tahun (opsional)
@@ -161,6 +157,14 @@
             });
 
         }
+        function getBulan(columnName) {
+            switch (columnName) {
+                case 'Jan': return 1;
+                case 'Feb': return 2;
+                case 'Mar': return 3;
+                default: return 0; // fallback
+            }
+        }
 
         function detailReklameCellTemplate(cellElement, cellInfo) {
             const value = cellInfo.value ?? 0;
@@ -168,34 +172,69 @@
                 $(cellElement).text('0');
                 return;
             }
-            const jalan = cellInfo.data.NamaJalan;
-            const jenis = cellInfo.data.Jenis;
-            const bulan = cellInfo.column.dataField; // "Jan", "Feb", dll.
+            const namaJalan = cellInfo.data.NamaJalan;
+            const kelasJalan = cellInfo.data.KelasJalan;
+            // const bulan = cellInfo.column.dataField;
+            const namaBulan = cellInfo.column.dataField;
+            const bulan = getBulan(namaBulan);
 
             const $link = $('<a>').addClass('text-primary fw-semibold')
                 .attr('href', 'javascript:void(0);')
                 .text(value.toLocaleString('id-ID'))
-                .on('click', () => showDetailModal(jalan, jenis, bulan));
+                .on('click', () => showDetailModal(namaJalan, kelasJalan, bulan));
             $(cellElement).append($link);
         }
 
-        function showDetailModal(jalan, jenis, bulan, jumlah) {
-            // Parameter yang dikirim: jalan, kategori (jenis), status (bulan)
-            const url = '@Url.Action("Detail", "ReklameLiar")'
-                + '?jalan=' + encodeURIComponent(jalan)
-                + '&kategori=' + encodeURIComponent(jenis)
-                + '&status=' + encodeURIComponent(bulan);
+        function showDetailModal(namaJalan, kelasJalan, bulan) {
+            const tahun = new Date().getFullYear(); // Asumsikan tahun saat ini
+            const url = '/ReklameLiar/Detail'; // Ganti sesuai controller & action Anda
 
-            const $modal = $('#detailModal');
-            const $modalContent = $('#detailModalContent');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: {
+                    namaJalan: namaJalan,
+                    kelasJalan: kelasJalan,
+                    bulan: bulan,
+                    tahun: tahun // jika diperlukan di sisi server
+                },
+                beforeSend: function () {
+                    $("#loader").show();
 
-            $modal.modal('show');
-            $modalContent.html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
+                },
+                success: function (response) {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
 
-            $.get(url, function (data) {
-                $modalContent.html(data);
-            }).fail(function() {
-                 $modalContent.html('<p class="text-danger p-5 text-center">Gagal memuat detail.</p>');
+                    // Jika response adalah HTML
+                    if (typeof response === "string" && response.trim().length > 0) {
+                        $modal.find(".modal-title").html(`Detail – ${namaJalan}`);
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else if (response.Status !== undefined) {
+                        // Jika response dalam format JSON error
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: response.Message
+                        });
+                    } else {
+                        $modal.find(".modal-title").html("Kosong");
+                        $modal.find(".modal-body").html('<p class="text-center text-muted">Tidak ada data ditampilkan.</p>');
+                        $modal.modal('show');
+                    }
+                },
+                error: function () {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").html("Error");
+                    $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
             });
         }
 
