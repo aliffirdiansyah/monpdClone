@@ -320,7 +320,7 @@ WHERE A.NPWPD NOT IN (
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine($"Error processing NOP {ex.Message}");
                     }
 
                     // ketetapan sbytax
@@ -416,9 +416,9 @@ WHERE A.NPWPD NOT IN (
                         }
                     }
                     catch (Exception ex)
-                    {
-
-                    }
+            {
+                Console.WriteLine($"Error processing NOP {ex.Message}");
+            }
 
                     //                    // realisasi
                     try
@@ -553,9 +553,9 @@ WHERE A.NPWPD NOT IN (
 
                     }
                     catch (Exception ex)
-                    {
-
-                    }
+            {
+                Console.WriteLine($"Error processing NOP {ex.Message}");
+            }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
                     Console.Write($"\rDB_OP_RESTORAN SBYTAX TAHUN {tahunBuku} JML OP {jmlData} : {item.Nop}  {persen:F2}%   ");
