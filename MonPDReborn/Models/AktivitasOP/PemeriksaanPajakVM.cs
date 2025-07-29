@@ -77,48 +77,26 @@ namespace MonPDReborn.Models.AktivitasOP
                 var ret = new List<DataDetailPemeriksaan>();
                 var context = DBClass.GetContext();
 
-                var query = context.TPemeriksaans
-                        .Where(x => x.JenisPajak == jenisPajak && x.TahunPajak == tahun)
-                        .Select(x => new DataDetailPemeriksaan
-                        {
-                            JenisPajak = x.JenisPajak.ToString(),
-                            NOP = x.Nop ?? "",
-                            WajibPajak = x.NamaWajibPajak ?? "",
-                            Alamat = x.Alamat ?? "",
-                            UPTB = x.UPTB ?? "",
-                            NoSP = x.NoSP ?? "",
-                            TglST = x.TglST ?? DateTime.MinValue,
-                            Tahun = x.Tahun,
-                            JumlahKB = x.JumlahKB ?? 0,
-                            Keterangan = x.Keterangan ?? "",
-                            LHP = x.NoLHP ?? "",
-                            TglLHP = x.TglLHP ?? DateTime.MinValue,
-                            TglBayar = x.TglBayar ?? DateTime.MinValue,
-                            Tim = x.NamaTim ?? ""
-                        });
-
-                                ret = query.ToList();
-
-
-
+                var query = context.TPemeriksaans.AsQueryable();
+                    
                 return ret;
             }
 
-            /*var all = GetAllDetail();
+            //var all = GetAllDetail();
 
-                // Jika tidak ada filter, kembalikan list kosong agar tidak semua data tampil di awal
-                if (string.IsNullOrWhiteSpace(jenisPajak) || tahun == 0)
-                    return new List<DataDetailPemeriksaan>();
+            //    // Jika tidak ada filter, kembalikan list kosong agar tidak semua data tampil di awal
+            //    if (string.IsNullOrWhiteSpace(jenisPajak) || tahun == 0)
+            //        return new List<DataDetailPemeriksaan>();
 
-                // Filter berdasarkan Jenis Pajak DAN Tahun
-                return all
-                    .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase) && x.Tahun == tahun)
-                    .ToList();
-            }
+            //    // Filter berdasarkan Jenis Pajak DAN Tahun
+            //    return all
+            //        .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase) && x.Tahun == tahun)
+            //        .ToList();
+        }
 
-            private static List<DataDetailPemeriksaan> GetAllDetail()
-            {
-                return new List<DataDetailPemeriksaan>
+        private static List<DataDetailPemeriksaan> GetAllDetail()
+        {
+            return new List<DataDetailPemeriksaan>
             {
                 new()
                 {
@@ -172,47 +150,46 @@ namespace MonPDReborn.Models.AktivitasOP
                     Tim = "Tim B"
                 }
             };
-            }
         }
+    }
 
-        // ======= ENTITY UTAMA ==========
-        public class DataPemeriksaan
-        {
-            public string JenisPajak { get; set; } = null!;
-            public int JumlahOPMines2 { get; set; }
-            public int JumlahOPMines1 { get; set; }
-            public int JumlahOPNow { get; set; }
+    // ======= ENTITY UTAMA ==========
+    public class DataPemeriksaan
+    {
+        public string JenisPajak { get; set; } = null!;
+        public int JumlahOPMines2 { get; set; }
+        public int JumlahOPMines1 { get; set; }
+        public int JumlahOPNow { get; set; }
 
-            public decimal PokokMines2 { get; set; }
-            public decimal SanksiMines2 { get; set; }
-            public decimal TotalMines2 => PokokMines2 + SanksiMines2;
+        public decimal PokokMines2 { get; set; }
+        public decimal SanksiMines2 { get; set; }
+        public decimal TotalMines2 => PokokMines2 + SanksiMines2;
 
-            public decimal PokokMines1 { get; set; }
-            public decimal SanksiMines1 { get; set; }
-            public decimal TotalMines1 => PokokMines1 + SanksiMines1;
+        public decimal PokokMines1 { get; set; }
+        public decimal SanksiMines1 { get; set; }
+        public decimal TotalMines1 => PokokMines1 + SanksiMines1;
 
-            public decimal PokokNow { get; set; }
-            public decimal SanksiNow { get; set; }
-            public decimal TotalNow => PokokNow + SanksiNow;
-        }
+        public decimal PokokNow { get; set; }
+        public decimal SanksiNow { get; set; }
+        public decimal TotalNow => PokokNow + SanksiNow;
+    }
 
-        // ======= ENTITY DETAIL ==========
-        public class DataDetailPemeriksaan
-        {
-            public string JenisPajak { get; set; } = null!;
-            public string NOP { get; set; } = null!;
-            public string WajibPajak { get; set; } = null!;
-            public string Alamat { get; set; } = null!;
-            public string UPTB { get; set; } = null!;
-            public string NoSP { get; set; } = null!;
-            public DateTime TglST { get; set; }
-            public int Tahun { get; set; }
-            public decimal JumlahKB { get; set; }
-            public string Keterangan { get; set; } = null!;
-            public string LHP { get; set; } = null!;
-            public DateTime TglLHP { get; set; }
-            public DateTime TglBayar { get; set; }
-            public string Tim { get; set; } = null!;
-        }
+    // ======= ENTITY DETAIL ==========
+    public class DataDetailPemeriksaan
+    {
+        public string JenisPajak { get; set; } = null!;
+        public string NOP { get; set; } = null!;
+        public string WajibPajak { get; set; } = null!;
+        public string Alamat { get; set; } = null!;
+        public string UPTB { get; set; } = null!;
+        public string NoSP { get; set; } = null!;
+        public DateTime TglST { get; set; }
+        public int Tahun { get; set; }
+        public decimal JumlahKB { get; set; }
+        public string Keterangan { get; set; } = null!;
+        public string LHP { get; set; } = null!;
+        public DateTime TglLHP { get; set; }
+        public DateTime TglBayar { get; set; }
+        public string Tim { get; set; } = null!;
     }
 }
