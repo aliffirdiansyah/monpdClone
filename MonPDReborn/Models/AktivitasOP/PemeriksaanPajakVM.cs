@@ -51,15 +51,20 @@ namespace MonPDReborn.Models.AktivitasOP
                 {
                     var col = new DataPemeriksaan();
                     col.JenisPajak = ((EnumFactory.EPajak)item).GetDescription();
-                    col.JumlahOP2023 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2);
-                    col.JumlahOP2024 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1);
-                    col.JumlahOP2025 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year);
-                    col.Pokok2023 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2).Sum(x => x.Pokok);
-                    col.Sanksi2023 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2).Sum(x => x.Denda);
-                    col.Pokok2024 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1).Sum(x => x.Pokok);
-                    col.Sanksi2024 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1).Sum(x => x.Denda);
-                    col.Pokok2025 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year).Sum(x => x.Pokok);
-                    col.Sanksi2025 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year).Sum(x => x.Denda);
+
+                    col.JumlahOPMines2 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2);
+                    col.JumlahOPMines1 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1);
+                    col.JumlahOPNow = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year);
+
+                    col.PokokMines2 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2).Sum(x => x.Pokok);
+                    col.SanksiMines2 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2).Sum(x => x.Denda);
+
+                    col.PokokMines1 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1).Sum(x => x.Pokok);
+                    col.SanksiMines1 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1).Sum(x => x.Denda);
+
+                    col.PokokNow = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year).Sum(x => x.Pokok);
+                    col.SanksiNow = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year).Sum(x => x.Denda);
+
                     ret.Add(col);
                 }
 
@@ -79,34 +84,6 @@ namespace MonPDReborn.Models.AktivitasOP
                 return all
                     .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase) && x.Tahun == tahun)
                     .ToList();
-            }
-
-            private static List<DataPemeriksaan> GetAllData()
-            {
-                var ret = new List<DataPemeriksaan>();
-                var currentYear = DateTime.Now.Year;
-                var context = DBClass.GetContext();
-
-                var pemeriksaanRestoMines2 = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear - 2).ToList();
-                var pemeriksaanRestoMines1 = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear - 1).ToList();
-                var pemeriksaanRestoNow = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear).ToList();
-
-                return new List<DataPemeriksaan>
-                {
-                    new()
-                    {
-                        JenisPajak = "Pajak Hotel",
-                        JumlahOP2023 = 10,
-                        JumlahOP2024 = 12,
-                        JumlahOP2025 = 15,
-                        Pokok2023 = 12000000,
-                        Sanksi2023 = 2000000,
-                        Pokok2024 = 15000000,
-                        Sanksi2024 = 2500000,
-                        Pokok2025 = 18000000,
-                        Sanksi2025 = 3000000
-                    }
-                };
             }
 
             private static List<DataDetailPemeriksaan> GetAllDetail()
@@ -172,21 +149,21 @@ namespace MonPDReborn.Models.AktivitasOP
         public class DataPemeriksaan
         {
             public string JenisPajak { get; set; } = null!;
-            public int JumlahOP2023 { get; set; }
-            public int JumlahOP2024 { get; set; }
-            public int JumlahOP2025 { get; set; }
+            public int JumlahOPMines2 { get; set; }
+            public int JumlahOPMines1 { get; set; }
+            public int JumlahOPNow { get; set; }
 
-            public decimal Pokok2023 { get; set; }
-            public decimal Sanksi2023 { get; set; }
-            public decimal Total2023 => Pokok2023 + Sanksi2023;
+            public decimal PokokMines2 { get; set; }
+            public decimal SanksiMines2 { get; set; }
+            public decimal TotalMines2 => PokokMines2 + SanksiMines2;
 
-            public decimal Pokok2024 { get; set; }
-            public decimal Sanksi2024 { get; set; }
-            public decimal Total2024 => Pokok2024 + Sanksi2024;
+            public decimal PokokMines1 { get; set; }
+            public decimal SanksiMines1 { get; set; }
+            public decimal TotalMines1 => PokokMines1 + SanksiMines1;
 
-            public decimal Pokok2025 { get; set; }
-            public decimal Sanksi2025 { get; set; }
-            public decimal Total2025 => Pokok2025 + Sanksi2025;
+            public decimal PokokNow { get; set; }
+            public decimal SanksiNow { get; set; }
+            public decimal TotalNow => PokokNow + SanksiNow;
         }
 
         // ======= ENTITY DETAIL ==========
