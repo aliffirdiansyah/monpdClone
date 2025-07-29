@@ -33,7 +33,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
             public Detail(string jenisPajak, int tahun)
             {
-                DataDetailList = Method.GetDetailPemeriksaan(jenisPajak, tahun);
+                DataDetailList = Method.GetDetailPemeriksaanList(jenisPajak, tahun);
             }
         }
 
@@ -67,9 +67,39 @@ namespace MonPDReborn.Models.AktivitasOP
 
             }
 
-            public static List<DataDetailPemeriksaan> GetDetailPemeriksaan(string jenisPajak, int tahun)
+            public static List<DataDetailPemeriksaan> GetDetailPemeriksaanList(string jenisPajak, int tahun)
             {
-                var all = GetAllDetail();
+                var ret = new List<DataDetailPemeriksaan>();
+                var context = DBClass.GetContext();
+
+                var query = context.TPemeriksaans
+                        .Where(x => x.JenisPajak == jenisPajak && x.TahunPajak == tahun)
+                        .Select(x => new DataDetailPemeriksaan
+                        {
+                            JenisPajak = x.JenisPajak.ToString(),
+                            NOP = x.Nop ?? "",
+                            WajibPajak = x.NamaWajibPajak ?? "",
+                            Alamat = x.Alamat ?? "",
+                            UPTB = x.UPTB ?? "",
+                            NoSP = x.NoSP ?? "",
+                            TglST = x.TglST ?? DateTime.MinValue,
+                            Tahun = x.Tahun,
+                            JumlahKB = x.JumlahKB ?? 0,
+                            Keterangan = x.Keterangan ?? "",
+                            LHP = x.NoLHP ?? "",
+                            TglLHP = x.TglLHP ?? DateTime.MinValue,
+                            TglBayar = x.TglBayar ?? DateTime.MinValue,
+                            Tim = x.NamaTim ?? ""
+                        });
+
+                                ret = query.ToList();
+
+
+
+                return ret;
+            }
+
+            /*var all = GetAllDetail();
 
                 // Jika tidak ada filter, kembalikan list kosong agar tidak semua data tampil di awal
                 if (string.IsNullOrWhiteSpace(jenisPajak) || tahun == 0)
@@ -78,36 +108,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 // Filter berdasarkan Jenis Pajak DAN Tahun
                 return all
                     .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase) && x.Tahun == tahun)
-                    .ToList();
-            }
-
-            private static List<DataPemeriksaan> GetAllData()
-            {
-                var ret = new List<DataPemeriksaan>();
-                var currentYear = DateTime.Now.Year;
-                var context = DBClass.GetContext();
-
-                var pemeriksaanRestoMines2 = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear - 2).ToList();
-                var pemeriksaanRestoMines1 = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear - 1).ToList();
-                var pemeriksaanRestoNow = context.TPemeriksaans.Where(x => x.TahunPajak == currentYear).ToList();
-
-                return new List<DataPemeriksaan>
-                {
-                    new()
-                    {
-                        JenisPajak = "Pajak Hotel",
-                        JumlahOP2023 = 10,
-                        JumlahOP2024 = 12,
-                        JumlahOP2025 = 15,
-                        Pokok2023 = 12000000,
-                        Sanksi2023 = 2000000,
-                        Pokok2024 = 15000000,
-                        Sanksi2024 = 2500000,
-                        Pokok2025 = 18000000,
-                        Sanksi2025 = 3000000
-                    }
-                };
-            }
+                    .ToList();*/
 
             private static List<DataDetailPemeriksaan> GetAllDetail()
             {
