@@ -1,92 +1,183 @@
 ﻿@using MonPDReborn.Models.AktivitasOP
 @model PemeriksaanPajakVM.Show
 
+@{
+    var tahunNow = (DateTime.Now.Year).ToString();
+    var tahunMines1 = (DateTime.Now.Year - 1).ToString();
+    var tahunMines2 = (DateTime.Now.Year - 2).ToString();
+}
+
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<PemeriksaanPajakVM.DataPemeriksaan>()
-        .ID("gridPemeriksaanPajak")
-        .DataSource(Model.DataPemeriksaanList)
-        .KeyExpr("JenisPajak")
-        .ShowBorders(true)
-        .ShowColumnLines(true)
-        .ColumnAutoWidth(true)
-        .HeaderFilter(h => h.Visible(true))
+            .ID("gridPemeriksaanPajak")
+            .DataSource(Model.DataPemeriksaanList)
+            .KeyExpr("JenisPajak")
+            .ShowBorders(true)
+            .ShowColumnLines(true)
+            .ColumnAutoWidth(true)
+            .HeaderFilter(h => h.Visible(true))
 
-        .FilterRow(f => f
-        .Visible(true)       // Tampilkan filter row
-        .ApplyFilter(GridApplyFilterMode.Auto) // Filter otomatis saat ketik
-        )
-        .Columns(columns =>
-        {
-            columns.AddFor(m => m.JenisPajak)
+            .FilterRow(f => f
+            .Visible(true)       // Tampilkan filter row
+            .ApplyFilter(GridApplyFilterMode.Auto) // Filter otomatis saat ketik
+            )
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.JenisPajak)
             .Caption("JENIS PAJAK")
             .Fixed(true);
 
-            columns.Add()
+                columns.Add()
             .Caption("JUMLAH OP YANG DIPERIKSA")
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub =>
             {
-                sub.Add().DataField("JumlahOP2023").Caption("2023").Alignment(HorizontalAlignment.Center)
-                .CellTemplate(@<text>
-                    <div style="display: flex; align-items: center; justify-content: flex-end;">
-                        <a href="javascript:void(0);"
-                            class="value-link text-decoration-none"
-                            onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', 2023)"
-                            title="Lihat Detail Pemeriksaan 2023">
-                            <%- (value || 0).toLocaleString('id-ID') %>
-                        </a>
-                    </div>
-                </text>);
+                sub.Add().DataField("JumlahOPMines2").Caption(tahunMines2).Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <a href="javascript:void(0);"
+               class="value-link text-decoration-none"
+               onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', @tahunMines2)"
+               title="Lihat Detail Pemeriksaan @tahunMines2">
+                <%- (value || 0).toLocaleString('id-ID') %>
+            </a>
+        </div>
+    </text>);
 
-                sub.Add().DataField("JumlahOP2024").Caption("2024").Alignment(HorizontalAlignment.Center)
-                .CellTemplate(@<text>
-                    <div style="display: flex; align-items: center; justify-content: flex-end;">
-                        <a href="javascript:void(0);"
-                            class="value-link text-decoration-none"
-                            onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', 2024)"
-                            title="Lihat Detail Pemeriksaan 2024">
-                            <%- (value || 0).toLocaleString('id-ID') %>
-                        </a>
-                    </div>
-                </text>);
+                sub.Add().DataField("JumlahOPMines1").Caption(tahunMines2).Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <a href="javascript:void(0);"
+               class="value-link text-decoration-none"
+               onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', @tahunMines1)"
+               title="Lihat Detail Pemeriksaan @tahunMines1">
+                <%- (value || 0).toLocaleString('id-ID') %>
+            </a>
+        </div>
+    </text>);
 
-                sub.Add().DataField("JumlahOP2025").Caption("2025").Alignment(HorizontalAlignment.Center)
-                .CellTemplate(@<text>
-                    <div style="display: flex; align-items: center; justify-content: flex-end;">
-                        <a href="javascript:void(0);"
-                            class="value-link text-decoration-none"
-                            onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', 2025)"
-                            title="Lihat Detail Pemeriksaan 2025">
-                            <%- (value || 0).toLocaleString('id-ID') %>
-                        </a>
-                    </div>
-                </text>);
+                sub.Add().DataField("JumlahOPNow").Caption(tahunNow).Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <a href="javascript:void(0);"
+               class="value-link text-decoration-none"
+               onclick="onDetailPemeriksaanClick('<%- data.JenisPajak %>', @tahunNow)"
+               title="Lihat Detail Pemeriksaan @tahunNow">
+                <%- (value || 0).toLocaleString('id-ID') %>
+            </a>
+        </div>
+    </text>);
             });
 
-            columns.Add()
-            .Caption("JUMLAH KURANG BAYAR")
-            .Alignment(HorizontalAlignment.Center)
-            .Columns(sub =>
+                columns.Add()
+    .Caption("JUMLAH KURANG BAYAR")
+    .Alignment(HorizontalAlignment.Center)
+    .Columns(sub =>
+    {
+                sub.Add().Caption(tahunMines2).Alignment(HorizontalAlignment.Center).Columns(kb2023 =>
             {
-                sub.Add().Caption("2023").Alignment(HorizontalAlignment.Center).Columns(kb2023 =>
+                kb2023.Add().DataField("PokokMines2").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
+                kb2023.Add().DataField("SanksiMines2").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
+                kb2023.Add().DataField("TotalMines2").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
+            });
+                sub.Add().Caption(tahunMines1).Alignment(HorizontalAlignment.Center).Columns(kb2024 =>
             {
-                kb2023.Add().DataField("Pokok2023").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
-                kb2023.Add().DataField("Sanksi2023").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
-                kb2023.Add().DataField("Total2023").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2024.Add().DataField("PokokMines1").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
+                kb2024.Add().DataField("SanksiMines1").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
+                kb2024.Add().DataField("TotalMines1").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
             });
-                sub.Add().Caption("2024").Alignment(HorizontalAlignment.Center).Columns(kb2024 =>
+                sub.Add().Caption(tahunNow).Alignment(HorizontalAlignment.Center).Columns(kb2025 =>
             {
-                kb2024.Add().DataField("Pokok2024").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
-                kb2024.Add().DataField("Sanksi2024").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
-                kb2024.Add().DataField("Total2024").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
-            });
-                sub.Add().Caption("2025").Alignment(HorizontalAlignment.Center).Columns(kb2025 =>
-            {
-                kb2025.Add().DataField("Pokok2025").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
-                kb2025.Add().DataField("Sanksi2025").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
-                kb2025.Add().DataField("Total2025").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                kb2025.Add().DataField("PokokNow").Caption("POKOK").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
+                kb2025.Add().DataField("SanksiNow").Caption("SANKSI").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
+                kb2025.Add().DataField("TotalNow").Caption("TOTAL").Alignment(HorizontalAlignment.Center).Format("#,##0").Alignment(HorizontalAlignment.Right);
             });
             });
+            })
+        .Summary(s => s
+        .TotalItems(items =>
+        {
+            // Jumlah OP
+            items.AddFor(m => m.JenisPajak)
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("TOTAL");
+            
+            items.Add().Column("JumlahOPMines2")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("JumlahOPMines1")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("JumlahOPNow")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            // Jumlah Kurang Bayar - Tahun Mines2
+            items.Add().Column("PokokMines2")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("SanksiMines2")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("TotalMines2")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            // Jumlah Kurang Bayar - Tahun Mines1
+            items.Add().Column("PokokMines1")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("SanksiMines1")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("TotalMines1")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            // Jumlah Kurang Bayar - Tahun Now
+            items.Add().Column("PokokNow")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("SanksiNow")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+            items.Add().Column("TotalNow")
+            .Alignment(HorizontalAlignment.Right)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
         })
+        )
         )
 </div>
