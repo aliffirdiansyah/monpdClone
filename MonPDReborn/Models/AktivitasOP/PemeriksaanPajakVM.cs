@@ -98,7 +98,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tahun = x.TahunPajak,
                         JumlahKB = 0,
                         Keterangan = x.Ket ?? "",
-                        LHP = "-",
+                        LHP =   "-",
                         TglLHP = DateTime.MinValue,
                         TglBayar = DateTime.MinValue,
                         Tim = x.Petugas ?? ""
@@ -177,34 +177,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tim = x.Petugas ?? ""
                     }).ToList();
                 }
-                    /*else if (jenisPajak == 2) // Restoran
-                    {
-                        var dbResto = context.DbOpRestorans.ToDictionary(x => x.Nop, x => x);
-
-                        ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
-                        {
-                            JenisPajak = x.JenisPajak.ToString(),
-                            NOP = x.Nop ?? "",
-                            WajibPajak = dbResto.ContainsKey(x.Nop) ? dbResto[x.Nop].NamaWp ?? "" : "",
-                            Alamat = dbResto.ContainsKey(x.Nop) ? dbResto[x.Nop].Alamat ?? "" : "",
-                            UPTB = dbResto.ContainsKey(x.Nop) ? dbResto[x.Nop].Uptb ?? "" : "",
-                            NoSP = x.NoSP ?? "",
-                            TglST = x.TglST ?? DateTime.MinValue,
-                            Tahun = x.Tahun,
-                            JumlahKB = x.JumlahKB ?? 0,
-                            Keterangan = x.Keterangan ?? "",
-                            LHP = x.NoLHP ?? "",
-                            TglLHP = x.TglLHP ?? DateTime.MinValue,
-                            TglBayar = x.TglBayar ?? DateTime.MinValue,
-                            Tim = x.NamaTim ?? ""
-                        }).ToList();
-                    }*/
-
-                    // Tambahkan else if untuk jenis pajak lain (3 = Hiburan, 4 = Parkir, dll)
-
+                    
                     return ret;
             }
 
+            
 
 
             //var all = GetAllDetail();
