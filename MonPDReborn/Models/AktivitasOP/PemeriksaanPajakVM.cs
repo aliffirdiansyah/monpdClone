@@ -31,7 +31,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
             public Detail() { }
 
-            public Detail(string jenisPajak, int tahun)
+            public Detail(int jenisPajak, int tahun)
             {
                 DataDetailList = Method.GetDetailPemeriksaanList(jenisPajak, tahun);
             }
@@ -72,15 +72,140 @@ namespace MonPDReborn.Models.AktivitasOP
 
             }
 
-            public static List<DataDetailPemeriksaan> GetDetailPemeriksaanList(string jenisPajak, int tahun)
+            public static List<DataDetailPemeriksaan> GetDetailPemeriksaanList(int jenisPajak, int tahun)
             {
                 var ret = new List<DataDetailPemeriksaan>();
                 var context = DBClass.GetContext();
 
-                var query = context.TPemeriksaans.AsQueryable();
-                    
-                return ret;
+                var pemeriksaans = context.TPemeriksaans
+                    .Where(x => x.PajakId == jenisPajak && x.TahunPajak == tahun)
+                    .ToList();
+                if (jenisPajak == 1)
+                {
+                    var dbMamin = context.DbOpRestos
+                        .GroupBy(x => x.Nop)
+                        .ToDictionary(g => g.Key, g => g.First());
+
+                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    {
+                        JenisPajak = x.PajakId.ToString(),
+                        NOP = x.Nop ?? "",
+                        WajibPajak = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NpwpdNama ?? "" : "",
+                        Alamat = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].AlamatOp ?? "" : "",
+                        UPTB = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].WilayahPajak ?? "" : "",
+                        NoSP = x.NoSp ?? "",
+                        TglST = x.TglSp,
+                        Tahun = x.TahunPajak,
+                        JumlahKB = 0,
+                        Keterangan = x.Ket ?? "",
+                        LHP = "-",
+                        TglLHP = DateTime.MinValue,
+                        TglBayar = DateTime.MinValue,
+                        Tim = x.Petugas ?? ""
+                    }).ToList();
+                }
+                else if (jenisPajak == 3) // Hotel
+                {
+                    // ✅ Hindari duplikat key NOP
+                    var dbHotel = context.DbOpHotels
+                        .GroupBy(x => x.Nop)
+                        .ToDictionary(g => g.Key, g => g.First());
+
+                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    {
+                        JenisPajak = x.PajakId.ToString(),
+                        NOP = x.Nop ?? "",
+                        WajibPajak = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NpwpdNama ?? "" : "",
+                        Alamat = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].AlamatOp ?? "" : "",
+                        UPTB = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].WilayahPajak ?? "" : "",
+                        NoSP = x.NoSp ?? "",
+                        TglST = x.TglSp,
+                        Tahun = x.TahunPajak,
+                        JumlahKB = 0,
+                        Keterangan = x.Ket ?? "",
+                        LHP = "-",
+                        TglLHP = DateTime.MinValue,
+                        TglBayar = DateTime.MinValue,
+                        Tim = x.Petugas ?? ""
+                    }).ToList();
+                }
+                else if (jenisPajak == 4)
+                {
+                    var dbParkir = context.DbOpParkirs
+                        .GroupBy(x => x.Nop)
+                        .ToDictionary(g => g.Key, g => g.First());
+
+                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    {
+                        JenisPajak = x.PajakId.ToString(),
+                        NOP = x.Nop ?? "",
+                        WajibPajak = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NpwpdNama ?? "" : "",
+                        Alamat = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].AlamatOp ?? "" : "",
+                        UPTB = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].WilayahPajak ?? "" : "",
+                        NoSP = x.NoSp ?? "",
+                        TglST = x.TglSp,
+                        Tahun = x.TahunPajak,
+                        JumlahKB = 0,
+                        Keterangan = x.Ket ?? "",
+                        LHP = "-",
+                        TglLHP = DateTime.MinValue,
+                        TglBayar = DateTime.MinValue,
+                        Tim = x.Petugas ?? ""
+                    }).ToList();
+                }
+                else if (jenisPajak == 5)
+                {
+                    var dbHiburan = context.DbOpHiburans
+                        .GroupBy(x => x.Nop)
+                        .ToDictionary(g => g.Key, g => g.First());
+
+                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    {
+                        JenisPajak = x.PajakId.ToString(),
+                        NOP = x.Nop ?? "",
+                        WajibPajak = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NpwpdNama ?? "" : "",
+                        Alamat = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].AlamatOp ?? "" : "",
+                        UPTB = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].WilayahPajak ?? "" : "",
+                        NoSP = x.NoSp ?? "",
+                        TglST = x.TglSp,
+                        Tahun = x.TahunPajak,
+                        JumlahKB = 0,
+                        Keterangan = x.Ket ?? "",
+                        LHP = "-",
+                        TglLHP = DateTime.MinValue,
+                        TglBayar = DateTime.MinValue,
+                        Tim = x.Petugas ?? ""
+                    }).ToList();
+                }
+                    /*else if (jenisPajak == 2) // Restoran
+                    {
+                        var dbResto = context.DbOpRestorans.ToDictionary(x => x.Nop, x => x);
+
+                        ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                        {
+                            JenisPajak = x.JenisPajak.ToString(),
+                            NOP = x.Nop ?? "",
+                            WajibPajak = dbResto.ContainsKey(x.Nop) ? dbResto[x.Nop].NamaWp ?? "" : "",
+                            Alamat = dbResto.ContainsKey(x.Nop) ? dbResto[x.Nop].Alamat ?? "" : "",
+                            UPTB = dbResto.ContainsKey(x.Nop) ? dbResto[x.Nop].Uptb ?? "" : "",
+                            NoSP = x.NoSP ?? "",
+                            TglST = x.TglST ?? DateTime.MinValue,
+                            Tahun = x.Tahun,
+                            JumlahKB = x.JumlahKB ?? 0,
+                            Keterangan = x.Keterangan ?? "",
+                            LHP = x.NoLHP ?? "",
+                            TglLHP = x.TglLHP ?? DateTime.MinValue,
+                            TglBayar = x.TglBayar ?? DateTime.MinValue,
+                            Tim = x.NamaTim ?? ""
+                        }).ToList();
+                    }*/
+
+                    // Tambahkan else if untuk jenis pajak lain (3 = Hiburan, 4 = Parkir, dll)
+
+                    return ret;
             }
+
+
 
             //var all = GetAllDetail();
 
