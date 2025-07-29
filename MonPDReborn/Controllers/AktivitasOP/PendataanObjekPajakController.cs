@@ -69,11 +69,11 @@ namespace MonPDReborn.Controllers.Aktivitas
         }
 
         // ✅ Versi baru: menerima jenisPajak dan tahun
-        public IActionResult Detail(int jenisPajak)
+        public IActionResult Detail(int jenisPajak, int tahun)
         {
             try
             {
-                var model = new PendataanObjekPajakVM.Detail((EnumFactory.EPajak)jenisPajak);
+                var model = new PendataanObjekPajakVM.Detail((EnumFactory.EPajak)jenisPajak, tahun);
                 return PartialView($"{URLView}_Detail", model);
             }
             catch (ArgumentException e)
@@ -90,11 +90,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
-        public IActionResult SubDetail(EnumFactory.EPajak jenisPajak, string nop)
+        public IActionResult SubDetail(EnumFactory.EPajak jenisPajak, string nop, int tahun)
         {
             try
             {
-                var model = new PendataanObjekPajakVM.SubDetail(jenisPajak, nop);
+                var model = new PendataanObjekPajakVM.SubDetail(jenisPajak, nop, tahun);
                 return PartialView($"{URLView}_SubDetail", model);
             }
             catch (ArgumentException e)
