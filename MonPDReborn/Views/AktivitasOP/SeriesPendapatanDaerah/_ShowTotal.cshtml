@@ -71,8 +71,8 @@
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Persentase1)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
+                    .SummaryType(SummaryType.Avg)
+                    .ValueFormat("#,##0.00'%'")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Target2)
                     .SummaryType(SummaryType.Sum)
@@ -83,8 +83,8 @@
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Persentase2)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
+                    .SummaryType(SummaryType.Avg)
+                    .ValueFormat("#,#0%")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Target3)
                     .SummaryType(SummaryType.Sum)
@@ -95,8 +95,8 @@
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Persentase3)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
+                    .SummaryType(SummaryType.Avg)
+                    .ValueFormat("#,#0%")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Target4)
                     .SummaryType(SummaryType.Sum)
@@ -107,8 +107,8 @@
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Persentase4)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
+                    .SummaryType(SummaryType.Avg)
+                    .ValueFormat("#,#0%")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Target5)
                     .SummaryType(SummaryType.Sum)
@@ -119,8 +119,8 @@
                     .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
             items.AddFor(m => m.Persentase5)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
+                    .SummaryType(SummaryType.Avg)
+                    .ValueFormat("#,#0%")
                     .DisplayFormat("{0}");
         });
     })
