@@ -67,7 +67,7 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult Detail(string jenisPajak, int tahun)
+        public IActionResult Detail(int jenisPajak, int tahun)
         {
             try
             {

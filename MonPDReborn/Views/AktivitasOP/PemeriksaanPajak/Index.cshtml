@@ -153,18 +153,68 @@
             });
         }
 
-        // FUNGSI INI DIPANGGIL DARI TOMBOL SEARCH DI TABEL SHOW
-        function onDetailPemeriksaanClick(jenisPajak, tahun) {
-            // Panggil fungsi loadDetail dengan parameter yang sesuai
-            loadDetail(jenisPajak, tahun);
+        
+        // function onDetailPemeriksaanClick(jenisPajak, tahun) {
+            
+        //     loadDetail(jenisPajak, tahun);
+        // }
+
+        
+        // function loadDetail(jenisPajak, tahun) {
+        //     $.ajax({
+        //         url: '@Url.Action("Detail", "PemeriksaanPajak")',
+        //         type: 'GET',
+              
+        //         data: {
+        //             jenisPajak: jenisPajak,
+        //             tahun: tahun
+        //         },
+        //         beforeSend: function () {
+        //             $('#loading2-Detail').show();
+        //             $('#Detail').hide();
+        //         },
+        //         success: function (result) {
+        //             $('#loading2-Detail').hide();
+        //             $('#Detail').html(result).show();
+        //         },
+        //         error: function () {
+        //             $('#loading2-Detail').hide();
+        //             $('#Detail').html('<div class="alert alert-danger">❌ Gagal memuat data detail.</div>').show();
+        //         }
+        //     });
+        // }
+                const EPajak = {
+            "PBJT atas Makanan dan/atau Minuman": 1,
+            "PBJT atas Tenaga Listrik": 2,
+            "PBJT atas Jasa Perhotelan": 3,
+            "PBJT atas Jasa Parkir": 4,
+            "PBJT atas Jasa Kesenian dan Hiburan": 5,
+            "Pajak Air Tanah": 6,
+            "Pajak Reklame": 7,
+            "Pajak Bumi Bangunan": 9,
+            "BPHTB": 12,
+            "Opsen PKB": 20,
+            "Opsen BBNKB": 21
+        };
+
+        function getIdFromJenisPajakName(name) {
+            return EPajak[name] ?? 0;
         }
 
-        // FUNGSI INI SEKARANG DIMODIFIKASI untuk menerima parameter dan memuat data detail
-        function loadDetail(jenisPajak, tahun) {
+                function onDetailPemeriksaanClick(jenisPajak, tahun) {
+            if (!jenisPajak || !tahun) {
+                alert("Jenis pajak atau tahun tidak valid.");
+                return;
+            }
+
+            loadDetail(jenisPajak, tahun);
+        }
+                function loadDetail(jenisPajak, tahun) {
+            const namaPajak = EPajak[jenisPajak] || 'Jenis Pajak Tidak Diketahui';
+
             $.ajax({
                 url: '@Url.Action("Detail", "PemeriksaanPajak")',
                 type: 'GET',
-                // Kirim data jenisPajak dan tahun ke controller
                 data: {
                     jenisPajak: jenisPajak,
                     tahun: tahun
@@ -172,6 +222,7 @@
                 beforeSend: function () {
                     $('#loading2-Detail').show();
                     $('#Detail').hide();
+                    $('#judulDetail').text(`📋 Detail Pemeriksaan: ${namaPajak} (${tahun})`);
                 },
                 success: function (result) {
                     $('#loading2-Detail').hide();
@@ -183,6 +234,7 @@
                 }
             });
         }
+
     </script>
 }
 
