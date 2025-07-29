@@ -4,7 +4,7 @@
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.DataPendataan>()
         .ID("gridPendataanShow")
-        .DataSource(Model.DataPendataanList)
+        .DataSource(Model.DataPendataanList.OrderBy(x => x.Tahun))
         .ShowBorders(true)
         .ShowColumnHeaders(true)
         .ShowColumnLines(true)
