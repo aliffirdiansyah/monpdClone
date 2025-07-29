@@ -58,4 +58,18 @@ public partial class TPemeriksaan
     [Column("SEQ")]
     [Precision(2)]
     public byte Seq { get; set; }
+
+    [Column("JUMLAH_KB", TypeName = "NUMBER(15,2)")]
+    public decimal? JumlahKb { get; set; }
+
+    [Column("LHP")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? Lhp { get; set; }
+
+    [Column("TGL_LHP", TypeName = "DATE")]
+    public DateTime? TglLhp { get; set; }
+
+    [Column("TGL_BYR", TypeName = "DATE")]
+    public DateTime? TglByr { get; set; }
 }

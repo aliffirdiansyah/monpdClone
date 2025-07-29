@@ -229,6 +229,16 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TMutasiPiutang> TMutasiPiutangs { get; set; }
 
+    public virtual DbSet<TOpHiburanLocation> TOpHiburanLocations { get; set; }
+
+    public virtual DbSet<TOpHotelLocation> TOpHotelLocations { get; set; }
+
+    public virtual DbSet<TOpParkirLocation> TOpParkirLocations { get; set; }
+
+    public virtual DbSet<TOpPpjLocation> TOpPpjLocations { get; set; }
+
+    public virtual DbSet<TOpRestoranLocation> TOpRestoranLocations { get; set; }
+
     public virtual DbSet<TPemeriksaan> TPemeriksaans { get; set; }
 
     public virtual DbSet<TPendapatanDaerah> TPendapatanDaerahs { get; set; }
@@ -270,6 +280,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
+
+    public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -805,6 +817,8 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MvReklameRekapLiar>(entity =>
         {
             entity.ToView("MV_REKLAME_REKAP_LIAR");
+
+            entity.Property(e => e.Jenis).IsFixedLength();
         });
 
         modelBuilder.Entity<MvReklameSum>(entity =>
@@ -1591,6 +1605,11 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<VwReklameStatusPerpanjangan>(entity =>
+        {
+            entity.ToView("VW_REKLAME_STATUS_PERPANJANGAN");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");

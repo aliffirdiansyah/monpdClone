@@ -190,7 +190,7 @@
 
 
         // Muat partial _Detail.cshtml berdasarkan jenis pajak dan tahun
-        function loadDetail(jenisPajak) {
+        function loadDetail(jenisPajak, tahun) {
             $('#Detail').html('<div class="text-center p-3">Memuat data detail...</div>');
             $('#detailWrapper').slideDown(300); // pastikan wrapper tampil
 
@@ -198,7 +198,8 @@
                 url: '@Url.Action("Detail", "PendataanObjekPajak")',
                 type: 'GET',
                 data: {
-                    jenisPajak: jenisPajak
+                    jenisPajak: jenisPajak,
+                    tahun, tahun
                 },
                 success: function (result) {
                     $('#Detail').html(result);
@@ -231,12 +232,11 @@
 
             const jenisPajak = data.EnumPajak;
             const nop = data.NOP;
+            const tahun = data.Tahun;
 
-            console.log("JenisPajak:", jenisPajak);
-            console.log("NOP:", nop);
 
-            const $modal = $("#detailModal");
-            $modal.find(".modal-title").text(`Detail - ${jenisPajak} ${nop}`);
+            const $modal = $("#staticBackdropExtraLargeScrollable");
+            $modal.find(".modal-title").text(`Detail - ${nop}`);
             $modal.find(".modal-body").html(`
                 <div class="text-center py-5">  
                     <div class="spinner-border text-primary"></div>
@@ -249,7 +249,7 @@
             $.ajax({
                 url: '/PendataanObjekPajak/SubDetail',
                 type: 'GET',
-                data: { jenisPajak, nop },
+                data: { jenisPajak, nop, tahun },
                 success: function (response) {
                     $modal.find(".modal-body").html(response);
                 },

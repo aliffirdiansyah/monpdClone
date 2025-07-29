@@ -4,7 +4,7 @@
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.DataPendataan>()
         .ID("gridPendataanShow")
-        .DataSource(Model.DataPendataanList)
+        .DataSource(Model.DataPendataanList.OrderBy(x => x.Tahun))
         .ShowBorders(true)
         .ShowColumnHeaders(true)
         .ShowColumnLines(true)
@@ -42,7 +42,7 @@
                 .Alignment(HorizontalAlignment.Center)
                 .CellTemplate(@<text>
                     <button class="btn btn-sm btn-primary"
-                            onclick="loadDetail('<%- data.EnumPajak %>', <%- data.Tahun %>)">
+                            onclick="loadDetail('<%- data.EnumPajak %>', '<%- data.Tahun %>')">
                         Detail
                     </button>
                 </text>);

@@ -20,7 +20,7 @@ public partial class MvReklameRekapLiar
     public string? KelasJalan { get; set; }
 
     [Column("JENIS")]
-    [StringLength(50)]
+    [StringLength(1)]
     [Unicode(false)]
     public string? Jenis { get; set; }
 
