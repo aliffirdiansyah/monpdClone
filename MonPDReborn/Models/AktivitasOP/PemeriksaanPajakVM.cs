@@ -1,4 +1,5 @@
 ﻿using MonPDLib;
+using MonPDLib.General;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
@@ -17,12 +18,9 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Show
         {
             public List<DataPemeriksaan> DataPemeriksaanList { get; set; } = new();
-
-            public Show() { }
-
-            public Show(string keyword)
+            public Show()
             {
-                DataPemeriksaanList = Method.GetFilteredData(keyword);
+                DataPemeriksaanList = Method.GetPemeriksaanList();
             }
         }
 
@@ -42,14 +40,31 @@ namespace MonPDReborn.Models.AktivitasOP
         // ======= METHOD ==========
         public class Method
         {
-            public static List<DataPemeriksaan> GetFilteredData(string keyword)
+            public static List<DataPemeriksaan> GetPemeriksaanList()
             {
-                var all = GetAllData();
+                var ret = new List<DataPemeriksaan>();
+                var context = DBClass.GetContext();
 
-                if (string.IsNullOrWhiteSpace(keyword))
-                    return all;
+                var query = context.TPemeriksaans.AsQueryable();
 
-                return all.Where(x => x.JenisPajak.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
+                foreach (var item in query.Select(x => x.PajakId).Distinct().ToList())
+                {
+                    var col = new DataPemeriksaan();
+                    col.JenisPajak = ((EnumFactory.EPajak)item).GetDescription();
+                    col.JumlahOP2023 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2);
+                    col.JumlahOP2024 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1);
+                    col.JumlahOP2025 = query.Count(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year);
+                    col.Pokok2023 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2).Sum(x => x.Pokok);
+                    col.Sanksi2023 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 2).Sum(x => x.Denda);
+                    col.Pokok2024 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1).Sum(x => x.Pokok);
+                    col.Sanksi2024 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year - 1).Sum(x => x.Denda);
+                    col.Pokok2025 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year).Sum(x => x.Pokok);
+                    col.Sanksi2025 = query.Where(x => x.PajakId == item && x.TahunPajak == DateTime.Now.Year).Sum(x => x.Denda);
+                    ret.Add(col);
+                }
+
+                return ret;
+
             }
 
             public static List<DataDetailPemeriksaan> GetDetailPemeriksaan(string jenisPajak, int tahun)

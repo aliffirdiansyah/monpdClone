@@ -19,9 +19,15 @@ namespace MonPDReborn.Models.PengawasanReklame
         public class Show
         {
             public List<RekapBulanan> DataRekap { get; set; } = new();
+            public decimal totalTahunan {get; set;}
+            public decimal totalSemester1 {get; set;}
+            public decimal totalSemester2 { get; set; } 
             public Show()
             {
                 DataRekap = Method.GetRekapDataBulanan();
+                totalTahunan = DataRekap.Sum(x => x.Total);
+                totalSemester1 = DataRekap.Sum(x => x.TotalSemester1);
+                totalSemester2 = DataRekap.Sum(x => x.TotalSemester2);
             }
         }
 
@@ -84,7 +90,8 @@ namespace MonPDReborn.Models.PengawasanReklame
 
                 var detailDataList = data.Select(x => new DetailData()
                 {
-                    KelasJalan = x.KelasJalan ?? "",
+                    Nor = x.Nor ?? "",
+                    KelasJalan = "Kelas " + x.KelasJalan ?? "",
                     NamaJalan = x.NamaJalan ?? "",
                     AlamatReklame = x.AlamatReklame ?? "",
                     Jenis = x.Jenis ?? "",
@@ -127,10 +134,13 @@ namespace MonPDReborn.Models.PengawasanReklame
             public decimal Nov { get; set; }
             public decimal Des { get; set; }
             public decimal Total => Jan + Feb + Mar + Apr + Mei + Jun + Jul + Agu + Sep + Okt + Nov + Des;
+            public decimal TotalSemester1 => Jan + Feb + Mar + Apr + Mei + Jun;
+            public decimal TotalSemester2 => Jul + Agu + Sep + Okt + Nov + Des;
         }
 
         public class DetailData
         {
+            public string Nor { get; set; } = null!;
             public string KelasJalan { get; set; } = null!;
             public string NamaJalan { get; set; } = null!;
             public string AlamatReklame { get; set; } = null!;

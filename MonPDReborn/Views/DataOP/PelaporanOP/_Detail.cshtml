@@ -8,6 +8,8 @@
             .KeyExpr("Id")
             .ShowBorders(true)
             .ShowRowLines(true)
+            .ShowColumnLines(true)
+            .ShowColumnHeaders(true)
             .ColumnAutoWidth(true)
             .Columns(columns => {
                 columns.AddFor(m => m.Bulan).Caption("Bulan");
@@ -26,10 +28,14 @@
             })
             .Summary(s => {
                     s.TotalItems(items => {
-                        items.AddFor(m => m.Nilai)
+                        items.AddFor(m => m.Status)
                     .SummaryType(SummaryType.Sum)
-                    .DisplayFormat("Total: {0}")
-                    .ValueFormat(v => v.Type(Format.Currency).Currency("IDR"));
+                    .Alignment(HorizontalAlignment.Right)
+                    .DisplayFormat("TOTAL");
+                    items.AddFor(m => m.Nilai)
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("{0}")
+                    .ValueFormat("#,##0");
                 });
             })
   )

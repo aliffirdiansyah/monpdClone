@@ -47,11 +47,11 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult Show(string keyword)
+        public IActionResult Show()
         {
             try
             {
-                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Show(keyword);
+                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Show();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

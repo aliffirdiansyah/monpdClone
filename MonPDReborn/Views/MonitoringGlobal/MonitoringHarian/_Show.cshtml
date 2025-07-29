@@ -68,6 +68,8 @@
             .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
             .FilterRow(f => f.Visible(true))
             .HeaderFilter(h => h.Visible(true))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+            .OnExporting("exportGrid")
             .Sorting(s => s.Mode(GridSortingMode.Multiple))
             .Paging(p => p.PageSize(10))
             .Pager(pager =>

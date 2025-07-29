@@ -18,7 +18,8 @@
         .Paging(p => p.PageSize(5))
         .Columns(columns =>
         {
-            columns.AddFor(m => m.KelasJalan).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Nor).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.KelasJalan);
             columns.AddFor(m => m.NamaJalan);
             columns.AddFor(m => m.AlamatReklame);
             columns.AddFor(m => m.Jenis);
