@@ -26,12 +26,7 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Index()
-                {
-                    TotalOpDiperiksa = 37,
-                    RataRataKurangBayar = 10500000m,
-                    TotalKurangBayar = 251100000m
-                };
+                var model = new Models.AktivitasOP.PemeriksaanPajakVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)

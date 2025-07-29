@@ -8,19 +8,22 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Index
         {
             public string Keyword { get; set; } = null!;
+            public Dashboard dashboard { get; set; } = new();
 
-            public int TotalOpDiperiksa { get; set; }
-            public decimal RataRataKurangBayar { get; set; }
-            public decimal TotalKurangBayar { get; set; }
-            public Index() { }
+            public Index()
+            {
+                dashboard = Method.GetDashboardAllPajak();
+            }
         }
 
         public class Show
         {
             public List<DataPemeriksaan> DataPemeriksaanList { get; set; } = new();
+            
             public Show()
             {
                 DataPemeriksaanList = Method.GetPemeriksaanList();
+                
             }
         }
 
@@ -88,20 +91,20 @@ namespace MonPDReborn.Models.AktivitasOP
 
                     ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
                     {
-                        JenisPajak = x.PajakId.ToString(),
-                        NOP = x.Nop ?? "",
-                        WajibPajak = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NpwpdNama ?? "" : "",
-                        Alamat = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].AlamatOp ?? "" : "",
-                        UPTB = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].WilayahPajak ?? "" : "",
-                        NoSP = x.NoSp ?? "",
+                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                        NOP = x.Nop ?? "-",
+                        WajibPajak = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NpwpdNama ?? "-" : "-",
+                        Alamat = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].AlamatOp ?? "-" : "-",
+                        UPTB = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].WilayahPajak ?? "-" : "-",
+                        NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
-                        JumlahKB = 0,
-                        Keterangan = x.Ket ?? "",
-                        LHP =   "-",
-                        TglLHP = DateTime.MinValue,
-                        TglBayar = DateTime.MinValue,
-                        Tim = x.Petugas ?? ""
+                        JumlahKB = x.JumlahKb ?? 0,
+                        Keterangan = x.Ket ?? "-",
+                        LHP = x.Lhp ??  "-",
+                        TglLHP = x.TglLhp ?? DateTime.MinValue,
+                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
                 else if (jenisPajak == 3) // Hotel
@@ -113,20 +116,20 @@ namespace MonPDReborn.Models.AktivitasOP
 
                     ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
                     {
-                        JenisPajak = x.PajakId.ToString(),
-                        NOP = x.Nop ?? "",
-                        WajibPajak = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NpwpdNama ?? "" : "",
-                        Alamat = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].AlamatOp ?? "" : "",
-                        UPTB = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].WilayahPajak ?? "" : "",
-                        NoSP = x.NoSp ?? "",
+                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                        NOP = x.Nop ?? "-",
+                        WajibPajak = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NpwpdNama ?? "-" : "-",
+                        Alamat = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].AlamatOp ?? "-" : "-",
+                        UPTB = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].WilayahPajak ?? "-" : "-",
+                        NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
-                        JumlahKB = 0,
-                        Keterangan = x.Ket ?? "",
-                        LHP = "-",
-                        TglLHP = DateTime.MinValue,
-                        TglBayar = DateTime.MinValue,
-                        Tim = x.Petugas ?? ""
+                        JumlahKB = x.JumlahKb ?? 0,
+                        Keterangan = x.Ket ?? "-",
+                        LHP = x.Lhp ?? "-",
+                        TglLHP = x.TglLhp ?? DateTime.MinValue,
+                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
                 else if (jenisPajak == 4)
@@ -137,20 +140,20 @@ namespace MonPDReborn.Models.AktivitasOP
 
                     ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
                     {
-                        JenisPajak = x.PajakId.ToString(),
-                        NOP = x.Nop ?? "",
-                        WajibPajak = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NpwpdNama ?? "" : "",
-                        Alamat = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].AlamatOp ?? "" : "",
-                        UPTB = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].WilayahPajak ?? "" : "",
-                        NoSP = x.NoSp ?? "",
+                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                        NOP = x.Nop ?? "-",
+                        WajibPajak = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NpwpdNama ?? "-" : "-",
+                        Alamat = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].AlamatOp ?? "-" : "-",
+                        UPTB = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].WilayahPajak ?? "-" : "-",
+                        NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
-                        JumlahKB = 0,
-                        Keterangan = x.Ket ?? "",
-                        LHP = "-",
-                        TglLHP = DateTime.MinValue,
-                        TglBayar = DateTime.MinValue,
-                        Tim = x.Petugas ?? ""
+                        JumlahKB = x.JumlahKb ?? 0,
+                        Keterangan = x.Ket ?? "-",
+                        LHP = x.Lhp ?? "-",
+                        TglLHP = x.TglLhp ?? DateTime.MinValue,
+                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
                 else if (jenisPajak == 5)
@@ -161,98 +164,49 @@ namespace MonPDReborn.Models.AktivitasOP
 
                     ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
                     {
-                        JenisPajak = x.PajakId.ToString(),
-                        NOP = x.Nop ?? "",
-                        WajibPajak = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NpwpdNama ?? "" : "",
-                        Alamat = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].AlamatOp ?? "" : "",
-                        UPTB = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].WilayahPajak ?? "" : "",
-                        NoSP = x.NoSp ?? "",
+                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                        NOP = x.Nop ?? "-",
+                        WajibPajak = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NpwpdNama ?? "-" : "-",
+                        Alamat = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].AlamatOp ?? "-" : "-",
+                        UPTB = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].WilayahPajak ?? "-" : "-",
+                        NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
-                        JumlahKB = 0,
-                        Keterangan = x.Ket ?? "",
-                        LHP = "-",
-                        TglLHP = DateTime.MinValue,
-                        TglBayar = DateTime.MinValue,
-                        Tim = x.Petugas ?? ""
+                        JumlahKB = x.JumlahKb ?? 0,
+                        Keterangan = x.Ket ?? "-",
+                        LHP = x.Lhp ?? "-",
+                        TglLHP = x.TglLhp ?? DateTime.MinValue,
+                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
                     
                     return ret;
             }
 
-            
-
-
-            //var all = GetAllDetail();
-
-            //    // Jika tidak ada filter, kembalikan list kosong agar tidak semua data tampil di awal
-            //    if (string.IsNullOrWhiteSpace(jenisPajak) || tahun == 0)
-            //        return new List<DataDetailPemeriksaan>();
-
-            //    // Filter berdasarkan Jenis Pajak DAN Tahun
-            //    return all
-            //        .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase) && x.Tahun == tahun)
-            //        .ToList();
-        }
-
-        private static List<DataDetailPemeriksaan> GetAllDetail()
-        {
-            return new List<DataDetailPemeriksaan>
+            public static Dashboard GetDashboardAllPajak()
             {
-                new()
+                var context = DBClass.GetContext();
+                int tahunIni = DateTime.Now.Year;
+
+                var data = context.TPemeriksaans
+                    .Where(x => x.TahunPajak == tahunIni)
+                    .ToList();
+
+                var totalOP = data.Count;
+                var totalKurangBayar = data.Sum(x => x.JumlahKb ?? 0);
+                var rataKurangBayar = totalOP > 0 ? totalKurangBayar / totalOP : 0;
+
+                return new Dashboard
                 {
-                    JenisPajak = "Pajak Hotel", // ✅ cocok dengan "Pajak Hotel"
-                    NOP = "35.78.170.005.902.00066",
-                    WajibPajak = "Hotel Bintang",
-                    Alamat = "Jl. Rajawali No. 47",
-                    UPTB = "UPTB Timur",
-                    NoSP = "SP-001/2025",
-                    TglST = new DateTime(2025, 1, 10),
-                    Tahun = 2023,
-                    JumlahKB = 15000000,
-                    Keterangan = "Kurang Bayar 2023",
-                    LHP = "LHP-2025-01",
-                    TglLHP = new DateTime(2025, 1, 20),
-                    TglBayar = new DateTime(2025, 2, 5),
-                    Tim = "Tim A"
-                },
-                new()
-                {
-                    JenisPajak = "Pajak Hotel", // ✅ baris kedua juga hotel
-                    NOP = "35.78.170.005.902.00067",
-                    WajibPajak = "Hotel Nusantara",
-                    Alamat = "Jl. Merdeka No. 12",
-                    UPTB = "UPTB Selatan",
-                    NoSP = "SP-003/2025",
-                    TglST = new DateTime(2025, 3, 1),
-                    Tahun = 2024,
-                    JumlahKB = 18000000,
-                    Keterangan = "Kurang Bayar 2024",
-                    LHP = "LHP-2025-03",
-                    TglLHP = new DateTime(2025, 3, 15),
-                    TglBayar = new DateTime(2025, 3, 20),
-                    Tim = "Tim C"
-                },
-                new()
-                {
-                    JenisPajak = "Pajak Restoran", // ✅ cocok dengan "Pajak Restoran"
-                    NOP = "35.78.100.002.902.00172",
-                    WajibPajak = "Restoran Nikmat",
-                    Alamat = "Jl. Bubutan No. 1-7",
-                    UPTB = "UPTB Pusat",
-                    NoSP = "SP-002/2025",
-                    TglST = new DateTime(2025, 2, 15),
-                    Tahun = 2024,
-                    JumlahKB = 12000000,
-                    Keterangan = "Kurang Bayar 2024",
-                    LHP = "LHP-2025-02",
-                    TglLHP = new DateTime(2025, 2, 25),
-                    TglBayar = new DateTime(2025, 3, 10),
-                    Tim = "Tim B"
-                }
-            };
+                    TotalOP = totalOP,
+                    TotalKurangBayar = totalKurangBayar,
+                    RataKurangBayar = rataKurangBayar
+                };
+            }
+
         }
+
         // ======= ENTITY UTAMA ==========
         public class DataPemeriksaan
         {
@@ -291,6 +245,13 @@ namespace MonPDReborn.Models.AktivitasOP
             public DateTime TglLHP { get; set; }
             public DateTime TglBayar { get; set; }
             public string Tim { get; set; } = null!;
+        }
+
+        public class Dashboard
+        {
+            public decimal TotalOP { get; set; }
+            public decimal RataKurangBayar { get; set; }
+            public decimal TotalKurangBayar { get; set; }
         }
     }
 
