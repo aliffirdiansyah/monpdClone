@@ -112,7 +112,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tahun = x.Key.Tahun,
                         EnumPajak = (int)x.Key.PajakId,
                         JenisPajak = ((EnumFactory.EPajak)x.Key.PajakId).GetDescription(),
-                        JumlahOp = x.Count(),
+                        JumlahOp = x.Select(d => d.Nop.Replace(".", "")).Distinct().Count(),
                         Potensi = x.Sum(x => x.PajakBulan),
                         TotalRealisasi = restoRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0,
                         Selisih = (restoRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0) - x.Sum(x => x.PajakBulan)
@@ -129,7 +129,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tahun = x.Key.Tahun,
                         EnumPajak = (int)x.Key.PajakId,
                         JenisPajak = ((EnumFactory.EPajak)x.Key.PajakId).GetDescription(),
-                        JumlahOp = x.Count(),
+                        JumlahOp = x.Select(d => d.Nop.Replace(".", "")).Distinct().Count(),
                         Potensi = x.Sum(x => x.PajakBulan),
                         TotalRealisasi = parkirRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0,
                         Selisih = (parkirRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0) - x.Sum(x => x.PajakBulan)
@@ -156,7 +156,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                         var restoDok = context.DbRekamRestorans
                             .Where(x => x.Tanggal.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, PajakId = x.PajakId })
+                            .GroupBy(x => new { Nop = x.Nop, PajakId = x.PajakId, Tahun = x.Tanggal.Year })
                             .ToList()
                             .Select(x =>
                             {
@@ -189,7 +189,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                         var parkirDok = context.DbRekamParkirs
                             .Where(x => x.Tanggal.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, PajakId = x.PajakId })
+                            .GroupBy(x => new { Nop = x.Nop, PajakId = x.PajakId, Tahun = x.Tanggal.Year })
                             .ToList()
                             .Select(x =>
                             {
