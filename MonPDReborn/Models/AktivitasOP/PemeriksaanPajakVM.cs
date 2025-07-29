@@ -151,45 +151,46 @@ namespace MonPDReborn.Models.AktivitasOP
                 }
             };
         }
+        // ======= ENTITY UTAMA ==========
+        public class DataPemeriksaan
+        {
+            public string JenisPajak { get; set; } = null!;
+            public int JumlahOPMines2 { get; set; }
+            public int JumlahOPMines1 { get; set; }
+            public int JumlahOPNow { get; set; }
+
+            public decimal PokokMines2 { get; set; }
+            public decimal SanksiMines2 { get; set; }
+            public decimal TotalMines2 => PokokMines2 + SanksiMines2;
+
+            public decimal PokokMines1 { get; set; }
+            public decimal SanksiMines1 { get; set; }
+            public decimal TotalMines1 => PokokMines1 + SanksiMines1;
+
+            public decimal PokokNow { get; set; }
+            public decimal SanksiNow { get; set; }
+            public decimal TotalNow => PokokNow + SanksiNow;
+        }
+
+        // ======= ENTITY DETAIL ==========
+        public class DataDetailPemeriksaan
+        {
+            public string JenisPajak { get; set; } = null!;
+            public string NOP { get; set; } = null!;
+            public string WajibPajak { get; set; } = null!;
+            public string Alamat { get; set; } = null!;
+            public string UPTB { get; set; } = null!;
+            public string NoSP { get; set; } = null!;
+            public DateTime TglST { get; set; }
+            public int Tahun { get; set; }
+            public decimal JumlahKB { get; set; }
+            public string Keterangan { get; set; } = null!;
+            public string LHP { get; set; } = null!;
+            public DateTime TglLHP { get; set; }
+            public DateTime TglBayar { get; set; }
+            public string Tim { get; set; } = null!;
+        }
     }
 
-    // ======= ENTITY UTAMA ==========
-    public class DataPemeriksaan
-    {
-        public string JenisPajak { get; set; } = null!;
-        public int JumlahOPMines2 { get; set; }
-        public int JumlahOPMines1 { get; set; }
-        public int JumlahOPNow { get; set; }
-
-        public decimal PokokMines2 { get; set; }
-        public decimal SanksiMines2 { get; set; }
-        public decimal TotalMines2 => PokokMines2 + SanksiMines2;
-
-        public decimal PokokMines1 { get; set; }
-        public decimal SanksiMines1 { get; set; }
-        public decimal TotalMines1 => PokokMines1 + SanksiMines1;
-
-        public decimal PokokNow { get; set; }
-        public decimal SanksiNow { get; set; }
-        public decimal TotalNow => PokokNow + SanksiNow;
-    }
-
-    // ======= ENTITY DETAIL ==========
-    public class DataDetailPemeriksaan
-    {
-        public string JenisPajak { get; set; } = null!;
-        public string NOP { get; set; } = null!;
-        public string WajibPajak { get; set; } = null!;
-        public string Alamat { get; set; } = null!;
-        public string UPTB { get; set; } = null!;
-        public string NoSP { get; set; } = null!;
-        public DateTime TglST { get; set; }
-        public int Tahun { get; set; }
-        public decimal JumlahKB { get; set; }
-        public string Keterangan { get; set; } = null!;
-        public string LHP { get; set; } = null!;
-        public DateTime TglLHP { get; set; }
-        public DateTime TglBayar { get; set; }
-        public string Tim { get; set; } = null!;
-    }
+    
 }
