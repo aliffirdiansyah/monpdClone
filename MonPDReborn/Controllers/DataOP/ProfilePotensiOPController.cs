@@ -122,22 +122,22 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                switch (jenisPajak.ToLower())
+                switch (jenisPajak)
                 {
-                    case "hotel":
+                    case "PBJT atas Jasa Perhotelan":
                         var hotelModel = new ProfilePotensiOPVM.DetailHotel(nop);
                         return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", hotelModel);
 
-                    case "parkir":
+                    case "PBJT atas Jasa Parkir":
                         var parkirModel = new ProfilePotensiOPVM.DetailParkir(nop);
                         return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", parkirModel);
 
-                    case "restoran":
+                    case "PBJT atas Makanan dan/atau Minuman":
                         // Anda mungkin perlu membuat ViewModel untuk restoran juga nantinya
                         var restoranModel = new ProfilePotensiOPVM.Detail(); // Placeholder
                         return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", restoranModel);
 
-                    case "hiburan":
+                    case "PBJT atas Jasa Kesenian dan Hiburan":
                         // DIUBAH: Panggil method ShowDetailHiburan untuk menangani semua logika hiburan
                         var hiburanModel = new ProfilePotensiOPVM.Detail(); // Kirim model dasar
                         return ShowDetailHiburan(kategoriHiburan, hiburanModel, nop); // Tambahkan nop jika perlu
