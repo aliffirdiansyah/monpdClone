@@ -1,5 +1,63 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.Detail
+
 @{
+    // Buat ID unik dari nama kegiatan
+    var namaKegiatan = Model.Data.FirstOrDefault()?.NamaKegiatan ?? "unknown";
+    var gridId = $"rekapDetailGrid_{namaKegiatan.Replace(" ", "_")}";
 }
+
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.Rekap>()
+        .ID(gridId)        
+        .DataSource(Model.Data)
+        @* .KeyExpr("NamaJalan") *@
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple)) *@
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns => {
+            // Kolom Kunci
+            columns.AddFor(m => m.Surveyor).Caption("Nama Petugas");
+            columns.AddFor(m => m.Target).Caption("Target").Format("#,##0");
+            columns.AddFor(m => m.ObjekLama).Caption("Obyek Lama").Format("#,##0");
+            columns.AddFor(m => m.PajakLama).Caption("Pajak Lama").Format("#,##0");
+            columns.AddFor(m => m.ObjekBaru).Caption("Obyek Baru").Format("#,##0");
+            columns.AddFor(m => m.PajakBaru).Caption("Pajak Baru").Format("#,##0");
+            columns.AddFor(m => m.ObjekTutup).Caption("Obyej Tutup").Format("#,##0");
+            columns.AddFor(m => m.PajakTutup).Caption("Pajak Tutup").Format("#,##0");
+            columns.AddFor(m => m.TotalObjek).Caption("Total Obyek").Format("#,##0");
+            columns.AddFor(m => m.TotalPajak).Caption("Total Pjak").Format("#,##0");
+            columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
+            columns.AddFor(m => m.Status).Caption("Status");
+        })
+        .Summary(s => {
+          
+            s.TotalItems(items => {
+                items.AddFor(m => m.Surveyor).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
+                items.AddFor(m => m.Target).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.ObjekLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.PajakLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.ObjekBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.PajakBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.ObjekTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.PajakTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.TotalObjek).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.TotalPajak).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+            });
+        })
+    )
+</div>

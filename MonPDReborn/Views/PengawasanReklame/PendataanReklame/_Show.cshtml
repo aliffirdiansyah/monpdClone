@@ -43,5 +43,11 @@
                 items.AddFor(m => m.Persentase).SummaryType(SummaryType.Avg).DisplayFormat("{0}");
             });
         })
+        .MasterDetail(md => md
+        .Enabled(true)
+        .Template(new JS("subDetailTemplate"))
+        )
+        .OnRowExpanding("onRowExpandingHandler")
+        .OnRowCollapsed("onRowCollapsedHandler")
     )
 </div>

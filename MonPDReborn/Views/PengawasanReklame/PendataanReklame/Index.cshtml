@@ -127,5 +127,62 @@
 
             }
         });
+
+        let expandedRowKey = null;
+
+        function subDetailTemplate(container, options) {
+            var namaKegiatan = options.data?.NamaKegiatan;
+            console.log("subDetailTemplate - NamaKegiatan:", namaKegiatan);
+
+            // Buat inner container
+            var innerContainer = $("<div>").addClass("p-2");
+            container.append(innerContainer);
+
+            if (!namaKegiatan) {
+                innerContainer.html('<div class="text-danger">Nama Kegiatan tidak ditemukan.</div>');
+                return;
+            }
+
+            // Loading spinner
+            innerContainer.html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2 text-muted">Memuat data sub-detail...</div>
+                </div>
+            `);
+
+            $.ajax({
+                url: '@Url.Action("Detail", "PendataanReklame")',
+                type: 'GET',
+                data: { namaKegiatan: namaKegiatan },
+                success: function (result) {
+                    innerContainer.html(result);
+                },
+                error: function () {
+                    innerContainer.html('<div class="text-danger">❌ Gagal memuat data sub-detail.</div>');
+                }
+            });
+        }
+
+        function onRowExpandingHandler(e) {
+            const grid = e.component;
+
+            // Jika ada baris yang sedang terbuka dan berbeda dari baris yang diklik
+            if (expandedRowKey && expandedRowKey !== e.key) {
+                // Tutup baris sebelumnya
+                grid.collapseRow(expandedRowKey);
+            }
+
+            // Simpan baris yang sedang dibuka
+            expandedRowKey = e.key;
+        }
+
+        function onRowCollapsedHandler(e) {
+            if (expandedRowKey === e.key) {
+                expandedRowKey = null;
+            }
+        }
     </script>
 }
