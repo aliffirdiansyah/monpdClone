@@ -14,11 +14,14 @@ namespace MonPDReborn.Models.PengawasanReklame
         // Untuk Partial View _Show.cshtml
         public class Show
         {
-            public List<PengawasanReklame> Data { get; set; }
-
-            public Show()
+            public List<PengawasanReklame> Data { get; set; } = new();
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+            public Show(int tahun, int bulan)
             {
-                Data = Method.GetPengawasanReklameData();
+                Tahun = tahun;
+                Bulan = bulan;
+                Data = Method.GetPengawasanReklameList(tahun, bulan);
             }
 
         }
@@ -35,25 +38,39 @@ namespace MonPDReborn.Models.PengawasanReklame
 
         public static class Method
         {
+            public static List<PengawasanReklame> GetPengawasanReklameList(int tahun, int bulan)
+            {
+                var allData = GetPengawasanReklameData();
+
+                return allData
+                    .Where(d => d.Tahun == tahun && d.Bulan == bulan)
+                    .ToList();
+            }
 
             // Pengawasan Reklame
-            public static List<PengawasanReklame> GetPengawasanReklameData()
+            private static List<PengawasanReklame> GetPengawasanReklameData()
             {
                 return new List<PengawasanReklame>()
                 {
                     new PengawasanReklame
                     {
                         NamaKegiatan = "Survey",
+                        Tahun = 2025,
+                        Bulan = 5,
                         JmlPetugas = 5,
                         Target = 100,
-                        Terlaksana = 85
+                        Terlaksana = 85,
+                        Status = "Tercapai"
                     },
                     new PengawasanReklame
                     {
                         NamaKegiatan = "Verifikasi",
+                        Tahun = 2025,
+                        Bulan = 5,
                         JmlPetugas = 3,
                         Target = 60,
-                        Terlaksana = 45
+                        Terlaksana = 45,
+                        Status = "Belum Tercapai"
                     },
                 };
             }
@@ -136,11 +153,14 @@ namespace MonPDReborn.Models.PengawasanReklame
         public class PengawasanReklame
         {
             public string NamaKegiatan { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
             public int JmlPetugas { get; set; }
             public int Target {  get; set; }
             public int Terlaksana { get; set; }
             public decimal Selisih => Target - Terlaksana;
             public decimal Persentase => Target == 0 ? 0 : Math.Round((decimal)Terlaksana / Target * 100, 2);
+            public string Status { get; set; } = null!;
         }
 
         public class Rekap

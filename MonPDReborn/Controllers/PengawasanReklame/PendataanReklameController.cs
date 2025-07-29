@@ -41,11 +41,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
-        public IActionResult Show()
+        public IActionResult Show(int tahun, int bulan)
         {
             try
             {
-                var model = new Models.PengawasanReklame.PendataanReklameVM.Show();
+                var model = new Models.PengawasanReklame.PendataanReklameVM.Show(tahun, bulan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -56,6 +56,7 @@ namespace MonPDReborn.Controllers.PengawasanReklame
             }
             catch (Exception ex)
             {
+                return Content("❌ ERROR: " + ex.ToString());
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
