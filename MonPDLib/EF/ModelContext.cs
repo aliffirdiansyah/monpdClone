@@ -45,6 +45,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklame> DbMonReklames { get; set; }
 
+    public virtual DbSet<DbMonReklameAktivita> DbMonReklameAktivitas { get; set; }
+
+    public virtual DbSet<DbMonReklameAktivitasDet> DbMonReklameAktivitasDets { get; set; }
+
     public virtual DbSet<DbMonReklameEmail> DbMonReklameEmails { get; set; }
 
     public virtual DbSet<DbMonReklameLiar> DbMonReklameLiars { get; set; }
@@ -302,6 +306,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<UserApiBapendum> UserApiBapenda { get; set; }
 
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
+
+    public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -591,6 +597,16 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KodeObyek).IsFixedLength();
             entity.Property(e => e.NoKetetapan).HasDefaultValueSql("'-' ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonReklameAktivita>(entity =>
+        {
+            entity.ToView("DB_MON_REKLAME_AKTIVITAS");
+        });
+
+        modelBuilder.Entity<DbMonReklameAktivitasDet>(entity =>
+        {
+            entity.ToView("DB_MON_REKLAME_AKTIVITAS_DET");
         });
 
         modelBuilder.Entity<DbMonReklameEmail>(entity =>
@@ -1688,6 +1704,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<VwReklameStatusPerpanjangan>(entity =>
         {
             entity.ToView("VW_REKLAME_STATUS_PERPANJANGAN");
+        });
+
+        modelBuilder.Entity<VwTargetAktivitasReklame>(entity =>
+        {
+            entity.ToView("VW_TARGET_AKTIVITAS_REKLAME");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");

@@ -16,14 +16,12 @@ public partial class DbPotensiParkir
     public string Nop { get; set; } = null!;
 
     [Column("JENIS_TARIF")]
-    [StringLength(50)]
-    [Unicode(false)]
-    public string? JenisTarif { get; set; }
+    [Precision(10)]
+    public int? JenisTarif { get; set; }
 
     [Column("SISTEM_PARKIR")]
-    [StringLength(50)]
-    [Unicode(false)]
-    public string? SistemParkir { get; set; }
+    [Precision(10)]
+    public int? SistemParkir { get; set; }
 
     [Column("TO_WD", TypeName = "NUMBER(12,2)")]
     public decimal? ToWd { get; set; }

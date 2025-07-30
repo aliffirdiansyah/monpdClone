@@ -62,27 +62,27 @@ public partial class DbOpPbb
     [Column("ALAMAT_WP")]
     [StringLength(100)]
     [Unicode(false)]
-    public string AlamatWp { get; set; } = null!;
+    public string? AlamatWp { get; set; }
 
     [Column("ALAMAT_WP_NO")]
     [StringLength(30)]
     [Unicode(false)]
-    public string AlamatWpNo { get; set; } = null!;
+    public string? AlamatWpNo { get; set; }
 
     [Column("ALAMAT_WP_KEL")]
     [StringLength(50)]
     [Unicode(false)]
-    public string AlamatWpKel { get; set; } = null!;
+    public string? AlamatWpKel { get; set; }
 
     [Column("ALAMAT_WP_KOTA")]
     [StringLength(50)]
     [Unicode(false)]
-    public string AlamatWpKota { get; set; } = null!;
+    public string? AlamatWpKota { get; set; }
 
     [Column("WP_KTP")]
     [StringLength(50)]
     [Unicode(false)]
-    public string WpKtp { get; set; } = null!;
+    public string? WpKtp { get; set; }
 
     [Column("WP_NAMA")]
     [StringLength(100)]
@@ -92,17 +92,17 @@ public partial class DbOpPbb
     [Column("WP_NPWP")]
     [StringLength(35)]
     [Unicode(false)]
-    public string WpNpwp { get; set; } = null!;
+    public string? WpNpwp { get; set; }
 
     [Column("WP_RT")]
     [StringLength(100)]
     [Unicode(false)]
-    public string WpRt { get; set; } = null!;
+    public string? WpRt { get; set; }
 
     [Column("WP_RW")]
     [StringLength(100)]
     [Unicode(false)]
-    public string WpRw { get; set; } = null!;
+    public string? WpRw { get; set; }
 
     [Column("STATUS", TypeName = "NUMBER")]
     public decimal Status { get; set; }
