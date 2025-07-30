@@ -53,6 +53,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameSuratTegurDok> DbMonReklameSuratTegurDoks { get; set; }
 
+    public virtual DbSet<DbMonReklameSurvey> DbMonReklameSurveys { get; set; }
+
     public virtual DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
 
     public virtual DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
@@ -283,9 +285,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -593,6 +595,13 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbMonReklameSuratTegurDok>(entity =>
         {
             entity.HasKey(e => new { e.Klasifikasi, e.TahunSurat, e.Pajak, e.KodeDokumen, e.Bidang, e.Agenda }).HasName("REKLAME_TEGUR_DOK_PK");
+        });
+
+        modelBuilder.Entity<DbMonReklameSurvey>(entity =>
+        {
+            entity.HasKey(e => e.Seq).HasName("DB_MON_REKLAME_SURVEY_PK");
+
+            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<DbMonReklameUpaya>(entity =>
@@ -1406,10 +1415,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<PotensiCtrlAirTanah>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_POTENSI_CTRL_AT");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033437");
         });
 
         modelBuilder.Entity<PotensiCtrlHiburan>(entity =>
@@ -1613,6 +1619,7 @@ public partial class ModelContext : DbContext
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");
+        modelBuilder.HasSequence("SEQ_DB_MON_REKLAME_SURVEY");
         modelBuilder.HasSequence("SEQ_DB_OP_REKLAME");
 
         OnModelCreatingPartial(modelBuilder);

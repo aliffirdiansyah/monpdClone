@@ -26,81 +26,83 @@ public partial class DbOpPbb
     [Column("ALAMAT_OP")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? AlamatOp { get; set; }
+    public string AlamatOp { get; set; } = null!;
 
     [Column("ALAMAT_OP_NO")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? AlamatOpNo { get; set; }
+    public string AlamatOpNo { get; set; } = null!;
 
     [Column("ALAMAT_OP_RT")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? AlamatOpRt { get; set; }
+    public string AlamatOpRt { get; set; } = null!;
 
     [Column("ALAMAT_OP_RW")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? AlamatOpRw { get; set; }
+    public string AlamatOpRw { get; set; } = null!;
 
     [Column("ALAMAT_KD_CAMAT")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? AlamatKdCamat { get; set; }
+    public string AlamatKdCamat { get; set; } = null!;
 
     [Column("ALAMAT_KD_LURAH")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? AlamatKdLurah { get; set; }
+    public string AlamatKdLurah { get; set; } = null!;
 
-    [Column("LUAS_TANAH")]
-    [Precision(10)]
-    public int? LuasTanah { get; set; }
+    [Column("UPTB", TypeName = "NUMBER")]
+    public decimal Uptb { get; set; }
+
+    [Column("LUAS_TANAH", TypeName = "NUMBER")]
+    public decimal LuasTanah { get; set; }
 
     [Column("ALAMAT_WP")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? AlamatWp { get; set; }
+    public string AlamatWp { get; set; } = null!;
 
     [Column("ALAMAT_WP_NO")]
     [StringLength(30)]
     [Unicode(false)]
-    public string? AlamatWpNo { get; set; }
+    public string AlamatWpNo { get; set; } = null!;
 
     [Column("ALAMAT_WP_KEL")]
     [StringLength(50)]
     [Unicode(false)]
-    public string? AlamatWpKel { get; set; }
+    public string AlamatWpKel { get; set; } = null!;
 
     [Column("ALAMAT_WP_KOTA")]
     [StringLength(50)]
     [Unicode(false)]
-    public string? AlamatWpKota { get; set; }
+    public string AlamatWpKota { get; set; } = null!;
 
     [Column("WP_KTP")]
     [StringLength(50)]
     [Unicode(false)]
-    public string? WpKtp { get; set; }
+    public string WpKtp { get; set; } = null!;
 
     [Column("WP_NAMA")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? WpNama { get; set; }
+    public string WpNama { get; set; } = null!;
 
     [Column("WP_NPWP")]
     [StringLength(35)]
     [Unicode(false)]
-    public string? WpNpwp { get; set; }
+    public string WpNpwp { get; set; } = null!;
 
     [Column("WP_RT")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? WpRt { get; set; }
+    public string WpRt { get; set; } = null!;
 
     [Column("WP_RW")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? WpRw { get; set; }
+    public string WpRw { get; set; } = null!;
 
     [Column("STATUS", TypeName = "NUMBER")]
     public decimal Status { get; set; }
@@ -112,76 +114,4 @@ public partial class DbOpPbb
     [StringLength(100)]
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
-
-    [Column("TAHUN_BUKU", TypeName = "NUMBER")]
-    public decimal TahunBuku { get; set; }
-
-    [Column("AKUN")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string Akun { get; set; } = null!;
-
-    [Column("NAMA_AKUN")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string NamaAkun { get; set; } = null!;
-
-    [Column("JENIS")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string Jenis { get; set; } = null!;
-
-    [Column("NAMA_JENIS")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string NamaJenis { get; set; } = null!;
-
-    [Column("OBJEK")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string Objek { get; set; } = null!;
-
-    [Column("NAMA_OBJEK")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string NamaObjek { get; set; } = null!;
-
-    [Column("RINCIAN")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string Rincian { get; set; } = null!;
-
-    [Column("NAMA_RINCIAN")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string NamaRincian { get; set; } = null!;
-
-    [Column("SUB_RINCIAN")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string SubRincian { get; set; } = null!;
-
-    [Column("NAMA_SUB_RINCIAN")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string NamaSubRincian { get; set; } = null!;
-
-    [Column("WILAYAH_PAJAK")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string? WilayahPajak { get; set; }
-
-    [Column("IS_TUTUP")]
-    [Precision(10)]
-    public int? IsTutup { get; set; }
-
-    [Column("KELOMPOK")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string? Kelompok { get; set; }
-
-    [Column("NAMA_KELOMPOK")]
-    [StringLength(200)]
-    [Unicode(false)]
-    public string? NamaKelompok { get; set; }
 }
