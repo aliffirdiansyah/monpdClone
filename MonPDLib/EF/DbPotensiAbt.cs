@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Table("POTENSI_CTRL_AIR_TANAH")]
-public partial class PotensiCtrlAirTanah
+[Keyless]
+public partial class DbPotensiAbt
 {
-    [Key]
     [Column("NOP")]
     [StringLength(30)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
 
     [Column("KELOMPOK")]
     [Precision(1)]
@@ -78,4 +77,7 @@ public partial class PotensiCtrlAirTanah
 
     [Column("PAJAK_AIR_TANAH", TypeName = "NUMBER(15,2)")]
     public decimal? PajakAirTanah { get; set; }
+
+    [Column("STATUS", TypeName = "NUMBER")]
+    public decimal? Status { get; set; }
 }

@@ -38,6 +38,7 @@ namespace MonPDLib.General
             DBOPPBB,
             DBOPREKLAME,
             DBOPREKLAMESURAT,
+            DBOPREKLAMESURVEY,
             DBNPWPD,
             DBOPOPSEN, 
         }

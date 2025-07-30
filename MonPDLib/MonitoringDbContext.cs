@@ -43,6 +43,7 @@ namespace MonPDLib
         public DbSet<DbMonReklameSurat> DbMonReklameSurats { get; set; }
         public DbSet<DbMonReklameSuratTegur> DbMonReklameSuratTegurs { get; set; }
         public DbSet<DbMonReklameSuratTegurDok> DbMonReklameSuratTegurDoks { get; set; }
+        public DbSet<DbMonReklameSurvey> DbMonReklameSurveys { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -86,6 +87,7 @@ namespace MonPDLib
             modelBuilder.Entity<DbMonReklameSurat>().HasNoKey();
             modelBuilder.Entity<DbMonReklameSuratTegur>().HasNoKey();
             modelBuilder.Entity<DbMonReklameSuratTegurDok>().HasNoKey();
+            modelBuilder.Entity<DbMonReklameSurvey>().HasNoKey();
         }
     }
 }

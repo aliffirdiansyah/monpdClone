@@ -53,6 +53,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameSuratTegurDok> DbMonReklameSuratTegurDoks { get; set; }
 
+    public virtual DbSet<DbMonReklameSurvey> DbMonReklameSurveys { get; set; }
+
     public virtual DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
 
     public virtual DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
@@ -74,6 +76,16 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbOpReklame> DbOpReklames { get; set; }
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
+
+    public virtual DbSet<DbPotensiAbt> DbPotensiAbts { get; set; }
+
+    public virtual DbSet<DbPotensiHiburan> DbPotensiHiburans { get; set; }
+
+    public virtual DbSet<DbPotensiHotel> DbPotensiHotels { get; set; }
+
+    public virtual DbSet<DbPotensiParkir> DbPotensiParkirs { get; set; }
+
+    public virtual DbSet<DbPotensiResto> DbPotensiRestos { get; set; }
 
     public virtual DbSet<DbRekamParkir> DbRekamParkirs { get; set; }
 
@@ -281,11 +293,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
 
+    public virtual DbSet<UserApiBapendum> UserApiBapenda { get; set; }
+
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -595,6 +609,13 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.Klasifikasi, e.TahunSurat, e.Pajak, e.KodeDokumen, e.Bidang, e.Agenda }).HasName("REKLAME_TEGUR_DOK_PK");
         });
 
+        modelBuilder.Entity<DbMonReklameSurvey>(entity =>
+        {
+            entity.HasKey(e => e.Seq).HasName("DB_MON_REKLAME_SURVEY_PK");
+
+            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
+        });
+
         modelBuilder.Entity<DbMonReklameUpaya>(entity =>
         {
             entity.HasKey(e => new { e.NoFormulir, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_PK");
@@ -702,6 +723,39 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.MaksimalProduksiPorsiHari).HasDefaultValueSql("0                     ");
             entity.Property(e => e.RataTerjualPorsiHari).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<DbPotensiAbt>(entity =>
+        {
+            entity.ToView("DB_POTENSI_ABT");
+        });
+
+        modelBuilder.Entity<DbPotensiHiburan>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033443");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbPotensiHotel>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033440");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbPotensiParkir>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033442");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbPotensiResto>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033441");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<DbRekamParkir>(entity =>
@@ -1406,10 +1460,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<PotensiCtrlAirTanah>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_POTENSI_CTRL_AT");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033437");
         });
 
         modelBuilder.Entity<PotensiCtrlHiburan>(entity =>
@@ -1607,12 +1658,18 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<UserApiBapendum>(entity =>
+        {
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
         modelBuilder.Entity<VwReklameStatusPerpanjangan>(entity =>
         {
             entity.ToView("VW_REKLAME_STATUS_PERPANJANGAN");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");
+        modelBuilder.HasSequence("SEQ_DB_MON_REKLAME_SURVEY");
         modelBuilder.HasSequence("SEQ_DB_OP_REKLAME");
 
         OnModelCreatingPartial(modelBuilder);

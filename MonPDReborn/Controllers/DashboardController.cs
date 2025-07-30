@@ -22,7 +22,7 @@ namespace MonPDReborn.Controllers
         }
         public IActionResult Index()
         {
-            var response = new ResponseBase();
+
             try
             {
                 var model = new Models.DashboardVM.Index();
@@ -30,13 +30,16 @@ namespace MonPDReborn.Controllers
             }
             catch (ArgumentException ex)
             {
-                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
-                return RedirectToAction("Index", "Dashboard", new { em = ex.Message });
+                ViewBag.ErrorMessage = ex.Message;
+                var model = new Models.DashboardVM.Index("Error, Pada Saat GetData");
+                return View($"{URLView}{actionName}", model);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
-                return RedirectToAction("Index", "Dashboard", new { em = response.InternalServerErrorMessage });
+                ViewBag.ErrorMessage = "Terjadi kesalahan sistem. Silakan coba lagi.";
+                var model = new Models.DashboardVM.Index("Terjadi kesalahan sistem. Silakan coba lagi.");
+                return View($"{URLView}{actionName}", model);
             }
         }
         public IActionResult SeriesPajakDaerah()
