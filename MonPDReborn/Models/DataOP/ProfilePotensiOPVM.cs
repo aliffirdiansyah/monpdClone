@@ -1421,7 +1421,7 @@ namespace MonPDReborn.Models.DataOP
                                 Realisasi2 = context.DbMonAbts.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
                                 Target3 = context.PotensiCtrlTargets.Where(x => x.Nop == item.Nop && x.Tahun == DateTime.Now.Year).Sum(q => q.Target),
                                 Realisasi3 = context.DbMonAbts.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
-                                TotalPotensi = totalPotensiAbt ?? 0
+                                TotalPotensi = totalPotensiAbt
                             };
                             ret.Add(potensi);
                         }
