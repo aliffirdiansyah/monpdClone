@@ -86,18 +86,7 @@ namespace ParkirWs
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
-            if (thnSetting != null)
-            {
-                var temp = tglServer.Year - (int)thnSetting.YearBefore;
-                if (temp >= 2021)
-                {
-                    tahunAmbil = temp;
-                }
-                else
-                {
-                    tahunAmbil = 2021;
-                }
-            }
+            tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
             // do fill db op PARKIR
             if (IsGetDBOp())

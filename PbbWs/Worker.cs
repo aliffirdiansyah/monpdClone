@@ -12,7 +12,9 @@ namespace PbbWs
 {
     public class Worker : BackgroundService
     {
+        private bool isFirst = true;
         private readonly ILogger<Worker> _logger;
+        private static int KDPajak = 9;
 
         public Worker(ILogger<Worker> logger)
         {
@@ -72,19 +74,8 @@ namespace PbbWs
             var tglServer = DateTime.Now;
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
-            var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == idPajak);
-            if (thnSetting != null)
-            {
-                var temp = tglServer.Year - (int)thnSetting.YearBefore;
-                if (temp >= 2023)
-                {
-                    tahunAmbil = temp;
-                }
-                else
-                {
-                    tahunAmbil = 2023;
-                }
-            }
+            var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
+            tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
 
             //FILL DB OP

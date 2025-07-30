@@ -3,6 +3,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
+using static MonPDLib.General.EnumFactory;
 using static MonPDLib.Helper;
 
 namespace ReklameWs
@@ -10,6 +11,7 @@ namespace ReklameWs
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private static int KDPajak = 7;
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -65,23 +67,11 @@ namespace ReklameWs
 
         private async Task DoWorkFullScanAsync(CancellationToken stoppingToken)
         {
-            int idPajak = 6;
             var tglServer = DateTime.Now;
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
-            var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == 6);
-            if (thnSetting != null)
-            {
-                var temp = tglServer.Year - (int)thnSetting.YearBefore;
-                if (temp >= 2023)
-                {
-                    tahunAmbil = temp;
-                }
-                else
-                {
-                    tahunAmbil = 2023;
-                }
-            }
+            var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
+            tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
             // do fill db op abt
             if (IsGetDBOp())

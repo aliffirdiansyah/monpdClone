@@ -3,11 +3,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Drawing;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static MonPDLib.General.EnumFactory;
 using static MonPDLib.Helper;
 
 namespace HiburanWs
@@ -16,7 +12,7 @@ namespace HiburanWs
     {
         private bool isFirst = true;
         private readonly ILogger<Worker> _logger;
-        private static int KDPajak = 2;
+        private static int KDPajak = 5;
 
         public Worker(ILogger<Worker> logger)
         {
@@ -87,18 +83,7 @@ namespace HiburanWs
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
-            if (thnSetting != null)
-            {
-                var temp = tglServer.Year - (int)thnSetting.YearBefore;
-                if (temp >= 2021)
-                {
-                    tahunAmbil = temp;
-                }
-                else
-                {
-                    tahunAmbil = 2021;
-                }
-            }
+            tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
             // do fill db op HIBURAN
             if (IsGetDBOp())
