@@ -299,7 +299,7 @@ namespace MonPDReborn.Models.DataOP
                         Kategori = "",
                         JumlahTotalRoom = x.TotalRoom.Value,
                         HargaRataRataRoom = x.AvgRoomPrice.Value,
-                        OkupansiRateRoom = x.OkupansiRateRoom.Value,
+                        OkupansiRateRoom = (x.OkupansiRateRoom.Value)/100,
                         KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet.Value,
                         HargaRataRataBanquetPerPax = x.AvgBanquetPrice.Value,
                         TarifPajak = 0.1m

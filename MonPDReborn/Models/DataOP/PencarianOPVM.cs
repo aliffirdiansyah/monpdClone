@@ -324,18 +324,18 @@ namespace MonPDReborn.Models.DataOP
 
                         break;
                     case EnumFactory.EPajak.PBB:
-                        ret = context.DbMonPbbs
-                            .Where(x => x.Nop == nop && x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
-                            .GroupBy(x => x.TglBayarPokok.Value.Date)
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = nop,
-                                Month = g.Key.Month,
-                                Bulan = g.Key.ToString("MMMM", new CultureInfo("id-ID")),
-                                Nominal = g.Sum(x => x.NominalPokokBayar ?? 0)
-                            })
-                            .OrderBy(x => x.Month)
-                            .ToList();
+                        //ret = context.DbMonPbbs
+                        //    .Where(x => x.Nop == nop && x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                        //    .GroupBy(x => x.TglBayarPokok.Value.Date)
+                        //    .Select(g => new RealisasiBulanan
+                        //    {
+                        //        NOP = nop,
+                        //        Month = g.Key.Month,
+                        //        Bulan = g.Key.ToString("MMMM", new CultureInfo("id-ID")),
+                        //        Nominal = g.Sum(x => x.NominalPokokBayar ?? 0)
+                        //    })
+                        //    .OrderBy(x => x.Month)
+                        //    .ToList();
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         ret = context.DbMonBphtbs
@@ -463,18 +463,18 @@ namespace MonPDReborn.Models.DataOP
 
                         break;
                     case EnumFactory.EPajak.PBB:
-                        ret = context.DbMonPbbs
-                            .Where(x => x.Nop == nop && x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
-                            .GroupBy(x => x.TglBayarPokok.Value.Date)
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = nop,
-                                Month = g.Key.Month,
-                                Bulan = g.Key.ToString("MMMM", new CultureInfo("id-ID")),
-                                Nominal = g.Sum(x => x.NominalPokokBayar ?? 0)
-                            })
-                            .OrderBy(x => x.Month)
-                            .ToList();
+                        //ret = context.DbMonPbbs
+                        //    .Where(x => x.Nop == nop && x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                        //    .GroupBy(x => x.TglBayarPokok.Value.Date)
+                        //    .Select(g => new RealisasiBulanan
+                        //    {
+                        //        NOP = nop,
+                        //        Month = g.Key.Month,
+                        //        Bulan = g.Key.ToString("MMMM", new CultureInfo("id-ID")),
+                        //        Nominal = g.Sum(x => x.NominalPokokBayar ?? 0)
+                        //    })
+                        //    .OrderBy(x => x.Month)
+                        //    .ToList();
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         ret = context.DbMonBphtbs

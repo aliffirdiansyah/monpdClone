@@ -160,25 +160,25 @@ namespace MonPDReborn.Models.DataOP
                             .ToList();
                         break;
                     case EnumFactory.EPajak.PBB:
-                        var dataKetetapanPbb = context.DbMonPbbs
-                            .Where(x => x.TglKetetapan.HasValue && x.TahunPajakKetetapan == tahun && x.MasaPajakKetetapan == bulan)
-                            .GroupBy(x => x.Nop)
-                            .Select(g => new PenetapanOP
-                            {
-                                Nop = g.Key,
-                                NoPenetapan = string.Concat(g.First().Nop, "-", g.First().MasaPajakKetetapan, "-", g.First().TahunPajakKetetapan),
-                                NamaWP = g.First().NamaOp,
-                                Alamat = g.First().AlamatOp,
-                                NilaiPenetapan = g.First().PokokPajakKetetapan ?? 0,
-                                MasaPajak = new DateTime(
-                                    (int)(g.First().TahunPajakKetetapan),
-                                    (int)(g.First().MasaPajakKetetapan), 1
-                                ).ToString("MMMM", new CultureInfo("id-ID")),
-                                Status = g.First().NominalPokokBayar.HasValue
-                                    ? (g.First().NominalPokokBayar.Value > 0 ? "Sudah Dibayar" : "Belum Dibayar")
-                                    : "Belum Ada Pembayaran"
-                            })
-                            .ToList();
+                        //var dataKetetapanPbb = context.DbMonPbbs
+                        //    .Where(x => x.TglKetetapan.HasValue && x.TahunPajakKetetapan == tahun && x.MasaPajakKetetapan == bulan)
+                        //    .GroupBy(x => x.Nop)
+                        //    .Select(g => new PenetapanOP
+                        //    {
+                        //        Nop = g.Key,
+                        //        NoPenetapan = string.Concat(g.First().Nop, "-", g.First().MasaPajakKetetapan, "-", g.First().TahunPajakKetetapan),
+                        //        NamaWP = g.First().NamaOp,
+                        //        Alamat = g.First().AlamatOp,
+                        //        NilaiPenetapan = g.First().PokokPajakKetetapan ?? 0,
+                        //        MasaPajak = new DateTime(
+                        //            (int)(g.First().TahunPajakKetetapan),
+                        //            (int)(g.First().MasaPajakKetetapan), 1
+                        //        ).ToString("MMMM", new CultureInfo("id-ID")),
+                        //        Status = g.First().NominalPokokBayar.HasValue
+                        //            ? (g.First().NominalPokokBayar.Value > 0 ? "Sudah Dibayar" : "Belum Dibayar")
+                        //            : "Belum Ada Pembayaran"
+                        //    })
+                        //    .ToList();
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         break;

@@ -479,31 +479,31 @@ namespace MonPDReborn.Models.DataOP
                         break;
                     case EnumFactory.EPajak.PBB:
 
-                        var dataPbb = context.DbMonPbbs.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
-                            .GroupBy(x => new
-                            {
-                                TglBayarPokok = x.TglBayarPokok.Value
-                            })
-                                .Select(x => new
-                                {
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                            .ToList();
-                        ret.Tahun = tahun;
-                        for (int bln = 1; bln <= 12; bln++)
-                        {
-                            var rest = dataPbb.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
-                            decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
-                            var tanggal = rest.LastOrDefault()?.TglBayarPokok;
+                        //var dataPbb = context.DbMonPbbs.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
+                        //    .GroupBy(x => new
+                        //    {
+                        //        TglBayarPokok = x.TglBayarPokok.Value
+                        //    })
+                        //        .Select(x => new
+                        //        {
+                        //            x.Key.TglBayarPokok,
+                        //            Realisasi = x.Sum(q => q.NominalPokokBayar)
+                        //        })
+                        //    .ToList();
+                        //ret.Tahun = tahun;
+                        //for (int bln = 1; bln <= 12; bln++)
+                        //{
+                        //    var rest = dataPbb.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
+                        //    decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
+                        //    var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
-                            ret.DataRealisasi.Add(new DataRealisasiPajak
-                            {
-                                Bulan = new DateTime(DateTime.Now.Year, bln, 1).ToString("MMMM", new CultureInfo("id-ID")),
-                                TglSSPD = tanggal,
-                                Realisasi = realisasi,
-                            });
-                        }
+                        //    ret.DataRealisasi.Add(new DataRealisasiPajak
+                        //    {
+                        //        Bulan = new DateTime(DateTime.Now.Year, bln, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        //        TglSSPD = tanggal,
+                        //        Realisasi = realisasi,
+                        //    });
+                        //}
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         break;
