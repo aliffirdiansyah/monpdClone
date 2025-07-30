@@ -1,8 +1,10 @@
-﻿using System;
+﻿using MonPDLib.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MonPDLib
 {
@@ -354,6 +356,33 @@ namespace MonPDLib
             public string? REKON_REFF { get; set; }
             public decimal SEQ_KETETAPAN { get; set; }
             public DateTime INS_DATE { get; set; } = DateTime.Now;
+        }
+
+        public class OPPbb
+        {
+            public string NOP { get; set; }
+            public int KATEGORI_ID { get; set; }
+            public string KATEGORI_NAMA { get; set; }
+            public string ALAMAT_OP { get; set; }
+            public string ALAMAT_OP_NO { get; set; }
+            public string ALAMAT_OP_RT { get; set; }
+            public string ALAMAT_OP_RW { get; set; }
+            public string ALAMAT_KD_CAMAT { get; set; }
+            public string ALAMAT_KD_LURAH { get; set; }
+            public int UPTB { get; set; }
+            public int LUAS_TANAH { get; set; }
+            public string ALAMAT_WP { get; set; }
+            public string ALAMAT_WP_NO { get; set; }
+            public string ALAMAT_WP_KEL { get; set; }
+            public string ALAMAT_WP_KOTA { get; set; }
+            public string WP_KTP { get; set; }
+            public string WP_NAMA { get; set; }
+            public string WP_NPWP { get; set; }
+            public string WP_RT { get; set; }
+            public string WP_RW { get; set; }
+            public int STATUS { get; set; }
+            public DateTime INS_DATE { get; set; }
+            public string INS_BY { get; set; }
         }
     }
 }

@@ -494,19 +494,19 @@ namespace MonPDReborn.Models.AktivitasOP
                         .ToList()
                 );
 
-                dataWilayahGabungan.AddRange(
-                    context.DbOpPbbs
-                        .Where(x => x.TahunBuku == currentYear)
-                        .Select(x => new
-                        {
-                            x.Nop,
-                            x.WilayahPajak,
-                            PajakId = 9m // PBB
-                        })
-                        .ToList()
-                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
-                        .ToList()
-                );
+                //dataWilayahGabungan.AddRange(
+                //    context.DbOpPbbs
+                //        .Where(x => x.TahunBuku == currentYear)
+                //        .Select(x => new
+                //        {
+                //            x.Nop,
+                //            x.WilayahPajak,
+                //            PajakId = 9m // PBB
+                //        })
+                //        .ToList()
+                //        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
+                //        .ToList()
+                //);
                 // Gabungkan data realisasi
                 var dataRealisasiGabungan = new List<(string Nop, DateTime? TglBayarPokok, decimal NominalPokokBayar, decimal PajakId)>();
 

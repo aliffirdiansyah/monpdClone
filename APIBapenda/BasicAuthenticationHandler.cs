@@ -32,6 +32,7 @@ namespace APIBapenda
                 var auth = AuthHandler.ValidateUser(username, password);
                 if (!auth)
                 {
+                    //return AuthenticateResult.Fail("Invalid Username or Password");
                     return AuthenticateResult.Fail("Invalid Username or Password");
                 }
 
@@ -49,6 +50,19 @@ namespace APIBapenda
             {
                 return AuthenticateResult.Fail("Invalid Authorization Header");
             }
+        }
+
+        protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
+        {
+            Response.StatusCode = StatusCodes.Status401Unauthorized;
+            Response.ContentType = "application/json";
+
+            var result = new
+            {
+                error = "Username atau Password salah"
+            };
+
+            await Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(result));
         }
     }
 }

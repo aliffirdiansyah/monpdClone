@@ -305,46 +305,46 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
-                        var dataTerlaporPbb = context.DbMonPbbs
-                        .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
-                        .GroupBy(x => x.Nop)
-                        .Select(g => new
-                        {
-                            Nop = g.Key,
-                            Count = g.Count()
-                        })
-                        .ToList();
+                        //var dataTerlaporPbb = context.DbMonPbbs
+                        //.Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
+                        //.GroupBy(x => x.Nop)
+                        //.Select(g => new
+                        //{
+                        //    Nop = g.Key,
+                        //    Count = g.Count()
+                        //})
+                        //.ToList();
 
-                        var getWilayahPbb = context.DbOpPbbs
-                            .Select(x => new
-                            {
-                                Nop = x.Nop,
-                                Wilayah = x.WilayahPajak
-                            })
-                            .ToList();
+                        //var getWilayahPbb = context.DbOpPbbs
+                        //    .Select(x => new
+                        //    {
+                        //        Nop = x.Nop,
+                        //        Wilayah = x.WilayahPajak
+                        //    })
+                        //    .ToList();
 
-                        var laporPbb = context.DbMonPbbs
-                            .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
-                            .GroupBy(x => x.Nop)
-                            .Select(g => g.First())
-                            .ToList()
-                            .Select(x => new HasilPelaporan
-                            {
-                                NPWPD = x.Npwpd,
-                                NOP = x.Nop,
-                                Nama = x.NamaOp,
-                                NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
-                                EnumPajak = (int)JenisPajak,
-                                JenisPajak = JenisPajak.GetDescription(),
-                                Wilayah = getWilayahPbb.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
-                                Status = "",
-                                PajakTerlapor = dataTerlaporPbb.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0,
-                                MasaBelumLapor = 12 - (dataTerlaporPbb.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0),
-                                PajakSeharusnya = 12,
-                                Alamat = x.AlamatOp
-                            }).ToList();
+                        //var laporPbb = context.DbMonPbbs
+                        //    .Where(x => x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == currentYear)
+                        //    .GroupBy(x => x.Nop)
+                        //    .Select(g => g.First())
+                        //    .ToList()
+                        //    .Select(x => new HasilPelaporan
+                        //    {
+                        //        NPWPD = x.Npwpd,
+                        //        NOP = x.Nop,
+                        //        Nama = x.NamaOp,
+                        //        NilaiPelaporan = x.PokokPajakKetetapan ?? 0,
+                        //        EnumPajak = (int)JenisPajak,
+                        //        JenisPajak = JenisPajak.GetDescription(),
+                        //        Wilayah = getWilayahPbb.Where(y => y.Nop == x.Nop).Select(y => y.Wilayah).FirstOrDefault() ?? "",
+                        //        Status = "",
+                        //        PajakTerlapor = dataTerlaporPbb.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0,
+                        //        MasaBelumLapor = 12 - (dataTerlaporPbb.FirstOrDefault(y => y.Nop == x.Nop)?.Count ?? 0),
+                        //        PajakSeharusnya = 12,
+                        //        Alamat = x.AlamatOp
+                        //    }).ToList();
 
-                        ret.AddRange(laporPbb);
+                        //ret.AddRange(laporPbb);
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         break;

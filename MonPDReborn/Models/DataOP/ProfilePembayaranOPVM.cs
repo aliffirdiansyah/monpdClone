@@ -147,10 +147,10 @@ namespace MonPDReborn.Models.DataOP
                         break;
 
                     case EnumFactory.EPajak.PBB:
-                        var pbb = context.DbOpPbbs
-                            .Where(x => (x.Nop == keyword) || x.WpNama.ToUpper().Contains(keyword.ToUpper()))
-                            .FirstOrDefault(x => x.TahunBuku == currentYear);
-                        if (pbb != null) MapIdentitas(ret, pbb.Nop, pbb.AlamatOp, pbb.AlamatKdCamat, pbb.AlamatKdLurah, pbb.WilayahPajak);
+                        //var pbb = context.DbOpPbbs
+                        //    .Where(x => (x.Nop == keyword) || x.WpNama.ToUpper().Contains(keyword.ToUpper()))
+                        //    .FirstOrDefault(x => x.TahunBuku == currentYear);
+                        //if (pbb != null) MapIdentitas(ret, pbb.Nop, pbb.AlamatOp, pbb.AlamatKdCamat, pbb.AlamatKdLurah, pbb.WilayahPajak);
                         break;
 
                     case EnumFactory.EPajak.BPHTB:
@@ -281,17 +281,17 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.PBB:
-                        var dataPbb = context.DbOpPbbs.Where(x => (x.Nop == keyword) || (x.WpNama.ToUpper().Contains(keyword.ToUpper()))).ToList();
-                        var PbbTahunIni = dataPbb.Where(x => x.TahunBuku == currentYear).FirstOrDefault();
-                        if (PbbTahunIni != null)
-                        {
-                            ret.NOP = PbbTahunIni.Nop;
-                            ret.NamaObjekPajak = PbbTahunIni.WpNama;
-                            ret.AlamatLengkap = PbbTahunIni.AlamatOp;
-                            ret.Kecamatan = PbbTahunIni.AlamatKdCamat;
-                            ret.Kelurahan = PbbTahunIni.AlamatKdLurah;
-                            ret.WilayahPajak = PbbTahunIni.WilayahPajak;
-                        }
+                        //var dataPbb = context.DbOpPbbs.Where(x => (x.Nop == keyword) || (x.WpNama.ToUpper().Contains(keyword.ToUpper()))).ToList();
+                        //var PbbTahunIni = dataPbb.Where(x => x.TahunBuku == currentYear).FirstOrDefault();
+                        //if (PbbTahunIni != null)
+                        //{
+                        //    ret.NOP = PbbTahunIni.Nop;
+                        //    ret.NamaObjekPajak = PbbTahunIni.WpNama;
+                        //    ret.AlamatLengkap = PbbTahunIni.AlamatOp;
+                        //    ret.Kecamatan = PbbTahunIni.AlamatKdCamat;
+                        //    ret.Kelurahan = PbbTahunIni.AlamatKdLurah;
+                        //    ret.WilayahPajak = PbbTahunIni.WilayahPajak;
+                        //}
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         break;
