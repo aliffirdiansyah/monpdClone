@@ -430,7 +430,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiRestoMines1,
                     Target1 = targetRestoMines2,
                     Realisasi1 = realisasiRestoMines2,
-                    //TotalPotensi = totalPotensiResto,
+                    TotalPotensi = totalPotensiResto,
                 });
 
                 ret.Add(new RekapPotensi
