@@ -4,7 +4,12 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
-
+@if (!string.IsNullOrEmpty(Model.Em))
+{
+    <div class="alert alert-danger">
+        @Model.Em
+    </div>
+}
 <style>
     .apexcharts-legend.apexcharts-align-center {
         justify-content: flex-start !important; /* Rata kiri */
