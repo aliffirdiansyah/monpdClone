@@ -15,6 +15,8 @@ public partial class ModelContext : DbContext
     {
     }
 
+    public virtual DbSet<DatapbbSatupetum> DatapbbSatupeta { get; set; }
+
     public virtual DbSet<DbAkun> DbAkuns { get; set; }
 
     public virtual DbSet<DbAkunTarget> DbAkunTargets { get; set; }
@@ -84,6 +86,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbPotensiHotel> DbPotensiHotels { get; set; }
 
     public virtual DbSet<DbPotensiParkir> DbPotensiParkirs { get; set; }
+
+    public virtual DbSet<DbPotensiPpj> DbPotensiPpjs { get; set; }
+
+    public virtual DbSet<DbPotensiReklame> DbPotensiReklames { get; set; }
 
     public virtual DbSet<DbPotensiResto> DbPotensiRestos { get; set; }
 
@@ -297,13 +303,19 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("MONPD");
+
+        modelBuilder.Entity<DatapbbSatupetum>(entity =>
+        {
+            entity.Property(e => e.RtOp).IsFixedLength();
+            entity.Property(e => e.RwOp).IsFixedLength();
+        });
 
         modelBuilder.Entity<DbAkun>(entity =>
         {
@@ -749,6 +761,16 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => e.Nop).HasName("SYS_C0033442");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbPotensiPpj>(entity =>
+        {
+            entity.ToView("DB_POTENSI_PPJ");
+        });
+
+        modelBuilder.Entity<DbPotensiReklame>(entity =>
+        {
+            entity.ToView("DB_POTENSI_REKLAME");
         });
 
         modelBuilder.Entity<DbPotensiResto>(entity =>
