@@ -21,6 +21,7 @@ namespace MonPDLib
         }
 
         public DbSet<SSPD> SSPDs { get; set; }
+        public DbSet<OPPbb> OPPbbs { get; set; }
         public DbSet<DbOpHotel> DbOpHotels { get; set; }
         public DbSet<DbOpPbb> DbOpPbbs { get; set; }
         public DbSet<DbOpHiburan> DbOpHiburans { get; set; }
@@ -48,6 +49,7 @@ namespace MonPDLib
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<OPPbb>().HasNoKey();
             modelBuilder.Entity<SSPD>().HasNoKey();
             modelBuilder.Entity<DbOpHotel>().HasNoKey();
 
