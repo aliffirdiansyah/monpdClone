@@ -86,27 +86,15 @@ namespace ParkirWs
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
-            if (thnSetting != null)
-            {
-                var temp = tglServer.Year - (int)thnSetting.YearBefore;
-                if (temp >= 2021)
-                {
-                    tahunAmbil = temp;
-                }
-                else
-                {
-                    tahunAmbil = 2021;
-                }
-            }
+            tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
             // do fill db op PARKIR
             if (IsGetDBOp())
             {
-                FillOP(2025);
-                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                //{
-                //    FillOP(i);
-                //}
+                for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                {
+                    FillOP(i);
+                }
             }
 
             MailHelper.SendMail(
@@ -123,13 +111,13 @@ namespace ParkirWs
             Console.WriteLine("");
 
             // SURABAYA TAX PROCESS
-            //SBYTaxProcess(tahunBuku);
+            SBYTaxProcess(tahunBuku);
 
             // HPP PROCESS
-            //HPPOPProcess(tahunBuku);
+            HPPOPProcess(tahunBuku);
 
             // ketetapan 
-            //HPPKetetapanProcess(tahunBuku);
+            HPPKetetapanProcess(tahunBuku);
 
             // realisasi
             HPPRealisasiProcess(tahunBuku);
@@ -176,7 +164,33 @@ namespace ParkirWs
             WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
         ELSE 0
         END AS IS_TUTUP,
-        'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
+        CASE
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 1' THEN '1'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 2' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 3' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 4' THEN '4'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 5' THEN '5'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 6' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 7' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 8' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '01' THEN '1'
+    WHEN TO_CHAR(UPTB_ID) = '02' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '03' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '04' THEN '4'
+    WHEN TO_CHAR(UPTB_ID) = '05' THEN '5'
+    WHEN TO_CHAR(UPTB_ID) = '07' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '06' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '08' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '1' THEN '1'
+    WHEN TO_CHAR(UPTB_ID) = '2' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '3' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '4' THEN '4'
+    WHEN TO_CHAR(UPTB_ID) = '5' THEN '5'
+    WHEN TO_CHAR(UPTB_ID) = '7' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '6' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '8' THEN '2'
+    ELSE NULL
+END AS WILAYAH_PAJAK,
         '-'  AKUN  ,
         '-'  NAMA_AKUN         ,
         '-'  KELOMPOK      ,
@@ -582,7 +596,33 @@ SELECT NVL(REPLACE(A.FK_NOP, '.', ''), '-') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP
             ELSE 38
             END AS KATEGORI_ID,
             NAMA_JENIS_PAJAK   KATEGORI_NAMA,
-             sysdate INS_dATE, 'JOB' INS_BY ,fk_wilayah_pajak WILAYAH_PAJAK   ,
+             sysdate INS_dATE, 'JOB' INS_BY ,CASE
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 1' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 2' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 3' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 4' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 5' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 6' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 7' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 8' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '01' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '02' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '03' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '04' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '05' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '07' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '06' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '08' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '1' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '2' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '3' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '4' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '5' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '7' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '6' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '8' THEN '2'
+    ELSE NULL
+END AS WILAYAH_PAJAK,
             '-' AKUN,'-'  NAMA_AKUN,'-'  JENIS,'-'  NAMA_JENIS,'-'  OBJEK,'-'  NAMA_OBJEK,'-'  RINCIAN,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU,'0' DIKELOLA, '0' PUNGUT_TARIF
@@ -667,6 +707,11 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                             newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
                             newRow.TglOpTutup = item.TglOpTutup;
                             newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
+
+                            var kategori = GetKategoriOvveride(item.Nop);
+                            item.KategoriId = Convert.ToInt32(kategori[0] ?? "38");
+                            item.KategoriNama = kategori[1] ?? "USAHA LAINNYA";
+
                             newRow.KategoriId = item.KategoriId;
                             newRow.KategoriNama = item.KategoriNama;
                             newRow.Dikelola = item.Dikelola;
@@ -1265,6 +1310,133 @@ GROUP BY NOP, MASA, TAHUN  ";
                 {
                     ret.Add("-");
                     ret.Add("-");
+                }
+                dr.Close();
+            }
+            catch
+            {
+
+            }
+
+            connection.Close();
+            return ret;
+        }
+
+        private List<string> GetKategoriOvveride(string nop)
+        {
+            var ret = new List<string>();
+            ret.Add("38");
+            ret.Add("USAHA LAINNYA");
+
+            var c = DBClass.GetMonitoringDbContext();
+            var connection = c.Database.GetDbConnection();
+            if (connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+            try
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = @" SELECT *
+                                        FROM T_OP_KATEGORI_STATUS
+                                        WHERE REPLACE(FK_NOP,'.','')=:NOP  AND ROWNUM=1";
+                var param = command.CreateParameter();
+                param.ParameterName = "NOP";
+                param.Value = nop;
+                command.Parameters.Add(param);
+                var dr = command.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    var katname = dr.GetString(2);
+                    switch (katname)
+                    {
+                        case "USAHA RESTORAN":
+                            ret[0] = "53";
+                            ret[1] = "USAHA RESTORAN/HIBURAN";
+                            break;
+                        case "SWALAYAN/SUPERMARKET":
+                            ret[0] = "52";
+                            ret[1] = "SWALAYAN/SUPERMARKET/MINIMARKET/PASAR";
+                            break;
+                        case "PASAR":
+                            ret[0] = "52";
+                            ret[1] = "SWALAYAN/SUPERMARKET/MINIMARKET/PASAR";
+                            break;
+                        case "PERTOKOAN":
+                            ret[0] = "33";
+                            ret[1] = "PERTOKOAN";
+                            break;
+                        case "RUMAH SAKIT":
+                            ret[0] = "51";
+                            ret[1] = "RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM";
+                            break;
+                        case "PERGUDANGAN/PABRIK":
+                            ret[0] = "37";
+                            ret[1] = "PERGUDANGAN/PABRIK";
+                            break;
+                        case "USAHA HIBURAN":
+                            ret[0] = "53";
+                            ret[1] = "USAHA RESTORAN/HIBURAN";
+                            break;
+                        case "LABORATORIUM":
+                            ret[0] = "51";
+                            ret[1] = "RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM";
+                            break;
+                        case "KLINIK":
+                            ret[0] = "51";
+                            ret[1] = "RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM";
+                            break;
+                        case "APOTIK":
+                            ret[0] = "51";
+                            ret[1] = "RUMAH SAKIT/APOTEK/KLINIK/LABORATORIUM";
+                            break;
+                        case "MALL/PLAZA":
+                            ret[0] = "26";
+                            ret[1] = "MALL/PLAZA";
+                            break;
+                        case "MINIMARKET":
+                            ret[0] = "52";
+                            ret[1] = "SWALAYAN/SUPERMARKET/MINIMARKET/PASAR";
+                            break;
+                        case "HOTEL/PENGINAPAN":
+                            ret[0] = "23";
+                            ret[1] = "HOTEL/PENGINAPAN";
+                            break;
+                        case "USAHA LAINNYA":
+                            ret[0] = "38";
+                            ret[1] = "USAHA LAINNYA";
+                            break;
+                        case "PERSEWAAN GEDUNG":
+                            ret[0] = "38";
+                            ret[1] = "USAHA LAINNYA";
+                            break;
+                        case "PERKANTORAN":
+                            ret[0] = "31";
+                            ret[1] = "PERKANTORAN";
+                            break;
+                        case "PERBANKAN":
+                            ret[0] = "31";
+                            ret[1] = "PERKANTORAN";
+                            break;
+                        case "APARTEMEN":
+                            ret[0] = "21";
+                            ret[1] = "APARTEMEN";
+                            break;
+                        case "USAHA PARKIR":
+                            ret[0] = "38";
+                            ret[1] = "USAHA LAINNYA";
+                            break;
+                        case "STASIUN":
+                            ret[0] = "38";
+                            ret[1] = "USAHA LAINNYA";
+                            break;
+                        default:
+                            ret[0] = "38";
+                            ret[1] = "USAHA LAINNYA";
+                            break;
+                    }
+
                 }
                 dr.Close();
             }

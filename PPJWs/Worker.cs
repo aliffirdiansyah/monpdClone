@@ -85,27 +85,15 @@ namespace PPJWs
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
-            if (thnSetting != null)
-            {
-                var temp = tglServer.Year - (int)thnSetting.YearBefore;
-                if (temp >= 2021)
-                {
-                    tahunAmbil = temp;
-                }
-                else
-                {
-                    tahunAmbil = 2021;
-                }
-            }
+            tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
             // do fill db op LISTRIK
             if (IsGetDBOp())
             {
-                FillOP(2025);
-                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                //{
-                //    FillOP(i);
-                //}
+                for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                {
+                    FillOP(i);
+                }
             }
 
             MailHelper.SendMail(
@@ -120,10 +108,10 @@ namespace PPJWs
             Console.WriteLine("");
 
             //// SURABAYA TAX PROCESS
-            //SBYTaxProcess(tahunBuku);
+            SBYTaxProcess(tahunBuku);
 
             //// HPP PROCESS
-            //HPPOPProcess(tahunBuku);
+            HPPOPProcess(tahunBuku);
 
             // ketetapan 
             HPPKetetapanProcess(tahunBuku);
@@ -181,7 +169,33 @@ namespace PPJWs
             WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
         ELSE 0
         END AS IS_TUTUP,
-        'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
+        CASE
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 1' THEN '1'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 2' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 3' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 4' THEN '4'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 5' THEN '5'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 6' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 7' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 8' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '01' THEN '1'
+    WHEN TO_CHAR(UPTB_ID) = '02' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '03' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '04' THEN '4'
+    WHEN TO_CHAR(UPTB_ID) = '05' THEN '5'
+    WHEN TO_CHAR(UPTB_ID) = '07' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '06' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '08' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '1' THEN '1'
+    WHEN TO_CHAR(UPTB_ID) = '2' THEN '2'
+    WHEN TO_CHAR(UPTB_ID) = '3' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '4' THEN '4'
+    WHEN TO_CHAR(UPTB_ID) = '5' THEN '5'
+    WHEN TO_CHAR(UPTB_ID) = '7' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '6' THEN '3'
+    WHEN TO_CHAR(UPTB_ID) = '8' THEN '2'
+    ELSE NULL
+END AS WILAYAH_PAJAK,
         '-'  AKUN  ,
         '-'  NAMA_AKUN         ,
         '-'  KELOMPOK      ,
@@ -607,7 +621,33 @@ SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_
                 ELSE 58
             END AS SUMBER,
             NVL(NAMA_JENIS_PAJAK, '-')   SUMBER_NAMA,
-             sysdate INS_dATE, 'JOB' INS_BY ,fk_wilayah_pajak WILAYAH_PAJAK   ,
+             sysdate INS_dATE, 'JOB' INS_BY ,CASE
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 1' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 2' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 3' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 4' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 5' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 6' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 7' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 8' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '01' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '02' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '03' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '04' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '05' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '07' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '06' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '08' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '1' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '2' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '3' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '4' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '5' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '7' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '6' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '8' THEN '2'
+    ELSE NULL
+END AS WILAYAH_PAJAK,
             '-' AKUN,'-'  NAMA_AKUN,'-'  JENIS,'-'  NAMA_JENIS,'-'  OBJEK,'-'  NAMA_OBJEK,'-'  RINCIAN,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU
