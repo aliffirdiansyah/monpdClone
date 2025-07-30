@@ -29,8 +29,8 @@ namespace APIBapenda
                 var username = credentials[0];
                 var password = credentials[1];
 
-                // ✅ VALIDASI USERNAME & PASSWORD
-                if (username != "admin" || password != "1234") // hardcoded
+                var auth = AuthHandler.ValidateUser(username, password);
+                if (!auth)
                 {
                     return AuthenticateResult.Fail("Invalid Username or Password");
                 }
