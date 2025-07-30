@@ -1,265 +1,419 @@
 ﻿@model MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetail
 
-<div class="table-responsive">
+
     
-    @if (Model.DataRestoranList != null && Model.DataRestoranList.Count > 0)
+@if (Model.DataRestoranList != null && Model.DataRestoranList.Count > 0)
+{
+    int no = 1;
+
+    @foreach (var data in Model.DataRestoranList)
     {
-        int no = 1;
+        @* <div class="card-header d-flex align-items-center bg-header-color text-dark rounded-top">
+            <div class="flex-grow-1">
+                <h4 class="card-title fs-16 mb-0">
+                    <i class="mdi mdi-chart-bell-curve-cumulative me-2"></i>
+                    Data Objek Pajak @data.ObjekPajak
+                </h4>
+                <small class="text-dark-50">Informasi detail pajak restoran</small>
+            </div>
+        </div> *@
 
-        @foreach (var data in Model.DataRestoranList)
-        {
-            @* <div class="card-header d-flex align-items-center bg-header-color text-dark rounded-top">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        <i class="mdi mdi-chart-bell-curve-cumulative me-2"></i>
-                        Data Objek Pajak @data.ObjekPajak
-                    </h4>
-                    <small class="text-dark-50">Informasi detail pajak restoran</small>
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-body">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center shadow" style="width: 48px; height: 48px;">
+                            <strong class="fs-5">@no</strong>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-semibold">@data.ObjekPajak</h5>
+                            <small class="text-muted"><i class="mdi mdi-calendar-clock me-1"></i>@data.Tgl.ToString("ddd, dd MMM yyyy")</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-muted small">Target</div>
+                        <div class="fw-bold fs-5 text-success">Rp @data.Bill.ToString("n0")</div>
+                    </div>
                 </div>
-            </div> *@
 
-            <div class="card shadow-sm border-0 rounded-4 mb-4">
-                <div class="card-body">
-                    <!-- Header -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center shadow" style="width: 48px; height: 48px;">
-                                <strong class="fs-5">@no</strong>
-                            </div>
-                            <div>
-                                <h5 class="mb-0 fw-semibold">@data.ObjekPajak</h5>
-                                <small class="text-muted"><i class="mdi mdi-calendar-clock me-1"></i>@data.Tgl.ToString("ddd, dd MMM yyyy")</small>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <div class="text-muted small">Target</div>
-                            <div class="fw-bold fs-5 text-success">Rp @data.Bill.ToString("n0")</div>
+                <!-- Informasi Utama -->
+                <div class="row text-sm mb-3">
+                    <div class="col-md-6 mb-2">
+                        <div class="p-3 border rounded bg-light-subtle">
+                            <div class="text-muted small">NOP</div>
+                            <strong class="text-dark">@data.NOP</strong>
                         </div>
                     </div>
-
-                    <!-- Informasi Utama -->
-                    <div class="row text-sm mb-3">
-                        <div class="col-md-6 mb-2">
-                            <div class="p-3 border rounded bg-light-subtle">
-                                <div class="text-muted small">NOP</div>
-                                <strong class="text-dark">@data.NOP</strong>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <div class="p-3 border rounded bg-light-subtle">
-                                <div class="text-muted small">Alamat</div>
-                                <strong class="text-dark">@data.Alamat</strong>
-                            </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="p-3 border rounded bg-light-subtle">
+                            <div class="text-muted small">Alamat</div>
+                            <strong class="text-dark">@data.Alamat</strong>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Statistik -->
-                    <div class="row text-sm mb-3">
-                        <div class="col-md-3 mb-2">
-                            <div class="p-3 border border-5 rounded bg-primary-subtle text-primary text-center">
-                                <div class="small">Jumlah Meja</div>
-                                <strong>@data.JmlMeja</strong>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <div class="p-3 border border-5 rounded bg-info-subtle text-info text-center">
-                                <div class="small">Jumlah Kursi</div>
-                                <strong>@data.JmlKursi</strong>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <div class="p-3 border border-5 rounded bg-success-subtle text-success text-center">
-                                <div class="small">Jumlah Pengunjung</div>
-                                <strong>@data.JmlPengunjung</strong>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <div class="p-3 border border-5 rounded bg-danger-subtle text-danger text-center">
-                                <div class="small">Rata-rata Pengunjung</div>
-                                <strong>@data.RataPengunjung</strong>
-                            </div>
+                <!-- Statistik -->
+                <div class="row text-sm mb-3">
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border border-5 rounded bg-primary-subtle text-primary text-center">
+                            <div class="small">Jumlah Meja</div>
+                            <strong>@data.JmlMeja</strong>
                         </div>
                     </div>
-
-                    <!-- Footer -->
-                    <div class="border-top pt-3 d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Rata-rata Bill</span>
-                        <span class="fw-bold text-dark">Rp @data.RataBill.ToString("n0")</span>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border border-5 rounded bg-info-subtle text-info text-center">
+                            <div class="small">Jumlah Kursi</div>
+                            <strong>@data.JmlKursi</strong>
+                        </div>
                     </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border border-5 rounded bg-success-subtle text-success text-center">
+                            <div class="small">Jumlah Pengunjung</div>
+                            <strong>@data.JmlPengunjung</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border border-5 rounded bg-danger-subtle text-danger text-center">
+                            <div class="small">Rata-rata Pengunjung</div>
+                            <strong>@data.RataPengunjung</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Rata-rata Bill</span>
+                    <span class="fw-bold fs-15 text-dark">Rp @data.RataBill.ToString("n0")</span>
                 </div>
             </div>
-
-            no++; // Increment nomor
-        }
-
-    
-
-        @* @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailRestoran>()
-            .ID("gridRestoran")
-            .DataSource(Model.DataRestoranList)
-            .KeyExpr("NOP")
-            .ShowBorders(true)
-            .ShowColumnLines(true)
-            .ShowColumnHeaders(true)
-            .AllowColumnResizing(true)
-            .ShowRowLines(true)
-            .ColumnAutoWidth(true)
-            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-            .FilterRow(f => f.Visible(true))
-            .HeaderFilter(h => h.Visible(true))
-            .Sorting(s => s.Mode(GridSortingMode.Multiple))
-            .Paging(p => p.PageSize(10))
-            .Pager(pager =>
-            {
-                pager.ShowPageSizeSelector(true);
-                pager.AllowedPageSizes(new[] { 10, 20, 50 });
-                pager.ShowInfo(true);
-            })
-            .Columns(columns => {
-                columns.AddFor(m => m.NamaHari)
-                    .Caption("Hari")
-                    .Format("ddd");
-                columns.AddFor(m => m.Tgl)
-                    .Caption("Tanggal")
-                    .Format("dd MMM yyyy");
-                columns.AddFor(m => m.NOP)
-                    .Caption("NOP");
-                columns.AddFor(m => m.ObjekPajak)
-                    .Caption("Objek Pajak");
-                columns.AddFor(m => m.Alamat)
-                    .Caption("Alamat");
-                columns.AddFor(m => m.JmlMeja)
-                    .Format("#,##0")
-                    .Caption("Jml Meja");
-                columns.AddFor(m => m.JmlKursi)
-                    .Format("#,##0")
-                    .Caption("Jml Kursi");
-                columns.AddFor(m => m.JmlPengunjung)
-                    .Caption("Jml Pengunjung");
-                columns.AddFor(m => m.Bill)
-                    .Caption("Bill")
-                    .Format("#,##0");
-                columns.AddFor(m => m.RataPengunjung)
-                    .Format("#,##0")
-                    .Caption("Rata Pengunjung");
-                columns.AddFor(m => m.RataBill)
-                    .Caption("Rata Bill")
-                    .Format("#,##0");
-            })
-        ) *@
-    }
-    
-    else if (Model.DataParkirList != null && Model.DataParkirList.Count > 0)
-    {
-        @(
-            Html.DevExtreme().DataGrid < MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailParkir>()
-             .ID("gridParkir")
-            .DataSource(Model.DataParkirList)
-            .KeyExpr("NOP")
-            .ShowBorders(true)
-            .ShowColumnLines(true)
-            .ShowColumnHeaders(true)
-            .AllowColumnResizing(true)
-            .ShowRowLines(true)
-            .ColumnAutoWidth(true)
-            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-            .FilterRow(f => f.Visible(true))
-            .HeaderFilter(h => h.Visible(true))
-            .Sorting(s => s.Mode(GridSortingMode.Multiple))
-            .Paging(p => p.PageSize(10))
-            .Pager(pager =>
-            {
-                pager.ShowPageSizeSelector(true);
-                pager.AllowedPageSizes(new[] { 10, 20, 50 });
-                pager.ShowInfo(true);
-            })
-            .Columns(columns => {
-                columns.AddFor(m => m.NamaHari)
-                    .Caption("Hari")
-                    .Format("dddd");
-                columns.AddFor(m => m.Tgl)
-                    .Caption("Tanggal")
-                    .Format("dd/MM/yyyy");
-                columns.AddFor(m => m.NOP)
-                    .Caption("NOP");
-                columns.AddFor(m => m.ObjekPajak)
-                    .Caption("Objek Pajak");
-                columns.AddFor(m => m.Alamat)
-                    .Caption("Alamat");
-                columns.AddFor(m => m.JenisBiaya)
-                    .Caption("Jenis Biaya");
-                columns.AddFor(m => m.KapasitasMotor)
-                    .Format("#,##0")
-                    .Caption("Kapasitas Motor");
-                columns.AddFor(m => m.KapasitasMobil)
-                    .Format("#,##0")
-                    .Caption("Kapasitas Mobil");
-                columns.AddFor(m => m.JmlMotor)
-                    .Format("#,##0")
-                    .Caption("Jml Motor");
-                columns.AddFor(m => m.JmlMobil)
-                    .Format("#,##0")
-                    .Caption("Jml Mobil");
-                columns.AddFor(m => m.JmlMobilBox)
-                    .Format("#,##0")
-                    .Caption("Jml Mobil Box");
-                columns.AddFor(m => m.JmlTruk)
-                    .Format("#,##0")
-                    .Caption("Jml Truk");
-                columns.AddFor(m => m.JmlTrailer)
-                    .Format("#,##0")
-                    .Caption("Jml Trailer");
-                columns.AddFor(m => m.EstMotor)
-                    .Format("#,##0")
-                    .Caption("Est Motor");
-                columns.AddFor(m => m.EstMobil)
-                    .Format("#,##0")
-                    .Caption("Est Mobil");
-                columns.AddFor(m => m.EstMobilBox)
-                    .Format("#,##0")
-                    .Caption("Est Mobil Box");
-                columns.AddFor(m => m.EstTruk)
-                    .Format("#,##0")
-                    .Caption("Est Truk");
-                columns.AddFor(m => m.EstTrailer)
-                    .Format("#,##0")
-                    .Caption("Est Trailer");
-                columns.AddFor(m => m.TarifMotor)
-                    .Caption("Tarif Motor")
-                    .Format("#,##0");
-                columns.AddFor(m => m.TarifMobil)
-                    .Caption("Tarif Mobil")
-                    .Format("#,##0");
-                columns.AddFor(m => m.TarifMobilBox)
-                    .Caption("Tarif Mobil Box")
-                    .Format("#,##0");
-                columns.AddFor(m => m.TarifTruk)
-                    .Caption("Tarif Truk")
-                    .Format("#,##0");
-                columns.AddFor(m => m.TarifTrailer)
-                    .Caption("Tarif Trailer")
-                    .Format("#,##0");
-            })
-        )
-    }
-    else
-    {
-        <div class="alert alert-warning">
-            Data tidak tersedia.
         </div>
+
+        no++; // Increment nomor
     }
+
     
-</div>
-@* 
-@if (Model.DataRestoranList.Count > 0)
-{
-    
+
+    @* @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailRestoran>()
+        .ID("gridRestoran")
+        .DataSource(Model.DataRestoranList)
+        .KeyExpr("NOP")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns => {
+            columns.AddFor(m => m.NamaHari)
+                .Caption("Hari")
+                .Format("ddd");
+            columns.AddFor(m => m.Tgl)
+                .Caption("Tanggal")
+                .Format("dd MMM yyyy");
+            columns.AddFor(m => m.NOP)
+                .Caption("NOP");
+            columns.AddFor(m => m.ObjekPajak)
+                .Caption("Objek Pajak");
+            columns.AddFor(m => m.Alamat)
+                .Caption("Alamat");
+            columns.AddFor(m => m.JmlMeja)
+                .Format("#,##0")
+                .Caption("Jml Meja");
+            columns.AddFor(m => m.JmlKursi)
+                .Format("#,##0")
+                .Caption("Jml Kursi");
+            columns.AddFor(m => m.JmlPengunjung)
+                .Caption("Jml Pengunjung");
+            columns.AddFor(m => m.Bill)
+                .Caption("Bill")
+                .Format("#,##0");
+            columns.AddFor(m => m.RataPengunjung)
+                .Format("#,##0")
+                .Caption("Rata Pengunjung");
+            columns.AddFor(m => m.RataBill)
+                .Caption("Rata Bill")
+                .Format("#,##0");
+        })
+    ) *@
 }
-else if (Model.DataParkirList.Count > 0)
-{
     
+else if (Model.DataParkirList != null && Model.DataParkirList.Count > 0)
+{
+    int no = 1;
+
+    @foreach (var data in Model.DataParkirList)
+    {
+        @* <div class="card-header d-flex align-items-center bg-header-color text-dark rounded-top">
+            <div class="flex-grow-1">
+                <h4 class="card-title fs-16 mb-0">
+                    <i class="mdi mdi-chart-bell-curve-cumulative me-2"></i>
+                    Data Objek Pajak @data.ObjekPajak
+                </h4>
+                <small class="text-dark-50">Informasi detail pajak restoran</small>
+            </div>
+        </div> *@
+
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-body">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center shadow" style="width: 48px; height: 48px;">
+                            <strong class="fs-5">@no</strong>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-semibold">@data.ObjekPajak</h5>
+                            <small class="text-muted">
+                                <i class="mdi mdi-calendar-clock me-1"></i>
+                                @data.Tgl.ToString("dddd, dd MMM yyyy")
+                            </small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-muted small">Jenis Biaya Parkir</div>
+                        <div class="fw-bold fs-5 text-success">@data.JenisBiaya</div>
+                    </div>
+                </div>
+
+                <!-- Info Utama -->
+                <div class="row text-sm mb-3">
+                    <div class="col-md-6 mb-2">
+                        <div class="p-3 border rounded bg-light-subtle">
+                            <h4 class="fs-14 fw-semibold mb-2">NOP</h4>
+                            <h4 class="fs-14 fw-bold mb-0">@data.NOP</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="p-3 border rounded bg-light-subtle">
+                            <h4 class="fs-14 fw-semibold mb-2">Alamat</h4>
+                            <h4 class="fs-14 fw-bold mb-0">@data.Alamat</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kapasitas -->
+                <div class="row text-sm mb-3">
+                    <div class="col-md-6 mb-2">
+                        <div class="p-3 border rounded">
+                            <h4 class="fs-14 fw-semibold mb-2">Kapasitas Motor</h4>
+                            <div class="fw-bold">@data.KapasitasMotor.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="p-3 border rounded">
+                            <h4 class="fs-14 fw-semibold mb-2">Kapasitas Mobil</h4>
+                            <div class="fw-bold">@data.KapasitasMobil.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Jumlah Motor</h4>
+                            <div class="fw-bold">@data.JmlMotor.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Jumlah Mobil</h4>
+                            <div class="fw-bold">@data.JmlMobil.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Jumlah Mobil Box</h4>
+                            <div class="fw-bold">@data.JmlMobilBox.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Jumlah Truk</h4>
+                            <div class="fw-bold">@data.JmlTruk.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Jumlah Trailer</h4>
+                            <div class="fw-bold">@data.JmlTrailer.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Est Motor</h4>
+                            <div class="fw-bold">@data.EstMotor.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Est Mobil</h4>
+                            <div class="fw-bold">@data.EstMobil.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Est Mobil Box</h4>
+                            <div class="fw-bold">@data.EstMobilBox.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Est Truk</h4>
+                            <div class="fw-bold">@data.EstTruk.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Est Trailer</h4>
+                            <div class="fw-bold">@data.EstTrailer.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Tarif Motor</h4>
+                            <div class="fw-bold">Rp @data.TarifMotor.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Tarif Mobil</h4>
+                            <div class="fw-bold">Rp @data.TarifMobil.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Tarif Mobil Box</h4>
+                            <div class="fw-bold">Rp @data.TarifMobilBox.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Tarif Truk</h4>
+                            <div class="fw-bold">Rp @data.TarifTruk.ToString("n0")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="p-3 border rounded bg-light">
+                            <h4 class="fs-14 fw-semibold mb-2">Tarif Trailer</h4>
+                            <div class="fw-bold">Rp @data.TarifTrailer.ToString("n0")</div>
+                        </div>
+                    </div>
+                </div>
+
+                @* <!-- Footer -->
+                <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Rata-rata Bill</span>
+                    <span class="fw-bold fs-15 text-dark">Rp @data.RataBill?.ToString("n0")</span>
+                </div> *@
+            </div>
+        </div>
+
+        no++; // Increment nomor
+    }
+    @* @(
+        Html.DevExtreme().DataGrid < MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailParkir>()
+            .ID("gridParkir")
+        .DataSource(Model.DataParkirList)
+        .KeyExpr("NOP")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns => {
+            columns.AddFor(m => m.NamaHari)
+                .Caption("Hari")
+                .Format("dddd");
+            columns.AddFor(m => m.Tgl)
+                .Caption("Tanggal")
+                .Format("dd/MM/yyyy");
+            columns.AddFor(m => m.NOP)
+                .Caption("NOP");
+            columns.AddFor(m => m.ObjekPajak)
+                .Caption("Objek Pajak");
+            columns.AddFor(m => m.Alamat)
+                .Caption("Alamat");
+            columns.AddFor(m => m.JenisBiaya)
+                .Caption("Jenis Biaya");
+            columns.AddFor(m => m.KapasitasMotor)
+                .Format("#,##0")
+                .Caption("Kapasitas Motor");
+            columns.AddFor(m => m.KapasitasMobil)
+                .Format("#,##0")
+                .Caption("Kapasitas Mobil");
+            columns.AddFor(m => m.JmlMotor)
+                .Format("#,##0")
+                .Caption("Jml Motor");
+            columns.AddFor(m => m.JmlMobil)
+                .Format("#,##0")
+                .Caption("Jml Mobil");
+            columns.AddFor(m => m.JmlMobilBox)
+                .Format("#,##0")
+                .Caption("Jml Mobil Box");
+            columns.AddFor(m => m.JmlTruk)
+                .Format("#,##0")
+                .Caption("Jml Truk");
+            columns.AddFor(m => m.JmlTrailer)
+                .Format("#,##0")
+                .Caption("Jml Trailer");
+            columns.AddFor(m => m.EstMotor)
+                .Format("#,##0")
+                .Caption("Est Motor");
+            columns.AddFor(m => m.EstMobil)
+                .Format("#,##0")
+                .Caption("Est Mobil");
+            columns.AddFor(m => m.EstMobilBox)
+                .Format("#,##0")
+                .Caption("Est Mobil Box");
+            columns.AddFor(m => m.EstTruk)
+                .Format("#,##0")
+                .Caption("Est Truk");
+            columns.AddFor(m => m.EstTrailer)
+                .Format("#,##0")
+                .Caption("Est Trailer");
+            columns.AddFor(m => m.TarifMotor)
+                .Caption("Tarif Motor")
+                .Format("#,##0");
+            columns.AddFor(m => m.TarifMobil)
+                .Caption("Tarif Mobil")
+                .Format("#,##0");
+            columns.AddFor(m => m.TarifMobilBox)
+                .Caption("Tarif Mobil Box")
+                .Format("#,##0");
+            columns.AddFor(m => m.TarifTruk)
+                .Caption("Tarif Truk")
+                .Format("#,##0");
+            columns.AddFor(m => m.TarifTrailer)
+                .Caption("Tarif Trailer")
+                .Format("#,##0");
+        })
+    ) *@
 }
 else
 {
-    <div class="alert alert-warning">Data tidak tersedia</div>
-} *@
+    <div class="alert alert-warning">
+        Data tidak tersedia.
+    </div>
+}
+    
