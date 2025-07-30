@@ -227,7 +227,7 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
                 var dataResto3 = context.DbOpRestos
-                    .Where(x => x.TahunBuku == DateTime.Now.Year)
+                    .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
@@ -239,7 +239,33 @@ namespace MonPDReborn.Models.DataOP
                     .Distinct()
                     .ToList();
                 var listOpRestoAll = dataRestoAll.Select(x => x.Nop).Distinct().ToList();
-                var potensiResto = new object();
+                var potensiResto = context.DbPotensiRestos
+                    .Where(x => dataResto3.Select(v => v.Nop).ToList().Contains(x.Nop))
+                    .ToList()
+                    .Select(x =>
+                    {
+                        var op = context.DbOpRestos.FirstOrDefault(o => o.Nop == x.Nop);
+
+                        return new DetailPotensiPajakResto
+                        {
+                            NOP = x.Nop,
+                            Nama = op?.NamaOp ?? "-",
+                            Alamat = op?.AlamatOp ?? "-",
+                            Wilayah = op?.WilayahPajak ?? "-",
+                            Kategori = "-",
+                            TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
+                            JumlahKursi = x.KapKursi ?? 0,
+                            KapasitasTenantCatering = x.KapTenantCatering ?? 0,
+                            RataRataBillPerOrang = x.AvgBillOrg ?? 0,
+                            TurnoverWeekdaysCatering = x.AvgTenatCatWd ?? 0,
+                            TurnoverWeekendCatering = x.AvgTenatCatWe ?? 0,
+                            TurnoverWeekdaysNonCatering = x.AvgVisWd ?? 0,
+                            TurnoverWeekendNonCatering = x.AvgVisWe ?? 0,
+                            TarifPajak = 0.1m
+                        };
+                    })
+                    .ToList();
+                var totalPotensiResto = new object();
 
                 var dataPpj1 = context.DbOpListriks
                     .Where(x => x.TahunBuku == DateTime.Now.Year - 2)
@@ -252,7 +278,7 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
                 var dataPpj3 = context.DbOpListriks
-                    .Where(x => x.TahunBuku == DateTime.Now.Year)
+                    .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
@@ -289,20 +315,28 @@ namespace MonPDReborn.Models.DataOP
                     .Distinct()
                     .ToList();
                 var listOpHotelAll = dataHotelAll.Select(x => x.Nop).Distinct().ToList();
-                var potensiHotel = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop))
-                    .Select(x => new DetailPotensiPajakHotel()
+                var potensiHotel = context.DbPotensiHotels
+                    .Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop))
+                    .ToList()
+                    .Select(x =>
                     {
-                        NOP = x.Nop,
-                        Nama = "",
-                        Alamat = "",
-                        Wilayah = "",
-                        Kategori = "",
-                        JumlahTotalRoom = x.TotalRoom.Value,
-                        HargaRataRataRoom = x.AvgRoomPrice.Value,
-                        OkupansiRateRoom = (x.OkupansiRateRoom.Value)/100,
-                        KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet.Value,
-                        HargaRataRataBanquetPerPax = x.AvgBanquetPrice.Value,
-                        TarifPajak = 0.1m
+                        var op = context.DbOpHotels.FirstOrDefault(o => o.Nop == x.Nop);
+
+                        return new DetailPotensiPajakHotel
+                        {
+                            NOP = x.Nop,
+                            Nama = op?.NamaOp ?? "-",
+                            Alamat = op?.AlamatOp ?? "-",
+                            Wilayah = op?.WilayahPajak ?? "-",
+                            Kategori = "-",
+                            TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
+                            JumlahTotalRoom = x.TotalRoom ?? 0,
+                            HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                            OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
+                            KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
+                            HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
+                            TarifPajak = 0.1m
+                        };
                     })
                     .ToList();
                 var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun);
@@ -318,7 +352,7 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
                 var dataParkir3 = context.DbOpParkirs
-                    .Where(x => x.TahunBuku == DateTime.Now.Year)
+                    .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
@@ -1395,6 +1429,7 @@ namespace MonPDReborn.Models.DataOP
             public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
             public decimal TotalPotensi { get; set; }
         }
+        #region CLASS DetailPotensiFix
         public class DetailPotensiPajakHotel
         {
             // Informasi dasar
@@ -1415,6 +1450,25 @@ namespace MonPDReborn.Models.DataOP
 
             // Tarif Pajak
             public decimal TarifPajak { get; set; } // dalam 0.0 - 1.0
+            public DateTime TglOpBuka { get; set; }
+            public int BulanSisa
+            {
+                get
+                {
+                    var now = DateTime.Now;
+                    var akhirTahun = new DateTime(now.Year, 12, 31);
+
+                    if (TglOpBuka.Year < now.Year)
+                        return 12;
+
+                    if (TglOpBuka.Year > now.Year)
+                        return 0;
+
+                    int totalBulan = (12 - TglOpBuka.Month) + 1;
+
+                    return totalBulan;
+                }
+            }
 
             // Perhitungan otomatis
 
@@ -1429,9 +1483,73 @@ namespace MonPDReborn.Models.DataOP
             public decimal PotensiOmzetBanquetPerBulan => HargaRataRataBanquetPerPax * RataRataPaxBanquetTerjualPerHari * 8;
 
             public decimal PotensiPajakPerBulan => (PotensiOmzetRoomPerBulan + PotensiOmzetBanquetPerBulan) * TarifPajak;
-
-            public decimal PotensiPajakPerTahun => PotensiPajakPerBulan * 12;
+            public decimal PotensiPajakPerTahun => PotensiPajakPerBulan * BulanSisa;
         }
+        public class DetailPotensiPajakResto
+        {
+            // Identitas
+            public string NOP { get; set; }
+            public string Nama { get; set; }
+            public string Alamat { get; set; }
+            public string Wilayah { get; set; }
+            public string Kategori { get; set; }
+            public DateTime TglOpBuka { get; set; }
+            public int BulanSisa
+            {
+                get
+                {
+                    var now = DateTime.Now;
+                    var akhirTahun = new DateTime(now.Year, 12, 31);
+
+                    if (TglOpBuka.Year < now.Year)
+                        return 12;
+
+                    if (TglOpBuka.Year > now.Year)
+                        return 0;
+
+                    int totalBulan = (12 - TglOpBuka.Month) + 1;
+
+                    return totalBulan;
+                }
+            }
+
+            // Data utama
+            //NonCatering
+            public int JumlahKursi { get; set; }
+
+            //Catering
+            public int KapasitasTenantCatering { get; set; }
+            public decimal RataRataBillPerOrang { get; set; }
+            public decimal TurnoverWeekdaysCatering { get; set; } // antara 0.0 - 1.0
+            public decimal TurnoverWeekendCatering { get; set; }  // antara 0.0 - 1.0
+            public decimal TurnoverWeekdaysNonCatering { get; set; } // antara 0.0 - 1.0
+            public decimal TurnoverWeekendNonCatering { get; set; }  // antara 0.0 - 1.0
+            public decimal TarifPajak { get; set; }       // misal 0.10 untuk 10%
+
+
+            // PerhitunganCatering
+            public decimal RataRataTerjualWeekdaysCatering => KapasitasTenantCatering * TurnoverWeekdaysCatering;
+            public decimal RataRataTerjualWeekendCatering => KapasitasTenantCatering * TurnoverWeekendCatering;
+
+            public decimal OmzetPerBulanCatering =>
+                (RataRataBillPerOrang * RataRataTerjualWeekdaysCatering * 22) +
+                (RataRataBillPerOrang * RataRataTerjualWeekendCatering * 8);
+
+            public decimal PotensiPajakPerBulanCatering => OmzetPerBulanCatering * TarifPajak;
+            public decimal PotensiPajakPerTahunCatering => PotensiPajakPerBulanCatering * BulanSisa;
+
+            // PerhitunganNonCatering
+            public decimal RataRataPengunjungWeekdaysNonCatering => JumlahKursi * TurnoverWeekdaysNonCatering;
+            public decimal RataRataPengunjungWeekendNonCatering => JumlahKursi * TurnoverWeekendNonCatering;
+
+            public decimal OmzetPerBulanNonCatering =>
+                (RataRataBillPerOrang * RataRataPengunjungWeekdaysNonCatering * 22) +
+                (RataRataBillPerOrang * RataRataPengunjungWeekendNonCatering * 8);
+
+            public decimal PotensiPajakPerBulanNonCatering => OmzetPerBulanNonCatering * TarifPajak;
+            public decimal PotensiPajakPerTahunNonCatering => PotensiPajakPerBulanNonCatering * BulanSisa;
+        }
+        #endregion
 
         public class DetailParkir
         {
