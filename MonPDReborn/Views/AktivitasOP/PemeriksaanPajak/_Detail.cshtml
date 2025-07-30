@@ -1,6 +1,18 @@
 ﻿@using MonPDReborn.Models.AktivitasOP
 @model PemeriksaanPajakVM.Detail
 
+@if (Model.DataDetailList?.Any() == true)
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+            <i class=" mdi mdi-file-document-outline" style="font-size: 20px; line-height: 1;"></i>
+            <h6 class="mb-0 fs-16 fw-bold">
+                @Model.DataDetailList.First().JenisPajak
+            </h6>
+        </div>
+    </div>
+   
+}
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<PemeriksaanPajakVM.DataDetailPemeriksaan>()
     .ID("detailGrid_" + Guid.NewGuid()) // Untuk menghindari duplikat ID
@@ -39,8 +51,8 @@
         columns.Add().DataField("JumlahKB").Caption("Jumlah KB").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
         columns.Add().DataField("Keterangan");
         columns.Add().DataField("LHP");
-        columns.Add().DataField("TglLHP").Caption("Tgl LHP").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
-        columns.Add().DataField("TglBayar").Caption("Tgl Bayar").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
+        columns.Add().DataField("TglLHPDisplay").Caption("Tgl LHP");
+        columns.Add().DataField("TglBayarDisplay").Caption("Tgl Bayar");
         columns.Add().DataField("Tim");
     })
 )

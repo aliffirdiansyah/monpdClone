@@ -402,11 +402,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => new
                         {
                             x.Nop,
-                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.WilayahPajak,
                             x.PajakId
                         })
                         .ToList()
-                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                         .ToList()
                 );
 
@@ -416,11 +416,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => new
                         {
                             x.Nop,
-                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.WilayahPajak,
                             x.PajakId
                         })
                         .ToList()
-                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                         .ToList()
                 );
 
@@ -430,11 +430,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => new
                         {
                             x.Nop,
-                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.WilayahPajak,
                             x.PajakId
                         })
                         .ToList()
-                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                         .ToList()
                 );
 
@@ -444,11 +444,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => new
                         {
                             x.Nop,
-                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.WilayahPajak,
                             x.PajakId
                         })
                         .ToList()
-                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                         .ToList()
                 );
 
@@ -458,11 +458,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => new
                         {
                             x.Nop,
-                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.WilayahPajak,
                             x.PajakId
                         })
                         .ToList()
-                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                         .ToList()
                 );
 
@@ -472,11 +472,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => new
                         {
                             x.Nop,
-                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.WilayahPajak,
                             x.PajakId
                         })
                         .ToList()
-                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                         .ToList()
                 );
 
@@ -500,11 +500,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         .Select(x => new
                         {
                             x.Nop,
-                            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                            x.WilayahPajak,
                             PajakId = 9m // PBB
                         })
                         .ToList()
-                        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                        .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                         .ToList()
                 );
                 // Gabungkan data realisasi

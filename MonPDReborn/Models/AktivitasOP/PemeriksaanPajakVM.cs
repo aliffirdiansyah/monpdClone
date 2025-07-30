@@ -102,8 +102,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahKB = x.JumlahKb ?? 0,
                         Keterangan = x.Ket ?? "-",
                         LHP = x.Lhp ??  "-",
-                        TglLHP = x.TglLhp ?? DateTime.MinValue,
-                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        TglLHP = x.TglLhp,
+                        TglBayar = x.TglByr,
                         Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
@@ -127,8 +127,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahKB = x.JumlahKb ?? 0,
                         Keterangan = x.Ket ?? "-",
                         LHP = x.Lhp ?? "-",
-                        TglLHP = x.TglLhp ?? DateTime.MinValue,
-                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        TglLHP = x.TglLhp,
+                        TglBayar = x.TglByr,
                         Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
@@ -151,8 +151,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahKB = x.JumlahKb ?? 0,
                         Keterangan = x.Ket ?? "-",
                         LHP = x.Lhp ?? "-",
-                        TglLHP = x.TglLhp ?? DateTime.MinValue,
-                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        TglLHP = x.TglLhp,
+                        TglBayar = x.TglByr,
                         Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
@@ -175,8 +175,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahKB = x.JumlahKb ?? 0,
                         Keterangan = x.Ket ?? "-",
                         LHP = x.Lhp ?? "-",
-                        TglLHP = x.TglLhp ?? DateTime.MinValue,
-                        TglBayar = x.TglByr ?? DateTime.MinValue,
+                        TglLHP = x.TglLhp,
+                        TglBayar = x.TglByr,
                         Tim = x.Petugas ?? "-"
                     }).ToList();
                 }
@@ -242,9 +242,12 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal JumlahKB { get; set; }
             public string Keterangan { get; set; } = null!;
             public string LHP { get; set; } = null!;
-            public DateTime TglLHP { get; set; }
-            public DateTime TglBayar { get; set; }
+            public DateTime? TglLHP { get; set; }
+            public DateTime? TglBayar { get; set; }
             public string Tim { get; set; } = null!;
+
+            public string TglLHPDisplay => TglLHP.HasValue ? TglLHP.Value.ToString("dd/MM/yyyy") : "-";
+            public string TglBayarDisplay => TglBayar.HasValue ? TglBayar.Value.ToString("dd/MM/yyyy") : "-";
         }
 
         public class Dashboard

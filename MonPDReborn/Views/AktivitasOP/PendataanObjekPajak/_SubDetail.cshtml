@@ -1,9 +1,100 @@
 ﻿@model MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetail
 
 <div class="table-responsive">
+    
     @if (Model.DataRestoranList != null && Model.DataRestoranList.Count > 0)
     {
-        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailRestoran>()
+        int no = 1;
+
+        @foreach (var data in Model.DataRestoranList)
+        {
+            @* <div class="card-header d-flex align-items-center bg-header-color text-dark rounded-top">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        <i class="mdi mdi-chart-bell-curve-cumulative me-2"></i>
+                        Data Objek Pajak @data.ObjekPajak
+                    </h4>
+                    <small class="text-dark-50">Informasi detail pajak restoran</small>
+                </div>
+            </div> *@
+
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center shadow" style="width: 48px; height: 48px;">
+                                <strong class="fs-5">@no</strong>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-semibold">@data.ObjekPajak</h5>
+                                <small class="text-muted"><i class="mdi mdi-calendar-clock me-1"></i>@data.Tgl.ToString("ddd, dd MMM yyyy")</small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-muted small">Target</div>
+                            <div class="fw-bold fs-5 text-success">Rp @data.Bill.ToString("n0")</div>
+                        </div>
+                    </div>
+
+                    <!-- Informasi Utama -->
+                    <div class="row text-sm mb-3">
+                        <div class="col-md-6 mb-2">
+                            <div class="p-3 border rounded bg-light-subtle">
+                                <div class="text-muted small">NOP</div>
+                                <strong class="text-dark">@data.NOP</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="p-3 border rounded bg-light-subtle">
+                                <div class="text-muted small">Alamat</div>
+                                <strong class="text-dark">@data.Alamat</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistik -->
+                    <div class="row text-sm mb-3">
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 border border-5 rounded bg-primary-subtle text-primary text-center">
+                                <div class="small">Jumlah Meja</div>
+                                <strong>@data.JmlMeja</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 border border-5 rounded bg-info-subtle text-info text-center">
+                                <div class="small">Jumlah Kursi</div>
+                                <strong>@data.JmlKursi</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 border border-5 rounded bg-success-subtle text-success text-center">
+                                <div class="small">Jumlah Pengunjung</div>
+                                <strong>@data.JmlPengunjung</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 border border-5 rounded bg-danger-subtle text-danger text-center">
+                                <div class="small">Rata-rata Pengunjung</div>
+                                <strong>@data.RataPengunjung</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Rata-rata Bill</span>
+                        <span class="fw-bold text-dark">Rp @data.RataBill.ToString("n0")</span>
+                    </div>
+                </div>
+            </div>
+
+            no++; // Increment nomor
+        }
+
+    
+
+        @* @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailRestoran>()
             .ID("gridRestoran")
             .DataSource(Model.DataRestoranList)
             .KeyExpr("NOP")
@@ -55,8 +146,9 @@
                     .Caption("Rata Bill")
                     .Format("#,##0");
             })
-        )
+        ) *@
     }
+    
     else if (Model.DataParkirList != null && Model.DataParkirList.Count > 0)
     {
         @(
@@ -156,6 +248,7 @@
             Data tidak tersedia.
         </div>
     }
+    
 </div>
 @* 
 @if (Model.DataRestoranList.Count > 0)
