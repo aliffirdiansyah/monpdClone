@@ -265,7 +265,7 @@ namespace MonPDReborn.Models.DataOP
                         };
                     })
                     .ToList();
-                var totalPotensiResto = new object();
+                var totalPotensiResto = potensiResto.Sum(x => x.PotensiPajakPerTahunNonCatering + x.PotensiPajakPerTahunCatering);
 
                 var dataPpj1 = context.DbOpListriks
                     .Where(x => x.TahunBuku == DateTime.Now.Year - 2)
