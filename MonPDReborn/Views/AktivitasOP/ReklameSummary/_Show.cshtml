@@ -12,8 +12,8 @@
         .AllowColumnResizing(true)
         .RowAlternationEnabled(true)
         .ColumnAutoWidth(true)
-            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-            .FilterRow(f => f.Visible(true))
+            @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true)) *@
             .HeaderFilter(h => h.Visible(true))
             .Sorting(s => s.Mode(GridSortingMode.Multiple))
         .Paging(p => p.PageSize(20))

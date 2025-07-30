@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using MonPDLib;
+using MonPDLib.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -252,27 +253,101 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
 
                 return ret;
             }
+
             public static List<RingkasanPendapatan> GetDataRingkasanList()
             {
                 var result = new List<RingkasanPendapatan>();
+                var context = DBClass.GetContext();
 
-                // 1. Pendapatan Asli Daerah
-                var listPAD = GetDataPendapatanAsliDaerahList();
-                var totalPAD = new RingkasanPendapatan
+                // Ambil PENDAPATAN
+                var dataPAD = context.TPendapatanDaerahs
+                    .Where(x => x.UraianRealisasi == "PENDAPATAN")
+                    .ToList();
+
+                var ringkasanPAD = new RingkasanPendapatan
                 {
-                    Uraian = "Pendapatan Asli Daerah",
-                    Target1 = listPAD.Sum(x => x.Target1),
-                    Realisasi1 = listPAD.Sum(x => x.Realisasi1),
-                    Target2 = listPAD.Sum(x => x.Target2),
-                    Realisasi2 = listPAD.Sum(x => x.Realisasi2),
-                    Target3 = listPAD.Sum(x => x.Target3),
-                    Realisasi3 = listPAD.Sum(x => x.Realisasi3),
-                    Target4 = listPAD.Sum(x => x.Target4),
-                    Realisasi4 = listPAD.Sum(x => x.Realisasi4),
-                    Target5 = listPAD.Sum(x => x.Target5),
-                    Realisasi5 = listPAD.Sum(x => x.Realisasi5),
+                    Uraian = "PENDAPATAN",
+                    Target1 = dataPAD.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataPAD.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target2 = dataPAD.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataPAD.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target3 = dataPAD.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataPAD.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target4 = dataPAD.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataPAD.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target5 = dataPAD.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataPAD.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
                 };
-                result.Add(totalPAD);
+
+                result.Add(ringkasanPAD);
+
+                // Ambil PENDAPATAN TRANSFER
+                var dataTransfer = context.TPendapatanDaerahs
+                    .Where(x => x.Seq >= 18 && x.Seq <= 29)
+                    .ToList();
+
+                var ringkasanTransfer = new RingkasanPendapatan
+                {
+                    Uraian = "PENDAPATAN TRANSFER",
+                    Target1 = dataTransfer.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataTransfer.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target2 = dataTransfer.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataTransfer.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target3 = dataTransfer.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataTransfer.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target4 = dataTransfer.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataTransfer.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target5 = dataTransfer.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataTransfer.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
+                };
+
+                result.Add(ringkasanTransfer);
+
+                // Ambil LAIN-LAIN PENDAPATAN
+                var dataLain = context.TPendapatanDaerahs
+                    .Where(x => x.Seq >= 30 && x.Seq <= 31)
+                    .ToList();
+
+                var ringkasanLain = new RingkasanPendapatan
+                {
+                    Uraian = "Lain - lain Pendapatan yang Sah",
+                    Target1 = dataLain.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataLain.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target2 = dataLain.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataLain.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target3 = dataLain.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataLain.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target4 = dataLain.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataLain.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target5 = dataLain.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataLain.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
+                };
+
+                result.Add(ringkasanLain);
+
+                // Ambil PENERIMAAN PEMBIAYAAN
+                var dataPenerimaan = context.TPendapatanDaerahs
+                    .Where(x => x.Seq >= 32 && x.Seq <= 35)
+                    .ToList();
+
+                var ringkasanPenerimaan = new RingkasanPendapatan
+                {
+                    Uraian = "Lain - lain Pendapatan yang Sah",
+                    Target1 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target2 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target3 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target4 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target5 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
+                };
+
+                result.Add(ringkasanPenerimaan);
+
+                return result;
 
                 // 2. Pendapatan Transfer
                 var listTransfer = GetDataPendapatanTransferList();
@@ -466,6 +541,8 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
         public class RingkasanPendapatan
         {
             public string Uraian { get; set; } = "";
+            public int ID { get; set; }
+            public string Kategori { get; set; } = "";
 
             public decimal Target1 { get; set; }
             public decimal Realisasi1 { get; set; }

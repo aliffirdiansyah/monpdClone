@@ -1,0 +1,53 @@
+﻿@model MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.Show
+
+<div class="tabel-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.PengawasanReklame>()
+        .ID("pengawasanReklameGrid")
+        .DataSource(Model.Data)
+        @* .KeyExpr("NamaJalan") *@
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns => {
+            // Kolom Kunci
+            columns.AddFor(m => m.NamaKegiatan).Caption("Nama Aktifitas");
+            columns.AddFor(m => m.JmlPetugas).Caption("Jumlah Petugas").Format("#,##0");
+            columns.AddFor(m => m.Target).Caption("Target").Format("#,##0");
+            columns.AddFor(m => m.Terlaksana).Caption("Terlaksana").Format("#,##0");
+            columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
+            columns.AddFor(m => m.Persentase).Caption("Persentase").Format("#,#0%");
+            columns.AddFor(m => m.Status).Caption("Status Pencapaian");
+        })
+        .Summary(s => {
+          
+            s.TotalItems(items => {
+                items.AddFor(m => m.NamaKegiatan).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
+                items.AddFor(m => m.JmlPetugas).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Target).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Terlaksana).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Selisih).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Persentase).SummaryType(SummaryType.Avg).DisplayFormat("{0}");
+            });
+        })
+        .MasterDetail(md => md
+        .Enabled(true)
+        .Template(new JS("subDetailTemplate"))
+        )
+        .OnRowExpanding("onRowExpandingHandler")
+        .OnRowCollapsed("onRowCollapsedHandler")
+    )
+</div>

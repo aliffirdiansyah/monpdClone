@@ -37,7 +37,7 @@
             columns.AddFor(m => m.Nop).Caption("NOP");
             columns.AddFor(m => m.NamaWP).Caption("Nama WP");
             columns.AddFor(m => m.Alamat).Caption("Alamat");
-            columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+            columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format("#,##0").Alignment(HorizontalAlignment.Right);
             columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
             columns.AddFor(m => m.Status).Caption("Status").CellTemplate(
             @<text>
@@ -63,6 +63,20 @@
             pager.ShowPageSizeSelector(true);
             pager.AllowedPageSizes(new[] { 10, 20, 50 });
             pager.ShowInfo(true);
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.Alamat)
+                .SummaryType(SummaryType.Sum)
+                .Alignment(HorizontalAlignment.Right)
+                .DisplayFormat("TOTAL");
+                items.AddFor(m => m.NilaiPenetapan)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .ValueFormat("#,##0");
+            });
         })
         )
 </div>

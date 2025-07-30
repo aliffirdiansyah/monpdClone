@@ -25,12 +25,12 @@
                 pager.ShowInfo(true);
             })
             .Columns(columns => {
-                columns.AddFor(m => m.Hari)
+                columns.AddFor(m => m.NamaHari)
                     .Caption("Hari")
-                    .Format("dddd");
+                    .Format("ddd");
                 columns.AddFor(m => m.Tgl)
                     .Caption("Tanggal")
-                    .Format("dd/MM/yyyy");
+                    .Format("dd MMM yyyy");
                 columns.AddFor(m => m.NOP)
                     .Caption("NOP");
                 columns.AddFor(m => m.ObjekPajak)
@@ -38,8 +38,10 @@
                 columns.AddFor(m => m.Alamat)
                     .Caption("Alamat");
                 columns.AddFor(m => m.JmlMeja)
+                    .Format("#,##0")
                     .Caption("Jml Meja");
                 columns.AddFor(m => m.JmlKursi)
+                    .Format("#,##0")
                     .Caption("Jml Kursi");
                 columns.AddFor(m => m.JmlPengunjung)
                     .Caption("Jml Pengunjung");
@@ -47,6 +49,7 @@
                     .Caption("Bill")
                     .Format("#,##0");
                 columns.AddFor(m => m.RataPengunjung)
+                    .Format("#,##0")
                     .Caption("Rata Pengunjung");
                 columns.AddFor(m => m.RataBill)
                     .Caption("Rata Bill")
@@ -79,7 +82,7 @@
                 pager.ShowInfo(true);
             })
             .Columns(columns => {
-                columns.AddFor(m => m.Hari)
+                columns.AddFor(m => m.NamaHari)
                     .Caption("Hari")
                     .Format("dddd");
                 columns.AddFor(m => m.Tgl)
@@ -94,28 +97,40 @@
                 columns.AddFor(m => m.JenisBiaya)
                     .Caption("Jenis Biaya");
                 columns.AddFor(m => m.KapasitasMotor)
+                    .Format("#,##0")
                     .Caption("Kapasitas Motor");
                 columns.AddFor(m => m.KapasitasMobil)
+                    .Format("#,##0")
                     .Caption("Kapasitas Mobil");
                 columns.AddFor(m => m.JmlMotor)
+                    .Format("#,##0")
                     .Caption("Jml Motor");
                 columns.AddFor(m => m.JmlMobil)
+                    .Format("#,##0")
                     .Caption("Jml Mobil");
                 columns.AddFor(m => m.JmlMobilBox)
+                    .Format("#,##0")
                     .Caption("Jml Mobil Box");
                 columns.AddFor(m => m.JmlTruk)
+                    .Format("#,##0")
                     .Caption("Jml Truk");
                 columns.AddFor(m => m.JmlTrailer)
+                    .Format("#,##0")
                     .Caption("Jml Trailer");
                 columns.AddFor(m => m.EstMotor)
+                    .Format("#,##0")
                     .Caption("Est Motor");
                 columns.AddFor(m => m.EstMobil)
+                    .Format("#,##0")
                     .Caption("Est Mobil");
                 columns.AddFor(m => m.EstMobilBox)
+                    .Format("#,##0")
                     .Caption("Est Mobil Box");
                 columns.AddFor(m => m.EstTruk)
+                    .Format("#,##0")
                     .Caption("Est Truk");
                 columns.AddFor(m => m.EstTrailer)
+                    .Format("#,##0")
                     .Caption("Est Trailer");
                 columns.AddFor(m => m.TarifMotor)
                     .Caption("Tarif Motor")

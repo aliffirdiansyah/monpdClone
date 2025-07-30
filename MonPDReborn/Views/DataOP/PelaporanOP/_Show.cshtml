@@ -110,16 +110,16 @@
         })
         .Columns(columns =>
         {
-            columns.AddFor(m => m.NPWPD).Caption("NPWPD");
-            columns.AddFor(m => m.NOP).Caption("NOP");
-            columns.AddFor(m => m.Nama).Caption("Nama OP");
+            columns.AddFor(m => m.NPWPD).Caption("NPWPD").Fixed(true);
+            columns.AddFor(m => m.NOP).Caption("NOP").Fixed(true);
+            columns.AddFor(m => m.Nama).Caption("Nama OP").Fixed(true);
             columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
             columns.AddFor(m => m.Alamat).Caption("Alamat");
             columns.AddFor(m => m.Wilayah).Caption("Wilayah");
-            columns.AddFor(m => m.NilaiPelaporan).Caption("Nilai Pelaporan");
-            columns.AddFor(m => m.PajakSeharusnya).Caption("Pajak Seharusnya");
-            columns.AddFor(m => m.PajakTerlapor).Caption("Pajak Terlapor");
-            columns.AddFor(m => m.MasaBelumLapor).Caption("Masa Belum Lapor");
+            columns.AddFor(m => m.NilaiPelaporan).Caption("Nilai Pelaporan").Format("#,##0");
+            columns.AddFor(m => m.PajakSeharusnya).Caption("Pajak Seharusnya").Format("#,##0");
+            columns.AddFor(m => m.PajakTerlapor).Caption("Pajak Terlapor").Format("#,##0");
+            columns.AddFor(m => m.MasaBelumLapor).Caption("Masa Belum Lapor").Format("#,##0");
             columns.AddFor(m => m.Status).Caption("Status");
             columns.Add()
             .Type(GridCommandColumnType.Buttons)
@@ -132,6 +132,19 @@
             });
 
         })
-
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.Wilayah)
+            .SummaryType(SummaryType.Sum)
+            .Alignment(HorizontalAlignment.Right)
+            .DisplayFormat("TOTAL");
+                items.AddFor(m => m.NilaiPelaporan)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+            });
+        })
         )
 </div>
