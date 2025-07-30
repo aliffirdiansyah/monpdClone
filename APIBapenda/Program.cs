@@ -76,6 +76,15 @@ else
     });
 }
 
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pembayaran API v1");
+    // Atur root URL Swagger ke hostname yang diinginkan
+    c.RoutePrefix = string.Empty;
+
+    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+});
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
