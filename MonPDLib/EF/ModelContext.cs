@@ -77,6 +77,16 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
 
+    public virtual DbSet<DbPotensiAbt> DbPotensiAbts { get; set; }
+
+    public virtual DbSet<DbPotensiHiburan> DbPotensiHiburans { get; set; }
+
+    public virtual DbSet<DbPotensiHotel> DbPotensiHotels { get; set; }
+
+    public virtual DbSet<DbPotensiParkir> DbPotensiParkirs { get; set; }
+
+    public virtual DbSet<DbPotensiResto> DbPotensiRestos { get; set; }
+
     public virtual DbSet<DbRekamParkir> DbRekamParkirs { get; set; }
 
     public virtual DbSet<DbRekamRestoran> DbRekamRestorans { get; set; }
@@ -282,6 +292,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
+
+    public virtual DbSet<UserApiBapendum> UserApiBapenda { get; set; }
 
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
 
@@ -711,6 +723,39 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.MaksimalProduksiPorsiHari).HasDefaultValueSql("0                     ");
             entity.Property(e => e.RataTerjualPorsiHari).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<DbPotensiAbt>(entity =>
+        {
+            entity.ToView("DB_POTENSI_ABT");
+        });
+
+        modelBuilder.Entity<DbPotensiHiburan>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033443");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbPotensiHotel>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033440");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbPotensiParkir>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033442");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbPotensiResto>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033441");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<DbRekamParkir>(entity =>
@@ -1610,6 +1655,11 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => e.Id).HasName("T_TEGURAN_SPTPD_PK");
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<UserApiBapendum>(entity =>
+        {
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
