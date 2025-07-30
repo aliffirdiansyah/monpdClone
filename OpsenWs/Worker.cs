@@ -224,7 +224,7 @@ namespace OpsenWs
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
-            var row = _contMonPd.SetLastRuns.FirstOrDefault(x => x.Job.ToUpper() == EnumFactory.EJobName.DBOPLISTRIK.ToString().ToUpper());
+            var row = _contMonPd.SetLastRuns.FirstOrDefault(x => x.Job.ToUpper() == EnumFactory.EJobName.DBOPOPSEN.ToString().ToUpper());
             if (row != null)
             {
                 if (row.InsDate.HasValue)
@@ -250,7 +250,7 @@ namespace OpsenWs
                 }
             }
             var newRow = new MonPDLib.EF.SetLastRun();
-            newRow.Job = EnumFactory.EJobName.DBOPLISTRIK.ToString().ToUpper();
+            newRow.Job = EnumFactory.EJobName.DBOPOPSEN.ToString().ToUpper();
             newRow.InsDate = DateTime.Now;
             _contMonPd.SetLastRuns.Add(newRow);
             _contMonPd.SaveChanges();

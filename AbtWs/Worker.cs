@@ -104,11 +104,10 @@ namespace AbtWs
             // do fill db op ABT
             if (IsGetDBOp())
             {
-                FillOP(2025);
-                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                //{
-                //    FillOP(i);
-                //}
+                for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                {
+                    FillOP(i);
+                }
             }
 
             MailHelper.SendMail(
@@ -132,7 +131,7 @@ namespace AbtWs
             using (var _contSbyTax = DBClass.GetSurabayaTaxContext())
             {
                 var sql = @"
-                    SELECT  A.NOP,
+                                        SELECT  A.NOP,
                                 C.NPWPD_NO NPWPD,
                                 C.NAMA NPWPD_NAMA,
                                 C.ALAMAT NPWPD_ALAMAT,
@@ -158,7 +157,33 @@ namespace AbtWs
                                 'AIR TANAH' KATEGORI_NAMA,
                                 1 IS_METERAN_AIR, 0 JUMLAH_KARYAWAN,
                                 DECODE(TGL_OP_TUTUP,NULL,0,1) IS_TUTUP,
-                                'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
+                                CASE
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 1' THEN '1'
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 2' THEN '2'
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 3' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 4' THEN '4'
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 5' THEN '5'
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 6' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 7' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 8' THEN '2'
+                                    WHEN TO_CHAR(UPTB_ID) = '01' THEN '1'
+                                    WHEN TO_CHAR(UPTB_ID) = '02' THEN '2'
+                                    WHEN TO_CHAR(UPTB_ID) = '03' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = '04' THEN '4'
+                                    WHEN TO_CHAR(UPTB_ID) = '05' THEN '5'
+                                    WHEN TO_CHAR(UPTB_ID) = '07' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = '06' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = '08' THEN '2'
+                                    WHEN TO_CHAR(UPTB_ID) = '1' THEN '1'
+                                    WHEN TO_CHAR(UPTB_ID) = '2' THEN '2'
+                                    WHEN TO_CHAR(UPTB_ID) = '3' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = '4' THEN '4'
+                                    WHEN TO_CHAR(UPTB_ID) = '5' THEN '5'
+                                    WHEN TO_CHAR(UPTB_ID) = '7' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = '6' THEN '3'
+                                    WHEN TO_CHAR(UPTB_ID) = '8' THEN '2'
+                                    ELSE NULL
+                                END AS WILAYAH_PAJAK,
                                 sysdate INS_dATE, 'JOB' INS_BY,
                                 TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
                                 '-'  AKUN  ,

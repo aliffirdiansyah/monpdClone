@@ -3,6 +3,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Data;
 using System.Drawing;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -102,11 +103,10 @@ namespace HiburanWs
             // do fill db op HIBURAN
             if (IsGetDBOp())
             {
-                FillOP(2025);
-                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                //{
-                //    FillOP(i);
-                //}
+                for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                {
+                    FillOP(i);
+                }
             }
 
             MailHelper.SendMail(
@@ -178,7 +178,33 @@ namespace HiburanWs
             WHEN TGL_OP_TUTUP IS NOT NULL THEN 1
         ELSE 0
         END AS IS_TUTUP,
-        'SURABAYA ' || UPTB_ID AS WILAYAH_PAJAK,
+        CASE
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 1' THEN '1'
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 2' THEN '2'
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 3' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 4' THEN '4'
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 5' THEN '5'
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 6' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 7' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 8' THEN '2'
+            WHEN TO_CHAR(UPTB_ID) = '01' THEN '1'
+            WHEN TO_CHAR(UPTB_ID) = '02' THEN '2'
+            WHEN TO_CHAR(UPTB_ID) = '03' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = '04' THEN '4'
+            WHEN TO_CHAR(UPTB_ID) = '05' THEN '5'
+            WHEN TO_CHAR(UPTB_ID) = '07' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = '06' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = '08' THEN '2'
+            WHEN TO_CHAR(UPTB_ID) = '1' THEN '1'
+            WHEN TO_CHAR(UPTB_ID) = '2' THEN '2'
+            WHEN TO_CHAR(UPTB_ID) = '3' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = '4' THEN '4'
+            WHEN TO_CHAR(UPTB_ID) = '5' THEN '5'
+            WHEN TO_CHAR(UPTB_ID) = '7' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = '6' THEN '3'
+            WHEN TO_CHAR(UPTB_ID) = '8' THEN '2'
+            ELSE NULL
+        END AS WILAYAH_PAJAK,
         '-'  AKUN  ,
         '-'  NAMA_AKUN         ,
         '-'  KELOMPOK      ,
@@ -590,7 +616,33 @@ SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_
             ELSE -2
             END AS KATEGORI_ID,
             NAMA_JENIS_PAJAK   KATEGORI_NAMA,
-             sysdate INS_dATE, 'JOB' INS_BY ,fk_wilayah_pajak WILAYAH_PAJAK   ,
+             sysdate INS_dATE, 'JOB' INS_BY ,CASE
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 1' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 2' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 3' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 4' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 5' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 6' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 7' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 8' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '01' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '02' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '03' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '04' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '05' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '07' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '06' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '08' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '1' THEN '1'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '2' THEN '2'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '3' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '4' THEN '4'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '5' THEN '5'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '7' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '6' THEN '3'
+    WHEN TO_CHAR(fk_wilayah_pajak) = '8' THEN '2'
+    ELSE NULL
+END AS WILAYAH_PAJAK,
             '-' AKUN,'-'  NAMA_AKUN,'-'  JENIS,'-'  NAMA_JENIS,'-'  OBJEK,'-'  NAMA_OBJEK,'-'  RINCIAN,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU
@@ -611,7 +663,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     // DATA OP
                     try
                     {
-                        if (item.Nop == "357802200290100001")
+                        if (item.Nop == "000000000090302748")
                         {
                             var kk = 1;
                         }
@@ -675,6 +727,11 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                             newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
                             newRow.TglOpTutup = item.TglOpTutup;
                             newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
+
+                            var kategori = GetKategoriOvveride(item.Nop);
+                            item.KategoriId = Convert.ToInt32(kategori[0] ?? "54");
+                            item.KategoriNama = kategori[1] ?? "HIBURAN";
+
                             newRow.KategoriId = item.KategoriId;
                             newRow.KategoriNama = item.KategoriNama;
                             newRow.MetodePenjualan = item.MetodePenjualan;
@@ -874,7 +931,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
             {
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
-                var sqlRealisasi = @"SELECT 	NOP, 
+                var sqlRealisasi = @"SELECT 	NVL(NOP, '-') NOP, 
 		MASA, 
 		TAHUN, 
 		'-' ID_SSPD,
@@ -1246,23 +1303,130 @@ GROUP BY NOP, MASA, TAHUN  ";
             try
             {
                 var command = connection.CreateCommand();
-                command.CommandText = @" SELECT  NVL(NAMAWP,'-'),NVL(ALAMAT,'-')
-                                    FROM PHRH_USER.npwpd_baru@LIHATHR
-                                    WHERE NPWPD=:NPWPD  AND ROWNUM=1";
+                command.CommandText = @" SELECT NVL(NAMAWP,'-'), NVL(ALAMAT,'-')
+                                 FROM PHRH_USER.npwpd_baru@LIHATHR
+                                 WHERE NPWPD = :NPWPD AND ROWNUM = 1";
                 var param = command.CreateParameter();
                 param.ParameterName = "NPWPD";
                 param.Value = npwpd;
                 command.Parameters.Add(param);
+
                 var dr = command.ExecuteReader();
                 if (dr.Read())
                 {
-                    ret.Add(dr.GetString(0));
-                    ret.Add(dr.GetString(1));
+                    ret.Add(dr.GetString(0)); // NAMAWP
+                    ret.Add(dr.GetString(1)); // ALAMAT
                 }
                 else
                 {
+                    ret.Add("-"); // Default value if no data
                     ret.Add("-");
-                    ret.Add("-");
+                }
+                dr.Close();
+            }
+            catch
+            {
+                ret.Clear();
+                ret.Add("-");
+                ret.Add("-");
+            }
+
+            connection.Close();
+            return ret;
+        }
+
+
+        private List<string> GetKategoriOvveride(string nop)
+        {
+            var ret = new List<string>();
+            ret.Add("54");
+            ret.Add("HIBURAN");
+
+            var c = DBClass.GetMonitoringDbContext();
+            var connection = c.Database.GetDbConnection();
+            if (connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+            try
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = @" SELECT *
+                                        FROM T_OP_KATEGORI_STATUS
+                                        WHERE REPLACE(FK_NOP,'.','')=:NOP  AND ROWNUM=1";
+                var param = command.CreateParameter();
+                param.ParameterName = "NOP";
+                param.Value = nop;
+                command.Parameters.Add(param);
+                var dr = command.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    var katname = dr.GetString(2);
+                    switch (katname)
+                    {
+                        case "PERMAINAN ANAK/ PERMAINAN KETANGKASAN":
+                            ret[0] = "50";
+                            ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                            break;
+                        case "GEDUNG OLAHRAGA":
+                            ret[0] = "46";
+                            ret[1] = "OLAHRAGA";
+                            break;
+                        case "KARAOKE KELUARGA":
+                            ret[0] = "45";
+                            ret[1] = "KARAOKE KELUARGA";
+                            break;
+                        case "PANTI PIJAT / THERAPY / SAUNA / SPA":
+                            ret[0] = "48";
+                            ret[1] = "PANTI PIJAT/THERAPY/SAUNA/SPA";
+                            break;
+                        case "TAMAN SATWA/ PEMANDIAN ALAM / TAMAN REKREASI / WISATA TIRTA / REKREASI AIR":
+                            ret[0] = "14";
+                            ret[1] = "HOTEL BINTANG TIGA";
+                            break;
+                        case "BILLYARD":
+                            ret[0] = "46";
+                            ret[1] = "OLAHRAGA";
+                            break;
+                        case "KOLAM RENANG":
+                            ret[0] = "46";
+                            ret[1] = "OLAHRAGA";
+                            break;
+                        case "KARAOKE DEWASA":
+                            ret[0] = "44";
+                            ret[1] = "KARAOKE DEWASA";
+                            break;
+                        case "BIOSKOP":
+                            ret[0] = "42";
+                            ret[1] = "BIOSKOP";
+                            break;
+                        case "PAMERAN SENI BUDAYA, SENI UKIR, BARANG SENI, TUMBU":
+                            ret[0] = "50";
+                            ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                            break;
+                        case "BAR / CAFE / KLAB MALAM / DISKOTIK":
+                            ret[0] = "41";
+                            ret[1] = "BAR/CAFE/KLAB MALAM/DISKOTIK";
+                            break;
+                        case "FUTSAL(OLAHRAGA)":
+                            ret[0] = "46";
+                            ret[1] = "OLAHRAGA";
+                            break;
+                        case "FITNESS / PUSAT KEBUGARAN":
+                            ret[0] = "43";
+                            ret[1] = "FITNESS/PUSAT KEBUGARAN";
+                            break;
+                        case "BOWLING":
+                            ret[0] = "46";
+                            ret[1] = "OLAHRAGA";
+                            break;
+                        default:
+                            ret[0] = "54";
+                            ret[1] = "HIBURAN";
+                            break;
+                    }
+
                 }
                 dr.Close();
             }
@@ -1274,6 +1438,7 @@ GROUP BY NOP, MASA, TAHUN  ";
             connection.Close();
             return ret;
         }
+
         private Helper.DbAkun? GetDbAkun(int tahun, int idPajak, int idKategori)
         {
             var _contMonPd = DBClass.GetContext();
