@@ -277,7 +277,7 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
                 var dataHotel3 = context.DbOpHotels
-                    .Where(x => x.TahunBuku == DateTime.Now.Year && x.TglOpTutup.Value > DateTime.Now)
+                    .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
