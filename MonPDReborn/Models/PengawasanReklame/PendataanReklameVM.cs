@@ -1,5 +1,6 @@
 ﻿using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
 using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
 
 namespace MonPDReborn.Models.PengawasanReklame
 {
@@ -21,7 +22,7 @@ namespace MonPDReborn.Models.PengawasanReklame
             {
                 Tahun = tahun;
                 Bulan = bulan;
-                Data = Method.GetPengawasanReklameList(tahun, bulan);
+                Data = Method.GetPengawasanReklameData(tahun, bulan);
             }
 
         }
@@ -38,42 +39,82 @@ namespace MonPDReborn.Models.PengawasanReklame
 
         public static class Method
         {
-            public static List<PengawasanReklame> GetPengawasanReklameList(int tahun, int bulan)
+            public static List<PengawasanReklame> GetPengawasanReklameData(int tahun, int bulan)
             {
-                var allData = GetPengawasanReklameData();
-
-                return allData
-                    .Where(d => d.Tahun == tahun && d.Bulan == bulan)
+                var context = DBClass.GetContext();
+                var ret = context.DbMonReklames
+                    .Where(x => x.TahunBuku == tahun /*&& x.BulanPajak == bulan*/)
+                    .Select(x => new PengawasanReklame
+                    {
+                        /*NamaKegiatan = x.NamaKegiatan ?? "",
+                        Tahun = x.Tahun,
+                        Bulan = x.Bulan,
+                        JmlPetugas = x.JmlPetugas,
+                        Target = x.Target,
+                        Terlaksana = x.Terlaksana,
+                        Status = x.Status ?? ""*/
+                    })
                     .ToList();
+                return ret;
             }
 
-            // Pengawasan Reklame
-            private static List<PengawasanReklame> GetPengawasanReklameData()
+            /*public static List<Rekap> GetRekaps(string namaKegiatan)
             {
-                return new List<PengawasanReklame>()
-                {
-                    new PengawasanReklame
+                var context = DBClass.GetContext();
+                var ret = context.DbMonReklames
+                    .Where(x => x.NamaKegiatan != null && x.NamaKegiatan.Contains(namaKegiatan, StringComparison.OrdinalIgnoreCase))
+                    .Select(x => new Rekap
                     {
-                        NamaKegiatan = "Survey",
-                        Tahun = 2025,
-                        Bulan = 5,
-                        JmlPetugas = 5,
-                        Target = 100,
-                        Terlaksana = 85,
-                        Status = "Tercapai"
-                    },
-                    new PengawasanReklame
-                    {
-                        NamaKegiatan = "Verifikasi",
-                        Tahun = 2025,
-                        Bulan = 5,
-                        JmlPetugas = 3,
-                        Target = 60,
-                        Terlaksana = 45,
-                        Status = "Belum Tercapai"
-                    },
-                };
-            }
+                        NamaKegiatan = x.NamaKegiatan ?? "",
+                        Surveyor = x.Surveyor ?? "",
+                        Target = x.Target,
+                        ObjekLama = x.ObjekLama,
+                        PajakLama = x.PajakLama,
+                        ObjekBaru = x.ObjekBaru,
+                        PajakBaru = x.PajakBaru,
+                        ObjekTutup = x.ObjekTutup,
+                        PajakTutup = x.PajakTutup,
+                        Status = x.Status ?? ""
+                    })
+                    .ToList();
+                return ret;
+            }*/
+            //public static List<PengawasanReklame> GetPengawasanReklameList(int tahun, int bulan)
+            //{
+            //    var allData = GetPengawasanReklameData();
+
+            //    return allData
+            //        .Where(d => d.Tahun == tahun && d.Bulan == bulan)
+            //        .ToList();
+            //}
+
+            //// Pengawasan Reklame
+            //private static List<PengawasanReklame> GetPengawasanReklameData()
+            //{
+            //    return new List<PengawasanReklame>()
+            //    {
+            //        new PengawasanReklame
+            //        {
+            //            NamaKegiatan = "Survey",
+            //            Tahun = 2025,
+            //            Bulan = 5,
+            //            JmlPetugas = 5,
+            //            Target = 100,
+            //            Terlaksana = 85,
+            //            Status = "Tercapai"
+            //        },
+            //        new PengawasanReklame
+            //        {
+            //            NamaKegiatan = "Verifikasi",
+            //            Tahun = 2025,
+            //            Bulan = 5,
+            //            JmlPetugas = 3,
+            //            Target = 60,
+            //            Terlaksana = 45,
+            //            Status = "Belum Tercapai"
+            //        },
+            //    };
+            //}
 
             // Rekap Survey Reklame
 
