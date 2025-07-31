@@ -124,4 +124,7 @@ public partial class DbMonPbb
     [StringLength(50)]
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
+
+    [Column("JUMLAH_BAYAR_SANKSI", TypeName = "NUMBER(38)")]
+    public decimal? JumlahBayarSanksi { get; set; }
 }
