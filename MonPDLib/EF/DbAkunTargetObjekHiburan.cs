@@ -34,4 +34,7 @@ public partial class DbAkunTargetObjekHiburan
 
     [Column("TARGET_TAHUN", TypeName = "NUMBER")]
     public decimal? TargetTahun { get; set; }
+
+    [Column("INSIDENTIL", TypeName = "NUMBER")]
+    public decimal? Insidentil { get; set; }
 }
