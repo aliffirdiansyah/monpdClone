@@ -325,7 +325,7 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
                 var sqlRealisasi = @"
-             SELECT NOP,TAHUN_PAJAK,SUM(POKOK) POKOK , SUM(SANKSI) SANKSI
+             SELECT NOP,TAHUN_PAJAK,SUM(NVL(POKOK, 0)) POKOK , SUM(NVL(SANKSI, 0)) SANKSI
 FROM (
 SELECT      A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS  NOP , A.d_pjk_thn TAHUN_PAJAK,                                        
                                         D_PJK_PBB POKOK,D_PJK_JMBYR-D_PJK_PBB SANKSI
