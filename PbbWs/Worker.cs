@@ -275,10 +275,9 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
                 int index = 0;
                 decimal jml = 0;
 
-                var source = _contMonPd.DbMonPbbs.ToList();
                 foreach (var itemKetetapan in ketetapanMonitoringDb)
                 {
-                    var src = source.FirstOrDefault(x => x.Nop == itemKetetapan.NOP && x.TahunBuku == itemKetetapan.TAHUN_BUKU && x.TahunPajak == itemKetetapan.TAHUN_PAJAK);
+                    var src = _contMonPd.DbMonPbbs.SingleOrDefault(x => x.Nop == itemKetetapan.NOP && x.TahunBuku == itemKetetapan.TAHUN_BUKU && x.TahunPajak == itemKetetapan.TAHUN_PAJAK);
                     if(src != null)
                     {
                         _contMonPd.DbMonPbbs.Remove(src);
@@ -312,10 +311,11 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
                     newRow.InsBy = itemKetetapan.INS_BY;
                     newRow.IsLunas = itemKetetapan.IS_LUNAS;
 
-                    var realisasi = GetRealisasi(tahunBuku, itemKetetapan.NOP);
+                    var realisasi = GetRealisasi(itemKetetapan.TAHUN_PAJAK, itemKetetapan.NOP);
 
-                    newRow.JumlahBayarPokok = realisasi.NominalRealisasi;
+                    newRow.JumlahBayarPokok = realisasi.NominalRealisasiPokok;
                     newRow.JumlahBayarSanksi = realisasi.NominalSanksi;
+
                     _contMonPd.DbMonPbbs.Add(newRow);
                     _contMonPd.SaveChanges();
                     index++;
@@ -330,7 +330,7 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
             }
         }
 
-        private PbbRealisasi GetRealisasi(int tahunBuku, string nop)
+        private PbbRealisasi GetRealisasi(int tahunPajak, string nop)
         {
             var res = new PbbRealisasi();
             try
@@ -345,12 +345,12 @@ FROM (
 				D_PJK_PBB POKOK,
 				D_PJK_JMBYR-D_PJK_PBB SANKSI
     FROM        CATBAYAR@LIHATGATOTKACA A 
-    WHERE       to_char(D_PJK_TGBYR,'YYYY') =:TAHUN AND (A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS) = :NOP
+    WHERE       A.d_pjk_thn =:TAHUN AND (A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS) = :NOP
     UNION ALL
     SELECT      A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP NOP,
                 THN_PAJAK_SPPT,JML_SPPT_YG_DIBAYAR-DENDA_SPPT,DENDA_SPPT                                                    
     FROM        PEMBAYARAN_SPPT@LIHATGATOTKACA A
-    WHERE       to_char(TGL_PEMBAYARAN_SPPT,'YYYY') = :TAHUN  AND NVL(REV_FLAG,0) !=1 AND (A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP) = :NOP
+    WHERE       THN_PAJAK_SPPT = :TAHUN  AND NVL(REV_FLAG,0) !=1 AND (A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP) = :NOP
 )
 GROUP BY NOP,TAHUN_PAJAK                                        
                 ";
@@ -358,10 +358,10 @@ GROUP BY NOP,TAHUN_PAJAK
                 var realisasiMonitoringDb = _contMonitoringDB.Set<RealisasiPbb>()
                     .FromSqlRaw(sqlRealisasi, new[] {
                                 new OracleParameter("NOP", nop),
-                                new OracleParameter("TAHUN", tahunBuku.ToString())
+                                new OracleParameter("TAHUN", tahunPajak)
                     }).ToList();
 
-                res.NominalRealisasi = realisasiMonitoringDb.Sum(x => x.POKOK);
+                res.NominalRealisasiPokok = realisasiMonitoringDb.Sum(x => x.POKOK);
                 res.NominalSanksi = realisasiMonitoringDb.Sum(x => x.SANKSI);
             }
             catch (Exception ex)
@@ -460,7 +460,7 @@ GROUP BY NOP,TAHUN_PAJAK
 
         public class PbbRealisasi
         {
-            public decimal NominalRealisasi { get; set; } = 0;
+            public decimal NominalRealisasiPokok { get; set; } = 0;
             public decimal NominalSanksi { get; set; } = 0;
         }
     }
