@@ -37,4 +37,35 @@ public partial class DbMonReklameAktivitasDet
     [StringLength(100)]
     [Unicode(false)]
     public string? Petugas { get; set; }
+
+    [Column("NAMA_PERUSAHAAN")]
+    [StringLength(255)]
+    [Unicode(false)]
+    public string? NamaPerusahaan { get; set; }
+
+    [Column("NAMA")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? Nama { get; set; }
+
+    [Column("ALAMAT_PERUSAHAAN")]
+    [StringLength(255)]
+    [Unicode(false)]
+    public string? AlamatPerusahaan { get; set; }
+
+    [Column("ALAMATREKLAME")]
+    [StringLength(181)]
+    [Unicode(false)]
+    public string? Alamatreklame { get; set; }
+
+    [Column("ISI_REKLAME")]
+    [StringLength(255)]
+    [Unicode(false)]
+    public string? IsiReklame { get; set; }
+
+    [Column("POKOK_PAJAK_KETETAPAN", TypeName = "NUMBER")]
+    public decimal? PokokPajakKetetapan { get; set; }
+
+    [Column("NOMINAL_POKOK_BAYAR", TypeName = "NUMBER")]
+    public decimal? NominalPokokBayar { get; set; }
 }
