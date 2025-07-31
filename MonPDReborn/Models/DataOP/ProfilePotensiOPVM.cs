@@ -218,8 +218,8 @@ namespace MonPDReborn.Models.DataOP
                 #region PotensioList();
                 var dataResto3 = context.DbOpRestos
                     .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
-                    .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
+                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                     .ToList();
 
                 var potensiResto = context.DbPotensiRestos
@@ -227,14 +227,11 @@ namespace MonPDReborn.Models.DataOP
                     .ToList()
                     .Select(x =>
                     {
-                        var op = context.DbOpRestos.FirstOrDefault(o => o.Nop == x.Nop);
+                        var op = dataResto3.FirstOrDefault(o => o.Nop == x.Nop);
 
                         return new DetailPotensiPajakResto
                         {
                             NOP = x.Nop,
-                            Nama = op?.NamaOp ?? "-",
-                            Alamat = op?.AlamatOp ?? "-",
-                            Wilayah = op?.WilayahPajak ?? "-",
                             Kategori = "-",
                             TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             JumlahKursi = x.KapKursi ?? 0,
@@ -263,8 +260,8 @@ namespace MonPDReborn.Models.DataOP
 
                 var dataHotel3 = context.DbOpHotels
                     .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
-                    .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
+                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                     .ToList();
 
                 var potensiHotel = context.DbPotensiHotels
@@ -272,14 +269,11 @@ namespace MonPDReborn.Models.DataOP
                     .ToList()
                     .Select(x =>
                     {
-                        var op = context.DbOpHotels.FirstOrDefault(o => o.Nop == x.Nop);
+                        var op = dataHotel3.FirstOrDefault(o => o.Nop == x.Nop);
 
                         return new DetailPotensiPajakHotel
                         {
                             NOP = x.Nop,
-                            Nama = op?.NamaOp ?? "-",
-                            Alamat = op?.AlamatOp ?? "-",
-                            Wilayah = op?.WilayahPajak ?? "-",
                             Kategori = "-",
                             TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             JumlahTotalRoom = x.TotalRoom ?? 0,
@@ -295,8 +289,8 @@ namespace MonPDReborn.Models.DataOP
 
                 var dataParkir3 = context.DbOpParkirs
                     .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
-                    .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
+                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                     .ToList();
 
                 var potensiParkir = context.DbPotensiParkirs
@@ -304,14 +298,11 @@ namespace MonPDReborn.Models.DataOP
                     .ToList()
                     .Select(x =>
                     {
-                        var op = context.DbOpParkirs.FirstOrDefault(o => o.Nop == x.Nop);
+                        var op = dataParkir3.FirstOrDefault(o => o.Nop == x.Nop);
 
                         return new DetailPotensiPajakParkir
                         {
                             NOP = x.Nop,
-                            Nama = op?.NamaOp ?? "-",
-                            Alamat = op?.AlamatOp ?? "-",
-                            Wilayah = op?.WilayahPajak ?? "-",
                             Kategori = "-",
                             Memungut = ((EnumFactory.EPungutTarifParkir)(x.JenisTarif ?? 0)).GetDescription(),
                             SistemParkir = ((EnumFactory.EPalangParkir)(x.SistemParkir ?? 0)).GetDescription(),
@@ -338,8 +329,8 @@ namespace MonPDReborn.Models.DataOP
 
                 var dataHiburan3 = context.DbOpHiburans
                     .Where(x => x.TahunBuku == DateTime.Now.Year)
-                    .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
+                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                     .ToList();
 
                 var potensiHiburan = context.DbPotensiHiburans
@@ -347,14 +338,11 @@ namespace MonPDReborn.Models.DataOP
                     .ToList()
                     .Select(x =>
                     {
-                        var op = context.DbOpHiburans.FirstOrDefault(o => o.Nop == x.Nop);
+                        var op = dataHiburan3.FirstOrDefault(o => o.Nop == x.Nop);
 
                         return new DetailPotensiPajakHiburan
                         {
                             NOP = x.Nop,
-                            Nama = op?.NamaOp ?? "-",
-                            Alamat = op?.AlamatOp ?? "-",
-                            Wilayah = op?.WilayahPajak ?? "-",
                             Kategori = "-",
                             TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             KapasitasStudio = x.KapKursiStudio ?? 0,
@@ -561,16 +549,8 @@ namespace MonPDReborn.Models.DataOP
                             .ToList();
                         var dataResto3 = context.DbOpRestos
                             .Where(x => (x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))
-                            .GroupBy(x => new { x.Nop, x.KategoriId })
-                            .Select(x => new { x.Key.Nop, x.Key.KategoriId })
-                            .ToList();
-
-                        
-                        var dataRestoAll = dataResto1
-                            .Concat(dataResto2)
-                            .Concat(dataResto3)
-                            .Select(x => (x.Nop, x.KategoriId))
-                            .Distinct()
+                            .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
+                            .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                             .ToList();
 
                         foreach (var item in kategoriList)
@@ -585,7 +565,6 @@ namespace MonPDReborn.Models.DataOP
                             var listOpResto1 = dataResto1.Where(x => x.KategoriId == item.Id).Select(x => x.Nop).ToList();
                             var listOpResto2 = dataResto2.Where(x => x.KategoriId == item.Id).Select(x => x.Nop).ToList();
                             var listOpResto3 = dataResto3.Where(x => x.KategoriId == item.Id).Select(x => x.Nop).ToList();
-                            var listOpRestoAll = dataRestoAll.Where(x => x.KategoriId == item.Id).Select(x => x.Nop).ToList();
 
                             var targetResto1 = context.PotensiCtrlTargets.Where(x => x.KdPajak == (int)jenisPajak && x.Tahun == DateTime.Now.Year - 2 && listOpResto1.Contains(x.Nop)).Sum(q => q.Target);
                             var targetResto2 = context.PotensiCtrlTargets.Where(x => x.KdPajak == (int)jenisPajak && x.Tahun == DateTime.Now.Year - 1 && listOpResto2.Contains(x.Nop)).Sum(q => q.Target);
@@ -598,14 +577,11 @@ namespace MonPDReborn.Models.DataOP
                             .ToList()
                             .Select(x =>
                             {
-                                var op = context.DbOpRestos.FirstOrDefault(o => o.Nop == x.Nop);
+                                var op = dataResto3.FirstOrDefault(o => o.Nop == x.Nop);
 
                                 return new DetailPotensiPajakResto
                                 {
                                     NOP = x.Nop,
-                                    Nama = op?.NamaOp ?? "-",
-                                    Alamat = op?.AlamatOp ?? "-",
-                                    Wilayah = op?.WilayahPajak ?? "-",
                                     Kategori = "-",
                                     TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                                     JumlahKursi = x.KapKursi ?? 0,
