@@ -223,7 +223,7 @@ namespace MonPDReborn.Models.DataOP
                     .ToList();
 
                 var potensiResto = context.DbPotensiRestos
-                    .Where(x => dataResto3.Select(v => v.Nop).ToList().Contains(x.Nop))
+                    .Where(x => dataResto3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year)
                     .ToList()
                     .Select(x =>
                     {
@@ -265,7 +265,7 @@ namespace MonPDReborn.Models.DataOP
                     .ToList();
 
                 var potensiHotel = context.DbPotensiHotels
-                    .Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop))
+                    .Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year)
                     .ToList()
                     .Select(x =>
                     {
@@ -294,7 +294,7 @@ namespace MonPDReborn.Models.DataOP
                     .ToList();
 
                 var potensiParkir = context.DbPotensiParkirs
-                    .Where(x => dataParkir3.Select(v => v.Nop).ToList().Contains(x.Nop))
+                    .Where(x => dataParkir3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year)
                     .ToList()
                     .Select(x =>
                     {
@@ -334,7 +334,7 @@ namespace MonPDReborn.Models.DataOP
                     .ToList();
 
                 var potensiHiburan = context.DbPotensiHiburans
-                    .Where(x => dataHiburan3.Select(v => v.Nop).ToList().Contains(x.Nop))
+                    .Where(x => dataHiburan3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year)
                     .ToList()
                     .Select(x =>
                     {
@@ -357,7 +357,7 @@ namespace MonPDReborn.Models.DataOP
                         };
                     })
                     .ToList();
-                var totalPotensiHiburan = potensiHiburan.Sum(x=> x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
+                var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
 
                 var dataAbt3 = context.DbOpAbts
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
@@ -595,7 +595,7 @@ namespace MonPDReborn.Models.DataOP
                                 };
                             })
                             .ToList();
-                            var totalPotensiResto = potensiResto.Sum(x=>x.PotensiPajakPerTahunCatering + x.PotensiPajakPerTahunNonCatering);
+                            var totalPotensiResto = potensiResto.Sum(x => x.PotensiPajakPerTahunCatering + x.PotensiPajakPerTahunNonCatering);
 
                             re.Target1 = targetResto1;
                             re.Realisasi1 = realisasiResto1;
@@ -1058,7 +1058,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataResto3.Distinct())
                         {
                             var potensiResto = context.DbPotensiRestos
-                            .Where(x => x.Nop == item.Nop)
+                            .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
                             .ToList()
                             .Select(x =>
                             {
@@ -1151,7 +1151,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataHotel3.Distinct())
                         {
                             var potensiHotel = context.DbPotensiHotels
-                                .Where(x => x.Nop == item.Nop)
+                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
                                 .ToList()
                                 .Select(x =>
                                 {
@@ -1208,7 +1208,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataParkir3.Distinct())
                         {
                             var potensiParkir = context.DbPotensiParkirs
-                                .Where(x => x.Nop == item.Nop)
+                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
                                 .ToList()
                                 .Select(x =>
                                 {
@@ -1276,7 +1276,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataHiburan3.Distinct())
                         {
                             var potensiHiburan = context.DbPotensiHiburans
-                                .Where(x => x.Nop == item.Nop)
+                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
                                 .ToList()
                                 .Select(x =>
                                 {
