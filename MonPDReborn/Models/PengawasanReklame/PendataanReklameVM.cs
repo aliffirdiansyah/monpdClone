@@ -266,7 +266,7 @@ namespace MonPDReborn.Models.PengawasanReklame
             public decimal JmlPetugas { get; set; }
             public decimal Target {  get; set; }
             public decimal Terlaksana { get; set; }
-            public decimal Selisih => Target - Terlaksana;
+            public decimal Selisih => Terlaksana - Target;
             public decimal Persentase => Target == 0 ? 0 : Math.Round((decimal)Terlaksana / Target * 100, 2);
             public string Status { get; set; } = null!;
         }
@@ -287,7 +287,7 @@ namespace MonPDReborn.Models.PengawasanReklame
             public decimal Terlaksana { get; set; }
             public decimal TotalObjek => ObjekLama + ObjekBaru + ObjekTutup;
             public decimal TotalPajak => PajakLama + PajakBaru + PajakTutup;
-            public decimal Selisih => Target - TotalObjek;
+            public decimal Selisih => Terlaksana - Target;
             public string Status { get; set; } = null!;
         }
 
