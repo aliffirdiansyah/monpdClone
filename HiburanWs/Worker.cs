@@ -88,10 +88,11 @@ namespace HiburanWs
             // do fill db op HIBURAN
             if (IsGetDBOp())
             {
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                {
-                    FillOP(i);
-                }
+                FillOP(2025);
+                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                //{
+                //    FillOP(i);
+                //}
             }
 
             MailHelper.SendMail(
@@ -1413,6 +1414,33 @@ GROUP BY NOP, MASA, TAHUN  ";
                     }
 
                 }
+
+                var command2 = connection.CreateCommand();
+                command2.CommandText = @" 
+                                SELECT DISTINCT REPLACE(FK_NOP, '.', '') FK_NOP, NAMA_AYAT_PAJAK
+                                FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
+                                WHERE NAMA_PAJAK_DAERAH='HIBURAN' 
+	                                AND NAMA_AYAT_PAJAK = 'Pajak Hiburan Insidentil' 
+	                                AND A.FK_NOP IS NOT NULL 
+	                                AND REPLACE(FK_NOP, '.', '') = :NOP
+	                                AND ROWNUM=1
+                            ";
+                var param2 = command2.CreateParameter();
+                param2.ParameterName = "NOP";
+                param2.Value = nop;
+                command2.Parameters.Add(param2);
+                var dr2 = command2.ExecuteReader();
+
+                if (dr2.Read())
+                {
+                    var insidentil = dr2.GetString(0);
+                    if (!string.IsNullOrEmpty(insidentil))
+                    {
+                        ret[0] = "64";
+                        ret[1] = "INSIDENTIL";
+                    }
+                }
+
                 dr.Close();
             }
             catch
