@@ -1,15 +1,8 @@
-﻿@model MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.Detail
-
-@{
-    // Buat ID unik dari nama kegiatan
-    var namaKegiatan = Model.Data.FirstOrDefault()?.NamaKegiatan ?? "unknown";
-    var gridId = $"rekapDetailGrid_{namaKegiatan.Replace(" ", "_")}";
-}
-
+﻿@model MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.DetailRekap
 
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.DetailPengawasan>()
-        .ID(gridId)        
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.DetailReklame>()
+        .ID("detailReklameGrid")     
         .DataSource(Model.Data)
         @* .KeyExpr("NamaJalan") *@
         .ShowBorders(true)
@@ -31,9 +24,9 @@
         })
         .Columns(columns => {
             // Kolom Kunci
-            columns.AddFor(m => m.Petugas).Caption("Nama Petugas").CellTemplate(new JS("petugasCellTemplate"));
-            columns.AddFor(m => m.Target).Caption("Target").Format("#,##0");
-            columns.AddFor(m => m.NamaKegiatan).Caption("Obyek Lama");
+            columns.AddFor(m => m.Petugas).Caption("Nama Petugas");
+            columns.AddFor(m => m.NOR).Caption("Target").Format("#,##0");
+            @* columns.AddFor(m => m.NamaKegiatan).Caption("Obyek Lama");
             columns.AddFor(m => m.PajakLama).Caption("Pajak Lama").Format("#,##0");
             columns.AddFor(m => m.ObjekBaru).Caption("Obyek Baru").Format("#,##0");
             columns.AddFor(m => m.PajakBaru).Caption("Pajak Baru").Format("#,##0");
@@ -42,9 +35,9 @@
             columns.AddFor(m => m.TotalObjek).Caption("Total Obyek").Format("#,##0");
             columns.AddFor(m => m.TotalPajak).Caption("Total Pjak").Format("#,##0");
             columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
-            columns.AddFor(m => m.Status).Caption("Status");
+            columns.AddFor(m => m.Status).Caption("Status"); *@
         })
-        .Summary(s => {
+        @* .Summary(s => {
           
             s.TotalItems(items => {
                 items.AddFor(m => m.Petugas).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
@@ -58,6 +51,6 @@
                 items.AddFor(m => m.TotalObjek).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.TotalPajak).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
             });
-        })
+        }) *@
     )
 </div>

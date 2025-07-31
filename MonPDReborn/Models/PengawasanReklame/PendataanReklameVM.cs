@@ -30,10 +30,19 @@ namespace MonPDReborn.Models.PengawasanReklame
         // Untuk Partial View _Detail.cshtml (modal)
         public class Detail
         {
-            public List<Rekap> Data { get; set; }
-            public Detail(string namaKegiatan)
+            public List<DetailPengawasan> Data { get; set; }
+            public Detail(string namaKegiatan, int tahun, int bulan)
             {
-                Data = Method.GetRekapList(namaKegiatan);
+                Data = Method.GetDetailPengawasanData(namaKegiatan, tahun, bulan);
+            }
+        }
+
+        public class DetailRekap
+        {
+            public List<DetailReklame> Data { get; set; }
+            public DetailRekap(string namaKegiatan, int tahun, int bulan, string petugas)
+            {
+                Data = Method.GetDetailReklameData(namaKegiatan, tahun, bulan, petugas);
             }
         }
 
@@ -41,44 +50,90 @@ namespace MonPDReborn.Models.PengawasanReklame
         {
             public static List<PengawasanReklame> GetPengawasanReklameData(int tahun, int bulan)
             {
+                
                 var context = DBClass.GetContext();
-                var ret = context.DbMonReklames
-                    .Where(x => x.TahunBuku == tahun /*&& x.BulanPajak == bulan*/)
-                    .Select(x => new PengawasanReklame
+
+                var ret = context.DbMonReklameAktivitas
+                    .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                    .AsEnumerable()
+                    .GroupBy(x => x.Aktifitas)
+                    .Select(g => new PengawasanReklame
                     {
-                        /*NamaKegiatan = x.NamaKegiatan ?? "",
-                        Tahun = x.Tahun,
-                        Bulan = x.Bulan,
-                        JmlPetugas = x.JmlPetugas,
-                        Target = x.Target,
-                        Terlaksana = x.Terlaksana,
-                        Status = x.Status ?? ""*/
-                    })
-                    .ToList();
+                        NamaKegiatan = g.Key ?? "-",
+                        Tahun = tahun,              // ✅ Tambahkan ini
+                        Bulan = bulan,
+                        JmlPetugas = g
+                                .SelectMany(x => (x.Petugas ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
+                                .Select(n => n.Trim())
+                                .Distinct()
+                                .Count(),
+                        Target = g.Sum(x => x.Target ?? 0),
+                        Terlaksana = g.Sum(x => x.Terlaksana ?? 0),
+                        Status = g
+                            .Where(x => !string.IsNullOrEmpty(x.Status))
+                            .GroupBy(x => x.Status)
+                            .OrderByDescending(s => s.Count())
+                            .Select(s => s.Key)
+                            .FirstOrDefault() ?? "-"
+                    }).ToList();
+
                 return ret;
             }
 
-            /*public static List<Rekap> GetRekaps(string namaKegiatan)
+            public static List<DetailPengawasan> GetDetailPengawasanData(string namaKegiatan, int tahun, int bulan)
             {
                 var context = DBClass.GetContext();
-                var ret = context.DbMonReklames
-                    .Where(x => x.NamaKegiatan != null && x.NamaKegiatan.Contains(namaKegiatan, StringComparison.OrdinalIgnoreCase))
-                    .Select(x => new Rekap
+                namaKegiatan = namaKegiatan.Trim().ToLowerInvariant();
+
+                var ret = context.DbMonReklameAktivitas
+                    .Where(x =>
+                        x.Tahun == tahun &&
+                        x.Bulan == bulan
+                    )
+                    .AsEnumerable()
+                    .Where(x =>
+                        (x.Aktifitas ?? "").Trim().ToLowerInvariant() == namaKegiatan
+                    )
+                    .SelectMany(x =>
+                        (x.Petugas ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(p => new DetailPengawasan
+                        {
+                            NamaKegiatan = x.Aktifitas ?? "-",
+                            Tahun = tahun,
+                            Bulan = bulan,
+                            Petugas = p.Trim(),
+                            Target = x.Target ?? 0,
+                            Terlaksana = x.Terlaksana ?? 0,
+                            Status = x.Status ?? "-"
+                        })
+                    ).ToList();
+
+                return ret;
+            }
+
+            public static List<DetailReklame> GetDetailReklameData(string namaKegiatan, int tahun, int bulan, string petugas)
+            {
+                var context = DBClass.GetContext();
+
+                var ret = context.DbMonReklameAktivitasDets
+                    .Where(d =>
+                        (d.Aktifitas ?? "").Trim().ToLower() == namaKegiatan.Trim().ToLower() &&
+                        d.Tahun == tahun &&
+                        d.Bulan == bulan &&
+                        (d.Petugas ?? "").Trim().ToLower() == petugas.Trim().ToLower()
+                    )
+                    .Select(d => new DetailReklame
                     {
-                        NamaKegiatan = x.NamaKegiatan ?? "",
-                        Surveyor = x.Surveyor ?? "",
-                        Target = x.Target,
-                        ObjekLama = x.ObjekLama,
-                        PajakLama = x.PajakLama,
-                        ObjekBaru = x.ObjekBaru,
-                        PajakBaru = x.PajakBaru,
-                        ObjekTutup = x.ObjekTutup,
-                        PajakTutup = x.PajakTutup,
-                        Status = x.Status ?? ""
+                        Petugas = d.Petugas ?? "-",
+                        NoFormulir = d.NoFormulir ?? "-",
+                        NOR = d.Nor ?? "-",
+                        Tgl = d.Tanggal ?? DateTime.MinValue
                     })
                     .ToList();
+
                 return ret;
-            }*/
+            }
+
             //public static List<PengawasanReklame> GetPengawasanReklameList(int tahun, int bulan)
             //{
             //    var allData = GetPengawasanReklameData();
@@ -118,7 +173,7 @@ namespace MonPDReborn.Models.PengawasanReklame
 
             // Rekap Survey Reklame
 
-            public static List<Rekap> GetRekapList(string namaKegiatan)
+            /*public static List<Rekap> GetRekapList(string namaKegiatan)
             {
                 var allData = GetRekapData();
 
@@ -187,7 +242,7 @@ namespace MonPDReborn.Models.PengawasanReklame
                         Status = "Sesuai Target"
                     },
                 };
-            }
+            }*/
 
         }
 
@@ -196,45 +251,56 @@ namespace MonPDReborn.Models.PengawasanReklame
             public string NamaKegiatan { get; set; } = null!;
             public int Tahun { get; set; }
             public int Bulan { get; set; }
-            public int JmlPetugas { get; set; }
-            public int Target {  get; set; }
-            public int Terlaksana { get; set; }
+            public decimal JmlPetugas { get; set; }
+            public decimal Target {  get; set; }
+            public decimal Terlaksana { get; set; }
             public decimal Selisih => Target - Terlaksana;
             public decimal Persentase => Target == 0 ? 0 : Math.Round((decimal)Terlaksana / Target * 100, 2);
             public string Status { get; set; } = null!;
         }
 
-        public class Rekap
+        public class DetailPengawasan
         {
             public string NamaKegiatan { get; set; } = null!;
-            public string Surveyor { get; set; } = null!;
-            public int Target {  get; set; }
-            public int ObjekLama { get; set; }
+            public string Petugas { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+            public decimal Target {  get; set; }
+            public decimal ObjekLama { get; set; }
             public decimal PajakLama { get; set; }
-            public int ObjekBaru { get; set; }
+            public decimal ObjekBaru { get; set; }
             public decimal PajakBaru { get; set; }
-            public int ObjekTutup {  get; set; }
+            public decimal ObjekTutup {  get; set; }
             public decimal PajakTutup { get; set; }
-            public int TotalObjek => ObjekLama + ObjekBaru + ObjekTutup;
+            public decimal Terlaksana { get; set; }
+            public decimal TotalObjek => ObjekLama + ObjekBaru + ObjekTutup;
             public decimal TotalPajak => PajakLama + PajakBaru + PajakTutup;
-            public int Selisih => Target - TotalObjek;
+            public decimal Selisih => Target - TotalObjek;
             public string Status { get; set; } = null!;
         }
-       /* public class RekapVerifikasi
+
+        public class DetailReklame
         {
-            public string NamaKegiatan { get; set; } = null!;
-            public string Verifikator { get; set; } = null!;
-            public int Target { get; set; }
-            public int ObjekLama { get; set; }
-            public decimal PajakLama { get; set; }
-            public int ObjekBaru { get; set; }
-            public decimal PajakBaru { get; set; }
-            public int ObjekTutup { get; set; }
-            public decimal PajakTutup { get; set; }
-            public int TotalObjek => ObjekLama + ObjekBaru + ObjekTutup;
-            public decimal TotalPajak => PajakLama + PajakBaru + PajakTutup;
-            public int Selisih => Target - TotalObjek;
-            public string Status { get; set; } = null!;
-        }*/
+            public string Petugas { get; set; } = null!;
+            public string NoFormulir { get; set; } = null!;
+            public string NOR { get; set; } = null!;
+            public DateTime Tgl { get; set; }
+        }
+        /* public class RekapVerifikasi
+{
+    public string NamaKegiatan { get; set; } = null!;
+    public string Verifikator { get; set; } = null!;
+    public int Target { get; set; }
+    public int ObjekLama { get; set; }
+    public decimal PajakLama { get; set; }
+    public int ObjekBaru { get; set; }
+    public decimal PajakBaru { get; set; }
+    public int ObjekTutup { get; set; }
+    public decimal PajakTutup { get; set; }
+    public int TotalObjek => ObjekLama + ObjekBaru + ObjekTutup;
+    public decimal TotalPajak => PajakLama + PajakBaru + PajakTutup;
+    public int Selisih => Target - TotalObjek;
+    public string Status { get; set; } = null!;
+}*/
     }
 }

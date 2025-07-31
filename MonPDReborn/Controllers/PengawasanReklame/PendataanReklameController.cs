@@ -63,11 +63,32 @@ namespace MonPDReborn.Controllers.PengawasanReklame
             }
         }
 
-        public IActionResult Detail(string namaKegiatan)
+        public IActionResult Detail(string namaKegiatan, int tahun, int bulan)
         {
             try
             {
-                var model = new Models.PengawasanReklame.PendataanReklameVM.Detail(namaKegiatan);
+                var model = new Models.PengawasanReklame.PendataanReklameVM.Detail(namaKegiatan, tahun, bulan);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult DetailRekap(string namaKegiatan, int tahun, int bulan, string petugas)
+        {
+            try
+            {
+                var model = new Models.PengawasanReklame.PendataanReklameVM.DetailRekap(namaKegiatan, tahun, bulan, petugas);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
