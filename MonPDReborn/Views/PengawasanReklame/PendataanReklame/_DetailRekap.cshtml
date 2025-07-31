@@ -1,0 +1,52 @@
+﻿@model MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.DetailRekap
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.PendataanReklameVM.DetailReklame>()
+        .ID("detailReklameGrid")     
+        .DataSource(Model.Data)
+        @* .KeyExpr("NamaJalan") *@
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns => {
+            // Kolom Kunci
+            columns.AddFor(m => m.NoFormulir).Caption("No Formulir").Fixed(true);
+            columns.AddFor(m => m.NOR).Caption("NOR").Fixed(true);
+            columns.AddFor(m => m.NamaWP).Caption("Nama");
+            columns.AddFor(m => m.NamaPerusahaan).Caption("Nama Perusahaan");
+            columns.AddFor(m => m.AlamatPerusahaan).Caption("Alamat Perusahaan");
+            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
+            columns.AddFor(m => m.AlamatReklame).Caption("Alamat Reklame");
+            columns.AddFor(m => m.Nominal).Caption("Nominal Bayar").Format("#,##0");
+        })
+        .Summary(s => {
+          
+            s.TotalItems(items => {
+                items.AddFor(m => m.NoFormulir).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
+                items.AddFor(m => m.Nominal).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat(" Rp {0}");
+                @* items.AddFor(m => m.ObjekLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.PajakLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.ObjekBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.PajakBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.ObjekTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.PajakTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.TotalObjek).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.TotalPajak).SummaryType(SummaryType.Sum).DisplayFormat("{0}"); *@
+            });
+        })
+    )
+</div>

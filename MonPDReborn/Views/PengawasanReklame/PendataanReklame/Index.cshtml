@@ -127,23 +127,46 @@
 
             }
         });
+        function statusCellTemplate(cellElement, cellInfo) {
+            const status = (cellInfo.value ?? "").trim().toLowerCase();
+
+            const warna = status === "tercapai" ? "#d4edda" : "#f8d7da"; // hijau muda untuk tercapai, merah muda lainnya
+            const teksWarna = status === "tercapai" ? "#155724" : "#721c24"; // warna teks hijau tua atau merah tua
+
+            const $badge = $('<div>')
+                .text(cellInfo.value ?? "-")
+                .css({
+                    backgroundColor: warna,
+                    color: teksWarna,
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    textAlign: "center",
+                    fontWeight: "bold"
+                });
+
+            $(cellElement).append($badge);
+        }
+
 
         let expandedRowKey = null;
 
         function subDetailTemplate(container, options) {
             var namaKegiatan = options.data?.NamaKegiatan;
-            console.log("subDetailTemplate - NamaKegiatan:", namaKegiatan);
+            var tahun = options.data?.Tahun;
+            var bulan = options.data?.Bulan;
 
-            // Buat inner container
+            console.log("subDetailTemplate - NamaKegiatan:", namaKegiatan);
+            console.log("Tahun:", tahun, "Bulan:", bulan);
+
             var innerContainer = $("<div>").addClass("p-2");
             container.append(innerContainer);
 
-            if (!namaKegiatan) {
-                innerContainer.html('<div class="text-danger">Nama Kegiatan tidak ditemukan.</div>');
+            if (!namaKegiatan || !tahun || !bulan) {
+                innerContainer.html('<div class="text-danger">Data tidak lengkap (Nama Kegiatan/Tahun/Bulan).</div>');
                 return;
             }
 
-            // Loading spinner
+            // Spinner
             innerContainer.html(`
                 <div class="text-center my-3">
                     <div class="spinner-border text-primary" role="status">
@@ -156,7 +179,11 @@
             $.ajax({
                 url: '@Url.Action("Detail", "PendataanReklame")',
                 type: 'GET',
-                data: { namaKegiatan: namaKegiatan },
+                data: {
+                    namaKegiatan: namaKegiatan,
+                    tahun: tahun,
+                    bulan: bulan
+                },
                 success: function (result) {
                     innerContainer.html(result);
                 },
@@ -165,6 +192,7 @@
                 }
             });
         }
+
 
         function onRowExpandingHandler(e) {
             const grid = e.component;
@@ -184,5 +212,56 @@
                 expandedRowKey = null;
             }
         }
+
+        function petugasCellTemplate(cellElement, cellInfo) {
+            const nama = cellInfo.value ?? "-";
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const kegiatan = cellInfo.data.NamaKegiatan;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none text-primary')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail Petugas')
+                .text(nama)
+                .on('click', () => {
+                    openDetailRekap(kegiatan, tahun, bulan, nama); // Fungsi pemanggil modal
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+
+        function openDetailRekap(namaKegiatan, tahun, bulan, petugas) {
+            const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+
+            $.ajax({
+                url: '/PendataanReklame/DetailRekap',
+                type: 'GET',
+                data: {
+                    namaKegiatan: namaKegiatan,
+                    tahun: tahun,
+                    bulan: bulan,
+                    petugas: petugas
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                    $modal.modal('show');
+                },
+                error: function (xhr) {
+                    console.error("Gagal memuat detail:", xhr.responseText);
+                    Swal.fire("Error", "Gagal memuat data detail rekap", "error");
+                }
+            });
+        }
+
     </script>
 }
