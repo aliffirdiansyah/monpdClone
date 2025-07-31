@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDReborn.Lib.General;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
@@ -26,7 +27,13 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.DataOP.PotensiUploadVM.Index();
+                var model = new Models.DataOP.PotensiUploadVM.Index
+                {
+                    TahunList = Enumerable.Range(DateTime.Now.Year - 5, 6)
+                        .Select(t => new SelectListItem { Value = t.ToString(), Text = t.ToString() })
+                        .ToList(),
+                    Tahun = DateTime.Now.Year
+                };
                 return View($"{URLView}{actionName}", model);
             }
             catch (Exception)
@@ -35,7 +42,7 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
         [HttpPost]
-        public IActionResult UploadExcel(IFormFile file)
+        public IActionResult UploadExcel(IFormFile file, int tahun)
         {
             try
             {
@@ -43,7 +50,7 @@ namespace MonPDReborn.Controllers.DataOP
                     return BadRequest("File belum dipilih.");
 
                 // Panggil method static untuk proses penyimpanan data
-                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelHotel(file);
+                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelHotel(file, tahun);
 
                 return Ok("Data hotel berhasil diupload.");
             }

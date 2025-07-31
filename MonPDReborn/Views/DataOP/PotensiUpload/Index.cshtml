@@ -1,10 +1,15 @@
 ﻿@model MonPDReborn.Models.DataOP.PotensiUploadVM.Index
 
 <form asp-action="UploadExcel" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label asp-for="FileExcel" class="form-label">Upload Excel</label>
-        <input asp-for="FileExcel" type="file" class="form-control" required />
-        <span asp-validation-for="FileExcel" class="text-danger"></span>
+    <div class="form-group">
+        <label for="Tahun">Tahun</label>
+        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
     </div>
-    <button type="submit" class="btn btn-primary">Upload</button>
+
+    <div class="form-group">
+        <label for="FileExcel">Upload Excel</label>
+        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Upload</button>
 </form>
