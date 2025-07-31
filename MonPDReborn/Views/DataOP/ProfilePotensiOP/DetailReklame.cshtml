@@ -141,8 +141,65 @@
                             <div class="card-body">
                                 <div class="flex-grow-1">
                                     <h4 class="card-title text-black fs-16 mb-0">
-                                        Detail NSR Tahunan
+                                        Komponen Perhitungan
                                     </h4>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Rata-rata NSR</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-16 fw-semibold">Rp </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Tarif Pajak Reklame</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-16 fw-semibold">Rp </p>
+                                    </div>
+                                </div><hr />
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Total Pajak Reklame</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-16 fw-semibold">Rp </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title text-black fs-16 mb-0">
+                                        Rumus Perhitungan
+                                    </h4>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <div class="flex-grow-1">
+                                                    <h4 class="card-title text-black fs-16 mb-0">
+                                                        Pajak = Rata-rata NSR x 25%
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <div class="flex-grow-1">
+                                                    <h4 class="card-title text-black fs-16 mb-0">
+                                                        Rp = Rp x 25%
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -153,4 +210,225 @@
         </div>
     </div>
 
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Ringkasan Data
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex p-3 py-0">
+                    <p class="fs-14 text-muted flex-grow-1">Nomor Objek Reklame</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-16 fw-semibold">Rp </p>
+                    </div>
+                </div>
+                <div class="d-flex p-3 py-0">
+                    <p class="fs-14 text-muted flex-grow-1">Jenis Reklame</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-16 fw-semibold">Rp </p>
+                    </div>
+                </div>
+                <div class="d-flex p-3 py-0">
+                    <p class="fs-14 text-muted flex-grow-1">Status</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-16 fw-semibold">Rp </p>
+                    </div>
+                </div>
+                <div class="d-flex p-3 py-0">
+                    <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-16 fw-semibold">Rp </p>
+                    </div>
+                </div>
+                <div class="d-flex p-3 py-0">
+                    <p class="fs-14 text-muted flex-grow-1">Konsistensi NSR</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-16 fw-semibold">Rp </p>
+                    </div>
+                </div>
+                <div class="d-flex p-3 py-0">
+                    <p class="fs-14 text-muted flex-grow-1">Tanggal Perhitungan</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-16 fw-semibold">Rp </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Tren NSR 5 Tahun Terakhir
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="line_chart_gradient" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Perbandingan NSR dan Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="column_chart" data-colors='["--vz-danger", "--vz-primary", "--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Informasi Tambahan
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts{
+    <script>
+        function renderLineChartGradient() {
+            const chartEl = document.querySelector("#line_chart_gradient");
+            if (!chartEl) return;
+
+            // Ambil warna dari data attribute
+            const rawColors = chartEl.getAttribute("data-colors");
+            const colorVars = JSON.parse(rawColors || "[]");
+            const chartColors = colorVars.map(c => getComputedStyle(document.documentElement).getPropertyValue(c.trim()) || c);
+
+            const options = {
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    toolbar: { show: false }
+                },
+                stroke: {
+                    width: 3,
+                    curve: 'smooth'
+                },
+                series: [{
+                    name: "Realisasi",
+                    data: [10, 40, 35, 50, 49, 60, 70, 91]
+                }],
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shade: 'light',
+                        type: "vertical",
+                        shadeIntensity: 0.5,
+                        gradientToColors: [chartColors[0]],
+                        inverseColors: false,
+                        opacityFrom: 0.6,
+                        opacityTo: 0.1,
+                        stops: [0, 90, 100]
+                    }
+                },
+                colors: chartColors,
+                markers: {
+                    size: 5,
+                    colors: chartColors,
+                    strokeColors: "#fff",
+                    strokeWidth: 2,
+                }
+            };
+
+            const chart = new ApexCharts(chartEl, options);
+            chart.render();
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderLineChartGradient();
+        });
+    </script>
+    <script>
+        function renderColumnChart() {
+            const chartEl = document.querySelector("#column_chart");
+            const colors = JSON.parse(chartEl.getAttribute("data-colors")).map(function(value) {
+                const cssVar = value.replace("--", "");
+                return getComputedStyle(document.documentElement).getPropertyValue(`--${cssVar}`).trim() || value;
+            });
+
+            const options = {
+                chart: {
+                    type: 'bar',
+                    height: 350
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '45%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                series: [
+                    {
+                        name: 'Produk A',
+                        data: [44, 55, 41, 67, 22, 43, 21]
+                    },
+                    {
+                        name: 'Produk B',
+                        data: [13, 23, 20, 8, 13, 27, 33]
+                    },
+                    {
+                        name: 'Produk C',
+                        data: [11, 17, 15, 15, 21, 14, 15]
+                    }
+                ],
+                colors: colors,
+                xaxis: {
+                    categories: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val + " unit";
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            };
+
+            const chart = new ApexCharts(chartEl, options);
+            chart.render();
+        }
+
+        // Jalankan saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", renderColumnChart);
+    </script>
+}
