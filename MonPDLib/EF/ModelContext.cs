@@ -808,6 +808,8 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbPotensiHotel>(entity =>
         {
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_HOTEL_PK");
+
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
