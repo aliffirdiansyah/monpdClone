@@ -12,9 +12,9 @@
         .ShowRowLines(true)
         .RowAlternationEnabled(true)
         .ColumnAutoWidth(true)
-        @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
         .FilterRow(f => f.Visible(true))
-        .Sorting(s => s.Mode(GridSortingMode.Multiple)) *@
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
         .Paging(p => p.PageSize(10))
         .Pager(pager =>
         {
@@ -24,33 +24,29 @@
         })
         .Columns(columns => {
             // Kolom Kunci
-            columns.AddFor(m => m.Petugas).Caption("Nama Petugas");
-            columns.AddFor(m => m.NOR).Caption("Target").Format("#,##0");
-            @* columns.AddFor(m => m.NamaKegiatan).Caption("Obyek Lama");
-            columns.AddFor(m => m.PajakLama).Caption("Pajak Lama").Format("#,##0");
-            columns.AddFor(m => m.ObjekBaru).Caption("Obyek Baru").Format("#,##0");
-            columns.AddFor(m => m.PajakBaru).Caption("Pajak Baru").Format("#,##0");
-            columns.AddFor(m => m.ObjekTutup).Caption("Obyej Tutup").Format("#,##0");
-            columns.AddFor(m => m.PajakTutup).Caption("Pajak Tutup").Format("#,##0");
-            columns.AddFor(m => m.TotalObjek).Caption("Total Obyek").Format("#,##0");
-            columns.AddFor(m => m.TotalPajak).Caption("Total Pjak").Format("#,##0");
-            columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
-            columns.AddFor(m => m.Status).Caption("Status"); *@
+            columns.AddFor(m => m.NoFormulir).Caption("No Formulir").Fixed(true);
+            columns.AddFor(m => m.NOR).Caption("NOR").Fixed(true);
+            columns.AddFor(m => m.NamaWP).Caption("Nama");
+            columns.AddFor(m => m.NamaPerusahaan).Caption("Nama Perusahaan");
+            columns.AddFor(m => m.AlamatPerusahaan).Caption("Alamat Perusahaan");
+            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
+            columns.AddFor(m => m.AlamatReklame).Caption("Alamat Reklame");
+            columns.AddFor(m => m.Nominal).Caption("Nominal Bayar").Format("#,##0");
         })
-        @* .Summary(s => {
+        .Summary(s => {
           
             s.TotalItems(items => {
-                items.AddFor(m => m.Petugas).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
-                items.AddFor(m => m.Target).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.ObjekLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.NoFormulir).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
+                items.AddFor(m => m.Nominal).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat(" Rp {0}");
+                @* items.AddFor(m => m.ObjekLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.PajakLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.ObjekBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.PajakBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.ObjekTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.PajakTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
                 items.AddFor(m => m.TotalObjek).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.TotalPajak).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.TotalPajak).SummaryType(SummaryType.Sum).DisplayFormat("{0}"); *@
             });
-        }) *@
+        })
     )
 </div>

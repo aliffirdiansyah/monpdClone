@@ -127,6 +127,26 @@
 
             }
         });
+        function statusCellTemplate(cellElement, cellInfo) {
+            const status = (cellInfo.value ?? "").trim().toLowerCase();
+
+            const warna = status === "tercapai" ? "#d4edda" : "#f8d7da"; // hijau muda untuk tercapai, merah muda lainnya
+            const teksWarna = status === "tercapai" ? "#155724" : "#721c24"; // warna teks hijau tua atau merah tua
+
+            const $badge = $('<div>')
+                .text(cellInfo.value ?? "-")
+                .css({
+                    backgroundColor: warna,
+                    color: teksWarna,
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    textAlign: "center",
+                    fontWeight: "bold"
+                });
+
+            $(cellElement).append($badge);
+        }
+
 
         let expandedRowKey = null;
 

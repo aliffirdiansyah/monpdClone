@@ -103,6 +103,12 @@ namespace MonPDReborn.Models.PengawasanReklame
                             Bulan = bulan,
                             Petugas = p.Trim(),
                             Target = x.Target ?? 0,
+                            ObjekLama = x.Lama ?? 0,
+                            PajakLama = x.PajakLama ?? 0,
+                            ObjekBaru = x.Baru ?? 0,
+                            PajakBaru = x.PajakBaru ?? 0,
+                            ObjekTutup = x.Tutup ?? 0,
+                            PajakTutup = x.PajakTutup ?? 0,
                             Terlaksana = x.Terlaksana ?? 0,
                             Status = x.Status ?? "-"
                         })
@@ -127,6 +133,12 @@ namespace MonPDReborn.Models.PengawasanReklame
                         Petugas = d.Petugas ?? "-",
                         NoFormulir = d.NoFormulir ?? "-",
                         NOR = d.Nor ?? "-",
+                        NamaWP = d.Nama ?? "-",
+                        NamaPerusahaan = d.NamaPerusahaan ?? "-",
+                        AlamatPerusahaan = d.AlamatPerusahaan ?? "-",
+                        IsiReklame = d.IsiReklame ?? "-",
+                        AlamatReklame = d.Alamatreklame ?? "-",
+                        Nominal = d.NominalPokokBayar ?? 0,
                         Tgl = d.Tanggal ?? DateTime.MinValue
                     })
                     .ToList();
@@ -284,6 +296,12 @@ namespace MonPDReborn.Models.PengawasanReklame
             public string Petugas { get; set; } = null!;
             public string NoFormulir { get; set; } = null!;
             public string NOR { get; set; } = null!;
+            public string NamaWP { get; set; } = null!;
+            public string NamaPerusahaan { get; set; } = null!;
+            public string AlamatPerusahaan { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string AlamatReklame { get; set; } = null!;
+            public decimal Nominal { get; set; }
             public DateTime Tgl { get; set; }
         }
         /* public class RekapVerifikasi

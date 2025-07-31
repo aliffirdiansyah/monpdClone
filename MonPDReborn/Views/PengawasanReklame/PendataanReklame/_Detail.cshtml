@@ -33,30 +33,30 @@
             // Kolom Kunci
             columns.AddFor(m => m.Petugas).Caption("Nama Petugas").CellTemplate(new JS("petugasCellTemplate"));
             columns.AddFor(m => m.Target).Caption("Target").Format("#,##0");
-            columns.AddFor(m => m.NamaKegiatan).Caption("Obyek Lama");
+            columns.AddFor(m => m.ObjekLama).Caption("Obyek Lama").Format("#,##0");
             columns.AddFor(m => m.PajakLama).Caption("Pajak Lama").Format("#,##0");
             columns.AddFor(m => m.ObjekBaru).Caption("Obyek Baru").Format("#,##0");
             columns.AddFor(m => m.PajakBaru).Caption("Pajak Baru").Format("#,##0");
             columns.AddFor(m => m.ObjekTutup).Caption("Obyej Tutup").Format("#,##0");
             columns.AddFor(m => m.PajakTutup).Caption("Pajak Tutup").Format("#,##0");
-            columns.AddFor(m => m.TotalObjek).Caption("Total Obyek").Format("#,##0");
+            columns.AddFor(m => m.Terlaksana).Caption("Total Obyek").Format("#,##0");
             columns.AddFor(m => m.TotalPajak).Caption("Total Pjak").Format("#,##0");
             columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
-            columns.AddFor(m => m.Status).Caption("Status");
+            columns.AddFor(m => m.Status).Caption("Status").CellTemplate(new JS("statusCellTemplate"));
         })
         .Summary(s => {
           
             s.TotalItems(items => {
                 items.AddFor(m => m.Petugas).SummaryType(SummaryType.Count).DisplayFormat("TOTAL");
-                items.AddFor(m => m.Target).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.ObjekLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.PajakLama).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.ObjekBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.PajakBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.ObjekTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.PajakTutup).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.TotalObjek).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
-                items.AddFor(m => m.TotalPajak).SummaryType(SummaryType.Sum).DisplayFormat("{0}");
+                items.AddFor(m => m.Target).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+                items.AddFor(m => m.ObjekLama).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+                items.AddFor(m => m.PajakLama).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("Rp {0}");
+                items.AddFor(m => m.ObjekBaru).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+                items.AddFor(m => m.PajakBaru).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("Rp {0}");
+                items.AddFor(m => m.ObjekTutup).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+                items.AddFor(m => m.PajakTutup).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("Rp {0}");
+                items.AddFor(m => m.Terlaksana).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+                items.AddFor(m => m.TotalPajak).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("Rp {0}");
             });
         })
     )
