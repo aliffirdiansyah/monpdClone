@@ -28,6 +28,27 @@ public partial class DbMonReklameAktivita
     [Column("TERLAKSANA", TypeName = "NUMBER")]
     public decimal? Terlaksana { get; set; }
 
+    [Column("TOTAL_PAJAK", TypeName = "NUMBER")]
+    public decimal? TotalPajak { get; set; }
+
+    [Column("PAJAK_BARU", TypeName = "NUMBER")]
+    public decimal? PajakBaru { get; set; }
+
+    [Column("PAJAK_LAMA", TypeName = "NUMBER")]
+    public decimal? PajakLama { get; set; }
+
+    [Column("PAJAK_TUTUP", TypeName = "NUMBER")]
+    public decimal? PajakTutup { get; set; }
+
+    [Column("BARU", TypeName = "NUMBER")]
+    public decimal? Baru { get; set; }
+
+    [Column("LAMA", TypeName = "NUMBER")]
+    public decimal? Lama { get; set; }
+
+    [Column("TUTUP", TypeName = "NUMBER")]
+    public decimal? Tutup { get; set; }
+
     [Column("TARGET", TypeName = "NUMBER")]
     public decimal? Target { get; set; }
 

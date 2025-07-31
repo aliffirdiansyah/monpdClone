@@ -158,22 +158,22 @@ namespace MonPDReborn.Models.DataWP
                     })
                     .ToList();
 
-                var DataPbb = context.DbMonPbbs
-                    .GroupBy(r => new { r.Npwpd })
-                    .ToList()
-                    .Select(wp =>
-                    {
-                        var first = wp.FirstOrDefault();
-                        return new PembayaranWP
-                        {
-                            NPWPD = wp.Key.Npwpd,
-                            NamaWP = first?.NpwpdNama ?? "-",
-                            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
-                            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
-                            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
-                        };
-                    })
-                    .ToList();
+                //var DataPbb = context.DbMonPbbs
+                //    .GroupBy(r => new { r.Npwpd })
+                //    .ToList()
+                //    .Select(wp =>
+                //    {
+                //        var first = wp.FirstOrDefault();
+                //        return new PembayaranWP
+                //        {
+                //            NPWPD = wp.Key.Npwpd,
+                //            NamaWP = first?.NpwpdNama ?? "-",
+                //            Ketetapan = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.PokokPajakKetetapan) ?? 0,
+                //            Terbayar = wp.Where(x => x.TahunBuku == currentYear).Sum(x => x.NominalPokokBayar) ?? 0,
+                //            Status = (first?.IsTutup ?? 0) == 1 ? "Tidak Aktif" : "Aktif"
+                //        };
+                //    })
+                //    .ToList();
 
                 ret.AddRange(DataResto);
                 ret.AddRange(DataListrik);
@@ -182,7 +182,7 @@ namespace MonPDReborn.Models.DataWP
                 ret.AddRange(DataHiburan);
                 ret.AddRange(DataAbt);
                 ret.AddRange(DataReklame);
-                ret.AddRange(DataPbb);
+                //ret.AddRange(DataPbb);
 
                 return ret;
             }
@@ -328,22 +328,22 @@ namespace MonPDReborn.Models.DataWP
                     .ToList();
 
 
-                var DataPbb = context.DbMonPbbs
-                    .Where(x => x.Npwpd == npwpd)
-                    .Select(wp => new DetailPembayaranWP
-                    {
-                        NPWPD = wp.Npwpd,
-                        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
-                        TahunBuku = (int)wp.TahunBuku,
-                        Ketetapan = wp.PokokPajakKetetapan ?? 0,
-                        Terbayar = wp.NominalPokokBayar ?? 0,
-                        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
-                        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
-                                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
-                        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
-                            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
-                    })
-                    .ToList();
+                //var DataPbb = context.DbMonPbbs
+                //    .Where(x => x.Npwpd == npwpd)
+                //    .Select(wp => new DetailPembayaranWP
+                //    {
+                //        NPWPD = wp.Npwpd,
+                //        JenisPajak = ((EnumFactory.EPajak)wp.PajakId).GetDescription(),
+                //        TahunBuku = (int)wp.TahunBuku,
+                //        Ketetapan = wp.PokokPajakKetetapan ?? 0,
+                //        Terbayar = wp.NominalPokokBayar ?? 0,
+                //        Tunggakan = (wp.PokokPajakKetetapan ?? 0) - (wp.NominalPokokBayar ?? 0),
+                //        Status = (wp.NominalPokokBayar ?? 0) >= (wp.PokokPajakKetetapan ?? 0) ? "Lunas" :
+                //                 (wp.NominalPokokBayar ?? 0) > 0 ? "Sebagian" : "Tunggakan",
+                //        Kepatuhan = (wp.PokokPajakKetetapan ?? 0) == 0 ? "0%" :
+                //            Math.Round(((wp.NominalPokokBayar ?? 0) / (wp.PokokPajakKetetapan ?? 0)) * 100, 2) + "%"
+                //    })
+                //    .ToList();
 
                 ret.DetailPembayaranWPList.AddRange(DataResto);
                 ret.DetailPembayaranWPList.AddRange(DataListrik);
@@ -352,7 +352,7 @@ namespace MonPDReborn.Models.DataWP
                 ret.DetailPembayaranWPList.AddRange(DataHiburan);
                 ret.DetailPembayaranWPList.AddRange(DataAbt);
                 ret.DetailPembayaranWPList.AddRange(DataReklame);
-                ret.DetailPembayaranWPList.AddRange(DataPbb);
+                //ret.DetailPembayaranWPList.AddRange(DataPbb);
 
                 return ret;
             }

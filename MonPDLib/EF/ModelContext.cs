@@ -569,12 +569,11 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonPbb>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_PBB_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku, e.TahunPajak }).HasName("DB_MON_PBB_PK");
 
-            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
-            entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
-            entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
         });
 
         modelBuilder.Entity<DbMonPpj>(entity =>

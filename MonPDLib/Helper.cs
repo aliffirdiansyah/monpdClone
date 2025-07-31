@@ -1,6 +1,9 @@
-﻿using MonPDLib.EF;
+﻿using Microsoft.EntityFrameworkCore;
+using MonPDLib.EF;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -383,6 +386,53 @@ namespace MonPDLib
             public int STATUS { get; set; }
             public DateTime INS_DATE { get; set; }
             public string INS_BY { get; set; }
+        }
+
+        public class KetetapanPbb
+        {            
+            public string NOP { get; set; } = null!;            
+            public int TAHUN_BUKU { get; set; }            
+            public int KATEGORI_ID { get; set; }            
+
+            public string KATEGORI_NAMA { get; set; } = null!;            
+            public string ALAMAT_OP { get; set; } = null!;            
+            public string ALAMAT_OP_NO { get; set; } = null!;            
+
+            public string ALAMAT_OP_RT { get; set; } = null!;            
+            public string ALAMAT_OP_RW { get; set; } = null!;            
+            public string ALAMAT_KD_CAMAT { get; set; } = null!;            
+
+            public string ALAMAT_KD_LURAH { get; set; } = null!;            
+            public int UPTB { get; set; }            
+            public string ALAMAT_WP { get; set; }            
+
+            public string ALAMAT_WP_NO { get; set; }            
+            public string ALAMAT_WP_KEL { get; set; }            
+            public string ALAMAT_WP_KOTA { get; set; }            
+
+            public string WP_NAMA { get; set; } = null!;            
+            public string WP_NPWP { get; set; }            
+            public int TAHUN_PAJAK { get; set; }            
+
+            public int POKOK_PAJAK { get; set; }            
+            public string KATEGORI_OP { get; set; }            
+            public string PERUNTUKAN { get; set; }            
+
+            public int IS_LUNAS { get; set; }            
+            public DateTime? TGL_BAYAR { get; set; }            
+            public int JUMLAH_BAYAR_POKOK { get; set; }
+
+            public int JUMLAH_BAYAR_SANKSI { get; set; }
+            public DateTime INS_DATE { get; set; }            
+            public string INS_BY { get; set; } = null!;
+        }
+
+        public class RealisasiPbb
+        {
+            public string NOP { get; set; } = null!;
+            public decimal TAHUN_PAJAK { get; set; }
+            public decimal POKOK { get; set; }
+            public decimal SANKSI { get; set; }            
         }
     }
 }

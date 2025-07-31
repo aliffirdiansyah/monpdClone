@@ -1058,12 +1058,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         );
 
                         // PBB
-                        dataRealisasiGabungan.AddRange(
-                            context.DbMonPbbs
-                                .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new ValueTuple<string, DateTime?, decimal>(x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0))
-                                .ToList()
-                        );
+                        //dataRealisasiGabungan.AddRange(
+                        //    context.DbMonPbbs
+                        //        .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
+                        //        .Select(x => new ValueTuple<string, DateTime?, decimal>(x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0))
+                        //        .ToList()
+                        //);
 
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
@@ -2306,20 +2306,20 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        dataRealisasiGabungan.AddRange(
-                            context.DbMonPbbs
-                                .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new
-                                {
-                                    x.Nop,
-                                    x.TglBayarPokok,
-                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
-                                    x.PajakId
-                                })
-                                .ToList()
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
-                                .ToList()
-                        );
+                        //dataRealisasiGabungan.AddRange(
+                        //    context.DbMonPbbs
+                        //        .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
+                        //        .Select(x => new
+                        //        {
+                        //            x.Nop,
+                        //            x.TglBayarPokok,
+                        //            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                        //            x.PajakId
+                        //        })
+                        //        .ToList()
+                        //        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        //        .ToList()
+                        //);
 
                         foreach (var item in dataTargetWilayah)
                         {
@@ -3589,20 +3589,20 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        dataRealisasiGabungan.AddRange(
-                            context.DbMonPbbs
-                                .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                                .Select(x => new
-                                {
-                                    x.Nop,
-                                    x.TglBayarPokok,
-                                    NominalPokokBayar = x.NominalPokokBayar ?? 0,
-                                    x.PajakId
-                                })
-                                .ToList()
-                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
-                                .ToList()
-                        );
+                        //dataRealisasiGabungan.AddRange(
+                        //    context.DbMonPbbs
+                        //        .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
+                        //        .Select(x => new
+                        //        {
+                        //            x.Nop,
+                        //            x.TglBayarPokok,
+                        //            NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                        //            x.PajakId
+                        //        })
+                        //        .ToList()
+                        //        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                        //        .ToList()
+                        //);
 
                         if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
@@ -4249,12 +4249,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.PBB:
-                        result = context.DbMonPbbs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
-                                ).Sum(q => q.NominalPokokBayar) ?? 0;
+                        //result = context.DbMonPbbs
+                        //        .Where(x =>
+                        //            x.TahunBuku == tahun &&
+                        //            x.TglBayarPokok.HasValue &&
+                        //            x.TglBayarPokok.Value == DateTime.Now
+                        //        ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         result = context.DbMonBphtbs
@@ -4321,12 +4321,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     x.TglBayarPokok.HasValue &&
                                     x.TglBayarPokok.Value == DateTime.Now
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
-                        result += context.DbMonPbbs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
-                                ).Sum(q => q.NominalPokokBayar) ?? 0;
+                        //result += context.DbMonPbbs
+                        //        .Where(x =>
+                        //            x.TahunBuku == tahun &&
+                        //            x.TglBayarPokok.HasValue &&
+                        //            x.TglBayarPokok.Value == DateTime.Now
+                        //        ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonBphtbs
                                 .Where(x =>
                                     x.Tahun == tahun &&
