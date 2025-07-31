@@ -237,10 +237,10 @@ namespace MonPDReborn.Models.DataOP
                             JumlahKursi = x.KapKursi ?? 0,
                             KapasitasTenantCatering = x.KapTenantCatering ?? 0,
                             RataRataBillPerOrang = x.AvgBillOrg ?? 0,
-                            TurnoverWeekdaysCatering = x.AvgTenatCatWd ?? 0,
-                            TurnoverWeekendCatering = x.AvgTenatCatWe ?? 0,
-                            TurnoverWeekdaysNonCatering = x.AvgVisWd ?? 0,
-                            TurnoverWeekendNonCatering = x.AvgVisWe ?? 0,
+                            TurnoverWeekdaysCatering = x.TurnoverWd ?? 0,
+                            TurnoverWeekendCatering = x.TurnoverWe ?? 0,
+                            TurnoverWeekdaysNonCatering = x.TurnoverWd ?? 0,
+                            TurnoverWeekendNonCatering = x.TurnoverWe ?? 0,
                             TarifPajak = 0.1m
                         };
                     })
@@ -587,10 +587,10 @@ namespace MonPDReborn.Models.DataOP
                                     JumlahKursi = x.KapKursi ?? 0,
                                     KapasitasTenantCatering = x.KapTenantCatering ?? 0,
                                     RataRataBillPerOrang = x.AvgBillOrg ?? 0,
-                                    TurnoverWeekdaysCatering = x.AvgTenatCatWd ?? 0,
-                                    TurnoverWeekendCatering = x.AvgTenatCatWe ?? 0,
-                                    TurnoverWeekdaysNonCatering = x.AvgVisWd ?? 0,
-                                    TurnoverWeekendNonCatering = x.AvgVisWe ?? 0,
+                                    TurnoverWeekdaysCatering = x.TurnoverWd ?? 0,
+                                    TurnoverWeekendCatering = x.TurnoverWe ?? 0,
+                                    TurnoverWeekdaysNonCatering = x.TurnoverWd ?? 0,
+                                    TurnoverWeekendNonCatering = x.TurnoverWe ?? 0,
                                     TarifPajak = 0.1m
                                 };
                             })
@@ -1075,10 +1075,10 @@ namespace MonPDReborn.Models.DataOP
                                     JumlahKursi = x.KapKursi ?? 0,
                                     KapasitasTenantCatering = x.KapTenantCatering ?? 0,
                                     RataRataBillPerOrang = x.AvgBillOrg ?? 0,
-                                    TurnoverWeekdaysCatering = x.AvgTenatCatWd ?? 0,
-                                    TurnoverWeekendCatering = x.AvgTenatCatWe ?? 0,
-                                    TurnoverWeekdaysNonCatering = x.AvgVisWd ?? 0,
-                                    TurnoverWeekendNonCatering = x.AvgVisWe ?? 0,
+                                    TurnoverWeekdaysCatering = x.TurnoverWd ?? 0,
+                                    TurnoverWeekendCatering = x.TurnoverWe ?? 0,
+                                    TurnoverWeekdaysNonCatering = x.TurnoverWd ?? 0,
+                                    TurnoverWeekendNonCatering = x.TurnoverWe ?? 0,
                                     TarifPajak = 0.1m
                                 };
                             })
