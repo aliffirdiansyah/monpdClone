@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
+[Keyless]
 [Table("DB_POTENSI_HOTEL")]
+[Index("Nop", "TahunBuku", Name = "DB_POTENSI_HOTEL_UNIQUE", IsUnique = true)]
 public partial class DbPotensiHotel
 {
-    [Key]
     [Column("NOP")]
     [StringLength(30)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
 
     [Column("TOTAL_ROOM")]
     [Precision(10)]
@@ -52,4 +53,8 @@ public partial class DbPotensiHotel
 
     [Column("UPDATED_AT", TypeName = "DATE")]
     public DateTime? UpdatedAt { get; set; }
+
+    [Column("TAHUN_BUKU")]
+    [Precision(10)]
+    public int? TahunBuku { get; set; }
 }
