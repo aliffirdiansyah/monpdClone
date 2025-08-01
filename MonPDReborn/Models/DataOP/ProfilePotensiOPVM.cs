@@ -1492,11 +1492,13 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new DetailPotensiPajakHotel
                     {
                         NOP = x.Nop,
-                        Nama = hotel.NamaOp ?? "-",
-                        Alamat = hotel.AlamatOp ?? "-",
-                        Wilayah = "SURABAYA " + hotel.WilayahPajak ?? "-",
-                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(hotel.KategoriId)).Nama ?? "Umum",
-                        TglOpBuka = hotel.TglMulaiBukaOp,
+                        Nama = hotel != null ? hotel.NamaOp ?? "-" : "-",
+                        Alamat = hotel != null ? hotel.AlamatOp ?? "-" : "-",
+                        Wilayah = hotel != null ? "SURABAYA " + hotel.WilayahPajak ?? "-" : "-",
+                        Kategori = hotel != null
+                            ? (context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(hotel.KategoriId)).Nama ?? "Umum")
+                            : "Umum",
+                        TglOpBuka = hotel != null ? hotel.TglMulaiBukaOp : DateTime.MinValue,
                         JumlahTotalRoom = x.TotalRoom ?? 0,
                         HargaRataRataRoom = x.AvgRoomPrice ?? 0,
                         OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
@@ -1518,11 +1520,13 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new DetailPotensiPajakResto
                     {
                         NOP = x.Nop,
-                        Nama = resto.NamaOp ?? "-",
-                        Alamat = resto.AlamatOp ?? "-",
-                        Wilayah = "SURABAYA " + resto.WilayahPajak ?? "-",
-                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(resto.KategoriId)).Nama ?? "Umum",
-                        TglOpBuka = resto.TglMulaiBukaOp,
+                        Nama = resto != null ? resto.NamaOp ?? "-" : "-",
+                        Alamat = resto != null ? resto.AlamatOp ?? "-" : "-",
+                        Wilayah = resto != null ? "SURABAYA " + resto.WilayahPajak ?? "-" : "-",
+                        Kategori = resto != null
+                            ? (context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(resto.KategoriId)).Nama ?? "Umum")
+                            : "Umum",
+                        TglOpBuka = resto != null ? resto.TglMulaiBukaOp : DateTime.MinValue,
                         JumlahKursi = x.KapKursi ?? 0,
                         KapasitasTenantCatering = x.KapTenantCatering ?? 0,
                         RataRataBillPerOrang = x.AvgBillOrg ?? 0,
@@ -1546,13 +1550,15 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new DetailPotensiPajakParkir
                     {
                         NOP = x.Nop,
-                        Nama = parkir.NamaOp ?? "-",
-                        Alamat = parkir.AlamatOp ?? "-",
-                        Wilayah = "SURABAYA " + parkir.WilayahPajak ?? "-",
-                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(parkir.KategoriId)).Nama ?? "Umum",
+                        Nama = parkir != null ? parkir.NamaOp ?? "-" : "-",
+                        Alamat = parkir != null ? parkir.AlamatOp ?? "-" : "-",
+                        Wilayah = "SURABAYA " + (parkir != null ? parkir.WilayahPajak ?? "-" : "-"),
+                        Kategori = parkir != null
+                            ? (context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(parkir.KategoriId)).Nama ?? "Umum")
+                            : "Umum",
                         Memungut = ((EnumFactory.EPungutTarifParkir)(x.JenisTarif ?? 0)).GetDescription(),
                         SistemParkir = ((EnumFactory.EPalangParkir)(x.SistemParkir ?? 0)).GetDescription(),
-                        TglOpBuka = parkir.TglMulaiBukaOp,
+                        TglOpBuka = parkir != null ? parkir.TglMulaiBukaOp : DateTime.MinValue,
                         TurnoverWeekdays = x.ToWd ?? 0,
                         TurnoverWeekend = x.ToWe ?? 0,
                         KapasitasSepeda = x.KapSepeda ?? 0,
@@ -1584,11 +1590,13 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new DetailPotensiPajakHiburan
                     {
                         NOP = x.Nop,
-                        Nama = hiburan.NamaOp ?? "-",
-                        Alamat = hiburan.AlamatOp ?? "-",
-                        Wilayah = "SURABAYA " + hiburan.WilayahPajak ?? "-",
-                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(hiburan.KategoriId)).Nama ?? "Umum",
-                        TglOpBuka = hiburan.TglMulaiBukaOp,
+                        Nama = hiburan != null ? hiburan.NamaOp ?? "-" : "-",
+                        Alamat = hiburan != null ? hiburan.AlamatOp ?? "-" : "-",
+                        Wilayah = hiburan != null ? "SURABAYA " + hiburan.WilayahPajak ?? "-" : "-",
+                        Kategori = hiburan != null
+                            ? (context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(hiburan.KategoriId)).Nama ?? "Umum")
+                            : "Umum",
+                        TglOpBuka = hiburan != null ? hiburan.TglMulaiBukaOp : DateTime.MinValue,
                         KapasitasStudio = x.KapKursiStudio ?? 0,
                         JumlahStudio = x.JumlahStudio ?? 0,
                         Kapasitas = x.KapPengunjung ?? 0,
