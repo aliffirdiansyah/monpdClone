@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,14 @@ builder.Services.AddControllersWithViews();
 //koneksi oracle
 var configValue = builder.Configuration.GetSection("Conn:Monpd").Value;
 DBClass.Monpd = configValue ?? throw new ArgumentNullException("Connection string 'Monpd' is not configured.");
+
+var supportedCultures = new[] { new CultureInfo("id-ID") };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("id-ID");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 
 var app = builder.Build();
 
