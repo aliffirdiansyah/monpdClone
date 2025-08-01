@@ -10,6 +10,7 @@ namespace EaccountingWs
 {
     public class Worker : BackgroundService
     {
+        private bool isFirst = true;
         private readonly ILogger<Worker> _logger;
 
         public Worker(ILogger<Worker> logger)
@@ -21,17 +22,17 @@ namespace EaccountingWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
+                DateTime nextRun = now.AddMinutes(15); // besok jam 00:00
+                TimeSpan delay = nextRun - now;
 
-                //var nextRun = now.AddDays(1); // besok jam 00:00
-                //var delay = nextRun - now;
+                Console.WriteLine($"eaccounting_api: next run at {nextRun}");
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                await Task.Delay(delay, stoppingToken);
 
-                //await Task.Delay(delay, stoppingToken);
-
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
                 // Eksekusi tugas
                 try
