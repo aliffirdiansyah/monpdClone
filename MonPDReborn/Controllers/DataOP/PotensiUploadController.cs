@@ -42,22 +42,124 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
         [HttpPost]
-        public IActionResult UploadExcel(IFormFile file, int tahun)
+        public IActionResult UploadHotel(IFormFile file, int tahun)
         {
             try
             {
                 if (file == null || file.Length == 0)
-                    return BadRequest("File belum dipilih.");
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
 
                 // Panggil method static untuk proses penyimpanan data
                 MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelHotel(file, tahun);
 
-                return Ok("Data hotel berhasil diupload.");
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Terjadi kesalahan: {ex.Message}");
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
+            return Json(response);
+        }
+        [HttpPost]
+        public IActionResult UploadParkir(IFormFile file, int tahun)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+
+                // Panggil method static untuk proses penyimpanan data
+                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelParkir(file, tahun);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
+        }
+        [HttpPost]
+        public IActionResult UploadResto(IFormFile file, int tahun)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+
+                // Panggil method static untuk proses penyimpanan data
+                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelResto(file, tahun);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
+        }
+        [HttpPost]
+        public IActionResult UploadHiburan(IFormFile file, int tahun)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+
+                // Panggil method static untuk proses penyimpanan data
+                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelHiburan(file, tahun);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
         }
     }
 }
