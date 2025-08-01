@@ -25,7 +25,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
         public class Method
         {
-            public static void SimpanLampiranExcelHotel(IFormFile fileExcel, int tahun)
+            public static void UploadPemeriksaanPajak(IFormFile fileExcel, int tahun)
             {
                 if (fileExcel == null || fileExcel.Length == 0)
                     throw new ArgumentException("File Excel kosong.");
@@ -46,31 +46,38 @@ namespace MonPDReborn.Models.AktivitasOP
                     var nop = sheet.Cells[row, 1].Text;
 
 
-                    var existingData = context.DbPotensiHotels
-                        .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
+                    var existingData = context.TPemeriksaans
+                        .FirstOrDefault(x => x.TahunPajak == tahun && x.Nop == nop);
 
                     if (existingData != null)
                     {
-                        context.DbPotensiHotels.Remove(existingData);
+                        context.TPemeriksaans.Remove(existingData);
                     }
 
-                    var dataHotel = new DbPotensiHotel
+                    var data = new TPemeriksaan
                     {
-                        TahunBuku = tahun,
-                        Nop = sheet.Cells[row, 1].Text,
-                        TotalRoom = TryInt(sheet.Cells[row, 2].Text),
-                        AvgRoomPrice = TryDecimal(sheet.Cells[row, 3].Text),
-                        OkupansiRateRoom = TryDecimal(sheet.Cells[row, 4].Text),
-                        AvgRoomSold = TryDecimal(sheet.Cells[row, 5].Text),
-                        RoomOmzet = TryDecimal(sheet.Cells[row, 6].Text),
-                        MaxPaxBanquet = TryInt(sheet.Cells[row, 7].Text),
-                        AvgBanquetPrice = TryDecimal(sheet.Cells[row, 8].Text),
-                        OkupansiRateBanquet = TryDecimal(sheet.Cells[row, 9].Text),
-                        AvgPaxBanquetSold = TryDecimal(sheet.Cells[row, 10].Text),
-                        BanquetOmzet = TryDecimal(sheet.Cells[row, 11].Text),
-                    };
+                        Nop = nop,
+                        TahunPajak = tahun,
+                        MasaPajak = "Tahunan",
+                        Seq = (byte)(row - 1),
 
-                    context.DbPotensiHotels.Add(dataHotel);
+                        NoSp = sheet.Cells[row, 12].Text ?? string.Empty,
+                        TglSp = DateTime.TryParse(sheet.Cells[row, 13].Text, out var tglSp) ? tglSp : DateTime.Now,
+
+                        Pokok = TryDecimal(sheet.Cells[row, 14].Text) ?? 0,
+                        Denda = TryDecimal(sheet.Cells[row, 15].Text) ?? 0,
+
+                        Petugas = sheet.Cells[row, 16].Text ?? string.Empty,
+                        Ket = sheet.Cells[row, 17].Text ?? string.Empty,
+
+                        PajakId = TryDecimal(sheet.Cells[row, 18].Text) ?? 0,
+
+                        JumlahKb = TryDecimal(sheet.Cells[row, 19].Text),
+                        Lhp = sheet.Cells[row, 20].Text,
+                        TglLhp = DateTime.TryParse(sheet.Cells[row, 21].Text, out var tglLhp) ? tglLhp : null,
+                        TglByr = DateTime.TryParse(sheet.Cells[row, 22].Text, out var tglByr) ? tglByr : null
+                    };
+                    context.TPemeriksaans.Add(data);
                 }
 
                 context.SaveChanges();
