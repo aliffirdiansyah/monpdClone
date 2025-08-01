@@ -118,11 +118,11 @@ namespace RestoWs
             // HPP PROCESS
             HPPOPProcess(tahunBuku);
 
-            // ketetapan 
-            HPPKetetapanProcess(tahunBuku);
+            //// ketetapan 
+            //HPPKetetapanProcess(tahunBuku);
 
-            // realisasi
-            HPPRealisasiProcess(tahunBuku);
+            //// realisasi
+            //HPPRealisasiProcess(tahunBuku);
 
             Console.WriteLine(" ");
         }
