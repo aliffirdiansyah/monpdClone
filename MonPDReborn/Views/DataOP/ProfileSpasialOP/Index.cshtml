@@ -5,6 +5,37 @@
     Layout = "_Layout";
 }
 
+<style>
+    .circle {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+
+    .red {
+        background-color: red;
+    }
+
+    .blue {
+        background-color: blue;
+    }
+
+    .green {
+        background-color: green;
+    }
+
+    .brown {
+        background-color: brown;
+    }
+
+    .purple {
+        background-color: purple;
+    }
+</style>
+
 <div class="row">
 
     <div class="col-lg-12">
@@ -23,28 +54,53 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="mb-3">Cari Nama OP:</h5>
-                <input type="text" class="form-control mb-3" placeholder="Masukkan Nama OP" id="filterNamaOP" />
+                <input type="text" class="form-control mb-3" placeholder="Masukkan Nama OP" id="filter-nama-op" />
 
                 <label class="mb-2">Pilih UPTB:</label>
-                <select class="form-select mb-3" id="filterUPTB">
-                    <option value="Semua">Semua Wilayah</option>
-                    <option value="UPTB 1">UPTB 1</option>
-                    <option value="UPTB 2">UPTB 2</option>
-                    <option value="UPTB 3">UPTB 3</option>
-                    <option value="UPTB 3">UPTB 4</option>
-                    <option value="UPTB 3">UPTB 5</option>
+                <select class="form-select mb-3" id="filter-uptb">
+                    <option value="all">Semua Wilayah</option>
+                    @foreach (var item in Model.Uptbs)
+                    {
+                        <option value="@(item.Id)">@(item.Nama)</option>
+                    }
                 </select>
 
                 <label class="mb-2">Jenis Pajak:</label>
                 <div class="mb-3">
-                    <div><input type="checkbox" value="HOTEL" checked /> <span style="color: blue;">●</span> HOTEL</div>
-                    <div><input type="checkbox" value="RESTORAN" /> <span style="color: red;">●</span> RESTORAN</div>
-                    <div><input type="checkbox" value="HIBURAN" /> <span style="color: green;">●</span> HIBURAN</div>
-                    <div><input type="checkbox" value="PPJ" /> <span style="color: purple;">●</span> PPJ</div>
-                    <div><input type="checkbox" value="PARKIR" /> <span style="color: brown;">●</span> PARKIR</div>
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="checkbox-hotel" value="3">
+                        <label for="checkbox-hotel" class="custom-control-label">
+                            <span class="circle blue"></span> HOTEL
+                        </label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="checkbox-restoran" value="1">
+                        <label for="checkbox-restoran" class="custom-control-label">
+                            <span class="circle red"></span> RESTORAN
+                        </label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="checkbox-hiburan" value="5">
+                        <label for="checkbox-hiburan" class="custom-control-label">
+                            <span class="circle green"></span> HIBURAN
+                        </label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="checkbox-ppj" value="2">
+                        <label for="checkbox-ppj" class="custom-control-label">
+                            <span class="circle purple"></span> PPJ
+                        </label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="checkbox-parkir" value="4">
+                        <label for="checkbox-parkir" class="custom-control-label">
+                            <span class="circle brown"></span> PARKIR
+                        </label>
+                    </div>
                 </div>
                 <div class="mt-3 fw-bold">
-                    Jumlah Data yang Ditemukan: <span id="jumlahData">0</span>
+                    <span style="font-size: 10px">Jumlah Data yang Ditemukan:</span>
+                    <span id="filter-result-count" style="font-size: 10px">0</span>
                 </div>
             </div>
         </div>
@@ -66,46 +122,91 @@
 
 @section Scripts{
     <script>
-        // FIXED: selector syntax
-        document.querySelectorAll('#filterNamaOP, #filterUPTB').forEach(el => {
-            el.addEventListener('change', filterData);
+        $(document).ready(function () {
+            var datas = @(Html.Raw(Model.MapDataJSON));
+            var map = L.map('map').setView([-7.250445, 112.768845], 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+            }).addTo(map);
+
+            var markers = [];
+            var NAMA_OP = new Set();
+            var FK_PAJAK_DAERAH = new Set();
+            var UPTB = new Set();
+
+            function loadMapsData() {
+                datas.forEach(function (item) {
+                    if (item.LATITUDE != '-' && item.LONGITUDE != '-') {
+                        const marker = L.circleMarker([item.LATITUDE, item.LONGITUDE], {
+                            radius: 5,
+                            color: item.COLOR_MARKER,
+                            fillOpacity: 0.8,
+                        });
+
+                        const tooltipContent = `<div>
+                                <p class="text-center" >${item.NAMA_OP}</p>
+                                <small>NOP: ${item.FK_NOP}</small><br/>
+                                <small>Kategori: ${item.KATEGORI_STATUS}</small><br/>
+                                <small>Alamat: ${item.ALAMAT_OP}</small><br/>
+                                <small>[Lat, Long]: [ ${item.LATITUDE} ], [ ${item.LONGITUDE} ]</small><br/>
+                              </div>
+                            `;
+
+                        marker.bindTooltip(tooltipContent, {
+                            permanent: false,
+                            direction: 'top',
+                            offset: [0, -10],
+                            animate: true,
+                        });
+
+                        marker.NAMA_OP = item.NAMA_OP;
+                        marker.FK_PAJAK_DAERAH = item.FK_PAJAK_DAERAH;
+                        marker.UPTB = item.UPTB;
+
+                        marker.on('click', function () {
+                            window.open('@Url.Action("Detail", "ProfileOP")'+'?nop='+item.FK_NOP+'&pajak='+item.FK_PAJAK_DAERAH, '_blank');
+                        });
+
+                        markers.push(marker);
+                        marker.addTo(map);
+
+                        NAMA_OP.add(item.NAMA_OP);
+                        FK_PAJAK_DAERAH.add(item.FK_PAJAK_DAERAH);
+                        UPTB.add(item.UPTB)
+                    }
+                });
+            }
+
+            function filterMarkers() {
+                var selectedUPTB = $('#filter-uptb').val();
+                var selectedTaxes = $('.custom-control-input:checked').map(function () { return this.value;}).get();
+                var filterNamaOp = $('#filter-nama-op').val().toLowerCase();
+
+                var matchedCount = 0;
+                markers.forEach(function (marker) {
+                    // Cek apakah marker sesuai dengan filter UPTB dan Jenis Pajak
+                    var matchesUPTB = selectedUPTB === "all" || marker.UPTB === selectedUPTB;
+                    var matchesTax = selectedTaxes.length === 0 || selectedTaxes.includes(marker.FK_PAJAK_DAERAH);
+                    var matchesNamaOp = !filterNamaOp || marker.NAMA_OP.toLowerCase().includes(filterNamaOp);
+
+                    // Tampilkan atau sembunyikan marker berdasarkan filter
+                    if (matchesUPTB && matchesTax && matchesNamaOp) {
+                        marker.addTo(map); // Tampilkan marker di peta
+                        matchedCount++;
+                    } else {
+                        map.removeLayer(marker); // Hapus marker dari peta
+                    }
+                });
+                $('#filter-result-count').text(matchedCount);
+            }
+
+            $('#filter-nama-op').on('input', filterMarkers);
+            $('#filter-uptb').change(filterMarkers);
+            $('.custom-control-input').change(filterMarkers);
+
+            loadMapsData();
+            filterMarkers();
         });
-        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-            cb.addEventListener('change', filterData);
-        });
-
-        function filterData() {
-            const nama = document.getElementById('filterNamaOP').value.toLowerCase();
-            const uptb = document.getElementById('filterUPTB').value;
-            const jenisPajak = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
-
-            console.log({ nama, uptb, jenisPajak });
-        }
-
-        var map = L.map('map').setView([-7.250445, 112.768845], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        var dataPajak = [
-            { nama: "Hotel Majapahit", jenis: "HOTEL", lat: -7.265, lng: 112.745, warna: "blue" },
-            { nama: "Restoran Sederhana", jenis: "RESTORAN", lat: -7.257, lng: 112.758, warna: "red" },
-            { nama: "Bioskop XXI", jenis: "HIBURAN", lat: -7.263, lng: 112.765, warna: "green" },
-            { nama: "Gedung PLN", jenis: "PPJ", lat: -7.268, lng: 112.755, warna: "purple" },
-            { nama: "Parkir Tunjungan", jenis: "PARKIR", lat: -7.252, lng: 112.770, warna: "brown" }
-        ];
-
-        dataPajak.forEach(function(item) {
-            L.circleMarker([item.lat, item.lng], {
-                radius: 8,
-                color: item.warna,
-                fillColor: item.warna,
-                fillOpacity: 0.8
-            })
-            .addTo(map)
-            .bindPopup(`<strong>${item.nama}</strong><br/>Jenis: ${item.jenis}`);
-        });
-
     </script>
 }

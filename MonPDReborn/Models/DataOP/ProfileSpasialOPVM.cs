@@ -1,13 +1,28 @@
-﻿namespace MonPDReborn.Models.DataOP
+﻿using MonPDLib;
+using MonPDLib.EF;
+using MonPDLib.General;
+using System.Text.Json;
+
+namespace MonPDReborn.Models.DataOP
 {
     public class ProfileSpasialOPVM
     {
         public class Index
         {
-            public string Keyword { get; set; } = null!;
+            public string MapDataJSON { get; set; } = "";
+            public List<UPTBViewModel> Uptbs { get; set; } = new List<UPTBViewModel>();
             public Index()
             {
-
+                var data = Method.GetDataOpAll();
+                MapDataJSON = JsonSerializer.Serialize(data);
+                Uptbs = new List<UPTBViewModel>
+                {
+                    new UPTBViewModel { Id = "1", Nama = "UPTB 1" },
+                    new UPTBViewModel { Id = "2", Nama = "UPTB 2" },
+                    new UPTBViewModel { Id = "3", Nama = "UPTB 3" },
+                    new UPTBViewModel { Id = "4", Nama = "UPTB 4" },
+                    new UPTBViewModel { Id = "5", Nama = "UPTB 5" }
+                };
             }
         }
         public class Show
@@ -94,6 +109,112 @@
                     new() { NOP = "35.78.050.005.902.00124", Bulan = "Des", Nominal = 155000000 }
                 };
             }
+
+            public static List<MAPViewModel> GetDataOpAll()
+            {
+                var result = new List<MAPViewModel>();
+
+                var context = DBClass.GetContext();
+
+                
+                var queryHotelLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).ToList();
+                foreach (var item in queryHotelLocation)
+                {
+                    var op = context.DbOpHotels.FirstOrDefault(x => x.Nop == item.FkNop);
+                    var res = new MAPViewModel();
+
+                    res.FK_NOP = op?.Nop ?? string.Empty;
+                    res.KATEGORI_STATUS = op?.KategoriNama ?? "-";
+                    res.NAMA_OP = op?.NamaOp ?? "-";
+                    res.ALAMAT_OP = op?.AlamatOp ?? "-";
+                    res.UPTB = op?.WilayahPajak ?? "-";
+                    res.LATITUDE = item?.Latitude ?? string.Empty;
+                    res.LONGITUDE = item?.Longitude ?? string.Empty;
+                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.JasaPerhotelan).ToString();
+                    res.COLOR_MARKER = "blue";
+
+                    result.Add(res);
+                }
+
+                var queryRestoLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).ToList();
+                foreach (var item in queryRestoLocation)
+                {
+                    var op = context.DbOpRestos.FirstOrDefault(x => x.Nop == item.FkNop);
+                    var res = new MAPViewModel();
+
+                    res.FK_NOP = op?.Nop ?? string.Empty;
+                    res.KATEGORI_STATUS = op?.KategoriNama ?? "-";
+                    res.NAMA_OP = op?.NamaOp ?? "-";
+                    res.ALAMAT_OP = op?.AlamatOp ?? "-";
+                    res.UPTB = op?.WilayahPajak ?? "-";
+                    res.LATITUDE = item?.Latitude ?? string.Empty;
+                    res.LONGITUDE = item?.Longitude ?? string.Empty;
+                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.MakananMinuman).ToString();
+                    res.COLOR_MARKER = "red";
+
+                    result.Add(res);
+                }
+
+                var queryHiburanLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).ToList();
+                foreach (var item in queryHiburanLocation)
+                {
+                    var op = context.DbOpHiburans.FirstOrDefault(x => x.Nop == item.FkNop);
+                    var res = new MAPViewModel();
+
+                    res.FK_NOP = op?.Nop ?? string.Empty;
+                    res.KATEGORI_STATUS = op?.KategoriNama ?? "-";
+                    res.NAMA_OP = op?.NamaOp ?? "-";
+                    res.ALAMAT_OP = op?.AlamatOp ?? "-";
+                    res.UPTB = op?.WilayahPajak ?? "-";
+                    res.LATITUDE = item?.Latitude ?? string.Empty;
+                    res.LONGITUDE = item?.Longitude ?? string.Empty;
+                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.JasaKesenianHiburan).ToString();
+                    res.COLOR_MARKER = "green";
+
+                    result.Add(res);
+                }
+
+                var queryPpjLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).ToList();
+                foreach (var item in queryPpjLocation)
+                {
+                    var op = context.DbOpListriks.FirstOrDefault(x => x.Nop == item.FkNop);
+                    var res = new MAPViewModel();
+
+                    res.FK_NOP = op?.Nop ?? string.Empty;
+                    res.KATEGORI_STATUS = op?.KategoriNama ?? "-";
+                    res.NAMA_OP = op?.NamaOp ?? "-";
+                    res.ALAMAT_OP = op?.AlamatOp ?? "-";
+                    res.UPTB = op?.WilayahPajak ?? "-";
+                    res.LATITUDE = item?.Latitude ?? string.Empty;
+                    res.LONGITUDE = item?.Longitude ?? string.Empty;
+                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.JasaKesenianHiburan).ToString();
+                    res.COLOR_MARKER = "purple";
+
+                    result.Add(res);
+                }
+
+                var queryParkirLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir).ToList();
+                foreach (var item in queryParkirLocation)
+                {
+                    var op = context.DbOpParkirs.FirstOrDefault(x => x.Nop == item.FkNop);
+                    var res = new MAPViewModel();
+
+                    res.FK_NOP = op?.Nop ?? string.Empty;
+                    res.KATEGORI_STATUS = op?.KategoriNama ?? "-";
+                    res.NAMA_OP = op?.NamaOp ?? "-";
+                    res.ALAMAT_OP = op?.AlamatOp ?? "-";
+                    res.UPTB = op?.WilayahPajak ?? "-";
+                    res.LATITUDE = item?.Latitude ?? string.Empty;
+                    res.LONGITUDE = item?.Longitude ?? string.Empty;
+                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.JasaKesenianHiburan).ToString();
+                    res.COLOR_MARKER = "brown";
+
+                    result.Add(res);
+                }
+
+
+                return result;
+            }
         }
         public class DataRealisasiOp
         {
@@ -112,6 +233,26 @@
             public string NOP { get; set; } = null!;
             public string Bulan { get; set; } = null!;
             public decimal Nominal { get; set; }
+        }
+
+        public class UPTBViewModel
+        {
+            public string Id { get; set; }
+            public string Nama { get; set; }
+        }
+        public class MAPViewModel
+        {
+            public string FK_NOP { get; set; } = string.Empty;
+            public string KATEGORI_STATUS { get; set; } = string.Empty;
+            public string NAMA_OP { get; set; } = string.Empty;
+            public string ALAMAT_OP { get; set; } = string.Empty;
+            public string UPTB { get; set; } = string.Empty;
+            public string FK_PAJAK_DAERAH { get; set; } = string.Empty;
+            public string FK_KECAMATAN { get; set; } = string.Empty;
+            public string FK_KELURAHAN { get; set; } = string.Empty;
+            public string LATITUDE { get; set; } = string.Empty;
+            public string LONGITUDE { get; set; } = string.Empty;
+            public string COLOR_MARKER { get; set; } = string.Empty;
         }
     }
 }

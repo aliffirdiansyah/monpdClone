@@ -218,7 +218,7 @@ namespace MonPDReborn.Models.DataOP
 
                 #region PotensioList();
                 var dataResto3 = context.DbOpRestos
-                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                     .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                     .ToList();
@@ -249,7 +249,7 @@ namespace MonPDReborn.Models.DataOP
                 var totalPotensiResto = potensiResto.Sum(x => x.PotensiPajakPerTahunNonCatering + x.PotensiPajakPerTahunCatering);
 
                 var dataPpj3 = context.DbOpListriks
-                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
@@ -260,7 +260,7 @@ namespace MonPDReborn.Models.DataOP
                     .Sum(q => q.JumlahPajak) ?? 0;
 
                 var dataHotel3 = context.DbOpHotels
-                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                     .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                     .ToList();
@@ -289,7 +289,7 @@ namespace MonPDReborn.Models.DataOP
                 var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun);
 
                 var dataParkir3 = context.DbOpParkirs
-                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                     .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                     .ToList();
@@ -361,7 +361,7 @@ namespace MonPDReborn.Models.DataOP
                 var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
 
                 var dataAbt3 = context.DbOpAbts
-                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
                     .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                     .ToList();
@@ -548,7 +548,7 @@ namespace MonPDReborn.Models.DataOP
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataResto3 = context.DbOpRestos
-                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                             .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                             .ToList();
@@ -621,7 +621,7 @@ namespace MonPDReborn.Models.DataOP
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataListrik3 = context.DbOpListriks
-                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                             .GroupBy(x => new { x.Nop, x.KategoriId })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
@@ -680,7 +680,7 @@ namespace MonPDReborn.Models.DataOP
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataHotel3 = context.DbOpHotels
-                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                             .GroupBy(x => new { x.Nop, x.KategoriId })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
@@ -763,7 +763,7 @@ namespace MonPDReborn.Models.DataOP
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataParkir3 = context.DbOpParkirs
-                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                             .GroupBy(x => new { x.Nop, x.KategoriId })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
@@ -856,7 +856,7 @@ namespace MonPDReborn.Models.DataOP
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataHiburan3 = context.DbOpHiburans
-                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                             .GroupBy(x => new { x.Nop, x.KategoriId })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
@@ -992,7 +992,7 @@ namespace MonPDReborn.Models.DataOP
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataAbt3 = context.DbOpAbts
-                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now)))
+                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                             .GroupBy(x => new { x.Nop, x.KategoriId })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
@@ -1103,7 +1103,7 @@ namespace MonPDReborn.Models.DataOP
                             .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori)
                             .ToList();
                         var dataResto3 = context.DbOpRestos
-                            .Where(x => (((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))) && x.KategoriId == kategori)
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
                             .ToList();
 
                         foreach (var item in dataResto3.Distinct())
@@ -1166,7 +1166,7 @@ namespace MonPDReborn.Models.DataOP
                             .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori)
                             .ToList();
                         var dataListrik3 = context.DbOpListriks
-                            .Where(x => (((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))) && x.KategoriId == kategori)
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
                             .ToList();
 
                         foreach (var item in dataListrik3.Distinct())
@@ -1200,7 +1200,7 @@ namespace MonPDReborn.Models.DataOP
                             .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori)
                             .ToList();
                         var dataHotel3 = context.DbOpHotels
-                            .Where(x => (((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))) && x.KategoriId == kategori)
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
                             .ToList();
 
                         foreach (var item in dataHotel3.Distinct())
@@ -1260,7 +1260,7 @@ namespace MonPDReborn.Models.DataOP
                             .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori)
                             .ToList();
                         var dataParkir3 = context.DbOpParkirs
-                            .Where(x => (((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))) && x.KategoriId == kategori)
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
                             .ToList();
 
                         foreach (var item in dataParkir3.Distinct())
@@ -1331,7 +1331,7 @@ namespace MonPDReborn.Models.DataOP
                             .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori)
                             .ToList();
                         var dataHiburan3 = context.DbOpHiburans
-                            .Where(x => (((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))) && x.KategoriId == kategori)
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
                             .ToList();
 
                         foreach (var item in dataHiburan3.Distinct())
@@ -1393,7 +1393,7 @@ namespace MonPDReborn.Models.DataOP
                             .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori)
                             .ToList();
                         var dataAbt3 = context.DbOpAbts
-                            .Where(x => (((x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue) || (x.TglOpTutup.HasValue && x.TglOpTutup.Value < DateTime.Now))) && x.KategoriId == kategori)
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
                             .ToList();
 
                         var listOpAbt1 = dataAbt1.Select(x => x.Nop).ToList();
