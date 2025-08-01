@@ -1783,6 +1783,8 @@ namespace MonPDReborn.Models.DataOP
             // PerhitunganCatering
             public decimal RataRataTerjualWeekdaysCatering => KapasitasTenantCatering * TurnoverWeekdaysCatering;
             public decimal RataRataTerjualWeekendCatering => KapasitasTenantCatering * TurnoverWeekendCatering;
+            public decimal RataRataTerjualPerHariCatering =>
+                (RataRataTerjualWeekdaysCatering * 22) + (RataRataTerjualWeekendCatering * 8);
 
             public decimal OmzetPerBulanCatering =>
                 (RataRataBillPerOrang * RataRataTerjualWeekdaysCatering * 22) +
@@ -1856,6 +1858,14 @@ namespace MonPDReborn.Models.DataOP
 
             public int KapasitasTrailer { get; set; }
             public decimal TarifTrailer { get; set; }
+            public int TotalKapasitas =>
+                (KapasitasMobil + KapasitasMotor + KapasitasSepeda + KapasitasTrailer + KapasitasTrukBus + KapasitasTrukMini);
+
+            public decimal PersentaseKapasitasMotor =>
+                (KapasitasMotor / TotalKapasitas);
+            public decimal PersentaseKapasitasMobil =>
+                (KapasitasMobil / TotalKapasitas);
+
 
             // Jumlah terparkir weekdays & weekend
             public decimal JumlahTerparkirSepedaWeekdays => TurnoverWeekdays * KapasitasSepeda;
@@ -1901,6 +1911,37 @@ namespace MonPDReborn.Models.DataOP
             public decimal PotensiPajakPerBulan => TotalOmzet * TarifPajak;
 
             public decimal PotensiPajakPerTahun => PotensiPajakPerBulan * BulanSisa;
+
+            public decimal TotalTerparkirWeekdays =>
+                JumlahTerparkirMobilWeekdays + JumlahTerparkirMotorWeekdays + JumlahTerparkirSepedaWeekdays +JumlahTerparkirTrailerWeekdays + JumlahTerparkirTrukBusWeekdays + JumlahTerparkirTrukMiniWeekdays;
+            public decimal PersentaseMotorWeekdays =>
+                JumlahTerparkirMotorWeekdays / TotalTerparkirWeekdays;
+            public decimal PersentaseMobilWeekdays =>
+                JumlahTerparkirMobilWeekdays / TotalTerparkirWeekdays;
+            public decimal PersentaseSepedaWeekdays =>
+                JumlahTerparkirSepedaWeekdays / TotalTerparkirWeekdays;
+            public decimal PersentaseTrailerWeekdays =>
+                JumlahTerparkirTrailerWeekdays / TotalTerparkirWeekdays;
+            public decimal PersentaseTrukMiniWeekdays =>
+                JumlahTerparkirTrukMiniWeekdays / TotalTerparkirWeekdays;
+            public decimal PersentaseTrukBusWeekdays =>
+                JumlahTerparkirTrukBusWeekdays / TotalTerparkirWeekdays;
+
+            public decimal TotalTerparkirWeekend =>
+                JumlahTerparkirMobilWeekend + JumlahTerparkirMotorWeekend + JumlahTerparkirSepedaWeekend + JumlahTerparkirTrailerWeekend + JumlahTerparkirTrukBusWeekend + JumlahTerparkirTrukMiniWeekend;
+
+            public decimal PersentaseMotorWeekend =>
+                JumlahTerparkirMotorWeekend / TotalTerparkirWeekend;
+            public decimal PersentaseMobilWeekend =>
+                JumlahTerparkirMobilWeekend / TotalTerparkirWeekend;
+            public decimal PersentaseSepedaWeekend =>
+                JumlahTerparkirSepedaWeekend / TotalTerparkirWeekend;
+            public decimal PersentaseTrailerWeekend =>
+                JumlahTerparkirTrailerWeekend / TotalTerparkirWeekend;
+            public decimal PersentaseTrukMiniWeekend =>
+                JumlahTerparkirTrukMiniWeekend / TotalTerparkirWeekend;
+            public decimal PersentaseTrukBusWeekend =>
+                JumlahTerparkirTrukBusWeekend / TotalTerparkirWeekend;
         }
         public class DetailPotensiPajakHiburan
         {
