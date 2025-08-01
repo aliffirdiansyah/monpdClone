@@ -67,7 +67,20 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
+        public IActionResult ShowData(int jenisPajak, int kategori)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfilePotensiOPVM.ShowData((EnumFactory.EPajak)jenisPajak, kategori);
 
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (Exception ex)
+            {
+                // optional: log ex.Message
+                throw;
+            }
+        }
         [HttpGet]
         public object GetDetailPotensi(DataSourceLoadOptions load_options, int JenisPajak)
         {
@@ -96,7 +109,14 @@ namespace MonPDReborn.Controllers.DataOP
                         break;
                     case EnumFactory.EPajak.MakananMinuman:
                         var modelMakananMinuman = ProfilePotensiOPVM.Method.GetDataPotensiResto(nop);
-                        return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", modelMakananMinuman);
+                        if (kategori == 4)
+                        {
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailMamin.cshtml", modelMakananMinuman);
+                        }
+                        else
+                        {
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", modelMakananMinuman);
+                        }
                     case EnumFactory.EPajak.TenagaListrik:
                         //var modelTenagaListrik = ProfilePotensiOPVM.Method.GetDataPotensiListrik(nop);
                         break;
