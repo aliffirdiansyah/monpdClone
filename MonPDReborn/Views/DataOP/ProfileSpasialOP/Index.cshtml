@@ -124,7 +124,6 @@
     <script>
         $(document).ready(function () {
             var datas = @(Html.Raw(Model.MapDataJSON));
-            console.log(datas)
             var map = L.map('map').setView([-7.250445, 112.768845], 12);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -166,26 +165,7 @@
                         marker.UPTB = item.UPTB;
 
                         marker.on('click', function () {
-                            $.ajax({
-                                url: '@Url.Action("GetDetail")',
-                                type: "GET",
-                                data: { nop: item.FK_NOP },
-                                beforeSend: function () {
-                                    $("#loading1").show();
-                                },
-                                success: function (resp)
-                                {
-                                    $("#loading1").hide();
-                                    $("#detail-modal-xl .modal-title").html(item.NAMA_OP);
-                                    $("#detail-modal-xl .modal-body").html(resp);
-                                    $("#detail-modal-xl").modal('show');
-                                },
-                                error: function (xhr) {
-                                    $("#loading1").hide();
-                                    alert("Internal Server Error", '', 'Information!', 1);
-                                    $('#modal-danger').modal({ backdrop: 'static', keyboard: false, show: true })
-                                }
-                            });
+                            window.open('@Url.Action("Detail", "ProfileOP")'+'?nop='+item.FK_NOP+'&pajak='+item.FK_PAJAK_DAERAH, '_blank');
                         });
 
                         markers.push(marker);
