@@ -111,7 +111,7 @@ namespace MonPDReborn.Controllers.DataOP
                         var modelMakananMinuman = ProfilePotensiOPVM.Method.GetDataPotensiResto(nop);
                         if (kategori == 4)
                         {
-                            return View("~/Views/DataOP/ProfilePotensiOP/DetailMamin.cshtml", modelMakananMinuman);
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailCatering.cshtml", modelMakananMinuman);
                         }
                         else
                         {
