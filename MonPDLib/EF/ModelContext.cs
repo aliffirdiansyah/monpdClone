@@ -35,6 +35,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbAkunTargetObjekPpj> DbAkunTargetObjekPpjs { get; set; }
 
+    public virtual DbSet<DbAkunTargetObjekReklame> DbAkunTargetObjekReklames { get; set; }
+
     public virtual DbSet<DbAkunTargetObjekResto> DbAkunTargetObjekRestos { get; set; }
 
     public virtual DbSet<DbMonAbt> DbMonAbts { get; set; }
@@ -323,9 +325,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -540,6 +542,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbAkunTargetObjekPpj>(entity =>
         {
             entity.ToView("DB_AKUN_TARGET_OBJEK_PPJ");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekReklame>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_REKLAME");
         });
 
         modelBuilder.Entity<DbAkunTargetObjekResto>(entity =>
