@@ -43,9 +43,20 @@ namespace MonPDReborn.Models.DataOP
 
                 for (int row = 2; row <= sheet.Dimension.End.Row; row++)
                 {
+                    var nop = sheet.Cells[row, 1].Text;
+
+                    
+                    var existingData = context.DbPotensiHotels
+                        .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
+
+                    if (existingData != null)
+                    {
+                        context.DbPotensiHotels.Remove(existingData);
+                    }
+
                     var dataHotel = new DbPotensiHotel
                     {
-                        TahunBuku = tahun, // <- ditambahkan di sini
+                        TahunBuku = tahun, 
                         Nop = sheet.Cells[row, 1].Text,
                         TotalRoom = TryInt(sheet.Cells[row, 2].Text),
                         AvgRoomPrice = TryDecimal(sheet.Cells[row, 3].Text),
@@ -65,7 +76,7 @@ namespace MonPDReborn.Models.DataOP
                 context.SaveChanges();
             }
 
-            public static void SimpanLampiranExcelParkir(IFormFile fileExcel)
+            public static void SimpanLampiranExcelParkir(IFormFile fileExcel, int tahun)
             {
                 if (fileExcel == null || fileExcel.Length == 0)
                     throw new ArgumentException("File Excel kosong.");
@@ -83,8 +94,19 @@ namespace MonPDReborn.Models.DataOP
 
                 for (int row = 2; row <= sheet.Dimension.End.Row; row++)
                 {
+                    var nop = sheet.Cells[row, 1].Text;
+
+                    var existingData = context.DbPotensiParkirs
+                        .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
+
+                    if (existingData != null)
+                    {
+                        context.DbPotensiParkirs.Remove(existingData);
+                    }
+
                     var data = new DbPotensiParkir
                     {
+                        TahunBuku = tahun,
                         Nop = sheet.Cells[row, 1].Text,
                         JenisTarif = TryInt(sheet.Cells[row, 2].Text),
                         SistemParkir = TryInt(sheet.Cells[row, 3].Text),
@@ -124,6 +146,105 @@ namespace MonPDReborn.Models.DataOP
                     };
 
                     context.DbPotensiParkirs.Add(data);
+                }
+
+                context.SaveChanges();
+            }
+
+            public static void SimpanLampiranExcelResto(IFormFile fileExcel, int tahun)
+            {
+                if (fileExcel == null || fileExcel.Length == 0)
+                    throw new ArgumentException("File Excel kosong.");
+
+                using var stream = new MemoryStream();
+                fileExcel.CopyTo(stream);
+                stream.Position = 0;
+
+                using var package = new ExcelPackage(stream);
+                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                if (sheet == null)
+                    throw new Exception("Sheet1 tidak ditemukan.");
+
+                using var context = DBClass.GetContext();
+
+                for (int row = 2; row <= sheet.Dimension.End.Row; row++)
+                {
+                    var nop = sheet.Cells[row, 1].Text;
+
+                    var existingData = context.DbOpRestos
+                        .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
+
+                    if (existingData != null)
+                    {
+                        context.DbOpRestos.Remove(existingData);
+                    }
+
+                    var data = new DbPotensiResto
+                    {
+                        TahunBuku = tahun,
+                        Nop = sheet.Cells[row, 1].Text,
+                        KapKursi = TryInt(sheet.Cells[row, 2].Text),
+                        KapTenantCatering = TryInt(sheet.Cells[row, 3].Text),
+                        AvgBillOrg = TryDecimal(sheet.Cells[row, 4].Text),
+                        TurnoverWd = TryDecimal(sheet.Cells[row, 5].Text),
+                        TurnoverWe = TryDecimal(sheet.Cells[row, 6].Text),
+                        AvgVisWd = TryDecimal(sheet.Cells[row, 7].Text),
+                        AvgVisWe = TryDecimal(sheet.Cells[row, 8].Text),
+                        AvgTenatCatWd = TryDecimal(sheet.Cells[row, 9].Text),
+                        AvgTenatCatWe = TryDecimal(sheet.Cells[row, 10].Text),
+                    };
+
+                    context.DbPotensiRestos.Add(data);
+                }
+                context.SaveChanges();
+            }
+            public static void SimpanLampiranExcelHiburan(IFormFile fileExcel, int tahun)
+            {
+                if (fileExcel == null || fileExcel.Length == 0)
+                    throw new ArgumentException("File Excel kosong.");
+
+                using var stream = new MemoryStream();
+                fileExcel.CopyTo(stream);
+                stream.Position = 0;
+
+                using var package = new ExcelPackage(stream);
+                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                if (sheet == null)
+                    throw new Exception("Sheet1 tidak ditemukan.");
+
+                using var context = DBClass.GetContext();
+
+                for (int row = 2; row <= sheet.Dimension.End.Row; row++)
+                {
+                    var nop = sheet.Cells[row, 1].Text;
+
+                    var existingData = context.DbPotensiHiburans
+                        .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
+
+                    if (existingData != null)
+                    {
+                        context.DbPotensiHiburans.Remove(existingData);
+                    }
+
+                    var data = new DbPotensiHiburan
+                    {
+                        TahunBuku = tahun,
+                        Nop = sheet.Cells[row, 1].Text,
+                        JumlahStudio = TryInt(sheet.Cells[row, 2].Text),
+                        KapKursiStudio = TryInt(sheet.Cells[row, 3].Text),
+                        KapPengunjung = TryInt(sheet.Cells[row, 4].Text),
+                        HtmWd = TryDecimal(sheet.Cells[row, 5].Text),
+                        HtmWe = TryInt(sheet.Cells[row, 6].Text),
+                        HargaMemberBulan = TryInt(sheet.Cells[row, 7].Text),
+                        ToWd = TryInt(sheet.Cells[row, 8].Text),
+                        ToWe = TryDecimal(sheet.Cells[row, 9].Text),
+                        AvgVisWd = TryDecimal(sheet.Cells[row, 10].Text),
+                        AvgVisWe = TryInt(sheet.Cells[row, 11].Text),
+                        AvgMemberBulan = TryInt(sheet.Cells[row, 12].Text),
+                        OmzetBulan = TryInt(sheet.Cells[row, 13].Text),
+                    };
+
+                    context.DbPotensiHiburans.Add(data);
                 }
 
                 context.SaveChanges();
