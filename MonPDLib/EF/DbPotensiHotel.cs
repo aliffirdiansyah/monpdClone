@@ -23,10 +23,10 @@ public partial class DbPotensiHotel
     [Column("AVG_ROOM_PRICE", TypeName = "NUMBER(12,2)")]
     public decimal? AvgRoomPrice { get; set; }
 
-    [Column("OKUPANSI_RATE_ROOM", TypeName = "NUMBER(5,2)")]
+    [Column("OKUPANSI_RATE_ROOM", TypeName = "NUMBER(10,2)")]
     public decimal? OkupansiRateRoom { get; set; }
 
-    [Column("AVG_ROOM_SOLD", TypeName = "NUMBER(5,2)")]
+    [Column("AVG_ROOM_SOLD", TypeName = "NUMBER(10,2)")]
     public decimal? AvgRoomSold { get; set; }
 
     [Column("ROOM_OMZET", TypeName = "NUMBER(18,2)")]
@@ -39,10 +39,10 @@ public partial class DbPotensiHotel
     [Column("AVG_BANQUET_PRICE", TypeName = "NUMBER(12,2)")]
     public decimal? AvgBanquetPrice { get; set; }
 
-    [Column("OKUPANSI_RATE_BANQUET", TypeName = "NUMBER(5,2)")]
+    [Column("OKUPANSI_RATE_BANQUET", TypeName = "NUMBER(10,2)")]
     public decimal? OkupansiRateBanquet { get; set; }
 
-    [Column("AVG_PAX_BANQUET_SOLD", TypeName = "NUMBER(5,2)")]
+    [Column("AVG_PAX_BANQUET_SOLD", TypeName = "NUMBER(10,2)")]
     public decimal? AvgPaxBanquetSold { get; set; }
 
     [Column("BANQUET_OMZET", TypeName = "NUMBER(18,2)")]

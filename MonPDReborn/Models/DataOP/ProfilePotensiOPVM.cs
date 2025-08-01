@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using static MonPDReborn.Models.DashboardVM;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.DataOP
 {
@@ -104,7 +105,6 @@ namespace MonPDReborn.Models.DataOP
 
                 return dashboardData;
             }
-
             public static List<RekapPotensi> GetRekapPotensiList()
             {
                 var ret = new List<RekapPotensi>();
@@ -519,7 +519,6 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
-
             public static List<DetailPotensi> GetDetailPotensiList(EnumFactory.EPajak jenisPajak)
             {
                 var ret = new List<DetailPotensi>();
@@ -1087,7 +1086,6 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
-
             public static List<DataPotensi> GetDataPotensiList(EnumFactory.EPajak jenisPajak, int kategori)
             {
                 var ret = new List<DataPotensi>();
@@ -1123,7 +1121,8 @@ namespace MonPDReborn.Models.DataOP
                                     Nama = op?.NamaOp ?? "-",
                                     Alamat = op?.AlamatOp ?? "-",
                                     Wilayah = op?.WilayahPajak ?? "-",
-                                    Kategori = "-",
+                                    Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(op.KategoriId)).Nama ?? "Umum",
+                                    KategoriId = Convert.ToInt32(op.KategoriId),
                                     TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                                     JumlahKursi = x.KapKursi ?? 0,
                                     KapasitasTenantCatering = x.KapTenantCatering ?? 0,
@@ -1145,11 +1144,11 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = item.AlamatOp,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Kategori = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum",
-                                Target1 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target1 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi1 = context.DbMonRestos.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target2 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target2 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi2 = context.DbMonRestos.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target3 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target3 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi3 = context.DbMonRestos.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
                                 TotalPotensi = totalPotensiResto
                             };
@@ -1171,19 +1170,19 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataListrik3.Distinct())
                         {
                             var totalPotensiListrik = context.DbPotensiPpjs.Where(x => x.Nop == item.Nop).Sum(q => q.JumlahPajak) ?? 0;
-
                             var potensi = new DataPotensi
                             {
                                 NOP = item.Nop,
                                 NamaOP = item.NamaOp,
                                 Alamat = item.AlamatOp,
                                 JenisPajak = jenisPajak.GetDescription(),
-                                Kategori = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum",
-                                Target1 = context.DbAkunTargetObjekPpjs.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(item.KategoriId)).Nama ?? "Umum",
+                                KategoriId = Convert.ToInt32(item.KategoriId),
+                                Target1 = context.DbAkunTargetObjekPpjs.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi1 = context.DbMonPpjs.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target2 = context.DbAkunTargetObjekPpjs.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target2 = context.DbAkunTargetObjekPpjs.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi2 = context.DbMonPpjs.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target3 = context.DbAkunTargetObjekPpjs.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target3 = context.DbAkunTargetObjekPpjs.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi3 = context.DbMonPpjs.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
                                 TotalPotensi = totalPotensiListrik
                             };
@@ -1216,7 +1215,8 @@ namespace MonPDReborn.Models.DataOP
                                         Nama = op?.NamaOp ?? "-",
                                         Alamat = op?.AlamatOp ?? "-",
                                         Wilayah = op?.WilayahPajak ?? "-",
-                                        Kategori = "-",
+                                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(op.KategoriId)).Nama ?? "Umum",
+                                        KategoriId = Convert.ToInt32(op.KategoriId),
                                         TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                                         JumlahTotalRoom = x.TotalRoom ?? 0,
                                         HargaRataRataRoom = x.AvgRoomPrice ?? 0,
@@ -1236,11 +1236,11 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = item.AlamatOp,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Kategori = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum",
-                                Target1 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target1 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi1 = context.DbMonHotels.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target2 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target2 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi2 = context.DbMonHotels.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target3 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target3 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi3 = context.DbMonHotels.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
                                 TotalPotensi = totalPotensiHotel
                             };
@@ -1273,7 +1273,8 @@ namespace MonPDReborn.Models.DataOP
                                         Nama = op?.NamaOp ?? "-",
                                         Alamat = op?.AlamatOp ?? "-",
                                         Wilayah = op?.WilayahPajak ?? "-",
-                                        Kategori = "-",
+                                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(op.KategoriId)).Nama ?? "Umum",
+                                        KategoriId = Convert.ToInt32(op.KategoriId),
                                         Memungut = ((EnumFactory.EPungutTarifParkir)(x.JenisTarif ?? 0)).GetDescription(),
                                         SistemParkir = ((EnumFactory.EPalangParkir)(x.SistemParkir ?? 0)).GetDescription(),
                                         TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
@@ -1303,12 +1304,13 @@ namespace MonPDReborn.Models.DataOP
                                 NamaOP = item.NamaOp,
                                 Alamat = item.AlamatOp,
                                 JenisPajak = jenisPajak.GetDescription(),
-                                Kategori = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum",
-                                Target1 = context.DbAkunTargetObjekParkirs.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(item.KategoriId)).Nama ?? "Umum",
+                                KategoriId = Convert.ToInt32(item.KategoriId),
+                                Target1 = context.DbAkunTargetObjekParkirs.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi1 = context.DbMonParkirs.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target2 = context.DbAkunTargetObjekParkirs.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target2 = context.DbAkunTargetObjekParkirs.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi2 = context.DbMonParkirs.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target3 = context.DbAkunTargetObjekParkirs.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target3 = context.DbAkunTargetObjekParkirs.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi3 = context.DbMonParkirs.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
                                 TotalPotensi = totalPotensiParkir
                             };
@@ -1364,11 +1366,12 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = item.AlamatOp,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Kategori = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum",
-                                Target1 = context.DbAkunTargetObjekHiburans.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                KategoriId = Convert.ToInt32(item.KategoriId),
+                                Target1 = context.DbAkunTargetObjekHiburans.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi1 = context.DbMonHiburans.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target2 = context.DbAkunTargetObjekHiburans.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target2 = context.DbAkunTargetObjekHiburans.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi2 = context.DbMonHiburans.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target3 = context.DbAkunTargetObjekHiburans.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target3 = context.DbAkunTargetObjekHiburans.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi3 = context.DbMonHiburans.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
                                 TotalPotensi = totalPotensiHiburan
                             };
@@ -1401,11 +1404,11 @@ namespace MonPDReborn.Models.DataOP
                                 Alamat = item.AlamatOp,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Kategori = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum",
-                                Target1 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target1 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi1 = context.DbMonAbts.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target2 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target2 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi2 = context.DbMonAbts.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target3 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.Target) ?? 0,
+                                Target3 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
                                 Realisasi3 = context.DbMonAbts.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
                                 TotalPotensi = totalPotensiAbt
                             };
@@ -1467,91 +1470,128 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
-
-
-            public static InfoDasar GetInfoDasar(string nop)
+            //DETAIL POTENSI PAJAK
+            public static DetailPotensiPajakHotel? GetDataPotensiHotel(string nop)
             {
-                // Simulasi mengambil data dari DB berdasarkan NOP
-                return new InfoDasar
-                {
-                    NOP = nop,
-                    NamaWP = "GALAXY MALL PARKIR",
-                    Alamat = "JL. DHARMAHUSADA INDAH TIMUR",
-                    KapasitasMotor = 1500,
-                    KapasitasMobil = 1000
-                };
+                var ret = new DetailPotensiPajakHotel();
+                var context = DBClass.GetContext();
+
+                var hotel = context.DbOpHotels
+                    .FirstOrDefault(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue);
+                ret = context.DbPotensiHotels
+                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year)
+                    .Select(x => new DetailPotensiPajakHotel
+                    {
+                        NOP = x.Nop,
+                        Nama = hotel.NamaOp ?? "-",
+                        Alamat = hotel.AlamatOp ?? "-",
+                        Wilayah = "SURABAYA " + hotel.WilayahPajak ?? "-",
+                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(hotel.KategoriId)).Nama ?? "Umum",
+                        TglOpBuka = hotel.TglMulaiBukaOp,
+                        JumlahTotalRoom = x.TotalRoom ?? 0,
+                        HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                        OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
+                        KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
+                        HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
+                        TarifPajak = 0.1m
+                    })
+                    .FirstOrDefault();
+                return ret;
             }
-
-            // Method untuk data dummy Kapasitas & Tarif
-            public static KapasitasTarif GetKapasitasTarif(string nop)
+            public static DetailPotensiPajakResto? GetDataPotensiResto(string nop)
             {
-                return new KapasitasTarif
-                {
-                    KapasitasMotor = 1500,
-                    TerpakaiMotorHariKerja = 900,
-                    TerpakaiMotorAkhirPekan = 1350,
-                    TarifMotor = 3000,
-                    KapasitasMobil = 1000,
-                    TerpakaiMobilHariKerja = 800,
-                    TerpakaiMobilAkhirPekan = 950,
-                    TarifMobil = 10000
-                };
+                var ret = new DetailPotensiPajakResto();
+                var context = DBClass.GetContext();
+                var resto = context.DbOpRestos
+                    .FirstOrDefault(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue);
+                ret = context.DbPotensiRestos
+                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year)
+                    .Select(x => new DetailPotensiPajakResto
+                    {
+                        NOP = x.Nop,
+                        Nama = resto.NamaOp ?? "-",
+                        Alamat = resto.AlamatOp ?? "-",
+                        Wilayah = "SURABAYA " + resto.WilayahPajak ?? "-",
+                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(resto.KategoriId)).Nama ?? "Umum",
+                        TglOpBuka = resto.TglMulaiBukaOp,
+                        JumlahKursi = x.KapKursi ?? 0,
+                        KapasitasTenantCatering = x.KapTenantCatering ?? 0,
+                        RataRataBillPerOrang = x.AvgBillOrg ?? 0,
+                        TurnoverWeekdaysCatering = x.TurnoverWd ?? 0,
+                        TurnoverWeekendCatering = x.TurnoverWe ?? 0,
+                        TurnoverWeekdaysNonCatering = x.TurnoverWd ?? 0,
+                        TurnoverWeekendNonCatering = x.TurnoverWe ?? 0,
+                        TarifPajak = 0.1m
+                    })
+                    .FirstOrDefault();
+                return ret;
             }
-
-            public static InfoDasar GetInfoDasarHotel(string nop)
+            public static DetailPotensiPajakParkir? GetDataPotensiParkir(string nop)
             {
-                // Simulasi ambil data dari DB
-                return new InfoDasar
-                {
-                    NOP = nop,
-                    NamaWP = "HOTEL JW MARRIOTT",
-                    Alamat = "Jl. Embong Malang 85-89, Surabaya",
-                };
+                var ret = new DetailPotensiPajakParkir();
+                var context = DBClass.GetContext();
+                var parkir = context.DbOpParkirs
+                    .FirstOrDefault(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue);
+                ret = context.DbPotensiParkirs
+                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year)
+                    .Select(x => new DetailPotensiPajakParkir
+                    {
+                        NOP = x.Nop,
+                        Nama = parkir.NamaOp ?? "-",
+                        Alamat = parkir.AlamatOp ?? "-",
+                        Wilayah = "SURABAYA " + parkir.WilayahPajak ?? "-",
+                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(parkir.KategoriId)).Nama ?? "Umum",
+                        Memungut = ((EnumFactory.EPungutTarifParkir)(x.JenisTarif ?? 0)).GetDescription(),
+                        SistemParkir = ((EnumFactory.EPalangParkir)(x.SistemParkir ?? 0)).GetDescription(),
+                        TglOpBuka = parkir.TglMulaiBukaOp,
+                        TurnoverWeekdays = x.ToWd ?? 0,
+                        TurnoverWeekend = x.ToWe ?? 0,
+                        KapasitasSepeda = x.KapSepeda ?? 0,
+                        TarifSepeda = x.TarifSepeda ?? 0,
+                        KapasitasMotor = x.KapMotor ?? 0,
+                        TarifMotor = x.TarifMotor ?? 0,
+                        KapasitasMobil = x.KapMobil ?? 0,
+                        TarifMobil = x.TarifMobil ?? 0,
+                        KapasitasTrukMini = x.KapTrukMini ?? 0,
+                        TarifTrukMini = x.TarifTrukMini ?? 0,
+                        KapasitasTrukBus = x.KapTrukBus ?? 0,
+                        TarifTrukBus = x.TarifTrukBus ?? 0,
+                        KapasitasTrailer = x.KapTrailer ?? 0,
+                        TarifTrailer = x.TarifTrailer ?? 0,
+                        TarifPajak = 0.1m
+                    })
+                    .FirstOrDefault();
+
+                return ret;
             }
-
-            public static InfoKamar GetInfoKamar(string nop)
+            public static DetailPotensiPajakHiburan? GetDataPotensiHiburan(string nop)
             {
-                return new InfoKamar
-                {
-                    JumlahKamar = 400,
-                    TarifRataRata = 1500000,
-                    TingkatHunian = 85 // artinya 85%
-                };
-            }
-
-            public static InfoBanquet GetInfoBanquet(string nop)
-            {
-                return new InfoBanquet
-                {
-                    KapasitasMaksimum = 1500,
-                    TingkatOkupansi = 60, // artinya 60%
-                    TarifRataRata = 250000,
-                    HariEventPerBulan = 10
-                };
-            }
-
-            public static InfoDasar GetInfoDasarBioskop(string nop)
-            {
-                return new InfoDasar
-                {
-                    NOP = nop,
-                    NamaWP = "XXI CITO",
-                    Alamat = "Jl. A. Yani No. 288, Surabaya",
-                    KapasitasKursiStudio = 850 // Properti baru untuk InfoDasar
-                };
-            }
-
-            public static InfoBioskop GetInfoBioskop(string nop)
-            {
-                return new InfoBioskop
-                {
-                    KapasitasKursi = 850,
-                    KursiTerjualPerHari = 600,
-                    TurnoverHariKerja = 2.5m,
-                    TurnoverAkhirPekan = 4.0m,
-                    HargaTiketHariKerja = 40000,
-                    HargaTiketAkhirPekan = 55000
-                };
+                var ret = new DetailPotensiPajakHiburan();
+                var context = DBClass.GetContext();
+                var hiburan = context.DbOpHiburans
+                    .FirstOrDefault(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue);
+                ret = context.DbPotensiHiburans
+                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year)
+                    .Select(x => new DetailPotensiPajakHiburan
+                    {
+                        NOP = x.Nop,
+                        Nama = hiburan.NamaOp ?? "-",
+                        Alamat = hiburan.AlamatOp ?? "-",
+                        Wilayah = "SURABAYA " + hiburan.WilayahPajak ?? "-",
+                        Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(hiburan.KategoriId)).Nama ?? "Umum",
+                        TglOpBuka = hiburan.TglMulaiBukaOp,
+                        KapasitasStudio = x.KapKursiStudio ?? 0,
+                        JumlahStudio = x.JumlahStudio ?? 0,
+                        Kapasitas = x.KapPengunjung ?? 0,
+                        HargaMemberFitness = x.HargaMemberBulan ?? 0,
+                        HTMWeekdays = x.HtmWd ?? 0,
+                        HTMWeekend = x.HtmWe ?? 0,
+                        TurnoverWeekdays = x.ToWd ?? 0,
+                        TurnoverWeekend = x.ToWe ?? 0,
+                        TarifPajak = 0.1m
+                    })
+                    .FirstOrDefault();
+                return ret;
             }
         }
 
@@ -1574,6 +1614,7 @@ namespace MonPDReborn.Models.DataOP
             public int EnumKategori { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string Kategori { get; set; } = null!;
+            public int KategoriId { get; set; }
             public decimal Target1 { get; set; } = 0;
             public decimal Realisasi1 { get; set; } = 0;
             public decimal Capaian1 => Target1 == 0 ? 0 : Math.Round((Realisasi1 / Target1) * 100, 2);
@@ -1621,6 +1662,7 @@ namespace MonPDReborn.Models.DataOP
             public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
             public decimal TotalPotensi { get; set; }
         }
+
         #region CLASS DetailPotensiFix
         public class DetailPotensiPajakHotel
         {
@@ -1630,6 +1672,7 @@ namespace MonPDReborn.Models.DataOP
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
             public string Kategori { get; set; }
+            public int KategoriId { get; set; }
 
             // Room
             public int JumlahTotalRoom { get; set; }
@@ -1685,6 +1728,7 @@ namespace MonPDReborn.Models.DataOP
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
             public string Kategori { get; set; }
+            public int KategoriId { get; set; }
             public DateTime TglOpBuka { get; set; }
             public int BulanSisa
             {
@@ -1749,6 +1793,7 @@ namespace MonPDReborn.Models.DataOP
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
             public string Kategori { get; set; }
+            public int KategoriId { get; set; }
             public string Memungut { get; set; } // "Memungut" atau "Tidak Memungut"
             public string SistemParkir { get; set; }
             public DateTime TglOpBuka { get; set; }
@@ -1847,7 +1892,8 @@ namespace MonPDReborn.Models.DataOP
             public string Nama { get; set; }
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
-            public string Kategori { get; set; } // "Bioskop", "Fitness/Pusat Kebugaran", atau lainnya
+            public string Kategori { get; set; }
+            public int KategoriId { get; set; }
             public DateTime TglOpBuka { get; set; }
             public int BulanSisa
             {
@@ -1911,214 +1957,6 @@ namespace MonPDReborn.Models.DataOP
         }
         #endregion
 
-        public class DetailParkir
-        {
-            public InfoDasar DataDasar { get; set; } = new();
-            public KapasitasTarif DataKapasitas { get; set; } = new();
-            public PotensiPajak DataPotensi { get; set; } = new();
-
-            public DetailParkir() { }
-
-            // Konstruktor untuk mengambil semua data berdasarkan NOP
-            public DetailParkir(string nop)
-            {
-                // Panggil method untuk mengambil semua data dummy
-                DataDasar = Method.GetInfoDasar(nop);
-                DataKapasitas = Method.GetKapasitasTarif(nop);
-                DataPotensi = new PotensiPajak(DataKapasitas); // Potensi dihitung dari kapasitas
-            }
-        }
-
-        // Class untuk data di kartu paling atas
-        public class InfoDasar
-        {
-            public string NamaWP { get; set; } = "";
-            public string Alamat { get; set; } = "";
-            public string NOP { get; set; } = "";
-            public decimal TotalKapasitas => KapasitasMotor + KapasitasMobil;
-            public decimal KapasitasMotor { get; set; }
-            public decimal KapasitasMobil { get; set; }
-
-            public decimal PersenKapasitasMotor => TotalKapasitas > 0 ? (KapasitasMotor / TotalKapasitas) * 100 : 0;
-
-            // Menghitung persentase kapasitas mobil dari total
-            public decimal PersenKapasitasMobil => TotalKapasitas > 0 ? (KapasitasMobil / TotalKapasitas) * 100 : 0;
-
-            // Hotel
-            public int? JumlahKamar { get; set; }
-            public int? KapasitasBanquet { get; set; }
-
-            // Bioskop
-            public int? KapasitasKursiStudio { get; set; }
-        }
-
-        // Class untuk data di kartu kapasitas dan tarif
-        public class KapasitasTarif
-        {
-            public int KapasitasMotor { get; set; }
-            public int TerpakaiMotorHariKerja { get; set; }
-            public int TerpakaiMotorAkhirPekan { get; set; }
-            public decimal TarifMotor { get; set; }
-
-            public int KapasitasMobil { get; set; }
-            public int TerpakaiMobilHariKerja { get; set; }
-            public int TerpakaiMobilAkhirPekan { get; set; }
-            public decimal TarifMobil { get; set; }
-
-            // Properti kalkulasi untuk persentase pemakaian
-            public decimal PersenMotorHariKerja => KapasitasMotor > 0 ? ((decimal)TerpakaiMotorHariKerja / KapasitasMotor) * 100 : 0;
-            public decimal PersenMotorAkhirPekan => KapasitasMotor > 0 ? ((decimal)TerpakaiMotorAkhirPekan / KapasitasMotor) * 100 : 0;
-            public decimal PersenMobilHariKerja => KapasitasMobil > 0 ? ((decimal)TerpakaiMobilHariKerja / KapasitasMobil) * 100 : 0;
-            public decimal PersenMobilAkhirPekan => KapasitasMobil > 0 ? ((decimal)TerpakaiMobilAkhirPekan / KapasitasMobil) * 100 : 0;
-
-            public int TotalTerparkirHariKerja => TerpakaiMotorHariKerja + TerpakaiMobilHariKerja;
-            public int TotalTerparkirAkhirPekan => TerpakaiMotorAkhirPekan + TerpakaiMobilAkhirPekan;
-        }
-
-        // Class untuk data di kartu perhitungan potensi
-        public class PotensiPajak
-        {
-            public decimal OmzetMotor { get; }
-            public decimal OmzetMobil { get; }
-            public decimal TotalOmzetBulanan { get; }
-            public decimal PotensiBulanan { get; }
-            public decimal PotensiTahunan { get; }
-            public const decimal TarifPajak = 0.10m; // 10%
-
-            // Konstruktor untuk menghitung semua potensi
-            public PotensiPajak() { }
-            public PotensiPajak(KapasitasTarif dataKapasitas)
-            {
-                decimal omzetMotorHariKerja = dataKapasitas.TerpakaiMotorHariKerja * dataKapasitas.TarifMotor * 22;
-                decimal omzetMotorAkhirPekan = dataKapasitas.TerpakaiMotorAkhirPekan * dataKapasitas.TarifMotor * 8;
-                OmzetMotor = omzetMotorHariKerja + omzetMotorAkhirPekan;
-
-                decimal omzetMobilHariKerja = dataKapasitas.TerpakaiMobilHariKerja * dataKapasitas.TarifMobil * 22;
-                decimal omzetMobilAkhirPekan = dataKapasitas.TerpakaiMobilAkhirPekan * dataKapasitas.TarifMobil * 8;
-                OmzetMobil = omzetMobilHariKerja + omzetMobilAkhirPekan;
-
-                TotalOmzetBulanan = OmzetMotor + OmzetMobil;
-                PotensiBulanan = TotalOmzetBulanan * TarifPajak;
-                PotensiTahunan = PotensiBulanan * 12;
-            }
-        }
-
-        // Class ini akan menjadi @model untuk halaman DetailHotel.cshtml
-        public class DetailHotel
-        {
-            public InfoDasar DataDasar { get; set; } = new();
-            public InfoKamar DataKamar { get; set; } = new();
-            public InfoBanquet DataBanquet { get; set; } = new();
-            public PotensiPajakHotel DataPotensi { get; set; } = new();
-
-            public DetailHotel() { }
-            public DetailHotel(string nop)
-            {
-                DataDasar = Method.GetInfoDasarHotel(nop);
-                DataKamar = Method.GetInfoKamar(nop);
-                DataBanquet = Method.GetInfoBanquet(nop);
-                DataPotensi = new PotensiPajakHotel(DataKamar, DataBanquet);
-            }
-        }
-
-        // Class untuk info kamar
-        public class InfoKamar
-        {
-            public int JumlahKamar { get; set; }
-            public decimal TarifRataRata { get; set; }
-            public decimal TingkatHunian { get; set; } // Dalam persen (misal: 85 untuk 85%)
-            public int RataKamarTerjual => (int)(JumlahKamar * (TingkatHunian / 100));
-        }
-
-        // Class untuk info banquet
-        public class InfoBanquet
-        {
-            public int KapasitasMaksimum { get; set; }
-            public decimal TingkatOkupansi { get; set; } // Dalam persen
-            public decimal TarifRataRata { get; set; }
-            public int HariEventPerBulan { get; set; }
-            public int RataTamuBanquet => (int)(KapasitasMaksimum * (TingkatOkupansi / 100));
-        }
-
-        // Class untuk kalkulasi potensi pajak hotel
-        public class PotensiPajakHotel
-        {
-            public decimal OmzetKamarBulanan { get; }
-            public decimal PajakKamarBulanan { get; }
-            public decimal OmzetBanquetBulanan { get; }
-            public decimal PajakBanquetBulanan { get; }
-            public decimal TotalPotensiBulanan { get; }
-            public decimal TotalPotensiTahunan { get; }
-            public const decimal TarifPajak = 0.10m; // 10%
-
-            public decimal PersenPotensiKamar => TotalPotensiBulanan > 0 ? (PajakKamarBulanan / TotalPotensiBulanan) * 100 : 0;
-            public decimal PersenPotensiBanquet => TotalPotensiBulanan > 0 ? (PajakBanquetBulanan / TotalPotensiBulanan) * 100 : 0;
-
-            public PotensiPajakHotel() { }
-            public PotensiPajakHotel(InfoKamar kamar, InfoBanquet banquet)
-            {
-                OmzetKamarBulanan = kamar.TarifRataRata * kamar.RataKamarTerjual * 30;
-                PajakKamarBulanan = OmzetKamarBulanan * TarifPajak;
-
-                OmzetBanquetBulanan = banquet.TarifRataRata * banquet.RataTamuBanquet * banquet.HariEventPerBulan;
-                PajakBanquetBulanan = OmzetBanquetBulanan * TarifPajak;
-
-                TotalPotensiBulanan = PajakKamarBulanan + PajakBanquetBulanan;
-                TotalPotensiTahunan = TotalPotensiBulanan * 12;
-            }
-        }
-
-        // Class ini akan menjadi @model untuk halaman DetailBioskop.cshtml
-        public class DetailBioskop
-        {
-            public InfoDasar DataDasar { get; set; } = new();
-            public InfoBioskop DataBioskop { get; set; } = new();
-            public PotensiPajakBioskop DataPotensi { get; set; } = new();
-
-            public DetailBioskop() { }
-            public DetailBioskop(string nop)
-            {
-                DataDasar = Method.GetInfoDasarBioskop(nop);
-                DataBioskop = Method.GetInfoBioskop(nop);
-                DataPotensi = new PotensiPajakBioskop(DataBioskop);
-            }
-        }
-
-        // Class untuk info spesifik bioskop
-        public class InfoBioskop
-        {
-            public int KapasitasKursi { get; set; }
-            public int KursiTerjualPerHari { get; set; }
-            public decimal TurnoverHariKerja { get; set; }
-            public decimal TurnoverAkhirPekan { get; set; }
-            public decimal HargaTiketHariKerja { get; set; }
-            public decimal HargaTiketAkhirPekan { get; set; }
-
-            // Properti kalkulasi
-            public int RataKunjunganHariKerja => (int)(KursiTerjualPerHari * TurnoverHariKerja);
-            public int RataKunjunganAkhirPekan => (int)(KursiTerjualPerHari * TurnoverAkhirPekan);
-        }
-
-        // Class untuk kalkulasi potensi pajak bioskop
-        public class PotensiPajakBioskop
-        {
-            public decimal OmzetHariKerja { get; }
-            public decimal OmzetAkhirPekan { get; }
-            public decimal TotalOmzetBulanan { get; }
-            public decimal PotensiBulanan { get; }
-            public decimal PotensiTahunan { get; }
-            public const decimal TarifPajak = 0.10m; // 10%
-
-            public PotensiPajakBioskop() { }
-            public PotensiPajakBioskop(InfoBioskop dataBioskop)
-            {
-                OmzetHariKerja = dataBioskop.HargaTiketHariKerja * dataBioskop.RataKunjunganHariKerja * 22;
-                OmzetAkhirPekan = dataBioskop.HargaTiketAkhirPekan * dataBioskop.RataKunjunganAkhirPekan * 8;
-                TotalOmzetBulanan = OmzetHariKerja + OmzetAkhirPekan;
-                PotensiBulanan = TotalOmzetBulanan * TarifPajak;
-                PotensiTahunan = PotensiBulanan * 12;
-            }
-        }
 
 
     }
