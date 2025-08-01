@@ -234,14 +234,14 @@ namespace MonPDReborn.Models.DataOP
                         KapKursiStudio = TryInt(sheet.Cells[row, 3].Text),
                         KapPengunjung = TryInt(sheet.Cells[row, 4].Text),
                         HtmWd = TryDecimal(sheet.Cells[row, 5].Text),
-                        HtmWe = TryInt(sheet.Cells[row, 6].Text),
-                        HargaMemberBulan = TryInt(sheet.Cells[row, 7].Text),
-                        ToWd = TryInt(sheet.Cells[row, 8].Text),
+                        HtmWe = TryDecimal(sheet.Cells[row, 6].Text),
+                        HargaMemberBulan = TryDecimal(sheet.Cells[row, 7].Text),
+                        ToWd = TryDecimal(sheet.Cells[row, 8].Text),
                         ToWe = TryDecimal(sheet.Cells[row, 9].Text),
                         AvgVisWd = TryDecimal(sheet.Cells[row, 10].Text),
-                        AvgVisWe = TryInt(sheet.Cells[row, 11].Text),
-                        AvgMemberBulan = TryInt(sheet.Cells[row, 12].Text),
-                        OmzetBulan = TryInt(sheet.Cells[row, 13].Text),
+                        AvgVisWe = TryDecimal(sheet.Cells[row, 11].Text),
+                        AvgMemberBulan = TryDecimal(sheet.Cells[row, 12].Text),
+                        OmzetBulan = TryDecimal(sheet.Cells[row, 13].Text),
                     };
 
                     context.DbPotensiHiburans.Add(data);
