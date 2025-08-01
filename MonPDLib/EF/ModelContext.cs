@@ -25,6 +25,18 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbAkunTargetBulanUptb> DbAkunTargetBulanUptbs { get; set; }
 
+    public virtual DbSet<DbAkunTargetObjekAbt> DbAkunTargetObjekAbts { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekHiburan> DbAkunTargetObjekHiburans { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekHotel> DbAkunTargetObjekHotels { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekParkir> DbAkunTargetObjekParkirs { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekPpj> DbAkunTargetObjekPpjs { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekResto> DbAkunTargetObjekRestos { get; set; }
+
     public virtual DbSet<DbMonAbt> DbMonAbts { get; set; }
 
     public virtual DbSet<DbMonBphtb> DbMonBphtbs { get; set; }
@@ -503,6 +515,36 @@ public partial class ModelContext : DbContext
                 .HasConstraintName("DB_AKUN_TARGET_BULAN_UPTB_R01");
         });
 
+        modelBuilder.Entity<DbAkunTargetObjekAbt>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_ABT");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekHiburan>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_HIBURAN");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekHotel>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_HOTEL");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekParkir>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_PARKIR");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekPpj>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_PPJ");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekResto>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_RESTO");
+        });
+
         modelBuilder.Entity<DbMonAbt>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_ABT_PK");
@@ -759,21 +801,21 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbPotensiHiburan>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033443");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_HIBURAN_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<DbPotensiHotel>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033440");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_HOTEL_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<DbPotensiParkir>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033442");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_PARKIR_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
@@ -790,7 +832,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbPotensiResto>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033441");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_RESTO_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });

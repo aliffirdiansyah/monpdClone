@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
+[PrimaryKey("Nop", "TahunBuku")]
 [Table("DB_POTENSI_HOTEL")]
 public partial class DbPotensiHotel
 {
@@ -52,4 +53,9 @@ public partial class DbPotensiHotel
 
     [Column("UPDATED_AT", TypeName = "DATE")]
     public DateTime? UpdatedAt { get; set; }
+
+    [Key]
+    [Column("TAHUN_BUKU")]
+    [Precision(10)]
+    public int TahunBuku { get; set; }
 }
