@@ -318,10 +318,12 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
 
                     _contMonPd.DbMonPbbs.Add(newRow);
                     _contMonPd.SaveChanges();
-                    index++;
+
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\rDB_KETETAPAN_PBB HPP TAHUN {tahunBuku} JML OP {jmlData} : {jml.ToString("n0")}  {persen:F2}%   ");
+                    Console.Write($"\rDB_KETETAPAN_PBB HPP TAHUN {tahunBuku} JML OP {jmlData} {index} : {jml.ToString("n0")}  {persen:F2}%   ");
                     Thread.Sleep(50);
+
+                    index++;
                 }
             }
             catch (Exception ex)
@@ -341,16 +343,16 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
              SELECT NOP,TAHUN_PAJAK,SUM(NVL(POKOK, 0)) POKOK , SUM(NVL(SANKSI, 0)) SANKSI
 FROM (
 	SELECT      A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS  NOP , 
-				A.d_pjk_thn TAHUN_PAJAK,    
+				TO_NUMBER(A.d_pjk_thn) TAHUN_PAJAK,    
 				D_PJK_PBB POKOK,
 				D_PJK_JMBYR-D_PJK_PBB SANKSI
     FROM        CATBAYAR@LIHATGATOTKACA A 
-    WHERE       A.d_pjk_thn =:TAHUN AND (A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS) = :NOP
+    WHERE       TO_NUMBER(A.d_pjk_thn) =:TAHUN AND (A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS) = :NOP
     UNION ALL
     SELECT      A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP NOP,
-                THN_PAJAK_SPPT,JML_SPPT_YG_DIBAYAR-DENDA_SPPT,DENDA_SPPT                                                    
+                TO_NUMBER(THN_PAJAK_SPPT) THN_PAJAK_SPPT,JML_SPPT_YG_DIBAYAR-DENDA_SPPT,DENDA_SPPT                                                    
     FROM        PEMBAYARAN_SPPT@LIHATGATOTKACA A
-    WHERE       THN_PAJAK_SPPT = :TAHUN  AND NVL(REV_FLAG,0) !=1 AND (A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP) = :NOP
+    WHERE       TO_NUMBER(THN_PAJAK_SPPT) = :TAHUN  AND NVL(REV_FLAG,0) !=1 AND (A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP) = :NOP
 )
 GROUP BY NOP,TAHUN_PAJAK                                        
                 ";
