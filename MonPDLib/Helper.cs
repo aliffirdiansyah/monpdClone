@@ -427,7 +427,7 @@ namespace MonPDLib
         public class RealisasiPbb
         {
             public string NOP { get; set; } = null!;
-            public decimal TAHUN_PAJAK { get; set; }
+            public int TAHUN_PAJAK { get; set; }
             public decimal POKOK { get; set; }
             public decimal SANKSI { get; set; }            
         }
