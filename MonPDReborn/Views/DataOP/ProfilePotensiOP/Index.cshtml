@@ -143,14 +143,12 @@
 
         function onDetail(e) {
             const data = e.row?.data;
-            if (!data || !data.NOP || !data.JenisPajak) return;
+            if (!data || !data.NOP || data.EnumPajak == null || data.KategoriId == null) return;
 
-            let url = `/ProfilePotensiOP/Detail?jenisPajak=${encodeURIComponent(data.JenisPajak)}&nop=${encodeURIComponent(data.NOP)}`;
-
-            // jika hiburan dan kategori tersedia
-            if (data.JenisPajak.toLowerCase() === 'hiburan' && data.Kategori) {
-                url += `&kategoriHiburan=${encodeURIComponent(data.Kategori)}`;
-            }
+            const url = `/ProfilePotensiOP/DetailPotensiOP` +
+                `?nop=${encodeURIComponent(data.NOP)}` +
+                `&jenisPajak=${encodeURIComponent(data.EnumPajak)}` +
+                `&kategori=${encodeURIComponent(data.KategoriId)}`;
 
             window.open(url, '_blank');
         }
