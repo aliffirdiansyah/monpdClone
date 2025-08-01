@@ -17,8 +17,8 @@ public partial class DbPotensiHiburan
     public string Nop { get; set; } = null!;
 
     [Column("JUMLAH_STUDIO")]
-    [Precision(5)]
-    public short? JumlahStudio { get; set; }
+    [Precision(10)]
+    public int? JumlahStudio { get; set; }
 
     [Column("KAP_KURSI_STUDIO")]
     [Precision(10)]
