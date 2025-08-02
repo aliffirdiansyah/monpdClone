@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Detail Potensi Pajak Restoran";
+    ViewBag.Title = "Detail Potensi Pajak Catering";
 }
 @if (Model != null)
 {
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="flex-shrink-0 ms-5">
                                     <p class="fs-14 text-muted mb-1">Rata-rata Transaksi</p>
-                                    <p class="fs-14 fw-semibold mb-3">@Model.RataRataBillPerOrang / Orang</p>
+                                    <p class="fs-14 fw-semibold mb-3">@Model.RataRataBillPerOrang.ToString("C") / Orang</p>
                                 </div>
                                 <div class="flex-shrink-0 ms-3">
                                     <p class="fs-14 text-muted mb-1">Rata-rata Terjual</p>
