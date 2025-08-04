@@ -23,10 +23,10 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <h4 class="fs-16 fw-semibold">
+                                    <h4 class="fs-16 fw-semibold text-dark">
                                         @Model.Nama
                                     </h4>
-                                    <p class="fs-16 lh-base">
+                                    <p class="fs-16 lh-base text-dark">
                                         @Model.Alamat
                                     </p>
                                 </div>
@@ -34,20 +34,20 @@
                         </div>
                         <div class="col-lg-4">
                             <div class="d-flex p-3">
-                                <h3 class="fs-16 fw-semibold">
+                                <h3 class="fs-16 fw-semibold text-dark">
                                     Potensi Pajak
                                 </h3>
                             </div>
                             <div class="d-flex p-3 py-0">
                                 <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerBulan.ToString("N0")</p>
+                                    <p class="fs-16 fw-bold text-dark">Rp. @Model.PotensiPajakPerBulan.ToString("N0")</p>
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
                                 <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerTahun.ToString("N0")</p>
+                                    <p class="fs-16 fw-bold text-dark">Rp. @Model.PotensiPajakPerTahun.ToString("N0")</p>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Kapasitas Parkir dan Tarif
                         </h4>
                     </div>
@@ -100,7 +100,7 @@
                                             </div>
                                             <div class="d-flex flex-grow-1 align-items-center">
                                                 <div>
-                                                    <h4 class="fs-14 fw-semibold mb-1">Sepeda Motor</h4>
+                                                    <h4 class="fs-14 fw-semibold mb-1 text-dark">Sepeda Motor</h4>
                                                     <p class="fs-14 lh-base mb-0">Kapasitas : @Model.KapasitasMotor Unit</p>
                                                 </div>
                                                 <div class="ms-auto my-auto">
@@ -126,7 +126,7 @@
                                             </div>
                                             <div class="d-flex flex-grow-1 align-items-center">
                                                 <div>
-                                                    <h4 class="fs-14 fw-semibold mb-1">Mobil</h4>
+                                                    <h4 class="fs-14 fw-semibold mb-1 text-dark">Mobil</h4>
                                                     <p class="fs-14 lh-base mb-0">Kapasitas : @Model.KapasitasMobil Unit</p>
                                                 </div>
                                                 <div class="ms-auto my-auto">
@@ -152,7 +152,7 @@
                                             </div>
                                             <div class="d-flex flex-grow-1 align-items-center">
                                                 <div>
-                                                    <h4 class="fs-14 fw-semibold mb-1">Sepeda</h4>
+                                                    <h4 class="fs-14 fw-semibold mb-1 text-dark">Sepeda</h4>
                                                     <p class="fs-14 lh-base mb-0">Kapasitas : @Model.KapasitasSepeda Unit</p>
                                                 </div>
                                                 <div class="ms-auto my-auto">
@@ -178,7 +178,7 @@
                                             </div>
                                             <div class="d-flex flex-grow-1 align-items-center">
                                                 <div>
-                                                    <h4 class="fs-14 fw-semibold mb-1">Truk Mini</h4>
+                                                    <h4 class="fs-14 fw-semibold mb-1 text-dark">Truk Mini</h4>
                                                     <p class="fs-14 lh-base mb-0">Kapasitas : @Model.KapasitasTrukMini Unit</p>
                                                 </div>
                                                 <div class="ms-auto my-auto">
@@ -204,7 +204,7 @@
                                             </div>
                                             <div class="d-flex flex-grow-1 align-items-center">
                                                 <div>
-                                                    <h4 class="fs-14 fw-semibold mb-1">Truk / Bus</h4>
+                                                    <h4 class="fs-14 fw-semibold mb-1 text-dark">Truk / Bus</h4>
                                                     <p class="fs-14 lh-base mb-0">Kapasitas : @Model.KapasitasTrukBus Unit</p>
                                                 </div>
                                                 <div class="ms-auto my-auto">
@@ -230,7 +230,7 @@
                                             </div>
                                             <div class="d-flex flex-grow-1 align-items-center">
                                                 <div>
-                                                    <h4 class="fs-14 fw-semibold mb-1">Trailer</h4>
+                                                    <h4 class="fs-14 fw-semibold mb-1 text-dark">Trailer</h4>
                                                     <p class="fs-14 lh-base mb-0">Kapasitas : @Model.KapasitasTrailer Unit</p>
                                                 </div>
                                                 <div class="ms-auto my-auto">
@@ -267,101 +267,100 @@
                                         var persenTrailer = (Model.TotalKapasitas == 0 ? 0 : (decimal)Model.KapasitasTrailer / Model.TotalKapasitas * 100)
                                         .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
                                     }
-                                </div>
-                                <div class="progress mb-4" style="height: 20px;">
-                                    @if (Model.KapasitasSepeda > 0)
-                                    {
-                                        <div class="progress-bar bg-primary" role="progressbar"
-                                             style="width: @persenSepeda%;" aria-valuenow="@Model.KapasitasSepeda"
-                                             aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
-                                            @persenSepeda%
-                                        </div>
-                                    }
-                                    @if (Model.KapasitasMotor > 0)
-                                    {
-                                        <div class="progress-bar bg-success" role="progressbar"
-                                             style="width: @persenMotor%;" aria-valuenow="@Model.KapasitasMotor"
-                                             aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
-                                            @persenMotor%
-                                        </div>
-                                    }
-                                    @if (Model.KapasitasMobil > 0)
-                                    {
-                                        <div class="progress-bar bg-info" role="progressbar"
-                                             style="width: @persenMobil%;" aria-valuenow="@Model.KapasitasMobil"
-                                             aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
-                                            @persenMobil%
-                                        </div>
-                                    }
-                                    @if (Model.KapasitasTrukMini > 0)
-                                    {
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                             style="width: @persenTruckMini%;" aria-valuenow="@Model.KapasitasTrukMini"
-                                             aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
-                                            @persenTruckMini%
-                                        </div>
-                                    }
-                                    @if (Model.KapasitasTrukBus > 0)
-                                    {
-                                        <div class="progress-bar bg-danger" role="progressbar"
-                                             style="width: @persenTrukBus%;" aria-valuenow="@Model.KapasitasTrukBus"
-                                             aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
-                                            @persenTrukBus%
-                                        </div>
-                                    }
-                                    @if (Model.KapasitasTrailer > 0)
-                                    {
-                                        <div class="progress-bar bg-secondary" role="progressbar"
-                                             style="width: @persenTrailer%;" aria-valuenow="@Model.KapasitasTrailer"
-                                             aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
-                                            @persenTrailer%
-                                        </div>
-                                    }
-                                </div>
+                                    <div class="progress mb-3" style="height: 20px;">
+                                        @if (Model.KapasitasSepeda > 0)
+                                        {
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                                                 style="width: @persenSepeda%;" aria-valuenow="@Model.KapasitasSepeda"
+                                                 aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
+                                                @persenSepeda%
+                                            </div>
+                                        }
+                                        @if (Model.KapasitasMotor > 0)
+                                        {
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                                                 style="width: @persenMotor%;" aria-valuenow="@Model.KapasitasMotor"
+                                                 aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
+                                                @persenMotor%
+                                            </div>
+                                        }
+                                        @if (Model.KapasitasMobil > 0)
+                                        {
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
+                                                 style="width: @persenMobil%;" aria-valuenow="@Model.KapasitasMobil"
+                                                 aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
+                                                @persenMobil%
+                                            </div>
+                                        }
+                                        @if (Model.KapasitasTrukMini > 0)
+                                        {
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
+                                                 style="width: @persenTruckMini%;" aria-valuenow="@Model.KapasitasTrukMini"
+                                                 aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
+                                                @persenTruckMini%
+                                            </div>
+                                        }
+                                        @if (Model.KapasitasTrukBus > 0)
+                                        {
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
+                                                 style="width: @persenTrukBus%;" aria-valuenow="@Model.KapasitasTrukBus"
+                                                 aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
+                                                @persenTrukBus%
+                                            </div>
+                                        }
+                                        @if (Model.KapasitasTrailer > 0)
+                                        {
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
+                                                 style="width: @persenTrailer%;" aria-valuenow="@Model.KapasitasTrailer"
+                                                 aria-valuemin="0" aria-valuemax="@Model.TotalKapasitas">
+                                                @persenTrailer%
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        @if (Model.KapasitasSepeda > 0)
+                                        {
+                                            <h6 class="px-3 fs-6">
+                                                <span class="badge bg-primary">@persenSepeda%</span> = Sepeda
+                                            </h6>
+                                        }
+                                        @if (Model.KapasitasMotor > 0)
+                                        {
+                                            <h6 class="px-3 fs-6">
+                                                <span class="badge bg-success">@persenMotor%</span> = Motor
+                                            </h6>
+                                        }
+                                        @if (Model.KapasitasMobil > 0)
+                                        {
+                                            <h6 class="px-3 fs-6">
+                                                <span class="badge bg-info">@persenMobil%</span> = Mobil
+                                            </h6>
+                                        }
+                                        @if (Model.KapasitasTrukMini > 0)
+                                        {
+                                            <h6 class="px-3 fs-6">
+                                                <span class="badge bg-warning">@persenTruckMini%</span> = Truk Mini
+                                            </h6>
+                                        }
+                                        @if (Model.KapasitasTrukBus > 0)
+                                        {
+                                            <h6 class="px-3 fs-6">
+                                                <span class="badge bg-danger">@persenTrukBus%</span> = Truk/Bus
+                                            </h6>
+                                        }
+                                        @if (Model.KapasitasTrailer > 0)
+                                        {
+                                            <h6 class="px-3 fs-6">
+                                                <span class="badge bg-secondary">@persenTrailer%</span> = Trailer
+                                            </h6>
+                                        }
+                                    </div>
+                                    <br />
 
-                                <div class="d-flex justify-content-center">
-                                    @if (Model.KapasitasSepeda > 0)
-                                    {
-                                        <h6 class="px-3 fs-6">
-                                            <span class="badge bg-primary">@persenSepeda%</span> = Sepeda
-                                        </h6>
-                                    }
-                                    @if (Model.KapasitasMotor > 0)
-                                    {
-                                        <h6 class="px-3 fs-6">
-                                            <span class="badge bg-success">@persenMotor%</span> = Motor
-                                        </h6>
-                                    }
-                                    @if (Model.KapasitasMobil > 0)
-                                    {
-                                        <h6 class="px-3 fs-6">
-                                            <span class="badge bg-info">@persenMobil%</span> = Mobil
-                                        </h6>
-                                    }
-                                    @if (Model.KapasitasTrukMini > 0)
-                                    {
-                                        <h6 class="px-3 fs-6">
-                                            <span class="badge bg-warning">@persenTruckMini%</span> = Truk Mini
-                                        </h6>
-                                    }
-                                    @if (Model.KapasitasTrukBus > 0)
-                                    {
-                                        <h6 class="px-3 fs-6">
-                                            <span class="badge bg-danger">@persenTrukBus%</span> = Truk/Bus
-                                        </h6>
-                                    }
-                                    @if (Model.KapasitasTrailer > 0)
-                                    {
-                                        <h6 class="px-3 fs-6">
-                                            <span class="badge bg-secondary">@persenTrailer%</span> = Trailer
-                                        </h6>
-                                    }
+                                    <h4 class="fs-14 fw-semibold mb-3 text-center mb-1">
+                                        Total Kapasitas @Model.TotalKapasitas.ToString("N0") Kendaraan
+                                    </h4>
                                 </div>
-                                <br />
-
-                                <h4 class="fs-14 fw-semibold mb-3 text-center mb-1">
-                                    Total Kapasitas @Model.TotalKapasitas.ToString("N0") Kendaraan
-                                </h4>
                             </div>
                         </div>
                     </div>
@@ -371,7 +370,7 @@
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Detail Kendaraan Terparkir
                         </h4>
                     </div>
@@ -383,7 +382,7 @@
                             <div class="card border border-secondary border-2">
                                 <div class="card-body bg-soft-secondary bg-opacity-25">
                                     <div class="text-center">
-                                        <h3 class="fs-18 fw-semibold mb-1">
+                                        <h3 class="fs-18 fw-semibold mb-1 text-dark">
                                             @Model.TotalTerparkirWeekdays.ToString("N0")
                                         </h3>
                                         <h4 class="fs-14">
@@ -398,7 +397,7 @@
                             <div class="card border border-warning border-2">
                                 <div class="card-body bg-soft-warning bg-opacity-25">
                                     <div class="text-center">
-                                        <h3 class="fs-18 fw-semibold mb-1">
+                                        <h3 class="fs-18 fw-semibold mb-1 text-dark">
                                             @Model.TotalTerparkirWeekend
                                         </h3>
                                         <h4 class="fs-14">
@@ -426,7 +425,7 @@
                                             @if (Model.KapasitasMotor > 0)
                                             {
                                                 <tr>
-                                                    <td>Motor</td>
+                                                    <td class="text-dark">Motor</td>
                                                     <td>@Model.KapasitasMotor.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirMotorWeekdays.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirMotorWeekend.ToString("N0")</td>
@@ -436,7 +435,7 @@
                                             @if (Model.KapasitasMobil > 0)
                                             {
                                                 <tr>
-                                                    <td>Mobil</td>
+                                                    <td class="text-dark">Mobil</td>
                                                     <td>@Model.KapasitasMobil.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirMobilWeekdays.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirMobilWeekend.ToString("N0")</td>
@@ -446,7 +445,7 @@
                                             @if (Model.KapasitasSepeda > 0)
                                             {
                                                 <tr>
-                                                    <td>Sepeda</td>
+                                                    <td class="text-dark">Sepeda</td>
                                                     <td>@Model.KapasitasSepeda.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirSepedaWeekdays.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirSepedaWeekend.ToString("N0")</td>
@@ -456,7 +455,7 @@
                                             @if (Model.KapasitasTrukMini > 0)
                                             {
                                                 <tr>
-                                                    <td>Truk Mini</td>
+                                                    <td class="text-dark">Truk Mini</td>
                                                     <td>@Model.KapasitasTrukMini.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0")</td>
@@ -466,7 +465,7 @@
                                             @if (Model.KapasitasTrukBus > 0)
                                             {
                                                 <tr>
-                                                    <td>Truk/Bus</td>
+                                                    <td class="text-dark">Truk/Bus</td>
                                                     <td>@Model.KapasitasTrukBus.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirTrukBusWeekend.ToString("N0")</td>
@@ -476,7 +475,7 @@
                                             @if (Model.KapasitasTrailer > 0)
                                             {
                                                 <tr>
-                                                    <td>Trailer</td>
+                                                    <td class="text-dark">Trailer</td>
                                                     <td>@Model.KapasitasTrailer.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirTrailerWeekdays.ToString("N0")</td>
                                                     <td>@Model.JumlahTerparkirTrailerWeekend.ToString("N0")</td>
@@ -495,33 +494,25 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="flex-grow-1">
-                                            <h4 class="card-title fs-14 mb-0">Sepeda Motor</h4>
+                                            <h4 class="card-title fs-14 mb-0 text-dark">Sepeda Motor</h4>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.KapasitasMotor Unit</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Kapasitas</p>
+                                            <p class="value">@Model.KapasitasMotor Unit</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekDays</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit (@Model.PersentaseMotorWeekdays.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekDays</p>
+                                            <p class="value">@Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit (@Model.PersentaseMotorWeekdays.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekEnd</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit (@Model.PersentaseMotorWeekend.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekEnd</p>
+                                            <p class="value">@Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit (@Model.PersentaseMotorWeekend.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Tarif</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">Rp. @Model.TarifMotor.ToString("N0")</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Tarif</p>
+                                            <p class="value">Rp. @Model.TarifMotor.ToString("N0")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -534,34 +525,27 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="flex-grow-1">
-                                            <h4 class="card-title fs-14 mb-0">Mobil</h4>
+                                            <h4 class="card-title fs-14 mb-0 text-dark">Mobil</h4>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.KapasitasMobil Unit</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Kapasitas</p>
+                                            <p class="value">@Model.KapasitasMobil Unit</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekDays</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit (@Model.PersentaseMobilWeekdays.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekDays</p>
+                                            <p class="value">@Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit (@Model.PersentaseMobilWeekdays.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekEnd</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit (@Model.PersentaseMobilWeekend.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekEnd</p>
+                                            <p class="value">@Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit (@Model.PersentaseMobilWeekend.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Tarif</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">Rp. @Model.TarifMobil.ToString("N0")</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Tarif</p>
+                                            <p class="value">Rp. @Model.TarifMobil.ToString("N0")</p>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -573,33 +557,25 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="flex-grow-1">
-                                            <h4 class="card-title fs-14 mb-0">Sepeda</h4>
+                                            <h4 class="card-title fs-14 mb-0 text-dark">Sepeda</h4>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.KapasitasSepeda Unit</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Kapasitas</p>
+                                            <p class="value">@Model.KapasitasSepeda Unit</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekDays</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit (@Model.PersentaseSepedaWeekdays.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekDays</p>
+                                            <p class="value">@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit (@Model.PersentaseSepedaWeekdays.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekEnd</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit (@Model.PersentaseSepedaWeekend.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekEnd</p>
+                                            <p class="value">@Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit (@Model.PersentaseSepedaWeekend.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Tarif</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">Rp. @Model.TarifSepeda.ToString("N0")</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Tarif</p>
+                                            <p class="value">Rp. @Model.TarifSepeda.ToString("N0")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -616,29 +592,21 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.KapasitasTrukMini Unit</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Kapasitas</p>
+                                            <p class="value">@Model.KapasitasTrukMini Unit</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekDays</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekdays.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekDays</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekdays.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekEnd</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekend.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekEnd</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekend.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Tarif</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">Rp. @Model.TarifTrukMini.ToString("N0")</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Tarif</p>
+                                            <p class="value">Rp. @Model.TarifTrukMini.ToString("N0")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -655,29 +623,21 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.KapasitasTrukBus Unit</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Kapasitas</p>
+                                            <p class="value">@Model.KapasitasTrukBus Unit</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekDays</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit (@Model.PersentaseTrukBusWeekdays.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekDays</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit (@Model.PersentaseTrukBusWeekdays.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekEnd</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit (@Model.PersentaseTrukBusWeekend.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekEnd</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit (@Model.PersentaseTrukBusWeekend.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Tarif</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">Rp. @Model.TarifTrukBus.ToString("N0")</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Tarif</p>
+                                            <p class="value">Rp. @Model.TarifTrukBus.ToString("N0")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -694,29 +654,21 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Kapasitas</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.KapasitasTrailer Unit</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Kapasitas</p>
+                                            <p class="value">@Model.KapasitasTrailer Unit</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekDays</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit (@Model.PersentaseTrailerWeekdays.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekDays</p>
+                                            <p class="value">@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit (@Model.PersentaseTrailerWeekdays.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Terparkir WeekEnd</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">@Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit (@Model.PersentaseTrailerWeekend.ToString("P2"))</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Terparkir WeekEnd</p>
+                                            <p class="value">@Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit (@Model.PersentaseTrailerWeekend.ToString("P2"))</p>
                                         </div>
-                                        <div class="d-flex p-3 py-0">
-                                            <p class="fs-14 text-muted flex-grow-1">Tarif</p>
-                                            <div class="flex-shrink-0">
-                                                <p class="fs-14 fw-semibold">Rp. @Model.TarifTrailer.ToString("N0")</p>
-                                            </div>
+                                        <div class="info-row">
+                                            <p class="label">Tarif</p>
+                                            <p class="value">Rp. @Model.TarifTrailer.ToString("N0")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -730,7 +682,7 @@
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">Detail Omzet</h4>
+                        <h4 class="card-title fs-16 mb-0 text-dark">Detail Omzet</h4>
                     </div>
                 </div>
                 <div class="card-body">
@@ -947,7 +899,7 @@
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Perhitungan Potensi Pajak
                         </h4>
                     </div>
@@ -994,43 +946,36 @@
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Ringkasan
                         </h4>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">NOP</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">@Model.NOP</p>
-                        </div>
+                    <div class="d-flex mb-2">
+                        <p class="label">NOP</p>
+                        <p class="value">@Model.NOP</p>
                     </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Nama Usaha</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">@Model.Nama</p>
-                        </div>
+                    <div class="d-flex mb-2">
+                        <p class="label">Nama Usaha</p>
+                        <p class="value">@Model.Nama</p>
                     </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Alamat</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">@Model.Alamat</p>
-                        </div>
+                    <div class="d-flex mb-2">
+                        <p class="label">Alamat</p>
+                        <p class="value">@Model.Alamat</p>
                     </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Total Kapasitas</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">@Model.TotalKapasitas Kendaraan</p>
-                        </div>
+                    <div class="d-flex mb-2">
+                        <p class="label">Total Kapasitas</p>
+                        <p class="value">@Model.TotalKapasitas Kendaraan</p>
                     </div>
+
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Potensi Pajak
                         </h4>
                     </div>
@@ -1043,10 +988,10 @@
                                     <h4 class="card-title fs-14 mb-4">
                                         Potensi Pajak per Bulan
                                     </h4>
-                                    <h4 class="card-title fs-18 mb-0">
+                                    <h4 class="card-title fs-18 mb-0 text-dark fw-bold">
                                         Rp. @Model.PotensiPajakPerBulan.ToString("N0")
                                     </h4>
-                                    <p class="fs-12">10% dari omzet bulanan</p>
+                                    <p class="fs-12 text-dark">10% dari omzet bulanan</p>
                                 </div>
                             </div>
                         </div>
@@ -1056,10 +1001,10 @@
                                     <h4 class="card-title fs-14 mb-4">
                                         Potensi Pajak per Tahun
                                     </h4>
-                                    <h4 class="card-title fs-18 mb-0">
+                                    <h4 class="card-title fs-18 mb-0 text-dark fw-bold">
                                         Rp. @Model.PotensiPajakPerTahun.ToString("N0")
                                     </h4>
-                                    <p class="fs-12">Proyeksi untuk 12 bulan</p>
+                                    <p class="fs-12 text-dark">Proyeksi untuk 12 bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -1070,126 +1015,244 @@
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Visualisasi Parkir
                         </h4>
                     </div>
                 </div>
                 <div class="card-body">
-                    <h4 class="fs-14 fw-semibold mb-2">
-                        Sepeda Motor
-                    </h4>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMotor.ToString("N0") Unit</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit (WeekDays)</p>
-                        </div>
-                    </div>
-                    <div class="progress mb-2" style="height:20px">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
-                             aria-valuenow="@Model.PersentaseMotorWeekdays.ToString("F0")"
-                             aria-valuemin="0" aria-valuemax="100"
-                             style="width: @Model.PersentaseMotorWeekdays.ToString("F0")%">
-                            @Model.PersentaseMotorWeekdays.ToString("N0")%
-                        </div>
-                    </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMotor.ToString("N0") Unit</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit (WeekEnd)</p>
-                        </div>
-                    </div>
-                    <div class="progress" style="height:20px">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
-                             aria-valuenow="@Model.PersentaseMotorWeekend.ToString("F0")"
-                             aria-valuemin="0" aria-valuemax="100"
-                             style="width: @Model.PersentaseMotorWeekend.ToString("F0")%">
-                            @Model.PersentaseMotorWeekend.ToString("N0")%
-                        </div>
-                    </div>
-                    <hr class="my-4">
+                    @{
+                        var persenMotorWeekdays = (Model.KapasitasMotor == 0 ? 0 : (decimal)Model.JumlahTerparkirMotorWeekdays / Model.KapasitasMotor * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
 
-                    <h4 class="fs-14 fw-semibold mb-2">
-                        Mobil
-                    </h4>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMobil.ToString("N0") Unit</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit (WeekDays)</p>
-                        </div>
-                    </div>
-                    <div class="progress mb-2" style="height:20px">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
-                             aria-valuenow="@Model.PersentaseMobilWeekdays.ToString("F0")"
-                             aria-valuemin="0" aria-valuemax="100"
-                             style="width: @Model.PersentaseMobilWeekdays.ToString("F0")%">
-                            @Model.PersentaseMobilWeekdays.ToString("N0")%
-                        </div>
-                    </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMobil.ToString("N0") Unit</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit (WeekEnd)</p>
-                        </div>
-                    </div>
-                    <div class="progress" style="height:20px">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
-                             aria-valuenow="@Model.PersentaseMotorWeekend.ToString("F0")"
-                             aria-valuemin="0" aria-valuemax="100"
-                             style="width: @Model.PersentaseMotorWeekend.ToString("F0")%">
-                            @Model.PersentaseMotorWeekend.ToString("N0")%
-                        </div>
-                    </div>
-                    <hr class="my-4">
+                        var persenMotorWeekend = (Model.KapasitasMotor == 0 ? 0 : (decimal)Model.JumlahTerparkirMotorWeekend / Model.KapasitasMotor * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
 
-                    <h4 class="fs-14 mb-2 text-center">
-                        Total Kendaraan Terparkir per Hari
-                    </h4>
-                    <h4 class="fs-16 fw-semibold mb-2 text-center">
-                        @Model.TotalTerparkirWeekdays.ToString("N0") Unit (WeekDays) | @Model.TotalTerparkirWeekend.ToString("N0") Unit (WeekEnd)
-                    </h4>
+                        var persenMobilWeekdays = (Model.KapasitasMobil == 0 ? 0 : (decimal)Model.JumlahTerparkirMobilWeekdays / Model.KapasitasMobil * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                        var persenMobilWeekend = (Model.KapasitasMobil == 0 ? 0 : (decimal)Model.JumlahTerparkirMobilWeekend / Model.KapasitasMobil * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                        var persenTrukMiniWeekdays = (Model.KapasitasTrukMini == 0 ? 0 : (decimal)Model.JumlahTerparkirTrukMiniWeekdays / Model.KapasitasTrukMini * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                        var persenTrukMiniWeekend = (Model.KapasitasTrukMini == 0 ? 0 : (decimal)Model.JumlahTerparkirTrukMiniWeekend / Model.KapasitasTrukMini * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                        var persenTrukBusWeekdays = (Model.KapasitasTrukBus == 0 ? 0 : (decimal)Model.JumlahTerparkirTrukBusWeekdays / Model.KapasitasTrukBus * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                        var persenTrukBusWeekend = (Model.KapasitasTrukBus == 0 ? 0 : (decimal)Model.JumlahTerparkirTrukBusWeekend / Model.KapasitasTrukBus * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                        var persenTrailerWeekdays = (Model.KapasitasTrailer == 0 ? 0 : (decimal)Model.JumlahTerparkirTrailerWeekdays / Model.KapasitasTrailer * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                        var persenTrailerWeekend = (Model.KapasitasTrailer == 0 ? 0 : (decimal)Model.JumlahTerparkirTrailerWeekend / Model.KapasitasTrailer * 100)
+                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    @if(Model.KapasitasMotor > 0)
+                    {
+                        <h4 class="fs-14 fw-semibold mb-2 text-dark">
+                            Sepeda Motor
+                        </h4>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMotor.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit (WeekDays)</p>
+                            </div>
+                        </div>
+                        <div class="progress mb-2" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                 role="progressbar"
+                                 aria-valuenow="@persenMotorWeekdays"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenMotorWeekdays%">
+                                @persenMotorWeekdays%
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMotor.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit (WeekEnd)</p>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                 role="progressbar"
+                                 aria-valuenow="@persenMotorWeekend"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenMotorWeekend%">
+                                @persenMotorWeekend%
+                            </div>
+                        </div>
+                    }
+                    @if (Model.KapasitasMobil > 0)
+                    {
+                        <h4 class="fs-14 fw-semibold mb-2 text-dark">Mobil</h4>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMobil.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit (WeekDays)</p>
+                            </div>
+                        </div>
+                        <div class="progress mb-2" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
+                                 aria-valuenow="@persenMobilWeekdays"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenMobilWeekdays%">
+                                @persenMobilWeekdays%
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasMobil.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit (WeekEnd)</p>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
+                                 aria-valuenow="@persenMobilWeekend"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenMobilWeekend%">
+                                @persenMobilWeekend%
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.KapasitasTrukMini > 0)
+                    {
+                        <h4 class="fs-14 fw-semibold mb-2 text-dark">Truk Mini</h4>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasTrukMini.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit (WeekDays)</p>
+                            </div>
+                        </div>
+                        <div class="progress mb-2" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                                 aria-valuenow="@persenTrukMiniWeekdays"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenTrukMiniWeekdays%">
+                                @persenTrukMiniWeekdays%
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasTrukMini.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit (WeekEnd)</p>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                                 aria-valuenow="@persenTrukMiniWeekend"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenTrukMiniWeekend%">
+                                @persenTrukMiniWeekend%
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.KapasitasTrukBus > 0)
+                    {
+                        <h4 class="fs-14 fw-semibold mb-2 text-dark">Truk / Bus</h4>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasTrukBus.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit (WeekDays)</p>
+                            </div>
+                        </div>
+                        <div class="progress mb-2" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                                 aria-valuenow="@persenTrukBusWeekdays"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenTrukBusWeekdays%">
+                                @persenTrukBusWeekdays%
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasTrukBus.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit (WeekEnd)</p>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                                 aria-valuenow="@persenTrukBusWeekend"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenTrukBusWeekend%">
+                                @persenTrukBusWeekend%
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.KapasitasTrailer > 0)
+                    {
+                        <h4 class="fs-14 fw-semibold mb-2 text-dark">Trailer</h4>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasTrailer.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit (WeekDays)</p>
+                            </div>
+                        </div>
+                        <div class="progress mb-2" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
+                                 aria-valuenow="@persenTrailerWeekdays"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenTrailerWeekdays%">
+                                @persenTrailerWeekdays%
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <p class="fs-14 text-muted flex-grow-1">Kapasitas: @Model.KapasitasTrailer.ToString("N0") Unit</p>
+                            <div class="flex-shrink-0">
+                                <p class="fs-14 fw-semibold mb-1">Terpakai @Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit (WeekEnd)</p>
+                            </div>
+                        </div>
+                        <div class="progress" style="height:20px">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
+                                 aria-valuenow="@persenTrailerWeekend"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: @persenTrailerWeekend%">
+                                @persenTrailerWeekend%
+                            </div>
+                        </div>
+                    }
+
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Parameter Perhitungan
                         </h4>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Turnover WeekDays</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">@Model.TurnoverWeekdays.ToString("N2") %</p>
-                        </div>
+                    <div class="info-row">
+                        <p class="label">Turnover WeekDays</p>
+                        <p class="value">@Model.TurnoverWeekdays.ToString("N2") %</p>
                     </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Turnover WeekEnd</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">@Model.TurnoverWeekend.ToString("N2") %</p>
-                        </div>
+                    <div class="info-row">
+                        <p class="label">Turnover WeekEnd</p>
+                        <p class="value">@Model.TurnoverWeekend.ToString("N2") %</p>
                     </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">WeekDays per Bulan</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">22 Hari</p>
-                        </div>
+                    <div class="info-row">
+                        <p class="label">WeekDays per Bulan</p>
+                        <p class="value">22 Hari</p>
                     </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">WeekEnd per Bulan</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">8 Hari</p>
-                        </div>
+                    <div class="info-row">
+                        <p class="label">WeekEnd per Bulan</p>
+                        <p class="value">8 Hari</p>
                     </div>
-                    <div class="d-flex">
-                        <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
-                        <div class="flex-shrink-0">
-                            <p class="fs-14 fw-semibold mb-1">@Model.TarifPajak.ToString("N2") %</p>
-                        </div>
+                    <div class="info-row">
+                        <p class="label">Tarif Pajak</p>
+                        <p class="value">@Model.TarifPajak.ToString("N2") %</p>
                     </div>
+
                 </div>
             </div>
 
@@ -1200,7 +1263,7 @@
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
                             Rumus Lengkap Perhitungan Potensi Pajak
                         </h4>
                     </div>
