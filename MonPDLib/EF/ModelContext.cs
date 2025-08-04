@@ -113,6 +113,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbPotensiResto> DbPotensiRestos { get; set; }
 
+    public virtual DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
+
+    public virtual DbSet<DbRekamAlatTbsb> DbRekamAlatTbsbs { get; set; }
+
     public virtual DbSet<DbRekamParkir> DbRekamParkirs { get; set; }
 
     public virtual DbSet<DbRekamRestoran> DbRekamRestorans { get; set; }
@@ -325,9 +329,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -844,6 +848,16 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_RESTO_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbRekamAlatT>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("DB_REKAM_ALAT_TS_PK");
+        });
+
+        modelBuilder.Entity<DbRekamAlatTbsb>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("DB_REKAM_ALAT_TBSB_PK");
         });
 
         modelBuilder.Entity<DbRekamParkir>(entity =>
