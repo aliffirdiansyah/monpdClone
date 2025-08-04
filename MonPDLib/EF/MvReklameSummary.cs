@@ -216,4 +216,11 @@ public partial class MvReklameSummary
     [StringLength(100)]
     [Unicode(false)]
     public string? NamaJalanA { get; set; }
+
+    [Column("IS_PERPANJANGAN", TypeName = "NUMBER")]
+    public decimal? IsPerpanjangan { get; set; }
+
+    [Column("JUMLAH")]
+    [Precision(10)]
+    public int? Jumlah { get; set; }
 }
