@@ -119,6 +119,7 @@ namespace MonPDReborn.Controllers.DataOP
                         }
                     case EnumFactory.EPajak.TenagaListrik:
                         //var modelTenagaListrik = ProfilePotensiOPVM.Method.GetDataPotensiListrik(nop);
+                        //return View("~/Views/DataOP/ProfilePotensiOP/DetailPPJ.cshtml", modelTenagaListrik);
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var modelPerhotelan = ProfilePotensiOPVM.Method.GetDataPotensiHotel(nop);
@@ -143,8 +144,12 @@ namespace MonPDReborn.Controllers.DataOP
                             return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", modelKesenianHiburan);
                         }
                     case EnumFactory.EPajak.AirTanah:
+                        var modelAbt = ProfilePotensiOPVM.Method.GetDataPotensiABT(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailAbt.cshtml", modelAbt);
                         break;
                     case EnumFactory.EPajak.Reklame:
+                        //var modelReklame = ProfilePotensiOPVM.Method.GetDataPotensiReklame(nop);
+                        //return View("~/Views/DataOP/ProfilePotensiOP/DetailPPJ.cshtml", modelReklame);
                         break;
                     case EnumFactory.EPajak.PBB:
                         break;
