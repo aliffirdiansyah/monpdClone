@@ -20,10 +20,8 @@ namespace MonPDReborn.Models.DataOP
         public class Index
         {
             public string Keyword { get; set; } = null!;
-            public Dashboard Data { get; set; } = new();
             public Index()
             {
-                Data = Method.GetDashboardData();
 
             }
         }
@@ -31,11 +29,29 @@ namespace MonPDReborn.Models.DataOP
         public class ShowRekap
         {
             public List<RekapPotensi> DataRekapPotensi { get; set; } = new();
+            public Dashboard Data { get; set; } = new();
+
             public ShowRekap() { }
             public ShowRekap(string jenisPajak)
             {
-
                 DataRekapPotensi = Method.GetRekapPotensiList();
+                // Total Potensi dari seluruh data rekap
+                Data.Potensi = DataRekapPotensi.Sum(r => r.TotalPotensi);
+
+                // Realisasi total = total dari Realisasi1 + Realisasi2 + Realisasi3
+                Data.RealisasiTotal = DataRekapPotensi.Sum(r => r.Realisasi1 + r.Realisasi2 + r.Realisasi3);
+
+                // Capaian dalam persen: (RealisasiTotal / Potensi) * 100
+                Data.Capaian = Data.Potensi == 0 ? 0 :
+                    Math.Round((Data.RealisasiTotal / Data.Potensi) * 100, 2);
+
+                // Jumlah OP
+                //Data.TotalOP = totalOP;
+                Data.RealisasiOP = DataRekapPotensi.Sum(r => r.Realisasi3);
+
+                // Capaian OP sebagai persen string
+                //Data.CapaianOP = totalOP == 0 ? "0%" :
+                //    Math.Round((decimal)realisasiOP / totalOP * 100, 2).ToString("0.##") + "%";
             }
         }
 
@@ -1954,7 +1970,7 @@ namespace MonPDReborn.Models.DataOP
             public decimal RealisasiTotal { get; set; }
             public decimal Capaian { get; set; }
             public int TotalOP { get; set; }
-            public int RealisasiOP { get; set; }
+            public decimal RealisasiOP { get; set; }
             public string CapaianOP { get; set; } = "";
         }
 
@@ -2437,15 +2453,15 @@ namespace MonPDReborn.Models.DataOP
 
         public class DetailPotensiReklame
         {
-            
+
             public string NomorObjekReklame { get; set; } = string.Empty;
-            public string JenisReklame { get; set; } = string.Empty; 
-            public string Status { get; set; } = string.Empty;       
+            public string JenisReklame { get; set; } = string.Empty;
+            public string Status { get; set; } = string.Empty;
             public DateTime TanggalPerhitungan { get; set; }
 
             public decimal TarifPajak { get; set; }
 
-            public decimal NSRTahun0 { get; set; } 
+            public decimal NSRTahun0 { get; set; }
             public decimal NSRTahun1 { get; set; }
             public decimal NSRTahun2 { get; set; }
             public decimal NSRTahun3 { get; set; }
