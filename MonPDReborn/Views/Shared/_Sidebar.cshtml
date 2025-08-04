@@ -321,7 +321,7 @@
             <div id="two-column-menu"></div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-wajibPajak">Wajib Pajak</span></li>
-                <li class="nav-item">
+               @*  <li class="nav-item">
                     <a class="nav-link menu-link collapse @AktivitasWPActiveClass" 
                         href="#sidebarAktivitasWP" 
                         data-bs-toggle="collapse" 
@@ -352,7 +352,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> *@
                 <li class="nav-item">
                     <a class="nav-link menu-link collapse @DataWPActiveClass" 
                         href="#sidebarDataWP" 
@@ -370,7 +370,7 @@
                                     Profile WP
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link @(currentController == "PROFILEPEMBAYARANWP" ? "active" : "")" 
                                     href="@Url.Action("Index","ProfilePembayaranWP")" data-key="t-profilPembayaranWP">
                                     Profile Pembayaran
@@ -381,7 +381,7 @@
                                     href="@Url.Action("Index","ProfilePiutangWP")" data-key="t-profilPiutang">
                                     Profile Piutang
                                 </a>
-                            </li>
+                            </li> *@
                         </ul>
                     </div>
                 </li>
