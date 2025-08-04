@@ -2183,6 +2183,24 @@ namespace MonPDReborn.Models.DataOP
             public decimal PotensiPajakPerTahunFitnes => PotensiPajakPerBulanFitnes * BulanSisa;
         }
 
+        public class DashboardPeneranganJalan
+        {
+            public string NOP { get; set; } = string.Empty;
+            public string Status { get; set; } = "Aktif";
+            public string PeriodeData { get; set; } = string.Empty;
+            public string PeriodeTerakhir { get; set; } = string.Empty; 
+            public DateTime TanggalPerhitungan { get; set; }
+
+            public decimal RataRataNJTL { get; set; }
+            public decimal TarifPajak { get; set; } 
+            public decimal TotalPajak => RataRataNJTL * TarifPajak;
+
+
+            public string Catatan { get; set; } = string.Empty;
+        }
+
+
+
         #endregion
 
 
