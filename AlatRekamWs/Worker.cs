@@ -175,12 +175,12 @@ namespace AlatRekamWs
                         newRow.HariIni = item.HariIni;
 
                         _contMonPd.DbRekamAlatTs.Add(newRow);
-                        _contMonPd.SaveChanges();
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"{DateTime.Now} DB_REKAM_ALAT_TS {item.Nop}");
                         Console.ResetColor();
                     }
 
+                    _contMonPd.SaveChanges();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"{DateTime.Now} DB_REKAM_ALAT_TS FINISHED");
                     Console.ResetColor();

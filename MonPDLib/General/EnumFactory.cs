@@ -41,6 +41,7 @@ namespace MonPDLib.General
             DBOPREKLAMESURVEY,
             DBNPWPD,
             DBOPOPSEN,
+            DBOPREKLAMEINSJML,
             DBOPALATREKAM
         }
         public enum EStatePemeriksaanSkpdKbJabatan

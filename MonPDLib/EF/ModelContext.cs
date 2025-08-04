@@ -65,6 +65,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameEmail> DbMonReklameEmails { get; set; }
 
+    public virtual DbSet<DbMonReklameInsJumlah> DbMonReklameInsJumlahs { get; set; }
+
     public virtual DbSet<DbMonReklameLiar> DbMonReklameLiars { get; set; }
 
     public virtual DbSet<DbMonReklameSurat> DbMonReklameSurats { get; set; }
@@ -666,6 +668,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbMonReklameEmail>(entity =>
         {
             entity.HasKey(e => new { e.NoFormulir, e.TglKirimEmail }).HasName("DB_MON_REKLAME_EMAIL_PK");
+        });
+
+        modelBuilder.Entity<DbMonReklameInsJumlah>(entity =>
+        {
+            entity.HasKey(e => e.NoFormulir).HasName("SYS_C0033518");
         });
 
         modelBuilder.Entity<DbMonReklameLiar>(entity =>
