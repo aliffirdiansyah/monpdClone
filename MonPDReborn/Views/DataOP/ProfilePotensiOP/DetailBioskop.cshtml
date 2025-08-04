@@ -157,36 +157,64 @@
 
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header d-flex bg-soft-warning">
+            <div class="card-header d-flex bg-elegant-dark">
                 <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Rumus Lengkap Perhitungan Potensi Pajak
+                    <h4 class="card-title fs-16 mb-0 text-white">
+                        Rumus Lengkap Potensi Pajak Hiburan
                     </h4>
                 </div>
             </div>
             <div class="card-body">
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (((Harga Tiket Masuk Hari Kerja x Kursi Studio Terjual per Hari x Turnover Hari Kerja x 22) + (Harga Tiket Masuk Akhir Pekan x Kursi Studi Terjual per Hari x Turnover Akhir Pekan x 8)) x Tarif Pajak) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (((f x d x l x 22) + (g x d x j x 8)) x Tarif Pajak) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (((0 x 0 x 0 x 22) + (0 x 0 x 0 x 8)) x Tarif Pajak) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = ((0 + 0) x 0,00) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x 0,00) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = 0 x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = Rp 0
-                </h4>
+                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet</h4>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Kapasitas = Jumlah Studio x Kapasitas Studio x 4 Kali Penayangan/Hari
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.JumlahStudio.ToString("N0") x @Model.KapasitasStudio.ToString("N0") x 4 = @Model.KapasitasBioskop.ToString("N0") orang
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Jumlah Pengunjung Weekdays = Kapasitas x Turnover Weekdays
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") orang
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Jumlah Pengunjung Weekend = Kapasitas x Turnover Weekend
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Model.JumlahPengunjungWeekendBioskop.ToString("N0") orang
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Omzet/Bulan = (HTM x Pengunjung Weekdays x 22) + (HTM x Pengunjung Weekend x 8)
+                </p>
+                <p class="fs-14 text-muted mb-3 fw-semibold">
+                    = (@Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") x 22) +
+                    (@Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendBioskop.ToString("N0") x 8) = @Model.OmzetPerBulanBioskop.ToString("N0")
+                </p>
+
+                <hr>
+
+                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.OmzetPerBulanBioskop.ToString("N0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulanBioskop.ToString("N0")
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                </p>
+                <p class="fs-14 text-muted fw-semibold">
+                    = @Model.PotensiPajakPerBulanBioskop.ToString("N0") x @Model.BulanSisa = @Model.PotensiPajakPerTahunBioskop.ToString("N0")
+                </p>
             </div>
         </div>
     </div>
+
 </div>

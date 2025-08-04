@@ -589,40 +589,59 @@
     </div>
 
     <div class="col-lg-12">
-
         <div class="card">
-            <div class="card-header d-flex bg-soft-success">
+            <div class="card-header d-flex bg-elegant-dark">
                 <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Rumus Lengkap Perhitungan Potensi Pajak
+                    <h4 class="card-title fs-16 mb-0 text-white">
+                        Rumus Lengkap Potensi Pajak Hiburan
                     </h4>
                 </div>
             </div>
             <div class="card-body">
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (((Harga Tiket Masuk Hari Kerja x Kapasitas Pengunjung x Turnover Hari Kerja x 22 Hari) + (Harga Tiket Masuk Akhir Pekan x Kapasitas Pengunjung x Turnover Akhir Pekan x 8 Hari)) x Tarif Pajak) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (((f x e x i x 22) + (g x e x j x 8)) x Tarif Pajak) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (((0 x 0 x 0,0 x 22) + (0 x 0 x 0,0 x 8)) x 0,5) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = ((0 + 0) x 0,5) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x 0,5) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = 0 x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = Rp 0
-                </h4>
+                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet</h4>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Jumlah Pengunjung Weekdays = Kapasitas x Turnover Weekdays
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") orang
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Jumlah Pengunjung Weekend = Kapasitas x Turnover Weekend
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Model.JumlahPengunjungWeekendLainnya.ToString("N0") orang
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Omzet/Bulan = (HTM Weekdays x Pengunjung Weekdays x 22) + (HTM Weekdays x Pengunjung Weekend x 8)
+                </p>
+                <p class="fs-14 text-muted mb-3 fw-semibold">
+                    = (@Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") x 22) +
+                    (@Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendLainnya.ToString("N0") x 8) = @Model.OmzetPerBulanLainnya.ToString("N0")
+                </p>
+
+                <hr>
+
+                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.OmzetPerBulanLainnya.ToString("N0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulanLainnya.ToString("N0")
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                </p>
+                <p class="fs-14 text-muted fw-semibold">
+                    = @Model.PotensiPajakPerBulanLainnya.ToString("N0") x @Model.BulanSisa = @Model.PotensiPajakPerTahunLainnya.ToString("N0")
+                </p>
             </div>
         </div>
-
     </div>
+
 
 </div>
