@@ -125,6 +125,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DetailUpayaReklame> DetailUpayaReklames { get; set; }
 
+    public virtual DbSet<MAbtKelompok> MAbtKelompoks { get; set; }
+
+    public virtual DbSet<MAbtKelompokHdum> MAbtKelompokHda { get; set; }
+
     public virtual DbSet<MFasilita> MFasilitas { get; set; }
 
     public virtual DbSet<MJenisKendaraan> MJenisKendaraans { get; set; }
@@ -875,6 +879,25 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbRekamRestoran>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.Tanggal, e.Seq }).HasName("SYS_C0032871");
+        });
+
+        modelBuilder.Entity<MAbtKelompok>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("M_ABT_KELOMPOK_PK");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Aktif).HasDefaultValueSql("1 ");
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate ");
+        });
+
+        modelBuilder.Entity<MAbtKelompokHdum>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.PemakaianBatasMinim }).HasName("M_ABT_KELOMPOK_HDA_PK");
+
+            entity.HasOne(d => d.IdNavigation).WithMany(p => p.MAbtKelompokHda)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ABT_KELOMPOK");
         });
 
         modelBuilder.Entity<MFasilita>(entity =>
