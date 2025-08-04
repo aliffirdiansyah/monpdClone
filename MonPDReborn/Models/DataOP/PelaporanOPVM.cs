@@ -370,88 +370,88 @@ namespace MonPDReborn.Models.DataOP
                 switch (JenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        var dataResto = context.DbMonRestos
-                            .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = g.Key.Nop,
-                                BulanKe = g.Key.BulanKe,
-                                Tahun = (int)g.Key.Tahun,
-                                Status = "Sudah Lapor",
-                                TanggalLapor = g.Max(x => x.TglKetetapan),
-                                Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
-                            }).ToList();
+                        ret = context.DbMonRestos
+                             .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
+                             .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
+                             .Select(g => new RealisasiBulanan
+                             {
+                                 NOP = g.Key.Nop,
+                                 BulanKe = g.Key.BulanKe,
+                                 Tahun = (int)g.Key.Tahun,
+                                 Status = "Sudah Lapor",
+                                 TanggalLapor = g.Max(x => x.TglKetetapan),
+                                 Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
+                             }).ToList();
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        var dataListrik = context.DbMonPpjs
-                            .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = g.Key.Nop,
-                                BulanKe = g.Key.BulanKe,
-                                Tahun = (int)g.Key.Tahun,
-                                Status = "Sudah Lapor",
-                                TanggalLapor = g.Max(x => x.TglKetetapan),
-                                Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
-                            }).ToList();
+                        ret = context.DbMonPpjs
+                             .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
+                             .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
+                             .Select(g => new RealisasiBulanan
+                             {
+                                 NOP = g.Key.Nop,
+                                 BulanKe = g.Key.BulanKe,
+                                 Tahun = (int)g.Key.Tahun,
+                                 Status = "Sudah Lapor",
+                                 TanggalLapor = g.Max(x => x.TglKetetapan),
+                                 Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
+                             }).ToList();
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        var dataHotel = context.DbMonHotels
-                            .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = g.Key.Nop,
-                                BulanKe = g.Key.BulanKe,
-                                Tahun = (int)g.Key.Tahun,
-                                Status = "Sudah Lapor",
-                                TanggalLapor = g.Max(x => x.TglKetetapan),
-                                Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
-                            }).ToList();
+                        ret = context.DbMonHotels
+                             .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
+                             .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
+                             .Select(g => new RealisasiBulanan
+                             {
+                                 NOP = g.Key.Nop,
+                                 BulanKe = g.Key.BulanKe,
+                                 Tahun = (int)g.Key.Tahun,
+                                 Status = "Sudah Lapor",
+                                 TanggalLapor = g.Max(x => x.TglKetetapan),
+                                 Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
+                             }).ToList();
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        var dataParkir = context.DbMonParkirs
-                            .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = g.Key.Nop,
-                                BulanKe = g.Key.BulanKe,
-                                Tahun = (int)g.Key.Tahun,
-                                Status = "Sudah Lapor",
-                                TanggalLapor = g.Max(x => x.TglKetetapan),
-                                Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
-                            }).ToList();
+                        ret = context.DbMonParkirs
+                             .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
+                             .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
+                             .Select(g => new RealisasiBulanan
+                             {
+                                 NOP = g.Key.Nop,
+                                 BulanKe = g.Key.BulanKe,
+                                 Tahun = (int)g.Key.Tahun,
+                                 Status = "Sudah Lapor",
+                                 TanggalLapor = g.Max(x => x.TglKetetapan),
+                                 Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
+                             }).ToList();
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var dataHiburan = context.DbMonHiburans
-                            .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = g.Key.Nop,
-                                BulanKe = g.Key.BulanKe,
-                                Tahun = (int)g.Key.Tahun,
-                                Status = "Sudah Lapor",
-                                TanggalLapor = g.Max(x => x.TglKetetapan),
-                                Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
-                            }).ToList();
+                        ret = context.DbMonHiburans
+                             .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
+                             .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
+                             .Select(g => new RealisasiBulanan
+                             {
+                                 NOP = g.Key.Nop,
+                                 BulanKe = g.Key.BulanKe,
+                                 Tahun = (int)g.Key.Tahun,
+                                 Status = "Sudah Lapor",
+                                 TanggalLapor = g.Max(x => x.TglKetetapan),
+                                 Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
+                             }).ToList();
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        var dataAbt = context.DbMonAbts
-                            .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
-                            .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
-                            .Select(g => new RealisasiBulanan
-                            {
-                                NOP = g.Key.Nop,
-                                BulanKe = g.Key.BulanKe,
-                                Tahun = (int)g.Key.Tahun,
-                                Status = "Sudah Lapor",
-                                TanggalLapor = g.Max(x => x.TglKetetapan),
-                                Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
-                            }).ToList();
+                        ret = context.DbMonAbts
+                             .Where(x => x.Nop == nop && x.TglKetetapan.HasValue && x.TglKetetapan.Value.Year == tahun)
+                             .GroupBy(x => new { Nop = x.Nop, BulanKe = x.TglKetetapan.Value.Month, Tahun = x.TahunBuku })
+                             .Select(g => new RealisasiBulanan
+                             {
+                                 NOP = g.Key.Nop,
+                                 BulanKe = g.Key.BulanKe,
+                                 Tahun = (int)g.Key.Tahun,
+                                 Status = "Sudah Lapor",
+                                 TanggalLapor = g.Max(x => x.TglKetetapan),
+                                 Nilai = g.Sum(x => x.PokokPajakKetetapan.Value)
+                             }).ToList();
                         break;
                     case EnumFactory.EPajak.Reklame:
                         break;
