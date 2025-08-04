@@ -136,7 +136,7 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.RataRataPengunjung Orang</p>
+                                        <p class="fs-14 fw-semibold">@Model.RataRataPengunjung.ToString("N0") Orang</p>
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +171,7 @@
                                     ((Rata-rata Kunjungan Hari kerja x 22 Hari) + (Rata-rata Kunjungan Akhir Pekan x 8 Hari))/12
                                 </p>
                                 <p class="fs-14 text-muted mb-2">
-                                    ((@Model.JumlahPengunjungWeekdaysLainnya x 22) + (@Model.JumlahPengunjungWeekendLainnya x 8))/12 = @Model.RataRataPengunjung Member
+                                    ((@Model.JumlahPengunjungWeekdaysLainnya x 22) + (@Model.JumlahPengunjungWeekendLainnya x 8))/12 = @Model.RataRataPengunjung.ToString("N0") Member
                                 </p>
                             </div>
                         </div>
@@ -410,28 +410,20 @@
             </div>
             <div class="card-body">
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">NOP</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.NOP</p>
-                    </div>
+                    <p class="label">NOP</p>                    
+                    <p class="value">@Model.NOP</p>                    
                 </div>
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Nama Usaha</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.Nama</p>
-                    </div>
+                    <p class="label">Nama Usaha</p>                    
+                        <p class="value">@Model.Nama</p>                   
                 </div>
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Alamat</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.Alamat</p>
-                    </div>
+                    <p class="label">Alamat</p>                    
+                        <p class="value">@Model.Alamat</p>                   
                 </div>
                 <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Kapasitas Pengunjung</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.Kapasitas Pengunjung</p>
-                    </div>
+                    <p class="label">Kapasitas Pengunjung</p>                    
+                        <p class="value">@Model.Kapasitas Pengunjung</p>                   
                 </div>
             </div>
         </div>
@@ -530,47 +522,33 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Hari Kerja</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Rp @Model.HTMWeekdays.ToString("N0")</p>
-                    </div>
+                <div class="info-row">
+                    <p class="label">Harga Tiket Hari Kerja</p>                  
+                    <p class="value">Rp @Model.HTMWeekdays.ToString("N0")</p>                   
                 </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Harga Tiket Akhir Pekan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">Rp @Model.HTMWeekend.ToString("N0")</p>
-                    </div>
+                <div class="info-row">
+                    <p class="label">Harga Tiket Akhir Pekan</p>                  
+                    <p class="value">Rp @Model.HTMWeekend.ToString("N0")</p>                   
                 </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Turnover Hari Kerja</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.TurnoverWeekdays.ToString("P2") Kali</p>
-                    </div>
+                <div class="info-row">
+                    <p class="label">Turnover Hari Kerja</p>                  
+                    <p class="value">@Model.TurnoverWeekdays.ToString("P2") Kali</p>                   
                 </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.TurnoverWeekend.ToString("P2") Kali</p>
-                    </div>
+                <div class="info-row">
+                    <p class="label">Turnover Akhir Pekan</p>                  
+                    <p class="value">@Model.TurnoverWeekend.ToString("P2") Kali</p>                   
                 </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Hari Kerja per Bulan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">22 Hari</p>
-                    </div>
+                <div class="info-row">
+                    <p class="label">Hari Kerja per Bulan</p>                  
+                    <p class="value">22 Hari</p>                   
                 </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Akhir Pekan per Bulan</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">8 Hari</p>
-                    </div>
+                <div class="info-row">
+                    <p class="label">Akhir Pekan per Bulan</p>                  
+                    <p class="value">8 Hari</p>                   
                 </div>
-                <div class="d-flex">
-                    <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.TarifPajak.ToString("P0")</p>
-                    </div>
+                <div class="info-row">
+                    <p class="label">Tarif Pajak</p>                  
+                    <p class="value">@Model.TarifPajak.ToString("P0")</p>                   
                 </div>
             </div>
         </div>
