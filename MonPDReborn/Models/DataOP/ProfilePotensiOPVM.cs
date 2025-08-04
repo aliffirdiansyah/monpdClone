@@ -873,7 +873,7 @@ namespace MonPDReborn.Models.DataOP
                             .Distinct()
                             .ToList();
 
-                        foreach (var item in kategoriList)
+                        foreach (var item in kategoriList.Where(x => x.Id != 0).ToList())
                         {
 
                             var re = new DetailPotensi();
