@@ -133,11 +133,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                  x.WilayahPajak
                              })
                              .ToList()
-                             .Select(x => new
+                             /*.Select(x => new
                              {
                                  x.Nop,
                                  Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })
+                             })*/
                              .ToList();
                         var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
                                 .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
@@ -171,7 +171,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -195,7 +195,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonRestos
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -247,11 +247,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                  x.WilayahPajak
                              })
                              .ToList()
-                             .Select(x => new
+                             /*.Select(x => new
                              {
                                  x.Nop,
                                  Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })
+                             })*/
                              .ToList();
                         var dataTargetWilayahListrik = context.DbAkunTargetBulanUptbs
                                 .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
@@ -284,7 +284,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -308,7 +308,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonPpjs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -359,11 +359,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 x.WilayahPajak
                             })
                             .ToList()
-                            .Select(x => new
+                            /*.Select(x => new
                             {
                                 x.Nop,
                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                            })
+                            })*/
                             .ToList();
                         var dataTargetWilayahHotel = context.DbAkunTargetBulanUptbs
                                 .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
@@ -397,7 +397,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -421,7 +421,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonHotels
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -471,11 +471,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                  x.WilayahPajak
                              })
                              .ToList()
-                             .Select(x => new
+                             /*.Select(x => new
                              {
                                  x.Nop,
                                  Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })
+                             })*/
                              .ToList();
                         var dataTargetWilayahParkir = context.DbAkunTargetBulanUptbs
                                 .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
@@ -509,7 +509,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -533,7 +533,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonParkirs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -583,11 +583,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                  x.WilayahPajak
                              })
                              .ToList()
-                             .Select(x => new
+                             /*.Select(x => new
                              {
                                  x.Nop,
                                  Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })
+                             })*/
                              .ToList();
                         var dataTargetWilayahHiburan = context.DbAkunTargetBulanUptbs
                                 .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
@@ -621,7 +621,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -645,7 +645,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonHiburans
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -696,11 +696,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                  x.WilayahPajak
                              })
                              .ToList()
-                             .Select(x => new
+                             /*.Select(x => new
                              {
                                  x.Nop,
                                  Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })
+                             })*/
                              .ToList();
                         var dataTargetWilayahAbt = context.DbAkunTargetBulanUptbs
                                 .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
@@ -734,7 +734,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataAbtWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -758,7 +758,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataAbtWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataAbtWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonAbts
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -942,7 +942,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x => x.TahunBuku == tahun)
                                 .Select(x => new ValueTuple<string, string>(
                                     x.Nop,
-                                    Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
+                                    x.WilayahPajak
                                 ))
                                 .ToList()
                         );
@@ -952,7 +952,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x => x.TahunBuku == tahun)
                                 .Select(x => new ValueTuple<string, string>(
                                     x.Nop,
-                                    Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
+                                   x.WilayahPajak
                                 ))
                                 .ToList()
                         );
@@ -962,7 +962,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x => x.TahunBuku == tahun)
                                 .Select(x => new ValueTuple<string, string>(
                                     x.Nop,
-                                    Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
+                                   x.WilayahPajak
                                 ))
                                 .ToList()
                         );
@@ -972,7 +972,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x => x.TahunBuku == tahun)
                                 .Select(x => new ValueTuple<string, string>(
                                     x.Nop,
-                                    Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
+                                   x.WilayahPajak
                                 ))
                                 .ToList()
                         );
@@ -982,7 +982,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x => x.TahunBuku == tahun)
                                 .Select(x => new ValueTuple<string, string>(
                                     x.Nop,
-                                    Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
+                                   x.WilayahPajak
                                 ))
                                 .ToList()
                         );
@@ -992,7 +992,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x => x.TahunBuku == tahun)
                                 .Select(x => new ValueTuple<string, string>(
                                     x.Nop,
-                                    Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
+                                   x.WilayahPajak
                                 ))
                                 .ToList()
                         );
@@ -1002,7 +1002,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         //        .Where(x => x.TahunBuku == tahun)
                         //        .Select(x => new ValueTuple<string, string>(
                         //            x.Nop,
-                        //            Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
+                        //           x.WilayahPajak
                         //        ))
                         //        .ToList()
                         //);
@@ -1141,12 +1141,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -1187,7 +1187,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1216,7 +1216,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonRestos
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -1240,7 +1240,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1278,12 +1278,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -1324,7 +1324,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1353,7 +1353,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonPpjs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -1377,7 +1377,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1415,12 +1415,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -1461,7 +1461,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1490,7 +1490,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonHotels
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -1514,7 +1514,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1552,12 +1552,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -1598,7 +1598,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1627,7 +1627,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonParkirs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -1651,7 +1651,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1690,12 +1690,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -1736,7 +1736,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1765,7 +1765,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonHiburans
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -1789,7 +1789,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1828,12 +1828,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                        /* .Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -1874,7 +1874,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataAbtWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -1903,7 +1903,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataAbtWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataAbtWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonAbts
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -1927,7 +1927,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataAbtWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2122,11 +2122,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -2136,11 +2136,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -2150,11 +2150,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -2164,11 +2164,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -2178,11 +2178,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -2192,11 +2192,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -2206,7 +2206,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         //        .Select(x => new
                         //        {
                         //            x.Nop,
-                        //            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                        //            x.WilayahPajak,
                         //            PajakId = 9m // PBB
                         //        })
                         //        .ToList()
@@ -2400,12 +2400,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                        /* .Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -2449,7 +2449,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2478,7 +2478,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonRestos
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -2502,7 +2502,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2540,12 +2540,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                        /* .Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -2589,7 +2589,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2618,7 +2618,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonPpjs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -2642,7 +2642,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2680,12 +2680,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -2729,7 +2729,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2758,7 +2758,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonHotels
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -2782,7 +2782,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2820,12 +2820,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -2869,7 +2869,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2898,7 +2898,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonParkirs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -2922,7 +2922,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -2961,12 +2961,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -3010,7 +3010,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -3039,7 +3039,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonHiburans
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -3063,7 +3063,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -3102,12 +3102,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                              x.PajakId
                          })
                          .ToList()
-                         .Select(x => new
+                         /*.Select(x => new
                          {
                              x.Nop,
                              Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
                              x.PajakId
-                         })
+                         })*/
                          .ToList();
 
 
@@ -3151,7 +3151,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataAbtWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -3180,7 +3180,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var uptb = dataAbtWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
+                            var uptb = dataAbtWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
                             var dataRealisasiWilayah = context.DbMonAbts
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
@@ -3204,7 +3204,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
 
                                 var nopUptb = dataAbtWilayah
-                                    .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
+                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
                                     .Select(w => w.Nop)
                                     .ToList();
 
@@ -3405,11 +3405,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -3419,11 +3419,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -3433,11 +3433,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -3447,11 +3447,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -3461,11 +3461,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -3475,11 +3475,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Select(x => new
                                 {
                                     x.Nop,
-                                    Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                    x.WilayahPajak,
                                     x.PajakId
                                 })
                                 .ToList()
-                                .Select(x => (x.Nop, x.Wilayah, x.PajakId))
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
                                 .ToList()
                         );
 
@@ -3489,7 +3489,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         //        .Select(x => new
                         //        {
                         //            x.Nop,
-                        //            Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                        //            x.WilayahPajak,
                         //            PajakId = 9m // PBB
                         //        })
                         //        .ToList()
@@ -3658,7 +3658,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             .Select(x => new
                             {
                                 x.Nop,
-                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                x.WilayahPajak,
                                 x.NamaOp,
                                 x.AlamatOp,
                                 x.KategoriNama,
@@ -3689,7 +3689,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         // ambil semua NOP di wilayah & pajak yg sesuai
                         var nopsUptb = dataRestoWilayah
-                            .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
+                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
                             .Select(w => w.Nop)
                             .ToList();
 
@@ -3738,7 +3738,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             .Select(x => new
                             {
                                 x.Nop,
-                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                x.WilayahPajak,
                                 x.NamaOp,
                                 x.AlamatOp,
                                 x.KategoriNama,
@@ -3766,7 +3766,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         // filter NOP sesuai UPTB & jenis pajak
                         var nopsUptbListrik = dataListrikWilayah
-                            .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
+                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
                             .Select(w => w.Nop)
                             .ToList();
 
@@ -3811,7 +3811,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             .Select(x => new
                             {
                                 x.Nop,
-                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                               x.WilayahPajak,
                                 x.NamaOp,
                                 x.AlamatOp,
                                 x.KategoriNama,
@@ -3839,7 +3839,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         // filter NOP sesuai UPTB & jenis pajak
                         var nopsUptbHotel = dataHotelWilayah
-                            .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
+                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
                             .Select(w => w.Nop)
                             .ToList();
 
@@ -3885,7 +3885,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             .Select(x => new
                             {
                                 x.Nop,
-                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                x.WilayahPajak,
                                 x.NamaOp,
                                 x.AlamatOp,
                                 x.KategoriNama,
@@ -3913,7 +3913,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         // filter NOP sesuai UPTB & jenis pajak
                         var nopsUptbParkir = dataParkirWilayah
-                            .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
+                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
                             .Select(w => w.Nop)
                             .ToList();
 
@@ -3959,7 +3959,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             .Select(x => new
                             {
                                 x.Nop,
-                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                x.WilayahPajak,
                                 x.NamaOp,
                                 x.AlamatOp,
                                 x.KategoriNama,
@@ -3987,7 +3987,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         // Filter NOP sesuai UPTB & jenis pajak
                         var nopsUptbHiburan = dataHiburanWilayah
-                            .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
+                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
                             .Select(w => w.Nop)
                             .ToList();
 
@@ -4032,7 +4032,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             .Select(x => new
                             {
                                 x.Nop,
-                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
+                                x.WilayahPajak,
                                 x.NamaOp,
                                 x.AlamatOp,
                                 x.KategoriNama,
@@ -4060,7 +4060,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         // Filter NOP sesuai UPTB & jenis pajak
                         var nopsUptbAbt = dataAbtWilayah
-                            .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
+                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
                             .Select(w => w.Nop)
                             .ToList();
 
