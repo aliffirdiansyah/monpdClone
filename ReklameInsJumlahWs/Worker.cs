@@ -128,6 +128,7 @@ namespace ReklameInsJumlahWs
                     null
                 );
 
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"{DateTime.Now} >>> Proses DoWorkFullScanAsync selesai.");
                 Console.ResetColor();
