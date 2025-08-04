@@ -2,9 +2,11 @@
 using MonPDLib.EF;
 using MonPDLib.General;
 using MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DashboardVM;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 
@@ -1979,9 +1981,15 @@ namespace MonPDReborn.Models.DataOP
             // ========== Perhitungan Kategori Lainnya ==========
             public decimal JumlahPengunjungWeekdaysLainnya => Kapasitas * TurnoverWeekdays;
             public decimal JumlahPengunjungWeekendLainnya => Kapasitas * TurnoverWeekend;
+            public decimal JumlahPengunjungPerBulanLainnya =>
+                (JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8);
+            public decimal RataRataPengunjung =>
+                ((JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8))/12;            
             public decimal OmzetPerBulanLainnya =>
                 (HTMWeekdays * JumlahPengunjungWeekdaysLainnya * 22) +
                 (HTMWeekend * JumlahPengunjungWeekendLainnya * 8);
+            public decimal OmzetWeekdaysLainnya => HTMWeekdays * JumlahPengunjungWeekdaysLainnya * 22;
+            public decimal OmzetWeekendLainnya => HTMWeekend * JumlahPengunjungWeekendLainnya * 8;
             public decimal PotensiPajakPerBulanLainnya => OmzetPerBulanLainnya * TarifPajak;
             public decimal PotensiPajakPerTahunLainnya => PotensiPajakPerBulanLainnya * BulanSisa;
 
