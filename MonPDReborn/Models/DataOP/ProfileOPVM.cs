@@ -90,44 +90,74 @@ namespace MonPDReborn.Models.DataOP
 
             public RekapJml()
             {
+                // Ambil data objek pajak
                 Data = Method.GetJmlObjekPajakData();
+                var tahunList = Enumerable.Range(DateTime.Now.Year - 4, 5).ToArray(); // contoh: 2021-2025
 
-                // Hitung total untuk setiap tahun menggunakan LINQ
-                decimal total2021 = Data.Sum(x => x.Tahun1_Akhir);
-                decimal total2022 = Data.Sum(x => x.Tahun2_Akhir);
-                decimal total2023 = Data.Sum(x => x.Tahun3_Akhir);
-                decimal total2024 = Data.Sum(x => x.Tahun4_Akhir);
-                decimal total2025 = Data.Sum(x => x.Tahun5_Akhir);
+                // Total akhir semua pajak per tahun
+                var totalPerTahun = new Dictionary<int, decimal>();
 
-                // Hitung selisih pertumbuhan tahunan
-                var selisihPerTahun = new Dictionary<string, decimal>
+                foreach (var tahun in tahunList)
                 {
-                    { "2021-2022", total2022 - total2021 },
-                    { "2022-2023", total2023 - total2022 },
-                    { "2023-2024", total2024 - total2023 },
-                    { "2024-2025", total2025 - total2024 }
-                };
+                    decimal totalAkhir = 0;
 
-                // Cari kenaikan tertinggi
-                decimal kenaikanTertinggi = 0;
-                string periodeTertinggi = "-";
-                if (selisihPerTahun.Any())
-                {
-                    kenaikanTertinggi = selisihPerTahun.Values.Max();
-                    periodeTertinggi = selisihPerTahun.FirstOrDefault(kv => kv.Value == kenaikanTertinggi).Key ?? "-";
+                    foreach (var item in Data)
+                    {
+                        totalAkhir += tahun switch
+                        {
+                            var y when y == tahunList[0] => item.Tahun5_Akhir,
+                            var y when y == tahunList[1] => item.Tahun4_Akhir,
+                            var y when y == tahunList[2] => item.Tahun3_Akhir,
+                            var y when y == tahunList[3] => item.Tahun2_Akhir,
+                            var y when y == tahunList[4] => item.Tahun1_Akhir,
+                            _ => 0
+                        };
+                    }
+
+                    totalPerTahun[tahun] = totalAkhir;
                 }
 
-                // Masukkan semua hasil perhitungan ke dalam model StatistikData
+                // Hitung pertumbuhan
+                var tahunIni = tahunList[4];
+                var tahunSebelumnya = tahunList[3];
+
+                decimal totalOpTahunIni = totalPerTahun.GetValueOrDefault(tahunIni);
+                decimal totalOpTahunSebelumnya = totalPerTahun.GetValueOrDefault(tahunSebelumnya);
+
+                decimal pertumbuhanOp = (totalOpTahunSebelumnya == 0) ? 0 :
+                    (totalOpTahunIni - totalOpTahunSebelumnya) / totalOpTahunSebelumnya * 100;
+
+                // Cari kenaikan tertinggi antar tahun
+                decimal kenaikanTertinggi = decimal.MinValue;
+                string periodeTertinggi = "-";
+
+                for (int i = 1; i < tahunList.Length; i++)
+                {
+                    var tahunA = tahunList[i - 1];
+                    var tahunB = tahunList[i];
+
+                    if (!totalPerTahun.ContainsKey(tahunA) || !totalPerTahun.ContainsKey(tahunB)) continue;
+
+                    var selisih = totalPerTahun[tahunB] - totalPerTahun[tahunA];
+
+                    if (selisih > kenaikanTertinggi)
+                    {
+                        kenaikanTertinggi = selisih;
+                        periodeTertinggi = $"{tahunA}-{tahunB}";
+                    }
+                }
+
+                // Set data statistik
                 StatistikData = new SeriesOPStatistik
                 {
-                    TotalOpTahunIni = total2025,
-                    PertumbuhanOp = total2025 - total2024,
+                    TotalOpTahunIni = totalOpTahunIni,
+                    PertumbuhanOp = Math.Round(pertumbuhanOp, 2),
                     KenaikanTertinggiOp = kenaikanTertinggi,
                     PeriodeKenaikanTertinggi = periodeTertinggi
                 };
             }
-
         }
+
 
         public class Detail
         {
