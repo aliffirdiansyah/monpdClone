@@ -1850,48 +1850,67 @@ namespace MonPDReborn.Models.DataOP
             public int TotalKapasitas =>
                 (KapasitasMobil + KapasitasMotor + KapasitasSepeda + KapasitasTrailer + KapasitasTrukBus + KapasitasTrukMini);
 
-            public decimal PersentaseKapasitasMotor =>
-                (KapasitasMotor / TotalKapasitas);
-            public decimal PersentaseKapasitasMobil =>
-                (KapasitasMobil / TotalKapasitas);
+            public decimal PersentaseKapasitasSepeda =>
+                TotalKapasitas == 0 ? 0 : (decimal)KapasitasSepeda / TotalKapasitas;
 
+            public decimal PersentaseKapasitasMotor =>
+                TotalKapasitas == 0 ? 0 : (decimal)KapasitasMotor / TotalKapasitas;
+
+            public decimal PersentaseKapasitasMobil =>
+                TotalKapasitas == 0 ? 0 : (decimal)KapasitasMobil / TotalKapasitas;
+
+            public decimal PersentaseKapasitasTrukMini =>
+                TotalKapasitas == 0 ? 0 : (decimal)KapasitasTrukMini / TotalKapasitas;
+
+            public decimal PersentaseKapasitasTrukBus =>
+                TotalKapasitas == 0 ? 0 : (decimal)KapasitasTrukBus / TotalKapasitas;
+
+            public decimal PersentaseKapasitasTrailer =>
+                TotalKapasitas == 0 ? 0 : (decimal)KapasitasTrailer / TotalKapasitas;
 
             // Jumlah terparkir weekdays & weekend
-            public decimal JumlahTerparkirSepedaWeekdays => TurnoverWeekdays * KapasitasSepeda;
-            public decimal JumlahTerparkirSepedaWeekend => TurnoverWeekend * KapasitasSepeda;
+            public decimal JumlahTerparkirSepedaWeekdays => KapasitasSepeda == 0 ? 0 : TurnoverWeekdays * KapasitasSepeda;
+            public decimal JumlahTerparkirSepedaWeekend => KapasitasSepeda == 0 ? 0 : TurnoverWeekend * KapasitasSepeda;
             public decimal OmzetSepeda =>
+                KapasitasSepeda == 0 ? 0 :
                 (JumlahTerparkirSepedaWeekdays * TarifSepeda * 22) +
                 (JumlahTerparkirSepedaWeekend * TarifSepeda * 8);
 
-            public decimal JumlahTerparkirMotorWeekdays => TurnoverWeekdays * KapasitasMotor;
-            public decimal JumlahTerparkirMotorWeekend => TurnoverWeekend * KapasitasMotor;
+            public decimal JumlahTerparkirMotorWeekdays => KapasitasMotor == 0 ? 0 : TurnoverWeekdays * KapasitasMotor;
+            public decimal JumlahTerparkirMotorWeekend => KapasitasMotor == 0 ? 0 : TurnoverWeekend * KapasitasMotor;
             public decimal OmzetMotor =>
+                KapasitasMotor == 0 ? 0 :
                 (JumlahTerparkirMotorWeekdays * TarifMotor * 22) +
                 (JumlahTerparkirMotorWeekend * TarifMotor * 8);
 
-            public decimal JumlahTerparkirMobilWeekdays => TurnoverWeekdays * KapasitasMobil;
-            public decimal JumlahTerparkirMobilWeekend => TurnoverWeekend * KapasitasMobil;
+            public decimal JumlahTerparkirMobilWeekdays => KapasitasMobil == 0 ? 0 : TurnoverWeekdays * KapasitasMobil;
+            public decimal JumlahTerparkirMobilWeekend => KapasitasMobil == 0 ? 0 : TurnoverWeekend * KapasitasMobil;
             public decimal OmzetMobil =>
+                KapasitasMobil == 0 ? 0 :
                 (JumlahTerparkirMobilWeekdays * TarifMobil * 22) +
                 (JumlahTerparkirMobilWeekend * TarifMobil * 8);
 
-            public decimal JumlahTerparkirTrukMiniWeekdays => TurnoverWeekdays * KapasitasTrukMini;
-            public decimal JumlahTerparkirTrukMiniWeekend => TurnoverWeekend * KapasitasTrukMini;
+            public decimal JumlahTerparkirTrukMiniWeekdays => KapasitasTrukMini == 0 ? 0 : TurnoverWeekdays * KapasitasTrukMini;
+            public decimal JumlahTerparkirTrukMiniWeekend => KapasitasTrukMini == 0 ? 0 : TurnoverWeekend * KapasitasTrukMini;
             public decimal OmzetTrukMini =>
+                KapasitasTrukMini == 0 ? 0 :
                 (JumlahTerparkirTrukMiniWeekdays * TarifTrukMini * 22) +
                 (JumlahTerparkirTrukMiniWeekend * TarifTrukMini * 8);
 
-            public decimal JumlahTerparkirTrukBusWeekdays => TurnoverWeekdays * KapasitasTrukBus;
-            public decimal JumlahTerparkirTrukBusWeekend => TurnoverWeekend * KapasitasTrukBus;
+            public decimal JumlahTerparkirTrukBusWeekdays => KapasitasTrukBus == 0 ? 0 : TurnoverWeekdays * KapasitasTrukBus;
+            public decimal JumlahTerparkirTrukBusWeekend => KapasitasTrukBus == 0 ? 0 : TurnoverWeekend * KapasitasTrukBus;
             public decimal OmzetTrukBus =>
+                KapasitasTrukBus == 0 ? 0 :
                 (JumlahTerparkirTrukBusWeekdays * TarifTrukBus * 22) +
                 (JumlahTerparkirTrukBusWeekend * TarifTrukBus * 8);
 
-            public decimal JumlahTerparkirTrailerWeekdays => TurnoverWeekdays * KapasitasTrailer;
-            public decimal JumlahTerparkirTrailerWeekend => TurnoverWeekend * KapasitasTrailer;
+            public decimal JumlahTerparkirTrailerWeekdays => KapasitasTrailer == 0 ? 0 : TurnoverWeekdays * KapasitasTrailer;
+            public decimal JumlahTerparkirTrailerWeekend => KapasitasTrailer == 0 ? 0 : TurnoverWeekend * KapasitasTrailer;
             public decimal OmzetTrailer =>
+                KapasitasTrailer == 0 ? 0 :
                 (JumlahTerparkirTrailerWeekdays * TarifTrailer * 22) +
                 (JumlahTerparkirTrailerWeekend * TarifTrailer * 8);
+
 
             // Total Omzet dan Pajak
             public decimal TotalOmzet =>
@@ -1904,33 +1923,39 @@ namespace MonPDReborn.Models.DataOP
             public decimal TotalTerparkirWeekdays =>
                 JumlahTerparkirMobilWeekdays + JumlahTerparkirMotorWeekdays + JumlahTerparkirSepedaWeekdays + JumlahTerparkirTrailerWeekdays + JumlahTerparkirTrukBusWeekdays + JumlahTerparkirTrukMiniWeekdays;
             public decimal PersentaseMotorWeekdays =>
-                JumlahTerparkirMotorWeekdays / TotalTerparkirWeekdays;
+                JumlahTerparkirMotorWeekdays / TotalKapasitas;
             public decimal PersentaseMobilWeekdays =>
-                JumlahTerparkirMobilWeekdays / TotalTerparkirWeekdays;
+                JumlahTerparkirMobilWeekdays / TotalKapasitas;
             public decimal PersentaseSepedaWeekdays =>
-                JumlahTerparkirSepedaWeekdays / TotalTerparkirWeekdays;
+                JumlahTerparkirSepedaWeekdays / TotalKapasitas;
             public decimal PersentaseTrailerWeekdays =>
-                JumlahTerparkirTrailerWeekdays / TotalTerparkirWeekdays;
+                JumlahTerparkirTrailerWeekdays / TotalKapasitas;
             public decimal PersentaseTrukMiniWeekdays =>
-                JumlahTerparkirTrukMiniWeekdays / TotalTerparkirWeekdays;
+                JumlahTerparkirTrukMiniWeekdays / TotalKapasitas;
             public decimal PersentaseTrukBusWeekdays =>
-                JumlahTerparkirTrukBusWeekdays / TotalTerparkirWeekdays;
+                JumlahTerparkirTrukBusWeekdays / TotalKapasitas;
 
             public decimal TotalTerparkirWeekend =>
                 JumlahTerparkirMobilWeekend + JumlahTerparkirMotorWeekend + JumlahTerparkirSepedaWeekend + JumlahTerparkirTrailerWeekend + JumlahTerparkirTrukBusWeekend + JumlahTerparkirTrukMiniWeekend;
 
             public decimal PersentaseMotorWeekend =>
-                JumlahTerparkirMotorWeekend / TotalTerparkirWeekend;
+                TotalTerparkirWeekend == 0 ? 0 : JumlahTerparkirMotorWeekend / TotalTerparkirWeekend;
+
             public decimal PersentaseMobilWeekend =>
-                JumlahTerparkirMobilWeekend / TotalTerparkirWeekend;
+                TotalTerparkirWeekend == 0 ? 0 : JumlahTerparkirMobilWeekend / TotalTerparkirWeekend;
+
             public decimal PersentaseSepedaWeekend =>
-                JumlahTerparkirSepedaWeekend / TotalTerparkirWeekend;
+                TotalTerparkirWeekend == 0 ? 0 : JumlahTerparkirSepedaWeekend / TotalTerparkirWeekend;
+
             public decimal PersentaseTrailerWeekend =>
-                JumlahTerparkirTrailerWeekend / TotalTerparkirWeekend;
+                TotalTerparkirWeekend == 0 ? 0 : JumlahTerparkirTrailerWeekend / TotalTerparkirWeekend;
+
             public decimal PersentaseTrukMiniWeekend =>
-                JumlahTerparkirTrukMiniWeekend / TotalTerparkirWeekend;
+                TotalTerparkirWeekend == 0 ? 0 : JumlahTerparkirTrukMiniWeekend / TotalTerparkirWeekend;
+
             public decimal PersentaseTrukBusWeekend =>
-                JumlahTerparkirTrukBusWeekend / TotalTerparkirWeekend;
+                TotalTerparkirWeekend == 0 ? 0 : JumlahTerparkirTrukBusWeekend / TotalTerparkirWeekend;
+
         }
         public class DetailPotensiPajakHiburan
         {
