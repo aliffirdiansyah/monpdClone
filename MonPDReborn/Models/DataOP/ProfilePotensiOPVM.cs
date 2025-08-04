@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Primitives;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
@@ -10,6 +11,7 @@ using System.Linq;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DashboardVM;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
+using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 
 namespace MonPDReborn.Models.DataOP
 {
@@ -1506,7 +1508,7 @@ namespace MonPDReborn.Models.DataOP
                         string kat = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum";
                         var dataTarget1 = context.DbAkunTargetObjekReklames
                             .Where(x => distinctNor.Contains(x.Nor) && x.TahunBuku == DateTime.Now.Year - 2)
-                            .GroupBy(x => new {x.Nor})
+                            .GroupBy(x => new { x.Nor })
                             .Select(x => new
                             {
                                 Nor = x.Key.Nor,
@@ -1524,7 +1526,7 @@ namespace MonPDReborn.Models.DataOP
 
                         var dataTarget2 = context.DbAkunTargetObjekReklames
                             .Where(x => distinctNor.Contains(x.Nor) && x.TahunBuku == DateTime.Now.Year - 1)
-                            .GroupBy(x => new {x.Nor})
+                            .GroupBy(x => new { x.Nor })
                             .Select(x => new
                             {
                                 Nor = x.Key.Nor,
@@ -1542,7 +1544,7 @@ namespace MonPDReborn.Models.DataOP
 
                         var dataTarget3 = context.DbAkunTargetObjekReklames
                             .Where(x => distinctNor.Contains(x.Nor) && x.TahunBuku == DateTime.Now.Year)
-                            .GroupBy(x => new {x.Nor})
+                            .GroupBy(x => new { x.Nor })
                             .Select(x => new
                             {
                                 Nor = x.Key.Nor,
@@ -1747,6 +1749,80 @@ namespace MonPDReborn.Models.DataOP
                     })
                     .FirstOrDefault();
                 return ret;
+            }
+            public static DetailPotensiPajakABT? GetDataPotensiABT(string nop)
+            {
+                var context = DBClass.GetContext();
+                var tahun = DateTime.Now.Year;
+
+                var abt = context.DbOpAbts
+                    .FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahun && !x.TglOpTutup.HasValue);
+
+                if (abt == null)
+                    return null;
+
+                // Ambil volume existing
+                var data = context.DbPotensiAbts.Where(x => x.Nop == nop).FirstOrDefault();
+                if (data == null)
+                {
+                    return null;
+                }
+                var kelompok = context.MAbtKelompoks
+                    .Include(x => x.MAbtKelompokHda)
+                    .FirstOrDefault(x => x.Id == data.Kelompok);
+
+                var hdaList = kelompok?.MAbtKelompokHda.ToList() ?? new List<MAbtKelompokHdum>();
+
+                var detail = new DetailPotensiPajakABT
+                {
+                    NOP = abt.Nop ?? "-",
+                    Nama = abt.NamaOp ?? "-",
+                    Alamat = abt.AlamatOp ?? "-",
+                    Wilayah = abt.WilayahPajak != null ? "SURABAYA " + abt.WilayahPajak : "-",
+                    Pajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                    Kategori = context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(abt.KategoriId))?.Nama ?? "Umum",
+                    KelompokId = kelompok?.Id ?? 0,
+                    KelompokNama = kelompok?.Nama ?? "-",
+                    VolumeRata = (decimal)data.VolPenggunaan,
+                    TarifPajakPersen = 20m,
+                    DetailPerhitungan = HitungHDAmanual((decimal)data.VolPenggunaan, hdaList)
+                };
+
+                detail.TotalNPA = detail.DetailPerhitungan.Sum(x => x.NPA);
+                detail.PajakAir = data.PajakAirTanah ?? 0;
+
+                return detail;
+            }
+            public static List<DetailPerhitunganABT> HitungHDAmanual(decimal volume, List<MAbtKelompokHdum> hdaList)
+            {
+                var result = new List<DetailPerhitunganABT>();
+                var sisa = volume;
+
+                // Urutkan berdasarkan batas minimum pemakaian
+                var sorted = hdaList.OrderBy(x => x.PemakaianBatasMinim).ToList();
+
+                foreach (var item in sorted)
+                {
+                    if (sisa <= 0) break;
+
+                    var batasMin = item.PemakaianBatasMinim;
+                    var batasMaks = item.PemakaianBatasMaks;
+
+                    // Volume yg bisa diambil di range ini
+                    var volumeRange = Math.Min(sisa, batasMaks - batasMin + 1);
+
+                    result.Add(new DetailPerhitunganABT
+                    {
+                        BatasMinim = batasMin,
+                        BatasMaks = batasMaks,
+                        Volume = volumeRange,
+                        HDA = item.Harga
+                    });
+
+                    sisa -= volumeRange;
+                }
+
+                return result;
             }
         }
 
@@ -2156,7 +2232,7 @@ namespace MonPDReborn.Models.DataOP
             public decimal JumlahPengunjungPerBulanLainnya =>
                 (JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8);
             public decimal RataRataPengunjung =>
-                ((JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8))/12;            
+                ((JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8)) / 12;
             public decimal OmzetPerBulanLainnya =>
                 (HTMWeekdays * JumlahPengunjungWeekdaysLainnya * 22) +
                 (HTMWeekend * JumlahPengunjungWeekendLainnya * 8);
@@ -2183,24 +2259,35 @@ namespace MonPDReborn.Models.DataOP
             public decimal PotensiPajakPerTahunFitnes => PotensiPajakPerBulanFitnes * BulanSisa;
         }
 
-        public class DashboardPeneranganJalan
+        public class DetailPotensiPajakABT
         {
-            public string NOP { get; set; } = string.Empty;
-            public string Status { get; set; } = "Aktif";
-            public string PeriodeData { get; set; } = string.Empty;
-            public string PeriodeTerakhir { get; set; } = string.Empty; 
-            public DateTime TanggalPerhitungan { get; set; }
+            public string NOP { get; set; }
+            public string NPWPD { get; set; }
+            public string Nama { get; set; }
+            public string Alamat { get; set; }
+            public string Wilayah { get; set; }
 
-            public decimal RataRataNJTL { get; set; }
-            public decimal TarifPajak { get; set; } 
-            public decimal TotalPajak => RataRataNJTL * TarifPajak;
+            public string Pajak { get; set; }
+            public string Kategori { get; set; }
 
+            public int KelompokId { get; set; }
+            public string KelompokNama { get; set; }
 
-            public string Catatan { get; set; } = string.Empty;
+            public decimal VolumeRata { get; set; }
+            public decimal TotalNPA { get; set; }
+            public decimal TarifPajakPersen { get; set; } = 10;
+            public decimal PajakAir { get; set; }
+
+            public List<DetailPerhitunganABT> DetailPerhitungan { get; set; } = new();
         }
-
-
-
+        public class DetailPerhitunganABT
+        {
+            public decimal BatasMinim { get; set; }
+            public decimal BatasMaks { get; set; }
+            public decimal Volume { get; set; }
+            public decimal HDA { get; set; }
+            public decimal NPA => Volume * HDA;
+        }
         #endregion
 
 
