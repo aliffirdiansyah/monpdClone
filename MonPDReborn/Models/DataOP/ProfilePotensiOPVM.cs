@@ -1075,6 +1075,70 @@ namespace MonPDReborn.Models.DataOP
                             .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
                             .ToList();
 
+                        var distinctNopResto = dataResto3.Select(x => x.Nop).Distinct().ToList();
+
+                        string katResto = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum";
+                        var dataTargetResto1 = context.DbAkunTargetObjekRestos
+                            .Where(x => distinctNopResto.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year - 2)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(x => new
+                            {
+                                Nop = x.Key.Nop,
+                                Nominal = x.Sum(q => q.Target)
+                            }).ToList();
+
+                        var dataRealisasiResto1 = context.DbMonRestos
+                            .Where(x => distinctNopResto.Contains(x.Nop) && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(x => new
+                            {
+                                Nop = x.Key.Nop,
+                                Nominal = x.Sum(q => q.NominalPokokBayar)
+                            }).ToList();
+
+                        var dataTargetResto2 = context.DbAkunTargetObjekRestos
+                            .Where(x => distinctNopResto.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year - 1)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(x => new
+                            {
+                                Nop = x.Key.Nop,
+                                Nominal = x.Sum(q => q.Target)
+                            }).ToList();
+
+                        var dataRealisasiResto2 = context.DbMonRestos
+                            .Where(x => distinctNopResto.Contains(x.Nop) && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(x => new
+                            {
+                                Nop = x.Key.Nop,
+                                Nominal = x.Sum(q => q.NominalPokokBayar)
+                            }).ToList();
+
+                        var dataTargetResto3 = context.DbAkunTargetObjekRestos
+                            .Where(x => distinctNopResto.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(x => new
+                            {
+                                Nop = x.Key.Nop,
+                                Nominal = x.Sum(q => q.Target)
+                            }).ToList();
+
+                        var dataRealisasiResto3 = context.DbMonRestos
+                            .Where(x => distinctNopResto.Contains(x.Nop) && x.TglBayarPokok.Value.Year == DateTime.Now.Year)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(x => new
+                            {
+                                Nop = x.Key.Nop,
+                                Nominal = x.Sum(q => q.NominalPokokBayar)
+                            }).ToList();
+
+                        var dictTargetResto1 = dataTargetResto1.ToDictionary(x => x.Nop, x => x.Nominal);
+                        var dictRealisasiResto1 = dataRealisasiResto1.ToDictionary(x => x.Nop, x => x.Nominal);
+                        var dictTargetResto2 = dataTargetResto2.ToDictionary(x => x.Nop, x => x.Nominal);
+                        var dictRealisasiResto2 = dataRealisasiResto2.ToDictionary(x => x.Nop, x => x.Nominal);
+                        var dictTargetResto3 = dataTargetResto3.ToDictionary(x => x.Nop, x => x.Nominal);
+                        var dictRealisasiResto3 = dataRealisasiResto3.ToDictionary(x => x.Nop, x => x.Nominal);
+
                         foreach (var item in dataResto3.Distinct())
                         {
                             var potensiResto = context.DbPotensiRestos
@@ -1114,13 +1178,13 @@ namespace MonPDReborn.Models.DataOP
                                 JenisPajak = jenisPajak.GetDescription(),
                                 KategoriId = kategori,
                                 EnumPajak = (int)jenisPajak,
-                                Kategori = context.MKategoriPajaks.FirstOrDefault(x => x.Id == kategori)?.Nama ?? "Umum",
-                                Target1 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
-                                Realisasi1 = context.DbMonRestos.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target2 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
-                                Realisasi2 = context.DbMonRestos.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1).Sum(x => x.NominalPokokBayar) ?? 0,
-                                Target3 = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year && x.Nop == item.Nop).Sum(q => q.TargetTahun) ?? 0,
-                                Realisasi3 = context.DbMonRestos.Where(x => x.Nop == item.Nop && x.TglBayarPokok.Value.Year == DateTime.Now.Year).Sum(x => x.NominalPokokBayar) ?? 0,
+                                Kategori = katResto,
+                                Target1 = dictTargetResto1.TryGetValue(item.Nop, out var t1) ? t1 ?? 0 : 0,
+                                Realisasi1 = dictRealisasiResto1.TryGetValue(item.Nop, out var r1) ? r1 ?? 0 : 0,
+                                Target2 = dictTargetResto2.TryGetValue(item.Nop, out var t2) ? t2 ?? 0 : 0,
+                                Realisasi2 = dictRealisasiResto2.TryGetValue(item.Nop, out var r2) ? r2 ?? 0 : 0,
+                                Target3 = dictTargetResto3.TryGetValue(item.Nop, out var t3) ? t3 ?? 0 : 0,
+                                Realisasi3 = dictRealisasiResto3.TryGetValue(item.Nop, out var r3) ? r3 ?? 0 : 0,
                                 TotalPotensi = totalPotensiResto
                             };
                             ret.Add(potensi);
