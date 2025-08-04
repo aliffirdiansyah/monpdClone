@@ -60,120 +60,180 @@ namespace MonPDReborn.Models.DataOP
                 }
                 var context = DBClass.GetContext();
                 var ret = new List<DataPencarianOp>();
-                var dataResto = context.DbOpRestos.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                var dataResto = context.DbOpRestos
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
+                    .AsEnumerable()
+                    .GroupBy(x => x.Nop)
+                    .Select(g =>
+                    {
+                        var bukaNow = g.FirstOrDefault(x => x.TahunBuku == DateTime.Now.Year && x.TglOpTutup == null);
+                        if (bukaNow != null)
+                            return bukaNow;
+
+                        return g.FirstOrDefault(x => x.TglOpTutup != null);
+                    })
+                    .Where(x => x != null)
                     .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
-                            JenisOp = x.PajakNama,
+                            JenisOp = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
-                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? "",
+                            StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
+                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
                             Tahun = (int)x.TahunBuku
                         }
                     )
-                    .FirstOrDefault();
-                if (dataResto != null)
+                    .ToList();
+                if (dataResto.Count > 0)
                 {
-                    ret.Add(dataResto);
+                    ret.AddRange(dataResto);
                 }
 
-                var dataHotel = context.DbOpHotels.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                var dataHotel = context.DbOpHotels
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
+                    .AsEnumerable()
+                    .GroupBy(x => x.Nop)
+                    .Select(g =>
+                    {
+                        var bukaNow = g.FirstOrDefault(x => x.TahunBuku == DateTime.Now.Year && x.TglOpTutup == null);
+                        if (bukaNow != null)
+                            return bukaNow;
+
+                        return g.FirstOrDefault(x => x.TglOpTutup != null);
+                    })
+                    .Where(x => x != null)
                     .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
-                            JenisOp = x.PajakNama,
+                            JenisOp = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
-                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? "",
+                            StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
+                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).FirstOrDefault();
+                    ).ToList();
 
-                if (dataHotel != null)
+                if (dataHotel.Count > 0)
                 {
-                    ret.Add(dataHotel);
+                    ret.AddRange(dataHotel);
                 }
 
-                var dataHiburan = context.DbOpHiburans.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                var dataHiburan = context.DbOpHiburans
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
+                    .AsEnumerable()
+                    .GroupBy(x => x.Nop)
+                    .Select(g =>
+                    {
+                        var bukaNow = g.FirstOrDefault(x => x.TahunBuku == DateTime.Now.Year && x.TglOpTutup == null);
+                        if (bukaNow != null)
+                            return bukaNow;
+
+                        return g.FirstOrDefault(x => x.TglOpTutup != null);
+                    })
+                    .Where(x => x != null)
                     .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
-                            JenisOp = x.PajakNama,
+                            JenisOp = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
-                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? "",
+                            StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
+                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).FirstOrDefault();
+                    ).ToList();
 
-                if (dataHiburan != null)
+                if (dataHiburan.Count > 0)
                 {
-                    ret.Add(dataHiburan);
+                    ret.AddRange(dataHiburan);
                 }
 
 
-                var dataParkir = context.DbOpParkirs.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                var dataParkir = context.DbOpParkirs
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
+                    .AsEnumerable()
+                    .GroupBy(x => x.Nop)
+                    .Select(g =>
+                    {
+                        var bukaNow = g.FirstOrDefault(x => x.TahunBuku == DateTime.Now.Year && x.TglOpTutup == null);
+                        if (bukaNow != null)
+                            return bukaNow;
+
+                        return g.FirstOrDefault(x => x.TglOpTutup != null);
+                    })
+                    .Where(x => x != null)
                     .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
-                            JenisOp = x.PajakNama,
+                            JenisOp = EnumFactory.EPajak.JasaParkir.GetDescription(),
                             KategoriOp = x.KategoriNama,
                             JenisPenarikan = "",
-                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? "",
+                            StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
+                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).FirstOrDefault();
+                    ).ToList();
 
-                if (dataParkir != null)
+                if (dataParkir.Count > 0)
                 {
-                    ret.Add(dataParkir);
+                    ret.AddRange(dataParkir);
                 }
 
-                var dataListrik = context.DbOpListriks.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                var dataListrik = context.DbOpListriks
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
+                    .AsEnumerable()
+                    .GroupBy(x => x.Nop)
+                    .Select(g =>
+                    {
+                        var bukaNow = g.FirstOrDefault(x => x.TahunBuku == DateTime.Now.Year && x.TglOpTutup == null);
+                        if (bukaNow != null)
+                            return bukaNow;
+
+                        return g.FirstOrDefault(x => x.TglOpTutup != null);
+                    })
+                    .Where(x => x != null)
                     .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
-                            JenisOp = x.PajakNama,
+                            JenisOp = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                             KategoriOp = x.KategoriNama ?? "",
                             JenisPenarikan = "",
-                            StatusNOP = x.IsTutup == 1 ? "Tutup" : "Buka",
-                            Wilayah = x.WilayahPajak ?? "",
+                            StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
+                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).FirstOrDefault();
+                    ).ToList();
 
-                if (dataListrik != null)
+                if (dataListrik.Count > 0)
                 {
-                    ret.Add(dataListrik);
+                    ret.AddRange(dataListrik);
                 }
 
                 var dataReklame = context.DbOpReklames.Where(x => x.Nop == keyword || x.Nama.Contains(keyword))
@@ -184,7 +244,7 @@ namespace MonPDReborn.Models.DataOP
                             NOP = x.Nop,
                             Nama = x.Nama,
                             Alamat = x.Alamat,
-                            JenisOp = x.NamaJenis,
+                            JenisOp = EnumFactory.EPajak.Reklame.GetDescription(),
                             KategoriOp = "Reklame",
                             JenisPenarikan = "",
                             StatusNOP = "Buka",
@@ -192,22 +252,34 @@ namespace MonPDReborn.Models.DataOP
                             EnumPajak = (int)EnumFactory.EPajak.Reklame,
                             Tahun = (int)DateTime.Now.Year
                         }
-                    ).FirstOrDefault();
+                    ).ToList();
 
-                if (dataReklame != null)
+                if (dataReklame.Count > 0)
                 {
-                    ret.Add(dataReklame);
+                    ret.AddRange(dataReklame);
                 }
 
-                var dataAbt = context.DbOpAbts.Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                var dataAbt = context.DbOpAbts
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
+                    .AsEnumerable()
+                    .GroupBy(x => x.Nop)
+                    .Select(g =>
+                    {
+                        var bukaNow = g.FirstOrDefault(x => x.TahunBuku == DateTime.Now.Year && x.TglOpTutup == null);
+                        if (bukaNow != null)
+                            return bukaNow;
+
+                        return g.FirstOrDefault(x => x.TglOpTutup != null);
+                    })
+                    .Where(x => x != null)
                     .Select(
                         x => new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
-                            JenisOp = x.PajakNama,
+                            JenisOp = EnumFactory.EPajak.AirTanah.GetDescription(),
                             KategoriOp = x.KategoriNama ?? "",
                             JenisPenarikan = "",
                             StatusNOP = "Buka",
@@ -215,11 +287,11 @@ namespace MonPDReborn.Models.DataOP
                             EnumPajak = (int)EnumFactory.EPajak.AirTanah,
                             Tahun = (int)x.TahunBuku
                         }
-                    ).FirstOrDefault();
+                    ).ToList();
 
-                if (dataAbt != null)
+                if (dataAbt.Count > 0)
                 {
-                    ret.Add(dataAbt);
+                    ret.AddRange(dataAbt);
                 }
 
                 return ret;
