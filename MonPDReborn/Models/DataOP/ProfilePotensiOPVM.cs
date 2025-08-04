@@ -1824,6 +1824,128 @@ namespace MonPDReborn.Models.DataOP
 
                 return result;
             }
+
+            public static DetailPotensiPPJ? GetDataPotensiPPJ(string nop)
+            {
+                var context = DBClass.GetContext();
+
+                // Cek objek PJU aktif
+                var pju = context.DbOpListriks
+                    .FirstOrDefault(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue);
+
+                // Ambil data potensi pajak terakhir untuk NOP
+                var data = context.DbPotensiPpjs
+                    .Where(x => x.Nop == nop)
+                    .FirstOrDefault();
+
+                if (data == null)
+                    return null;
+
+                // Buat list detail NJTL bulanan dari 6 bulan terakhir
+                var detail = new List<DetailNJTL>();
+                var now = DateTime.Now;
+
+                detail.Add(new DetailNJTL { Bulan = now.AddMonths(-1).ToString("MMMM yyyy"), NJTL = data.NjtlBulanMinus1 ?? 0 });
+                detail.Add(new DetailNJTL { Bulan = now.AddMonths(-2).ToString("MMMM yyyy"), NJTL = data.NjtlBulanMinus2 ?? 0 });
+                detail.Add(new DetailNJTL { Bulan = now.AddMonths(-3).ToString("MMMM yyyy"), NJTL = data.NjtlBulanMinus3 ?? 0 });
+                detail.Add(new DetailNJTL { Bulan = now.AddMonths(-4).ToString("MMMM yyyy"), NJTL = data.NjtlBulanMinus4 ?? 0 });
+                detail.Add(new DetailNJTL { Bulan = now.AddMonths(-5).ToString("MMMM yyyy"), NJTL = data.NjtlBulanMinus5 ?? 0 });
+                detail.Add(new DetailNJTL { Bulan = now.AddMonths(-6).ToString("MMMM yyyy"), NJTL = data.NjtlBulanMinus6 ?? 0 });
+
+                var ret = new DetailPotensiPPJ
+                {
+                    NOP = nop,
+                    Status = pju != null ? "Aktif" : "Tidak Aktif",
+                    PeriodeData = $"{now.AddMonths(-6):MMMM} - {now.AddMonths(-1):MMMM yyyy}",
+                    PeriodeTerakhir = now.AddMonths(-1).ToString("MMMM yyyy"),
+                    TanggalPerhitungan = pju?.TglMulaiBukaOp ?? DateTime.Now,
+                    RataRataNJTL = data.RataRataNjtl6Bulan ?? 0,
+                    TarifPajak = pju == null
+                        ? 0.015m
+                        : (pju.Peruntukan == 58 ? 0.10m : 0.015m),
+                    TotalPajak = data.JumlahPajak ?? 0,
+                    DetailNJTLBulanan = detail,
+                    KonsistensiNJTL = HitungKonsistensi(detail),
+                };
+
+                return ret;
+            }
+            private static string HitungKonsistensi(List<DetailNJTL> data)
+            {
+                if (data.Count < 2)
+                    return "Tidak Cukup Data";
+
+                var selisih = data.Max(x => x.NJTL) - data.Min(x => x.NJTL);
+                var rata = data.Average(x => x.NJTL);
+
+                if (selisih < 0.1m * rata)
+                    return "Stabil";
+                else if (selisih < 0.3m * rata)
+                    return "Berfluktuasi";
+                else
+                    return "Tidak Stabil";
+            }
+
+            public static DetailPotensiReklame? GetDataPotensiReklame(string nop)
+            {
+                using var context = DBClass.GetContext();
+
+                // Ambil data dari master OP Reklame
+                var op = context.DbOpReklames.FirstOrDefault(x => x.Nor == nop);
+                if (op == null) return null;
+
+                // Ambil data potensi
+                var potensi = context.DbPotensiReklames.FirstOrDefault(x => x.Nor == nop);
+                if (potensi == null) return null;
+
+                // Tentukan Tarif Pajak berdasarkan jenis reklame
+                var tarifPajak = 0.20m;
+
+                // Buat model view
+                var model = new DetailPotensiReklame
+                {
+                    NomorObjekReklame = nop,
+                    JenisReklame = op.FlagPermohonan ?? "-",
+                    Status = op.StatusVer == 1 ? "Aktif" : "Tidak Aktif",
+
+                    TarifPajak = tarifPajak,
+
+                    // NSR Tahunan dari BulanMin-6 s.d BulanMin-1
+                    NSRTahun0 = potensi.Nsr0 ?? 0,
+                    NSRTahun1 = potensi.Nsr1 ?? 0,
+                    NSRTahun2 = potensi.Nsr2 ?? 0,
+                    NSRTahun3 = potensi.Nsr3 ?? 0,
+                    NSRTahun4 = potensi.Nsr4 ?? 0,
+
+                    RataRataNSR = potensi.Rata2Nsr ?? 0,
+                    RataRataPajak = potensi.Rata2Pajak ?? 0,
+
+                    KonsistensiNSR = CekKonsistensiNSR(potensi),
+                };
+
+                return model;
+            }
+            private static string CekKonsistensiNSR(DbPotensiReklame potensi)
+            {
+                var list = new List<decimal?> {
+                        potensi.Nsr0, potensi.Nsr1,
+                        potensi.Nsr2, potensi.Nsr3,
+                        potensi.Nsr4
+                    }.Where(x => x.HasValue).Select(x => x.Value).ToList();
+
+                if (!list.Any()) return "Data Kosong";
+
+                var max = list.Max();
+                var min = list.Min();
+
+                var selisih = max - min;
+                var stabil = selisih < 0.2m * max;
+
+                return stabil ? "Stabil" : "Fluktuatif";
+            }
+
+
+
         }
 
         public class Dashboard
@@ -2288,6 +2410,57 @@ namespace MonPDReborn.Models.DataOP
             public decimal HDA { get; set; }
             public decimal NPA => Volume * HDA;
         }
+
+        public class DetailPotensiPPJ
+        {
+            public string NOP { get; set; } = string.Empty;
+            public string Status { get; set; } = "Aktif";
+            public string PeriodeData { get; set; } = string.Empty; // Contoh: "Januari - Juni 2023"
+            public string PeriodeTerakhir { get; set; } = string.Empty; // Contoh: "Juli 2023"
+            public DateTime TanggalPerhitungan { get; set; }
+
+            public decimal RataRataNJTL { get; set; }
+            public decimal TarifPajak { get; set; } // dalam persen, contoh: 1.5
+            public decimal TotalPajak { get; set; }
+
+            public List<DetailNJTL> DetailNJTLBulanan { get; set; } = new();
+            public string KonsistensiNJTL { get; set; } = "Stabil";
+
+            public string Catatan { get; set; } = string.Empty;
+        }
+
+        public class DetailNJTL
+        {
+            public string Bulan { get; set; } = string.Empty; // Contoh: "Bulan -1"
+            public decimal NJTL { get; set; }
+        }
+
+        public class DetailPotensiReklame
+        {
+            
+            public string NomorObjekReklame { get; set; } = string.Empty;
+            public string JenisReklame { get; set; } = string.Empty; 
+            public string Status { get; set; } = string.Empty;       
+            public DateTime TanggalPerhitungan { get; set; }
+
+            public decimal TarifPajak { get; set; }
+
+            public decimal NSRTahun0 { get; set; } 
+            public decimal NSRTahun1 { get; set; }
+            public decimal NSRTahun2 { get; set; }
+            public decimal NSRTahun3 { get; set; }
+            public decimal NSRTahun4 { get; set; }
+
+            public decimal RataRataNSR { get; set; }
+            public decimal RataRataPajak { get; set; }
+
+            public string KonsistensiNSR { get; set; } = string.Empty;
+
+            public string Catatan { get; set; }
+
+            public string RumusPerhitungan { get; set; }
+        }
+
         #endregion
 
 

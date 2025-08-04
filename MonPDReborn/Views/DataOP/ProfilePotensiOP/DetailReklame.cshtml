@@ -1,4 +1,11 @@
-﻿
+﻿@using MonPDReborn.Models.DataOP
+@model ProfilePotensiOPVM.DetailPotensiReklame
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Detail Potensi Pajak Reklame";
+
+}
 
 <style>
     .info-row {
@@ -48,10 +55,10 @@
                                     Dashboard Pajak Reklame
                                 </h4>
                                 <p class="fs-16 lh-base">
-                                    NOP :
+                                    NOR : @Model.NomorObjekReklame
                                 </p>
                                 <p class="fs-16 lh-base">
-                                    Jenis :
+                                    Jenis : @Model.JenisReklame
                                 </p>
                             </div>
                         </div>
@@ -60,11 +67,11 @@
                     <div class="col-lg-4">
                         <div class="card border border-primary border-2">
                             <div class="d-flex p-3">
-                                <h3 class="fs-16 fw-semibold">Status : </h3>
-                            </div>
+                                <h3 class="fs-16 fw-semibold">Status : @Model.Status</h3>
+                            </div>@* 
                             <div class="d-flex p-3">
-                                <h3 class="fs-16 fw-semibold">Periode : </h3>
-                            </div>
+                                <h3 class="fs-16 fw-semibold">Periode : @Model.Perio </h3>
+                            </div> *@
                         </div>
                     </div>
 
@@ -77,7 +84,7 @@
         <div class="card bg-soft-primary">
             <div class="card-body">
                 <h4 class="fs-14">RATA - RATA NSR</h4>
-                <h3 class="fs-18 fw-semibold mb-1">M3</h3>
+                <h3 class="fs-18 fw-semibold mb-1">Rp. @Model.RataRataNSR.ToString("N0")</h3>
                 <h4 class="fs-14">Nilai sewa Reklame rata-rata</h4>
             </div>
         </div>
@@ -87,7 +94,7 @@
         <div class="card bg-soft-primary">
             <div class="card-body">
                 <h4 class="fs-14">RATA - RATA PAJAK REKLAME</h4>
-                <h3 class="fs-18 fw-semibold mb-1">Rp</h3>
+                <h3 class="fs-18 fw-semibold mb-1">Rp. @Model.RataRataPajak.ToString("N0")</h3>
                 <h4 class="fs-14">25% dari rata-rata NSR</h4>
             </div>
         </div>
@@ -106,31 +113,31 @@
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">NSR Tahun Berjalan (NSR 0)</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun0.ToString("N0") </p>
                     </div>
                 </div><hr />
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">NSR Tahun-1</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun1.ToString("N0") </p>
                     </div>
                 </div><hr />
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">NSR Tahun-2</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun2.ToString("N0") </p>
                     </div>
                 </div><hr />
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">NSR Tahun-3</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun3.ToString("N0") </p>
                     </div>
                 </div><hr />
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">NSR Tahun-4</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun4.ToString("N0") </p>
                     </div>
                 </div>
                 <div class="row">
@@ -140,7 +147,7 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Rata-rata NSR</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp </p>
+                                        <p class="fs-16 fw-semibold">Rp. @Model.RataRataNSR.ToString("N0") </p>
                                     </div>
                                 </div>
                                 <small class="text-dark-50">Rata-rata Nilai Sewa Reklame dari data yang tersedia</small>
@@ -175,19 +182,22 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Rata-rata NSR</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp </p>
+                                        <p class="fs-16 fw-semibold">Rp. @Model.RataRataNSR.ToString("N0") </p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Tarif Pajak Reklame</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp </p>
+                                        <p class="fs-16 fw-semibold">@Model.TarifPajak.ToString("P1")</p>
                                     </div>
                                 </div><hr />
+                                @{
+                                    decimal totalPajak = Model.RataRataNSR * Model.TarifPajak;
+                                }
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Total Pajak Reklame</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp </p>
+                                        <p class="fs-16 fw-semibold">Rp. @totalPajak.ToString("N0")</p>
                                     </div>
                                 </div>
                             </div>
@@ -209,7 +219,7 @@
                                             <div class="card-body">
                                                 <div class="flex-grow-1">
                                                     <h4 class="card-title text-black fs-16 mb-0">
-                                                        Pajak = Rata-rata NSR x 25%
+                                                        Pajak = Rata-rata NSR x 20%
                                                     </h4>
                                                 </div>
                                             </div>
@@ -221,7 +231,7 @@
                                             <div class="card-body">
                                                 <div class="flex-grow-1">
                                                     <h4 class="card-title text-black fs-16 mb-0">
-                                                        Rp = Rp x 25%
+                                                        = Rp. @Model.RataRataNSR.ToString("N0") * @Model.TarifPajak.ToString("N0") = Rp. @totalPajak.ToString("N0")
                                                     </h4>
                                                 </div>
                                             </div>
@@ -251,44 +261,44 @@
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">Nomor Objek Reklame</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">@Model.NomorObjekReklame </p>
                     </div>
                 </div>
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">Jenis Reklame</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">@Model.JenisReklame </p>
                     </div>
                 </div>
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">Status</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">@Model.Status </p>
                     </div>
                 </div>
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">@Model.TarifPajak </p>
                     </div>
                 </div>
                 <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">Konsistensi NSR</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                        <p class="fs-16 fw-semibold">@Model.KonsistensiNSR </p>
                     </div>
                 </div>
-                <div class="d-flex p-3 py-0">
+                @* <div class="d-flex p-3 py-0">
                     <p class="fs-14 text-muted flex-grow-1">Tanggal Perhitungan</p>
                     <div class="flex-shrink-0">
                         <p class="fs-16 fw-semibold">Rp </p>
                     </div>
-                </div>
+                </div> *@
             </div>
         </div>
     </div>
 
-    <div class="col-lg-6">
+    @* <div class="col-lg-6">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
@@ -316,7 +326,7 @@
                 <div id="column_chart" data-colors='["--vz-danger", "--vz-primary", "--vz-success"]' class="apex-charts" dir="ltr"></div>
             </div>
         </div>
-    </div>
+    </div> *@
 
     <div class="col-lg-12">
         <div class="card">
