@@ -69,6 +69,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameLiar> DbMonReklameLiars { get; set; }
 
+    public virtual DbSet<DbMonReklamePerpanjangan> DbMonReklamePerpanjangans { get; set; }
+
     public virtual DbSet<DbMonReklameSurat> DbMonReklameSurats { get; set; }
 
     public virtual DbSet<DbMonReklameSuratTegur> DbMonReklameSuratTegurs { get; set; }
@@ -326,6 +328,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TSuratReklameTeguranFile> TSuratReklameTeguranFiles { get; set; }
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
+
+    public virtual DbSet<TempPerpanjangan> TempPerpanjangans { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
 
@@ -682,6 +686,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbMonReklameLiar>(entity =>
         {
             entity.HasKey(e => new { e.Nor, e.TanggalSkSilang }).HasName("PK_REKLAME_LIAR");
+        });
+
+        modelBuilder.Entity<DbMonReklamePerpanjangan>(entity =>
+        {
+            entity.HasKey(e => e.NoFormulir).HasName("DB_MON_REKLAME_PERPANJANGAN_PK");
         });
 
         modelBuilder.Entity<DbMonReklameSurat>(entity =>
