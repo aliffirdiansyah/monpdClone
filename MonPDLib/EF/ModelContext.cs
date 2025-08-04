@@ -850,6 +850,16 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
+        modelBuilder.Entity<DbRekamAlatT>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("DB_REKAM_ALAT_TS_PK");
+        });
+
+        modelBuilder.Entity<DbRekamAlatTbsb>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("DB_REKAM_ALAT_TBSB_PK");
+        });
+
         modelBuilder.Entity<DbRekamParkir>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.Tanggal, e.Seq }).HasName("PK_REKAM_PARKIR");

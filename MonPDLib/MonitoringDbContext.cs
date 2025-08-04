@@ -20,6 +20,7 @@ namespace MonPDLib
         {
         }
 
+        public DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
         public DbSet<KetetapanPbb> KetetapanPbbs { get; set; }
         public DbSet<RealisasiPbb> RealisasiPbbs { get; set; }
         public DbSet<SSPD> SSPDs { get; set; }
@@ -51,6 +52,7 @@ namespace MonPDLib
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<DbRekamAlatT>().HasNoKey();
             modelBuilder.Entity<RealisasiPbb>().HasNoKey();
             modelBuilder.Entity<KetetapanPbb>().HasNoKey();
             modelBuilder.Entity<OPPbb>().HasNoKey();

@@ -22,28 +22,28 @@ namespace AlatRekamWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
-                DateTime nextRun = now.AddSeconds(1); // besok jam 00:00
-                TimeSpan delay = nextRun - now;
-                if (isFirst)
-                {
-                    nextRun = now.AddSeconds(1); // besok jam 00:00
-                    delay = nextRun - now;
-                    isFirst = false;
-                }
-                else
-                {
-                    nextRun = now.AddHours(1); // next jam 00:00
-                    delay = nextRun - now;
-                }
+                //var now = DateTime.Now;
+                //DateTime nextRun = now.AddSeconds(1); // besok jam 00:00
+                //TimeSpan delay = nextRun - now;
+                //if (isFirst)
+                //{
+                //    nextRun = now.AddSeconds(1); // besok jam 00:00
+                //    delay = nextRun - now;
+                //    isFirst = false;
+                //}
+                //else
+                //{
+                //    nextRun = now.AddHours(1); // next jam 00:00
+                //    delay = nextRun - now;
+                //}
 
 
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 // Eksekusi tugas
                 try
@@ -97,7 +97,7 @@ namespace AlatRekamWs
 			                    JENIS, 
 			                    LOCK_SPTPD, 
 			                    OPEN_TS, 
-			                    TERPASANG, 
+			                    TO_NUMBER(TERPASANG) TERPASANG, 
 			                    MAX(TERAKHIR_AKTIF) TERAKHIR_AKTIF, 
 			                    MAX(HARI_INI) HARI_INI
 	                    FROM (
@@ -149,10 +149,13 @@ namespace AlatRekamWs
 			                    TERPASANG
                     ";
 
+                    Console.WriteLine($"{DateTime.Now} DB_REKAM_ALAT_TS START");
                     var result = await _contMonitoringDb.Set<DbRekamAlatT>().FromSqlRaw(sql).ToListAsync();
 
                     var source = _contMonPd.DbRekamAlatTs.ToList();
                     _contMonPd.DbRekamAlatTs.RemoveRange(source);
+                    Console.WriteLine($"{DateTime.Now} DB_REKAM_ALAT_TS DELETE OLD DATA");
+
                     foreach (var item in result)
                     {
                         var newRow = new DbRekamAlatT();
@@ -171,12 +174,16 @@ namespace AlatRekamWs
                         newRow.TerakhirAktif = item.TerakhirAktif;
                         newRow.HariIni = item.HariIni;
 
-
+                        _contMonPd.DbRekamAlatTs.Add(newRow);
                         _contMonPd.SaveChanges();
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"{DateTime.Now} DB_REKAM_ALAT_TS {item.Nop}");
                         Console.ResetColor();
                     }
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{DateTime.Now} DB_REKAM_ALAT_TS FINISHED");
+                    Console.ResetColor();
                 }
 
 
@@ -208,7 +215,7 @@ namespace AlatRekamWs
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
-            var row = _contMonPd.SetLastRuns.FirstOrDefault(x => x.Job.ToUpper() == EnumFactory.EJobName.DBOPREKLAMESURAT.ToString().ToUpper());
+            var row = _contMonPd.SetLastRuns.FirstOrDefault(x => x.Job.ToUpper() == EnumFactory.EJobName.DBOPALATREKAM.ToString().ToUpper());
             if (row != null)
             {
                 if (row.InsDate.HasValue)
@@ -234,7 +241,7 @@ namespace AlatRekamWs
                 }
             }
             var newRow = new MonPDLib.EF.SetLastRun();
-            newRow.Job = EnumFactory.EJobName.DBOPREKLAMESURAT.ToString().ToUpper();
+            newRow.Job = EnumFactory.EJobName.DBOPALATREKAM.ToString().ToUpper();
             newRow.InsDate = DateTime.Now;
             _contMonPd.SetLastRuns.Add(newRow);
             _contMonPd.SaveChanges();

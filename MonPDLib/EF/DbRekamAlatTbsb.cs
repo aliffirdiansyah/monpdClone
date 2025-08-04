@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Keyless]
 [Table("DB_REKAM_ALAT_TBSB")]
 public partial class DbRekamAlatTbsb
 {
+    [Key]
     [Column("NOP")]
     [StringLength(100)]
     [Unicode(false)]

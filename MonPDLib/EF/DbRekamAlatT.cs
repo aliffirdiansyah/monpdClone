@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Keyless]
 [Table("DB_REKAM_ALAT_TS")]
 public partial class DbRekamAlatT
 {
@@ -20,6 +19,7 @@ public partial class DbRekamAlatT
     [Unicode(false)]
     public string Koderekening { get; set; } = null!;
 
+    [Key]
     [Column("NOP")]
     [StringLength(100)]
     [Unicode(false)]
