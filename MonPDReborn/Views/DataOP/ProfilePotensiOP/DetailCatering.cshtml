@@ -112,13 +112,13 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-white flex-grow-1 ">Per Bulan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold text-white">@Model.PotensiPajakPerBulanCatering.ToString("C")</p>
+                                        <p class="fs-16 fw-semibold text-white">Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0")</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-white flex-grow-1">Per Tahun</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold text-white">@Model.PotensiPajakPerTahunCatering.ToString("C")</p>
+                                        <p class="fs-16 fw-semibold text-white">Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")</p>
                                     </div>
                                 </div>
                             </div>
@@ -131,11 +131,11 @@
                                 </div>
                                 <div class="flex-shrink-0 ms-5">
                                     <p class="fs-14 text-muted mb-1">Rata-rata Transaksi</p>
-                                    <p class="fs-14 fw-semibold mb-3">@Model.RataRataBillPerOrang.ToString("C") / Orang</p>
+                                    <p class="fs-14 fw-semibold mb-3">Rp. @Model.RataRataBillPerOrang.ToString("N0") / Orang</p>
                                 </div>
                                 <div class="flex-shrink-0 ms-3">
                                     <p class="fs-14 text-muted mb-1">Rata-rata Terjual</p>
-                                    <p class="fs-14 fw-semibold mb-3">@Model.RataRataTerjualPerHariCatering / Hari</p>
+                                    <p class="fs-14 fw-semibold mb-3">@Model.RataRataTerjualPerHariCatering.ToString("N0") / Hari</p>
                                 </div>
                             </div>
                         </div>
@@ -190,19 +190,19 @@
                             <div class="d-flex p-3 py-0">
                                 <p class="fs-14 text-muted flex-grow-1">Rata-rata Transaksi per Orang</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-14 fw-semibold">@Model.RataRataBillPerOrang.ToString("C")</p>
+                                    <p class="fs-14 fw-semibold">Rp. @Model.RataRataBillPerOrang.ToString("N0")</p>
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
                                 <p class="fs-14 text-muted flex-grow-1">Perputaran Hari Kerja</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysCatering Kali</p>
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysCatering.ToString("P2")</p>
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
                                 <p class="fs-14 text-muted flex-grow-1">Perputaran Akhir Pekan</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekendCatering Kali</p>
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekendCatering.ToString("P2")</p>
                                 </div>
                             </div>
                         </div>
@@ -219,17 +219,46 @@
                                             <p class="fs-14 fw-semibold">@Model.RataRataTerjualWeekdaysCatering.ToString("N0") Terjual</p>
                                         </div>
                                     </div>
+                                    @{
+                                        decimal terjualWeekdays = (Model.RataRataTerjualWeekdaysCatering * 22);
+                                        decimal terjualWeekend = (Model.RataRataTerjualWeekendCatering * 8);
+                                        decimal terjualBulan = terjualWeekdays + terjualWeekend;
+
+                                        var persenTerjualWeekdaysCatering = (terjualBulan == 0 ? 0 :
+                                        terjualWeekdays / terjualBulan * 100)
+                                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                                    }
                                     <div class="progress mb-4" style="height:20px">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-primary" role="progressbar" aria-valuenow="@Model.RataRataTerjualWeekdaysCatering.ToString("N0")" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RataRataTerjualWeekdaysCatering.ToString("N0")%">@Model.RataRataTerjualWeekdaysCatering.ToString("N0")</div>
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-primary"
+                                             role="progressbar"
+                                             aria-valuenow="@persenTerjualWeekdaysCatering"
+                                             aria-valuemin="0"
+                                             aria-valuemax="@terjualBulan"
+                                             style="width: @persenTerjualWeekdaysCatering%">
+                                            @persenTerjualWeekdaysCatering%
+                                        </div>
                                     </div>
+
                                     <div class="d-flex p-0 py-0">
                                         <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 Hari/bulan)</p>
                                         <div class="flex-shrink-0">
                                             <p class="fs-14 fw-semibold">@Model.RataRataTerjualWeekendCatering.ToString("N0") Terjual</p>
                                         </div>
                                     </div>
-                                    <div class="progress mb-2" style="height:20px">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-danger" role="progressbar" aria-valuenow="@Model.RataRataTerjualWeekendCatering.ToString("N0")" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RataRataTerjualWeekendCatering.ToString("N0")%">@Model.RataRataTerjualWeekendCatering.ToString("N0")</div>
+                                    @{
+                                        var persenTerjualWeekendCatering = (terjualBulan == 0 ? 0 :
+                                        terjualWeekend / terjualBulan * 100)
+                                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                                    }
+                                    <div class="progress mb-4" style="height: 20px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
+                                             role="progressbar"
+                                             style="width: @persenTerjualWeekendCatering%;"
+                                             aria-valuenow="@persenTerjualWeekendCatering"
+                                             aria-valuemin="0"
+                                             aria-valuemax="@terjualBulan">
+                                            @persenTerjualWeekendCatering%
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -246,9 +275,7 @@
                                     </p>
                                     <p class="fs-14 text-muted mb-2">
                                         @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22 =
-                                        @{
-                                            decimal terjualWeekdays = (Model.RataRataTerjualWeekdaysCatering * 22);
-                                        } @terjualWeekdays.ToString("N0") Terjual
+                                        @terjualWeekdays.ToString("N0") Terjual
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-1">
                                         Total Terjual Akhir Pekan per Bulan :
@@ -258,17 +285,13 @@
                                     </p>
                                     <p class="fs-14 text-muted mb-2">
                                         @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8 =
-                                        @{
-                                            decimal terjualWeekend = (Model.RataRataTerjualWeekendCatering * 8);
-                                        } @terjualWeekend.ToString("N0") Terjual
+                                        @terjualWeekend.ToString("N0") Terjual
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-1">
                                         Total Terjual per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted">
-                                        @{
-                                            decimal terjualBulan = terjualWeekdays + terjualWeekend;
-                                        } @terjualBulan.ToString("N0") Terjual
+                                         @terjualBulan.ToString("N0") Terjual
                                     </p>
                                 </div>
                             </div>
