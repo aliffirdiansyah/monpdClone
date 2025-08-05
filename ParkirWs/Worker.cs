@@ -116,11 +116,11 @@ namespace ParkirWs
             // HPP PROCESS
             HPPOPProcess(tahunBuku);
 
-            // ketetapan 
-            HPPKetetapanProcess(tahunBuku);
+            //// ketetapan 
+            //HPPKetetapanProcess(tahunBuku);
 
-            // realisasi
-            HPPRealisasiProcess(tahunBuku);
+            //// realisasi
+            //HPPRealisasiProcess(tahunBuku);
 
             Console.WriteLine(" ");
         }
@@ -589,7 +589,12 @@ WHERE A.NPWPD NOT IN (
 FROM (
 SELECT NVL(REPLACE(A.FK_NOP, '.', ''), '-') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Parkir' PAJAK_NAMA,
               NVL(ALAMAT_OP, '-') ALAMAT_OP, '-'  ALAMAT_OP_NO,'-' ALAMAT_OP_RT,'-' ALAMAT_OP_RW,NVL(NOMOR_TELEPON, '-') TELP,
-              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT,TGL_TUTUP TGL_OP_TUTUP,
+              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT,
+              CASE
+              	WHEN EXTRACT(YEAR FROM TGL_TUTUP) <= 1990 THEN NULL
+              	WHEN EXTRACT(YEAR FROM TGL_TUTUP) IS NULL THEN NULL
+              	ELSE TGL_TUTUP
+              END AS TGL_OP_TUTUP,
               NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP, 0 METODE_PENJUALAN,        0 METODE_PEMBAYARAN,        0 JUMLAH_KARYAWAN,  
               CASE                             
                         WHEN NAMA_JENIS_PAJAK = 'PARKIR' THEN 38                        

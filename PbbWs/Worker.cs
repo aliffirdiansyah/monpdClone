@@ -684,6 +684,13 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
                 decimal jml = 0;
                 foreach (var itemKetetapan in ketetapanMonitoringDb)
                 {
+                    var src = _contMonPd.DbMonPbbs.SingleOrDefault(x => x.Nop == itemKetetapan.NOP && x.TahunBuku == itemKetetapan.TAHUN_BUKU && x.TahunPajak == itemKetetapan.TAHUN_PAJAK);
+                    if(src != null)
+                    {
+                        _contMonPd.DbMonPbbs.Remove(src);
+                        _contMonPd.SaveChanges();
+                    }
+
                     var newRow = new DbMonPbb();
                     newRow.Nop = itemKetetapan.NOP;
                     newRow.TahunBuku = itemKetetapan.TAHUN_BUKU;
@@ -706,24 +713,72 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
                     newRow.PokokPajak = itemKetetapan.POKOK_PAJAK;
                     newRow.KategoriOp = itemKetetapan.KATEGORI_OP;
                     newRow.Peruntukan = itemKetetapan.PERUNTUKAN;
-                    newRow.IsLunas = itemKetetapan.IS_LUNAS;
                     newRow.TglBayar = itemKetetapan.TGL_BAYAR;
-                    newRow.JumlahBayarPokok = itemKetetapan.JUMLAH_BAYAR_POKOK;
-                    newRow.JumlahBayarSanksi = itemKetetapan.JUMLAH_BAYAR_SANKSI;
                     newRow.InsDate = itemKetetapan.INS_DATE;
                     newRow.InsBy = itemKetetapan.INS_BY;
+                    newRow.IsLunas = itemKetetapan.IS_LUNAS;
+
+                    var realisasi = GetRealisasi(itemKetetapan.TAHUN_PAJAK, itemKetetapan.NOP);
+
+                    newRow.JumlahBayarPokok = realisasi.NominalRealisasiPokok;
+                    newRow.JumlahBayarSanksi = realisasi.NominalSanksi;
+
                     _contMonPd.DbMonPbbs.Add(newRow);
                     _contMonPd.SaveChanges();
-                    index++;
+
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\rDB_KETETAPAN_PBB HPP TAHUN {tahunBuku} JML OP {jmlData} : {jml.ToString("n0")}  {persen:F2}%   ");
+                    Console.Write($"\rDB_KETETAPAN_PBB HPP TAHUN {tahunBuku} JML OP {jmlData} {index} : {jml.ToString("n0")}  {persen:F2}%   ");
                     Thread.Sleep(50);
+
+                    index++;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing KETETAPAN {ex.Message}");
             }
+        }
+
+        private PbbRealisasi GetRealisasi(int tahunPajak, string nop)
+        {
+            var res = new PbbRealisasi();
+            try
+            {
+                var _contMonitoringDB = DBClass.GetMonitoringDbContext();
+                var _contMonPd = DBClass.GetContext();
+                var sqlRealisasi = @"
+             SELECT NOP,TAHUN_PAJAK,SUM(NVL(POKOK, 0)) POKOK , SUM(NVL(SANKSI, 0)) SANKSI
+FROM (
+	SELECT      A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS  NOP , 
+				TO_NUMBER(A.d_pjk_thn) TAHUN_PAJAK,    
+				D_PJK_PBB POKOK,
+				D_PJK_JMBYR-D_PJK_PBB SANKSI
+    FROM        CATBAYAR@LIHATGATOTKACA A 
+    WHERE       TO_NUMBER(A.d_pjk_thn) =:TAHUN AND (A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS) = :NOP
+    UNION ALL
+    SELECT      A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP NOP,
+                TO_NUMBER(THN_PAJAK_SPPT) THN_PAJAK_SPPT,JML_SPPT_YG_DIBAYAR-DENDA_SPPT,DENDA_SPPT                                                    
+    FROM        PEMBAYARAN_SPPT@LIHATGATOTKACA A
+    WHERE       TO_NUMBER(THN_PAJAK_SPPT) = :TAHUN  AND NVL(REV_FLAG,0) !=1 AND (A.KD_PROPINSI || A.KD_DATI2  ||  A.KD_KECAMATAN  ||  A.KD_KELURAHAN  ||  A.KD_BLOK  ||  A.NO_URUT  ||  A.KD_JNS_OP) = :NOP
+)
+GROUP BY NOP,TAHUN_PAJAK                                        
+                ";
+
+                var realisasiMonitoringDb = _contMonitoringDB.Set<RealisasiPbb>()
+                    .FromSqlRaw(sqlRealisasi, new[] {
+                                new OracleParameter("NOP", nop),
+                                new OracleParameter("TAHUN", tahunPajak)
+                    }).ToList();
+
+                res.NominalRealisasiPokok = realisasiMonitoringDb.Sum(x => x.POKOK);
+                res.NominalSanksi = realisasiMonitoringDb.Sum(x => x.SANKSI);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing REALISASI {ex.Message}");
+            }
+
+            return res;
         }
 
         private void GetRealisasi(int tahunBuku)
@@ -733,7 +788,7 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
                 var sqlRealisasi = @"
-             SELECT NOP,TAHUN_PAJAK,SUM(POKOK) POKOK , SUM(SANKSI) SANKSI
+             SELECT NOP,TAHUN_PAJAK,SUM(NVL(POKOK, 0)) POKOK , SUM(NVL(SANKSI, 0)) SANKSI
 FROM (
 SELECT      A.T_PROP_KD ||A.T_DATI2_KD ||A.T_KEC_KD || A.T_KEL_KD || A.D_NOP_BLK || A.D_NOP_URUT  || A.D_NOP_JNS  NOP , A.d_pjk_thn TAHUN_PAJAK,                                        
                                         D_PJK_PBB POKOK,D_PJK_JMBYR-D_PJK_PBB SANKSI
@@ -811,6 +866,12 @@ GROUP BY NOP,TAHUN_PAJAK
             _contMonPd.SetLastRuns.Add(newRow);
             _contMonPd.SaveChanges();
             return true;
+        }
+
+        public class PbbRealisasi
+        {
+            public decimal NominalRealisasiPokok { get; set; } = 0;
+            public decimal NominalSanksi { get; set; } = 0;
         }
     }
 }

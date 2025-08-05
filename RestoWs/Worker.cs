@@ -92,11 +92,11 @@ namespace RestoWs
             // do fill db op RESTORAN
             if (IsGetDBOp())
             {
-                //FillOP(2025);
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                {
-                    FillOP(i);
-                }
+                FillOP(2025);
+                //for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                //{
+                //    FillOP(i);
+                //}
             }
 
             MailHelper.SendMail(
@@ -118,11 +118,11 @@ namespace RestoWs
             // HPP PROCESS
             HPPOPProcess(tahunBuku);
 
-            // ketetapan 
-            HPPKetetapanProcess(tahunBuku);
+            //// ketetapan 
+            //HPPKetetapanProcess(tahunBuku);
 
-            // realisasi
-            HPPRealisasiProcess(tahunBuku);
+            //// realisasi
+            //HPPRealisasiProcess(tahunBuku);
 
             Console.WriteLine(" ");
         }

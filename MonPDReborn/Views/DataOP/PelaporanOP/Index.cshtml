@@ -116,6 +116,7 @@
 
         function onDetailClick(e) {
             const nop = e.row.data.NOP;
+            const jenisPajak = e.row.data.EnumPajak;
 
             if (!nop) {
                 alert("NOP tidak ditemukan.");
@@ -125,7 +126,7 @@
             $.ajax({
                 url: '/PelaporanOP/Detail',
                 type: 'GET',
-                data: { nop: nop },
+                data: { jenisPajak: jenisPajak, nop: nop },
                 success: function (response) {
                     $("#staticBackdropLargeScrollable .modal-title").html("Detail PELAPORAN");
                     $("#staticBackdropLargeScrollable .modal-body").html(response);

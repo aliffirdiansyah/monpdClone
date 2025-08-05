@@ -25,6 +25,20 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbAkunTargetBulanUptb> DbAkunTargetBulanUptbs { get; set; }
 
+    public virtual DbSet<DbAkunTargetObjekAbt> DbAkunTargetObjekAbts { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekHiburan> DbAkunTargetObjekHiburans { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekHotel> DbAkunTargetObjekHotels { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekParkir> DbAkunTargetObjekParkirs { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekPpj> DbAkunTargetObjekPpjs { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekReklame> DbAkunTargetObjekReklames { get; set; }
+
+    public virtual DbSet<DbAkunTargetObjekResto> DbAkunTargetObjekRestos { get; set; }
+
     public virtual DbSet<DbMonAbt> DbMonAbts { get; set; }
 
     public virtual DbSet<DbMonBphtb> DbMonBphtbs { get; set; }
@@ -51,7 +65,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameEmail> DbMonReklameEmails { get; set; }
 
+    public virtual DbSet<DbMonReklameInsJumlah> DbMonReklameInsJumlahs { get; set; }
+
     public virtual DbSet<DbMonReklameLiar> DbMonReklameLiars { get; set; }
+
+    public virtual DbSet<DbMonReklamePerpanjangan> DbMonReklamePerpanjangans { get; set; }
 
     public virtual DbSet<DbMonReklameSurat> DbMonReklameSurats { get; set; }
 
@@ -75,6 +93,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbOpListrik> DbOpListriks { get; set; }
 
+    public virtual DbSet<DbOpLocation> DbOpLocations { get; set; }
+
     public virtual DbSet<DbOpParkir> DbOpParkirs { get; set; }
 
     public virtual DbSet<DbOpPbb> DbOpPbbs { get; set; }
@@ -97,11 +117,19 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbPotensiResto> DbPotensiRestos { get; set; }
 
+    public virtual DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
+
+    public virtual DbSet<DbRekamAlatTbsb> DbRekamAlatTbsbs { get; set; }
+
     public virtual DbSet<DbRekamParkir> DbRekamParkirs { get; set; }
 
     public virtual DbSet<DbRekamRestoran> DbRekamRestorans { get; set; }
 
     public virtual DbSet<DetailUpayaReklame> DetailUpayaReklames { get; set; }
+
+    public virtual DbSet<MAbtKelompok> MAbtKelompoks { get; set; }
+
+    public virtual DbSet<MAbtKelompokHdum> MAbtKelompokHda { get; set; }
 
     public virtual DbSet<MFasilita> MFasilitas { get; set; }
 
@@ -300,6 +328,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TSuratReklameTeguranFile> TSuratReklameTeguranFiles { get; set; }
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
+
+    public virtual DbSet<TempPerpanjangan> TempPerpanjangans { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
 
@@ -503,6 +533,41 @@ public partial class ModelContext : DbContext
                 .HasConstraintName("DB_AKUN_TARGET_BULAN_UPTB_R01");
         });
 
+        modelBuilder.Entity<DbAkunTargetObjekAbt>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_ABT");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekHiburan>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_HIBURAN");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekHotel>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_HOTEL");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekParkir>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_PARKIR");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekPpj>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_PPJ");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekReklame>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_REKLAME");
+        });
+
+        modelBuilder.Entity<DbAkunTargetObjekResto>(entity =>
+        {
+            entity.ToView("DB_AKUN_TARGET_OBJEK_RESTO");
+        });
+
         modelBuilder.Entity<DbMonAbt>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_ABT_PK");
@@ -613,9 +678,19 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.NoFormulir, e.TglKirimEmail }).HasName("DB_MON_REKLAME_EMAIL_PK");
         });
 
+        modelBuilder.Entity<DbMonReklameInsJumlah>(entity =>
+        {
+            entity.HasKey(e => e.NoFormulir).HasName("SYS_C0033518");
+        });
+
         modelBuilder.Entity<DbMonReklameLiar>(entity =>
         {
             entity.HasKey(e => new { e.Nor, e.TanggalSkSilang }).HasName("PK_REKLAME_LIAR");
+        });
+
+        modelBuilder.Entity<DbMonReklamePerpanjangan>(entity =>
+        {
+            entity.HasKey(e => e.NoFormulir).HasName("DB_MON_REKLAME_PERPANJANGAN_PK");
         });
 
         modelBuilder.Entity<DbMonReklameSurat>(entity =>
@@ -759,21 +834,21 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbPotensiHiburan>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033443");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_HIBURAN_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<DbPotensiHotel>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033440");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_HOTEL_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<DbPotensiParkir>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033442");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_PARKIR_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
@@ -790,9 +865,19 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbPotensiResto>(entity =>
         {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033441");
+            entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_RESTO_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbRekamAlatT>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("DB_REKAM_ALAT_TS_PK");
+        });
+
+        modelBuilder.Entity<DbRekamAlatTbsb>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("DB_REKAM_ALAT_TBSB_PK");
         });
 
         modelBuilder.Entity<DbRekamParkir>(entity =>
@@ -803,6 +888,25 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbRekamRestoran>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.Tanggal, e.Seq }).HasName("SYS_C0032871");
+        });
+
+        modelBuilder.Entity<MAbtKelompok>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("M_ABT_KELOMPOK_PK");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Aktif).HasDefaultValueSql("1 ");
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate ");
+        });
+
+        modelBuilder.Entity<MAbtKelompokHdum>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.PemakaianBatasMinim }).HasName("M_ABT_KELOMPOK_HDA_PK");
+
+            entity.HasOne(d => d.IdNavigation).WithMany(p => p.MAbtKelompokHda)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ABT_KELOMPOK");
         });
 
         modelBuilder.Entity<MFasilita>(entity =>

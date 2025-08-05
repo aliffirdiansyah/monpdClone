@@ -1,4 +1,8 @@
-﻿
+﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DetailPotensiPajakABT
+@{
+    ViewBag.Title = "Detail Potensi Pajak Air Tanah";
+
+}
 <div class="row">
 
     <div class="col-lg-12">
@@ -17,19 +21,22 @@
                             </div>
                             <div class="mt-2">
                                 <h4 class="fs-16 fw-semibold">
-                                    Dashboard Pajak Air Bawah Tanah
+                                    @Model.Nama
                                 </h4>
                                 <p class="fs-16 lh-base">
-                                    NOP :
+                                    NOP : @Model.NOP
                                 </p>
                                 <p class="fs-16 lh-base">
-                                    Kelompok :
+                                    ALAMAT : @Model.Alamat
+                                </p>
+                                <p class="fs-16 lh-base">
+                                    Kelompok : @Model.KelompokNama
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-4">
+                    @* <div class="col-lg-4">
                         <div class="card border border-primary border-2">
                             <div class="d-flex p-3">
                                 <h3 class="fs-16 fw-semibold">Status : </h3>
@@ -38,7 +45,7 @@
                                 <h3 class="fs-16 fw-semibold">Periode : </h3>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
 
                 </div>
             </div>
@@ -48,8 +55,8 @@
     <div class="col-lg-6">
         <div class="card bg-soft-primary">
             <div class="card-body">
-                <h4 class="fs-14">TOTAL VOLUME PENGGUNAAN</h4>
-                <h3 class="fs-18 fw-semibold mb-1">M3</h3>
+                <h4 class="fs-14">RATA-RATA VOLUME PENGGUNAAN</h4>
+                <h3 class="fs-18 fw-semibold mb-1">@Model.VolumeRata.ToString("N0") M³</h3>
                 <h4 class="fs-14">Volume air bawah tanah yang digunakan</h4>
             </div>
         </div>
@@ -58,8 +65,8 @@
     <div class="col-lg-6">
         <div class="card bg-soft-primary">
             <div class="card-body">
-                <h4 class="fs-14">TOTAL PAJAK AAIR BAWAH TANAH</h4>
-                <h3 class="fs-18 fw-semibold mb-1">Rp</h3>
+                <h4 class="fs-14">TOTAL POTENSI AIR BAWAH TANAH</h4>
+                <h3 class="fs-18 fw-semibold mb-1">Rp. @Model.PajakAir.ToString("N0")</h3>
                 <h4 class="fs-14">Berdasarkan volumen dan tarif yang berlaku</h4>
             </div>
         </div>
@@ -80,60 +87,71 @@
                     <div class="col-lg-12">
                         <div class="card-body">
                             <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Volume Total</p>
+                                <p class="fs-14 text-muted flex-grow-1">Volume Rata-Rata</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">m3</p>
+                                    <p class="fs-16 fw-semibold">@Model.VolumeRata.ToString("N0") M³</p>
                                 </div>
                             </div>
-                            <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Range 1 (0 - 50 m3)</p>
-                                <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">m3</p>
+                            @{
+                                var detail = Model.DetailPerhitungan; // List<DetailPerhitunganABT>
+                                var totalVolume = detail.Sum(x => x.Volume);
+                                var colors = new[] { "bg-primary", "bg-info", "bg-warning", "bg-danger", "bg-success" };
+                            }
+                            <div class="col-lg-12">
+                                <div class="card-body">
+                                    <!-- DETAIL PER RANGE -->
+                                    @for (int i = 0; i < detail.Count; i++)
+                                    {
+                                        var item = detail[i];
+                                        var color = colors[i % colors.Length];
+                                        <div class="d-flex p-3 py-0">
+                                            <p class="fs-14 text-muted flex-grow-1">
+                                                Range @(i + 1)
+                                                (@item.BatasMinim.ToString("n0") -
+                                                @(item.BatasMaks == 9999 ? "∞" : item.BatasMaks.ToString("n0")) m³)
+                                            </p>
+                                            <div class="flex-shrink-0">
+                                                <p class="fs-16 fw-semibold">@item.Volume.ToString("n0") m³</p>
+                                            </div>
+                                        </div>
+                                        <div class="progress" style="height:20px">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated text-white @color"
+                                                 role="progressbar"
+                                                 style="width: 100%"
+                                                 aria-valuenow="100"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                    }
+                                    <hr />
+                                    <!-- DISTRIBUSI VOLUME (STACKED PROGRESS BAR) -->
+                                    <div class="flex-grow-1 mb-2">
+                                        <h4 class="card-title text-black fs-16 mb-0">Distribusi Volume</h4>
+                                    </div>
+                                    <div class="progress" style="height: 20px">
+                                        @for (int i = 0; i < detail.Count; i++)
+                                        {
+                                            var item = detail[i];
+                                            var percent = totalVolume > 0 ? (item.Volume / totalVolume * 100m) : 0;
+                                            var color = colors[i % colors.Length];
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated text-white @color"
+                                                 role="progressbar"
+                                                 style="width: @percent.ToString("n0")%"
+                                                 title="Range @(i + 1): @item.Volume.ToString("n0") m³"
+                                                 aria-valuenow="@percent.ToString("n0")"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
+                                        }
+                                    </div>
+                                    <small class="text-dark-50">Visualisasi distribusi volume penggunaan berdasarkan range</small>
                                 </div>
-                            </div>
-                            <div class="progress" style="height:20px">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Range 2 (51 - 283 m3)</p>
-                                <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">m3</p>
-                                </div>
-                            </div>
-                            <div class="progress" style="height:20px">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Range 3</p>
-                                <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">m3</p>
-                                </div>
-                            </div>
-                            <div class="progress" style="height:20px">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Range 4</p>
-                                <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">m3</p>
-                                </div>
-                            </div>
-                            <div class="progress" style="height:20px">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Range 5</p>
-                                <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-semibold">m3</p>
-                                </div>
-                            </div>
-                            <div class="progress" style="height:20px">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated text-white" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-12">
+                    @* <div class="col-lg-12">
                         <div class="card-body">
                             <div class="flex-grow-1">
                                 <h4 class="card-title text-black fs-16 mb-0">
@@ -146,10 +164,10 @@
                             </div>
                             <small class="text-dark-50">Visualisasi distribusi volume penggunaan berdasarkan range</small>
                         </div>
-                    </div>
+                    </div> *@
 
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -158,46 +176,29 @@
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
-                    <h4 class="card-title text-black fs-16 mb-0">
-                        Detail Harga Dasar Air
-                    </h4>
+                    <h4 class="card-title text-black fs-16 mb-0">Detail Harga Dasar Air</h4>
                 </div>
             </div>
             <div class="card-body">
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">Range 1</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                @for (int i = 0; i < detail.Count; i++)
+                {
+                    var item = detail[i];
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">Range @(i + 1)</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">Rp @item.HDA.ToString("n2")</p>
+                        </div>
                     </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">Range 2</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">Range 3</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">Range 4</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">Range 5</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div>
+                    @if (i != detail.Count - 1)
+                    {
+                        <hr />
+                    }
+                }
+
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
+                        <div class="card mt-2">
+                            <div class="card-body py-2">
                                 <small class="text-dark-50">HDA = Harga Dasar Air yang ditetapkan berdasarkan range volume penggunaan</small>
                             </div>
                         </div>
@@ -207,60 +208,50 @@
         </div>
     </div>
 
+
+    @{
+
+        var tarif = Model.TarifPajakPersen;
+    }
+
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
-                    <h4 class="card-title text-black fs-16 mb-0">
-                        Nilai Perolehan Air (NPA)
-                    </h4>
+                    <h4 class="card-title text-black fs-16 mb-0">Nilai Perolehan Air (NPA)</h4>
                 </div>
             </div>
             <div class="card-body">
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">NPA Range 1</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
+                @for (int i = 0; i < detail.Count; i++)
+                {
+                    var item = detail[i];
+                    var npa = item.Volume * item.HDA;
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">NPA Range @(i + 1)</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">Rp @npa.ToString("n2")</p>
+                        </div>
                     </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">NPA Range 2</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">NPA Range 3</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">NPA Range 4</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div><hr />
-                <div class="d-flex p-3 py-0">
-                    <p class="fs-14 text-muted flex-grow-1">NPA Range 5</p>
-                    <div class="flex-shrink-0">
-                        <p class="fs-16 fw-semibold">Rp </p>
-                    </div>
-                </div>
+                    @if (i != detail.Count - 1)
+                    {
+                        <hr />
+                    }
+                }
+
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
+                        <div class="card mt-2">
+                            <div class="card-body py-2">
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Total NPA</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp </p>
+                                        <p class="fs-16 fw-semibold">Rp @Model.TotalNPA.ToString("n2")</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
-                                    <p class="fs-14 text-muted flex-grow-1">Pajak Air (20%)</p>
+                                    <p class="fs-14 text-muted flex-grow-1">Pajak Air (@tarif.ToString("n0")%)</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp </p>
+                                        <p class="fs-16 fw-semibold">Rp @Model.PajakAir.ToString("n2")</p>
                                     </div>
                                 </div>
                             </div>
@@ -271,7 +262,8 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+
+    @* <div class="col-lg-6">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
@@ -300,7 +292,7 @@
             </div>
         </div>
     </div>
-
+ *@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
@@ -313,22 +305,29 @@
             <div class="card-body">
                 <div class="row">
 
-                    <div class="col-lg-4">
+                    <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="flex-grow-1">
                                     <h4 class="card-title text-black fs-16 mb-0">
-                                        Data Wajib Pajak
+                                        Rumus Perhitungan
                                     </h4>
                                 </div>
-                                <h4 class="fs-14">NOP :</h4>
-                                <h4 class="fs-14">Kelompok :</h4>
-                                <h4 class="fs-14">Volume Penggunaan :</h4>
-                                <h4 class="fs-14">Status :</h4>
+                                <hr />
+                                <h4 class="fs-14">NPA Range 1 : Volume R1 × HDA R1</h4>
+                                <h4 class="fs-14">NPA Range 2 : Volume R2 × HDA R2</h4>
+                                <h4 class="fs-14">NPA Range 3 : Volume R3 × HDA R3</h4>
+                                <h4 class="fs-14">NPA Range 4 : Volume R4 × HDA R4</h4>
+                                <h4 class="fs-14">NPA Range 5 : Volume R5 × HDA R5</h4>
+                                <hr />
+                                <h4 class="fs-14">Total NPA = NPA R1 + NPA R2 + NPA R3 + NPA R4 + NPA R5</h4>
+                                <h4 class="fs-14">Potensi ABT = Total NPA × 20%</h4>
+                                <h4 class="fs-14">Potensi ABT = Rp <span class="text-primary fw-bold">@Model.PajakAir.ToString("n0")</span></h4>
                             </div>
                         </div>
                     </div>
 
+@* 
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
@@ -346,22 +345,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="flex-grow-1">
-                                    <h4 class="card-title text-black fs-16 mb-0">
-                                        Rumus Perhitungan
-                                    </h4>
-                                </div>
-                                <h4 class="fs-14">NPA Range 1 : Vol R1 x HDA R1</h4>
-                                <h4 class="fs-14">NPA Range 2 : Vol R2 x HDA R2</h4>
-                                <h4 class="fs-14">Total NPA = Sum(NPA R1 ... NPA R2)</h4>
-                                <h4 class="fs-14">Pajak ABT = Total NPA x 20%</h4>
-                                <h4 class="fs-14">Pajak ABT = Rp</h4>
-                            </div>
-                        </div>
-                    </div>
+ *@
 
                 </div>
             </div>

@@ -34,9 +34,17 @@ namespace MonPDReborn.Controllers.DataOP
                 var model = new Models.DataOP.ProfilePotensiOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                throw;
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
         public IActionResult ShowRekap(string jenisPajak)
@@ -59,7 +67,20 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
+        public IActionResult ShowData(int jenisPajak, int kategori)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfilePotensiOPVM.ShowData((EnumFactory.EPajak)jenisPajak, kategori);
 
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (Exception ex)
+            {
+                // optional: log ex.Message
+                throw;
+            }
+        }
         [HttpGet]
         public object GetDetailPotensi(DataSourceLoadOptions load_options, int JenisPajak)
         {
@@ -77,112 +98,116 @@ namespace MonPDReborn.Controllers.DataOP
 
             return DataSourceLoader.Load(data, load_options);
         }
-        //public IActionResult ShowDetail(int jenisPajak)
-        //{
-        //    try
-        //    {
-        //        var model = new Models.DataOP.ProfilePotensiOPVM.ShowDetail
-        //        {
-        //           /* JenisPajak = jenisPajak,*/
-        //            DataDetailPotensi = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList((EnumFactory.EPajak)jenisPajak)
-        //        };
-        //        return PartialView($"{URLView}_{actionName}", model);
-        //    }
-        //    catch (ArgumentException e)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
-        //        return Json(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = "⚠ Server Error: Internal Server Error";
-        //        return Json(response);
-        //    }
-        //}
-        public IActionResult ShowData(int jenisPajak, int kategori)
+        public IActionResult DetailPotensiOP(string nop, int jenisPajak, int kategori)
         {
             try
             {
-                var model = new Models.DataOP.ProfilePotensiOPVM.ShowData((EnumFactory.EPajak)jenisPajak, kategori);
-
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (Exception ex)
-            {
-                // optional: log ex.Message
-                throw;
-            }
-        }
-
-        // Di dalam file ProfilePotensiOPController.cs
-
-        public IActionResult Detail(string nop, string jenisPajak, string? kategoriHiburan = null)
-        {
-            try
-            {
-                switch (jenisPajak)
+                var jenisPajakEnum = (EnumFactory.EPajak)jenisPajak;
+                switch (jenisPajakEnum)
                 {
-                    case "PBJT atas Jasa Perhotelan":
-                        var hotelModel = new ProfilePotensiOPVM.DetailHotel(nop);
-                        return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", hotelModel);
-
-                    case "PBJT atas Jasa Parkir":
-                        var parkirModel = new ProfilePotensiOPVM.DetailParkir(nop);
-                        return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", parkirModel);
-
-                    case "PBJT atas Makanan dan/atau Minuman":
-                        // Anda mungkin perlu membuat ViewModel untuk restoran juga nantinya
-                        var restoranModel = new ProfilePotensiOPVM.Detail(); // Placeholder
-                        return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", restoranModel);
-
-                    case "PBJT atas Jasa Kesenian dan Hiburan":
-                        // DIUBAH: Panggil method ShowDetailHiburan untuk menangani semua logika hiburan
-                        var hiburanModel = new ProfilePotensiOPVM.Detail(); // Kirim model dasar
-                        return ShowDetailHiburan(kategoriHiburan, hiburanModel, nop); // Tambahkan nop jika perlu
-
+                    case EnumFactory.EPajak.Semua:
+                        break;
+                    case EnumFactory.EPajak.MakananMinuman:
+                        var modelMakananMinuman = ProfilePotensiOPVM.Method.GetDataPotensiResto(nop);
+                        if (kategori == 4)
+                        {
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailCatering.cshtml", modelMakananMinuman);
+                        }
+                        else
+                        {
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", modelMakananMinuman);
+                        }
+                    case EnumFactory.EPajak.TenagaListrik:
+                        var modelTenagaListrik = ProfilePotensiOPVM.Method.GetDataPotensiPPJ(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailPPJ.cshtml", modelTenagaListrik);
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        var modelPerhotelan = ProfilePotensiOPVM.Method.GetDataPotensiHotel(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", modelPerhotelan);
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        var modelJasaParkir = ProfilePotensiOPVM.Method.GetDataPotensiParkir(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailParkir.cshtml", modelJasaParkir);
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var modelKesenianHiburan = ProfilePotensiOPVM.Method.GetDataPotensiHiburan(nop);
+                        if (kategori == 42)
+                        {
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", modelKesenianHiburan);
+                        }
+                        else if (kategori == 43)
+                        {
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", modelKesenianHiburan);
+                        }
+                        else
+                        {
+                            return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", modelKesenianHiburan);
+                        }
+                    case EnumFactory.EPajak.AirTanah:
+                        var modelAbt = ProfilePotensiOPVM.Method.GetDataPotensiABT(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailAbt.cshtml", modelAbt);
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        var modelReklame = ProfilePotensiOPVM.Method.GetDataPotensiReklame(nop);
+                        return View("~/Views/DataOP/ProfilePotensiOP/DetailReklame.cshtml", modelReklame);
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
                     default:
-                        var defaultModel = new ProfilePotensiOPVM.Detail();
-                        return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", defaultModel);
+                        break;
                 }
+                var defaultModel = new ProfilePotensiOPVM.Detail();
+                return View("~/Views/DataOP/ProfilePotensiOP/DetailDefault.cshtml", defaultModel);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error di Action Detail");
-                return Content("Terjadi kesalahan di server.");
-            }
-        }
-
-        // Ubah juga method ShowDetailHiburan untuk lebih fleksibel
-        private IActionResult ShowDetailHiburan(string? kategori, object detailModel, string nop)
-        {
-            if (string.IsNullOrEmpty(kategori))
-            {
-                // Tampilkan halaman hiburan umum jika tidak ada kategori
-                return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
-            }
-
-            switch (kategori.ToLower())
-            {
-                case "bioskop":
-                    var bioskopModel = new ProfilePotensiOPVM.DetailBioskop(nop);
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", bioskopModel);
-
-                case "massage":
-                    // var massageModel = new ProfilePotensiOPVM.DetailMassage(nop);
-                    // return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", massageModel);
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
-
-
-                case "gym":
-                    // var gymModel = new ProfilePotensiOPVM.DetailGym(nop);
-                    // return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", gymModel);
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
-
-                default:
-                    return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
     }
+
+    // Ubah juga method ShowDetailHiburan untuk lebih fleksibel
+    //private IActionResult ShowDetailHiburan(string? kategori, object detailModel, string nop)
+    //{
+    //    if (string.IsNullOrEmpty(kategori))
+    //    {
+    //        // Tampilkan halaman hiburan umum jika tidak ada kategori
+    //        return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
+    //    }
+
+    //    switch (kategori.ToLower())
+    //    {
+    //        case "bioskop":
+    //            var bioskopModel = new ProfilePotensiOPVM.DetailBioskop(nop);
+    //            return View("~/Views/DataOP/ProfilePotensiOP/DetailBioskop.cshtml", bioskopModel);
+
+    //        case "massage":
+    //            // var massageModel = new ProfilePotensiOPVM.DetailMassage(nop);
+    //            // return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", massageModel);
+    //            return View("~/Views/DataOP/ProfilePotensiOP/DetailMassage.cshtml", detailModel);
+
+
+    //        case "gym":
+    //            // var gymModel = new ProfilePotensiOPVM.DetailGym(nop);
+    //            // return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", gymModel);
+    //            return View("~/Views/DataOP/ProfilePotensiOP/DetailGym.cshtml", detailModel);
+
+    //        default:
+    //            return View("~/Views/DataOP/ProfilePotensiOP/DetailHiburan.cshtml", detailModel);
+    //    }
+    //}
 }

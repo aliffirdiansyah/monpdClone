@@ -1145,25 +1145,25 @@ File: Main Js File
                         getElementUsingTagname('dev_extreme-css-mode', 'light');
                         sessionStorage.setItem('dev_extreme-css-mode', 'light');
                         document.documentElement.setAttribute('dev_extreme-css-mode', 'light');
-                        loadCSS('/css/devextreme/dx.light');
+                        loadCSS('/css/devextreme/dx.material.blue.light.compact.css');
                         break;
                     case 'dark':
                         getElementUsingTagname('dev_extreme-css-mode', 'dark');
                         sessionStorage.setItem('dev_extreme-css-mode', 'dark');
                         document.documentElement.setAttribute('dev_extreme-css-mode', 'dark');
-                        loadCSS('/css/devextreme/dx.dark.css');
+                        loadCSS('/css/devextreme/dx.material.blue.dark.compact.css');
                         break;
                     default:
                         if (sessionStorage.getItem('dev_extreme-css-mode') && sessionStorage.getItem('dev_extreme-css-mode') == 'dark') {
                             getElementUsingTagname('dev_extreme-css-mode', 'dark');
                             sessionStorage.setItem('dev_extreme-css-mode', 'dark');
                             document.documentElement.setAttribute('dev_extreme-css-mode', 'dark');
-                            loadCSS('/css/devextreme/dx.dark.css');
+                            loadCSS('/css/devextreme/dx.material.blue.dark.compact.css');
                         } else {
                             getElementUsingTagname('dev_extreme-css-mode', 'light');
                             sessionStorage.setItem('dev_extreme-css-mode', 'light');
                             document.documentElement.setAttribute('dev_extreme-css-mode', 'light');
-                            loadCSS('/css/devextreme/dx.light.css');
+                            loadCSS('/css/devextreme/dx.material.blue.light.compact.css');
                         }
                         break;
                 }

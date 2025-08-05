@@ -230,7 +230,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
                 }
@@ -253,7 +254,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
 
@@ -277,7 +279,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
                 }
@@ -302,7 +305,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
                 }
@@ -327,7 +331,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
                 }
@@ -353,7 +358,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
                 }
@@ -379,7 +385,8 @@ namespace MonPDReborn.Models.Reklame
                            Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                            TglMulai = x.TglMulaiBerlaku.Value,
                            TglSelesai = x.TglAkhirBerlaku.Value,
-                           Pajak = x.PajakPokok.Value
+                           Pajak = x.PajakPokok.Value,
+                           Jumlah = x.Jumlah ?? 0
                        })
                        .ToList();
                 }
@@ -405,7 +412,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
                 }
@@ -431,7 +439,8 @@ namespace MonPDReborn.Models.Reklame
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
                             TglMulai = x.TglMulaiBerlaku.Value,
                             TglSelesai = x.TglAkhirBerlaku.Value,
-                            Pajak = x.PajakPokok.Value
+                            Pajak = x.PajakPokok.Value,
+                            Jumlah = x.Jumlah ?? 0
                         })
                         .ToList();
                 }
@@ -1117,6 +1126,7 @@ namespace MonPDReborn.Models.Reklame
             : 0;
         public string Ukuran { get; set; } = null!;
         public decimal Pajak { get; set; }
+        public int Jumlah { get; set; }
     }
 
 }

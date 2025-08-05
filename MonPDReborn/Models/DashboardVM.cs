@@ -397,7 +397,7 @@ namespace MonPDReborn.Models
                 var dataRealisasiParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiReklame = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
-                //var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.Pokok) ?? 0;
                 var dataRealisasiAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
@@ -408,7 +408,7 @@ namespace MonPDReborn.Models
                                     + dataTargetPbb + dataTargetBphtb + dataTargetAbt + dataTargetOpsenPkb + dataTargetOpsenBbnkb;
 
                 decimal TotalRealisasi = dataRealisasiMamin + dataRealisasiHotel + dataRealisasiHiburan + dataRealisasiParkir + dataRealisasiListrik + dataRealisasiReklame
-                                       /*+ dataRealisasiPbb*/ + dataRealisasiBphtb + dataRealisasiAbt + dataRealisasiOpsenPkb + dataRealisasiOpsenBbnkb;
+                                       + dataRealisasiPbb + dataRealisasiBphtb + dataRealisasiAbt + dataRealisasiOpsenPkb + dataRealisasiOpsenBbnkb;
 
                 decimal TotalPersentase = TotalTarget != 0 ? (TotalRealisasi / TotalTarget) * 100 : 0;
 
@@ -419,7 +419,7 @@ namespace MonPDReborn.Models
                 var OpParkirAkhir = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
                 var OpListrikAkhir = context.DbOpListriks.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
                 var OpAbtAkhir = context.DbOpAbts.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
-                //var OpPbbAkhir = context.DbOpPbbs.Count(x => x.TahunBuku == currentYear);
+                var OpPbbAkhir = context.DbOpPbbs.Count();
                 var OpReklameAkhir = context.DbOpReklames.Count(x => x.TahunBuku == currentYear);
 
                 #endregion
@@ -458,14 +458,14 @@ namespace MonPDReborn.Models
                     JumlahOpListrik = OpListrikAkhir,
 
                     TargetPbb = dataTargetPbb,
-                    //RealisasiPbb = dataRealisasiPbb,
-                    //PersentasePbb = dataTargetPbb != 0 ? Math.Round((dataRealisasiPbb / dataTargetPbb) * 100, 2) : 0,
-                    //JumlahOpPbb = OpPbbAkhir,
+                    RealisasiPbb = dataRealisasiPbb,
+                    PersentasePbb = dataTargetPbb != 0 ? Math.Round((dataRealisasiPbb / dataTargetPbb) * 100, 2) : 0,
+                    JumlahOpPbb = OpPbbAkhir,
 
                     TargetBphtb = dataTargetBphtb,
                     RealisasiBphtb = dataRealisasiBphtb,
                     PersentaseBphtb = dataTargetBphtb != 0 ? Math.Round((dataRealisasiBphtb / dataTargetBphtb) * 100, 2) : 0,
-                    //JumlahOpBphtb = OpPbbAkhir,
+                    JumlahOpBphtb = OpPbbAkhir,
 
                     TargetReklame = dataTargetReklame,
                     RealisasiReklame = dataRealisasiReklame,
@@ -529,10 +529,10 @@ namespace MonPDReborn.Models
                     .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
 
                 // PBB
-                //var pbb = context.DbMonPbbs
-                //    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == currentYear)
-                //    .GroupBy(x => x.TglBayarPokok.Value.Month)
-                //    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.NominalPokokBayar ?? 0) });
+                var pbb = context.DbMonPbbs
+                    .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year == currentYear)
+                    .GroupBy(x => x.TglBayar.Value.Month)
+                    .Select(g => new { Month = g.Key, Total = g.Sum(x => x.JumlahBayarPokok ?? 0) });
 
                 // BPHTB
                 var bphtb = context.DbMonBphtbs
@@ -574,7 +574,7 @@ namespace MonPDReborn.Models
                 Tambah(hiburan);
                 Tambah(parkir);
                 Tambah(ppj);
-                //Tambah(pbb);
+                Tambah(pbb);
                 Tambah(bphtb);
                 Tambah(abt);
                 Tambah(opsenPkb);
@@ -616,7 +616,7 @@ namespace MonPDReborn.Models
                 var realisasiListrikNow = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetPbbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                //var realisasiPbbNow = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbNow = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.JumlahBayarPokok) ?? 0;
 
                 var targetBphtbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
                 var realisasiBphtbNow = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.Pokok) ?? 0;
@@ -651,7 +651,7 @@ namespace MonPDReborn.Models
                 var realisasiListrikMines1 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetPbbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                //var realisasiPbbMines1 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbMines1 = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear - 1).Sum(x => x.JumlahBayarPokok) ?? 0;
 
                 var targetBphtbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
                 var realisasiBphtbMines1 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 1).Sum(x => x.Pokok) ?? 0;
@@ -686,7 +686,7 @@ namespace MonPDReborn.Models
                 var realisasiListrikMines2 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetPbbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                //var realisasiPbbMines2 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbMines2 = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear - 2).Sum(x => x.JumlahBayarPokok) ?? 0;
 
                 var targetBphtbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
                 var realisasiBphtbMines2 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 2).Sum(x => x.Pokok) ?? 0;

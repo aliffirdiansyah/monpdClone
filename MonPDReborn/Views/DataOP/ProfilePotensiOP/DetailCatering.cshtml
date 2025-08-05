@@ -1,0 +1,529 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DetailPotensiPajakResto
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Detail Potensi Pajak Catering";
+}
+<style>
+    .bg-elegant-dark {
+        background-color: #2E2E2E;
+        color: #FDF5E6;
+    }
+
+    .bg-elegant-light {
+        background-color: #F8F9FA;
+    }
+
+    .text-wine {
+        color: #582534;
+    }
+
+    .border-wine {
+        border: 2px solid #582534;
+    }
+
+    .card-elegant {
+        background-color: #2C3E50;
+        color: #FDF5E6;
+        border: 2px solid #708090;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+
+    .card-elegant-light {
+        background-color: #F8F9FA;
+        color: #FDF5E6;
+        border: 2px solid #582534;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+
+    .progress-bar-primary {
+        background-color: #2C3E50;
+    }
+
+    .progress-bar-secondary {
+        background-color: #B0A8B9;
+    }
+
+    .progress-bar-danger {
+        background-color: #582534;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 0.5rem;
+        gap: 2rem; 
+    }
+
+    .label {
+        width: 160px; 
+        flex-shrink: 0;
+        font-size: 14px;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+
+    .value {
+        flex-grow: 2;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 0;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+</style>
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border-wine border-2">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="d-flex p-3">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-elegant-light border-wine rounded-circle fs-1">
+                                            <i class="ri-restaurant-line text-wine"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <h4 class="fs-16 fw-semibold text-dark">
+                                        @Model.Nama
+                                    </h4>
+                                    <p class="fs-16 lh-base text-dark">
+                                        @Model.Alamat
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card-elegant">
+                                <div class="d-flex p-3">
+                                    <h3 class="fs-16 fw-semibold text-white">
+                                        Potensi Pajak
+                                    </h3>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-white flex-grow-1 ">Per Bulan</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-16 fw-semibold text-white">Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0")</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-white flex-grow-1">Per Tahun</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-16 fw-semibold text-white">Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="d-flex p-3">
+                                <div class="flex-shrink-0 ms-3">
+                                    <p class="fs-14 text-muted mb-1">NOP</p>
+                                    <p class="fs-14 fw-semibold mb-3">@Model.NOP</p>
+                                </div>
+                                <div class="flex-shrink-0 ms-5">
+                                    <p class="fs-14 text-muted mb-1">Rata-rata Transaksi</p>
+                                    <p class="fs-14 fw-semibold mb-3">Rp. @Model.RataRataBillPerOrang.ToString("N0") / Orang</p>
+                                </div>
+                                <div class="flex-shrink-0 ms-3">
+                                    <p class="fs-14 text-muted mb-1">Rata-rata Terjual</p>
+                                    <p class="fs-14 fw-semibold mb-3">@Model.RataRataTerjualPerHariCatering.ToString("N0") / Hari</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex bg-elegant-dark">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-white">
+                            Detail Tenant / Catering
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-lg-6 p-3">
+                            <div class="card-elegant-light">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <h3 class="fs-18 fw-semibold mb-1 text-dark">
+                                            @Model.RataRataTerjualWeekdaysCatering.ToString("N0")
+                                        </h3>
+                                        <h4 class="fs-14 text-dark">
+                                            Rata-rata Terjual Hari Kerja
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 p-3">
+                            <div class="card-elegant">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <h3 class="fs-18 fw-semibold mb-1 text-white">
+                                            @Model.RataRataTerjualWeekendCatering.ToString("N0")
+                                        </h3>
+                                        <h4 class="fs-14 text-white">
+                                            Rata-rata Terjual Akhir Pekan
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="d-flex p-3 py-0">
+                                <p class="fs-14 text-muted flex-grow-1">Rata-rata Transaksi per Orang</p>
+                                <div class="flex-shrink-0">
+                                    <p class="fs-14 fw-semibold">Rp. @Model.RataRataBillPerOrang.ToString("N0")</p>
+                                </div>
+                            </div>
+                            <div class="d-flex p-3 py-0">
+                                <p class="fs-14 text-muted flex-grow-1">Perputaran Hari Kerja</p>
+                                <div class="flex-shrink-0">
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysCatering.ToString("P2")</p>
+                                </div>
+                            </div>
+                            <div class="d-flex p-3 py-0">
+                                <p class="fs-14 text-muted flex-grow-1">Perputaran Akhir Pekan</p>
+                                <div class="flex-shrink-0">
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekendCatering.ToString("P2")</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="card border-wine">
+                                <div class="card-body">
+                                    <h4 class="fs-14 fw-semibold mb-2">
+                                        Distribusi Transaksi Penjualan
+                                    </h4>
+                                    <div class="d-flex p-0 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 hari/bulan)</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">@Model.RataRataTerjualWeekdaysCatering.ToString("N0") Terjual</p>
+                                        </div>
+                                    </div>
+                                    @{
+                                        decimal terjualWeekdays = (Model.RataRataTerjualWeekdaysCatering * 22);
+                                        decimal terjualWeekend = (Model.RataRataTerjualWeekendCatering * 8);
+                                        decimal terjualBulan = terjualWeekdays + terjualWeekend;
+
+                                        var persenTerjualWeekdaysCatering = (terjualBulan == 0 ? 0 :
+                                        terjualWeekdays / terjualBulan * 100)
+                                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                                    }
+                                    <div class="progress mb-4" style="height:20px">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-primary"
+                                             role="progressbar"
+                                             aria-valuenow="@persenTerjualWeekdaysCatering"
+                                             aria-valuemin="0"
+                                             aria-valuemax="@terjualBulan"
+                                             style="width: @persenTerjualWeekdaysCatering%">
+                                            @persenTerjualWeekdaysCatering%
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex p-0 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 Hari/bulan)</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">@Model.RataRataTerjualWeekendCatering.ToString("N0") Terjual</p>
+                                        </div>
+                                    </div>
+                                    @{
+                                        var persenTerjualWeekendCatering = (terjualBulan == 0 ? 0 :
+                                        terjualWeekend / terjualBulan * 100)
+                                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                                    }
+                                    <div class="progress mb-4" style="height: 20px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
+                                             role="progressbar"
+                                             style="width: @persenTerjualWeekendCatering%;"
+                                             aria-valuenow="@persenTerjualWeekendCatering"
+                                             aria-valuemin="0"
+                                             aria-valuemax="@terjualBulan">
+                                            @persenTerjualWeekendCatering%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="card border-wine">
+                                <div class="card-body bg-elegant-light">
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Total Terjual Hari Kerja per Bulan :
+                                    </h4>
+                                    <p class="fs-14 text-muted font-monospace mb-1">
+                                        Rata-rata Terjual Hari Kerja x 22 Hari
+                                    </p>
+                                    <p class="fs-14 text-muted mb-2">
+                                        @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22 =
+                                        @terjualWeekdays.ToString("N0") Terjual
+                                    </p>
+                                    <h4 class="fs-16 fw-semibold mb-1">
+                                        Total Terjual Akhir Pekan per Bulan :
+                                    </h4>
+                                    <p class="fs-14 text-muted font-monospace mb-1">
+                                        Rata-rata Terjual Akhir Pekan x 8 Hari
+                                    </p>
+                                    <p class="fs-14 text-muted mb-2">
+                                        @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8 =
+                                        @terjualWeekend.ToString("N0") Terjual
+                                    </p>
+                                    <h4 class="fs-16 fw-semibold mb-1">
+                                        Total Terjual per Bulan :
+                                    </h4>
+                                    <p class="fs-14 text-muted">
+                                         @terjualBulan.ToString("N0") Terjual
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex bg-elegant-dark">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-white">
+                            Perhitungan Potensi Pajak
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card-elegant-light">
+                                <div class="card-body">
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Rumus Perhitungan Potensi Pajak Per Bulan :
+                                    </h4>
+                                    <p class="fs-14 text-muted font-monospace mb-2">
+                                        Omzet Bulanan x 10%
+                                    </p>
+                                    <p class="fs-14 text-muted mb-1">
+                                        @Model.OmzetPerBulanCatering.ToString("N0") x 10% = @Model.PotensiPajakPerBulanCatering.ToString("N0")
+                                    </p>
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Rumus Perhitungan Potensi Pajak Per Tahun :
+                                    </h4>
+                                    <p class="fs-14 text-muted font-monospace mb-2">
+                                        Potensi Pajak per Bulan x 12
+                                    </p>
+                                    <p class="fs-14 text-muted mb-1">
+                                        Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x 12 =
+                                        @{
+                                            decimal potensiTahun = (Model.PotensiPajakPerBulanCatering * 12);
+                                        } @potensiTahun.ToString("N0")
+                                    </p>
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Total Potensi Pajak Per Tahun : Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex bg-elegant-dark">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-white">
+                            Ringkasan
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-2">
+                        <p class="label">NOP</p>
+                        <p class="value">@Model.NOP</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <p class="label">Nama Catering</p>
+                        <p class="value">@Model.Nama</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <p class="label">Alamat</p>
+                        <p class="value">@Model.Alamat</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <p class="label">Rata-rata Transaksi</p>
+                        <p class="value">Rp. @Model.RataRataBillPerOrang.ToString("N0") / Orang</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex bg-elegant-dark">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-white">
+                            Potensi Pajak
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12 p-3">
+                            <div class="card-elegant-light">
+                                <div class="card-body">
+                                    <h4 class="card-title fs-14 mb-4 text-dark">
+                                        Potensi Pajak per Bulan
+                                    </h4>
+                                    <h4 class="fs-18 fw-bold mb-0 text-dark">
+                                        Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0")
+                                    </h4>
+                                    <p class="fs-12 text-muted">10% dari omzet bulanan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="card-elegant-light">
+                                <div class="card-body">
+                                    <h4 class="card-title fs-14 mb-4 text-dark">
+                                        Potensi Pajak per Tahun
+                                    </h4>
+                                    <h4 class="fs-18 fw-bold text-dark mb-0">
+                                        Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
+                                    </h4>
+                                    <p class="fs-12 text-muted">Proyeksi untuk 12 bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex bg-elegant-dark">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-white">
+                            Parameter Perhitungan
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <p class="label">Rata-rata Transaksi per Orang</p>
+                        <p class="value">Rp. @Model.RataRataBillPerOrang.ToString("N0")</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Perputaran Hari Kerja</p>
+                        <p class="value">@Model.TurnoverWeekdaysCatering.ToString("N0") kali</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Perputaran Akhir Pekan</p>
+                        <p class="value">@Model.TurnoverWeekendCatering.ToString("N0") kali</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Rata-rata Terjual Hari Kerja</p>
+                        <p class="value">@Model.RataRataTerjualWeekdaysCatering.ToString("N0")</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Rata-rata Terjual Akhir Pekan</p>
+                        <p class="value">@Model.RataRataTerjualWeekendCatering.ToString("N0")</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Hari Kerja per Bulan</p>
+                        <p class="value">22 Hari</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Hari Kerja per Tahun</p>
+                        <p class="value">8 Hari</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Tarif Pajak</p>
+                        <p class="value">@Model.TarifPajak.ToString("P0")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex bg-elegant-dark">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-white">
+                            Rumus Lengkap Perhitungan Potensi Pajak
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet Tenant/Catering</h4>
+
+                    <p class="fs-14 text-muted font-monospace mb-1">
+                        Rata-Rata Terjual (Weekdays) = Kapasitas Tenant/Catering x Turnover Weekdays
+                    </p>
+                    <p class="fs-14 text-muted mb-2 fw-semibold">
+                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekdaysCatering.ToString("N1") = @Model.RataRataTerjualWeekdaysCatering.ToString("N0") orang
+                    </p>
+
+                    <p class="fs-14 text-muted font-monospace mb-1">
+                        Rata-Rata Terjual (Weekend) = Kapasitas Tenant/Catering x Turnover Weekend
+                    </p>
+                    <p class="fs-14 text-muted mb-2 fw-semibold">
+                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekendCatering.ToString("N1") = @Model.RataRataTerjualWeekendCatering.ToString("N0") orang
+                    </p>
+
+                    <p class="fs-14 text-muted font-monospace mb-1">
+                        Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 22) + (Rata-Rata Bill/Orang x Terjual Weekend x 8)
+                    </p>
+                    <p class="fs-14 text-muted mb-3 fw-semibold">
+                        = (@Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22) +
+                        (@Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8) =
+                        @Model.OmzetPerBulanCatering.ToString("N0")
+                    </p>
+
+                    <hr>
+
+                    <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
+
+                    <p class="fs-14 text-muted font-monospace mb-1">
+                        Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
+                    </p>
+                    <p class="fs-14 text-muted mb-2 fw-semibold">
+                        = @Model.OmzetPerBulanCatering.ToString("N0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulanCatering.ToString("N0")
+                    </p>
+
+                    <p class="fs-14 text-muted font-monospace mb-1">
+                        Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                    </p>
+                    <p class="fs-14 text-muted fw-semibold">
+                        = @Model.PotensiPajakPerBulanCatering.ToString("N0") x 12 = @Model.PotensiPajakPerTahunCatering.ToString("N0")
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>   
+}
+else
+{
+    <h4>Data Tidak Ditemukan</h4>
+}
+

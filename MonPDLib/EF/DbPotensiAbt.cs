@@ -14,9 +14,8 @@ public partial class DbPotensiAbt
     [Unicode(false)]
     public string? Nop { get; set; }
 
-    [Column("KELOMPOK")]
-    [Precision(1)]
-    public bool? Kelompok { get; set; }
+    [Column("KELOMPOK", TypeName = "NUMBER(38)")]
+    public decimal? Kelompok { get; set; }
 
     [Column("VOL_PENGGUNAAN")]
     [Precision(10)]

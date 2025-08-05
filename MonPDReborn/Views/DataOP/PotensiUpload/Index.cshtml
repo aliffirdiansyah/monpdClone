@@ -1,0 +1,285 @@
+﻿@model MonPDReborn.Models.DataOP.PotensiUploadVM.Index
+
+<div class="row">
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Potensi Hotel
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadHotel" asp-action="UploadHotel" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadHotel()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Potensi Resto
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadResto" asp-action="UploadResto" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadResto()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Potensi Hiburan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadHiburan" asp-action="UploadHiburan" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadHiburan()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Potensi Parkir
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadParkir" asp-action="UploadParkir" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadParkir()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        function UploadHotel() {
+            var formData = new FormData($('#UploadHotel')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadHotel", "PotensiUpload")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadHotel')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+
+        function UploadResto() {
+            var formData = new FormData($('#UploadResto')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadResto", "PotensiUpload")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadResto')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+
+        function UploadHiburan() {
+            var formData = new FormData($('#UploadHiburan')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadHiburan", "PotensiUpload")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadHiburan')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+
+        function UploadParkir() {
+            var formData = new FormData($('#UploadParkir')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadParkir", "PotensiUpload")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadParkir')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+    </script>
+}
