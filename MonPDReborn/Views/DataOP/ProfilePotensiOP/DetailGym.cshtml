@@ -508,39 +508,50 @@
 
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header d-flex bg-soft-success">
+            <div class="card-header d-flex bg-elegant-dark">
                 <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Rumus Perhitungan Potensi Pajak
+                    <h4 class="card-title fs-16 mb-0 text-white">
+                        Rumus Lengkap Potensi Pajak Hiburan
                     </h4>
                 </div>
             </div>
             <div class="card-body">
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (Harga Membership Bulanan x (((Kapasitas Pengunjung x Turnover Hari Kerja x 22) + (Kapasitas Pengunjung x Turnover Akhir Pekan x 8))/12) x Tarif Pajak) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (h x (((e x i x 22) + (e x j x 8))/12) x Tarif Pajak) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x (((0 x 0,00 x 22) + (0 x 0 x 8))/12) x 0,1) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x (((0) + (0))/12) x 0,1) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x (0/12) x 0,1) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = (0 x 0 x 0,1) x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = 0 x 12
-                </h4>
-                <h4 class="fs-14 fw-semibold mb-2">
-                    P = Rp 0
-                </h4>
+                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet</h4>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Estimasi Jumlah Member = [(Kapasitas x Turnover Weekdays x 22) + (Kapasitas x Turnover Weekend x 8)] / 12
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = [(@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") x 22) +
+                    (@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") x 8)] / 12 = @Model.EstimasiJumlahMemberFitnes.ToString("N0") orang
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Omzet/Bulan = Harga Member x Estimasi Jumlah Member
+                </p>
+                <p class="fs-14 text-muted mb-3 fw-semibold">
+                    = @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0") = @Model.OmzetPerBulanFitnes.ToString("N0")
+                </p>
+
+                <hr>
+
+                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
+                </p>
+                <p class="fs-14 text-muted mb-2 fw-semibold">
+                    = @Model.OmzetPerBulanFitnes.ToString("N0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulanFitnes.ToString("N0")
+                </p>
+
+                <p class="fs-14 text-muted font-monospace mb-1">
+                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                </p>
+                <p class="fs-14 text-muted fw-semibold">
+                    = @Model.PotensiPajakPerBulanFitnes.ToString("N0") x @Model.BulanSisa = @Model.PotensiPajakPerTahunFitnes.ToString("N0")
+                </p>
             </div>
         </div>
     </div>
+
 </div>

@@ -424,6 +424,49 @@ namespace MonPDLib
             public string INS_BY { get; set; } = null!;
         }
 
+
+        public class KetetapanPbbAsync
+        {
+            public string NOP { get; set; } = null!;
+            public decimal TAHUN_BUKU { get; set; }
+            public decimal KATEGORI_ID { get; set; }
+
+            public string KATEGORI_NAMA { get; set; } = null!;
+            public string ALAMAT_OP { get; set; } = null!;
+            public string ALAMAT_OP_NO { get; set; } = null!;
+
+            public string ALAMAT_OP_RT { get; set; } = null!;
+            public string ALAMAT_OP_RW { get; set; } = null!;
+            public string ALAMAT_KD_CAMAT { get; set; } = null!;
+
+            public string ALAMAT_KD_LURAH { get; set; } = null!;
+            public decimal UPTB { get; set; }
+            public string ALAMAT_WP { get; set; }
+
+            public string ALAMAT_WP_NO { get; set; }
+            public string ALAMAT_WP_KEL { get; set; }
+            public string ALAMAT_WP_KOTA { get; set; }
+
+            public string WP_NAMA { get; set; } = null!;
+            public string WP_NPWP { get; set; }
+            public decimal TAHUN_PAJAK { get; set; }
+
+            public decimal POKOK_PAJAK { get; set; }
+            public string KATEGORI_OP { get; set; }
+            public string PERUNTUKAN { get; set; }
+
+            public decimal IS_LUNAS { get; set; }
+            public DateTime? TGL_BAYAR { get; set; }
+            public decimal JUMLAH_BAYAR_POKOK { get; set; }
+
+            public decimal JUMLAH_BAYAR_SANKSI { get; set; }
+            public decimal POKOK_BANK { get; set; }
+
+            public decimal DENDA_BANK { get; set; }
+
+            public DateTime INS_DATE { get; set; }
+            public string INS_BY { get; set; } = null!;
+        }
         public class RealisasiPbb
         {
             public string NOP { get; set; } = null!;
