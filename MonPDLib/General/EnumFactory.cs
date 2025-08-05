@@ -41,9 +41,15 @@ namespace MonPDLib.General
             DBOPREKLAMESURVEY,
             DBNPWPD,
             DBOPOPSEN,
+            DBOPPBB1,
+            DBOPPBB2,
+            DBOPPBB3,
+            DBOPPBB4,
+            DBOPPBB5
             DBOPREKLAMEINSJML,
             DBOPALATREKAM,
-            DBOPREKLAMEPERPANJANGAN
+            DBOPREKLAMEPERPANJANGAN,
+            DBOPREKLAMEUPAYA,
         }
         public enum EStatePemeriksaanSkpdKbJabatan
         {
