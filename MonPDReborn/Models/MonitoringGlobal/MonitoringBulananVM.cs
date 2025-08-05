@@ -362,7 +362,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .Select(g => new
                             {
                                 Bulan = g.Key.TglBayar,
-                                Realisasi = g.Sum(x => x.NominalPokokBayar) ?? 0
+                                Realisasi = g.Sum(x => x.JumlahBayarPokok) ?? 0
                             })
                             .OrderBy(x => x.Bulan)
                             .ToList();
