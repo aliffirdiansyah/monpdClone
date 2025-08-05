@@ -1268,7 +1268,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 .GroupBy(x => x.TglBayar.Value.Month)
                                 .Select(g => new ValueTuple<int, decimal>(
                                     g.Key,
-                                    g.Sum(x => x.NominalPokokBayar) ?? 0
+                                    g.Sum(x => x.JumlahBayarPokok) ?? 0
                                 ))
                                 .ToList()
                         );
