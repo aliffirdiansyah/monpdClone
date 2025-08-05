@@ -1005,9 +1005,9 @@ namespace MonPDReborn.Models.DataOP
                             var listOpAbt3 = dataAbt3.Where(x => x.KategoriId == item.Id).Select(x => x.Nop).ToList();
                             var listOpAbtAll = dataAbtAll.Where(x => x.KategoriId == item.Id).Select(x => x.Nop).ToList();
 
-                            var targetAbt1 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && listOpAbt1.Contains(x.Nop)).Sum(q => q.Target) ?? 0;
-                            var targetAbt2 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && listOpAbt2.Contains(x.Nop)).Sum(q => q.Target) ?? 0;
-                            var targetAbt3 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year && listOpAbt3.Contains(x.Nop)).Sum(q => q.Target) ?? 0;
+                            var targetAbt1 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && listOpAbt1.Contains(x.Nop)).Sum(q => q.TargetTahun) ?? 0;
+                            var targetAbt2 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && listOpAbt2.Contains(x.Nop)).Sum(q => q.TargetTahun) ?? 0;
+                            var targetAbt3 = context.DbAkunTargetObjekAbts.Where(x => x.TahunBuku == DateTime.Now.Year && listOpAbt3.Contains(x.Nop)).Sum(q => q.TargetTahun) ?? 0;
                             var realisasiAbt1 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2 && listOpAbt1.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                             var realisasiAbt2 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1 && listOpAbt2.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                             var realisasiAbt3 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && listOpAbt3.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
