@@ -20,6 +20,8 @@ namespace MonPDLib
         {
         }
 
+        public DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
+        public DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
         public DbSet<DbMonReklamePerpanjangan> DbMonReklamePerpanjangans { get; set; }
         public DbSet<DbMonReklameInsJumlah> DbMonReklameInsJumlahs { get; set; }
         public DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
@@ -53,6 +55,21 @@ namespace MonPDLib
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<DbMonReklameUpaya>(entity =>
+            {
+                entity.HasKey(e => new { e.NoFormulir, e.TglUpaya, e.Seq }); // definisikan composite key
+            });
+
+            modelBuilder.Entity<DbMonReklameUpayaDok>(entity =>
+            {
+                entity.HasKey(e => new { e.NoformS, e.TglUpaya, e.Seq });
+
+                // Jika ini adalah relasi 1-to-1
+                entity.HasOne(d => d.DbMonReklameUpaya)
+                      .WithOne(p => p.DbMonReklameUpayaDok)
+                      .HasForeignKey<DbMonReklameUpayaDok>(d => new { d.NoformS, d.TglUpaya, d.Seq });
+            });
 
             modelBuilder.Entity<DbMonReklamePerpanjangan>().HasNoKey();
             modelBuilder.Entity<DbMonReklameInsJumlah>().HasNoKey();

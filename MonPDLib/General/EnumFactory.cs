@@ -43,7 +43,8 @@ namespace MonPDLib.General
             DBOPOPSEN,
             DBOPREKLAMEINSJML,
             DBOPALATREKAM,
-            DBOPREKLAMEPERPANJANGAN
+            DBOPREKLAMEPERPANJANGAN,
+            DBOPREKLAMEUPAYA,
         }
         public enum EStatePemeriksaanSkpdKbJabatan
         {
