@@ -953,7 +953,7 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
+                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerBulanFitnes);
 
 
                             re.Realisasi1 = realisasiHiburan1;
@@ -1414,7 +1414,7 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
+                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerBulanFitnes);
                             if (kategori != 64)
                             {
                                 var potensi = new DataPotensi

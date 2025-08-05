@@ -57,11 +57,11 @@
                             </div>
                             <div class="flex-shrink-0 ms-5">
                                 <p class="fs-14 text-muted mb-1">Kapasitas Pengunjung</p>
-                                <p class="fs-14 fw-semibold mb-3">@Model.Kapasitas Orang</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.Kapasitas.ToString("N0") Orang</p>
                             </div>
                             <div class="flex-shrink-0 ms-3">
                                 <p class="fs-14 text-muted mb-1">Membership Bulanan</p>
-                                <p class="fs-14 fw-semibold mb-3">@Model.EstimasiJumlahMemberFitnes Orang</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
     </div>
 
     <div class="col-lg-8">
-        
+
         <div class="card">
             <div class="card-header d-flex bg-soft-success">
                 <div class="flex-grow-1">
@@ -88,7 +88,7 @@
                             <div class="card-body">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-semibold mb-1">
-                                        @Model.EstimasiJumlahMemberFitnes
+                                        @Model.EstimasiJumlahMemberFitnes.ToString("N0")
                                     </h3>
                                     <h4 class="fs-14 text-muted">
                                         Estimasi Jumlah Member
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
 
                     <div class="col-lg-6">
                         <div class="card">
@@ -119,7 +119,7 @@
                                 <div class="d-flex">
                                     <p class="fs-14 text-muted flex-grow-1">Kapasitas Pengunjung</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">@Model.Kapasitas Orang</p>
+                                        <p class="fs-16 fw-semibold">@Model.Kapasitas.ToString("N0") Orang</p>
                                     </div>
                                 </div>
                                 <div class="d-flex">
@@ -137,7 +137,7 @@
                                 <div class="d-flex">
                                     <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">@Model.EstimasiJumlahMemberFitnes Orang</p>
+                                        <p class="fs-16 fw-semibold">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +146,7 @@
 
                     <div class="col-lg-12">
                         <div class="card border border-success border-2">
-                            <div class="card-body">                                
+                            <div class="card-body">
                                 <h4 class="fs-14 fw-semibold mb-1">
                                     Perhitungan Rata-rata Member Bulanan :
                                 </h4>
@@ -186,9 +186,9 @@
                                 <div class="d-flex">
                                     <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.EstimasiJumlahMemberFitnes Orang</p>
+                                        <p class="fs-14 fw-semibold">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
                                     </div>
-                                </div>                          
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -240,7 +240,7 @@
                                     Harga Membership Bulanan x Rata-rata Member Bulanan
                                 </p>
                                 <p class="fs-14 text-muted mb-1">
-                                    Rp @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes  = Rp 0
+                                    Rp @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0")  = Rp @Model.OmzetPerBulanFitnes.ToString("N0")
                                 </p>
                             </div>
                         </div>
@@ -318,7 +318,7 @@
                                 </h4>
                                 <h4 class="fs-18 fw-semibold mb-2">
                                     Rp @Model.PotensiPajakPerBulanFitnes.ToString("N0")
-                                </h4>                                
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -340,20 +340,20 @@
             </div>
             <div class="card-body">
                 <div class="d-flex">
-                    <p class="label">NOP</p>                    
-                        <p class="value">@Model.NOP</p>
+                    <p class="label">NOP</p>
+                    <p class="value">@Model.NOP</p>
                 </div>
                 <div class="d-flex">
-                    <p class="label">Nama Usaha</p>                    
-                        <p class="value">@Model.Nama</p>                    
+                    <p class="label">Nama Usaha</p>
+                    <p class="value">@Model.Nama</p>
                 </div>
                 <div class="d-flex">
-                    <p class="label">Alamat</p>                    
-                        <p class="value">@Model.Alamat</p>                    
+                    <p class="label">Alamat</p>
+                    <p class="value">@Model.Alamat</p>
                 </div>
                 <div class="d-flex">
-                    <p class="label">Kapasitas Pengunjung</p>                    
-                        <p class="value">@Model.Kapasitas Pengunjung</p>                    
+                    <p class="label">Kapasitas Pengunjung</p>
+                    <p class="value">@Model.Kapasitas.ToString("N0") Pengunjung</p>
                 </div>
             </div>
         </div>
@@ -390,7 +390,7 @@
                                 <h4 class="card-title fs-18 mb-0">
                                     Rp @Model.PotensiPajakPerTahunFitnes.ToString("N0")
                                 </h4>
-                                <p class="fs-12 text-muted">Proyeksi untuk 12 bulan</p>
+                                <p class="fs-12 text-muted">Proyeksi untuk @Model.BulanSisa.ToString("N0") bulan</p>
                             </div>
                         </div>
                     </div>
@@ -495,7 +495,7 @@
                     <div class="flex-shrink-0">
                         <p class="fs-14 fw-semibold mb-1">@Model.TurnoverWeekend.ToString("P2") Kali</p>
                     </div>
-                </div>                
+                </div>
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
                     <div class="flex-shrink-0">
