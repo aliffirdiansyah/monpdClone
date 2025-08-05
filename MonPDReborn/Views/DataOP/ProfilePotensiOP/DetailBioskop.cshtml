@@ -2,6 +2,8 @@
 
 @{
     Layout = "_Layout";
+    ViewBag.Title = "Detail Potensi Pajak Hiburan Bioskop";
+
 }
 
 <div class="row">
@@ -31,19 +33,23 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <div class="d-flex p-3">
-                            <h3 class="fs-16 fw-semibold">Potensi Pajak</h3>
-                        </div>
-                        <div class="d-flex p-3 py-0">
-                            <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
-                            <div class="flex-shrink-0">
-                                <p class="fs-16 fw-semibold">Rp @Model.PotensiPajakPerBulanBioskop.ToString("N0")</p>
-                            </div>
-                        </div>
-                        <div class="d-flex p-3 py-0">
-                            <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
-                            <div class="flex-shrink-0">
-                                <p class="fs-16 fw-semibold">Rp @Model.PotensiPajakPerTahunBioskop.ToString("N0")</p>
+                        <div class="card border border-warning border-2">
+                            <div class="card-body bg-soft-warning bg-opacity-25">
+                                <div class="d-flex p-3">
+                                    <h3 class="fs-16 fw-semibold">Potensi Pajak</h3>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerBulanBioskop.ToString("N0")</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex p-3 py-0">
+                                    <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
+                                    <div class="flex-shrink-0">
+                                        <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerTahunBioskop.ToString("N0")</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -59,8 +65,8 @@
                                 <p class="fs-14 fw-semibold mb-3">@Model.KapasitasStudio.ToString("N0") Kursi</p>
                             </div>
                             <div class="flex-shrink-0 ms-3">
-                                <p class="fs-14 text-muted mb-1">Kursi Terjual per Hari</p>
-                                <p class="fs-14 fw-semibold mb-3">0 Tiket</p>
+                                <p class="fs-14 text-muted mb-1">Jumlah Pengunjung</p>
+                                <p class="fs-14 fw-semibold mb-3">@Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") Hari Kerja | @Model.JumlahPengunjungWeekendBioskop.ToString("N0") Akhir Pekan</p>
                             </div>
                         </div>
                     </div>
@@ -145,11 +151,11 @@
                 </div>
                 <div class="info-row">
                     <p class="label">Kursi Terjual per Hari Kerja</p>                    
-                    <p class="value">@Model.JumlahPengunjungWeekdaysBioskop Tiket</p>                    
+                    <p class="value">@Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") Tiket</p>
                 </div>
                 <div class="info-row">
                     <p class="label">Kursi Terjual per Akhir Pekan</p>                    
-                    <p class="value">@Model.JumlahPengunjungWeekendBioskop Tiket</p>                    
+                    <p class="value">@Model.JumlahPengunjungWeekendBioskop.ToString("N0") Tiket</p>
                 </div>
             </div>
         </div>
@@ -157,9 +163,9 @@
 
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header d-flex bg-elegant-dark">
+            <div class="card-header d-flex bg-soft-warning">
                 <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0 text-white">
+                    <h4 class="card-title fs-16 mb-0">
                         Rumus Lengkap Potensi Pajak Hiburan
                     </h4>
                 </div>
@@ -192,8 +198,8 @@
                     Omzet/Bulan = (HTM x Pengunjung Weekdays x 22) + (HTM x Pengunjung Weekend x 8)
                 </p>
                 <p class="fs-14 text-muted mb-3 fw-semibold">
-                    = (@Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") x 22) +
-                    (@Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendBioskop.ToString("N0") x 8) = @Model.OmzetPerBulanBioskop.ToString("N0")
+                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") x 22) +
+                    (Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendBioskop.ToString("N0") x 8) = Rp. @Model.OmzetPerBulanBioskop.ToString("N0")
                 </p>
 
                 <hr>
@@ -204,14 +210,14 @@
                     Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
                 </p>
                 <p class="fs-14 text-muted mb-2 fw-semibold">
-                    = @Model.OmzetPerBulanBioskop.ToString("N0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulanBioskop.ToString("N0")
+                    = Rp. @Model.OmzetPerBulanBioskop.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanBioskop.ToString("N0")
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
                 </p>
                 <p class="fs-14 text-muted fw-semibold">
-                    = @Model.PotensiPajakPerBulanBioskop.ToString("N0") x @Model.BulanSisa = @Model.PotensiPajakPerTahunBioskop.ToString("N0")
+                    = Rp. @Model.PotensiPajakPerBulanBioskop.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunBioskop.ToString("N0")
                 </p>
             </div>
         </div>
