@@ -628,7 +628,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             })
                             .ToList();
 
-                        var realisasiPerHari = new List<(string Nop, DateTime Tgl, decimal Realisasi)>();
+                        var realisasiPerHari = new List<(string Nop, DateTime Tgl, decimal Realisasi, int pajakId)>();
 
                         realisasiPerHari.AddRange(
                             context.DbMonRestos
@@ -639,10 +639,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayarPokok.Value.Month == bulan
                             )
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok.Value,
-                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.MakananMinuman
                             ))
                             .ToList()
                         );
@@ -655,10 +656,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayarPokok.Value.Month == bulan
                             )
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok.Value,
-                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.TenagaListrik
                             ))
                             .ToList()
                         );
@@ -671,26 +673,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayarPokok.Value.Month == bulan
                             )
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok.Value,
-                                x.Sum(q => q.NominalPokokBayar) ?? 0
-                            ))
-                            .ToList()
-                        );
-                        realisasiPerHari.AddRange(
-                            context.DbMonHotels
-                            .Where(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglBayarPokok.HasValue &&
-                                x.TglBayarPokok.Value.Year == tahun &&
-                                x.TglBayarPokok.Value.Month == bulan
-                            )
-                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
-                                x.Key.Nop,
-                                x.Key.TglBayarPokok.Value,
-                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.JasaPerhotelan
                             ))
                             .ToList()
                         );
@@ -703,10 +690,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayarPokok.Value.Month == bulan
                             )
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok.Value,
-                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.JasaKesenianHiburan
                             ))
                             .ToList()
                         );
@@ -719,10 +707,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayarPokok.Value.Month == bulan
                             )
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok.Value,
-                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.AirTanah
                             ))
                             .ToList()
                         );
@@ -735,29 +724,31 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayarPokok.Value.Month == bulan
                             )
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok.Value,
-                                x.Sum(q => q.NominalPokokBayar) ?? 0
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.Reklame
                             ))
                             .ToList()
                         );
-                        //realisasiPerHari.AddRange(
-                        //    context.DbMonPbbs
-                        //    .Where(x =>
-                        //        x.TahunBuku == tahun &&
-                        //        x.TglBayarPokok.HasValue &&
-                        //        x.TglBayarPokok.Value.Year == tahun &&
-                        //        x.TglBayarPokok.Value.Month == bulan
-                        //    )
-                        //    .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                        //    .Select(x => new ValueTuple<string, DateTime, decimal>(
-                        //        x.Key.Nop,
-                        //        x.Key.TglBayarPokok.Value,
-                        //        x.Sum(q => q.NominalPokokBayar) ?? 0
-                        //    ))
-                        //    .ToList()
-                        //);
+                        realisasiPerHari.AddRange(
+                            context.DbMonPbbs
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.TglBayar.HasValue &&
+                                x.TglBayar.Value.Year == tahun &&
+                                x.TglBayar.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayar = x.TglBayar })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayar.Value,
+                                x.Sum(q => q.JumlahBayarPokok) ?? 0,
+                                (int)EnumFactory.EPajak.PBB
+                            ))
+                            .ToList()
+                        );
                         realisasiPerHari.AddRange(
                             context.DbMonBphtbs
                             .Where(x =>
@@ -767,10 +758,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayar.Value.Month == bulan
                             )
                             .GroupBy(x => new { x.SpptNop, TglBayar = x.TglBayar })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.SpptNop,
                                 x.Key.TglBayar.Value,
-                                x.Sum(q => q.Pokok) ?? 0
+                                x.Sum(q => q.Pokok) ?? 0,
+                                (int)EnumFactory.EPajak.BPHTB
                             ))
                             .ToList()
                         );
@@ -782,11 +774,12 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglSspd.Month == bulan
                             )
                             .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
 
                                 x.Key.Nop,
                                 x.Key.TglSspd,
-                                x.Sum(q => q.JmlPokok)
+                                x.Sum(q => q.JmlPokok),
+                                (int)EnumFactory.EPajak.OpsenPkb
                             ))
                             .ToList()
                         );
@@ -798,11 +791,12 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglSspd.Month == bulan
                             )
                             .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd })
-                            .Select(x => new ValueTuple<string, DateTime, decimal>(
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
 
                                 x.Key.Nop,
                                 x.Key.TglSspd,
-                                x.Sum(q => q.JmlPokok)
+                                x.Sum(q => q.JmlPokok),
+                                (int)EnumFactory.EPajak.OpsenBbnkb
                             ))
                             .ToList()
                         );
@@ -810,7 +804,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetPerHari)
                         {
                             var totalRealisasi = realisasiPerHari
-                                .Where(x => x.Tgl.Month == item.Bulan && x.Tgl.Day == item.Tgl && x.Tgl.Year == tahun)
+                                .Where(x => x.Tgl.Month == item.Bulan && x.Tgl.Day == item.Tgl && x.Tgl.Year == tahun && x.pajakId == item.PajakId)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
