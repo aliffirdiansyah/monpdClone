@@ -1,0 +1,188 @@
+﻿@model MonPDReborn.Models.ReklamePublic.ReklamePublicVM.Index
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Reklame Publik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .captcha-canvas {
+            background: linear-gradient(45deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #0ea5e9;
+            border-radius: 8px;
+        }
+
+        .status-badge {
+            transition: all 0.2s ease;
+        }
+
+            .status-badge:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+
+        .road-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #0ea5e9;
+        }
+
+            .road-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                border-left-color: #0284c7;
+            }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    @* <header class="bg-white shadow-lg border-b-4 border-blue-600">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-2xl font-bold text-gray-800">Sistem Informasi Reklame</h1>
+                        <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">Portal Publik - Informasi Reklame Sepanjang Jalan</p>
+                        <p class="text-xs text-gray-600 sm:hidden">Portal Publik</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs sm:text-sm text-gray-500">Akses Publik</p>
+                    <p class="text-xs text-gray-400" id="currentDate"></p>
+                </div>
+            </div>
+        </div>
+    </header> *@
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Search and Filter Section -->
+        <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+            <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Pencarian Data
+                </h2>
+
+                <!-- Input Nama Jalan -->
+                <div class="mb-4">
+                    <label for="namaJalanSearch" class="block text-sm font-medium text-gray-700 mb-2">Nama Jalan</label>
+                    <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base">
+                </div>
+
+                <!-- CAPTCHA Section -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Verifikasi Keamanan</h3>
+                    <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
+                        <canvas id="captchaCanvas" class="captcha-canvas" width="120" height="40"></canvas>
+                        <button type="button" onclick="generateCaptcha()"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm w-full sm:w-auto">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    <input type="text" id="captchaInput" name="captchaInput" placeholder="Masukkan kode CAPTCHA"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-3 text-base">
+                    <p class="text-xs text-gray-500 mt-2">Masukkan kode yang terlihat di gambar</p>
+                </div>
+
+                <!-- Tombol Submit -->
+                <button type="submit"
+                        class="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium text-base">
+                    🔍 Cari Data Reklame
+                </button>
+            </form>
+
+        </div>
+
+        <!-- Results Section -->
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                    Hasil Pencarian Data Reklame
+                </h2>
+
+                <div id="resultsContent">
+                    <!-- Partial view akan dimuat di sini -->
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- Footer -->
+    @* <footer class="bg-gray-800 text-white py-6 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-300 text-sm">© 2024 Sistem Informasi Reklame Publik</p>
+            <p class="text-gray-300 text-sm">Portal akses informasi untuk masyarakat</p>
+            <p class="text-gray-400 text-xs mt-2">Data diperbarui secara berkala untuk transparansi publik</p>
+        </div>
+    </footer> *@
+
+    <script>
+            let captchaText = '';
+
+        function generateCaptcha() {
+            const canvas = document.getElementById('captchaCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            captchaText = Math.random().toString(36).substring(2, 8).toUpperCase();
+            ctx.font = '24px Arial';
+            ctx.fillStyle = '#000';
+            ctx.fillText(captchaText, 10, 30);
+        }
+
+        function searchData() {
+            const captchaInput = document.getElementById('captchaInput').value.toUpperCase();
+
+            if (captchaInput !== captchaText) {
+                alert('Kode CAPTCHA tidak sesuai! Silakan coba lagi.');
+                generateCaptcha();
+                document.getElementById('captchaInput').value = '';
+                return;
+            }
+
+            const namaJalan = document.getElementById('namaJalanSearch').value;
+
+            $.ajax({
+                url: '@Url.Action("Show", "ReklamePublic")',
+                type: 'GET',
+                data: { namaJalan },
+                success: function (result) {
+                    $('#resultsContent').html(result);
+                    $('#resultsSection').removeClass('hidden');
+                    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+                },
+                error: function () {
+                    alert('Terjadi kesalahan saat mengambil data.');
+                }
+            });
+        }
+
+        window.onload = generateCaptcha;
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a49e7f959d40c8',t:'MTc1NDM3OTM0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

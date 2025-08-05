@@ -1,0 +1,119 @@
+﻿@model MonPDReborn.Models.ReklamePublic.ReklamePublicVM.Show
+
+@{
+    Layout = null;
+}
+
+@if (!Model.Data.Any())
+{
+    <div class="text-center py-8">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.562M15 6.306a7.962 7.962 0 00-6 0m6 0a7.962 7.962 0 105.824 8.132M9.172 16.172L6.343 19M15.828 16.172L18.657 19"></path>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data ditemukan</h3>
+        <p class="text-gray-500">Coba ubah kriteria pencarian Anda</p>
+    </div>
+}
+else
+{
+    <!-- Mobile Card View -->
+    <div class="block lg:hidden space-y-4">
+        @foreach (var item in Model.Data)
+        {
+            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-semibold text-gray-800 text-base">@item.Jalan</h3>
+                    <span class="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-bold px-2 py-1 rounded ml-2">
+                        Jumlah: @item.Jumlah
+                    </span>
+                </div>
+
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-start">
+                        <span class="text-gray-500 w-16 flex-shrink-0">Alamat:</span>
+                        <span class="text-gray-700">@item.Alamat</span>
+                    </div>
+
+                    <div class="flex items-center">
+                        <span class="text-gray-500 w-16 flex-shrink-0">Jenis:</span>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            @item.JenisReklame
+                        </span>
+                    </div>
+
+                    <div class="flex items-center">
+                        <span class="text-gray-500 w-16 flex-shrink-0">Kategori:</span>
+                        <span class="text-gray-700">@item.Kategori</span>
+                    </div>
+
+                    <div class="flex items-start">
+                        <span class="text-gray-500 w-16 flex-shrink-0">Tayang:</span>
+                        <div class="flex items-start">
+                            <svg class="w-4 h-4 text-gray-400 mr-1 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-gray-700 text-xs leading-relaxed">@($"{item.tglMulai:dd MMM yyyy} - {item.tglAkhir:dd MMM yyyy}")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Desktop Table View -->
+    <div class="hidden lg:block overflow-x-auto">
+        <table class="w-full bg-white border border-gray-200 rounded-lg">
+            <thead class="bg-blue-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Jalan</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Alamat</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Jenis Reklame</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Kategori Reklame</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Tanggal Tayang</th>
+                    <th class="px-6 py-4 text-center text-sm font-semibold text-gray-800 border-b">Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Data.Count; i++)
+                {
+                    var item = Model.Data[i];
+                    var bg = i % 2 == 0 ? "bg-white" : "bg-gray-50";
+                    <tr class="hover:bg-gray-50 transition-colors @bg">
+                        <td class="px-6 py-4 text-sm text-gray-800 border-b font-medium">@item.Jalan</td>
+                        <td class="px-6 py-4 text-sm text-gray-600 border-b">@item.Alamat</td>
+                        <td class="px-6 py-4 text-sm border-b">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                @item.JenisReklame
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600 border-b">@item.Kategori</td>
+                        <td class="px-6 py-4 text-sm text-gray-600 border-b">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                @($"{item.tglMulai:dd MMM yyyy} - {item.tglAkhir:dd MMM yyyy}")
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center border-b">
+                            <span class="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-800 rounded-full text-sm font-bold">
+                                @item.Jumlah
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6 bg-gray-50 rounded-lg p-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
+            <p class="text-sm text-gray-600">
+                Menampilkan <span class="font-semibold">@Model.Data.Count()</span> data reklame
+            </p>
+            <p class="text-sm text-gray-600">
+                Total Reklame: <span class="font-semibold text-blue-600">@Model.Data.Sum(x => x.Jumlah)</span>
+            </p>
+        </div>
+    </div>
+}

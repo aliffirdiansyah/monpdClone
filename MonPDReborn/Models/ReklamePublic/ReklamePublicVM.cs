@@ -1,0 +1,81 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using static MonPDReborn.Models.StrukPBJT.StrukPBJTVM;
+
+namespace MonPDReborn.Models.ReklamePublic
+{
+    public class ReklamePublicVM
+    {
+        public class Index
+        {
+            public Index()
+            {
+                
+            }
+        }
+        public class Show
+        {
+            public List<ReklameJalan> Data { get; set; } = new List<ReklameJalan>();
+            public Show(string namaJalan)
+            {
+                Data = Method.GetReklameJalanList(namaJalan);
+            }
+        }
+
+        public class Method
+        {
+            public static List<ReklameJalan> GetReklameJalanList(string namaJalan)
+            {
+                var context = DBClass.GetContext();
+                var hariIni = DateTime.Today;
+
+                var query = context.MvReklameSummaries
+                    .Where(x => x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value.Date >= hariIni);
+
+                if (!string.IsNullOrWhiteSpace(namaJalan))
+                {
+                    query = query.Where(x => x.NamaJalan != null &&
+                                             x.NamaJalan.ToLower().Contains(namaJalan.ToLower()));
+                }
+
+                var result = query
+                    .AsEnumerable() // penting: pindahkan ke memory agar bisa pakai statement lambda
+                    .GroupBy(x => new {
+                        JenisReklame = x.FlagPermohonan ?? "-",
+                        Kategori = x.NmJenis ?? "-"
+                    })
+                    .Select(g =>
+                    {
+                        var first = g.FirstOrDefault();
+                        return new ReklameJalan
+                        {
+                            JenisReklame = g.Key.JenisReklame,
+                            Kategori = g.Key.Kategori,
+                            Jumlah = g.Sum(x => x.Jumlah ?? 0),
+                            Jalan = first?.NamaJalan ?? "-",
+                            Alamat = first?.Alamatreklame ?? "-",
+                            tglMulai = first?.TglMulaiBerlaku ?? DateTime.MinValue,
+                            tglAkhir = first?.TglAkhirBerlaku ?? DateTime.MinValue
+                        };
+                    })
+                    .ToList();
+
+                return result;
+            }
+
+
+        }
+
+        public class ReklameJalan
+        {
+            public string Jalan { get; set; }
+            public string Alamat { get; set; }
+            public string JenisReklame { get; set; }
+            public string Kategori { get; set; }
+            public string Status { get; set; }
+            public DateTime tglMulai { get; set; }
+            public DateTime tglAkhir { get; set; }
+            public int Jumlah { get; set; }
+        }
+    }
+}
