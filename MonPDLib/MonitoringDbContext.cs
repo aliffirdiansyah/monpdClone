@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Dapper.SqlMapper;
 using static MonPDLib.Helper;
 
 namespace MonPDLib
@@ -21,6 +22,7 @@ namespace MonPDLib
         }
 
         public DbSet<KetetapanPbb> KetetapanPbbs { get; set; }
+        public DbSet<KetetapanPbbAsync> KetetapanPbbAsyncs { get; set; }
         public DbSet<SSPD> SSPDs { get; set; }
         public DbSet<OPPbb> OPPbbs { get; set; }
         public DbSet<DbOpHotel> DbOpHotels { get; set; }
@@ -50,6 +52,8 @@ namespace MonPDLib
         {
             base.OnModelCreating(modelBuilder);
 
+            
+            modelBuilder.Entity<KetetapanPbbAsync>().HasKey(e => new { e.NOP, e.TAHUN_BUKU, e.TAHUN_PAJAK}).HasName("DB_MON_PBB_PK");
             modelBuilder.Entity<KetetapanPbb>().HasNoKey();
             modelBuilder.Entity<OPPbb>().HasNoKey();
             modelBuilder.Entity<SSPD>().HasNoKey();
