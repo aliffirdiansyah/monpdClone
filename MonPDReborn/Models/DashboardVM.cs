@@ -721,7 +721,7 @@ namespace MonPDReborn.Models
                 var realisasiListrikMines3 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 3).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetPbbMines3 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 3 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                //var realisasiPbbMines3 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 3).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiPbbMines3 = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear - 3).Sum(x => x.JumlahBayarPokok) ?? 0;
 
                 var targetBphtbMines3 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 3 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
                 var realisasiBphtbMines3 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 3).Sum(x => x.Pokok) ?? 0;
