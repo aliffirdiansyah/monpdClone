@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.ReklamePublic.ReklamePublicVM;
 
 namespace MonPDReborn.Controllers.ReklamePublic
 {
@@ -60,6 +63,22 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
+        }
+        [HttpGet]
+        public async Task<object> GetNama(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+
+            // EF Core query langsung, tanpa ToListAsync
+            var query = context.MvReklameSummaries
+                .Distinct()
+                .Select(item => new namaJalanView
+                {
+                    Value = item.NamaJalan,
+                    Text = item.NamaJalan ?? string.Empty
+                });
+
+            return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
         }
     }
 }

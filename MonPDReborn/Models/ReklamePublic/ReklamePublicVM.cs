@@ -8,6 +8,7 @@ namespace MonPDReborn.Models.ReklamePublic
     {
         public class Index
         {
+            public int selectedUpaya { get; set; }
             public Index()
             {
                 
@@ -24,13 +25,13 @@ namespace MonPDReborn.Models.ReklamePublic
 
         public class Method
         {
-            public static List<ReklameJalan> GetReklameJalanList(string namaJalan)
+            /*public static List<ReklameJalan> GetReklameJalanList(string namaJalan)
             {
                 var context = DBClass.GetContext();
                 var hariIni = DateTime.Today;
 
                 var query = context.MvReklameSummaries
-                    .Where(x => x.TglAkhirBerlaku.HasValue && x.TglAkhirBerlaku.Value.Date >= hariIni);
+                    .Where(x => x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.Value.Date >= hariIni);
 
                 if (!string.IsNullOrWhiteSpace(namaJalan))
                 {
@@ -39,9 +40,11 @@ namespace MonPDReborn.Models.ReklamePublic
                 }
 
                 var result = query
-                    .AsEnumerable() // penting: pindahkan ke memory agar bisa pakai statement lambda
-                    .GroupBy(x => new {
+                    .AsEnumerable() 
+                    .GroupBy(x => new
+                    {
                         JenisReklame = x.FlagPermohonan ?? "-",
+                        Alamat = x.Alamatreklame ?? "-",
                         Kategori = x.NmJenis ?? "-"
                     })
                     .Select(g =>
@@ -53,7 +56,8 @@ namespace MonPDReborn.Models.ReklamePublic
                             Kategori = g.Key.Kategori,
                             Jumlah = g.Sum(x => x.Jumlah ?? 0),
                             Jalan = first?.NamaJalan ?? "-",
-                            Alamat = first?.Alamatreklame ?? "-",
+                            Alamat = g.Key.Alamat,
+                            IsiReklame = first?.IsiReklame ?? "-",
                             tglMulai = first?.TglMulaiBerlaku ?? DateTime.MinValue,
                             tglAkhir = first?.TglAkhirBerlaku ?? DateTime.MinValue
                         };
@@ -61,16 +65,56 @@ namespace MonPDReborn.Models.ReklamePublic
                     .ToList();
 
                 return result;
+            }*/
+
+            public static List<ReklameJalan> GetReklameJalanList(string namaJalan)
+            {
+                var context = DBClass.GetContext();
+                var hariIni = DateTime.Today;
+
+                var query = context.MvReklameSummaries
+                    .Where(x => x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.Value.Date >= hariIni);
+
+                if (!string.IsNullOrWhiteSpace(namaJalan))
+                {
+                    query = query.Where(x => x.NamaJalan != null &&
+                                             x.NamaJalan.ToLower().Contains(namaJalan.ToLower()));
+                }
+
+                var result = query
+                    .Select(x => new ReklameJalan
+                    {
+                        JenisReklame = x.FlagPermohonan ?? "-",
+                        Kategori = x.NmJenis ?? "-",
+                        Jumlah = x.Jumlah ?? 0,
+                        Jalan = x.NamaJalan ?? "-",
+                        Alamat = x.Alamatreklame ?? "-",
+                        IsiReklame = x.IsiReklame ?? "-",
+                        tglMulai = x.TglMulaiBerlaku ?? DateTime.MinValue,
+                        tglAkhir = x.TglAkhirBerlaku ?? DateTime.MinValue
+                    })
+                    .ToList();
+
+                return result;
             }
+
 
 
         }
 
+        public class namaJalanView
+        {
+            public string Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+
         public class ReklameJalan
         {
+            
             public string Jalan { get; set; }
             public string Alamat { get; set; }
             public string JenisReklame { get; set; }
+            public string IsiReklame { get; set; }
             public string Kategori { get; set; }
             public string Status { get; set; }
             public DateTime tglMulai { get; set; }

@@ -11,6 +11,53 @@
     <title>Sistem Informasi Reklame Publik</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Devextreme -->
+    <script src="~/js/vendor.js"></script>
+    <script src="~/js/devextreme/jquery.js"></script>
+    <script src="~/js/devextreme/dx.all.js"></script>
+    <script src="~/js/devextreme/aspnet/dx.aspnet.mvc.js"></script>
+    <script src="~/js/devextreme/aspnet/dx.aspnet.data.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/latest/js/localization/dx.messages.id.js"></script>
+    <script>
+        DevExpress.localization.locale("id"); // Ubah "id" sesuai dengan bahasa yang diinginkan
+    </script>
+
+    <!-- App favicon -->
+    @* <link rel="shortcut icon" href="assets/images/favicon.ico"> *@
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <!-- jsvectormap css -->
+    <link href="~/assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Swiper slider css -->
+    <link href="~/assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Layout config Js -->
+    <script src="~/assets/js/layout.js"></script>
+    <!-- Bootstrap Css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <!-- custom Css-->
+    <link href="~/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+    @*VELZON CSS*@
+    <link href="~/assets/js/jquery-ui.css" rel="stylesheet" />
+
+    @*PLUGIN CSS*@
+    <link href="~/assets/DataTables/datatables.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/spinner.css" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/flatpickr/themes/material_blue.css" rel="stylesheet" />
+    <link href="~/assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/libs/leaflet/leaflet.css" rel="stylesheet" />
+    <link href="~/assets/libs/multi.js/multi.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/glightbox/css/glightbox.min.css" rel="stylesheet" />
+    <link href="~/css/lightbox.css" rel="stylesheet" />
+
 
     <style>
         
@@ -88,6 +135,15 @@
                         <label for="namaJalanSearch" class="block text-sm font-medium text-gray-700 mb-2">Nama Jalan</label>
                         <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
+                            .ID("namaJalanView")
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .DataSource(d => d.Mvc().Controller("ReklamePublic").LoadAction("GetNama"))
+                            .SearchExpr("Text")
+                            .SearchEnabled(true)
+                            .MinSearchLength(4)
+                            )
                     </div>
 
                     <!-- CAPTCHA Section -->
@@ -148,6 +204,57 @@
             <p class="text-gray-400 text-xs mt-2">Data diperbarui secara berkala untuk transparansi publik</p>
         </div>
     </footer>
+
+    @*VELZON JS*@
+    @* <script src="~/assets/js/jquery.js"></script> *@
+    <script src="~/assets/js/jquery-ui.js"></script>
+    <script src="~/lib/jquery-cookie/jquery.cookie.min.js"></script>
+
+    <!-- JAVASCRIPT -->
+    <script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="~/assets/libs/node-waves/waves.min.js"></script>
+    <script src="~/assets/libs/feather-icons/feather.min.js"></script>
+    <script src="~/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+    <script src="~/assets/js/plugins.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="text/javascript" src="~/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script type="text/javascript" src="~/assets/libs/flatpickr/flatpickr.min.js"></script>
+
+    @*PLUGIN JS*@
+    <script src="~/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/assets/libs/flatpickr/flatpickr.min.js"></script>
+    <script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script>
+    <script src="~/assets/libs/swiper/swiper-bundle.min.js"></script>
+    <script src="~/assets/js/spinner.js"></script>
+    <script src="~/assets/datatables/datatables.js"></script>
+    <script src="~/assets/datatables/datatables.min.js"></script>
+    <script src="~/js/datatable.pipeline.js"></script>
+    <script src="~/assets/libs/multi.js/multi.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/custom/Pemkot.js"></script>
+    <script src="~/assets/libs/glightbox/js/glightbox.min.js"></script>
+    <script src="~/js/lightbox.js"></script>
+
+    <!-- apexcharts -->
+    <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script>
+
+    <!-- Vector map-->
+    <script src="~/assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+    <script src="~/assets/libs/jsvectormap/maps/world-merc.js"></script>
+
+    <!--Swiper slider js-->
+    <script src="~/assets/libs/swiper/swiper-bundle.min.js"></script>
+
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <script src="~/exportjs/jspdf.umd.min.js"></script>
+
+    <script src="~/exportjs/polyfill.min.js"></script>
+    <script src="~/exportjs/exceljs.min.js"></script>
+    <script src="~/exportjs/filesaver.min.js"></script>
 
     <script>
             let captchaText = '';
