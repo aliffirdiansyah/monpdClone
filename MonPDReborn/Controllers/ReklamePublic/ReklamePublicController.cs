@@ -71,12 +71,13 @@ namespace MonPDReborn.Controllers.ReklamePublic
 
             // EF Core query langsung, tanpa ToListAsync
             var query = context.MvReklameSummaries
-                .Distinct()
-                .Select(item => new namaJalanView
-                {
-                    Value = item.NamaJalan,
-                    Text = item.NamaJalan ?? string.Empty
-                });
+                 .Where(x => !string.IsNullOrEmpty(x.NamaJalan))
+                 .GroupBy(x => x.NamaJalan)
+                 .Select(g => new namaJalanView
+                 {
+                     Value = g.Key,
+                     Text = g.Key
+                 });
 
             return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
         }

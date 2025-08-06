@@ -8,7 +8,7 @@ namespace MonPDReborn.Models.ReklamePublic
     {
         public class Index
         {
-            public int selectedUpaya { get; set; }
+            public string selectedUpaya { get; set; }
             public Index()
             {
                 
