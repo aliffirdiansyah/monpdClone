@@ -21,19 +21,19 @@
                     <!-- Input Nama Jalan -->
                     <div class="mb-3">
                         <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
-                        <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
-                               class="form-control">
+                        @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
+                               class="form-control"> *@
                         @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
-                                                .ID("namaJalanView")
-                                                .ValueExpr("Value")
-                                                .DisplayExpr("Text")
-                                                .DataSource(d => d.Mvc()
-                                                .Controller("ReklamePublic")
-                                                .LoadAction("GetNama"))
-                                                .SearchExpr("Text")
-                                                .SearchEnabled(true)
-                                                .MinSearchLength(4)
-                                                )
+                            .ID("namaJalanView")
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .DataSource(d => d.Mvc()
+                            .Controller("ReklamePublic")
+                            .LoadAction("GetNama").Key("filter"))
+                            .SearchExpr("Text")
+                            .SearchEnabled(true)
+                            .MinSearchLength(3)
+                        )
                     </div>
 
                     <!-- CAPTCHA Section -->
@@ -190,7 +190,7 @@
                 return;
             }
 
-            const namaJalan = document.getElementById('namaJalanSearch').value;
+            const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
 
             // Tampilkan loading
             $('#loadingIndicator').removeClass('hidden');
