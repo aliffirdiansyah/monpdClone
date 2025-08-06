@@ -141,7 +141,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpRestos.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -171,7 +171,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpRestos.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -209,7 +209,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpListriks.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -239,7 +239,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpListriks.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -277,7 +277,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpHotels.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -307,7 +307,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpHotels.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -345,7 +345,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpParkirs.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -375,7 +375,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpParkirs.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -413,7 +413,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpHiburans.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -443,7 +443,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpHiburans.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -481,7 +481,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpAbts.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -511,7 +511,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var nopList = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpAbts.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2108,7 +2108,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpRestos.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2167,7 +2167,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpRestos.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2230,7 +2230,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpListriks.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2289,7 +2289,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpListriks.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2352,7 +2352,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpHotels.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2411,7 +2411,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpHotels.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2474,7 +2474,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpParkirs.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2533,7 +2533,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpParkirs.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2597,7 +2597,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                var nopList = context.DbOpHiburans.Where(x => x.WilayahPajak == uptb)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
@@ -2656,7 +2656,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else
                         {
-                            var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                            var nopList = context.DbOpHiburans.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
