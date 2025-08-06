@@ -2,6 +2,7 @@
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models;
+using System.Text.Json.Nodes;
 
 namespace MonPDReborn.Controllers
 {
@@ -14,10 +15,12 @@ namespace MonPDReborn.Controllers
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         public const string ERROR_LOGIN = "ERROR_LOGIN";
-        public LoginController(ILogger<LoginController> logger)
+        private IConfiguration configuration;
+        public LoginController(ILogger<LoginController> logger, IConfiguration configuration)
         {
             URLView = string.Concat("../", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
+            this.configuration = configuration;
         }
 
         public IActionResult Index()
@@ -45,11 +48,18 @@ namespace MonPDReborn.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(LoginVM.Index input)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(LoginVM.Index input)
         {
             var response = new ResponseBase();
             try
             {
+                var secretKey = configuration["RecaptchaSettings:SecretKey"];
+                bool successCapthca = await RecaptchaService.verifyReCaptchaV2((input.RecaptchaToken ?? ""), (secretKey ?? ""));
+                if (!successCapthca)
+                {
+                    throw new Exception("Invalid Captcha");
+                }
                 var login = LoginVM.DoLogin(input);
 
                 HttpContext.Session.SetString(Utility.SESSION_USER, login.Username);
@@ -68,6 +78,36 @@ namespace MonPDReborn.Controllers
 
                 TempData[ERROR_LOGIN] = response.InternalServerErrorMessage;
                 return View($"{URLView}{actionName}", input);
+            }
+        }
+        public class RecaptchaService
+        {
+            public static async Task<bool> verifyReCaptchaV2(string response, string secret)
+            {
+                using (var clienct = new HttpClient())
+                {
+                    string url = "https://www.google.com/recaptcha/api/siteverify";
+
+                    MultipartFormDataContent content = new MultipartFormDataContent();
+                    content.Add(new StringContent(response), "response");
+                    content.Add(new StringContent(secret), "secret");
+
+                    var result = await clienct.PostAsync(url, content);
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var strResponse = await result.Content.ReadAsStringAsync();
+
+                        var jsonResponse = JsonNode.Parse(strResponse);
+                        if (jsonResponse != null)
+                        {
+                            var success = ((bool?)jsonResponse["success"]);
+                            if (success != null && success == true) return true;
+                        }
+                    }
+                }
+
+                return false;
             }
         }
     }

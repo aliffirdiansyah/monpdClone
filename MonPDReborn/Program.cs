@@ -58,3 +58,9 @@ app.MapControllerRoute(
     pattern: "{controller=Login}/{action=Index}/{id?}");
 
 app.Run();
+
+public class RecaptchaSettings
+{
+    public string SiteKey { get; set; }
+    public string SecretKey { get; set; }
+}

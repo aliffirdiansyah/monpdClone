@@ -19,11 +19,11 @@ namespace MonPDLib.Lib
         {
             if (string.IsNullOrEmpty(username))
             {
-                throw new Exception("Username is required.");
+                throw new ArgumentException("Username is required.");
             }
             if (string.IsNullOrEmpty(password))
             {
-                throw new Exception("Password is required.");
+                throw new ArgumentException("Password is required.");
             }
 
             var generatedPassword = GeneratedPassword(username, password);
@@ -45,7 +45,7 @@ namespace MonPDLib.Lib
 
             if (userLogin == null)
             {
-                throw new Exception("Invalid username or password.");
+                throw new ArgumentException("Invalid username or password.");
             }
 
             return userLogin;

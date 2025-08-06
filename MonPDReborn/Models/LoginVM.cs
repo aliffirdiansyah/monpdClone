@@ -8,6 +8,7 @@ namespace MonPDReborn.Models
         public class Index
         {
             public CViewModel.LoginRow Row { get; set; } = new CViewModel.LoginRow();
+            public string? RecaptchaToken { get; set; }
             public Index()
             {
 
