@@ -48,6 +48,14 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 return Json(response);
             }
         }
+        [HttpGet]
+        public IActionResult GetNewCaptcha()
+        {
+            var model = new Models.ReklamePublic.ReklamePublicVM.Index(); 
+            HttpContext.Session.SetInt32("CaptchaAnswer", model.CaptchaAnswer);
+            return Json(new { number1 = model.Number1, number2 = model.Number2 });
+        }
+
         public IActionResult Show(string namaJalan, int userAnswer)
         {
             try

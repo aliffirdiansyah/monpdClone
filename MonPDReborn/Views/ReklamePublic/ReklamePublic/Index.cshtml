@@ -44,8 +44,12 @@
                             <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
                             <div class="row align-items-center mb-2">
                                 <div>
-                                    <label>Masukkan hasil dari @(Model.Number1) + @(Model.Number2) = ?</label>
-                                    <input id="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
+                                    <label id="captchaLabel">
+                                        Masukkan hasil dari <span id="number1">@Model.Number1</span> + <span id="number2">@Model.Number2</span> = ?
+                                    </label>
+                                    <input id="userAnswer" name="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()">Refresh CAPTCHA</button>
+
                                 </div>
                             </div>
                             <div class="form-text">Masukkan verifikasi keamanan</div>
@@ -112,7 +116,6 @@
             const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
             const userAnswer = $("#userAnswer").val();
 
-            // Tampilkan loading
             $('#loadingIndicator').removeClass('d-none');
             $('#resultsSection').removeClass('d-none');
             $('#resultsContent').html('');
@@ -122,22 +125,28 @@
                 type: 'GET',
                 data: { namaJalan, userAnswer },
                 success: function (result) {
-                    // Tangani jika respons valid (bukan JSON error)
+                    $('#loadingIndicator').addClass('d-none');
+
                     if (result.Status === undefined) {
-                        setTimeout(function () {
-                            $('#loadingIndicator').addClass('d-none');
-                            $('#resultsContent').html(result);
-                            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
-                        }, 1000);
+                        // Sukses: render HTML partial
+                        $('#resultsContent').html(result);
                     } else {
-                        // Jika hasil JSON error (berisi Status & Message)
-                        $('#loadingIndicator').addClass('d-none');
+                        // Gagal: tampilkan pesan error dari server
                         $('#resultsContent').html(`<p class="text-danger">⚠ ${result.Message}</p>`);
                     }
+
+                    // Scroll ke hasil
+                    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+
+                    // Selalu refresh CAPTCHA setelah submit
+                    refreshCaptcha();
                 },
                 error: function () {
                     $('#loadingIndicator').addClass('d-none');
                     $('#resultsContent').html('<p class="text-danger">⚠ Gagal memuat data. Silakan coba lagi.</p>');
+
+                    // Refresh CAPTCHA juga saat error
+                    refreshCaptcha();
                 }
             });
         }
@@ -178,6 +187,16 @@
             }
         });
     </script>
+    <script>
+        function refreshCaptcha() {
+            $.get('@Url.Action("GetNewCaptcha", "ReklamePublic")', function (data) {
+                $('#number1').text(data.number1);
+                $('#number2').text(data.number2);
+                $('#userAnswer').val('');
+            });
+        }
+    </script>
+
 
 }
     
