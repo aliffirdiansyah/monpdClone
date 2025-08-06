@@ -483,7 +483,8 @@
                         <div id="gradient_radialbar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                     </div>
                     <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div id="simple_dount_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]' class="apex-charts w-100" dir="ltr"></div>
+                        <div id="simple_pie_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]' class="apex-charts" dir="ltr"></div>
+                        @* <div id="simple_dount_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]' class="apex-charts w-100" dir="ltr"></div> *@
                     </div>
                 </div>
 
@@ -492,502 +493,6 @@
     </div>
 
 </div>
-@* 
-<div class="row g-2 mb-3">
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success border-0 bg-dashboard-satu shadow-sm text-dark" style="height:87%;" >
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-                    <!-- Persen di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseHotel %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())</span>
-                            <i class="bx bx-building fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1 text-white">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiHotel.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetHotel.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpHotel.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success border-0 bg-dashboard-dua shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseMamin %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white text-responsive">@(EnumFactory.EPajak.MakananMinuman.GetDescription())</span>
-                            <i class="bx bx-restaurant fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1 text-white">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiMamin.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetMamin.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpMamin.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success border-0 bg-dashboard-tiga shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseHiburan %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white text-responsive">@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())</span>
-                            <i class="bx bx-camera-movie fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiHiburan.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetHiburan.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpHiburan.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success border-0 bg-dashboard-empat shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseListrik %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.TenagaListrik.GetDescription())</span>
-                            <i class="bx bx-bulb fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiListrik.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetListrik.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpListrik.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-satu border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseParkir %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.JasaParkir.GetDescription())</span>
-                            <i class="bx bx-stop-circle fs-20 text-white"></i> <!-- Ganti bila ada ikon parkir -->
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiParkir.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetParkir.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpParkir.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-dua border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseReklame %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.Reklame.GetDescription())</span>
-                            <i class="bx bx-news fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiReklame.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetReklame.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpReklame.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-tiga border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseAbt %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.AirTanah.GetDescription())</span>
-                            <i class="bx bx-water fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiAbt.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetAbt.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpAbt.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-empat border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentasePbb %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.PBB.GetDescription())</span>
-                            <i class="bx bx-home fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiPbb.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetPbb.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpPbb.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-satu border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseBphtb %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.BPHTB.GetDescription())</span>
-                            <i class="bx bx-transfer-alt fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiBphtb.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetBphtb.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpBphtb.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-dua border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseOpsenPkb %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.OpsenPkb.GetDescription())</span>
-                            <i class="bx bx-car fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiOpsenPkb.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetOpsenPkb.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpOpsenPkb.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-tiga border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.PersentaseOpsenBbnkb %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">@(EnumFactory.EPajak.OpsenBbnkb.GetDescription())</span>
-                            <i class="bx bx-transfer fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.RealisasiOpsenBbnkb.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TargetOpsenBbnkb.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span><i class="bx bx-file me-1"></i>@Model.Data.JumlahOpOpsenBbnkb.ToString("n0") OP</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-lg-3 col-md-4">
-        <div class="card card-success bg-dashboard-total border-0 shadow-sm text-white" style="height:87%;">
-            <div class="card-body py-2 px-3">
-                <div class="d-flex align-items-center">
-
-                    <!-- Persentase di kiri -->
-                    <div class="flex-shrink-0 me-3">
-                        <div class="text-white border border-white fw-bold text-center px-3 py-3 rounded fs-16" style="min-width: 80px;">
-                            @Model.Data.TotalPersentase %
-                        </div>
-                    </div>
-
-                    <!-- Keterangan di kanan -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-semibold fs-15 text-white">Total Semua Pajak</span>
-                            <i class="bx bx-pie-chart-alt-2 fs-20 text-white"></i>
-                        </div>
-                        <p class="card-text mb-1 fs-14 mt-1">
-                            <span class="fs-12 d-block">
-                                Real : <strong class="text-white">Rp @Model.Data.TotalRealisasi.ToString("n0")</strong>
-                            </span>
-                            <span class="fs-12 d-block">
-                                Trgt : <strong class="text-white">Rp @Model.Data.TotalTarget.ToString("n0")</strong>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer py-1 px-3 border-top border-white d-flex justify-content-between fs-11 text-white bg-transparent">
-                <span>
-                    <i class="bx bx-calendar-check me-1"></i>
-                    @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("id-ID"))
-                </span>
-            </div>
-        </div>
-    </div>
-
-
-</div> *@
-@* <div class="card border shadow-sm mb-4">
-    <div class="card-header d-flex align-items-center">
-        <div class="flex-grow-1">
-            <h5 class="card-title fs-16  mb-0">
-                <h5 class="card-title fs-16  mb-0">
-                    <i class="mdi mdi-database align-middle me-1"></i> REALISASI PAJAK DAERAH
-                </h5>
-            </h5>
-        </div>
-        <div class="flex-shrink-0 text-end">
-            <button class="btn btn-sm btn-outline-light" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
-                <i class="mdi mdi-refresh align-middle"></i> Refresh
-            </button>
-        </div>
-    </div>
-    <div class="card-body">
-
-    </div>
-</div> *@
-
-@* <div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title fs-16 mb-0">
-                    📊 STATISTIC
-                </h4>
-
-            </div><!-- end card header -->
-
-            <div class="card-body">
-                <div id="line_chart_datalabel" data-colors='["--vz-danger", "--vz-success"]' class="apex-charts" dir="ltr"></div>
-            </div><!-- end card-body -->
-        </div><!-- end card -->
-    </div>
-</div> *@
 
 <div class="row">
     <div class="col-lg-12">
@@ -1883,6 +1388,106 @@
             var chart = new ApexCharts(document.querySelector("#simple_dount_chart"), options);
             chart.render();
         }
+
+                var chartPieBasicColors = getChartColorsArray("simple_pie_chart");
+
+        if (chartPieBasicColors) {
+            var seriesData = [
+                @Model.Data.PersentaseHotel.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseMamin.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseHiburan.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseListrik.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseParkir.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseReklame.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseAbt.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentasePbb.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseBphtb.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseOpsenPkb.ToString("n2").Replace(",", "."),
+                @Model.Data.PersentaseOpsenBbnkb.ToString("n2").Replace(",", ".")
+            ];
+
+            var labelData = [
+                "@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())",
+                "@(EnumFactory.EPajak.MakananMinuman.GetDescription())",
+                "@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())",
+                "@(EnumFactory.EPajak.TenagaListrik.GetDescription())",
+                "@(EnumFactory.EPajak.JasaParkir.GetDescription())",
+                "@(EnumFactory.EPajak.Reklame.GetDescription())",
+                "@(EnumFactory.EPajak.AirTanah.GetDescription())",
+                "@(EnumFactory.EPajak.PBB.GetDescription())",
+                "@(EnumFactory.EPajak.BPHTB.GetDescription())",
+                "@(EnumFactory.EPajak.OpsenPkb.GetDescription())",
+                "@(EnumFactory.EPajak.OpsenBbnkb.GetDescription())"
+            ];
+
+            var total = seriesData.reduce((a, b) => a + parseFloat(b), 0);
+
+            var options = {
+                series: seriesData,
+                chart: {
+                    height: 500,
+                    type: "pie"
+                },
+                labels: labelData,
+                legend: {
+                    position: "right",
+                    offsetY: 50,
+                    offsetX: -20,
+                    fontWeight: 600,
+                    fontSize: "13px",
+                    formatter: function (seriesName, opts) {
+                        var value = opts.w.globals.series[opts.seriesIndex];
+                        var percent = total > 0 ? ((value / total) * 100).toFixed(2) : 0;
+                        return seriesName + ": " + percent + " %";
+                    },
+                    labels: {
+                        useSeriesColors: false
+                    },
+                    itemMargin: {
+                        horizontal: 0,
+                        vertical: 2
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val, opts) {
+                        var value = opts.w.globals.series[opts.seriesIndex];
+                        return value.toFixed(2) + " %";
+                    },
+                    style: {
+                        fontWeight: "bold"
+                    },
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                responsive: [
+                    {
+                        breakpoint: 1200,
+                        options: {
+                            chart: {
+                                height: 500
+                            },
+                            legend: {
+                                position: "bottom",
+                                offsetX: 0,
+                                offsetY: 10,
+                                fontSize: "5px",
+                                itemMargin: {
+                                    horizontal: 5,
+                                    vertical: 2
+                                }
+                            }
+                        }
+                    }
+                ],
+                colors: chartPieBasicColors.slice(0, 11)
+            };
+
+            var chart = new ApexCharts(document.querySelector("#simple_pie_chart"), options);
+            chart.render();
+        }
+
 
     </script>
     }

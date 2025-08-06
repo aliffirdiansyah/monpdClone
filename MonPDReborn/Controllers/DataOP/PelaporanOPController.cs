@@ -6,18 +6,18 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class PelaporanOPController : BaseController
+    public class PelaporanOPNGAWORController : BaseController
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<PelaporanOPController> _logger;
+        private readonly ILogger<PelaporanOPNGAWORController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         ResponseBase response = new ResponseBase();
-        public PelaporanOPController(ILogger<PelaporanOPController> logger)
+        public PelaporanOPNGAWORController(ILogger<PelaporanOPNGAWORController> logger)
         {
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;

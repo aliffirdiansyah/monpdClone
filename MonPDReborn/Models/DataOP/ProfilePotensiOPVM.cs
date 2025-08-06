@@ -486,7 +486,7 @@ namespace MonPDReborn.Models.DataOP
                     TotalPotensi = totalPotensiReklame
                 });
 
-                ret.Add(new RekapPotensi
+                /*ret.Add(new RekapPotensi
                 {
                     EnumPajak = (int)EnumFactory.EPajak.PBB,
                     JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
@@ -536,7 +536,7 @@ namespace MonPDReborn.Models.DataOP
                     Target1 = targetOpsenBbnkbMines2,
                     Realisasi1 = realisasiOpsenBbnkbMines2,
                     TotalPotensi = 0
-                });
+                });*/
 
                 return ret;
             }
