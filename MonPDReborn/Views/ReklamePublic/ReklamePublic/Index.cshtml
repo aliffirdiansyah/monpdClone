@@ -8,50 +8,67 @@
     <div class="col-lg-3"></div>
     <div class="col-lg-6">
         <div class="card">
-            <div class="card-body">
-                <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
-                    <h2 class="h5 mb-4 d-flex align-items-center text-dark">
+            <div class="card-header d-flex bg-primary align-items-center">
+                <div class="flex-grow-1">
+                    <h2 class="h5 mb-1 d-flex align-items-center text-white">
                         <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                         Pencarian Data
                     </h2>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
+                    <div class="row gy-2">
 
-                    <!-- Input Nama Jalan -->
-                    <div class="mb-3">
-                        <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
-                        @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
+                        <div class="col-lg-12">
+                            <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
+                            @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
                                class="form-control"> *@
-                        @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
-                            .ID("namaJalanView")
-                            .ValueExpr("Value")
-                            .DisplayExpr("Text")
-                            .DataSource(d => d.Mvc()
-                            .Controller("ReklamePublic")
-                            .LoadAction("GetNama").Key("filter"))
-                            .SearchExpr("Text")
-                            .SearchEnabled(true)
-                            .MinSearchLength(3)
-                        )
+                            @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
+                                                        .ID("namaJalanView")
+                                                        .ValueExpr("Value")
+                                                        .DisplayExpr("Text")
+                                                        .DataSource(d => d.Mvc()
+                                                        .Controller("ReklamePublic")
+                                                        .LoadAction("GetNama").Key("filter"))
+                                                        .SearchExpr("Text")
+                                                        .SearchEnabled(true)
+                                                        .MinSearchLength(3)
+                                                        )
+                        </div>
+
+                        <div class="col-lg-12">
+                            <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
+                            <div class="row align-items-center mb-2">
+                                <div>
+                                    <label>Masukkan hasil dari @(Model.Number1) + @(Model.Number2) = ?</label>
+                                    <input id="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
+                                </div>
+                            </div>
+                            <div class="form-text">Masukkan verifikasi keamanan</div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary w-100 py-2">
+                                🔍 Cari Data Reklame
+                            </button>
+                        </div>
+                    </div>
+                   @*  <!-- Input Nama Jalan -->
+                    <div class="mb-3">
+                        
                     </div>
 
                     <!-- CAPTCHA Section -->
                     <div class="bg-light p-3 mb-3 rounded">
-                        <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
-                        <div class="row align-items-center mb-2">
-                            <div>
-                                <label>Masukkan hasil dari @(Model.Number1) + @(Model.Number2) = ?</label>
-                                <input id="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
-                            </div>
-                        </div>
-                        <div class="form-text">Masukkan kode yang terlihat di gambar</div>
+                        
                     </div>
 
-                    <!-- Tombol Submit -->
-                    <button type="submit" class="btn btn-primary w-100 py-2">
-                        🔍 Cari Data Reklame
-                    </button>
+                    <!-- Tombol Submit --> *@
+                    
                 </form>
 
             </div>
@@ -61,40 +78,43 @@
     <div id="resultsSection" class="d-none">
         <div class="container my-4">
             <div class="card shadow-sm">
-                <div class="card-body">
-                    <h2 class="h5 fw-semibold text-dark mb-4 d-flex align-items-center">
+                <!-- Header Card -->
+                <div class="card-header bg-primary d-flex align-items-center">
+                    <h2 class="h5 fw-semibold text-white mb-0">
                         Hasil Pencarian Data Reklame
                     </h2>
+                </div>
 
+                <!-- Body Card -->
+                <div class="card-body">
+                    <!-- Loading Indicator -->
                     <div id="loadingIndicator" class="text-center py-3 d-none">
                         <div class="spinner-border text-primary mb-2" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <p class="text-muted small">Memuat data, mohon tunggu...</p>
+                        <p class="text-muted small mb-0">Memuat data, mohon tunggu...</p>
                     </div>
 
-                    <div id="resultsContent">
-                        <!-- Partial view akan dimuat di sini -->
-                    </div>
+                    <!-- Hasil AJAX akan dimuat di sini -->
+                    <div id="resultsContent"></div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="col-lg-3"></div>
 
 </div>
 
 @section Scripts{
     <script>
-
-
         function searchData() {
             const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
             const userAnswer = $("#userAnswer").val();
 
             // Tampilkan loading
-            $('#loadingIndicator').removeClass('hidden');
-            $('#resultsSection').removeClass('hidden');
+            $('#loadingIndicator').removeClass('d-none');
+            $('#resultsSection').removeClass('d-none');
             $('#resultsContent').html('');
 
             $.ajax({
@@ -102,23 +122,61 @@
                 type: 'GET',
                 data: { namaJalan, userAnswer },
                 success: function (result) {
-                    if(result.Status == undefined){
+                    // Tangani jika respons valid (bukan JSON error)
+                    if (result.Status === undefined) {
                         setTimeout(function () {
                             $('#loadingIndicator').addClass('d-none');
                             $('#resultsContent').html(result);
-                            document.getElementById('resultsSection').classList.remove("d-none");
                             document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
                         }, 1000);
                     } else {
-                        alert(result.Message);
+                        // Jika hasil JSON error (berisi Status & Message)
+                        $('#loadingIndicator').addClass('d-none');
+                        $('#resultsContent').html(`<p class="text-danger">⚠ ${result.Message}</p>`);
                     }
                 },
                 error: function () {
-                    $('#loadingIndicator').addClass('hidden');
-                    alert('Terjadi kesalahan saat mengambil data.');
+                    $('#loadingIndicator').addClass('d-none');
+                    $('#resultsContent').html('<p class="text-danger">⚠ Gagal memuat data. Silakan coba lagi.</p>');
                 }
             });
         }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            const itemsPerPage = 5;
+            const $cards = $("#mobileCards .bg-white");
+            const totalItems = $cards.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            function showPage(page) {
+                $cards.hide();
+                const start = (page - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                $cards.slice(start, end).show();
+
+                // Update active button
+                $("#mobilePaging button").removeClass("active");
+                $(`#mobilePaging button[data-page='${page}']`).addClass("active");
+            }
+
+            // Generate paging buttons
+            if (totalPages > 1) {
+                let pagingHtml = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    pagingHtml += `<button class="btn btn-sm btn-outline-primary me-1" data-page="${i}">${i}</button>`;
+                }
+                $("#mobilePaging").html(pagingHtml);
+
+                $("#mobilePaging").on("click", "button", function () {
+                    const page = $(this).data("page");
+                    showPage(page);
+                });
+
+                showPage(1); // Show first page initially
+            }
+        });
     </script>
 
 }
