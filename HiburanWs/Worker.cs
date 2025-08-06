@@ -119,10 +119,10 @@ namespace HiburanWs
             HPPOPProcess(tahunBuku);
 
             // ketetapan 
-            //HPPKetetapanProcess(tahunBuku);
+            HPPKetetapanProcess(tahunBuku);
 
             // realisasi
-            //HPPRealisasiProcess(tahunBuku);
+            HPPRealisasiProcess(tahunBuku);
 
             Console.WriteLine(" ");
         }
@@ -1202,7 +1202,7 @@ GROUP BY NOP, MASA, TAHUN  ";
                                 newRow.UpdDate = DateTime.Now;
                                 newRow.UpdBy = "JOB";
 
-
+                                newRow.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
                                 newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
                                 newRow.AkunPokokBayar = akunBayar;
                                 newRow.Kelompok = kelompokBayar;

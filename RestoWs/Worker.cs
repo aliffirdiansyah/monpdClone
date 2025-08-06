@@ -92,11 +92,14 @@ namespace RestoWs
             // do fill db op RESTORAN
             if (IsGetDBOp())
             {
-                FillOP(2025);
                 //for (var i = tahunAmbil; i <= tglServer.Year; i++)
                 //{
                 //    FillOP(i);
                 //}
+                for (var i = tglServer.Year; i >= tahunAmbil; i--)
+                {
+                    FillOP(i);
+                }
             }
 
             MailHelper.SendMail(

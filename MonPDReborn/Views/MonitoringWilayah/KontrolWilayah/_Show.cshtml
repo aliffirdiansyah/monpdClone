@@ -49,7 +49,19 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+    @{
+        string col1 = "col-lg-12";
+        string col2 = "col-lg-12";
+        bool col2Visible = false;
+        @if (Model.Wilayah == MonPDLib.General.EnumFactory.EUPTB.SEMUA && Model.JenisPajak == MonPDLib.General.EnumFactory.EPajak.Semua)
+        {
+            col1 = "col-lg-6";
+            col2 = "col-lg-6";
+            col2Visible = true;
+        }
+    }
+
+    <div class="@(col1)">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
@@ -159,7 +171,9 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+    @if (col2Visible)
+    {
+    <div class="@(col2)">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
@@ -258,8 +272,8 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    </div>    
+    }
 </div>
 
 
