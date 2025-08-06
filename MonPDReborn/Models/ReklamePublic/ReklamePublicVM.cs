@@ -9,9 +9,19 @@ namespace MonPDReborn.Models.ReklamePublic
         public class Index
         {
             public string selectedUpaya { get; set; }
+            public int Number1 { get; set; }
+            public int Number2 { get; set; }
+            public int CaptchaAnswer { get; set; }
             public Index()
             {
-                
+                var random = new Random();
+                int number1 = random.Next(1, 10);
+                int number2 = random.Next(1, 10);
+                int captchaAnswer = number1 + number2;
+
+                Number1 = number1;
+                Number2 = number2;
+                CaptchaAnswer = captchaAnswer;
             }
         }
         public class Show
