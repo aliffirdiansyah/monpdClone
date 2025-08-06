@@ -474,5 +474,30 @@ namespace MonPDLib
             public decimal POKOK { get; set; }
             public decimal SANKSI { get; set; }            
         }
+
+        public class KetetapanHPP
+        {
+            public string NOP { get; set; } = null!;
+            public decimal TAHUN_PAJAK  { get; set; }
+            public decimal MASA_PAJAK { get; set; }
+            public int SEQ { get; set; }
+            public int JENIS_KETETAPAN { get; set; }
+            public DateTime TGL_KETETAPAN { get; set; } 
+            public DateTime TGL_JATUH_TEMPO_BAYAR { get; set; }
+            public int NILAI_P0ENGURANG { get; set; }
+            public decimal POKOK { get; set; }
+            
+        }
+        public class SSPDHPP
+        {
+            public string NOP { get; set; } = null!;
+            public decimal MASA_PAJAK { get; set; }
+            public decimal TAHUN_PAJAK { get; set; }
+            public decimal SEQ { get; set; }
+            public DateTime JATUH_TEMPO { get; set; }
+            public decimal NOMINAL_POKOK { get; set; }
+            public decimal NOMINAL_SANKSI { get; set; }
+            public DateTime TRANSACTION_DATE { get; set; }
+        }
     }
 }

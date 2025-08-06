@@ -21,6 +21,7 @@ namespace MonPDLib
         {
         }
 
+        public DbSet<SSPDHPP> SSPDHPPs { get; set; }
         public DbSet<DbMonReklamePerpanjangan> DbMonReklamePerpanjangans { get; set; }
         public DbSet<DbMonReklameInsJumlah> DbMonReklameInsJumlahs { get; set; }
         public DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
@@ -55,7 +56,7 @@ namespace MonPDLib
         {
             base.OnModelCreating(modelBuilder);
 
-            
+            modelBuilder.Entity<SSPDHPP>().HasNoKey();
             modelBuilder.Entity<KetetapanPbbAsync>().HasKey(e => new { e.NOP, e.TAHUN_BUKU, e.TAHUN_PAJAK}).HasName("DB_MON_PBB_PK");
             modelBuilder.Entity<DbMonReklamePerpanjangan>().HasNoKey();
             modelBuilder.Entity<DbMonReklameInsJumlah>().HasNoKey();
