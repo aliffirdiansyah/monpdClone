@@ -58,7 +58,7 @@ namespace MonPDReborn.Controllers
                 bool successCapthca = await RecaptchaService.verifyReCaptchaV2((input.RecaptchaToken ?? ""), (secretKey ?? ""));
                 if (!successCapthca)
                 {
-                    throw new Exception("Invalid Captcha");
+                    throw new ArgumentException("Invalid Captcha");
                 }
                 var login = LoginVM.DoLogin(input);
 

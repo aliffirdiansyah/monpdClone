@@ -6,22 +6,8 @@
     Layout = "_LayoutLogin";
     var siteKey = Configuration["RecaptchaSettings:SiteKey"];
 }
-<script type="text/javascript">
-    var onloadCallback = function () {
-       grecaptcha.render('html_element', {
-          'sitekey': '@(siteKey)'
-       });
-    };
 
-    function onSubmit(event) {
-       var token = grecaptcha.getResponse();
-       document.getElementById("RecaptchaToken").value = token
-    }
-</script>
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-        async defer>
-</script>
-<div class="card shadow rounded-4 p-4 mt-4 text-black" 
+<div class="card shadow rounded-4 p-4 mt-4 text-black"
      style="width: 100%; max-width: 400px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
@@ -38,7 +24,7 @@
         </div>
     }
 
-    <form method="post" asp-action="Index">
+    <form method="post" asp-action="Index" onsubmit="return onSubmit(event)">
         @Html.HiddenFor(x => x.RecaptchaToken)
         <div class="mb-3">
             <label asp-for="Row.Username" class="form-label"></label>
@@ -47,12 +33,12 @@
         <div class="mb-3">
             <label asp-for="Row.Password" class="form-label"></label>
             <input asp-for="Row.Password" type="password" class="form-control" placeholder="Masukkan Password" />
-            <span class="password-toggle" style="position: absolute; top: 45%; right: 1%; color: #888787; cursor: pointer;" onclick="togglePasswordVisibility()">
+            @* <span class="password-toggle" style="position: absolute; top: 45%; right: 1%; color: #888787; cursor: pointer;" onclick="togglePasswordVisibility()">
                 <i class="ri-eye-line"></i>
-            </span>
+            </span> *@
         </div>
-        <div class="text-center mt-2 w-100">
-            <div id="html_element"></div>
+        <div class="mb-3">
+            <div class="form-control p-0" id="html_element" style="height: auto;"></div>
         </div>
         @* <div class="mb-3 text-end">
             <a href="/account/forgot-password" class="text-decoration-none small text-black">Lupa Password?</a>
@@ -62,7 +48,22 @@
 </div>
 
 @section scripts {
-@* <script>
+    <script type="text/javascript">
+        var onloadCallback = function () {
+           grecaptcha.render('html_element', {
+              'sitekey': '@(siteKey)'
+           });
+        };
+
+        function onSubmit(event) {
+           var token = grecaptcha.getResponse();
+           document.getElementById("RecaptchaToken").value = token
+        }
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async defer>
+    </script>
+    @* <script>
           function togglePasswordVisibility() {
              var passwordField = document.getElementById("passwordField");
              var toggleIcon = document.querySelector(".password-toggle");
