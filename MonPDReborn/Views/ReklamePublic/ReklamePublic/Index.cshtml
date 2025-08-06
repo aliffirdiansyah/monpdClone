@@ -47,7 +47,7 @@
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <!-- Header -->
-    @* <header class="bg-white shadow-lg border-b-4 border-blue-600">
+    <header class="bg-white shadow-lg border-b-4 border-blue-600">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -68,77 +68,86 @@
                 </div>
             </div>
         </div>
-    </header> *@
+    </header>
 
+    <!-- Form Pencarian -->
     <div class="container mx-auto px-4 py-6">
-        <!-- Search and Filter Section -->
-        <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
-            <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    Pencarian Data
-                </h2>
+        <div class="max-w-xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+                <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Pencarian Data
+                    </h2>
 
-                <!-- Input Nama Jalan -->
-                <div class="mb-4">
-                    <label for="namaJalanSearch" class="block text-sm font-medium text-gray-700 mb-2">Nama Jalan</label>
-                    <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base">
-                </div>
-
-                <!-- CAPTCHA Section -->
-                <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Verifikasi Keamanan</h3>
-                    <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                        <canvas id="captchaCanvas" class="captcha-canvas" width="120" height="40"></canvas>
-                        <button type="button" onclick="generateCaptcha()"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm w-full sm:w-auto">
-                            🔄 Refresh
-                        </button>
+                    <!-- Input Nama Jalan -->
+                    <div class="mb-4">
+                        <label for="namaJalanSearch" class="block text-sm font-medium text-gray-700 mb-2">Nama Jalan</label>
+                        <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base">
                     </div>
-                    <input type="text" id="captchaInput" name="captchaInput" placeholder="Masukkan kode CAPTCHA"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-3 text-base">
-                    <p class="text-xs text-gray-500 mt-2">Masukkan kode yang terlihat di gambar</p>
-                </div>
 
-                <!-- Tombol Submit -->
-                <button type="submit"
-                        class="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium text-base">
-                    🔍 Cari Data Reklame
-                </button>
-            </form>
+                    <!-- CAPTCHA Section -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Verifikasi Keamanan</h3>
+                        <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
+                            <canvas id="captchaCanvas" class="captcha-canvas" width="120" height="40"></canvas>
+                            <button type="button" onclick="generateCaptcha()"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm w-full sm:w-auto">
+                                🔄 Refresh
+                            </button>
+                        </div>
+                        <input type="text" id="captchaInput" name="captchaInput" placeholder="Masukkan kode CAPTCHA"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-3 text-base">
+                        <p class="text-xs text-gray-500 mt-2">Masukkan kode yang terlihat di gambar</p>
+                    </div>
 
+                    <!-- Tombol Submit -->
+                    <button type="submit"
+                            class="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium text-base">
+                        🔍 Cari Data Reklame
+                    </button>
+                </form>
+            </div>
         </div>
+    </div>
 
-        <!-- Results Section -->
-        <!-- Results Section -->
-        <div id="resultsSection" class="hidden">
+    
+
+    <!-- Hasil Pencarian (DILUAR max-w-xl agar lebih besar) -->
+    <div id="resultsSection" class="hidden">
+        <div class="max-w-5xl mx-auto px-4 mb-10">
             <div class="bg-white rounded-xl shadow-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
                     Hasil Pencarian Data Reklame
                 </h2>
-
+                <div id="loadingIndicator" class="text-center py-4 hidden">
+                    <svg class="animate-spin h-6 w-6 text-blue-600 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500">Memuat data, mohon tunggu...</p>
+                </div>
                 <div id="resultsContent">
                     <!-- Partial view akan dimuat di sini -->
                 </div>
             </div>
         </div>
-
-
-
     </div>
 
+
+
     <!-- Footer -->
-    @* <footer class="bg-gray-800 text-white py-6 mt-8">
+    <footer class="bg-gray-800 text-white py-6 mt-8">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-300 text-sm">© 2024 Sistem Informasi Reklame Publik</p>
+            <p class="text-gray-300 text-sm">© @DateTime.Now.Year Sistem Informasi Reklame Publik</p>
             <p class="text-gray-300 text-sm">Portal akses informasi untuk masyarakat</p>
             <p class="text-gray-400 text-xs mt-2">Data diperbarui secara berkala untuk transparansi publik</p>
         </div>
-    </footer> *@
+    </footer>
 
     <script>
             let captchaText = '';
@@ -166,20 +175,41 @@
 
             const namaJalan = document.getElementById('namaJalanSearch').value;
 
+            // Tampilkan loading
+            $('#loadingIndicator').removeClass('hidden');
+            $('#resultsSection').removeClass('hidden');
+            $('#resultsContent').html('');
+
             $.ajax({
                 url: '@Url.Action("Show", "ReklamePublic")',
                 type: 'GET',
                 data: { namaJalan },
                 success: function (result) {
-                    $('#resultsContent').html(result);
-                    $('#resultsSection').removeClass('hidden');
-                    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+                    // Delay 2 detik sebelum menampilkan hasil
+                    setTimeout(function () {
+                        $('#loadingIndicator').addClass('hidden');
+                        $('#resultsContent').html(result);
+                        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+                    }, 1000);
                 },
                 error: function () {
+                    $('#loadingIndicator').addClass('hidden');
                     alert('Terjadi kesalahan saat mengambil data.');
                 }
             });
         }
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCaptcha();
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        });
 
         window.onload = generateCaptcha;
     </script>
