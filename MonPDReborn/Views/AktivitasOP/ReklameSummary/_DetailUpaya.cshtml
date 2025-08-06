@@ -28,11 +28,10 @@
                         <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
                             .ID("cbUpaya")
-                            .ValueExpr("Value")
-                            .DisplayExpr("Text")
-                            .DataSource(d => d.Mvc().Controller("ReklameSummary").LoadAction("GetUpaya"))
+                            .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
                             .OnValueChanged("fnReloadTindakan")
-                            .SearchExpr("Text")
+                            .DisplayExpr("Text")
+                            .ValueExpr("Value")
                             .SearchEnabled(true)
                             )
                     </div>
@@ -172,10 +171,3 @@
     </div>
 
 </div>
-
-@section Scripts{
-    <script>
-                  
-
-    </script>
-}

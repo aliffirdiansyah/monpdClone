@@ -90,7 +90,7 @@ namespace PPJWs
             // do fill db op LISTRIK
             if (IsGetDBOp())
             {
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                for (var i = tglServer.Year; i >= tahunAmbil; i--)
                 {
                     FillOP(i);
                 }
@@ -1223,7 +1223,7 @@ GROUP BY NOP, MASA, TAHUN  ";
                                 newRow.PeruntukanNama = "-";
                                 newRow.SumberNama = "-";
 
-
+                                newRow.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
                                 newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
                                 newRow.AkunPokokBayar = akunBayar;
                                 newRow.Kelompok = kelompokBayar;

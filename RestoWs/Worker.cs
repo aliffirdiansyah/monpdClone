@@ -92,11 +92,14 @@ namespace RestoWs
             // do fill db op RESTORAN
             if (IsGetDBOp())
             {
-                FillOP(2025);
                 //for (var i = tahunAmbil; i <= tglServer.Year; i++)
                 //{
                 //    FillOP(i);
                 //}
+                for (var i = tglServer.Year; i >= tahunAmbil; i--)
+                {
+                    FillOP(i);
+                }
             }
 
             MailHelper.SendMail(
@@ -119,10 +122,10 @@ namespace RestoWs
             HPPOPProcess(tahunBuku);
 
             //// ketetapan 
-            //HPPKetetapanProcess(tahunBuku);
+            HPPKetetapanProcess(tahunBuku);
 
             //// realisasi
-            //HPPRealisasiProcess(tahunBuku);
+            HPPRealisasiProcess(tahunBuku);
 
             Console.WriteLine(" ");
         }
@@ -1220,7 +1223,7 @@ GROUP BY NOP, MASA, TAHUN  ";
                                 newRow.UpdDate = DateTime.Now;
                                 newRow.UpdBy = "JOB";
 
-
+                                newRow.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
                                 newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
                                 newRow.AkunPokokBayar = akunBayar;
                                 newRow.Kelompok = kelompokBayar;

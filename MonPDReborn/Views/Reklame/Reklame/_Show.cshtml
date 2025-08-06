@@ -143,7 +143,7 @@
             {
                 sub.AddFor(x => x.Insidentil.Aktif).Caption("AKTIF").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'Aktif')">
+                    <a href="javascript:void(0)" class="value-link value-link-success" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'Aktif')">
                         <%= data.Insidentil.Aktif %>
                     </a>
                 </text>
@@ -151,7 +151,7 @@
 
                             sub.AddFor(x => x.Insidentil.Expired).Caption("EXPIRED").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'Expired')">
+                    <a href="javascript:void(0)" class="value-link value-link-warning" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'Expired')">
                         <%= data.Insidentil.Expired %>
                     </a>
                 </text>
@@ -159,7 +159,7 @@
 
                             sub.AddFor(x => x.Insidentil.Perpanjangan).Caption("PERPANJANGAN").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'Perpanjangan')">
+                    <a href="javascript:void(0)" class="value-link" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'Perpanjangan')">
                         <%= data.Insidentil.Perpanjangan %>
                     </a>
                 </text>
@@ -167,7 +167,7 @@
 
                             sub.AddFor(x => x.Insidentil.WajibBongkar).Caption("WAJIB BONGKAR").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'WajibBongkar')">
+                    <a href="javascript:void(0)" class="value-link value-link-danger" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'WajibBongkar')">
                         <%= data.Insidentil.WajibBongkar %>
                     </a>
                 </text>
@@ -183,7 +183,7 @@
 
                             sub.AddFor(x => x.Insidentil.BlmBongkar).Caption("BELUM BONGKAR").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'BlmBongkar')">
+                    <a href="javascript:void(0)" class="value-link value-link-danger" onclick="GetDetailJalan('<%= 1 %>', '<%= data.NamaJalan %>', 'BlmBongkar')">
                         <%= data.Insidentil.BlmBongkar %>
                     </a>
                 </text>
@@ -196,7 +196,7 @@
             {
                 sub.AddFor(x => x.Permanen.Aktif).Caption("AKTIF").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'Aktif')">
+                    <a href="javascript:void(0)" class="value-link value-link-success" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'Aktif')">
                         <%= data.Permanen.Aktif %>
                     </a>
                 </text>
@@ -204,7 +204,7 @@
 
                             sub.AddFor(x => x.Permanen.Expired).Caption("EXPIRED").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'Expired')">
+                    <a href="javascript:void(0)" class="value-link value-link-warning" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'Expired')">
                         <%= data.Permanen.Expired %>
                     </a>
                 </text>
@@ -212,7 +212,7 @@
 
                             sub.AddFor(x => x.Permanen.Perpanjangan).Caption("PERPANJANGAN").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'Perpanjangan')">
+                    <a href="javascript:void(0)" class="value-link" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'Perpanjangan')">
                         <%= data.Permanen.Perpanjangan %>
                     </a>
                 </text>
@@ -220,7 +220,7 @@
 
                             sub.AddFor(x => x.Permanen.WajibBongkar).Caption("WAJIB BONGKAR").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'WajibBongkar')">
+                    <a href="javascript:void(0)" class="value-link value-link-danger" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'WajibBongkar')">
                         <%= data.Permanen.WajibBongkar %>
                     </a>
                 </text>
@@ -236,7 +236,7 @@
 
                             sub.AddFor(x => x.Permanen.BlmBongkar).Caption("BELUM BONGKAR").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'BlmBongkar')">
+                    <a href="javascript:void(0)" class="value-link value-link-danger" onclick="GetDetailJalan('<%= 2 %>', '<%= data.NamaJalan %>', 'BlmBongkar')">
                         <%= data.Permanen.BlmBongkar %>
                     </a>
                 </text>
@@ -249,7 +249,7 @@
             {
                 sub.AddFor(x => x.Terbatas.Aktif).Caption("AKTIF").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'Aktif')">
+                    <a href="javascript:void(0)" class="value-link value-link-success" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'Aktif')">
                         <%= data.Terbatas.Aktif %>
                     </a>
                 </text>
@@ -257,7 +257,7 @@
 
                             sub.AddFor(x => x.Terbatas.Expired).Caption("EXPIRED").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'Expired')">
+                    <a href="javascript:void(0)" class="value-link value-link-warning" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'Expired')">
                         <%= data.Terbatas.Expired %>
                     </a>
                 </text>
@@ -265,7 +265,7 @@
 
                             sub.AddFor(x => x.Terbatas.Perpanjangan).Caption("PERPANJANGAN").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'Perpanjangan')">
+                    <a href="javascript:void(0)" class="value-link" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'Perpanjangan')">
                         <%= data.Terbatas.Perpanjangan %>
                     </a>
                 </text>
@@ -273,7 +273,7 @@
 
                             sub.AddFor(x => x.Terbatas.WajibBongkar).Caption("WAJIB BONGKAR").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'WajibBongkar')">
+                    <a href="javascript:void(0)" class="value-link value-link-danger" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'WajibBongkar')">
                         <%= data.Terbatas.WajibBongkar %>
                     </a>
                 </text>
@@ -289,7 +289,7 @@
 
                             sub.AddFor(x => x.Terbatas.BlmBongkar).Caption("BELUM BONGKAR").CellTemplate(
                     @<text>
-                    <a href="javascript:void(0)" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'BlmBongkar')">
+                    <a href="javascript:void(0)" class="value-link value-link-danger" onclick="GetDetailJalan('<%= 3 %>', '<%= data.NamaJalan %>', 'BlmBongkar')">
                         <%= data.Terbatas.BlmBongkar %>
                     </a>
                 </text>

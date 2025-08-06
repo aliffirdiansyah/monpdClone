@@ -1,13 +1,16 @@
 ﻿
 
+using ClosedXML.Excel;
 using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
 using DocumentFormat.OpenXml.InkML;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using static MonPDLib.General.EnumFactory;
 
 namespace MonPDReborn.Models.MonitoringWilayah
 {
@@ -70,14 +73,21 @@ namespace MonPDReborn.Models.MonitoringWilayah
             public decimal PersenTotal { get; set; } = 0;
             public decimal TotalPencapaianHarian { get; set; } = 0;
             public decimal TotalWajibPajak { get; set; } = 0;
-
+            public EnumFactory.EUPTB Wilayah { get; set; }
+            public EnumFactory.EPajak JenisPajak { get; set; }
             public Show() { }
-
 
             public Show(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
             {
+                Wilayah = wilayah;
+                JenisPajak = jenisPajak;
+
                 RealisasiWilayahList = Method.GetDataRealisasiWilayahList(wilayah, tahun, bulan, jenisPajak);
-                RealisasiJenisList = Method.GetDataRealisasiJenisList(wilayah, tahun, bulan, jenisPajak);
+
+                if(wilayah == EnumFactory.EUPTB.SEMUA && jenisPajak == EnumFactory.EPajak.Semua)
+                {
+                    RealisasiJenisList = Method.GetDataRealisasiJenisList(wilayah, tahun, bulan, jenisPajak);
+                }
 
                 TotalTarget = RealisasiWilayahList.Sum(x => x.Target);
                 TotalRealisasi = RealisasiWilayahList.Sum(x => x.Realisasi);
@@ -125,678 +135,410 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        var dataRestoWilayah = context.DbOpRestos
-                             .Where(x => x.TahunBuku == tahun)
-                             .Select(x => new
-                             {
-                                 x.Nop,
-                                 x.WilayahPajak
-                             })
-                             .ToList()
-                             /*.Select(x => new
-                             {
-                                 x.Nop,
-                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })*/
-                             .ToList();
-                        var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                                .GroupBy(x => new { x.Uptb })
-                                .Select(g => new
-                                {
-                                    Uptb = g.Key.Uptb,
-                                    TotalTarget = g.Sum(x => x.Target)
-                                })
-                                .ToList();
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
-                            var dataRealisasiWilayah = context.DbMonRestos
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
-
-                            foreach (var item in dataTargetWilayahResto)
+                            foreach (var uptb in uptbList)
                             {
-
-                                var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
-                                    .Select(w => w.Nop)
+                                var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
                                     .ToList();
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop))
-                                    .Sum(x => x.Realisasi);
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonRestos
+                                        .Where(x =>
+                                            x.TglBayarPokok.HasValue
+                                            && x.TglBayarPokok.Value.Year == tahun
+                                            && x.TglBayarPokok.Value.Month <= bulan
+                                            && nopList.Contains(x.Nop)
+                                        ).Sum(q => q.NominalPokokBayar);
 
                                 ret.Add(new RealisasiWilayah
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
+                                    Wilayah = $"UPTB {uptb}",
                                     Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
+                                    Lokasi = $"UPTB {uptb}",
+                                    Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
                                     Status = ""
                                 });
                             }
-
-
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonRestos
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
+                            var totalTarget = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Sum(x => x.Target);
 
-                            var targetPerUptb = dataTargetWilayahResto
-                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
-                                .ToList();
+                            var totalRealisasi = context.DbMonRestos
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    ).Sum(q => q.NominalPokokBayar);
 
-                            foreach (var item in targetPerUptb)
+                            ret.Add(new RealisasiWilayah
                             {
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan)
-                                    .Sum(x => x.Realisasi);
-
-                                ret.Add(new RealisasiWilayah
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0,
-                                    Tren = 0,
-                                    Status = ""
-                                });
-                            }
+                                Wilayah = $"UPTB {(int)wilayah}",
+                                Tahun = tahun,
+                                Lokasi = $"UPTB {(int)wilayah}",
+                                Target = totalTarget,
+                                Realisasi = totalRealisasi ?? 0,
+                                Tren = 0,
+                                Status = ""
+                            });
                         }
 
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        var dataListrikWilayah = context.DbOpListriks
-                             .Where(x => x.TahunBuku == tahun)
-                             .Select(x => new
-                             {
-                                 x.Nop,
-                                 x.WilayahPajak
-                             })
-                             .ToList()
-                             /*.Select(x => new
-                             {
-                                 x.Nop,
-                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })*/
-                             .ToList();
-                        var dataTargetWilayahListrik = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                                .GroupBy(x => new { x.Uptb })
-                                .Select(g => new
-                                {
-                                    Uptb = g.Key.Uptb,
-                                    TotalTarget = g.Sum(x => x.Target)
-                                })
-                                .ToList();
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
-                            var dataRealisasiWilayah = context.DbMonPpjs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
-                            foreach (var item in dataTargetWilayahListrik)
+                            foreach (var uptb in uptbList)
                             {
-
-                                var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
-                                    .Select(w => w.Nop)
+                                var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
                                     .ToList();
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop))
-                                    .Sum(x => x.Realisasi);
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonPpjs
+                                        .Where(x =>
+                                            x.TglBayarPokok.HasValue
+                                            && x.TglBayarPokok.Value.Year == tahun
+                                            && x.TglBayarPokok.Value.Month <= bulan
+                                            && nopList.Contains(x.Nop)
+                                        ).Sum(q => q.NominalPokokBayar);
 
                                 ret.Add(new RealisasiWilayah
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
+                                    Wilayah = $"UPTB {uptb}",
                                     Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
+                                    Lokasi = $"UPTB {uptb}",
+                                    Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
                                     Status = ""
                                 });
                             }
-
-
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonPpjs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                            var targetPerUptb = dataTargetWilayahListrik
-                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
-                                .ToList();
+                            var totalTarget = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Sum(x => x.Target);
 
-                            foreach (var item in targetPerUptb)
+                            var totalRealisasi = context.DbMonPpjs
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    ).Sum(q => q.NominalPokokBayar);
+
+                            ret.Add(new RealisasiWilayah
                             {
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan)
-                                    .Sum(x => x.Realisasi);
-
-                                ret.Add(new RealisasiWilayah
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0,
-                                    Tren = 0,
-                                    Status = ""
-                                });
-                            }
+                                Wilayah = $"UPTB {(int)wilayah}",
+                                Tahun = tahun,
+                                Lokasi = $"UPTB {(int)wilayah}",
+                                Target = totalTarget,
+                                Realisasi = totalRealisasi ?? 0,
+                                Tren = 0,
+                                Status = ""
+                            });
                         }
 
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        var dataHotelWilayah = context.DbOpHotels
-                            .Where(x => x.TahunBuku == tahun)
-                            .Select(x => new
-                            {
-                                x.Nop,
-                                x.WilayahPajak
-                            })
-                            .ToList()
-                            /*.Select(x => new
-                            {
-                                x.Nop,
-                                Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                            })*/
-                            .ToList();
-                        var dataTargetWilayahHotel = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                                .GroupBy(x => new { x.Uptb })
-                                .Select(g => new
-                                {
-                                    Uptb = g.Key.Uptb,
-                                    TotalTarget = g.Sum(x => x.Target)
-                                })
-                                .ToList();
-
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
-                            var dataRealisasiWilayah = context.DbMonHotels
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
-                            foreach (var item in dataTargetWilayahHotel)
+                            foreach (var uptb in uptbList)
                             {
-
-                                var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
-                                    .Select(w => w.Nop)
+                                var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
                                     .ToList();
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop))
-                                    .Sum(x => x.Realisasi);
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonHotels
+                                        .Where(x =>
+                                            x.TglBayarPokok.HasValue
+                                            && x.TglBayarPokok.Value.Year == tahun
+                                            && x.TglBayarPokok.Value.Month <= bulan
+                                            && nopList.Contains(x.Nop)
+                                        ).Sum(q => q.NominalPokokBayar);
 
                                 ret.Add(new RealisasiWilayah
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
+                                    Wilayah = $"UPTB {uptb}",
                                     Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
+                                    Lokasi = $"UPTB {uptb}",
+                                    Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
                                     Status = ""
                                 });
                             }
-
-
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonHotels
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
-                            var targetPerUptb = dataTargetWilayahHotel
-                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
-                                .ToList();
+                            var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                            foreach (var item in targetPerUptb)
+                            var totalTarget = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Sum(x => x.Target);
+
+                            var totalRealisasi = context.DbMonHotels
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    ).Sum(q => q.NominalPokokBayar);
+
+                            ret.Add(new RealisasiWilayah
                             {
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan)
-                                    .Sum(x => x.Realisasi);
-
-                                ret.Add(new RealisasiWilayah
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0,
-                                    Tren = 0,
-                                    Status = ""
-                                });
-                            }
+                                Wilayah = $"UPTB {(int)wilayah}",
+                                Tahun = tahun,
+                                Lokasi = $"UPTB {(int)wilayah}",
+                                Target = totalTarget,
+                                Realisasi = totalRealisasi ?? 0,
+                                Tren = 0,
+                                Status = ""
+                            });
                         }
 
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        var dataParkirWilayah = context.DbOpParkirs
-                             .Where(x => x.TahunBuku == tahun)
-                             .Select(x => new
-                             {
-                                 x.Nop,
-                                 x.WilayahPajak
-                             })
-                             .ToList()
-                             /*.Select(x => new
-                             {
-                                 x.Nop,
-                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })*/
-                             .ToList();
-                        var dataTargetWilayahParkir = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                                .GroupBy(x => new { x.Uptb })
-                                .Select(g => new
-                                {
-                                    Uptb = g.Key.Uptb,
-                                    TotalTarget = g.Sum(x => x.Target)
-                                })
-                                .ToList();
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
-                            var dataRealisasiWilayah = context.DbMonParkirs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
-
-                            foreach (var item in dataTargetWilayahParkir)
+                            foreach (var uptb in uptbList)
                             {
-
-                                var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
-                                    .Select(w => w.Nop)
+                                var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
                                     .ToList();
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop))
-                                    .Sum(x => x.Realisasi);
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonParkirs
+                                        .Where(x =>
+                                            x.TglBayarPokok.HasValue
+                                            && x.TglBayarPokok.Value.Year == tahun
+                                            && x.TglBayarPokok.Value.Month <= bulan
+                                            && nopList.Contains(x.Nop)
+                                        ).Sum(q => q.NominalPokokBayar);
 
                                 ret.Add(new RealisasiWilayah
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
+                                    Wilayah = $"UPTB {uptb}",
                                     Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
+                                    Lokasi = $"UPTB {uptb}",
+                                    Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
                                     Status = ""
                                 });
                             }
-
-
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonParkirs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
-                            var targetPerUptb = dataTargetWilayahParkir
-                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
-                                .ToList();
+                            var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                            foreach (var item in targetPerUptb)
+                            var totalTarget = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Sum(x => x.Target);
+
+                            var totalRealisasi = context.DbMonParkirs
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    ).Sum(q => q.NominalPokokBayar);
+
+                            ret.Add(new RealisasiWilayah
                             {
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan)
-                                    .Sum(x => x.Realisasi);
-
-                                ret.Add(new RealisasiWilayah
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0,
-                                    Tren = 0,
-                                    Status = ""
-                                });
-                            }
+                                Wilayah = $"UPTB {(int)wilayah}",
+                                Tahun = tahun,
+                                Lokasi = $"UPTB {(int)wilayah}",
+                                Target = totalTarget,
+                                Realisasi = totalRealisasi ?? 0,
+                                Tren = 0,
+                                Status = ""
+                            });
                         }
 
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var dataHiburanWilayah = context.DbOpHiburans
-                             .Where(x => x.TahunBuku == tahun)
-                             .Select(x => new
-                             {
-                                 x.Nop,
-                                 x.WilayahPajak
-                             })
-                             .ToList()
-                             /*.Select(x => new
-                             {
-                                 x.Nop,
-                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })*/
-                             .ToList();
-                        var dataTargetWilayahHiburan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                                .GroupBy(x => new { x.Uptb })
-                                .Select(g => new
-                                {
-                                    Uptb = g.Key.Uptb,
-                                    TotalTarget = g.Sum(x => x.Target)
-                                })
-                                .ToList();
-
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
-                            var dataRealisasiWilayah = context.DbMonHiburans
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
-                            foreach (var item in dataTargetWilayahHiburan)
+                            foreach (var uptb in uptbList)
                             {
-
-                                var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
-                                    .Select(w => w.Nop)
+                                var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
                                     .ToList();
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop))
-                                    .Sum(x => x.Realisasi);
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonHiburans
+                                        .Where(x =>
+                                            x.TglBayarPokok.HasValue
+                                            && x.TglBayarPokok.Value.Year == tahun
+                                            && x.TglBayarPokok.Value.Month <= bulan
+                                            && nopList.Contains(x.Nop)
+                                        ).Sum(q => q.NominalPokokBayar);
 
                                 ret.Add(new RealisasiWilayah
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
+                                    Wilayah = $"UPTB {uptb}",
                                     Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
+                                    Lokasi = $"UPTB {uptb}",
+                                    Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
                                     Status = ""
                                 });
                             }
-
-
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonHiburans
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                            var targetPerUptb = dataTargetWilayahHiburan
-                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
-                                .ToList();
+                            var totalTarget = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Sum(x => x.Target);
 
-                            foreach (var item in targetPerUptb)
+                            var totalRealisasi = context.DbMonHiburans
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    ).Sum(q => q.NominalPokokBayar);
+
+                            ret.Add(new RealisasiWilayah
                             {
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan)
-                                    .Sum(x => x.Realisasi);
-
-                                ret.Add(new RealisasiWilayah
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0,
-                                    Tren = 0,
-                                    Status = ""
-                                });
-                            }
+                                Wilayah = $"UPTB {(int)wilayah}",
+                                Tahun = tahun,
+                                Lokasi = $"UPTB {(int)wilayah}",
+                                Target = totalTarget,
+                                Realisasi = totalRealisasi ?? 0,
+                                Tren = 0,
+                                Status = ""
+                            });
                         }
 
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        var dataAbtWilayah = context.DbOpAbts
-                             .Where(x => x.TahunBuku == tahun)
-                             .Select(x => new
-                             {
-                                 x.Nop,
-                                 x.WilayahPajak
-                             })
-                             .ToList()
-                             /*.Select(x => new
-                             {
-                                 x.Nop,
-                                 Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                             })*/
-                             .ToList();
-                        var dataTargetWilayahAbt = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                                .GroupBy(x => new { x.Uptb })
-                                .Select(g => new
-                                {
-                                    Uptb = g.Key.Uptb,
-                                    TotalTarget = g.Sum(x => x.Target)
-                                })
-                                .ToList();
-
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
-                            var dataRealisasiWilayah = context.DbMonAbts
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
-                            foreach (var item in dataTargetWilayahAbt)
+                            foreach (var uptb in uptbList)
                             {
-
-                                var nopUptb = dataAbtWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb)
-                                    .Select(w => w.Nop)
+                                var nopList = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
                                     .ToList();
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop))
-                                    .Sum(x => x.Realisasi);
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonAbts
+                                        .Where(x =>
+                                            x.TglBayarPokok.HasValue
+                                            && x.TglBayarPokok.Value.Year == tahun
+                                            && x.TglBayarPokok.Value.Month <= bulan
+                                            && nopList.Contains(x.Nop)
+                                        ).Sum(q => q.NominalPokokBayar);
 
                                 ret.Add(new RealisasiWilayah
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
+                                    Wilayah = $"UPTB {uptb}",
                                     Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
+                                    Lokasi = $"UPTB {uptb}",
+                                    Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
                                     Status = ""
                                 });
                             }
-
-
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var uptb = dataAbtWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonAbts
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
+                            var nopList = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                            var targetPerUptb = dataTargetWilayahAbt
-                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
-                                .ToList();
+                            var totalTarget = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Sum(x => x.Target);
 
-                            foreach (var item in targetPerUptb)
+                            var totalRealisasi = context.DbMonAbts
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    ).Sum(q => q.NominalPokokBayar);
+
+                            ret.Add(new RealisasiWilayah
                             {
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == bulan)
-                                    .Sum(x => x.Realisasi);
-
-                                ret.Add(new RealisasiWilayah
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    Tahun = tahun,
-                                    Lokasi = $"UPTB {(int)item.Uptb}",
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0,
-                                    Tren = 0,
-                                    Status = ""
-                                });
-                            }
+                                Wilayah = $"UPTB {(int)wilayah}",
+                                Tahun = tahun,
+                                Lokasi = $"UPTB {(int)wilayah}",
+                                Target = totalTarget,
+                                Realisasi = totalRealisasi ?? 0,
+                                Tren = 0,
+                                Status = ""
+                            });
                         }
 
                         break;
@@ -804,114 +546,102 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         
                         break;
                     case EnumFactory.EPajak.PBB:
-                        //var dataPbbWilayah = context.DbOpPbbs
-                        //     .Where(x => x.TahunBuku == tahun)
-                        //     .Select(x => new
-                        //     {
-                        //         x.Nop,
-                        //         x.WilayahPajak
-                        //     })
-                        //     .ToList()
-                        //     .Select(x => new
-                        //     {
-                        //         x.Nop,
-                        //         Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value
-                        //     })
-                        //     .ToList();
-                        //var dataTargetWilayahPbb = context.DbAkunTargetBulanUptbs
-                        //        .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                        //        .GroupBy(x => new { x.Uptb })
-                        //        .Select(g => new
-                        //        {
-                        //            Uptb = g.Key.Uptb,
-                        //            TotalTarget = g.Sum(x => x.Target)
-                        //        })
-                        //        .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
-                        //if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        //{
-                        //    var dataRealisasiWilayah = context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value.Year == tahun &&
-                        //            x.TglBayarPokok.Value.Month <= bulan
-                        //        )
-                        //        .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                        //        .Select(x => new
-                        //        {
-                        //            x.Key.Nop,
-                        //            x.Key.TglBayarPokok,
-                        //            Realisasi = x.Sum(q => q.NominalPokokBayar)
-                        //        })
-                        //        .ToList();
-                        //    foreach (var item in dataTargetWilayahPbb)
-                        //    {
+                            foreach (var uptb in uptbList)
+                            {
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonPbbs
+                                        .Where(x =>
+                                            x.TahunBuku == tahun
+                                            && x.TglBayar.HasValue
+                                            && x.TglBayar.Value.Year == tahun
+                                            && x.TglBayar.Value.Month <= bulan
+                                            && x.Uptb == Convert.ToInt32(uptb)
+                                        ).Sum(q => q.JumlahBayarPokok);
 
-                        //        var nopUptb = dataPbbWilayah
-                        //            .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb)
-                        //            .Select(w => w.Nop)
-                        //            .ToList();
+                                ret.Add(new RealisasiWilayah
+                                {
+                                    Wilayah = $"UPTB {uptb}",
+                                    Tahun = tahun,
+                                    Lokasi = $"UPTB {uptb}",
+                                    Target = totalTarget,
+                                    Realisasi = totalRealisasi ?? 0,
+                                    Tren = 0,
+                                    Status = ""
+                                });
+                            }
+                        }
+                        else if (wilayah != EnumFactory.EUPTB.SEMUA)
+                        {
+                            var dataPbbWilayah = context.DbMonPbbs
+                                 .Where(x => x.TahunBuku == tahun && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                 .Select(x => new
+                                 {
+                                     x.Nop,
+                                     WilayahPajak = x.Uptb
+                                 })
+                                 .Distinct()
+                                 .AsQueryable();
 
-                        //        var totalRealisasi = dataRealisasiWilayah
-                        //            .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop))
-                        //            .Sum(x => x.Realisasi);
+                            var dataTargetWilayahPbb = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                .GroupBy(x => new { x.Uptb })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
 
-                        //        ret.Add(new RealisasiWilayah
-                        //        {
-                        //            Wilayah = $"UPTB {(int)item.Uptb}",
-                        //            Tahun = tahun,
-                        //            Lokasi = $"UPTB {(int)item.Uptb}",
-                        //            Target = item.TotalTarget,
-                        //            Realisasi = totalRealisasi ?? 0,
-                        //            Tren = 0,
-                        //            Status = ""
-                        //        });
-                        //    }
+                            var uptb = dataPbbWilayah
+                                .Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah)
+                                .Select(x => x.Nop)
+                                .AsEnumerable();
 
+                            var dataRealisasiWilayah = context.DbMonPbbs
+                                .Where(x =>
+                                    x.TahunBuku == tahun &&
+                                    x.TglBayar.HasValue &&
+                                    x.TglBayar.Value.Year == tahun &&
+                                    x.TglBayar.Value.Month <= bulan &&
+                                    uptb.Contains(x.Nop)
+                                )
+                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayar })
+                                .Select(x => new
+                                {
+                                    x.Key.Nop,
+                                    x.Key.TglBayarPokok,
+                                    Realisasi = x.Sum(q => q.JumlahBayarPokok)
+                                })
+                                .AsQueryable();
 
-                        //}
-                        //else if (wilayah != EnumFactory.EUPTB.SEMUA)
-                        //{
-                        //    var uptb = dataPbbWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
-                        //    var dataRealisasiWilayah = context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value.Year == tahun &&
-                        //            x.TglBayarPokok.Value.Month <= bulan &&
-                        //            uptb.Contains(x.Nop)
-                        //        )
-                        //        .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
-                        //        .Select(x => new
-                        //        {
-                        //            x.Key.Nop,
-                        //            x.Key.TglBayarPokok,
-                        //            Realisasi = x.Sum(q => q.NominalPokokBayar)
-                        //        })
-                        //        .ToList();
-                        //    var targetPerUptb = dataTargetWilayahPbb
-                        //        .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
-                        //        .ToList();
+                            var targetPerUptb = dataTargetWilayahPbb
+                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
+                                .ToList();
 
-                        //    foreach (var item in targetPerUptb)
-                        //    {
-                        //        var totalRealisasi = dataRealisasiWilayah
-                        //            .Where(x => x.TglBayarPokok.Value.Month == bulan)
-                        //            .Sum(x => x.Realisasi);
+                            var totalRealisasi = dataRealisasiWilayah
+                                .Where(x => x.TglBayarPokok.Value.Month == bulan)
+                                .Sum(x => x.Realisasi);
 
-                        //        ret.Add(new RealisasiWilayah
-                        //        {
-                        //            Wilayah = $"UPTB {(int)item.Uptb}",
-                        //            Tahun = tahun,
-                        //            Lokasi = $"UPTB {(int)item.Uptb}",
-                        //            Target = item.TotalTarget,
-                        //            Realisasi = totalRealisasi ?? 0,
-                        //            Tren = 0,
-                        //            Status = ""
-                        //        });
-                        //    }
-                        //}
+                            foreach (var item in targetPerUptb)
+                            {
+                                var re = new RealisasiWilayah();
+                                re.Wilayah = $"UPTB {(int)item.Uptb}";
+                                re.Tahun = tahun;
+                                re.Lokasi = $"UPTB {(int)item.Uptb}";
+                                re.Target = item.TotalTarget;
+                                re.Realisasi = totalRealisasi ?? 0;
+                                re.Tren = 0;
+                                re.Status = "";
+
+                                ret.Add(re);
+                            }
+                        }
 
                         break;
                     case EnumFactory.EPajak.BPHTB:
@@ -997,15 +727,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        //dataWilayahGabungan.AddRange(
-                        //    context.DbOpPbbs
-                        //        .Where(x => x.TahunBuku == tahun)
-                        //        .Select(x => new ValueTuple<string, string>(
-                        //            x.Nop,
-                        //           x.WilayahPajak
-                        //        ))
-                        //        .ToList()
-                        //);
+                        dataWilayahGabungan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TahunBuku == tahun)
+                                .Select(x => new ValueTuple<string, string>(
+                                    x.Nop,
+                                    x.Uptb.ToString()
+                                ))
+                                .Distinct()
+                                .ToList()
+                        );
 
                         var dataRealisasiGabungan = new List<(string Nop, DateTime? TglBayarPokok, decimal NominalPokokBayar)>();
 
@@ -1058,12 +789,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         );
 
                         // PBB
-                        //dataRealisasiGabungan.AddRange(
-                        //    context.DbMonPbbs
-                        //        .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                        //        .Select(x => new ValueTuple<string, DateTime?, decimal>(x.Nop, x.TglBayarPokok, x.NominalPokokBayar ?? 0))
-                        //        .ToList()
-                        //);
+                        dataRealisasiGabungan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TahunBuku == tahun && x.TglBayar.HasValue && x.TglBayar.Value.Month <= bulan)
+                                .Select(x => new ValueTuple<string, DateTime?, decimal>(x.Nop, x.TglBayar, x.JumlahBayarPokok ?? 0))
+                                .ToList()
+                        );
 
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
@@ -1959,141 +1690,118 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
-                        //var dataPbbWilayah = context.DbOpPbbs
-                        // .Where(x => x.TahunBuku == tahun)
-                        // .Select(x => new
-                        // {
-                        //     x.Nop,
-                        //     x.WilayahPajak,
-                        //     PajakId = 9m
-                        // })
-                        // .ToList()
-                        // .Select(x => new
-                        // {
-                        //     x.Nop,
-                        //     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                        //     x.PajakId
-                        // })
-                        // .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
+
+                            foreach (var uptb in uptbList)
+                            {
+                                var totalWp = context.DbOpPbbs
+                                    .Where(x => x.Uptb == Convert.ToInt32(uptb))
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .Count();
+
+                                var totalTarget = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Sum(x => x.Target);
+                                var totalRealisasi = context.DbMonPbbs
+                                        .Where(x =>
+                                            x.TahunBuku == tahun
+                                            && x.TglBayar.HasValue
+                                            && x.TglBayar.Value.Year == tahun
+                                            && x.TglBayar.Value.Month <= bulan
+                                            && x.Uptb == Convert.ToInt32(uptb)
+                                        ).Sum(q => q.JumlahBayarPokok);
+
+                                ret.Add(new RealisasiJenis
+                                {
+                                    Wilayah = uptb.ToString(),
+                                    Tahun = tahun,
+                                    Bulan = bulan,
+                                    JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription(),
+                                    JmlWP = totalWp,
+                                    Target = totalTarget,
+                                    Realisasi = totalRealisasi ?? 0,
+                                    Tren = 0,
+                                    Status = ""
+                                });
+                            }
+                        }
+                        else
+                        {
+                            var dataPbbWilayah = context.DbMonPbbs
+                                 .Where(x => x.TahunBuku == tahun && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                 .Select(x => new
+                                 {
+                                     x.Nop,
+                                     WilayahPajak = x.Uptb.ToString(),
+                                     PajakId = 9m
+                                 })
+                                 .Distinct()
+                                 .AsQueryable();
 
 
-                        //var dataTargetWilayahPbb = context.DbAkunTargetBulanUptbs
-                        //        .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                        //        .GroupBy(x => new { x.Uptb, x.PajakId })
-                        //        .Select(g => new
-                        //        {
-                        //            Uptb = g.Key.Uptb,
-                        //            PajakId = g.Key.PajakId,
-                        //            TotalTarget = g.Sum(x => x.Target)
-                        //        })
-                        //        .ToList();
+                            var dataTargetWilayahPbb = context.DbAkunTargetBulanUptbs
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                    .GroupBy(x => new { x.Uptb, x.PajakId })
+                                    .Select(g => new
+                                    {
+                                        Uptb = g.Key.Uptb,
+                                        PajakId = g.Key.PajakId,
+                                        TotalTarget = g.Sum(x => x.Target)
+                                    })
+                                    .AsQueryable();
+
+                            var uptb = dataPbbWilayah
+                                .Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah)
+                                .Select(x => x.Nop)
+                                .AsEnumerable();
+
+                            var dataRealisasiWilayah = context.DbMonPbbs
+                                .Where(x =>
+                                    x.TahunBuku == tahun &&
+                                    x.TglBayar.HasValue &&
+                                    x.TglBayar.Value.Year == tahun &&
+                                    x.TglBayar.Value.Month <= bulan &&
+                                    uptb.Contains(x.Nop)
+                                )
+                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayar })
+                                .Select(x => new
+                                {
+                                    x.Key.Nop,
+                                    x.Key.TglBayarPokok,
+                                    Realisasi = x.Sum(q => q.JumlahBayarPokok)
+                                })
+                                .AsQueryable();
+
+                            var targetPerUptb = dataTargetWilayahPbb
+                                .Where(x => x.Uptb == (int)wilayah) // filter sesuai UPTB
+                                .ToList();
+
+                            var totalRealisasi = dataRealisasiWilayah
+                                .Where(x => x.TglBayarPokok.Value.Month == bulan)
+                                .Sum(x => x.Realisasi);
+
+                            foreach (var item in targetPerUptb)
+                            {
+                                RealisasiJenis result = new RealisasiJenis
+                                {
+                                    Wilayah = item.Uptb.ToString(),
+                                    Tahun = tahun,
+                                    Bulan = bulan,
+                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                    JmlWP = uptb.Count(),
+                                    Target = item.TotalTarget,
+                                    Realisasi = totalRealisasi ?? 0,
+                                    Tren = 0,
+                                    Status = "Status here"
+                                };
 
 
-                        //if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        //{
-
-                        //    var dataRealisasiWilayah = context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value.Year == tahun &&
-                        //            x.TglBayarPokok.Value.Month <= bulan
-                        //        )
-                        //        .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                        //        .Select(x => new
-                        //        {
-                        //            x.Key.Nop,
-                        //            x.Key.TglBayarPokok,
-                        //            x.Key.PajakId,
-                        //            Realisasi = x.Sum(q => q.NominalPokokBayar)
-                        //        })
-                        //        .ToList();
-
-
-                        //    foreach (var item in dataTargetWilayahPbb)
-                        //    {
-
-                        //        var nopUptb = dataPbbWilayah
-                        //            .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
-                        //            .Select(w => w.Nop)
-                        //            .ToList();
-
-
-                        //        var totalRealisasi = dataRealisasiWilayah
-                        //            .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                        //            .Sum(x => x.Realisasi);
-
-
-                        //        RealisasiJenis result = new RealisasiJenis
-                        //        {
-                        //            Wilayah = item.Uptb.ToString(),
-                        //            Tahun = tahun,
-                        //            Bulan = bulan,
-                        //            JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                        //            JmlWP = nopUptb.Count(),
-                        //            Target = item.TotalTarget,
-                        //            Realisasi = totalRealisasi ?? 0,
-                        //            Tren = 0,
-                        //            Status = "Status here"
-                        //        };
-
-
-                        //        ret.Add(result);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    var uptb = dataPbbWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
-                        //    var dataRealisasiWilayah = context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value.Year == tahun &&
-                        //            x.TglBayarPokok.Value.Month <= bulan &&
-                        //            uptb.Contains(x.Nop)
-                        //        )
-                        //        .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                        //        .Select(x => new
-                        //        {
-                        //            x.Key.Nop,
-                        //            x.Key.TglBayarPokok,
-                        //            x.Key.PajakId,
-                        //            Realisasi = x.Sum(q => q.NominalPokokBayar)
-                        //        })
-                        //        .ToList();
-
-
-                        //    foreach (var item in dataTargetWilayahPbb.Where(x => x.Uptb == (decimal)wilayah))
-                        //    {
-
-                        //        var nopUptb = dataPbbWilayah
-                        //            .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
-                        //            .Select(w => w.Nop)
-                        //            .ToList();
-
-
-                        //        var totalRealisasi = dataRealisasiWilayah
-                        //            .Where(x => x.TglBayarPokok.Value.Month == bulan && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                        //            .Sum(x => x.Realisasi);
-
-
-                        //        RealisasiJenis result = new RealisasiJenis
-                        //        {
-                        //            Wilayah = item.Uptb.ToString(),
-                        //            Tahun = tahun,
-                        //            Bulan = bulan,
-                        //            JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                        //            JmlWP = nopUptb.Count(),
-                        //            Target = item.TotalTarget,
-                        //            Realisasi = totalRealisasi ?? 0,
-                        //            Tren = 0,
-                        //            Status = "Status here"
-                        //        };
-
-
-                        //        ret.Add(result);
-                        //    }
-                        //}
+                                ret.Add(result);
+                            }
+                        }
 
                         break;
                     case EnumFactory.EPajak.BPHTB:
@@ -2200,19 +1908,21 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        //dataWilayahGabungan.AddRange(
-                        //    context.DbOpPbbs
-                        //        .Where(x => x.TahunBuku == tahun)
-                        //        .Select(x => new
-                        //        {
-                        //            x.Nop,
-                        //            x.WilayahPajak,
-                        //            PajakId = 9m // PBB
-                        //        })
-                        //        .ToList()
-                        //        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
-                        //        .ToList()
-                        //);
+                        dataWilayahGabungan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TahunBuku == tahun)
+                                .Select(x => new
+                                {
+                                    x.Nop,
+                                    WilayahPajak = x.Uptb.ToString(),
+                                    PajakId = 9m
+                                })
+                                .Distinct()
+                                .ToList()
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
+                                .ToList()
+                        );
+
                         // Gabungkan data realisasi
                         var dataRealisasiGabungan = new List<(string Nop, DateTime? TglBayarPokok, decimal NominalPokokBayar, decimal PajakId)>();
 
@@ -2306,20 +2016,21 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        //dataRealisasiGabungan.AddRange(
-                        //    context.DbMonPbbs
-                        //        .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                        //        .Select(x => new
-                        //        {
-                        //            x.Nop,
-                        //            x.TglBayarPokok,
-                        //            NominalPokokBayar = x.NominalPokokBayar ?? 0,
-                        //            x.PajakId
-                        //        })
-                        //        .ToList()
-                        //        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
-                        //        .ToList()
-                        //);
+                        dataRealisasiGabungan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TahunBuku == tahun && x.TglBayar.HasValue && x.TglBayar.Value.Month <= bulan)
+                                .Select(x => new
+                                {
+                                    x.Nop,
+                                    TglBayarPokok = x.TglBayar,
+                                    NominalPokokBayar = x.JumlahBayarPokok ?? 0,
+                                    PajakId = 9m,
+                                })
+                                .Distinct()
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         foreach (var item in dataTargetWilayah)
                         {
@@ -2391,139 +2102,121 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        var dataRestoWilayah = context.DbOpRestos
-                         .Where(x => x.TahunBuku == tahun)
-                         .Select(x => new
-                         {
-                             x.Nop,
-                             x.WilayahPajak,
-                             x.PajakId
-                         })
-                         .ToList()
-                        /* .Select(x => new
-                         {
-                             x.Nop,
-                             Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                             x.PajakId
-                         })*/
-                         .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
+                            foreach (var uptb in uptbList)
+                            {
+                                var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                        var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                                var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == Convert.ToInt32(uptb))
                                 .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {
                                     Uptb = g.Key.Uptb,
-                                    Tgl = g.Key.Tgl,
-                                    Bulan = g.Key.Bulan,
-                                    Tahun = g.Key.TahunBuku,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
                                     PajakId = g.Key.PajakId,
                                     TotalTarget = g.Sum(x => x.Target)
                                 })
-                                .ToList();
+                                .AsQueryable();
 
-
-                        if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        {
-
-                            var dataRealisasiWilayah = context.DbMonRestos
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
-
-
-                            foreach (var item in dataTargetWilayahResto)
-                            {
-
-                                var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
+                                var dataRealisasiWilayahResto = context.DbMonRestos
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    )
+                                    .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                    })
                                     .ToList();
 
+                                var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
+                                for (int i = 1; i <= totalTanggal; i++)
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                    var tanggal = new DateTime(tahun, bulan, i);
+                                    var result = new DataHarian();
+                                    result.Wilayah = $"UPTB {uptb}";
+                                    result.EnumWilayah = Convert.ToInt32(uptb);
+                                    result.Tanggal = tanggal;
+                                    result.Tahun = (int)bulan;
+                                    result.Bulan = (int)tahun;
+                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.Target = dataTargetWilayahResto.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                    result.Realisasi = dataRealisasiWilayahResto.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
-                                ret.Add(result);
+                                    ret.Add(result);
+                                }
                             }
                         }
                         else
                         {
-                            var uptb = dataRestoWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonRestos
+                            var nopList = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
+
+                            var dataTargetWilayahResto = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
+
+                            var dataRealisasiWilayahResto = context.DbMonRestos
                                 .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
+                                    x.TahunBuku == tahun
+                                    && x.TglBayarPokok.HasValue
+                                    && x.TglBayarPokok.Value.Year == tahun
+                                    && x.TglBayarPokok.Value.Month <= bulan
+                                    && nopList.Contains(x.Nop)
                                 )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                                .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
                                 .Select(x => new
                                 {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
+                                    Tanggal = x.Key.TglBayarPokok,
                                     x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
+                                    TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                                 .ToList();
 
-
-                            foreach (var item in dataTargetWilayahResto.Where(x => x.Uptb == (decimal)wilayah))
+                            var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
+                            for (int i = 1; i <= totalTanggal; i++)
                             {
-
-                                var nopUptb = dataRestoWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
-                                    .ToList();
-
-
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == item.Tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                var tanggal = new DateTime(tahun, bulan, i);
+                                var result = new DataHarian();
+                                result.Wilayah = $"UPTB {(int)wilayah}";
+                                result.EnumWilayah = (int)wilayah;
+                                result.Tanggal = tanggal;
+                                result.Tahun = (int)bulan;
+                                result.Bulan = (int)tahun;
+                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.Target = dataTargetWilayahResto.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                result.Realisasi = dataRealisasiWilayahResto.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
                                 ret.Add(result);
@@ -2531,139 +2224,121 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        var dataListrikWilayah = context.DbOpListriks
-                         .Where(x => x.TahunBuku == tahun)
-                         .Select(x => new
-                         {
-                             x.Nop,
-                             x.WilayahPajak,
-                             x.PajakId
-                         })
-                         .ToList()
-                        /* .Select(x => new
-                         {
-                             x.Nop,
-                             Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                             x.PajakId
-                         })*/
-                         .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
+                            foreach (var uptb in uptbList)
+                            {
+                                var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                        var dataTargetWilayahListrik = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                                var dataTargetWilayahListrik = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == Convert.ToInt32(uptb))
                                 .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {
                                     Uptb = g.Key.Uptb,
-                                    Tgl = g.Key.Tgl,
-                                    Bulan = g.Key.Bulan,
-                                    Tahun = g.Key.TahunBuku,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
                                     PajakId = g.Key.PajakId,
                                     TotalTarget = g.Sum(x => x.Target)
                                 })
-                                .ToList();
+                                .AsQueryable();
 
-
-                        if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        {
-
-                            var dataRealisasiWilayah = context.DbMonPpjs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
-
-
-                            foreach (var item in dataTargetWilayahListrik)
-                            {
-
-                                var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
+                                var dataRealisasiWilayahListrik = context.DbMonPpjs
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    )
+                                    .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                    })
                                     .ToList();
 
+                                var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
+                                for (int i = 1; i <= totalTanggal; i++)
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                    var tanggal = new DateTime(tahun, bulan, i);
+                                    var result = new DataHarian();
+                                    result.Wilayah = $"UPTB {uptb}";
+                                    result.EnumWilayah = Convert.ToInt32(uptb);
+                                    result.Tanggal = tanggal;
+                                    result.Tahun = (int)bulan;
+                                    result.Bulan = (int)tahun;
+                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.Target = dataTargetWilayahListrik.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                    result.Realisasi = dataRealisasiWilayahListrik.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
-                                ret.Add(result);
+                                    ret.Add(result);
+                                }
                             }
                         }
                         else
                         {
-                            var uptb = dataListrikWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonPpjs
+                            var nopList = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
+
+                            var dataTargetWilayahListrik = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
+
+                            var dataRealisasiWilayahListrik = context.DbMonPpjs
                                 .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
+                                    x.TahunBuku == tahun
+                                    && x.TglBayarPokok.HasValue
+                                    && x.TglBayarPokok.Value.Year == tahun
+                                    && x.TglBayarPokok.Value.Month <= bulan
+                                    && nopList.Contains(x.Nop)
                                 )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                                .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
                                 .Select(x => new
                                 {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
+                                    Tanggal = x.Key.TglBayarPokok,
                                     x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
+                                    TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                                 .ToList();
 
-
-                            foreach (var item in dataTargetWilayahListrik.Where(x => x.Uptb == (decimal)wilayah))
+                            var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
+                            for (int i = 1; i <= totalTanggal; i++)
                             {
-
-                                var nopUptb = dataListrikWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
-                                    .ToList();
-
-
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == item.Tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                var tanggal = new DateTime(tahun, bulan, i);
+                                var result = new DataHarian();
+                                result.Wilayah = $"UPTB {(int)wilayah}";
+                                result.EnumWilayah = (int)wilayah;
+                                result.Tanggal = tanggal;
+                                result.Tahun = (int)bulan;
+                                result.Bulan = (int)tahun;
+                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.Target = dataTargetWilayahListrik.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                result.Realisasi = dataRealisasiWilayahListrik.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
                                 ret.Add(result);
@@ -2671,139 +2346,121 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        var dataHotelWilayah = context.DbOpHotels
-                         .Where(x => x.TahunBuku == tahun)
-                         .Select(x => new
-                         {
-                             x.Nop,
-                             x.WilayahPajak,
-                             x.PajakId
-                         })
-                         .ToList()
-                         /*.Select(x => new
-                         {
-                             x.Nop,
-                             Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                             x.PajakId
-                         })*/
-                         .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
+                            foreach (var uptb in uptbList)
+                            {
+                                var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                        var dataTargetWilayahHotel = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                                var dataTargetWilayahHotel = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == Convert.ToInt32(uptb))
                                 .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {
                                     Uptb = g.Key.Uptb,
-                                    Tgl = g.Key.Tgl,
-                                    Bulan = g.Key.Bulan,
-                                    Tahun = g.Key.TahunBuku,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
                                     PajakId = g.Key.PajakId,
                                     TotalTarget = g.Sum(x => x.Target)
                                 })
-                                .ToList();
+                                .AsQueryable();
 
-
-                        if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        {
-
-                            var dataRealisasiWilayah = context.DbMonHotels
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
-
-
-                            foreach (var item in dataTargetWilayahHotel)
-                            {
-
-                                var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
+                                var dataRealisasiWilayahHotel = context.DbMonHotels
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    )
+                                    .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                    })
                                     .ToList();
 
+                                var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
+                                for (int i = 1; i <= totalTanggal; i++)
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                    var tanggal = new DateTime(tahun, bulan, i);
+                                    var result = new DataHarian();
+                                    result.Wilayah = $"UPTB {uptb}";
+                                    result.EnumWilayah = Convert.ToInt32(uptb);
+                                    result.Tanggal = tanggal;
+                                    result.Tahun = (int)bulan;
+                                    result.Bulan = (int)tahun;
+                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.Target = dataTargetWilayahHotel.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                    result.Realisasi = dataRealisasiWilayahHotel.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
-                                ret.Add(result);
+                                    ret.Add(result);
+                                }
                             }
                         }
                         else
                         {
-                            var uptb = dataHotelWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonHotels
+                            var nopList = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
+
+                            var dataTargetWilayahHotel = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
+
+                            var dataRealisasiWilayahHotel = context.DbMonHotels
                                 .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
+                                    x.TahunBuku == tahun
+                                    && x.TglBayarPokok.HasValue
+                                    && x.TglBayarPokok.Value.Year == tahun
+                                    && x.TglBayarPokok.Value.Month <= bulan
+                                    && nopList.Contains(x.Nop)
                                 )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                                .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
                                 .Select(x => new
                                 {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
+                                    Tanggal = x.Key.TglBayarPokok,
                                     x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
+                                    TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                                 .ToList();
 
-
-                            foreach (var item in dataTargetWilayahHotel.Where(x => x.Uptb == (decimal)wilayah))
+                            var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
+                            for (int i = 1; i <= totalTanggal; i++)
                             {
-
-                                var nopUptb = dataHotelWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
-                                    .ToList();
-
-
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == item.Tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                var tanggal = new DateTime(tahun, bulan, i);
+                                var result = new DataHarian();
+                                result.Wilayah = $"UPTB {(int)wilayah}";
+                                result.EnumWilayah = (int)wilayah;
+                                result.Tanggal = tanggal;
+                                result.Tahun = (int)bulan;
+                                result.Bulan = (int)tahun;
+                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.Target = dataTargetWilayahHotel.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                result.Realisasi = dataRealisasiWilayahHotel.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
                                 ret.Add(result);
@@ -2811,139 +2468,121 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        var dataParkirWilayah = context.DbOpParkirs
-                         .Where(x => x.TahunBuku == tahun)
-                         .Select(x => new
-                         {
-                             x.Nop,
-                             x.WilayahPajak,
-                             x.PajakId
-                         })
-                         .ToList()
-                         /*.Select(x => new
-                         {
-                             x.Nop,
-                             Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                             x.PajakId
-                         })*/
-                         .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
+                            foreach (var uptb in uptbList)
+                            {
+                                var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                        var dataTargetWilayahParkir = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                                var dataTargetWilayahParkir = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == Convert.ToInt32(uptb))
                                 .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {
                                     Uptb = g.Key.Uptb,
-                                    Tgl = g.Key.Tgl,
-                                    Bulan = g.Key.Bulan,
-                                    Tahun = g.Key.TahunBuku,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
                                     PajakId = g.Key.PajakId,
                                     TotalTarget = g.Sum(x => x.Target)
                                 })
-                                .ToList();
+                                .AsQueryable();
 
-
-                        if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        {
-
-                            var dataRealisasiWilayah = context.DbMonParkirs
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
-
-
-                            foreach (var item in dataTargetWilayahParkir)
-                            {
-
-                                var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
+                                var dataRealisasiWilayahParkir = context.DbMonParkirs
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    )
+                                    .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                    })
                                     .ToList();
 
+                                var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
+                                for (int i = 1; i <= totalTanggal; i++)
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                    var tanggal = new DateTime(tahun, bulan, i);
+                                    var result = new DataHarian();
+                                    result.Wilayah = $"UPTB {uptb}";
+                                    result.EnumWilayah = Convert.ToInt32(uptb);
+                                    result.Tanggal = tanggal;
+                                    result.Tahun = (int)bulan;
+                                    result.Bulan = (int)tahun;
+                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.Target = dataTargetWilayahParkir.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                    result.Realisasi = dataRealisasiWilayahParkir.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
-                                ret.Add(result);
+                                    ret.Add(result);
+                                }
                             }
                         }
                         else
                         {
-                            var uptb = dataParkirWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonParkirs
+                            var nopList = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
+
+                            var dataTargetWilayahParkir = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
+
+                            var dataRealisasiWilayahParkir = context.DbMonParkirs
                                 .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
+                                    x.TahunBuku == tahun
+                                    && x.TglBayarPokok.HasValue
+                                    && x.TglBayarPokok.Value.Year == tahun
+                                    && x.TglBayarPokok.Value.Month <= bulan
+                                    && nopList.Contains(x.Nop)
                                 )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                                .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
                                 .Select(x => new
                                 {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
+                                    Tanggal = x.Key.TglBayarPokok,
                                     x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
+                                    TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                                 .ToList();
 
-
-                            foreach (var item in dataTargetWilayahParkir.Where(x => x.Uptb == (decimal)wilayah))
+                            var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
+                            for (int i = 1; i <= totalTanggal; i++)
                             {
-
-                                var nopUptb = dataParkirWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
-                                    .ToList();
-
-
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == item.Tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                var tanggal = new DateTime(tahun, bulan, i);
+                                var result = new DataHarian();
+                                result.Wilayah = $"UPTB {(int)wilayah}";
+                                result.EnumWilayah = (int)wilayah;
+                                result.Tanggal = tanggal;
+                                result.Tahun = (int)bulan;
+                                result.Bulan = (int)tahun;
+                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.Target = dataTargetWilayahParkir.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                result.Realisasi = dataRealisasiWilayahParkir.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
                                 ret.Add(result);
@@ -2952,139 +2591,121 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var dataHiburanWilayah = context.DbOpHiburans
-                         .Where(x => x.TahunBuku == tahun)
-                         .Select(x => new
-                         {
-                             x.Nop,
-                             x.WilayahPajak,
-                             x.PajakId
-                         })
-                         .ToList()
-                         /*.Select(x => new
-                         {
-                             x.Nop,
-                             Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                             x.PajakId
-                         })*/
-                         .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
+                            foreach (var uptb in uptbList)
+                            {
+                                var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == uptb)
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
 
-                        var dataTargetWilayahHiburan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
+                                var dataTargetWilayahHiburan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == Convert.ToInt32(uptb))
                                 .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {
                                     Uptb = g.Key.Uptb,
-                                    Tgl = g.Key.Tgl,
-                                    Bulan = g.Key.Bulan,
-                                    Tahun = g.Key.TahunBuku,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
                                     PajakId = g.Key.PajakId,
                                     TotalTarget = g.Sum(x => x.Target)
                                 })
-                                .ToList();
+                                .AsQueryable();
 
-
-                        if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        {
-
-                            var dataRealisasiWilayah = context.DbMonHiburans
-                                .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan
-                                )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                                .Select(x => new
-                                {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
-                                    x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
-                                })
-                                .ToList();
-
-
-                            foreach (var item in dataTargetWilayahHiburan)
-                            {
-
-                                var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
+                                var dataRealisasiWilayahHiburan = context.DbMonHiburans
+                                    .Where(x =>
+                                        x.TahunBuku == tahun
+                                        && x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month <= bulan
+                                        && nopList.Contains(x.Nop)
+                                    )
+                                    .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                    })
                                     .ToList();
 
+                                var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
 
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
+                                for (int i = 1; i <= totalTanggal; i++)
                                 {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                    var tanggal = new DateTime(tahun, bulan, i);
+                                    var result = new DataHarian();
+                                    result.Wilayah = $"UPTB {uptb}";
+                                    result.EnumWilayah = Convert.ToInt32(uptb);
+                                    result.Tanggal = tanggal;
+                                    result.Tahun = (int)bulan;
+                                    result.Bulan = (int)tahun;
+                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.Target = dataTargetWilayahHiburan.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                    result.Realisasi = dataRealisasiWilayahHiburan.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
-                                ret.Add(result);
+                                    ret.Add(result);
+                                }
                             }
                         }
                         else
                         {
-                            var uptb = dataHiburanWilayah.Where(x => Convert.ToInt32(x.WilayahPajak) == (int)wilayah).Select(x => x.Nop).ToList();
-                            var dataRealisasiWilayah = context.DbMonHiburans
+                            var nopList = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString())
+                                    .Select(x => x.Nop)
+                                    .Distinct()
+                                    .ToList();
+
+                            var dataTargetWilayahHiburan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
+
+                            var dataRealisasiWilayahHiburan = context.DbMonHiburans
                                 .Where(x =>
-                                    x.TahunBuku == tahun &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month <= bulan &&
-                                    uptb.Contains(x.Nop)
+                                    x.TahunBuku == tahun
+                                    && x.TglBayarPokok.HasValue
+                                    && x.TglBayarPokok.Value.Year == tahun
+                                    && x.TglBayarPokok.Value.Month <= bulan
+                                    && nopList.Contains(x.Nop)
                                 )
-                                .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                                .GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 9 })
                                 .Select(x => new
                                 {
-                                    x.Key.Nop,
-                                    x.Key.TglBayarPokok,
+                                    Tanggal = x.Key.TglBayarPokok,
                                     x.Key.PajakId,
-                                    Realisasi = x.Sum(q => q.NominalPokokBayar)
+                                    TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                                 .ToList();
 
-
-                            foreach (var item in dataTargetWilayahHiburan.Where(x => x.Uptb == (decimal)wilayah))
+                            var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
+                            for (int i = 1; i <= totalTanggal; i++)
                             {
-
-                                var nopUptb = dataHiburanWilayah
-                                    .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)item.Uptb && w.PajakId == item.PajakId)
-                                    .Select(w => w.Nop)
-                                    .ToList();
-
-
-                                var totalRealisasi = dataRealisasiWilayah
-                                    .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == item.Tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                                    .Sum(x => x.Realisasi);
-
-
-                                DataHarian result = new DataHarian
-                                {
-                                    Wilayah = $"UPTB {(int)item.Uptb}",
-                                    EnumWilayah = (int)item.Uptb,
-                                    Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                                    Tahun = (int)item.Bulan,
-                                    Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                                    Target = item.TotalTarget,
-                                    Realisasi = totalRealisasi ?? 0
-                                };
+                                var tanggal = new DateTime(tahun, bulan, i);
+                                var result = new DataHarian();
+                                result.Wilayah = $"UPTB {(int)wilayah}";
+                                result.EnumWilayah = (int)wilayah;
+                                result.Tanggal = tanggal;
+                                result.Tahun = (int)bulan;
+                                result.Bulan = (int)tahun;
+                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.Target = dataTargetWilayahHiburan.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                result.Realisasi = dataRealisasiWilayahHiburan.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
                                 ret.Add(result);
@@ -3236,144 +2857,116 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
-                        //var dataPbbWilayah = context.DbOpPbbs
-                        // .Where(x => x.TahunBuku == tahun)
-                        // .Select(x => new
-                        // {
-                        //     x.Nop,
-                        //     x.WilayahPajak,
-                        //     PajakId = 9m
-                        // })
-                        // .ToList()
-                        // .Select(x => new
-                        // {
-                        //     x.Nop,
-                        //     Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                        //     x.PajakId
-                        // })
-                        // .ToList();
+                        if (wilayah == EnumFactory.EUPTB.SEMUA)
+                        {
+                            var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
+
+                            foreach (var uptb in uptbList)
+                            {
+                                var dataTargetWilayahPbb = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == Convert.ToInt32(uptb))
+                                .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
+
+                                var dataRealisasiWilayahPbb = context.DbMonPbbs
+                                    .Where(x =>
+                                        x.TahunBuku == tahun &&
+                                        x.TglBayar.HasValue &&
+                                        x.TglBayar.Value.Year == tahun &&
+                                        x.TglBayar.Value.Month <= bulan &&
+                                        x.Uptb == Convert.ToInt32(uptb)
+                                    )
+                                    .GroupBy(x => new { TglBayarPokok = x.TglBayar.Value.Date, PajakId = 9 })
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.JumlahBayarPokok)
+                                    })
+                                    .ToList();
+
+                                var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
+                                for (int i = 1; i <= totalTanggal; i++)
+                                {
+                                    var tanggal = new DateTime(tahun, bulan, i);
+                                    var result = new DataHarian();
+                                    result.Wilayah = $"UPTB {uptb}";
+                                    result.EnumWilayah = Convert.ToInt32(uptb);
+                                    result.Tanggal = tanggal;
+                                    result.Tahun = (int)bulan;
+                                    result.Bulan = (int)tahun;
+                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.Target = dataTargetWilayahPbb.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                    result.Realisasi = dataRealisasiWilayahPbb.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
-                        //var dataTargetWilayahPbb = context.DbAkunTargetBulanUptbs
-                        //        .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak)
-                        //        .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
-                        //        .Select(g => new
-                        //        {
-                        //            Uptb = g.Key.Uptb,
-                        //            Tgl = g.Key.Tgl,
-                        //            Bulan = g.Key.Bulan,
-                        //            Tahun = g.Key.TahunBuku,
-                        //            PajakId = g.Key.PajakId,
-                        //            TotalTarget = g.Sum(x => x.Target)
-                        //        })
-                        //        .ToList();
+                                    ret.Add(result);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var dataTargetWilayahPbb = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                .GroupBy(x => new { x.Uptb, x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Uptb = g.Key.Uptb,
+                                    g.Key.Tgl,
+                                    g.Key.Bulan,
+                                    g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .AsQueryable();
+
+                            var dataRealisasiWilayahPbb = context.DbMonPbbs
+                                .Where(x =>
+                                    x.TahunBuku == tahun &&
+                                    x.TglBayar.HasValue &&
+                                    x.TglBayar.Value.Year == tahun &&
+                                    x.TglBayar.Value.Month <= bulan &&
+                                    x.Uptb == (int)wilayah
+                                )
+                                .GroupBy(x => new { TglBayarPokok = x.TglBayar.Value.Date, PajakId = 9 })
+                                .Select(x => new
+                                {
+                                    Tanggal = x.Key.TglBayarPokok,
+                                    x.Key.PajakId,
+                                    TotalRealisasi = x.Sum(q => q.JumlahBayarPokok)
+                                })
+                                .ToList();
+
+                            var totalTanggal = DateTime.DaysInMonth(tahun, bulan);
+                            for (int i = 1; i <= totalTanggal; i++)
+                            {
+                                var tanggal = new DateTime(tahun, bulan, i);
+                                var result = new DataHarian();
+                                result.Wilayah = $"UPTB {(int)wilayah}";
+                                result.EnumWilayah = (int)wilayah;
+                                result.Tanggal = tanggal;
+                                result.Tahun = (int)bulan;
+                                result.Bulan = (int)tahun;
+                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
+                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.Target = dataTargetWilayahPbb.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
+                                result.Realisasi = dataRealisasiWilayahPbb.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
 
-                        //if (wilayah == EnumFactory.EUPTB.SEMUA)
-                        //{
+                                ret.Add(result);
+                            }
 
-                        //    var dataRealisasiWilayah = context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value.Year == tahun &&
-                        //            x.TglBayarPokok.Value.Month <= bulan
-                        //        )
-                        //        .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                        //        .Select(x => new
-                        //        {
-                        //            x.Key.Nop,
-                        //            x.Key.TglBayarPokok,
-                        //            x.Key.PajakId,
-                        //            Realisasi = x.Sum(q => q.NominalPokokBayar)
-                        //        })
-                        //        .ToList();
-
-
-                        //    foreach (var item in dataTargetWilayahPbb)
-                        //    {
-
-                        //        var nopUptb = dataPbbWilayah
-                        //            .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
-                        //            .Select(w => w.Nop)
-                        //            .ToList();
-
-
-                        //        var totalRealisasi = dataRealisasiWilayah
-                        //            .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                        //            .Sum(x => x.Realisasi);
-
-
-                        //        DataHarian result = new DataHarian
-                        //        {
-                        //            Wilayah = $"UPTB {(int)item.Uptb}",
-                        //            EnumWilayah = (int)item.Uptb,
-                        //            Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                        //            Tahun = (int)item.Bulan,
-                        //            Bulan = (int)item.Tahun,
-                        //            JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                        //            EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                        //            Target = item.TotalTarget,
-                        //            Realisasi = totalRealisasi ?? 0
-                        //        };
-
-
-                        //        ret.Add(result);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    var uptb = dataPbbWilayah.Where(x => Convert.ToInt32(x.Wilayah) == (int)wilayah).Select(x => x.Nop).ToList();
-                        //    var dataRealisasiWilayah = context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value.Year == tahun &&
-                        //            x.TglBayarPokok.Value.Month <= bulan &&
-                        //            uptb.Contains(x.Nop)
-                        //        )
-                        //        .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
-                        //        .Select(x => new
-                        //        {
-                        //            x.Key.Nop,
-                        //            x.Key.TglBayarPokok,
-                        //            x.Key.PajakId,
-                        //            Realisasi = x.Sum(q => q.NominalPokokBayar)
-                        //        })
-                        //        .ToList();
-
-
-                        //    foreach (var item in dataTargetWilayahPbb.Where(x => x.Uptb == (decimal)wilayah))
-                        //    {
-
-                        //        var nopUptb = dataPbbWilayah
-                        //            .Where(w => Convert.ToInt32(w.Wilayah) == (int)item.Uptb && w.PajakId == item.PajakId)
-                        //            .Select(w => w.Nop)
-                        //            .ToList();
-
-
-                        //        var totalRealisasi = dataRealisasiWilayah
-                        //            .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == item.Tahun && nopUptb.Contains(x.Nop) && x.PajakId == item.PajakId)
-                        //            .Sum(x => x.Realisasi);
-
-
-                        //        DataHarian result = new DataHarian
-                        //        {
-                        //            Wilayah = $"UPTB {(int)item.Uptb}",
-                        //            EnumWilayah = (int)item.Uptb,
-                        //            Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
-                        //            Tahun = (int)item.Bulan,
-                        //            Bulan = (int)item.Tahun,
-                        //            JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                        //            EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
-                        //            Target = item.TotalTarget,
-                        //            Realisasi = totalRealisasi ?? 0
-                        //        };
-
-
-                        //        ret.Add(result);
-                        //    }
-                        //}
+                        }
 
                         break;
                     case EnumFactory.EPajak.BPHTB:
@@ -3483,19 +3076,21 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        //dataWilayahGabungan.AddRange(
-                        //    context.DbOpPbbs
-                        //        .Where(x => x.TahunBuku == tahun)
-                        //        .Select(x => new
-                        //        {
-                        //            x.Nop,
-                        //            x.WilayahPajak,
-                        //            PajakId = 9m // PBB
-                        //        })
-                        //        .ToList()
-                        //        .Select(x => (x.Nop, x.Wilayah, x.PajakId))
-                        //        .ToList()
-                        //);
+                        dataWilayahGabungan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TahunBuku == tahun)
+                                .Distinct()
+                                .Select(x => new
+                                {
+                                    x.Nop,
+                                    WilayahPajak = x.Uptb.ToString(),
+                                    PajakId = 9m // PBB
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.WilayahPajak, x.PajakId))
+                                .ToList()
+                        );
+
                         // Gabungkan data realisasi
                         var dataRealisasiGabungan = new List<(string Nop, DateTime? TglBayarPokok, decimal NominalPokokBayar, decimal PajakId)>();
 
@@ -3589,20 +3184,21 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList()
                         );
 
-                        //dataRealisasiGabungan.AddRange(
-                        //    context.DbMonPbbs
-                        //        .Where(x => x.TahunBuku == tahun && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Month <= bulan)
-                        //        .Select(x => new
-                        //        {
-                        //            x.Nop,
-                        //            x.TglBayarPokok,
-                        //            NominalPokokBayar = x.NominalPokokBayar ?? 0,
-                        //            x.PajakId
-                        //        })
-                        //        .ToList()
-                        //        .Select(x => (x.Nop, x.TglBayarPokok, x.NominalPokokBayar, x.PajakId))
-                        //        .ToList()
-                        //);
+                        dataRealisasiGabungan.AddRange(
+                            context.DbMonPbbs
+                                .Where(x => x.TahunBuku == tahun && x.TglBayar.HasValue && x.TglBayar.Value.Month <= bulan)
+                                .Distinct()
+                                .Select(x => new
+                                {
+                                    x.Nop,
+                                    x.TglBayar,
+                                    NominalPokokBayar = x.JumlahBayarPokok ?? 0,
+                                    PajakId = 9m
+                                })
+                                .ToList()
+                                .Select(x => (x.Nop, x.TglBayar, x.NominalPokokBayar, x.PajakId))
+                                .ToList()
+                        );
 
                         if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
@@ -4102,76 +3698,76 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
-                        //var dataPbbWilayah = context.DbOpPbbs
-                        //    .Where(x => x.TahunBuku == tanggal.Year)
-                        //    .Select(x => new
-                        //    {
-                        //        x.Nop,
-                        //        Wilayah = Regex.Match(x.WilayahPajak ?? "", @"\d+").Value,
-                        //        NamaOp = "-",            // PBB biasanya tidak ada, default "-"
-                        //        AlamatOp = "-",          // PBB biasanya tidak ada, default "-"
-                        //        KategoriNama = "-",
-                        //        PajakId = 9m
-                        //    })
-                        //    .ToList();
+                        var dataPbbWilayah = context.DbMonPbbs
+                            .Where(x => x.TahunBuku == tanggal.Year)
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                Wilayah = Regex.Match(x.Uptb.ToString() ?? "", @"\d+").Value,
+                                NamaOp = "-",            // PBB biasanya tidak ada, default "-"
+                                AlamatOp = "-",          // PBB biasanya tidak ada, default "-"
+                                KategoriNama = "-",
+                                PajakId = 9m
+                            })
+                            .ToList();
 
-                        //// Ambil data realisasi bayar PBB per NOP, tanggal, pajak
-                        //var dataRealisasiWilayahPbbQuery = context.DbMonPbbs
-                        //    .Where(x =>
-                        //        x.TahunBuku == tanggal.Year &&
-                        //        x.TglBayarPokok.HasValue &&
-                        //        x.TglBayarPokok.Value.Year == tanggal.Year &&
-                        //        x.TglBayarPokok.Value.Month <= tanggal.Month
-                        //    )
-                        //    .GroupBy(x => new { x.Nop, x.TglBayarPokok, x.PajakId })
-                        //    .Select(x => new
-                        //    {
-                        //        x.Key.Nop,
-                        //        x.Key.TglBayarPokok,
-                        //        x.Key.PajakId,
-                        //        Realisasi = x.Sum(q => q.NominalPokokBayar)
-                        //    })
-                        //    .ToList();
+                        // Ambil data realisasi bayar PBB per NOP, tanggal, pajak
+                        var dataRealisasiWilayahPbbQuery = context.DbMonPbbs
+                            .Where(x =>
+                                x.TahunBuku == tanggal.Year &&
+                                x.TglBayar.HasValue &&
+                                x.TglBayar.Value.Year == tanggal.Year &&
+                                x.TglBayar.Value.Month <= tanggal.Month
+                            )
+                            .GroupBy(x => new { x.Nop, x.TglBayar, PajakId = 9m })
+                            .Select(x => new
+                            {
+                                x.Key.Nop,
+                                x.Key.TglBayar,
+                                x.Key.PajakId,
+                                Realisasi = x.Sum(q => q.JumlahBayarPokok)
+                            })
+                            .ToList();
 
-                        //// Filter NOP sesuai UPTB & jenis pajak
-                        //var nopsUptbPbb = dataPbbWilayah
-                        //    .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
-                        //    .Select(w => w.Nop)
-                        //    .ToList();
+                        // Filter NOP sesuai UPTB & jenis pajak
+                        var nopsUptbPbb = dataPbbWilayah
+                            .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
+                            .Select(w => w.Nop)
+                            .ToList();
 
-                        //// Ambil detail realisasi + join ke master dataPbbWilayah
-                        //var realisasiDetailPbb = dataRealisasiWilayahPbbQuery
-                        //    .Where(x =>
-                        //        x.TglBayarPokok.Value.Month == tanggal.Month &&
-                        //        x.TglBayarPokok.Value.Day == tanggal.Day &&
-                        //        x.TglBayarPokok.Value.Year == tanggal.Year &&
-                        //        x.PajakId == (int)jenisPajak &&
-                        //        nopsUptbPbb.Contains(x.Nop)
-                        //    )
-                        //    .Select(r =>
-                        //    {
-                        //        var master = dataPbbWilayah.FirstOrDefault(m => m.Nop == r.Nop);
-                        //        return new DataDetailModal
-                        //        {
-                        //            NOP = r.Nop,
-                        //            NamaOP = master?.NamaOp ?? "-",
-                        //            AlamatOP = master?.AlamatOp ?? "-",
-                        //            KategoriNama = master?.KategoriNama ?? "-",
-                        //            Realisasi = r.Realisasi ?? 0
-                        //        };
-                        //    })
-                        //    .ToList();
+                        // Ambil detail realisasi + join ke master dataPbbWilayah
+                        var realisasiDetailPbb = dataRealisasiWilayahPbbQuery
+                            .Where(x =>
+                                x.TglBayar.Value.Month == tanggal.Month &&
+                                x.TglBayar.Value.Day == tanggal.Day &&
+                                x.TglBayar.Value.Year == tanggal.Year &&
+                                x.PajakId == (int)jenisPajak &&
+                                nopsUptbPbb.Contains(x.Nop)
+                            )
+                            .Select(r =>
+                            {
+                                var master = dataPbbWilayah.FirstOrDefault(m => m.Nop == r.Nop);
+                                return new DataDetailModal
+                                {
+                                    NOP = r.Nop,
+                                    NamaOP = master?.NamaOp ?? "-",
+                                    AlamatOP = master?.AlamatOp ?? "-",
+                                    KategoriNama = master?.KategoriNama ?? "-",
+                                    Realisasi = r.Realisasi ?? 0
+                                };
+                            })
+                            .ToList();
 
-                        //ret = new DataModal
-                        //{
-                        //    Wilayah = $"UPTB {(int)wilayah}",
-                        //    EnumWilayah = (int)wilayah,
-                        //    Tanggal = tanggal,
-                        //    Tahun = tanggal.Year,
-                        //    Bulan = tanggal.Month,
-                        //    JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
-                        //    Detail = realisasiDetailPbb
-                        //};
+                        ret = new DataModal
+                        {
+                            Wilayah = $"UPTB {(int)wilayah}",
+                            EnumWilayah = (int)wilayah,
+                            Tanggal = tanggal,
+                            Tahun = tanggal.Year,
+                            Bulan = tanggal.Month,
+                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
+                            Detail = realisasiDetailPbb
+                        };
 
                         break;
                     case EnumFactory.EPajak.BPHTB:
@@ -4249,12 +3845,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.PBB:
-                        //result = context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value == DateTime.Now
-                        //        ).Sum(q => q.NominalPokokBayar) ?? 0;
+                        result = context.DbMonPbbs
+                                .Where(x =>
+                                    x.TahunBuku == tahun &&
+                                    x.TglBayar.HasValue &&
+                                    x.TglBayar.Value == DateTime.Now
+                                ).Sum(q => q.JumlahBayarPokok) ?? 0;
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         result = context.DbMonBphtbs
@@ -4321,12 +3917,12 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     x.TglBayarPokok.HasValue &&
                                     x.TglBayarPokok.Value == DateTime.Now
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
-                        //result += context.DbMonPbbs
-                        //        .Where(x =>
-                        //            x.TahunBuku == tahun &&
-                        //            x.TglBayarPokok.HasValue &&
-                        //            x.TglBayarPokok.Value == DateTime.Now
-                        //        ).Sum(q => q.NominalPokokBayar) ?? 0;
+                        result += context.DbMonPbbs
+                                .Where(x =>
+                                    x.TahunBuku == tahun &&
+                                    x.TglBayar.HasValue &&
+                                    x.TglBayar.Value == DateTime.Now
+                                ).Sum(q => q.JumlahBayarPokok) ?? 0;
                         result += context.DbMonBphtbs
                                 .Where(x =>
                                     x.Tahun == tahun &&

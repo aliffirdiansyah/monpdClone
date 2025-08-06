@@ -4,7 +4,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
 
-namespace ReklameInsJumlahWs
+namespace ReklameUpayaWs
 {
     public class Worker : BackgroundService
     {
@@ -54,7 +54,7 @@ namespace ReklameInsJumlahWs
                     _logger.LogError(ex, "Error occurred while executing task.");
                     MailHelper.SendMail(
                     false,
-                    "ERROR REKLAME_SURAT WS",
+                    "ERROR REKLAME_SURVEY WS",
                     $@"
                             Terjadi exception pada sistem:
 
@@ -84,57 +84,95 @@ namespace ReklameInsJumlahWs
 
                 using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
                 {
-                    Console.WriteLine($"{DateTime.Now} >>> Mengambil data dari INSIDENTIL@lihatreklame...");
-
                     var sql = @"
-                    SELECT NVL(NO_FORMULIR, '-') NO_FORMULIR, SUM(NVL(JUMLAH, 0)) JUMLAH 
-                    FROM INSIDENTIL@lihatreklame 
-                    GROUP BY NO_FORMULIR
-            ";
+                        SELECT NOFORM_S NO_FORMULIR, 
+                                TGL_UPAYA, 
+                                UPAYA, 
+                                KETERANGAN, 
+                                PETUGAS, 
+                                SEQ
+                        FROM DETAIL_UPAYA_REKLAME
+                    ";
 
-                    var result = await _contMonitoringDb.Set<DbMonReklameInsJumlah>().FromSqlRaw(sql).ToListAsync();
-                    Console.WriteLine($"{DateTime.Now} >>> Jumlah data yang diambil: {result.Count}");
+                    Console.WriteLine($@"{DateTime.Now} REKLAME_UPAYA WS STARTED");
+                    var result = await _contMonitoringDb.Set<DbMonReklameUpaya>().FromSqlRaw(sql).ToListAsync();
+                    int jmlData = result.Count;
+                    int index = 0;
 
-                    Console.WriteLine($"{DateTime.Now} >>> Menghapus data lama dari DB_MON_REKLAME_INS_JUMLAH...");
-                    var source = _contMonPd.DbMonReklameInsJumlahs.ToList();
-                    _contMonPd.DbMonReklameInsJumlahs.RemoveRange(source);
-                    _contMonPd.SaveChanges();
+                    var source = _contMonPd.DbMonReklameUpayas.ToList();
+                    _contMonPd.DbMonReklameUpayas.RemoveRange(source);
+                    Console.WriteLine($@"{DateTime.Now} REKLAME_UPAYA EXISTING REMOVED");
 
-                    Console.WriteLine($"{DateTime.Now} >>> Menyimpan data baru...");
-
-                    int total = result.Count;
-                    int current = 0;
                     foreach (var item in result)
                     {
-                        current++;
 
-                        _contMonPd.DbMonReklameInsJumlahs.Add(new DbMonReklameInsJumlah()
-                        {
-                            NoFormulir = item.NoFormulir,
-                            Jumlah = item.Jumlah
-                        });
+                        var newRow = new DbMonReklameUpaya();
+                        newRow.NoFormulir = item.NoFormulir;
+                        newRow.TglUpaya = item.TglUpaya;
+                        newRow.Upaya = item.Upaya;
+                        newRow.Keterangan = item.Keterangan;
+                        newRow.Petugas = item.Petugas;
+                        newRow.Seq = item.Seq;
 
-                        double percent = ((double)current / total) * 100;
-                        Console.Write($"\r TOTAL DATA : {total.ToString("n0")} Progress: {item.NoFormulir} {current.ToString("n0")} - {percent:0.00}%   ");
+                        _contMonPd.DbMonReklameUpayas.Add(newRow);
+
+                        double persen = ((double)index / jmlData) * 100;
+                        Console.Write($"\rREKLAME_UPAYA MONITORINGDB JML OP {jmlData.ToString("n0")} {item.NoFormulir} : {persen:F2}%   ");
+
+                        index++;
                     }
-
-                    _contMonPd.SaveChanges();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{DateTime.Now} >>> [FINISHED]");
-                    Console.ResetColor();
                 }
 
+                using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
+                {
+                    var sql = @"
+                        SELECT  NOFORM_S, 
+                                TGL_UPAYA, 
+                                GAMBAR, 
+                                SEQ 
+                        FROM DETAIL_UPLOAD_REKLAME
+                    ";
+
+                    Console.WriteLine($@"{DateTime.Now} REKLAME_UPAYA_DOK WS STARTED");
+                    var result = await _contMonitoringDb.Set<DbMonReklameUpayaDok>().FromSqlRaw(sql).ToListAsync();
+                    int jmlData = result.Count;
+                    int index = 0;
+
+                    var source = _contMonPd.DbMonReklameUpayaDoks.ToList();
+                    _contMonPd.DbMonReklameUpayaDoks.RemoveRange(source);
+                    Console.WriteLine($@"{DateTime.Now} REKLAME_UPAYA_DOK EXISTING REMOVED");
+
+                    foreach (var item in result)
+                    {
+
+                        var newRow = new DbMonReklameUpayaDok();
+                        newRow.NoformS = item.NoformS;
+                        newRow.TglUpaya = item.TglUpaya;
+                        newRow.Gambar = item.Gambar;
+                        newRow.Seq = item.Seq;
+
+                        _contMonPd.DbMonReklameUpayaDoks.Add(newRow);
+
+                        double persen = ((double)index / jmlData) * 100;
+                        Console.Write($"\rREKLAME_UPAYA_DOK MONITORINGDB JML OP {jmlData.ToString("n0")} {item.NoformS} : {persen:F2}%   ");
+
+                        index++;
+                    }
+                }
+
+
+
+                Console.WriteLine($"SAVING....");
+                _contMonPd.SaveChanges();
+                Console.WriteLine($"FINISHED");
+
+
                 MailHelper.SendMail(
-                    false,
-                    "DONE REKLAME_SURAT WS",
-                    $@"REKLAME_SURAT WS FINISHED",
-                    null
+                false,
+                "DONE REKLAME_SURVEY WS",
+                $@"REKLAME_SURVEY WS FINISHED",
+                null
                 );
-
-
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{DateTime.Now} >>> Proses DoWorkFullScanAsync selesai.");
-                Console.ResetColor();
             }
         }
 
@@ -156,7 +194,7 @@ namespace ReklameInsJumlahWs
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
-            var row = _contMonPd.SetLastRuns.FirstOrDefault(x => x.Job.ToUpper() == EnumFactory.EJobName.DBOPREKLAMEINSJML.ToString().ToUpper());
+            var row = _contMonPd.SetLastRuns.FirstOrDefault(x => x.Job.ToUpper() == EnumFactory.EJobName.DBOPREKLAMEUPAYA.ToString().ToUpper());
             if (row != null)
             {
                 if (row.InsDate.HasValue)
@@ -182,7 +220,7 @@ namespace ReklameInsJumlahWs
                 }
             }
             var newRow = new MonPDLib.EF.SetLastRun();
-            newRow.Job = EnumFactory.EJobName.DBOPREKLAMEINSJML.ToString().ToUpper();
+            newRow.Job = EnumFactory.EJobName.DBOPREKLAMEUPAYA.ToString().ToUpper();
             newRow.InsDate = DateTime.Now;
             _contMonPd.SetLastRuns.Add(newRow);
             _contMonPd.SaveChanges();

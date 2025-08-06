@@ -540,11 +540,11 @@
     <script>
 
         function showPajakCellTemplate(cellElement, cellInfo) {
-            const JenisPajak = cellInfo.data.JenisPajak;
+            const jenisPajak = cellInfo.data.JenisPajak;
             const kategori = cellInfo.data.Kategori;
             const tahun = 2025; // atau ambil dari cellInfo.data.Tahun kalau ada
 
-            // Tentukan status berdasar kolom
+            // Tentukan status berdasarkan caption kolom
             let status = '';
             const caption = cellInfo.column.caption?.toUpperCase();
 
@@ -556,33 +556,25 @@
                 status = 'BLM';
             }
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
                 .attr('title', `Lihat Detail ${status}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    // kirim parameter dengan status yang benar
-                    onPajakClick(JenisPajak, kategori, tahun, status);
-                });
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => onPajakClick(jenisPajak, kategori, tahun, status));
 
-            const span = $('<span>').text(cellInfo.value);
-
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(button)
-                .append(span);
-
-            $(cellElement).append(wrapper);
+            $(cellElement).append($link);
         }
 
 
 
-        function upayaPajakCellTemplate(cellElement, cellInfo) {
-            const JenisPajak = cellInfo.data.JenisPajak;
-            const kategori = cellInfo.data.Kategori;
-            const tahun = 2025; // atau ambil dari cellInfo.data.Tahun kalau tersedia
 
-            // Tentukan status berdasar kolom
+        function upayaPajakCellTemplate(cellElement, cellInfo) {
+            const jenisPajak = cellInfo.data.JenisPajak;
+            const kategori = cellInfo.data.Kategori;
+            const tahun = 2025; // atau bisa pakai cellInfo.data.Tahun jika tersedia
+
+            // Tentukan status berdasarkan caption kolom
             let status = '';
             const caption = cellInfo.column.caption?.toUpperCase();
 
@@ -596,23 +588,16 @@
                 status = 'KEJAK';
             }
 
-            const button = $('<button>')
-                .addClass('btn btn-sm btn-outline-primary me-2')
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
                 .attr('title', `Lihat Detail ${status}`)
-                .html('<i class="ri-search-line"></i>')
-                .on('click', function () {
-                    onUpayaClick(JenisPajak, kategori, tahun, status);
-                });
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => onUpayaClick(jenisPajak, kategori, tahun, status));
 
-            const span = $('<span>').text(cellInfo.value);
-
-            const wrapper = $('<div>')
-                .css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between' })
-                .append(button)
-                .append(span);
-
-            $(cellElement).append(wrapper);
+            $(cellElement).append($link);
         }
+
 
 
         function onPajakClick(jenisPajak, kategori, tahun, status) {

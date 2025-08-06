@@ -88,11 +88,15 @@ namespace HiburanWs
             // do fill db op HIBURAN
             if (IsGetDBOp())
             {
-                FillOP(2025);
                 //for (var i = tahunAmbil; i <= tglServer.Year; i++)
                 //{
                 //    FillOP(i);
                 //}
+
+                for (var i = tglServer.Year; i >= tahunAmbil; i--)
+                {
+                    FillOP(i);
+                }
             }
 
             MailHelper.SendMail(
@@ -1198,7 +1202,7 @@ GROUP BY NOP, MASA, TAHUN  ";
                                 newRow.UpdDate = DateTime.Now;
                                 newRow.UpdBy = "JOB";
 
-
+                                newRow.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
                                 newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
                                 newRow.AkunPokokBayar = akunBayar;
                                 newRow.Kelompok = kelompokBayar;
@@ -1349,70 +1353,73 @@ GROUP BY NOP, MASA, TAHUN  ";
                 if (dr.Read())
                 {
                     var katname = dr.GetString(2);
-                    switch (katname)
+                    if (!string.IsNullOrEmpty(katname))
                     {
-                        case "PERMAINAN ANAK/ PERMAINAN KETANGKASAN":
-                            ret[0] = "50";
-                            ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
-                            break;
-                        case "GEDUNG OLAHRAGA":
-                            ret[0] = "46";
-                            ret[1] = "OLAHRAGA";
-                            break;
-                        case "KARAOKE KELUARGA":
-                            ret[0] = "45";
-                            ret[1] = "KARAOKE KELUARGA";
-                            break;
-                        case "PANTI PIJAT / THERAPY / SAUNA / SPA":
-                            ret[0] = "48";
-                            ret[1] = "PANTI PIJAT/THERAPY/SAUNA/SPA";
-                            break;
-                        case "TAMAN SATWA/ PEMANDIAN ALAM / TAMAN REKREASI / WISATA TIRTA / REKREASI AIR":
-                            ret[0] = "14";
-                            ret[1] = "HOTEL BINTANG TIGA";
-                            break;
-                        case "BILLYARD":
-                            ret[0] = "46";
-                            ret[1] = "OLAHRAGA";
-                            break;
-                        case "KOLAM RENANG":
-                            ret[0] = "46";
-                            ret[1] = "OLAHRAGA";
-                            break;
-                        case "KARAOKE DEWASA":
-                            ret[0] = "44";
-                            ret[1] = "KARAOKE DEWASA";
-                            break;
-                        case "BIOSKOP":
-                            ret[0] = "42";
-                            ret[1] = "BIOSKOP";
-                            break;
-                        case "PAMERAN SENI BUDAYA, SENI UKIR, BARANG SENI, TUMBU":
-                            ret[0] = "50";
-                            ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
-                            break;
-                        case "BAR / CAFE / KLAB MALAM / DISKOTIK":
-                            ret[0] = "41";
-                            ret[1] = "BAR/CAFE/KLAB MALAM/DISKOTIK";
-                            break;
-                        case "FUTSAL(OLAHRAGA)":
-                            ret[0] = "46";
-                            ret[1] = "OLAHRAGA";
-                            break;
-                        case "FITNESS / PUSAT KEBUGARAN":
-                            ret[0] = "43";
-                            ret[1] = "FITNESS/PUSAT KEBUGARAN";
-                            break;
-                        case "BOWLING":
-                            ret[0] = "46";
-                            ret[1] = "OLAHRAGA";
-                            break;
-                        default:
-                            ret[0] = "54";
-                            ret[1] = "HIBURAN";
-                            break;
+                        katname = katname.Replace(" ", "").ToUpper().Trim();
+                        switch (katname)
+                        {
+                            case "PERMAINANANAK/PERMAINANKETANGKASAN":
+                                ret[0] = "50";
+                                ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                                break;
+                            case "GEDUNGOLAHRAGA":
+                                ret[0] = "46";
+                                ret[1] = "OLAHRAGA";
+                                break;
+                            case "KARAOKEKELUARGA":
+                                ret[0] = "45";
+                                ret[1] = "KARAOKE KELUARGA";
+                                break;
+                            case "PANTIPIJAT/THERAPY/SAUNA/SPA":
+                                ret[0] = "48";
+                                ret[1] = "PANTI PIJAT/THERAPY/SAUNA/SPA";
+                                break;
+                            case "TAMANSATWA/PEMANDIANALAM/TAMANREKREASI/WISATATIRTA/REKREASIAIR":
+                                ret[0] = "50";
+                                ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                                break;
+                            case "BILLYARD":
+                                ret[0] = "46";
+                                ret[1] = "OLAHRAGA";
+                                break;
+                            case "KOLAMRENANG":
+                                ret[0] = "46";
+                                ret[1] = "OLAHRAGA";
+                                break;
+                            case "KARAOKEDEWASA":
+                                ret[0] = "44";
+                                ret[1] = "KARAOKE DEWASA";
+                                break;
+                            case "BIOSKOP":
+                                ret[0] = "42";
+                                ret[1] = "BIOSKOP";
+                                break;
+                            case "PAMERANSENIBUDAYA,SENIUKIR,BARANGSENI,TUMBU":
+                                ret[0] = "50";
+                                ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                                break;
+                            case "BAR/CAFE/KLABMALAM/DISKOTIK":
+                                ret[0] = "41";
+                                ret[1] = "BAR/CAFE/KLAB MALAM/DISKOTIK";
+                                break;
+                            case "FUTSAL(OLAHRAGA)":
+                                ret[0] = "46";
+                                ret[1] = "OLAHRAGA";
+                                break;
+                            case "FITNESS/PUSATKEBUGARAN":
+                                ret[0] = "43";
+                                ret[1] = "FITNESS/PUSAT KEBUGARAN";
+                                break;
+                            case "BOWLING":
+                                ret[0] = "46";
+                                ret[1] = "OLAHRAGA";
+                                break;
+                            default:
+                                ret[0] = "54";
+                                ret[1] = "HIBURAN";
+                                break;
+                        }
                     }
-
                 }
 
                 var command2 = connection.CreateCommand();

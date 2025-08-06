@@ -148,11 +148,11 @@ namespace MonPDReborn.Models.DataOP
                 var targetListrikNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
                 var realisasiListrikNow = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
 
-                //var targetPbbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                //var realisasiPbbNow = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
+                var targetPbbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
+                var realisasiPbbNow = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.JumlahBayarPokok) ?? 0;
 
-                //var targetBphtbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
-                //var realisasiBphtbNow = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.Pokok) ?? 0;
+                var targetBphtbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
+                var realisasiBphtbNow = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear).Sum(x => x.Pokok) ?? 0;
 
                 var targetReklameNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
                 var realisasiReklameNow = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -160,11 +160,11 @@ namespace MonPDReborn.Models.DataOP
                 var targetAbtNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
                 var realisasiAbtNow = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear).Sum(x => x.NominalPokokBayar) ?? 0;
 
-                //var targetOpsenPkbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
-                //var realisasiOpsenPkbNow = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
+                var targetOpsenPkbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
+                var realisasiOpsenPkbNow = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
 
-                //var targetOpsenBbnkbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
-                //var realisasiOpsenBbnkbNow = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
+                var targetOpsenBbnkbNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
+                var realisasiOpsenBbnkbNow = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
                 #endregion
 
                 #region Mines1
@@ -183,11 +183,11 @@ namespace MonPDReborn.Models.DataOP
                 var targetListrikMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
                 var realisasiListrikMines1 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
 
-                //var targetPbbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                //var realisasiPbbMines1 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var targetPbbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
+                var realisasiPbbMines1 = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear - 1).Sum(x => x.JumlahBayarPokok) ?? 0;
 
-                //var targetBphtbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
-                //var realisasiBphtbMines1 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 1).Sum(x => x.Pokok) ?? 0;
+                var targetBphtbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
+                var realisasiBphtbMines1 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 1).Sum(x => x.Pokok) ?? 0;
 
                 var targetReklameMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
                 var realisasiReklameMines1 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -195,11 +195,11 @@ namespace MonPDReborn.Models.DataOP
                 var targetAbtMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
                 var realisasiAbtMines1 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
 
-                //var targetOpsenPkbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
-                //var realisasiOpsenPkbMines1 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear - 1).Sum(x => x.JmlPokok);
+                var targetOpsenPkbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
+                var realisasiOpsenPkbMines1 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear - 1).Sum(x => x.JmlPokok);
 
-                //var targetOpsenBbnkbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
-                //var realisasiOpsenBbnkbMines1 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 1).Sum(x => x.JmlPokok);
+                var targetOpsenBbnkbMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
+                var realisasiOpsenBbnkbMines1 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 1).Sum(x => x.JmlPokok);
                 #endregion
 
                 #region Mines2
@@ -218,11 +218,11 @@ namespace MonPDReborn.Models.DataOP
                 var targetListrikMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
                 var realisasiListrikMines2 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2).Sum(x => x.NominalPokokBayar) ?? 0;
 
-                //var targetPbbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                //var realisasiPbbMines2 = context.DbMonPbbs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2).Sum(x => x.NominalPokokBayar) ?? 0;
+                var targetPbbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
+                var realisasiPbbMines2 = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear - 2).Sum(x => x.JumlahBayarPokok) ?? 0;
 
-                //var targetBphtbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
-                //var realisasiBphtbMines2 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 2).Sum(x => x.Pokok) ?? 0;
+                var targetBphtbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
+                var realisasiBphtbMines2 = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == currentYear - 2).Sum(x => x.Pokok) ?? 0;
 
                 var targetReklameMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
                 var realisasiReklameMines2 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -230,11 +230,11 @@ namespace MonPDReborn.Models.DataOP
                 var targetAbtMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
                 var realisasiAbtMines2 = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2).Sum(x => x.NominalPokokBayar) ?? 0;
 
-                //var targetOpsenPkbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
-                //var realisasiOpsenPkbMines2 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear - 2).Sum(x => x.JmlPokok);
+                var targetOpsenPkbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
+                var realisasiOpsenPkbMines2 = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == currentYear - 2).Sum(x => x.JmlPokok);
 
-                //var targetOpsenBbnkbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
-                //var realisasiOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 2).Sum(x => x.JmlPokok);
+                var targetOpsenBbnkbMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
+                var realisasiOpsenBbnkbMines2 = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear - 2).Sum(x => x.JmlPokok);
                 #endregion
 
                 #region PotensioList();
@@ -486,57 +486,57 @@ namespace MonPDReborn.Models.DataOP
                     TotalPotensi = totalPotensiReklame
                 });
 
-                //ret.Add(new RekapPotensi
-                //{
-                //    EnumPajak = (int)EnumFactory.EPajak.PBB,
-                //    JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
-                //    Target3 = targetPbbNow,
-                //    Realisasi3 = realisasiPbbNow,
-                //    Target2 = targetPbbMines1,
-                //    Realisasi2 = realisasiPbbMines1,
-                //    Target1 = targetPbbMines2,
-                //    Realisasi1 = realisasiPbbMines2,
-                //    TotalPotensi = 0
-                //});
+                /*ret.Add(new RekapPotensi
+                {
+                    EnumPajak = (int)EnumFactory.EPajak.PBB,
+                    JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
+                    Target3 = targetPbbNow,
+                    Realisasi3 = realisasiPbbNow,
+                    Target2 = targetPbbMines1,
+                    Realisasi2 = realisasiPbbMines1,
+                    Target1 = targetPbbMines2,
+                    Realisasi1 = realisasiPbbMines2,
+                    TotalPotensi = 0
+                });
 
-                //ret.Add(new RekapPotensi
-                //{
-                //    EnumPajak = (int)EnumFactory.EPajak.BPHTB,
-                //    JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
-                //    Target3 = targetBphtbNow,
-                //    Realisasi3 = realisasiBphtbNow,
-                //    Target2 = targetBphtbMines1,
-                //    Realisasi2 = realisasiBphtbMines1,
-                //    Target1 = targetBphtbMines2,
-                //    Realisasi1 = realisasiBphtbMines2,
-                //    TotalPotensi = 0
-                //});
+                ret.Add(new RekapPotensi
+                {
+                    EnumPajak = (int)EnumFactory.EPajak.BPHTB,
+                    JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
+                    Target3 = targetBphtbNow,
+                    Realisasi3 = realisasiBphtbNow,
+                    Target2 = targetBphtbMines1,
+                    Realisasi2 = realisasiBphtbMines1,
+                    Target1 = targetBphtbMines2,
+                    Realisasi1 = realisasiBphtbMines2,
+                    TotalPotensi = 0
+                });
 
-                //ret.Add(new RekapPotensi
-                //{
-                //    EnumPajak = (int)EnumFactory.EPajak.OpsenPkb,
-                //    JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
-                //    Target3 = targetOpsenPkbNow,
-                //    Realisasi3 = realisasiOpsenPkbNow,
-                //    Target2 = targetOpsenPkbMines1,
-                //    Realisasi2 = realisasiOpsenPkbMines1,
-                //    Target1 = targetOpsenPkbMines2,
-                //    Realisasi1 = realisasiOpsenPkbMines2,
-                //    TotalPotensi = 0
-                //});
+                ret.Add(new RekapPotensi
+                {
+                    EnumPajak = (int)EnumFactory.EPajak.OpsenPkb,
+                    JenisPajak = EnumFactory.EPajak.OpsenPkb.GetDescription(),
+                    Target3 = targetOpsenPkbNow,
+                    Realisasi3 = realisasiOpsenPkbNow,
+                    Target2 = targetOpsenPkbMines1,
+                    Realisasi2 = realisasiOpsenPkbMines1,
+                    Target1 = targetOpsenPkbMines2,
+                    Realisasi1 = realisasiOpsenPkbMines2,
+                    TotalPotensi = 0
+                });
 
-                //ret.Add(new RekapPotensi
-                //{
-                //    EnumPajak = (int)EnumFactory.EPajak.OpsenBbnkb,
-                //    JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
-                //    Target3 = targetOpsenBbnkbNow,
-                //    Realisasi3 = realisasiOpsenBbnkbNow,
-                //    Target2 = targetOpsenBbnkbMines1,
-                //    Realisasi2 = realisasiOpsenBbnkbMines1,
-                //    Target1 = targetOpsenBbnkbMines2,
-                //    Realisasi1 = realisasiOpsenBbnkbMines2,
-                //    TotalPotensi = 0
-                //});
+                ret.Add(new RekapPotensi
+                {
+                    EnumPajak = (int)EnumFactory.EPajak.OpsenBbnkb,
+                    JenisPajak = EnumFactory.EPajak.OpsenBbnkb.GetDescription(),
+                    Target3 = targetOpsenBbnkbNow,
+                    Realisasi3 = realisasiOpsenBbnkbNow,
+                    Target2 = targetOpsenBbnkbMines1,
+                    Realisasi2 = realisasiOpsenBbnkbMines1,
+                    Target1 = targetOpsenBbnkbMines2,
+                    Realisasi1 = realisasiOpsenBbnkbMines2,
+                    TotalPotensi = 0
+                });*/
 
                 return ret;
             }
@@ -953,7 +953,7 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
+                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerBulanFitnes);
 
 
                             re.Realisasi1 = realisasiHiburan1;
@@ -1414,7 +1414,7 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
+                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerBulanFitnes);
                             if (kategori != 64)
                             {
                                 var potensi = new DataPotensi
