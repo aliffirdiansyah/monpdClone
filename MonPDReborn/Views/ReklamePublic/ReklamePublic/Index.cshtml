@@ -1,53 +1,72 @@
 ﻿@model MonPDReborn.Models.ReklamePublic.ReklamePublicVM.Index
 
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutNon.cshtml";
+    // Layout = "~/Views/Shared/_DevExtremeLayout.cshtml";
 }
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi Reklame Publik</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
+                    <h2 class="h5 mb-4 d-flex align-items-center text-dark">
+                        <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Pencarian Data
+                    </h2>
 
-    <style>
-        
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+                    <!-- Input Nama Jalan -->
+                    <div class="mb-3">
+                        <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
+                        <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
+                               class="form-control">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
+                                                .ID("namaJalanView")
+                                                .ValueExpr("Value")
+                                                .DisplayExpr("Text")
+                                                .DataSource(d => d.Mvc()
+                                                .Controller("ReklamePublic")
+                                                .LoadAction("GetNama"))
+                                                .SearchExpr("Text")
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(4)
+                                                )
+                    </div>
 
-        .captcha-canvas {
-            background: linear-gradient(45deg, #f0f9ff, #e0f2fe);
-            border: 2px solid #0ea5e9;
-            border-radius: 8px;
-        }
+                    <!-- CAPTCHA Section -->
+                    <div class="bg-light p-3 mb-3 rounded">
+                        <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
+                        <div class="row align-items-center mb-2">
+                            <div class="col-auto">
+                                <canvas id="captchaCanvas" class="border" width="120" height="40"></canvas>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" onclick="generateCaptcha()" class="btn btn-primary">
+                                    🔄 Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <input type="text" id="captchaInput" name="captchaInput" placeholder="Masukkan kode CAPTCHA"
+                               class="form-control mb-2">
+                        <div class="form-text">Masukkan kode yang terlihat di gambar</div>
+                    </div>
 
-        .status-badge {
-            transition: all 0.2s ease;
-        }
+                    <!-- Tombol Submit -->
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        🔍 Cari Data Reklame
+                    </button>
+                </form>
 
-            .status-badge:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3"></div>
 
-        .road-card {
-            transition: all 0.3s ease;
-            border-left: 4px solid #0ea5e9;
-        }
-
-            .road-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-                border-left-color: #0284c7;
-            }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-lg border-b-4 border-blue-600">
+</div>
+    @* <header class="bg-white shadow-lg border-b-4 border-blue-600">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -88,6 +107,15 @@
                         <label for="namaJalanSearch" class="block text-sm font-medium text-gray-700 mb-2">Nama Jalan</label>
                         <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
+                            .ID("namaJalanView")
+                            .ValueExpr("Value")
+                            .DisplayExpr("Text")
+                            .DataSource(d => d.Mvc().Controller("ReklamePublic").LoadAction("GetNama"))
+                            .SearchExpr("Text")
+                            .SearchEnabled(true)
+                            .MinSearchLength(4)
+                            )
                     </div>
 
                     <!-- CAPTCHA Section -->
@@ -136,19 +164,8 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-6 mt-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-300 text-sm">© @DateTime.Now.Year Sistem Informasi Reklame Publik</p>
-            <p class="text-gray-300 text-sm">Portal akses informasi untuk masyarakat</p>
-            <p class="text-gray-400 text-xs mt-2">Data diperbarui secara berkala untuk transparansi publik</p>
-        </div>
-    </footer>
-
+    </div> *@
+@section Scripts{
     <script>
             let captchaText = '';
 
@@ -213,6 +230,6 @@
 
         window.onload = generateCaptcha;
     </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a49e7f959d40c8',t:'MTc1NDM3OTM0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-</body>
-</html>
+}
+    
+
