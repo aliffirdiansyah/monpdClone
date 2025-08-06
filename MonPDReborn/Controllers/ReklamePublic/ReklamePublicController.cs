@@ -1,8 +1,10 @@
 ﻿using DevExtreme.AspNet.Mvc;
+using DocumentFormat.OpenXml.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.AktivitasOP.ReklameSummaryVM;
 using static MonPDReborn.Models.ReklamePublic.ReklamePublicVM;
 
 namespace MonPDReborn.Controllers.ReklamePublic
@@ -65,21 +67,41 @@ namespace MonPDReborn.Controllers.ReklamePublic
             }
         }
         [HttpGet]
-        public async Task<object> GetNama(DataSourceLoadOptions loadOptions)
+        public async Task<object> GetNama(DataSourceLoadOptions loadOptions, string filter)
         {
             var context = DBClass.GetContext();
-
-            // EF Core query langsung, tanpa ToListAsync
-            var query = context.MvReklameSummaries
-                 .Where(x => !string.IsNullOrEmpty(x.NamaJalan))
+            var dataList = new List<namaJalanView>();
+            if (!string.IsNullOrEmpty(filter))
+            {
+                filter = filter.Replace("[[", "");
+                filter = filter.Replace("]]", "");
+                filter = filter.Replace("\"", "");
+                filter = filter.ToUpper();
+                string[] s = filter.Split(',');
+                // EF Core query langsung, tanpa ToListAsync
+                dataList = context.MvReklameSummaries
+                 .Where(x => !string.IsNullOrEmpty(x.NamaJalan) && x.NamaJalan.ToUpper().Contains(s[2].ToUpper()))
                  .GroupBy(x => x.NamaJalan)
                  .Select(g => new namaJalanView
                  {
                      Value = g.Key,
                      Text = g.Key
-                 });
-
-            return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
+                 })
+                .ToList();
+            }
+            else
+            {
+                dataList = context.MvReklameSummaries
+                 .Where(x => !string.IsNullOrEmpty(x.NamaJalan) && x.NamaJalan.ToUpper().Contains(filter.ToUpper()))
+                 .GroupBy(x => x.NamaJalan)
+                 .Select(g => new namaJalanView
+                 {
+                     Value = g.Key,
+                     Text = g.Key
+                 })
+                .ToList();
+            }
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
         }
     }
 }
