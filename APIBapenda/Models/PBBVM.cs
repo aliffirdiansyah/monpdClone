@@ -11,5 +11,16 @@
         {
             public string Persil { get; set; } = "";
         }        
+
+        public class KecamatanReq
+        {
+            public string Kecamatan { get; set; } = "";
+        }        
+
+        public class KecamatanKelurahanReq
+        {
+            public string Kecamatan { get; set; } = "";
+            public string Kelurahan { get; set; } = "";
+        }        
     }
 }
