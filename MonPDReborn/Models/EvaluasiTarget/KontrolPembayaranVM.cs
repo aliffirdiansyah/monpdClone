@@ -1354,7 +1354,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == EnumFactory.EPajak.PBB)
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
                     .ToList()
                     .Select(x => new
                     {
