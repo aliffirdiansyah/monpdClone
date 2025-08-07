@@ -1669,7 +1669,206 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
+            //BPHTB
+            public static List<KontrolPembayaran> GetKontrolPembayaranBphtbRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.BPHTB)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
 
+                var kontrolPembayaranList = context.DbCtrlByrBphtbs
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
             #endregion
 
             #region Data Detail KontrolPembayaran
@@ -2012,6 +2211,42 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         }
                         break;
                     case EnumFactory.EPajak.BPHTB:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrBphtbs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Idsspd,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrBphtbs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Idsspd,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         break;
@@ -2025,7 +2260,573 @@ namespace MonPDReborn.Models.EvaluasiTarget
             }
 
             #endregion
-            
+
+            #region Data Rekap Potensi Pajak
+            public static List<Potensi> GetPotensiPajakHotel(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrHotels
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            public static List<Potensi> GetPotensiPajakResto(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrRestos
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            public static List<Potensi> GetPotensiPajakParkir(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrParkirs
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            public static List<Potensi> GetPotensiPajakHiburan(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrHiburans
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            public static List<Potensi> GetPotensiPajakReklame(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrReklames
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            public static List<Potensi> GetPotensiPajakAirTanah(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrAbts
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            public static List<Potensi> GetPotensiPajakPbb(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrPbbs
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.PBB.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            public static List<Potensi> GetPotensiPajakBphtb(int tahun)
+            {
+                var ret = new List<Potensi>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.BPHTB)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranList = context.DbCtrlByrBphtbs
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Ketetapan = g.Sum(x => x.Ketetapan),
+                    })
+                    .AsQueryable();
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new Potensi();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription();
+                    re.Jan = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Feb = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mar = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Apr = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Mei = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jun = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Jul = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Agt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Sep = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Okt = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Nov = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                    re.Des = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Ketetapan) ?? 0;
+                }
+
+                return ret;
+            }
+            #endregion
 
             public static List<UpayaPajak> GetDataUpayaPajakList(string JenisPajak, int tahun)
             {
