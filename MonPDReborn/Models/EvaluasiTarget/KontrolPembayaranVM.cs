@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.InkML;
 using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
 using System.Globalization;
 using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
@@ -343,7 +344,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-
             //RESTO
             public static List<KontrolPembayaran> GetKontrolPembayaranRestoRekap(int tahun)
             {
@@ -370,7 +370,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Jml = g.Count(),
                         JmlBlmBayar = g.Count(x => x.StatusBayar.Value == 0),
                         JmlBayar = g.Count(x => x.StatusBayar.Value == 1),
-                        JmlNTs = g.Count(x => x.StatusBayar.Value == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar.Value == 2),
                         //Ketetapan = g.Sum(x => x.Ketetapan),
                         //Realisasi = g.Sum(x => x.Realisasi),
                     })
@@ -544,7 +544,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-
             //PARKIR
             public static List<KontrolPembayaran> GetKontrolPembayaranParkirRekap(int tahun)
             {
@@ -745,7 +744,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-
             //HIBURAN
             public static List<KontrolPembayaran> GetKontrolPembayaranHiburanRekap(int tahun)
             {
@@ -946,7 +944,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-
             //PPJ
             public static List<KontrolPembayaran> GetKontrolPembayaranPPJRekap(int tahun)
             {
@@ -973,7 +970,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Jml = g.Count(),
                         JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
                         JmlBayar = g.Count(x => x.StatusBayar == 1),
-                        JmlNTs = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
                         //Ketetapan = g.Sum(x => x.Ketetapan),
                         //Realisasi = g.Sum(x => x.Realisasi),
                     })
@@ -1147,7 +1144,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-
             //ABT
             public static List<KontrolPembayaran> GetKontrolPembayaranABTRekap(int tahun)
             {
@@ -1174,7 +1170,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Jml = g.Count(),
                         JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
                         JmlBayar = g.Count(x => x.StatusBayar == 1),
-                        JmlNTs = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
                         //Ketetapan = g.Sum(x => x.Ketetapan),
                         //Realisasi = g.Sum(x => x.Realisasi),
                     })
@@ -1362,7 +1358,19 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
                     })
                     .ToList();
-
+                var kontrolPembayaranAwalList = context.DbCtrlByrPbbs
+                   .Where(x => x.Tahun == tahun)
+                   .GroupBy(x => new { x.KategoriId })
+                   .Select(g => new
+                   {
+                       KategoriId = g.Key.KategoriId,
+                       Jml = g.Count(),
+                       JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                       JmlNTs = g.Count(x => x.StatusBayar == 2),
+                       //Ketetapan = g.Sum(x => x.Ketetapan),
+                       //Realisasi = g.Sum(x => x.Realisasi),
+                   })
+                   .AsQueryable();
                 var kontrolPembayaranList = context.DbCtrlByrPbbs
                     .Where(x => x.Tahun == tahun)
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
@@ -1371,10 +1379,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         KategoriId = g.Key.KategoriId,
                         Tahun = g.Key.Tahun,
                         Bulan = g.Key.Bulan,
-                        Jml = g.Count(),
-                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
                         JmlBayar = g.Count(x => x.StatusBayar == 1),
-                        JmlNTs = g.Count(x => x.StatusBayar == 1),
                         //Ketetapan = g.Sum(x => x.Ketetapan),
                         //Realisasi = g.Sum(x => x.Realisasi),
                     })
@@ -1386,6 +1391,109 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
                     re.JenisPajak = EnumFactory.EPajak.PBB.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranAwalList
+                        .Where(x => x.KategoriId == item.Id)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranAwalList
+                        .Where(x => x.KategoriId == item.Id)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Nts1 = kontrolPembayaranAwalList
+                        .Where(x => x.KategoriId == item.Id)
+                        .Sum(x => x.JmlNTs);
+
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //REKLAME
+            public static List<KontrolPembayaran> GetKontrolPembayaranReklameRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrReklames
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.Reklame.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
@@ -1551,7 +1659,360 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
             #endregion
 
-            
+            #region Data Detail KontrolPembayaran
+            public List<DetailPajak> GetDetailKontrolPembayaranList(EnumFactory.EPajak jenisPajak, int tahun, int bulan, int status)
+            {
+                // STATUS
+                // 0 = belumBayar
+                // 1 = sudahBayar
+                // 2 = NTs
+                // 3 all
+                var ret = new List<DetailPajak>();
+                var context = DBClass.GetContext();
+
+                switch (jenisPajak)
+                {
+                    case EnumFactory.EPajak.Semua:
+                        break;
+                    case EnumFactory.EPajak.MakananMinuman:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrRestos
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrRestos
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrPpjs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrPpjs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrHotels
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrHotels
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrParkirs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrParkirs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrHiburans
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrHiburans
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrAbts
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrAbts
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrReklames
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.NoFormulir,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrReklames
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.NoFormulir,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        // Status 0 = belum bayar All, 1 = sudah bayar Bulan, 2 = NTs All
+                        // Jika status 3, maka tampilkan semua
+                        if (status == 1)
+                        {
+                            ret = context.DbCtrlByrPbbs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else if (status == 3)
+                        {
+                            ret = context.DbCtrlByrPbbs
+                                .Where(x => x.Tahun == tahun)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrPbbs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
+                    default:
+                        break;
+                }
+
+                return ret;
+            }
+
+            #endregion
+
             public static List<KontrolPembayaran> GetDataKontolPembayaranList(string JenisPajak, int tahun)
             {
                 var allData = GetAllData();
@@ -1648,7 +2109,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 };
             }
 
-           
+
             public static List<DetailPajak> GetDataDetailPajakList(EnumFactory.EPajak jenisPajak, string kategori, int tahun, string status)
             {
                 var allData = GetAllDataDetailPajak();
@@ -1757,7 +2218,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
             public decimal Nts12 { get; set; }
             public decimal Blm12 { get; set; }
         }
-
         public class UpayaPajak
         {
             public string Kategori { get; set; } = null!;
@@ -1824,7 +2284,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
             public int Sil12 { get; set; }
             public int Kejak12 { get; set; }
         }
-
         public class Potensi
         {
             public string Kategori { get; set; } = null!;
@@ -1840,11 +2299,10 @@ namespace MonPDReborn.Models.EvaluasiTarget
             public decimal Agt { get; set; }
             public decimal Sep { get; set; }
             public decimal Okt { get; set; }
-            public decimal Nov {  get; set; }
+            public decimal Nov { get; set; }
             public decimal Des { get; set; }
             public decimal Total => Jan + Feb + Mar + Apr + Mei + Jun + Jul + Agt + Sep + Okt + Nov + Des;
         }
-
         public class DetailPajak
         {
             public string Kategori { get; set; } = null!;
