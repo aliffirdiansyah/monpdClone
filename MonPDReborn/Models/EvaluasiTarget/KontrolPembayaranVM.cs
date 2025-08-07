@@ -142,6 +142,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
         }
         public class Method
         {
+            #region Get Rekap Kontrol Pembayaran
             //HOTEL
             public static List<KontrolPembayaran> GetKontrolPembayaranHotelRekap(int tahun)
             {
@@ -1548,6 +1549,9 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 return ret;
             }
 
+            #endregion
+
+            
             public static List<KontrolPembayaran> GetDataKontolPembayaranList(string JenisPajak, int tahun)
             {
                 var allData = GetAllData();
