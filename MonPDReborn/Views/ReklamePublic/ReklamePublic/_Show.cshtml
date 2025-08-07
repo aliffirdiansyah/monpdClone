@@ -12,10 +12,27 @@
 }
 else
 {
+    <div class="d-lg-none mb-3">
+        <input type="text" id="mobileSearchInput" class="form-control" placeholder="Cari berdasarkan nama jalan, isi reklame, atau alamat...">
+    </div>
     <div id="mobileCards" class="d-lg-none mb-4">
+        @{
+            int index = 1;
+        }
         @foreach (var item in Model.Data)
         {
-            <div class="bg-white border border-secondary rounded-3 p-3 shadow-sm mb-3">
+            <div id="data_@(index)"
+                 data-index="@index"
+                 data-jalan="@item.Jalan"
+                 data-alamat="@item.Alamat"
+                 data-jenisreklame="@item.JenisReklame"
+                 data-isireklame="@item.IsiReklame"
+                 data-kategori="@item.Kategori"
+                 data-status="@item.Status"
+                 data-tglmulai="@item.tglMulai.ToString("yyyy-MM-dd")"
+                 data-tglakhir="@item.tglAkhir.ToString("yyyy-MM-dd")"
+                 data-jumlah="@item.Jumlah">
+                <div class="bg-white border border-secondary rounded-3 p-3 shadow-sm mb-3">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <h5 class="fw-semibold text-dark mb-0">@item.Jalan</h5>
                     <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">
@@ -55,6 +72,9 @@ else
                     </div>
                 </div>
             </div>
+            </div>
+
+            index++;
         }
     </div>
     <div id="mobilePaging" class="text-center mt-3 d-lg-none"></div>
@@ -110,4 +130,35 @@ else
     </div>
 }
 
+<script>
+    $(document).ready(function () {
+        $("#mobileSearchInput").on("keydown", function () {
+            // Delay sedikit agar input val sudah berubah saat keydown
+            setTimeout(function () {
+                const keyword = $("#mobileSearchInput").val().toLowerCase();
 
+                $("#mobileCards > div[id^='data_']").each(function () {
+                    const jalan = $(this).data("jalan")?.toString().toLowerCase() || "";
+                    const alamat = $(this).data("alamat")?.toString().toLowerCase() || "";
+                    const jenis = $(this).data("jenisreklame")?.toString().toLowerCase() || "";
+                    const isi = $(this).data("isireklame")?.toString().toLowerCase() || "";
+                    const kategori = $(this).data("kategori")?.toString().toLowerCase() || "";
+                    const status = $(this).data("status")?.toString().toLowerCase() || "";
+                    const tglmulai = $(this).data("tglmulai")?.toString().toLowerCase() || "";
+                    const tglakhir = $(this).data("tglakhir")?.toString().toLowerCase() || "";
+                    const jumlah = $(this).data("jumlah")?.toString().toLowerCase() || "";
+
+                    const combinedText = `${jalan} ${alamat} ${jenis} ${isi} ${kategori} ${status} ${tglmulai} ${tglakhir} ${jumlah}`;
+
+                    if (keyword === "") {
+                        $(this).show(); // tampilkan semua jika kosong
+                    } else if (combinedText.includes(keyword)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }, 10); // tunggu sebentar agar input val sudah update
+        });
+    });
+</script>
