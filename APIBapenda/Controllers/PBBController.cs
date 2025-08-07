@@ -58,5 +58,53 @@ namespace APIBapenda.Controllers
 
             return response;
         }
+
+        [HttpPost("GetPBBByKecamatan")]
+        [SwaggerOperation(Summary = "Get PBB By NOP", Description = "Ambil Data PBB by Kecamatan")]
+        [Authorize]
+        public async Task<APIResponse<List<MonPDLib.EF.DatapbbSatupetum>>> GetPBBInfoAsync(PBBVM.KecamatanReq req)
+        {
+            var response = new APIResponse<List<MonPDLib.EF.DatapbbSatupetum>> { Code = 0, Message = "Sukses" };
+
+            try
+            {
+                // Bungkus pemanggilan synchronous ke dalam Task.Run jika tidak tersedia versi async                
+                var _context = DBClass.GetContext();
+                response.Data = await Task.Run(() => _context.DatapbbSatupeta.Where(x => x.Kecamatan.Trim().ToUpper() == req.Kecamatan.Trim().ToUpper()).ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                response.Code = 500;
+                response.Message = ex.InnerException?.Message ?? ex.Message;
+            }
+
+            return response;
+        }
+
+        [HttpPost("GetPBBByKecamatanKelurahan")]
+        [SwaggerOperation(Summary = "Get PBB By NOP", Description = "Ambil Data PBB by Kecamatan Kelurahan")]
+        [Authorize]
+        public async Task<APIResponse<List<MonPDLib.EF.DatapbbSatupetum>>> GetPBBInfoAsync(PBBVM.KecamatanKelurahanReq req)
+        {
+            var response = new APIResponse<List<MonPDLib.EF.DatapbbSatupetum>> { Code = 0, Message = "Sukses" };
+
+            try
+            {
+                // Bungkus pemanggilan synchronous ke dalam Task.Run jika tidak tersedia versi async                
+                var _context = DBClass.GetContext();
+                response.Data = await Task.Run(() => 
+                    _context.DatapbbSatupeta
+                        .Where(x => x.Kecamatan.Trim().ToUpper() == req.Kecamatan.Trim().ToUpper() && x.Kelurahan.Trim().ToUpper() == req.Kelurahan.Trim().ToUpper())
+                        .ToListAsync()
+                );
+            }
+            catch (Exception ex)
+            {
+                response.Code = 500;
+                response.Message = ex.InnerException?.Message ?? ex.Message;
+            }
+
+            return response;
+        }
     }
 }
