@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [Keyless]
-public partial class DbCtrlByrPbb
+public partial class DbCtrlByrBphtb
 {
-    [Column("NOP")]
-    [StringLength(100)]
+    [Column("IDSSPD")]
+    [StringLength(50)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Idsspd { get; set; }
 
     [Column("TAHUN", TypeName = "NUMBER")]
     public decimal? Tahun { get; set; }
@@ -21,30 +21,32 @@ public partial class DbCtrlByrPbb
     public decimal? Bulan { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
-    public decimal KategoriId { get; set; }
+    public decimal? KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
-    [StringLength(100)]
+    [StringLength(200)]
     [Unicode(false)]
     public string? NamaKategori { get; set; }
 
-    [Column("WILAYAH_PAJAK", TypeName = "NUMBER")]
-    public decimal WilayahPajak { get; set; }
-
-    [Column("NAMA_WP")]
-    [StringLength(100)]
+    [Column("WILAYAH_PAJAK")]
+    [StringLength(5)]
     [Unicode(false)]
-    public string NamaWp { get; set; } = null!;
+    public string? WilayahPajak { get; set; }
+
+    [Column("NAMA_OP")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? NamaOp { get; set; }
 
     [Column("ALAMAT_OP")]
-    [StringLength(218)]
+    [StringLength(200)]
     [Unicode(false)]
     public string? AlamatOp { get; set; }
 
-    [Column("REALISASI", TypeName = "NUMBER(38)")]
+    [Column("REALISASI", TypeName = "NUMBER")]
     public decimal? Realisasi { get; set; }
 
-    [Column("KETETAPAN", TypeName = "NUMBER(38)")]
+    [Column("KETETAPAN", TypeName = "NUMBER")]
     public decimal? Ketetapan { get; set; }
 
     [Column("KETERANGAN")]
