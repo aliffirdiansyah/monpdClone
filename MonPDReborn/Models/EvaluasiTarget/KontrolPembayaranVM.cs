@@ -2827,6 +2827,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 return ret;
             }
             #endregion
+
             public static List<UpayaPajak> GetDataUpayaPajakList(string JenisPajak, int tahun)
             {
                 var allData = GetAllDataUpayaPajak();
