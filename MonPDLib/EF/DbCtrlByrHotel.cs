@@ -12,7 +12,7 @@ public partial class DbCtrlByrHotel
     [Column("NOP")]
     [StringLength(30)]
     [Unicode(false)]
-    public string? Nop { get; set; }
+    public string Nop { get; set; } = null!;
 
     [Column("TAHUN", TypeName = "NUMBER")]
     public decimal? Tahun { get; set; }
@@ -54,8 +54,6 @@ public partial class DbCtrlByrHotel
     [Unicode(false)]
     public string? Keterangan { get; set; }
 
-    [Column("STATUS_BAYAR")]
-    [StringLength(1)]
-    [Unicode(false)]
-    public string? StatusBayar { get; set; }
+    [Column("STATUS_BAYAR", TypeName = "NUMBER")]
+    public decimal? StatusBayar { get; set; }
 }

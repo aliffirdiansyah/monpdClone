@@ -583,43 +583,31 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbCtrlByrAbt>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_ABT");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrHiburan>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_HIBURAN");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrHotel>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_HOTEL");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrParkir>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_PARKIR");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrPpj>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_PPJ");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrResto>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_RESTO");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbMonAbt>(entity =>

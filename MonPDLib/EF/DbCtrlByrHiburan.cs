@@ -21,12 +21,12 @@ public partial class DbCtrlByrHiburan
     public decimal? Bulan { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
-    public decimal? KategoriId { get; set; }
+    public decimal KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
     [StringLength(150)]
     [Unicode(false)]
-    public string? NamaKategori { get; set; }
+    public string NamaKategori { get; set; } = null!;
 
     [Column("WILAYAH_PAJAK")]
     [StringLength(20)]
@@ -36,12 +36,12 @@ public partial class DbCtrlByrHiburan
     [Column("NAMA_OP")]
     [StringLength(150)]
     [Unicode(false)]
-    public string? NamaOp { get; set; }
+    public string NamaOp { get; set; } = null!;
 
     [Column("ALAMAT_OP")]
     [StringLength(250)]
     [Unicode(false)]
-    public string? AlamatOp { get; set; }
+    public string AlamatOp { get; set; } = null!;
 
     [Column("REALISASI", TypeName = "NUMBER")]
     public decimal? Realisasi { get; set; }
@@ -54,8 +54,6 @@ public partial class DbCtrlByrHiburan
     [Unicode(false)]
     public string? Keterangan { get; set; }
 
-    [Column("STATUS_BAYAR")]
-    [StringLength(1)]
-    [Unicode(false)]
-    public string? StatusBayar { get; set; }
+    [Column("STATUS_BAYAR", TypeName = "NUMBER")]
+    public decimal? StatusBayar { get; set; }
 }
