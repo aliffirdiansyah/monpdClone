@@ -88,7 +88,7 @@ else
                         {
                             columns.AddFor(m => m.Jalan).Caption("Jalan");
 
-                            columns.AddFor(m => m.Alamat).Caption("Alamat");
+                            columns.AddFor(m => m.Alamat).Caption("Alamat").CssClass("WrappedColumnClass").Width(150);
 
                             columns.AddFor(m => m.JenisReklame)
                                 .Caption("Jenis Reklame")
@@ -96,13 +96,11 @@ else
                                                     <span class="badge bg-info text-dark"><%- value %></span>
                                 </text>);
 
-                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
+                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame").CssClass("WrappedColumnClass").Width(150);
 
-                            columns.AddFor(m => m.Kategori).Caption("Kategori Reklame");
+                            columns.AddFor(m => m.Kategori).Caption("Kategori Reklame").CssClass("WrappedColumnClass").Width(150);
 
-                            columns.AddFor(m => m.tglMulai).Caption("Tanggal Mulai");
-
-                            columns.AddFor(m => m.tglAkhir).Caption("Tanggal Akhir");
+                            columns.AddFor(m => m.TanggalTayang).Caption("Tanggal Tayang").CssClass("WrappedColumnClass").Width(115);
 
                             columns.AddFor(m => m.Jumlah).Caption("Jumlah").Alignment(HorizontalAlignment.Center).CssClass("fw-bold text-primary");
                         })
