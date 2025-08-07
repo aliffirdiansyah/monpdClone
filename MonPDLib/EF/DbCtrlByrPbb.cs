@@ -21,7 +21,7 @@ public partial class DbCtrlByrPbb
     public decimal? Bulan { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
-    public decimal? KategoriId { get; set; }
+    public decimal KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
     [StringLength(100)]
