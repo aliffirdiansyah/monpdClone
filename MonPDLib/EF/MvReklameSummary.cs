@@ -220,7 +220,6 @@ public partial class MvReklameSummary
     [Column("IS_PERPANJANGAN", TypeName = "NUMBER")]
     public decimal? IsPerpanjangan { get; set; }
 
-    [Column("JUMLAH")]
-    [Precision(10)]
-    public int? Jumlah { get; set; }
+    [Column("JUMLAH", TypeName = "NUMBER")]
+    public decimal? Jumlah { get; set; }
 }
