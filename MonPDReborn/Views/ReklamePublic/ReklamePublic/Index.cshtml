@@ -1,10 +1,13 @@
 ﻿@model MonPDReborn.Models.ReklamePublic.ReklamePublicVM.Index
-
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @{
     Layout = "~/Views/Shared/_LayoutNon.cshtml";
+    var siteKey = Configuration["RecaptchaSettings:SiteKey"];
     // Layout = "~/Views/Shared/_DevExtremeLayout.cshtml";
 }
 <div class="row">
+    
     <center>
         <div class="col-lg-8 col-sm-12">
             <div class="card">
@@ -21,38 +24,29 @@
                 </div>
                 <div class="card-body">
                     <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
+                        @Html.HiddenFor(x => x.RecaptchaToken)
+
                         <div class="row gy-2">
 
                             <div class="col-lg-12">
-                                <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
+                                <label for="namaJalanSearch" class="form-label d-flex align-items-center fs-14">Nama Jalan</label>
                                 @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
                                class="form-control"> *@
                                 @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
-                                    .ID("namaJalanView")
-                                    .ValueExpr("Value")
-                                    .DisplayExpr("Text")
-                                    .DataSource(d => d.Mvc()
-                                    .Controller("ReklamePublic")
-                                    .LoadAction("GetNama").Key("filter"))
-                                    .SearchExpr("Text")
-                                    .SearchEnabled(true)
-                                    .MinSearchLength(3)
-                                    )
+                                                                .ID("namaJalanView")
+                                                                .ValueExpr("Value")
+                                                                .DisplayExpr("Text")
+                                                                .DataSource(d => d.Mvc()
+                                                                .Controller("ReklamePublic")
+                                                                .LoadAction("GetNama").Key("filter"))
+                                                                .SearchExpr("Text")
+                                                                .SearchEnabled(true)
+                                                                .MinSearchLength(3)
+                                                                )
                             </div>
 
                             <div class="col-lg-12">
-                                <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
-                                <div class="row align-items-center mb-2">
-                                    <div>
-                                        <label id="captchaLabel">
-                                            Masukkan hasil dari <span id="number1">@Model.Number1</span> + <span id="number2">@Model.Number2</span> = ?
-                                        </label>
-                                        <input id="userAnswer" name="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
-                                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()">Refresh CAPTCHA</button>
-
-                                    </div>
-                                </div>
-                                <div class="form-text">Masukkan verifikasi keamanan</div>
+                                <div class="form-control p-0 d-flex align-items-center" id="html_element" style="height: auto;"></div>
                             </div>
 
                             <div class="col-lg-12">
@@ -61,18 +55,6 @@
                                 </button>
                             </div>
                         </div>
-                        @*  <!-- Input Nama Jalan -->
-                    <div class="mb-3">
-
-                    </div>
-
-                    <!-- CAPTCHA Section -->
-                    <div class="bg-light p-3 mb-3 rounded">
-
-                    </div>
-
-                    <!-- Tombol Submit --> *@
-
                     </form>
 
                 </div>
@@ -111,10 +93,29 @@
 </div>
 
 @section Scripts {
+    <script type="text/javascript">
+        var widgetId; // simpan ID reCAPTCHA untuk digunakan nanti
+
+        var onloadCallback = function () {
+           grecaptcha.render('html_element', {
+              'sitekey': '@(siteKey)'
+           });
+        };
+
+
+        function onSubmit(event) {
+           var token = grecaptcha.getResponse();
+           document.getElementById("RecaptchaToken").value = token
+        }
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async defer>
+    </script>
     <script>
         function searchData() {
             const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
             const userAnswer = $("#userAnswer").val();
+            const recaptchaToken = grecaptcha.getResponse(widgetId); // Ambil token dari widget ID
 
             $('#loadingIndicator').removeClass('d-none');
             $('#resultsSection').removeClass('d-none');
@@ -123,33 +124,31 @@
             $.ajax({
                 url: '@Url.Action("Show", "ReklamePublic")',
                 type: 'GET',
-                data: { namaJalan, userAnswer },
+                data: { namaJalan, recaptchaToken },
                 success: function (result) {
                     $('#loadingIndicator').addClass('d-none');
 
                     if (result.Status === undefined) {
-                        // Sukses: render HTML partial
                         $('#resultsContent').html(result);
                     } else {
-                        // Gagal: tampilkan pesan error dari server
                         $('#resultsContent').html(`<p class="text-danger">⚠ ${result.Message}</p>`);
                     }
 
-                    // Scroll ke hasil
                     document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
 
-                    // Selalu refresh CAPTCHA setelah submit
-                    refreshCaptcha();
+                    // ✅ Refresh CAPTCHA setelah submit sukses
+                    grecaptcha.reset(widgetId);
                 },
                 error: function () {
                     $('#loadingIndicator').addClass('d-none');
                     $('#resultsContent').html('<p class="text-danger">⚠ Gagal memuat data. Silakan coba lagi.</p>');
 
-                    // Refresh CAPTCHA juga saat error
-                    refreshCaptcha();
+                    // ✅ Refresh CAPTCHA saat error juga
+                    grecaptcha.reset(widgetId);
                 }
             });
         }
+
 
     </script>
     <script>

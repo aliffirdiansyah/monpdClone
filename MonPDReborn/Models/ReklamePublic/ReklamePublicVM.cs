@@ -13,6 +13,8 @@ namespace MonPDReborn.Models.ReklamePublic
             public int Number1 { get; set; }
             public int Number2 { get; set; }
             public int CaptchaAnswer { get; set; }
+            public string? RecaptchaToken { get; set; }
+
             public Index()
             {
                 var random = new Random();
@@ -27,9 +29,12 @@ namespace MonPDReborn.Models.ReklamePublic
         }
         public class Show
         {
+            public string? RecaptchaToken { get; set; }
+            public string NamaJalan { get; set; }
             public List<ReklameJalan> Data { get; set; } = new List<ReklameJalan>();
             public Show(string namaJalan)
             {
+                NamaJalan = namaJalan;
                 Data = Method.GetReklameJalanList(namaJalan);
             }
         }
