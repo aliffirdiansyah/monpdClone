@@ -196,13 +196,13 @@
                             <div class="d-flex p-3 py-0">
                                 <p class="fs-14 text-muted flex-grow-1">Perputaran Hari Kerja</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysCatering.ToString("P2")</p>
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysCatering.ToString("N0")</p>
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
                                 <p class="fs-14 text-muted flex-grow-1">Perputaran Akhir Pekan</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekendCatering.ToString("P2")</p>
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekendCatering.ToString("N0")</p>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +320,7 @@
                                         Omzet Bulanan x 10%
                                     </p>
                                     <p class="fs-14 text-muted mb-1">
-                                        @Model.OmzetPerBulanCatering.ToString("N0") x 10% = @Model.PotensiPajakPerBulanCatering.ToString("N0")
+                                        Rp. @Model.OmzetPerBulanCatering.ToString("N0") x 10% = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0")
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">
                                         Rumus Perhitungan Potensi Pajak Per Tahun :
@@ -332,7 +332,7 @@
                                         Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x 12 =
                                         @{
                                             decimal potensiTahun = (Model.PotensiPajakPerBulanCatering * 12);
-                                        } @potensiTahun.ToString("N0")
+                                        } Rp. @potensiTahun.ToString("N0")
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">
                                         Total Potensi Pajak Per Tahun : Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
@@ -493,9 +493,9 @@
                         Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 22) + (Rata-Rata Bill/Orang x Terjual Weekend x 8)
                     </p>
                     <p class="fs-14 text-muted mb-3 fw-semibold">
-                        = (@Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22) +
-                        (@Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8) =
-                        @Model.OmzetPerBulanCatering.ToString("N0")
+                        = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22) +
+                        (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8) =
+                        Rp. @Model.OmzetPerBulanCatering.ToString("N0")
                     </p>
 
                     <hr>
@@ -506,14 +506,14 @@
                         Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
                     </p>
                     <p class="fs-14 text-muted mb-2 fw-semibold">
-                        = @Model.OmzetPerBulanCatering.ToString("N0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulanCatering.ToString("N0")
+                        = Rp. @Model.OmzetPerBulanCatering.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0")
                     </p>
 
                     <p class="fs-14 text-muted font-monospace mb-1">
                         Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
                     </p>
                     <p class="fs-14 text-muted fw-semibold">
-                        = @Model.PotensiPajakPerBulanCatering.ToString("N0") x 12 = @Model.PotensiPajakPerTahunCatering.ToString("N0")
+                        = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
                     </p>
 
                 </div>

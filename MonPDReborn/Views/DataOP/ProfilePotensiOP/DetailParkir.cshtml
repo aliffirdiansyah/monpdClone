@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="flex-shrink-0 ms-3">
                                     <p class="fs-14 text-muted mb-1">Turnover</p>
-                                    <p class="fs-14 fw-semibold mb-3">@Model.TurnoverWeekdays.ToString("P2") WeekDays | @Model.TurnoverWeekend.ToString("P2") WeekEnd</p>
+                                    <p class="fs-14 fw-semibold mb-3">@Model.TurnoverWeekdays.ToString("N0") Hari Kerja | @Model.TurnoverWeekend.ToString("N0") Akhir Pekan</p>
                                 </div>
                             </div>
                         </div>
@@ -916,7 +916,7 @@
                                         Total Omzet Bulanan x Tarif Pajak
                                     </p>
                                     <p class="fs-14 text-muted mb-3 fw-semibold">
-                                        @Model.TotalOmzet.ToString("C0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulan.ToString("C0")
+                                        Rp. @Model.TotalOmzet.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")
                                     </p>
                                     <hr>
                                     <h4 class="fs-16 fw-semibold mb-2">
@@ -926,11 +926,11 @@
                                         Potensi Pajak per Bulan x 12
                                     </p>
                                     <p class="fs-14 text-muted mb-3 fw-semibold">
-                                        @Model.PotensiPajakPerBulan.ToString("C0") x 12 = @Model.PotensiPajakPerTahun.ToString("C0")
+                                        Rp. @Model.PotensiPajakPerBulan.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
                                     </p>
                                     <hr>
                                     <h4 class="fs-16 fw-semibold mb-2 text-end">
-                                        Total Potensi Pajak per Tahun: <span class="text-success">@Model.PotensiPajakPerTahun.ToString("C0")</span>
+                                        Total Potensi Pajak per Tahun: <span class="text-success">Rp. @Model.PotensiPajakPerTahun.ToString("N0")</span>
                                     </h4>
                                 </div>
                             </div>
@@ -1234,11 +1234,11 @@
                 <div class="card-body">
                     <div class="info-row">
                         <p class="label">Turnover WeekDays</p>
-                        <p class="value">@Model.TurnoverWeekdays.ToString("N2") %</p>
+                        <p class="value">@Model.TurnoverWeekdays.ToString("N0")</p>
                     </div>
                     <div class="info-row">
                         <p class="label">Turnover WeekEnd</p>
-                        <p class="value">@Model.TurnoverWeekend.ToString("N2") %</p>
+                        <p class="value">@Model.TurnoverWeekend.ToString("N0")</p>
                     </div>
                     <div class="info-row">
                         <p class="label">WeekDays per Bulan</p>
@@ -1250,7 +1250,7 @@
                     </div>
                     <div class="info-row">
                         <p class="label">Tarif Pajak</p>
-                        <p class="value">@Model.TarifPajak.ToString("N2") %</p>
+                        <p class="value">@Model.TarifPajak.ToString("P0") %</p>
                     </div>
 
                 </div>
@@ -1281,7 +1281,7 @@
                             Jumlah Terparkir Sepeda Weekend = Turnover Weekend x Kapasitas Sepeda
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Sepeda = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetSepeda.ToString("C0")
+                            Omzet Sepeda = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetSepeda.ToString("N0")
                         </p>
 
                         @* Motor *@
@@ -1292,7 +1292,7 @@
                             Jumlah Terparkir Motor Weekend = Turnover Weekend x Kapasitas Motor
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Motor = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetMotor.ToString("C0")
+                            Omzet Motor = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetMotor.ToString("N0")
                         </p>
 
                         @* Mobil *@
@@ -1303,7 +1303,7 @@
                             Jumlah Terparkir Mobil Weekend = Turnover Weekend x Kapasitas Mobil
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Mobil = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetMobil.ToString("C0")
+                            Omzet Mobil = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetMobil.ToString("N0")
                         </p>
 
                         @* Truk Mini *@
@@ -1314,7 +1314,7 @@
                             Jumlah Terparkir Truk Mini Weekend = Turnover Weekend x Kapasitas Truk Mini
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Truk Mini = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetTrukMini.ToString("C0")
+                            Omzet Truk Mini = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrukMini.ToString("N0")
                         </p>
 
                         @* Truk/Bus *@
@@ -1325,7 +1325,7 @@
                             Jumlah Terparkir Truk/Bus Weekend = Turnover Weekend x Kapasitas Truk/Bus
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Truk/Bus = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetTrukBus.ToString("C0")
+                            Omzet Truk/Bus = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrukBus.ToString("N0")
                         </p>
 
                         @* Trailer *@
@@ -1336,27 +1336,27 @@
                             Jumlah Terparkir Trailer Weekend = Turnover Weekend x Kapasitas Trailer
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Trailer = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetTrailer.ToString("C0")
+                            Omzet Trailer = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrailer.ToString("N0")
                         </p>
 
                         <hr>
 
                         <p class="fs-14 text-muted mb-1 fw-semibold">
-                            Total Omzet = @Model.TotalOmzet.ToString("C0")
+                            Total Omzet = Rp. @Model.TotalOmzet.ToString("N0")
                         </p>
 
                         <p class="fs-14 text-muted mb-1 font-monospace">
                             Potensi Pajak per Bulan = Total Omzet x Tarif Pajak
                         </p>
                         <p class="fs-14 text-muted mb-1 fw-semibold">
-                            = @Model.TotalOmzet.ToString("C0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulan.ToString("C0")
+                            = Rp. @Model.TotalOmzet.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")
                         </p>
 
                         <p class="fs-14 text-muted mb-1 font-monospace">
                             Potensi Pajak per Tahun = Pajak per Bulan x @Model.BulanSisa
                         </p>
                         <p class="fs-14 text-muted fw-semibold">
-                            = @Model.PotensiPajakPerBulan.ToString("C0") x 12 = @Model.PotensiPajakPerTahun.ToString("C0")
+                            = Rp. @Model.PotensiPajakPerBulan.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
                         </p>
                     </div>
                 </div>
