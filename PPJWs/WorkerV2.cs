@@ -116,6 +116,7 @@ namespace PPJWs
 
         private void GetOPProcess(int tahunBuku)
         {
+            var tglMulai = DateTime.Now;
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
             {
                 var sql = @"
@@ -174,7 +175,7 @@ END AS WILAYAH_PAJAK,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
-WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL 
+WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL AND A.FK_NOP IS NOT NULL  AND FK_NOP NOT LIKE '00%'    AND FK_NOP NOT LIKE '-%'
 )
 WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN) OR  TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
                     ";
@@ -277,7 +278,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\rOP LISTRIK TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
+                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} OP LISTRIK TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
@@ -293,7 +294,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     _contMonPd.DbOpListriks.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done");
+                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
                 Console.WriteLine($"");
             }
         }
@@ -301,6 +302,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
 
         private void GetRealisasi(int tahunBuku)
         {
+            var tglMulai = DateTime.Now;
             try
             {
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
@@ -312,7 +314,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
         MAX(TRANSACTION_DATE) TRANSACTION_DATE
 FROM (            
     SELECT            TO_DATE(nvl( MP_AKHIR, LAST_DAY(TO_DATE(bulan_pajak || '-' || tahun_pajak, 'MM-YYYY')) ) ) JATUH_TEMPO,  
-            REPLACE(FK_NOP,'.','') NOP,
+            REPLACE(NVL(FK_NOP,0),'.','') NOP,
             TO_NUMBER( NVL(BULAN_PAJAK,0)) MASA_PAJAK,
             TO_NUMBER(NVL(TAHUN_PAJAK,0)) TAHUN_PAJAK, 
             1 SEQ, 
@@ -512,7 +514,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\rREALISASI PPJ TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
+                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} REALISASI PPJ TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
                 if (newList.Any())
@@ -527,7 +529,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     _contMonPd.DbMonPpjs.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done");
+                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
                 Console.WriteLine($"");
 
             }
