@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [Keyless]
-public partial class DbCtrlByrHotel
+public partial class DbCtrlByrReklame
 {
-    [Column("NOP")]
-    [StringLength(30)]
+    [Column("NO_FORMULIR")]
+    [StringLength(20)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? NoFormulir { get; set; }
 
     [Column("TAHUN", TypeName = "NUMBER")]
     public decimal? Tahun { get; set; }
@@ -21,27 +21,32 @@ public partial class DbCtrlByrHotel
     public decimal? Bulan { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
-    public decimal KategoriId { get; set; }
+    public decimal? KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
-    [StringLength(150)]
+    [StringLength(10)]
     [Unicode(false)]
-    public string NamaKategori { get; set; } = null!;
+    public string? NamaKategori { get; set; }
+
+    [Column("JENIS")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? Jenis { get; set; }
 
     [Column("WILAYAH_PAJAK")]
-    [StringLength(20)]
+    [StringLength(5)]
     [Unicode(false)]
     public string? WilayahPajak { get; set; }
 
-    [Column("NAMA_OP")]
-    [StringLength(150)]
+    [Column("NAMA_WP")]
+    [StringLength(100)]
     [Unicode(false)]
-    public string NamaOp { get; set; } = null!;
+    public string? NamaWp { get; set; }
 
     [Column("ALAMAT_OP")]
-    [StringLength(250)]
+    [StringLength(181)]
     [Unicode(false)]
-    public string AlamatOp { get; set; } = null!;
+    public string? AlamatOp { get; set; }
 
     [Column("REALISASI", TypeName = "NUMBER")]
     public decimal? Realisasi { get; set; }
