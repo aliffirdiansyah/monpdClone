@@ -136,7 +136,7 @@ namespace MonPDReborn.Models.ReklamePublic
             public DateTime tglMulai { get; set; }
             public DateTime tglAkhir { get; set; }
             public string TanggalTayang => string.Concat(tglMulai.ToString("dd MMM yyyy", new CultureInfo("id-ID")), " - ", tglAkhir.ToString("dd MMM yyyy", new CultureInfo("id-ID")));
-            public int Jumlah { get; set; }
+            public decimal Jumlah { get; set; }
         }
     }
 }
