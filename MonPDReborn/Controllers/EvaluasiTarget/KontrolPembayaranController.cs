@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using MonPDReborn.Models.EvaluasiTarget;
+using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Lib.General.ResponseBase;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 
@@ -44,16 +46,56 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
-        public IActionResult Show(string jenisPajak = "Hotel", int tahun = 2025)
+        public IActionResult Show(int tahun, string jenisPajak)
         {
+            var response = new ResponseBase(); // Pastikan ResponseResult ini adalah class response standar kamu
+
             try
             {
+                EPajak enumPajak;
 
-                var model = new Models.EvaluasiTarget.KontrolPembayaranVM.Show
+                switch ((jenisPajak ?? "").ToLower())
                 {
-                    Tahun = tahun,
-                    DataKontrolPembayaranList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataKontolPembayaranList(jenisPajak, tahun)
-                };
+                    case "hotel":
+                        enumPajak = EPajak.JasaPerhotelan;
+                        break;
+                    case "restoran":
+                        enumPajak = EPajak.MakananMinuman;
+                        break;
+                    case "ppj":
+                        enumPajak = EPajak.TenagaListrik;
+                        break;
+                    case "parkir":
+                        enumPajak = EPajak.JasaParkir;
+                        break;
+                    case "hiburan":
+                        enumPajak = EPajak.JasaKesenianHiburan;
+                        break;
+                    case "abt":
+                        enumPajak = EPajak.AirTanah;
+                        break;
+                    case "pbb":
+                        enumPajak = EPajak.PBB;
+                        break;
+                    case "bphtb":
+                        enumPajak = EPajak.BPHTB;
+                        break;
+                    case "opsenpkb":
+                        enumPajak = EPajak.OpsenPkb;
+                        break;
+                    case "opsenbbnkb":
+                        enumPajak = EPajak.OpsenBbnkb;
+                        break;
+                    case "semua":
+                        enumPajak = EPajak.Semua;
+                        break;
+                    default:
+                        return BadRequest("Jenis pajak tidak dikenal: " + jenisPajak);
+                }
+
+                // Inisialisasi ViewModel
+                var model = new KontrolPembayaranVM.Show(tahun, enumPajak);
+
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_Show.cshtml", model);
             }

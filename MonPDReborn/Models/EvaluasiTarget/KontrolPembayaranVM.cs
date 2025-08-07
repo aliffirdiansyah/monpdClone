@@ -2,6 +2,7 @@
 using MonPDLib;
 using MonPDLib.General;
 using System.Globalization;
+using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
 using static MonPDReborn.Models.DataOP.ProfilePotensiOPVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Method;
@@ -19,24 +20,36 @@ namespace MonPDReborn.Models.EvaluasiTarget
             }
         }
 
+
         public class Show
         {
             public int Tahun { get; set; }
+            public EPajak Pajak { get; set; }
+            public List<KontrolPembayaran> Data { get; set; }
 
-            public List<KontrolPembayaran> DataKontrolPembayaranList { get; set; } = new();
-
-            public Show()
-            {
-                Tahun = 2025;
-                DataKontrolPembayaranList = Method.GetDataKontolPembayaranList("", Tahun);
-            }
-
-            public Show(string JenisPajak, int tahun)
+            public Show(int tahun, EPajak pajak)
             {
                 Tahun = tahun;
-                DataKontrolPembayaranList = Method.GetDataKontolPembayaranList(JenisPajak, tahun);
+                Pajak = pajak;
+                Data = AmbilData(pajak, tahun);
+            }
+
+            private List<KontrolPembayaran> AmbilData(EPajak pajak, int tahun)
+            {
+                return pajak switch
+                {
+                    EPajak.JasaPerhotelan => Method.GetKontrolPembayaranHotelRekap(tahun),
+                    EPajak.MakananMinuman => Method.GetKontrolPembayaranRestoRekap(tahun),
+                    EPajak.JasaParkir => Method.GetKontrolPembayaranParkirRekap(tahun),
+                    EPajak.JasaKesenianHiburan => Method.GetKontrolPembayaranHiburanRekap(tahun),
+                    EPajak.TenagaListrik => Method.GetKontrolPembayaranPPJRekap(tahun),
+                    EPajak.AirTanah => Method.GetKontrolPembayaranABTRekap(tahun),
+                    EPajak.PBB => Method.GetKontrolPembayaranPBBRekap(tahun),
+                    _ => new List<KontrolPembayaran>()
+                };
             }
         }
+
 
         public class ShowUpaya
         {
@@ -1552,7 +1565,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
             #endregion
 
             
-            public static List<KontrolPembayaran> GetDataKontolPembayaranList(string JenisPajak, int tahun)
+            /*public static List<KontrolPembayaran> GetDataKontolPembayaranList(string JenisPajak, int tahun)
             {
                 var allData = GetAllData();
 
@@ -1596,7 +1609,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     new KontrolPembayaran {JenisPajak = "RESTORAN",Kategori = "FAST FOOD",    Tahun = 2024, OPbuka1 = 8, Byr1 = 45, Nts1 = 3, Blm1 = 2, OPbuka2 = 49, Byr2 = 44, Nts2 = 3, Blm2 = 2, OPbuka3 = 51, Byr3 = 46, Nts3 = 3, Blm3 = 2, OPbuka4 = 50, Byr4 = 45, Nts4 = 3, Blm4 = 2, OPbuka5 = 50, Byr5 = 45, Nts5 = 3, Blm5 = 2, OPbuka6 = 50, Byr6 = 45, Nts6 = 3, Blm6 = 2, OPbuka7 = 50, Byr7 = 45, Nts7 = 3, Blm7 = 2, OPbuka8 = 50, Byr8 = 45, Nts8 = 3, Blm8 = 2, OPbuka9 = 50, Byr9 = 45, Nts9 = 3, Blm9 = 2, OPbuka10 = 50, Byr10 = 45, Nts10 = 3, Blm10 = 2, OPbuka11 = 50, Byr11 = 45, Nts11 = 3, Blm11 = 2, OPbuka12 = 50, Byr12 = 45, Nts12 = 3, Blm12 = 2 },
                     new KontrolPembayaran {JenisPajak = "RESTORAN",Kategori = "CATERING",     Tahun = 2024, OPbuka1 = 8, Byr1 = 54, Nts1 = 4, Blm1 = 2, OPbuka2 = 59, Byr2 = 53, Nts2 = 4, Blm2 = 2, OPbuka3 = 61, Byr3 = 55, Nts3 = 4, Blm3 = 2, OPbuka4 = 60, Byr4 = 54, Nts4 = 4, Blm4 = 2, OPbuka5 = 60, Byr5 = 54, Nts5 = 4, Blm5 = 2, OPbuka6 = 60, Byr6 = 54, Nts6 = 4, Blm6 = 2, OPbuka7 = 60, Byr7 = 54, Nts7 = 4, Blm7 = 2, OPbuka8 = 60, Byr8 = 54, Nts8 = 4, Blm8 = 2, OPbuka9 = 60, Byr9 = 54, Nts9 = 4, Blm9 = 2, OPbuka10 = 60, Byr10 = 54, Nts10 = 4, Blm10 = 2, OPbuka11 = 60, Byr11 = 54, Nts11 = 4, Blm11 = 2, OPbuka12 = 60, Byr12 = 54, Nts12 = 4, Blm12 = 2 },
                 };
-            }
+            }*/
 
             public static List<UpayaPajak> GetDataUpayaPajakList(string JenisPajak, int tahun)
             {
