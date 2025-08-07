@@ -5,112 +5,112 @@
     // Layout = "~/Views/Shared/_DevExtremeLayout.cshtml";
 }
 <div class="row">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header d-flex bg-primary align-items-center">
-                <div class="flex-grow-1">
-                    <h2 class="h5 mb-1 d-flex align-items-center text-white">
-                        <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        Pencarian Data
-                    </h2>
-                </div>
-            </div>
-            <div class="card-body">
-                <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
-                    <div class="row gy-2">
-
-                        <div class="col-lg-12">
-                            <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
-                            @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
-                               class="form-control"> *@
-                            @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
-                                                        .ID("namaJalanView")
-                                                        .ValueExpr("Value")
-                                                        .DisplayExpr("Text")
-                                                        .DataSource(d => d.Mvc()
-                                                        .Controller("ReklamePublic")
-                                                        .LoadAction("GetNama").Key("filter"))
-                                                        .SearchExpr("Text")
-                                                        .SearchEnabled(true)
-                                                        .MinSearchLength(3)
-                                                        )
-                        </div>
-
-                        <div class="col-lg-12">
-                            <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
-                            <div class="row align-items-center mb-2">
-                                <div>
-                                    <label id="captchaLabel">
-                                        Masukkan hasil dari <span id="number1">@Model.Number1</span> + <span id="number2">@Model.Number2</span> = ?
-                                    </label>
-                                    <input id="userAnswer" name="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()">Refresh CAPTCHA</button>
-
-                                </div>
-                            </div>
-                            <div class="form-text">Masukkan verifikasi keamanan</div>
-                        </div>
-
-                        <div class="col-lg-12">
-                            <button type="submit" class="btn btn-primary w-100 py-2">
-                                🔍 Cari Data Reklame
-                            </button>
-                        </div>
+    <center>
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header d-flex bg-primary align-items-center">
+                    <div class="flex-grow-1">
+                        <h2 class="h5 mb-1 d-flex align-items-center text-white">
+                            <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Pencarian Data
+                        </h2>
                     </div>
-                   @*  <!-- Input Nama Jalan -->
+                </div>
+                <div class="card-body">
+                    <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
+                        <div class="row gy-2">
+
+                            <div class="col-lg-12">
+                                <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
+                                @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
+                               class="form-control"> *@
+                                @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
+                                    .ID("namaJalanView")
+                                    .ValueExpr("Value")
+                                    .DisplayExpr("Text")
+                                    .DataSource(d => d.Mvc()
+                                    .Controller("ReklamePublic")
+                                    .LoadAction("GetNama").Key("filter"))
+                                    .SearchExpr("Text")
+                                    .SearchEnabled(true)
+                                    .MinSearchLength(3)
+                                    )
+                            </div>
+
+                            <div class="col-lg-12">
+                                <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
+                                <div class="row align-items-center mb-2">
+                                    <div>
+                                        <label id="captchaLabel">
+                                            Masukkan hasil dari <span id="number1">@Model.Number1</span> + <span id="number2">@Model.Number2</span> = ?
+                                        </label>
+                                        <input id="userAnswer" name="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()">Refresh CAPTCHA</button>
+
+                                    </div>
+                                </div>
+                                <div class="form-text">Masukkan verifikasi keamanan</div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    🔍 Cari Data Reklame
+                                </button>
+                            </div>
+                        </div>
+                        @*  <!-- Input Nama Jalan -->
                     <div class="mb-3">
-                        
+
                     </div>
 
                     <!-- CAPTCHA Section -->
                     <div class="bg-light p-3 mb-3 rounded">
-                        
+
                     </div>
 
                     <!-- Tombol Submit --> *@
-                    
-                </form>
 
-            </div>
-        </div>
-        
-    </div>
-    <div id="resultsSection" class="d-none">
-        <div class="container my-4">
-            <div class="card shadow-sm">
-                <!-- Header Card -->
-                <div class="card-header bg-primary d-flex align-items-center">
-                    <h2 class="h5 fw-semibold text-white mb-0">
-                        Hasil Pencarian Data Reklame
-                    </h2>
+                    </form>
+
                 </div>
+            </div>
 
-                <!-- Body Card -->
-                <div class="card-body">
-                    <!-- Loading Indicator -->
-                    <div id="loadingIndicator" class="text-center py-3 d-none">
-                        <div class="spinner-border text-primary mb-2" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="text-muted small mb-0">Memuat data, mohon tunggu...</p>
+        </div>
+        <div class="col-lg-10">
+            <div id="resultsSection" class="d-none">
+
+                <div class="card shadow-sm">
+                    <!-- Header Card -->
+                    <div class="card-header bg-primary d-flex align-items-center">
+                        <h2 class="h5 fw-semibold text-white mb-0">
+                            Hasil Pencarian Data Reklame
+                        </h2>
                     </div>
 
-                    <!-- Hasil AJAX akan dimuat di sini -->
-                    <div id="resultsContent"></div>
+                    <!-- Body Card -->
+                    <div class="card-body">
+                        <!-- Loading Indicator -->
+                        <div id="loadingIndicator" class="text-center py-3 d-none">
+                            <div class="spinner-border text-primary mb-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-muted small mb-0">Memuat data, mohon tunggu...</p>
+                        </div>
+
+                        <!-- Hasil AJAX akan dimuat di sini -->
+                        <div id="resultsContent"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-lg-3"></div>
+    </center>
 
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         function searchData() {
             const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
@@ -199,5 +199,5 @@
 
 
 }
-    
+
 
