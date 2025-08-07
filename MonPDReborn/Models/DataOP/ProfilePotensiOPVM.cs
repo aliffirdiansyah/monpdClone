@@ -39,7 +39,7 @@ namespace MonPDReborn.Models.DataOP
                 Data.Potensi = DataRekapPotensi.Sum(r => r.TotalPotensi);
 
                 // Realisasi total = total dari Realisasi1 + Realisasi2 + Realisasi3
-                Data.RealisasiTotal = DataRekapPotensi.Sum(r => r.Realisasi1 + r.Realisasi2 + r.Realisasi3);
+                Data.RealisasiTotal = DataRekapPotensi.Sum(q => q.Realisasi3);
 
                 // Capaian dalam persen: (RealisasiTotal / Potensi) * 100
                 Data.Capaian = Data.Potensi == 0 ? 0 :
@@ -135,95 +135,95 @@ namespace MonPDReborn.Models.DataOP
                 #region LIST OP BUKA
                 var dataResto1 = context.DbOpRestos
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataPpj1 = context.DbOpListriks
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataHotel1 = context.DbOpHotels
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataParkir1 = context.DbOpParkirs
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataHiburan1 = context.DbOpHiburans
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataAbt1 = context.DbOpAbts
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
 
                 var dataResto2 = context.DbOpRestos
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataPpj2 = context.DbOpListriks
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataHotel2 = context.DbOpHotels
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataParkir2 = context.DbOpParkirs
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataHiburan2 = context.DbOpHiburans
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataAbt2 = context.DbOpAbts
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
 
                 var dataResto3 = context.DbOpRestos
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataPpj3 = context.DbOpListriks
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataHotel3 = context.DbOpHotels
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataParkir3 = context.DbOpParkirs
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataHiburan3 = context.DbOpHiburans
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
-                    .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
+                    .GroupBy(x => new { x.Nop })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 var dataAbt3 = context.DbOpAbts
                     .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .Select(x => new { x.Key.Nop })
                     .ToList();
                 #endregion
 
@@ -313,7 +313,6 @@ namespace MonPDReborn.Models.DataOP
                         {
                             NOP = x.Nop,
                             Kategori = "-",
-                            TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             JumlahKursi = x.KapKursi ?? 0,
                             KapasitasTenantCatering = x.KapTenantCatering ?? 0,
                             RataRataBillPerOrang = x.AvgBillOrg ?? 0,
@@ -343,7 +342,6 @@ namespace MonPDReborn.Models.DataOP
                         {
                             NOP = x.Nop,
                             Kategori = "-",
-                            TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             JumlahTotalRoom = x.TotalRoom ?? 0,
                             HargaRataRataRoom = x.AvgRoomPrice ?? 0,
                             OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
@@ -368,7 +366,6 @@ namespace MonPDReborn.Models.DataOP
                             Kategori = "-",
                             Memungut = ((EnumFactory.EPungutTarifParkir)(x.JenisTarif ?? 0)).GetDescription(),
                             SistemParkir = ((EnumFactory.EPalangParkir)(x.SistemParkir ?? 0)).GetDescription(),
-                            TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             TurnoverWeekdays = x.ToWd ?? 0,
                             TurnoverWeekend = x.ToWe ?? 0,
                             KapasitasSepeda = x.KapSepeda ?? 0,
@@ -400,7 +397,6 @@ namespace MonPDReborn.Models.DataOP
                         {
                             NOP = x.Nop,
                             Kategori = "-",
-                            TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             KapasitasStudio = x.KapKursiStudio ?? 0,
                             JumlahStudio = x.JumlahStudio ?? 0,
                             Kapasitas = x.KapPengunjung ?? 0,
