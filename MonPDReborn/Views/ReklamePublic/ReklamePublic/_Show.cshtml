@@ -93,7 +93,7 @@ else
                             columns.AddFor(m => m.JenisReklame)
                                 .Caption("Jenis Reklame")
                                 .CellTemplate(@<text>
-                                                    <span class="badge bg-info text-dark"><%- value %></span>
+                                        <span class="badge bg-primary text-white"><%- value %></span>
                                 </text>);
 
                             columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame").CssClass("WrappedColumnClass").Width(150);

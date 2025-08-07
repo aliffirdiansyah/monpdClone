@@ -13,6 +13,8 @@ namespace MonPDReborn.Models.ReklamePublic
             public int Number1 { get; set; }
             public int Number2 { get; set; }
             public int CaptchaAnswer { get; set; }
+            public string? RecaptchaToken { get; set; }
+
             public Index()
             {
                 var random = new Random();
@@ -27,9 +29,12 @@ namespace MonPDReborn.Models.ReklamePublic
         }
         public class Show
         {
+            public string? RecaptchaToken { get; set; }
+            public string NamaJalan { get; set; }
             public List<ReklameJalan> Data { get; set; } = new List<ReklameJalan>();
             public Show(string namaJalan)
             {
+                NamaJalan = namaJalan;
                 Data = Method.GetReklameJalanList(namaJalan);
             }
         }
@@ -131,7 +136,7 @@ namespace MonPDReborn.Models.ReklamePublic
             public DateTime tglMulai { get; set; }
             public DateTime tglAkhir { get; set; }
             public string TanggalTayang => string.Concat(tglMulai.ToString("dd MMM yyyy", new CultureInfo("id-ID")), " - ", tglAkhir.ToString("dd MMM yyyy", new CultureInfo("id-ID")));
-            public int Jumlah { get; set; }
+            public decimal Jumlah { get; set; }
         }
     }
 }
