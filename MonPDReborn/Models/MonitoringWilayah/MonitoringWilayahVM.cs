@@ -88,7 +88,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                 if(wilayah == EnumFactory.EUPTB.SEMUA && jenisPajak == EnumFactory.EPajak.Semua)
                 {
-                    RealisasiJenisList = Method.GetDataRealisasiJenisList(wilayah, tahun, bulan, jenisPajak);
+                    RealisasiJenisList = Method.GetDataRealisasiJenisList(tahun, bulan);
                 }
 
                 TotalTarget = RealisasiWilayahList.Sum(x => x.Target);
@@ -184,8 +184,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasi = context.DbMonRestos
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -252,8 +251,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasi = context.DbMonPpjs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -320,8 +318,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasi = context.DbMonHotels
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -388,8 +385,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasi = context.DbMonParkirs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -456,8 +452,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasi = context.DbMonHiburans
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -524,8 +519,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasi = context.DbMonAbts
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -559,8 +553,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     .Sum(x => x.Target);
                                 var totalRealisasi = context.DbMonPbbs
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayar.HasValue
+                                            x.TglBayar.HasValue
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
                                             && x.Uptb == Convert.ToInt32(uptb)
@@ -581,7 +574,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
                             var dataPbbWilayah = context.DbMonPbbs
-                                 .Where(x => x.TahunBuku == tahun && Convert.ToInt32(x.Uptb) == (int)wilayah)
+                                 .Where(x => x.TglBayar.Value.Year == tahun && Convert.ToInt32(x.Uptb) == (int)wilayah)
                                  .Select(x => new
                                  {
                                      x.Nop,
@@ -607,7 +600,6 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var dataRealisasiWilayah = context.DbMonPbbs
                                 .Where(x =>
-                                    x.TahunBuku == tahun &&
                                     x.TglBayar.HasValue &&
                                     x.TglBayar.Value.Year == tahun &&
                                     x.TglBayar.Value.Month <= bulan &&
@@ -686,8 +678,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiAbt = context.DbMonAbts
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListAbt.Contains(x.Nop)
@@ -695,8 +686,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiResto = context.DbMonRestos
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListResto.Contains(x.Nop)
@@ -704,8 +694,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiHotel = context.DbMonHotels
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListHotel.Contains(x.Nop)
@@ -713,8 +702,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiListrik = context.DbMonPpjs
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListListrik.Contains(x.Nop)
@@ -722,8 +710,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiParkir = context.DbMonParkirs
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListParkir.Contains(x.Nop)
@@ -731,8 +718,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiHiburan = context.DbMonHiburans
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListHiburan.Contains(x.Nop)
@@ -740,8 +726,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiPbb = context.DbMonPbbs
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayar.HasValue
+                                            x.TglBayar.HasValue
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
                                             && x.Uptb == Convert.ToInt32(uptb)
@@ -898,8 +883,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiAbt = context.DbMonAbts
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListAbt.Contains(x.Nop)
@@ -907,8 +891,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiResto = context.DbMonRestos
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListResto.Contains(x.Nop)
@@ -916,8 +899,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiHotel = context.DbMonHotels
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListHotel.Contains(x.Nop)
@@ -925,8 +907,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiListrik = context.DbMonPpjs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListListrik.Contains(x.Nop)
@@ -934,8 +915,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiParkir = context.DbMonParkirs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListParkir.Contains(x.Nop)
@@ -943,8 +923,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiHiburan = context.DbMonHiburans
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListHiburan.Contains(x.Nop)
@@ -952,8 +931,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiPbb = context.DbMonPbbs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayar.HasValue
+                                        x.TglBayar.HasValue
                                         && x.TglBayar.Value.Year == tahun
                                         && x.TglBayar.Value.Month <= bulan
                                         && x.Uptb == Convert.ToInt32(wilayah)
@@ -1088,7 +1066,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                 return ret;
             }
-            public static List<RealisasiJenis> GetDataRealisasiJenisList(EnumFactory.EUPTB wilayah, int tahun, int bulan, EnumFactory.EPajak jenisPajak)
+            public static List<RealisasiJenis> GetDataRealisasiJenisList(int tahun, int bulan)
             {
                 var result = new List<RealisasiJenis>();
 
@@ -1131,56 +1109,49 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                 var realisasiPajakAbt = context.DbMonAbts
                         .Where(x =>
-                            x.TahunBuku == tahun
-                            && x.TglBayarPokok.HasValue
+                            x.TglBayarPokok.HasValue
                             && x.TglBayarPokok.Value.Year == tahun
                             && x.TglBayarPokok.Value.Month <= bulan
                         ).Sum(q => q.NominalPokokBayar) ?? 0;
 
                 var realisasiPajakResto = context.DbMonRestos
                         .Where(x =>
-                            x.TahunBuku == tahun
-                            && x.TglBayarPokok.HasValue
+                            x.TglBayarPokok.HasValue
                             && x.TglBayarPokok.Value.Year == tahun
                             && x.TglBayarPokok.Value.Month <= bulan
                         ).Sum(q => q.NominalPokokBayar) ?? 0;
 
                 var realisasiPajakHotel = context.DbMonHotels
                         .Where(x =>
-                            x.TahunBuku == tahun
-                            && x.TglBayarPokok.HasValue
+                            x.TglBayarPokok.HasValue
                             && x.TglBayarPokok.Value.Year == tahun
                             && x.TglBayarPokok.Value.Month <= bulan
                         ).Sum(q => q.NominalPokokBayar) ?? 0;
 
                 var realisasiPajakPpj = context.DbMonPpjs
                         .Where(x =>
-                            x.TahunBuku == tahun
-                            && x.TglBayarPokok.HasValue
+                            x.TglBayarPokok.HasValue
                             && x.TglBayarPokok.Value.Year == tahun
                             && x.TglBayarPokok.Value.Month <= bulan
                         ).Sum(q => q.NominalPokokBayar) ?? 0;
 
                 var realisasiPajakParkir = context.DbMonParkirs
                         .Where(x =>
-                            x.TahunBuku == tahun
-                            && x.TglBayarPokok.HasValue
+                            x.TglBayarPokok.HasValue
                             && x.TglBayarPokok.Value.Year == tahun
                             && x.TglBayarPokok.Value.Month <= bulan
                         ).Sum(q => q.NominalPokokBayar) ?? 0;
 
                 var realisasiPajakHiburan = context.DbMonHiburans
                         .Where(x =>
-                            x.TahunBuku == tahun
-                            && x.TglBayarPokok.HasValue
+                            x.TglBayarPokok.HasValue
                             && x.TglBayarPokok.Value.Year == tahun
                             && x.TglBayarPokok.Value.Month <= bulan
                         ).Sum(q => q.NominalPokokBayar) ?? 0;
 
                 var realisasiPajakPbb = context.DbMonPbbs
                         .Where(x =>
-                            x.TahunBuku == tahun
-                            && x.TglBayar.HasValue
+                            x.TglBayar.HasValue
                             && x.TglBayar.Value.Year == tahun
                             && x.TglBayar.Value.Month <= bulan
                         ).Sum(q => q.JumlahBayarPokok) ?? 0;
@@ -1327,8 +1298,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var dataRealisasiWilayahResto = context.DbMonRestos
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -1386,8 +1356,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var dataRealisasiWilayahResto = context.DbMonRestos
                                 .Where(x =>
-                                    x.TahunBuku == tahun
-                                    && x.TglBayarPokok.HasValue
+                                     x.TglBayarPokok.HasValue
                                     && x.TglBayarPokok.Value.Year == tahun
                                     && x.TglBayarPokok.Value.Month <= bulan
                                     && nopList.Contains(x.Nop)
@@ -1449,8 +1418,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var dataRealisasiWilayahListrik = context.DbMonPpjs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -1508,8 +1476,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var dataRealisasiWilayahListrik = context.DbMonPpjs
                                 .Where(x =>
-                                    x.TahunBuku == tahun
-                                    && x.TglBayarPokok.HasValue
+                                     x.TglBayarPokok.HasValue
                                     && x.TglBayarPokok.Value.Year == tahun
                                     && x.TglBayarPokok.Value.Month <= bulan
                                     && nopList.Contains(x.Nop)
@@ -1571,8 +1538,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var dataRealisasiWilayahHotel = context.DbMonHotels
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -1630,8 +1596,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var dataRealisasiWilayahHotel = context.DbMonHotels
                                 .Where(x =>
-                                    x.TahunBuku == tahun
-                                    && x.TglBayarPokok.HasValue
+                                     x.TglBayarPokok.HasValue
                                     && x.TglBayarPokok.Value.Year == tahun
                                     && x.TglBayarPokok.Value.Month <= bulan
                                     && nopList.Contains(x.Nop)
@@ -1693,8 +1658,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var dataRealisasiWilayahParkir = context.DbMonParkirs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -1752,8 +1716,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var dataRealisasiWilayahParkir = context.DbMonParkirs
                                 .Where(x =>
-                                    x.TahunBuku == tahun
-                                    && x.TglBayarPokok.HasValue
+                                     x.TglBayarPokok.HasValue
                                     && x.TglBayarPokok.Value.Year == tahun
                                     && x.TglBayarPokok.Value.Month <= bulan
                                     && nopList.Contains(x.Nop)
@@ -1816,8 +1779,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var dataRealisasiWilayahHiburan = context.DbMonHiburans
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopList.Contains(x.Nop)
@@ -1875,8 +1837,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var dataRealisasiWilayahHiburan = context.DbMonHiburans
                                 .Where(x =>
-                                    x.TahunBuku == tahun
-                                    && x.TglBayarPokok.HasValue
+                                     x.TglBayarPokok.HasValue
                                     && x.TglBayarPokok.Value.Year == tahun
                                     && x.TglBayarPokok.Value.Month <= bulan
                                     && nopList.Contains(x.Nop)
@@ -2209,8 +2170,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiAbt = context.DbMonAbts
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListAbt.Contains(x.Nop)
@@ -2225,8 +2185,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiResto = context.DbMonRestos
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListResto.Contains(x.Nop)
@@ -2241,8 +2200,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiHotel = context.DbMonHotels
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListHotel.Contains(x.Nop)
@@ -2257,8 +2215,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiListrik = context.DbMonPpjs
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListListrik.Contains(x.Nop)
@@ -2273,8 +2230,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiParkir = context.DbMonParkirs
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListParkir.Contains(x.Nop)
@@ -2289,8 +2245,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiHiburan = context.DbMonHiburans
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayarPokok.HasValue
+                                            x.TglBayarPokok.HasValue
                                             && x.TglBayarPokok.Value.Year == tahun
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListHiburan.Contains(x.Nop)
@@ -2305,8 +2260,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                                 var totalRealisasiPbb = context.DbMonPbbs
                                         .Where(x =>
-                                            x.TahunBuku == tahun
-                                            && x.TglBayar.HasValue
+                                            x.TglBayar.HasValue
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
                                             && x.Uptb == Convert.ToInt32(uptb)
@@ -2464,8 +2418,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiAbt = context.DbMonAbts
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListAbt.Contains(x.Nop)
@@ -2480,8 +2433,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiResto = context.DbMonRestos
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListResto.Contains(x.Nop)
@@ -2496,8 +2448,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiHotel = context.DbMonHotels
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListHotel.Contains(x.Nop)
@@ -2512,8 +2463,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiListrik = context.DbMonPpjs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListListrik.Contains(x.Nop)
@@ -2528,8 +2478,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiParkir = context.DbMonParkirs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListParkir.Contains(x.Nop)
@@ -2544,8 +2493,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiHiburan = context.DbMonHiburans
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayarPokok.HasValue
+                                        x.TglBayarPokok.HasValue
                                         && x.TglBayarPokok.Value.Year == tahun
                                         && x.TglBayarPokok.Value.Month <= bulan
                                         && nopListHiburan.Contains(x.Nop)
@@ -2560,8 +2508,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             var totalRealisasiPbb = context.DbMonPbbs
                                     .Where(x =>
-                                        x.TahunBuku == tahun
-                                        && x.TglBayar.HasValue
+                                        x.TglBayar.HasValue
                                         && x.TglBayar.Value.Year == tahun
                                         && x.TglBayar.Value.Month <= bulan
                                         && x.Uptb == Convert.ToInt32(wilayah)
@@ -3268,7 +3215,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
@@ -3276,7 +3223,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
@@ -3284,7 +3231,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.JasaParkir:
@@ -3292,7 +3239,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
@@ -3300,7 +3247,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.AirTanah:
@@ -3308,7 +3255,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.Reklame:
@@ -3316,7 +3263,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         break;
                     case EnumFactory.EPajak.PBB:
@@ -3324,7 +3271,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayar.HasValue &&
-                                    x.TglBayar.Value == DateTime.Now
+                                    x.TglBayar.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.JumlahBayarPokok) ?? 0;
                         break;
                     case EnumFactory.EPajak.BPHTB:
@@ -3332,21 +3279,21 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.Tahun == tahun &&
                                     x.TglBayar.HasValue &&
-                                    x.TglBayar.Value == DateTime.Now
+                                    x.TglBayar.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.Pokok) ?? 0;
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
                         result = context.DbMonOpsenPkbs
                                 .Where(x =>
                                     x.TahunPajakSspd == tahun &&
-                                    x.TglSspd == DateTime.Now
+                                    x.TglSspd.Date == DateTime.Now.Date
                                 ).Sum(q => q.JmlPokok);
                         break;
                     case EnumFactory.EPajak.OpsenBbnkb:
                         result = context.DbMonOpsenBbnkbs
                                 .Where(x =>
                                     x.TahunPajakSspd == tahun &&
-                                    x.TglSspd == DateTime.Now
+                                    x.TglSspd.Date == DateTime.Now.Date
                                 ).Sum(q => q.JmlPokok);
                         break;
                     default:
@@ -3354,65 +3301,65 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonPpjs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonHotels
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonParkirs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonHiburans
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonAbts
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonReklames
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value == DateTime.Now
+                                    x.TglBayarPokok.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.NominalPokokBayar) ?? 0;
                         result += context.DbMonPbbs
                                 .Where(x =>
                                     x.TahunBuku == tahun &&
                                     x.TglBayar.HasValue &&
-                                    x.TglBayar.Value == DateTime.Now
+                                    x.TglBayar.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.JumlahBayarPokok) ?? 0;
                         result += context.DbMonBphtbs
                                 .Where(x =>
                                     x.Tahun == tahun &&
                                     x.TglBayar.HasValue &&
-                                    x.TglBayar.Value == DateTime.Now
+                                    x.TglBayar.Value.Date == DateTime.Now.Date
                                 ).Sum(q => q.Pokok) ?? 0;
                         result += context.DbMonOpsenPkbs
                                 .Where(x =>
                                     x.TahunPajakSspd == tahun &&
-                                    x.TglSspd == DateTime.Now
+                                    x.TglSspd.Date == DateTime.Now.Date
                                 ).Sum(q => q.JmlPokok);
                         result += context.DbMonOpsenBbnkbs
                                 .Where(x =>
                                     x.TahunPajakSspd == tahun &&
-                                    x.TglSspd == DateTime.Now
+                                    x.TglSspd.Date == DateTime.Now.Date
                                 ).Sum(q => q.JmlPokok);
 
                         break;
