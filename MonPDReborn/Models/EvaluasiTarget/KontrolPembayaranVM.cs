@@ -1,4 +1,10 @@
-﻿using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
+﻿using DocumentFormat.OpenXml.InkML;
+using MonPDLib;
+using MonPDLib.EF;
+using MonPDLib.General;
+using System.Globalization;
+using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
+using static MonPDReborn.Models.DataOP.ProfilePotensiOPVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Method;
 
 namespace MonPDReborn.Models.EvaluasiTarget
@@ -84,12 +90,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
             public ShowDetailPajak()
             {
                 Tahun = 2025;
-                DataDetailList = Method.GetDataDetailPajakList("", "", Tahun, "");
+                //DataDetailList = Method.GetDataDetailPajakList("", "", Tahun, "");
             }
 
-            public ShowDetailPajak(string jenisPajak, string kategori, int tahun, string status)
+            public ShowDetailPajak(EnumFactory.EPajak jenisPajak, string kategori, int tahun, string status)
             {
-                JenisPajak = jenisPajak;
+                JenisPajak = jenisPajak.GetDescription();
                 Kategori = kategori;
                 Tahun = tahun;
                 Status = status;
@@ -137,6 +143,1876 @@ namespace MonPDReborn.Models.EvaluasiTarget
         }
         public class Method
         {
+            #region Get Rekap Kontrol Pembayaran
+            //HOTEL
+            public static List<KontrolPembayaran> GetKontrolPembayaranHotelRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrHotels
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //RESTO
+            public static List<KontrolPembayaran> GetKontrolPembayaranRestoRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrRestos
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar.Value == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar.Value == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar.Value == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //PARKIR
+            public static List<KontrolPembayaran> GetKontrolPembayaranParkirRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrParkirs
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //HIBURAN
+            public static List<KontrolPembayaran> GetKontrolPembayaranHiburanRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrHotels
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //PPJ
+            public static List<KontrolPembayaran> GetKontrolPembayaranPPJRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrPpjs
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //ABT
+            public static List<KontrolPembayaran> GetKontrolPembayaranABTRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrAbts
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //PBB
+            public static List<KontrolPembayaran> GetKontrolPembayaranPBBRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+                var kontrolPembayaranAwalList = context.DbCtrlByrPbbs
+                   .Where(x => x.Tahun == tahun)
+                   .GroupBy(x => new { x.KategoriId })
+                   .Select(g => new
+                   {
+                       KategoriId = g.Key.KategoriId,
+                       Jml = g.Count(),
+                       JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                       JmlNTs = g.Count(x => x.StatusBayar == 2),
+                       //Ketetapan = g.Sum(x => x.Ketetapan),
+                       //Realisasi = g.Sum(x => x.Realisasi),
+                   })
+                   .AsQueryable();
+                var kontrolPembayaranList = context.DbCtrlByrPbbs
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.PBB.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranAwalList
+                        .Where(x => x.KategoriId == item.Id)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranAwalList
+                        .Where(x => x.KategoriId == item.Id)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Nts1 = kontrolPembayaranAwalList
+                        .Where(x => x.KategoriId == item.Id)
+                        .Sum(x => x.JmlNTs);
+
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+            //REKLAME
+            public static List<KontrolPembayaran> GetKontrolPembayaranReklameRekap(int tahun)
+            {
+                var ret = new List<KontrolPembayaran>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var kontrolPembayaranList = context.DbCtrlByrReklames
+                    .Where(x => x.Tahun == tahun)
+                    .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.KategoriId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        Jml = g.Count(),
+                        JmlBlmBayar = g.Count(x => x.StatusBayar == 0),
+                        JmlBayar = g.Count(x => x.StatusBayar == 1),
+                        JmlNTs = g.Count(x => x.StatusBayar == 2),
+                        //Ketetapan = g.Sum(x => x.Ketetapan),
+                        //Realisasi = g.Sum(x => x.Realisasi),
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new KontrolPembayaran();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.JenisPajak = EnumFactory.EPajak.Reklame.GetDescription();
+
+                    re.OPbuka1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.Jml);
+                    re.Blm1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts1 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.Jml);
+                    re.Blm2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts2 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.Jml);
+                    re.Blm3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts3 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.Jml);
+                    re.Blm4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts4 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.Jml);
+                    re.Blm5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka5 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.Jml);
+                    re.Blm6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts6 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.Jml);
+                    re.Blm7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts7 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.Jml);
+                    re.Blm8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts8 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.Jml);
+                    re.Blm9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts9 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.Jml);
+                    re.Blm10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts10 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.Jml);
+                    re.Blm11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts11 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.JmlNTs);
+
+                    re.OPbuka12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.Jml);
+                    re.Blm12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBlmBayar);
+                    re.Byr12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlBayar);
+                    re.Nts12 = kontrolPembayaranList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.JmlNTs);
+
+                    ret.Add(re);
+                }
+
+                return ret;
+            }
+
+            #endregion
+
+            #region Data Detail KontrolPembayaran
+            public List<DetailPajak> GetDetailKontrolPembayaranList(EnumFactory.EPajak jenisPajak, int tahun, int bulan, int status)
+            {
+                // STATUS
+                // 0 = belumBayar
+                // 1 = sudahBayar
+                // 2 = NTs
+                // 3 all
+                var ret = new List<DetailPajak>();
+                var context = DBClass.GetContext();
+
+                switch (jenisPajak)
+                {
+                    case EnumFactory.EPajak.Semua:
+                        break;
+                    case EnumFactory.EPajak.MakananMinuman:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrRestos
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrRestos
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrPpjs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrPpjs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrHotels
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrHotels
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrParkirs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrParkirs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrHiburans
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrHiburans
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrAbts
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrAbts
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaOp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.Reklame:
+                        if (status == 3)
+                        {
+                            ret = context.DbCtrlByrReklames
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.NoFormulir,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrReklames
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.NoFormulir,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.PBB:
+                        // Status 0 = belum bayar All, 1 = sudah bayar Bulan, 2 = NTs All
+                        // Jika status 3, maka tampilkan semua
+                        if (status == 1)
+                        {
+                            ret = context.DbCtrlByrPbbs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else if (status == 3)
+                        {
+                            ret = context.DbCtrlByrPbbs
+                                .Where(x => x.Tahun == tahun)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            ret = context.DbCtrlByrPbbs
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Select(x => new DetailPajak
+                                {
+                                    Kategori = x.NamaKategori,
+                                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                    NOP = x.Nop,
+                                    Tahun = tahun,
+                                    NamaOP = x.NamaWp,
+                                    Alamat = x.AlamatOp,
+                                    Realisasi = x.Realisasi ?? 0,
+                                    Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
+                                    Keterangan = x.Keterangan ?? "-",
+                                })
+                                .ToList();
+                        }
+                        break;
+                    case EnumFactory.EPajak.BPHTB:
+                        break;
+                    case EnumFactory.EPajak.OpsenPkb:
+                        break;
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        break;
+                    default:
+                        break;
+                }
+
+                return ret;
+            }
+
+            #endregion
+
             public static List<KontrolPembayaran> GetDataKontolPembayaranList(string JenisPajak, int tahun)
             {
                 var allData = GetAllData();
@@ -233,32 +2109,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 };
             }
 
-            //public static List<DetailPajak> GetDataDetailPajakList(string jenisPajak, string kategori, int tahun, string status)
-            //{
-            //    var allData = GetAllDataDetailPajak();
 
-            //    var filtered = allData
-            //   .Where(d =>
-            //       (string.IsNullOrWhiteSpace(jenisPajak) || d.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase)) &&
-            //       (string.IsNullOrWhiteSpace(kategori) || d.Kategori.Equals(kategori, StringComparison.OrdinalIgnoreCase)) &&
-            //       d.Tahun == tahun
-            //   );
-
-            //    if (!string.IsNullOrWhiteSpace(status))
-            //    {
-            //        filtered = filtered.Where(d =>
-            //            d.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
-            //    }
-
-            //    return filtered.ToList();
-            //}
-
-            public static List<DetailPajak> GetDataDetailPajakList(string jenisPajak, string kategori, int tahun, string status)
+            public static List<DetailPajak> GetDataDetailPajakList(EnumFactory.EPajak jenisPajak, string kategori, int tahun, string status)
             {
                 var allData = GetAllDataDetailPajak();
 
                 return allData.Where(d =>
-                    d.JenisPajak == jenisPajak &&
                     d.Kategori == kategori &&
                     d.Tahun == tahun &&
                     d.Status.Equals(status, StringComparison.OrdinalIgnoreCase)
@@ -302,67 +2158,66 @@ namespace MonPDReborn.Models.EvaluasiTarget
             public string JenisPajak { get; set; } = null!;
             public int Tahun { get; set; }
 
-            public int OPbuka1 { get; set; }
-            public int Byr1 { get; set; }
-            public int Nts1 { get; set; }
-            public int Blm1 { get; set; }
+            public decimal OPbuka1 { get; set; }
+            public decimal Byr1 { get; set; }
+            public decimal Nts1 { get; set; }
+            public decimal Blm1 { get; set; }
 
-            public int OPbuka2 { get; set; }
-            public int Byr2 { get; set; }
-            public int Nts2 { get; set; }
-            public int Blm2 { get; set; }
+            public decimal OPbuka2 { get; set; }
+            public decimal Byr2 { get; set; }
+            public decimal Nts2 { get; set; }
+            public decimal Blm2 { get; set; }
 
-            public int OPbuka3 { get; set; }
-            public int Byr3 { get; set; }
-            public int Nts3 { get; set; }
-            public int Blm3 { get; set; }
+            public decimal OPbuka3 { get; set; }
+            public decimal Byr3 { get; set; }
+            public decimal Nts3 { get; set; }
+            public decimal Blm3 { get; set; }
 
-            public int OPbuka4 { get; set; }
-            public int Byr4 { get; set; }
-            public int Nts4 { get; set; }
-            public int Blm4 { get; set; }
+            public decimal OPbuka4 { get; set; }
+            public decimal Byr4 { get; set; }
+            public decimal Nts4 { get; set; }
+            public decimal Blm4 { get; set; }
 
-            public int OPbuka5 { get; set; }
-            public int Byr5 { get; set; }
-            public int Nts5 { get; set; }
-            public int Blm5 { get; set; }
+            public decimal OPbuka5 { get; set; }
+            public decimal Byr5 { get; set; }
+            public decimal Nts5 { get; set; }
+            public decimal Blm5 { get; set; }
 
-            public int OPbuka6 { get; set; }
-            public int Byr6 { get; set; }
-            public int Nts6 { get; set; }
-            public int Blm6 { get; set; }
+            public decimal OPbuka6 { get; set; }
+            public decimal Byr6 { get; set; }
+            public decimal Nts6 { get; set; }
+            public decimal Blm6 { get; set; }
 
-            public int OPbuka7 { get; set; }
-            public int Byr7 { get; set; }
-            public int Nts7 { get; set; }
-            public int Blm7 { get; set; }
+            public decimal OPbuka7 { get; set; }
+            public decimal Byr7 { get; set; }
+            public decimal Nts7 { get; set; }
+            public decimal Blm7 { get; set; }
 
-            public int OPbuka8 { get; set; }
-            public int Byr8 { get; set; }
-            public int Nts8 { get; set; }
-            public int Blm8 { get; set; }
+            public decimal OPbuka8 { get; set; }
+            public decimal Byr8 { get; set; }
+            public decimal Nts8 { get; set; }
+            public decimal Blm8 { get; set; }
 
-            public int OPbuka9 { get; set; }
-            public int Byr9 { get; set; }
-            public int Nts9 { get; set; }
-            public int Blm9 { get; set; }
+            public decimal OPbuka9 { get; set; }
+            public decimal Byr9 { get; set; }
+            public decimal Nts9 { get; set; }
+            public decimal Blm9 { get; set; }
 
-            public int OPbuka10 { get; set; }
-            public int Byr10 { get; set; }
-            public int Nts10 { get; set; }
-            public int Blm10 { get; set; }
+            public decimal OPbuka10 { get; set; }
+            public decimal Byr10 { get; set; }
+            public decimal Nts10 { get; set; }
+            public decimal Blm10 { get; set; }
 
-            public int OPbuka11 { get; set; }
-            public int Byr11 { get; set; }
-            public int Nts11 { get; set; }
-            public int Blm11 { get; set; }
+            public decimal OPbuka11 { get; set; }
+            public decimal Byr11 { get; set; }
+            public decimal Nts11 { get; set; }
+            public decimal Blm11 { get; set; }
 
-            public int OPbuka12 { get; set; }
-            public int Byr12 { get; set; }
-            public int Nts12 { get; set; }
-            public int Blm12 { get; set; }
+            public decimal OPbuka12 { get; set; }
+            public decimal Byr12 { get; set; }
+            public decimal Nts12 { get; set; }
+            public decimal Blm12 { get; set; }
         }
-
         public class UpayaPajak
         {
             public string Kategori { get; set; } = null!;
@@ -429,7 +2284,6 @@ namespace MonPDReborn.Models.EvaluasiTarget
             public int Sil12 { get; set; }
             public int Kejak12 { get; set; }
         }
-
         public class Potensi
         {
             public string Kategori { get; set; } = null!;
@@ -445,11 +2299,10 @@ namespace MonPDReborn.Models.EvaluasiTarget
             public decimal Agt { get; set; }
             public decimal Sep { get; set; }
             public decimal Okt { get; set; }
-            public decimal Nov {  get; set; }
+            public decimal Nov { get; set; }
             public decimal Des { get; set; }
             public decimal Total => Jan + Feb + Mar + Apr + Mei + Jun + Jul + Agt + Sep + Okt + Nov + Des;
         }
-
         public class DetailPajak
         {
             public string Kategori { get; set; } = null!;
