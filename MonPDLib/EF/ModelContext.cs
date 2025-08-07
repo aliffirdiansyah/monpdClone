@@ -47,7 +47,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbCtrlByrParkir> DbCtrlByrParkirs { get; set; }
 
+    public virtual DbSet<DbCtrlByrPbb> DbCtrlByrPbbs { get; set; }
+
     public virtual DbSet<DbCtrlByrPpj> DbCtrlByrPpjs { get; set; }
+
+    public virtual DbSet<DbCtrlByrReklame> DbCtrlByrReklames { get; set; }
 
     public virtual DbSet<DbCtrlByrResto> DbCtrlByrRestos { get; set; }
 
@@ -600,9 +604,21 @@ public partial class ModelContext : DbContext
             entity.ToView("DB_CTRL_BYR_PARKIR");
         });
 
+        modelBuilder.Entity<DbCtrlByrPbb>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_PBB");
+        });
+
         modelBuilder.Entity<DbCtrlByrPpj>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_PPJ");
+        });
+
+        modelBuilder.Entity<DbCtrlByrReklame>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_REKLAME");
+
+            entity.Property(e => e.WilayahPajak).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrResto>(entity =>
