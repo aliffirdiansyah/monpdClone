@@ -1,170 +1,113 @@
 ﻿@model MonPDReborn.Models.ReklamePublic.ReklamePublicVM.Show
 
-@{
-    Layout = null;
-}
-
 @if (!Model.Data.Any())
 {
-    <div class="text-center py-8">
-        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="text-center py-5">
+        <svg class="mb-3 text-secondary" width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.562M15 6.306a7.962 7.962 0 00-6 0m6 0a7.962 7.962 0 105.824 8.132M9.172 16.172L6.343 19M15.828 16.172L18.657 19"></path>
         </svg>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data ditemukan</h3>
-        <p class="text-gray-500">Coba ubah kriteria pencarian Anda</p>
+        <h3 class="h5 fw-bold text-dark">Tidak ada data ditemukan</h3>
+        <p class="text-muted">Coba ubah kriteria pencarian Anda</p>
     </div>
 }
 else
 {
-    <!-- Mobile Card View -->
-    <div class="block lg:hidden space-y-4">
+    <div id="mobileCards" class="d-lg-none mb-4">
         @foreach (var item in Model.Data)
         {
-            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="font-semibold text-gray-800 text-base">@item.Jalan</h3>
-                    <span class="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-bold px-2 py-1 rounded ml-2">
+            <div class="bg-white border border-secondary rounded-3 p-3 shadow-sm mb-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="fw-semibold text-dark mb-0">@item.Jalan</h5>
+                    <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">
                         Jumlah: @item.Jumlah
                     </span>
                 </div>
 
-                <div class="space-y-2 text-sm">
-                    <div class="flex items-start">
-                        <span class="text-gray-500 w-16 flex-shrink-0">Alamat:</span>
-                        <span class="text-gray-700">@item.Alamat</span>
+                <div class="small">
+                    <div class="d-flex mb-1">
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Alamat:</span>
+                        <span class="text-dark">@item.Alamat</span>
                     </div>
 
-                    <div class="flex items-center">
-                        <span class="text-gray-500 w-16 flex-shrink-0">Jenis:</span>
-                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            @item.JenisReklame
-                        </span>
+                    <div class="d-flex mb-1">
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Jenis:</span>
+                        <span class="badge bg-primary bg-opacity-10 text-primary text-wrap">@item.JenisReklame</span>
                     </div>
 
-                    <div class="flex items-center">
-                        <span class="text-gray-500 w-16 flex-shrink-0">Isi Reklame:</span>
-                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            @item.IsiReklame
-                        </span>
+                    <div class="d-flex mb-1">
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Isi Reklame:</span>
+                        <span class="badge bg-primary bg-opacity-10 text-primary text-wrap">@item.IsiReklame</span>
                     </div>
 
-                    <div class="flex items-center">
-                        <span class="text-gray-500 w-16 flex-shrink-0">Kategori:</span>
-                        <span class="text-gray-700">@item.Kategori</span>
+                    <div class="d-flex mb-1">
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Kategori:</span>
+                        <span class="text-dark">@item.Kategori</span>
                     </div>
 
-                    <div class="flex items-start">
-                        <span class="text-gray-500 w-16 flex-shrink-0">Tayang:</span>
-                        <div class="flex items-start">
-                            <svg class="w-4 h-4 text-gray-400 mr-1 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    <div class="d-flex">
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Tayang:</span>
+                        <div class="d-flex align-items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar me-1 text-muted" viewBox="0 0 16 16">
+                                <path d="M3.5 0a.5.5 0 0 0 0 1H4v1a.5.5 0 0 0 1 0V1h6v1a.5.5 0 0 0 1 0V1h.5a.5.5 0 0 0 0-1H12V0h-1v1H5V0H4v1h-.5zM1 3.5A1.5 1.5 0 0 1 2.5 2h11A1.5 1.5 0 0 1 15 3.5V5H1V3.5zM0 6v6.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6H0zm1 1h14v6.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7z" />
                             </svg>
-                            <span class="text-gray-700 text-xs leading-relaxed">@($"{item.tglMulai:dd MMM yyyy} - {item.tglAkhir:dd MMM yyyy}")</span>
+                            <span class="text-dark text-wrap">@($"{item.tglMulai:dd MMM yyyy} - {item.tglAkhir:dd MMM yyyy}")</span>
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+    <div id="mobilePaging" class="text-center mt-3 d-lg-none"></div>
 
-    <!-- Desktop Table View -->
-    <div class="max-w-5xl mx-auto">
-        <!-- Desktop Table View -->
-        <div class="hidden lg:block overflow-x-auto">
-            <table id="dataTable" class="w-full bg-white border border-gray-200 rounded-lg">
-                <thead class="bg-blue-50">
-                    <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Jalan</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Alamat</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Jenis Reklame</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">isi Reklame</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Kategori Reklame</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800 border-b">Tanggal Tayang</th>
-                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-800 border-b">Jumlah</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.Data.Count; i++)
-                    {
-                        var item = Model.Data[i];
-                        var bg = i % 2 == 0 ? "bg-white" : "bg-gray-50";
-                        <tr class="hover:bg-gray-50 transition-colors @bg">
-                            <td class="px-6 py-4 text-sm text-gray-800 border-b font-medium">@item.Jalan</td>
-                            <td class="px-6 py-4 text-sm text-gray-600 border-b">@item.Alamat</td>
-                            <td class="px-6 py-4 text-sm border-b">
-                                <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    @item.JenisReklame
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-600 border-b">@item.IsiReklame</td>
-                            <td class="px-6 py-4 text-sm text-gray-600 border-b">@item.Kategori</td>
-                            <td class="px-6 py-4 text-sm text-gray-600 border-b">
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
-                                    @($"{item.tglMulai:dd MMM yyyy} - {item.tglAkhir:dd MMM yyyy}")
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-center border-b">
-                                <span class="text-sm font-bold text-blue-800">
-                                    @item.Jumlah
-                                </span>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div id="paginationControls" class="flex justify-center mt-4 space-x-2 text-sm text-gray-700"></div>
-        </div>
 
-        <!-- Footer Info -->
-        <div class="mt-6 bg-gray-50 rounded-lg p-4">
-            <div class="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
-                <p class="text-sm text-gray-600">
-                    Menampilkan <span class="font-semibold">@Model.Data.Count()</span> data reklame
-                </p>
-                <p class="text-sm text-gray-600">
-                    Total Reklame: <span class="font-semibold text-blue-600">@Model.Data.Sum(x => x.Jumlah)</span>
-                </p>
+
+    <div class="container-fluid mb-5">
+        <div class="d-none d-lg-block">
+            <div class="table-responsive">
+                @(Html.DevExtreme().DataGrid<MonPDReborn.Models.ReklamePublic.ReklamePublicVM.ReklameJalan>()
+                        .ID("hasilReklameGrid")
+                        .DataSource(Model.Data)
+                        .ShowBorders(true)
+                        .ShowColumnLines(true)
+                        .ShowColumnHeaders(true)
+                        .AllowColumnResizing(true)
+                        .ShowRowLines(true)
+                        .ColumnAutoWidth(true)
+                        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(h => h.Visible(true))
+                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                            pager.ShowInfo(true);
+                        })
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.Jalan).Caption("Jalan");
+
+                            columns.AddFor(m => m.Alamat).Caption("Alamat").CssClass("WrappedColumnClass").Width(150);
+
+                            columns.AddFor(m => m.JenisReklame)
+                                .Caption("Jenis Reklame")
+                                .CellTemplate(@<text>
+                                                    <span class="badge bg-info text-dark"><%- value %></span>
+                                </text>);
+
+                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame").CssClass("WrappedColumnClass").Width(150);
+
+                            columns.AddFor(m => m.Kategori).Caption("Kategori Reklame").CssClass("WrappedColumnClass").Width(150);
+
+                            columns.AddFor(m => m.TanggalTayang).Caption("Tanggal Tayang").CssClass("WrappedColumnClass").Width(115);
+
+                            columns.AddFor(m => m.Jumlah).Caption("Jumlah").Alignment(HorizontalAlignment.Center).CssClass("fw-bold text-primary");
+                        })
+                )
             </div>
         </div>
     </div>
-    <script>
-        (function() {
-            const rowsPerPage = 10;
-            const table = document.getElementById("dataTable");
-            if (!table) return;
-            const tbody = table.querySelector("tbody");
-            const rows = Array.from(tbody.querySelectorAll("tr"));
-            const totalPages = Math.ceil(rows.length / rowsPerPage);
-            const paginationControls = document.getElementById("paginationControls");
-
-            function showPage(page) {
-                const start = (page - 1) * rowsPerPage;
-                const end = start + rowsPerPage;
-
-                rows.forEach((row, i) => {
-                    row.style.display = i >= start && i < end ? "" : "none";
-                });
-
-                renderPagination(page);
-            }
-
-            function renderPagination(activePage) {
-                paginationControls.innerHTML = "";
-
-                for (let i = 1; i <= totalPages; i++) {
-                    const btn = document.createElement("button");
-                    btn.textContent = i;
-                    btn.className = `btn btn-sm ${i === activePage ? "btn-primary" : "btn-light"} me-1`;
-                    btn.addEventListener("click", () => showPage(i));
-                    paginationControls.appendChild(btn);
-                }
-            }
-
-            showPage(1);
-        })();
-    </script>
-
 }
+
+

@@ -31,6 +31,8 @@ namespace MonPDReborn.Controllers.ReklamePublic
             {
                 ViewData["Title"] = controllerName;
                 var model = new Models.ReklamePublic.ReklamePublicVM.Index();
+
+                HttpContext.Session.SetInt32("CaptchaAnswer", model.CaptchaAnswer);
                 return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -46,10 +48,24 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 return Json(response);
             }
         }
-        public IActionResult Show(string namaJalan)
+        [HttpGet]
+        public IActionResult GetNewCaptcha()
+        {
+            var model = new Models.ReklamePublic.ReklamePublicVM.Index(); 
+            HttpContext.Session.SetInt32("CaptchaAnswer", model.CaptchaAnswer);
+            return Json(new { number1 = model.Number1, number2 = model.Number2 });
+        }
+
+        public IActionResult Show(string namaJalan, int userAnswer)
         {
             try
             {
+                var captchaAnswer = HttpContext.Session.GetInt32("CaptchaAnswer");
+                if(userAnswer != captchaAnswer)
+                {
+                    throw new ArgumentException("CAPTCHA TIDAK SESUAI");
+                }
+
                 var model = new Models.ReklamePublic.ReklamePublicVM.Show(namaJalan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
@@ -71,37 +87,45 @@ namespace MonPDReborn.Controllers.ReklamePublic
         {
             var context = DBClass.GetContext();
             var dataList = new List<namaJalanView>();
+
             if (!string.IsNullOrEmpty(filter))
             {
-                filter = filter.Replace("[[", "");
-                filter = filter.Replace("]]", "");
-                filter = filter.Replace("\"", "");
-                filter = filter.ToUpper();
-                string[] s = filter.Split(',');
-                // EF Core query langsung, tanpa ToListAsync
-                dataList = context.MvReklameSummaries
-                 .Where(x => !string.IsNullOrEmpty(x.NamaJalan) && x.NamaJalan.ToUpper().Contains(s[2].ToUpper()))
-                 .GroupBy(x => x.NamaJalan)
-                 .Select(g => new namaJalanView
-                 {
-                     Value = g.Key,
-                     Text = g.Key
-                 })
-                .ToList();
+                try
+                {
+                    filter = filter.Replace("[[", "")
+                                   .Replace("]]", "")
+                                   .Replace("\"", "")
+                                   .ToUpper();
+
+                    string[] s = filter.Split(',');
+
+                    // Pastikan array s memiliki cukup elemen
+                    string keyword = s.Length > 2 ? s[2] : s.FirstOrDefault() ?? string.Empty;
+
+                    if (!string.IsNullOrEmpty(keyword))
+                    {
+                        dataList = context.MvReklameSummaries
+                            .Where(x => !string.IsNullOrEmpty(x.NamaJalan) &&
+                                        x.NamaJalan.ToUpper().Contains(keyword))
+                            .GroupBy(x => x.NamaJalan)
+                            .Select(g => new namaJalanView
+                            {
+                                Value = g.Key,
+                                Text = g.Key
+                            })
+                            .ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Logging optional
+                    Console.WriteLine("Error filter: " + ex.Message);
+                }
             }
-            else
-            {
-                dataList = context.MvReklameSummaries
-                 .Where(x => !string.IsNullOrEmpty(x.NamaJalan) && x.NamaJalan.ToUpper().Contains(filter.ToUpper()))
-                 .GroupBy(x => x.NamaJalan)
-                 .Select(g => new namaJalanView
-                 {
-                     Value = g.Key,
-                     Text = g.Key
-                 })
-                .ToList();
-            }
+
+            // Jika filter kosong atau tidak valid, tetap kembalikan default kosong
             return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
         }
+
     }
 }

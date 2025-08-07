@@ -1,10 +1,13 @@
 ﻿@model MonPDReborn.Models.LoginVM.Index
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @{
     ViewData["Title"] = "Login";
     Layout = "_LayoutLogin";
+    var siteKey = Configuration["RecaptchaSettings:SiteKey"];
 }
 
-<div class="card shadow rounded-4 p-4 mt-4 text-black" 
+<div class="card shadow rounded-4 p-4 mt-4 text-black"
      style="width: 100%; max-width: 400px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
@@ -21,7 +24,8 @@
         </div>
     }
 
-    <form method="post" asp-action="Index">
+    <form method="post" asp-action="Index" onsubmit="return onSubmit(event)">
+        @Html.HiddenFor(x => x.RecaptchaToken)
         <div class="mb-3">
             <label asp-for="Row.Username" class="form-label"></label>
             <input asp-for="Row.Username" class="form-control" placeholder="Masukkan Username" />
@@ -29,10 +33,64 @@
         <div class="mb-3">
             <label asp-for="Row.Password" class="form-label"></label>
             <input asp-for="Row.Password" type="password" class="form-control" placeholder="Masukkan Password" />
+            @* <span class="password-toggle" style="position: absolute; top: 45%; right: 1%; color: #888787; cursor: pointer;" onclick="togglePasswordVisibility()">
+                <i class="ri-eye-line"></i>
+            </span> *@
         </div>
-        <div class="mb-3 text-end">
+        <div class="mb-3">
+            <div class="form-control p-0" id="html_element" style="height: auto;"></div>
+        </div>
+        @* <div class="mb-3 text-end">
             <a href="/account/forgot-password" class="text-decoration-none small text-black">Lupa Password?</a>
-        </div>
+        </div> *@
         <button style="background-color:#1E2640; color:white" type="submit" class="btn w-100">Login</button>
     </form>
 </div>
+
+@section scripts {
+    <script type="text/javascript">
+        var onloadCallback = function () {
+           grecaptcha.render('html_element', {
+              'sitekey': '@(siteKey)'
+           });
+        };
+
+        function onSubmit(event) {
+           var token = grecaptcha.getResponse();
+           document.getElementById("RecaptchaToken").value = token
+        }
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async defer>
+    </script>
+    @* <script>
+          function togglePasswordVisibility() {
+             var passwordField = document.getElementById("passwordField");
+             var toggleIcon = document.querySelector(".password-toggle");
+
+             if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.innerHTML = '<i class="fas fa-eye-slash"></i>'; // Show password icon
+             } else {
+                passwordField.type = "password";
+                toggleIcon.innerHTML = '<i class="fas fa-eye"></i>'; // Hide password icon
+             }
+          }
+       </script> *@
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("passwordField");
+            var passwordToggleIcon = document.querySelector(".password-toggle i");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                passwordToggleIcon.classList.remove("ri-eye-line");
+                passwordToggleIcon.classList.add("ri-eye-off-line");
+            } else {
+                passwordField.type = "password";
+                passwordToggleIcon.classList.remove("ri-eye-off-line");
+                passwordToggleIcon.classList.add("ri-eye-line");
+            }
+        }
+    </script>
+}

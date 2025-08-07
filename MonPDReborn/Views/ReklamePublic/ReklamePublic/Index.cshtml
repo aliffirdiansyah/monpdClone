@@ -5,231 +5,199 @@
     // Layout = "~/Views/Shared/_DevExtremeLayout.cshtml";
 }
 <div class="row">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
-                    <h2 class="h5 mb-4 d-flex align-items-center text-dark">
-                        <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        Pencarian Data
-                    </h2>
+    <center>
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex bg-primary align-items-center">
+                    <div class="flex-grow-1">
+                        <h2 class="h5 mb-1 d-flex align-items-center text-white">
+                            <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Pencarian Data
+                        </h2>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
+                        <div class="row gy-2">
 
-                    <!-- Input Nama Jalan -->
-                    <div class="mb-3">
-                        <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
-                        @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
+                            <div class="col-lg-12">
+                                <label for="namaJalanSearch" class="form-label">Nama Jalan</label>
+                                @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
                                class="form-control"> *@
-                        @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
-                            .ID("namaJalanView")
-                            .ValueExpr("Value")
-                            .DisplayExpr("Text")
-                            .DataSource(d => d.Mvc()
-                            .Controller("ReklamePublic")
-                            .LoadAction("GetNama").Key("filter"))
-                            .SearchExpr("Text")
-                            .SearchEnabled(true)
-                            .MinSearchLength(3)
-                        )
+                                @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
+                                    .ID("namaJalanView")
+                                    .ValueExpr("Value")
+                                    .DisplayExpr("Text")
+                                    .DataSource(d => d.Mvc()
+                                    .Controller("ReklamePublic")
+                                    .LoadAction("GetNama").Key("filter"))
+                                    .SearchExpr("Text")
+                                    .SearchEnabled(true)
+                                    .MinSearchLength(3)
+                                    )
+                            </div>
+
+                            <div class="col-lg-12">
+                                <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
+                                <div class="row align-items-center mb-2">
+                                    <div>
+                                        <label id="captchaLabel">
+                                            Masukkan hasil dari <span id="number1">@Model.Number1</span> + <span id="number2">@Model.Number2</span> = ?
+                                        </label>
+                                        <input id="userAnswer" name="userAnswer" type="number" placeholder="Masukkan kode CAPTCHA" class="form-control mb-2" />
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="refreshCaptcha()">Refresh CAPTCHA</button>
+
+                                    </div>
+                                </div>
+                                <div class="form-text">Masukkan verifikasi keamanan</div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    🔍 Cari Data Reklame
+                                </button>
+                            </div>
+                        </div>
+                        @*  <!-- Input Nama Jalan -->
+                    <div class="mb-3">
+
                     </div>
 
                     <!-- CAPTCHA Section -->
                     <div class="bg-light p-3 mb-3 rounded">
-                        <h3 class="h6 mb-3">Verifikasi Keamanan</h3>
-                        <div class="row align-items-center mb-2">
-                            <div class="col-auto">
-                                <canvas id="captchaCanvas" class="border" width="120" height="40"></canvas>
-                            </div>
-                            <div class="col-auto">
-                                <button type="button" onclick="generateCaptcha()" class="btn btn-primary">
-                                    🔄 Refresh
-                                </button>
-                            </div>
-                        </div>
-                        <input type="text" id="captchaInput" name="captchaInput" placeholder="Masukkan kode CAPTCHA"
-                               class="form-control mb-2">
-                        <div class="form-text">Masukkan kode yang terlihat di gambar</div>
+
                     </div>
 
-                    <!-- Tombol Submit -->
-                    <button type="submit" class="btn btn-primary w-100 py-2">
-                        🔍 Cari Data Reklame
-                    </button>
-                </form>
+                    <!-- Tombol Submit --> *@
 
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-8 col-sm-12">
+            <div id="resultsSection" class="d-none">
+
+                <div class="card shadow-sm">
+                    <!-- Header Card -->
+                    <div class="card-header bg-primary d-flex align-items-center">
+                        <h2 class="h5 fw-semibold text-white mb-0">
+                            Hasil Pencarian Data Reklame
+                        </h2>
+                    </div>
+
+                    <!-- Body Card -->
+                    <div class="card-body">
+                        <!-- Loading Indicator -->
+                        <div id="loadingIndicator" class="text-center py-3 d-none">
+                            <div class="spinner-border text-primary mb-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-muted small mb-0">Memuat data, mohon tunggu...</p>
+                        </div>
+
+                        <!-- Hasil AJAX akan dimuat di sini -->
+                        <div id="resultsContent"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-3"></div>
+    </center>
 
 </div>
-    @* <header class="bg-white shadow-lg border-b-4 border-blue-600">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-lg sm:text-2xl font-bold text-gray-800">Sistem Informasi Reklame</h1>
-                        <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">Portal Publik - Informasi Reklame Sepanjang Jalan</p>
-                        <p class="text-xs text-gray-600 sm:hidden">Portal Publik</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <p class="text-xs sm:text-sm text-gray-500">Akses Publik</p>
-                    <p class="text-xs text-gray-400" id="currentDate"></p>
-                </div>
-            </div>
-        </div>
-    </header>
 
-    <!-- Form Pencarian -->
-    <div class="container mx-auto px-4 py-6">
-        <div class="max-w-xl mx-auto">
-            <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
-                <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        Pencarian Data
-                    </h2>
-
-                    <!-- Input Nama Jalan -->
-                    <div class="mb-4">
-                        <label for="namaJalanSearch" class="block text-sm font-medium text-gray-700 mb-2">Nama Jalan</label>
-                        <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base">
-                        @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
-                            .ID("namaJalanView")
-                            .ValueExpr("Value")
-                            .DisplayExpr("Text")
-                            .DataSource(d => d.Mvc().Controller("ReklamePublic").LoadAction("GetNama"))
-                            .SearchExpr("Text")
-                            .SearchEnabled(true)
-                            .MinSearchLength(4)
-                            )
-                    </div>
-
-                    <!-- CAPTCHA Section -->
-                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                        <h3 class="text-sm font-medium text-gray-700 mb-3">Verifikasi Keamanan</h3>
-                        <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                            <canvas id="captchaCanvas" class="captcha-canvas" width="120" height="40"></canvas>
-                            <button type="button" onclick="generateCaptcha()"
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm w-full sm:w-auto">
-                                🔄 Refresh
-                            </button>
-                        </div>
-                        <input type="text" id="captchaInput" name="captchaInput" placeholder="Masukkan kode CAPTCHA"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-3 text-base">
-                        <p class="text-xs text-gray-500 mt-2">Masukkan kode yang terlihat di gambar</p>
-                    </div>
-
-                    <!-- Tombol Submit -->
-                    <button type="submit"
-                            class="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium text-base">
-                        🔍 Cari Data Reklame
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    
-
-    <!-- Hasil Pencarian (DILUAR max-w-xl agar lebih besar) -->
-    <div id="resultsSection" class="hidden">
-        <div class="max-w-5xl mx-auto px-4 mb-10">
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                    Hasil Pencarian Data Reklame
-                </h2>
-                <div id="loadingIndicator" class="text-center py-4 hidden">
-                    <svg class="animate-spin h-6 w-6 text-blue-600 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                    </svg>
-                    <p class="text-sm text-gray-500">Memuat data, mohon tunggu...</p>
-                </div>
-                <div id="resultsContent">
-                    <!-- Partial view akan dimuat di sini -->
-                </div>
-            </div>
-        </div>
-    </div> *@
-@section Scripts{
+@section Scripts {
     <script>
-            let captchaText = '';
-
-        function generateCaptcha() {
-            const canvas = document.getElementById('captchaCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            captchaText = Math.random().toString(36).substring(2, 8).toUpperCase();
-            ctx.font = '24px Arial';
-            ctx.fillStyle = '#000';
-            ctx.fillText(captchaText, 10, 30);
-        }
-
         function searchData() {
-            const captchaInput = document.getElementById('captchaInput').value.toUpperCase();
-
-            if (captchaInput !== captchaText) {
-                alert('Kode CAPTCHA tidak sesuai! Silakan coba lagi.');
-                generateCaptcha();
-                document.getElementById('captchaInput').value = '';
-                return;
-            }
-
             const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
+            const userAnswer = $("#userAnswer").val();
 
-            // Tampilkan loading
-            $('#loadingIndicator').removeClass('hidden');
-            $('#resultsSection').removeClass('hidden');
+            $('#loadingIndicator').removeClass('d-none');
+            $('#resultsSection').removeClass('d-none');
             $('#resultsContent').html('');
 
             $.ajax({
                 url: '@Url.Action("Show", "ReklamePublic")',
                 type: 'GET',
-                data: { namaJalan },
+                data: { namaJalan, userAnswer },
                 success: function (result) {
-                    // Delay 2 detik sebelum menampilkan hasil
-                    setTimeout(function () {
-                        $('#loadingIndicator').addClass('hidden');
+                    $('#loadingIndicator').addClass('d-none');
+
+                    if (result.Status === undefined) {
+                        // Sukses: render HTML partial
                         $('#resultsContent').html(result);
-                        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
-                    }, 1000);
+                    } else {
+                        // Gagal: tampilkan pesan error dari server
+                        $('#resultsContent').html(`<p class="text-danger">⚠ ${result.Message}</p>`);
+                    }
+
+                    // Scroll ke hasil
+                    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+
+                    // Selalu refresh CAPTCHA setelah submit
+                    refreshCaptcha();
                 },
                 error: function () {
-                    $('#loadingIndicator').addClass('hidden');
-                    alert('Terjadi kesalahan saat mengambil data.');
+                    $('#loadingIndicator').addClass('d-none');
+                    $('#resultsContent').html('<p class="text-danger">⚠ Gagal memuat data. Silakan coba lagi.</p>');
+
+                    // Refresh CAPTCHA juga saat error
+                    refreshCaptcha();
                 }
             });
         }
 
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-            generateCaptcha();
-            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        });
-
-        window.onload = generateCaptcha;
     </script>
+    <script>
+        $(document).ready(function () {
+            const itemsPerPage = 5;
+            const $cards = $("#mobileCards .bg-white");
+            const totalItems = $cards.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            function showPage(page) {
+                $cards.hide();
+                const start = (page - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                $cards.slice(start, end).show();
+
+                // Update active button
+                $("#mobilePaging button").removeClass("active");
+                $(`#mobilePaging button[data-page='${page}']`).addClass("active");
+            }
+
+            // Generate paging buttons
+            if (totalPages > 1) {
+                let pagingHtml = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    pagingHtml += `<button class="btn btn-sm btn-outline-primary me-1" data-page="${i}">${i}</button>`;
+                }
+                $("#mobilePaging").html(pagingHtml);
+
+                $("#mobilePaging").on("click", "button", function () {
+                    const page = $(this).data("page");
+                    showPage(page);
+                });
+
+                showPage(1); // Show first page initially
+            }
+        });
+    </script>
+    <script>
+        function refreshCaptcha() {
+            $.get('@Url.Action("GetNewCaptcha", "ReklamePublic")', function (data) {
+                $('#number1').text(data.number1);
+                $('#number2').text(data.number2);
+                $('#userAnswer').val('');
+            });
+        }
+    </script>
+
+
 }
-    
+
 
