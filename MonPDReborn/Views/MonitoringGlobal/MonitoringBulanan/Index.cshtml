@@ -107,5 +107,24 @@
                 }
             });
         }
+        function bulananPajakRealisasi(cellElement, cellInfo) {
+            
+            const jenisPajak = cellInfo.data.EnumPajak;
+            const tahun = cellInfo.data.Tahun;;
+            const bulan = cellInfo.data.Bulan;;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', `Lihat Monitoring Harian ${cellInfo.data.BulanNama;}`)
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => onPajakClick(jenisPajak, kategoriId, tahun, bulan, status));
+
+            $(cellElement).append($link);
+        }
+
+        function fnMonitoringHarian(jenisPajak, tahun, bulan) {
+            window.location.href = `/MonitoringHarian?jenisPajak=${jenisPajak}&tahun=${tahun}&bulan=${bulan}`;
+        }
     </script>
 }

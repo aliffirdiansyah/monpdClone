@@ -243,7 +243,7 @@
             });
         });
 
-                function showPajakCellTemplate(cellElement, cellInfo) {
+        function showPajakCellTemplate(cellElement, cellInfo) {
             const jenisPajakMap = {
                 'Restoran': 1,
                 'PPJ': 2,
@@ -256,8 +256,8 @@
                 'BPHTB': 12,
             };
             const jenisPajak = jenisPajakMap[currentJenis] || 0;
-        const kategoriId = cellInfo.data.kategoriId;
-                    const tahun = currentTahun;
+            const kategoriId = cellInfo.data.kategoriId;
+            const tahun = currentTahun;
 
             // Ambil angka bulan dari nama field (contoh: Byr1 → 1)
             const fieldName = cellInfo.column.dataField || '';

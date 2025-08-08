@@ -22,6 +22,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
             public List<SelectListItem> TahunList { get; set; } = new();
             public Index()
             {
+                SelectedPajak = 0;
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
                     //.Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
@@ -47,6 +48,37 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         Text = i.ToString()
                     });
                 }
+            }
+            public Index(EnumFactory.EPajak jenisPajak, int bulan, int tahun)
+            {
+                JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
+                    .Cast<EnumFactory.EPajak>()
+                    //.Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
+                    .Select(x => new SelectListItem
+                    {
+                        Value = ((int)x).ToString(),
+                        Text = x.GetDescription()
+                    }).ToList();
+                for (int i = 1; i <= 12; i++)
+                {
+                    var namaBulan = new DateTime(1, i, 1).ToString("MMMM", new CultureInfo("id-ID"));
+                    BulanList.Add(new SelectListItem
+                    {
+                        Value = i.ToString(),
+                        Text = namaBulan
+                    });
+                }
+                for (int i = 2025; i >= 2021; i--)
+                {
+                    TahunList.Add(new SelectListItem
+                    {
+                        Value = i.ToString(),
+                        Text = i.ToString()
+                    });
+                }
+                SelectedPajak = (int)jenisPajak;
+                SelectedTahun = tahun;
+                SelectedBulan = bulan;
             }
         }
         public class Show
