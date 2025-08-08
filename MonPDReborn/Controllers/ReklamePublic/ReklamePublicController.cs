@@ -54,22 +54,30 @@ namespace MonPDReborn.Controllers.ReklamePublic
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ReklamePublicVM.Index input)
+        public async Task<IActionResult> Show(string namaJalan, string recaptchaToken)
         {
             var response = new ResponseBase();
             try
             {
+                // Ambil secret key dari appsettings.json
                 var secretKey = configuration["RecaptchaSettings:SecretKey"];
-                bool successCaptcha = await RecaptchaService.verifyReCaptchaV2((input.RecaptchaToken ?? ""), (secretKey ?? ""));
+
+                // Validasi captcha Google
+                bool successCaptcha = await RecaptchaService.verifyReCaptchaV2(
+                    recaptchaToken ?? "",
+                    secretKey ?? ""
+                );
+
                 if (!successCaptcha)
                 {
                     throw new ArgumentException("CAPTCHA TIDAK SESUAI");
                 }
-                
 
-                response.Status = StatusEnum.Success;
-                response.Message = "✅ CAPTCHA valid tanpa login.";
-                return Json(response);
+                // CAPTCHA valid → ambil data model
+                var model = new Models.ReklamePublic.ReklamePublicVM.Show(namaJalan);
+
+                // Kembalikan partial view dengan data model
+                return PartialView($"{URLView}_{nameof(Show)}", model);
             }
             catch (ArgumentException e)
             {
@@ -84,6 +92,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 return Json(response);
             }
         }
+
 
         public class RecaptchaService
         {
@@ -117,7 +126,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
         }
 
 
-        public IActionResult Show(string namaJalan)
+        /*public IActionResult Show(string namaJalan)
         {
             try
             {
@@ -136,7 +145,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
-        }
+        }*/
         [HttpGet]
         public async Task<object> GetNama(DataSourceLoadOptions loadOptions, string filter)
         {

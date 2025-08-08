@@ -24,7 +24,7 @@
                 </div>
                 <div class="card-body">
                     <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
-                        @Html.HiddenFor(x => x.RecaptchaToken)
+                        @Html.AntiForgeryToken()
 
                         <div class="row gy-2">
 
@@ -114,8 +114,15 @@
     <script>
         function searchData() {
             const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
-            const userAnswer = $("#userAnswer").val();
-            const recaptchaToken = grecaptcha.getResponse(widgetId); // Ambil token dari widget ID
+            const recaptchaToken = grecaptcha.getResponse(widgetId); // Ambil token dari widget
+
+            if (!recaptchaToken) {
+                alert("⚠ Silakan verifikasi CAPTCHA terlebih dahulu.");
+                return;
+            }
+
+            // Ambil token antiforgery dari form
+            const antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
 
             $('#loadingIndicator').removeClass('d-none');
             $('#resultsSection').removeClass('d-none');
@@ -123,11 +130,17 @@
 
             $.ajax({
                 url: '@Url.Action("Show", "ReklamePublic")',
-                type: 'GET',
-                data: { namaJalan, recaptchaToken },
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: antiForgeryToken,
+                    namaJalan: namaJalan,
+                    recaptchaToken: recaptchaToken
+                },
                 success: function (result) {
+                    console.log(result);
                     $('#loadingIndicator').addClass('d-none');
 
+                    // Kalau result.Status undefined → berarti yang dikembalikan adalah PartialView
                     if (result.Status === undefined) {
                         $('#resultsContent').html(result);
                     } else {
@@ -136,56 +149,23 @@
 
                     document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
 
-                    // ✅ Refresh CAPTCHA setelah submit sukses
+                    // Refresh CAPTCHA setelah submit
                     grecaptcha.reset(widgetId);
                 },
                 error: function () {
                     $('#loadingIndicator').addClass('d-none');
                     $('#resultsContent').html('<p class="text-danger">⚠ Gagal memuat data. Silakan coba lagi.</p>');
 
-                    // ✅ Refresh CAPTCHA saat error juga
+                    // Refresh CAPTCHA saat error
                     grecaptcha.reset(widgetId);
                 }
             });
         }
 
 
+
     </script>
-    <script>
-        $(document).ready(function () {
-            const itemsPerPage = 5;
-            const $cards = $("#mobileCards .bg-white");
-            const totalItems = $cards.length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-            function showPage(page) {
-                $cards.hide();
-                const start = (page - 1) * itemsPerPage;
-                const end = start + itemsPerPage;
-                $cards.slice(start, end).show();
-
-                // Update active button
-                $("#mobilePaging button").removeClass("active");
-                $(`#mobilePaging button[data-page='${page}']`).addClass("active");
-            }
-
-            // Generate paging buttons
-            if (totalPages > 1) {
-                let pagingHtml = '';
-                for (let i = 1; i <= totalPages; i++) {
-                    pagingHtml += `<button class="btn btn-sm btn-outline-primary me-1" data-page="${i}">${i}</button>`;
-                }
-                $("#mobilePaging").html(pagingHtml);
-
-                $("#mobilePaging").on("click", "button", function () {
-                    const page = $(this).data("page");
-                    showPage(page);
-                });
-
-                showPage(1); // Show first page initially
-            }
-        });
-    </script>
+    
     <script>
         function refreshCaptcha() {
             $.get('@Url.Action("GetNewCaptcha", "ReklamePublic")', function (data) {

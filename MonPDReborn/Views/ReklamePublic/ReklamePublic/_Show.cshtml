@@ -42,27 +42,27 @@ else
 
                 <div class="small">
                     <div class="d-flex mb-1">
-                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Alamat:</span>
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Alamat:</span>
                         <span class="text-dark">@item.Alamat</span>
                     </div>
 
                     <div class="d-flex mb-1">
-                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Jenis:</span>
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Jenis:</span>
                         <span class="badge bg-primary bg-opacity-10 text-primary text-wrap">@item.JenisReklame</span>
                     </div>
 
                     <div class="d-flex mb-1">
-                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Isi Reklame:</span>
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Isi Reklame:</span>
                         <span class="badge bg-primary bg-opacity-10 text-primary text-wrap">@item.IsiReklame</span>
                     </div>
 
                     <div class="d-flex mb-1">
-                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Kategori:</span>
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Kategori:</span>
                         <span class="text-dark">@item.Kategori</span>
                     </div>
 
                     <div class="d-flex">
-                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px;">Tayang:</span>
+                        <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Tayang:</span>
                         <div class="d-flex align-items-start">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar me-1 text-muted" viewBox="0 0 16 16">
                                 <path d="M3.5 0a.5.5 0 0 0 0 1H4v1a.5.5 0 0 0 1 0V1h6v1a.5.5 0 0 0 1 0V1h.5a.5.5 0 0 0 0-1H12V0h-1v1H5V0H4v1h-.5zM1 3.5A1.5 1.5 0 0 1 2.5 2h11A1.5 1.5 0 0 1 15 3.5V5H1V3.5zM0 6v6.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6H0zm1 1h14v6.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7z" />
@@ -160,5 +160,40 @@ else
                 });
             }, 10); // tunggu sebentar agar input val sudah update
         });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        const itemsPerPage = 5;
+        const $cards = $("#mobileCards .bg-white");
+        const totalItems = $cards.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        function showPage(page) {
+            $cards.hide();
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            $cards.slice(start, end).show();
+
+            // Update active button
+            $("#mobilePaging button").removeClass("active");
+            $(`#mobilePaging button[data-page='${page}']`).addClass("active");
+        }
+
+        // Generate paging buttons
+        if (totalPages > 1) {
+            let pagingHtml = '';
+            for (let i = 1; i <= totalPages; i++) {
+                pagingHtml += `<button class="btn btn-sm btn-outline-primary me-1" data-page="${i}">${i}</button>`;
+            }
+            $("#mobilePaging").html(pagingHtml);
+
+            $("#mobilePaging").on("click", "button", function () {
+                const page = $(this).data("page");
+                showPage(page);
+            });
+
+            showPage(1); // Show first page initially
+        }
     });
 </script>
