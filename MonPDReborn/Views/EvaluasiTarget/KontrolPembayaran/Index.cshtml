@@ -131,31 +131,32 @@
             // Tampilkan hanya kontainer jenis pajak saat ini
             $(`#container-${jenisPajak}`).show();
 
-            // Tampilkan semua spinner
+            // Tampilkan semua spinner untuk jenis pajak ini
             $(`#kontrolPembayaranSpinner-${jenisPajak}`).show();
             $(`#kontrolUpayaSpinner-${jenisPajak}`).show();
             $(`#kontrolPotensiSpinner-${jenisPajak}`).show();
 
-            // Sembunyikan semua konten
+            // Sembunyikan semua konten data
             $(`#kontrolPembayaranContainer-${jenisPajak}`).hide();
             $(`#kontrolUpayaContainer-${jenisPajak}`).hide();
             $(`#kontrolPotensiContainer-${jenisPajak}`).hide();
         }
 
         function loadShow(jenisPajak, tahun) {
-            currentJenis = jenisPajak;
+            currentJenis = jenisPajak; // pastikan variabel global ikut berubah
             currentTahun = tahun;
 
             console.log(`Load untuk ${jenisPajak} tahun ${tahun}`);
 
-            // Tab aktif
+            // Tab aktif untuk jenis pajak
             $('.jenis-pajak-tab').removeClass('active');
             $(`.jenis-pajak-tab[data-jenis="${jenisPajak}"]`).addClass('active');
 
+            // Tab aktif untuk tahun
             $('#tahunGroup .tahun-link').removeClass('active');
             $(`#tahunGroup .tahun-link[data-tahun="${tahun}"]`).addClass('active');
 
-            // Tampilkan spinner
+            // Tampilkan spinner loading
             showLoadingFor(jenisPajak);
 
             // === AJAX: Pembayaran ===
@@ -166,13 +167,17 @@
                     $(`#kontrolPembayaranSpinner-${jenisPajak}`).hide();
                     const container = $(`#kontrolPembayaranContainer-${jenisPajak}`);
                     container.html(html).show();
+
+                    // Eksekusi script di dalam HTML
                     container.find("script").each(function () {
                         $.globalEval(this.text || this.textContent || this.innerHTML || '');
                     });
                 },
                 error: function () {
                     $(`#kontrolPembayaranSpinner-${jenisPajak}`).hide();
-                    $(`#kontrolPembayaranContainer-${jenisPajak}`).html('<div class="text-danger">Gagal memuat data pembayaran.</div>').show();
+                    $(`#kontrolPembayaranContainer-${jenisPajak}`).html(
+                        '<div class="text-danger">Gagal memuat data pembayaran.</div>'
+                    ).show();
                 }
             });
 
@@ -184,13 +189,16 @@
                     $(`#kontrolUpayaSpinner-${jenisPajak}`).hide();
                     const container = $(`#kontrolUpayaContainer-${jenisPajak}`);
                     container.html(html).show();
+
                     container.find("script").each(function () {
                         $.globalEval(this.text || this.textContent || this.innerHTML || '');
                     });
                 },
                 error: function () {
                     $(`#kontrolUpayaSpinner-${jenisPajak}`).hide();
-                    $(`#kontrolUpayaContainer-${jenisPajak}`).html('<div class="text-danger">Gagal memuat data upaya.</div>').show();
+                    $(`#kontrolUpayaContainer-${jenisPajak}`).html(
+                        '<div class="text-danger">Gagal memuat data upaya.</div>'
+                    ).show();
                 }
             });
 
@@ -202,18 +210,22 @@
                     $(`#kontrolPotensiSpinner-${jenisPajak}`).hide();
                     const container = $(`#kontrolPotensiContainer-${jenisPajak}`);
                     container.html(html).show();
+
                     container.find("script").each(function () {
                         $.globalEval(this.text || this.textContent || this.innerHTML || '');
                     });
                 },
                 error: function () {
                     $(`#kontrolPotensiSpinner-${jenisPajak}`).hide();
-                    $(`#kontrolPotensiContainer-${jenisPajak}`).html('<div class="text-danger">Gagal memuat data potensi.</div>').show();
+                    $(`#kontrolPotensiContainer-${jenisPajak}`).html(
+                        '<div class="text-danger">Gagal memuat data potensi.</div>'
+                    ).show();
                 }
             });
         }
 
         $(document).ready(function () {
+            // Load default saat halaman pertama dibuka
             loadShow(currentJenis, currentTahun);
 
             // Klik Tahun
@@ -230,25 +242,39 @@
                 loadShow(jenisDipilih, currentTahun);
             });
         });
-    </script>
 
-    <script>
+                function showPajakCellTemplate(cellElement, cellInfo) {
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+        const kategoriId = cellInfo.data.kategoriId;
+                    const tahun = currentTahun;
 
-        function showPajakCellTemplate(cellElement, cellInfo) {
-            const jenisPajak = cellInfo.data.JenisPajak;
-            const kategori = cellInfo.data.Kategori;
-            const tahun = 2025; // atau ambil dari cellInfo.data.Tahun kalau ada
+            // Ambil angka bulan dari nama field (contoh: Byr1 → 1)
+            const fieldName = cellInfo.column.dataField || '';
+            const matchBulan = fieldName.match(/\d+$/);
+            const bulan = matchBulan ? parseInt(matchBulan[0]) : 0;
 
-            // Tentukan status berdasarkan caption kolom
+            // Ambil status dari caption kolom
+            const colCaption = cellInfo.column.caption?.toUpperCase() || '';
             let status = '';
-            const caption = cellInfo.column.caption?.toUpperCase();
-
-            if (caption.includes('BYR')) {
-                status = 'BYR';
-            } else if (caption.includes('N/TS')) {
-                status = 'NTS';
-            } else if (caption.includes('BLM')) {
-                status = 'BLM';
+            if (colCaption.includes('BYR')) {
+                status = '1';
+            } else if (colCaption.includes('N/TS')) {
+                status = '2';
+            } else if (colCaption.includes('BLM')) {
+                status = '0';
+            } else if (colCaption.includes('OP BUKA')) {
+                status = '3';
             }
 
             const $link = $('<a>')
@@ -256,10 +282,22 @@
                 .attr('href', 'javascript:void(0);')
                 .attr('title', `Lihat Detail ${status}`)
                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                .on('click', () => onPajakClick(jenisPajak, kategori, tahun, status));
+                .on('click', () => onPajakClick(jenisPajak, kategoriId, tahun, bulan, status));
 
             $(cellElement).append($link);
         }
+
+
+
+
+
+
+    </script>
+
+
+    <script>
+
+        
 
 
 
@@ -295,21 +333,22 @@
 
 
 
-        function onPajakClick(jenisPajak, kategori, tahun, status) {
-            showDetailPajak(jenisPajak, kategori, tahun, status);
+        function onPajakClick(jenisPajak, kategoriId, tahun, bulan, status) {
+            showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status);
         }
 
         function onUpayaClick(jenisPajak, kategori, tahun, status) {
             showDetailUpaya(jenisPajak, kategori, tahun, status);
         }
 
-        function showDetailPajak(jenisPajak, kategori, tahun, status) {
+        function showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status) {
             $.ajax({
-                url: '/KontrolPembayaran/ShowDetailPajak',
+                url: '/KontrolPembayaran/DetailPembayaran',
                 type: 'GET',
                 data: {
                     jenisPajak: jenisPajak,
-                    kategori: kategori,
+                    kategoriId: kategoriId,
+                    bulan: bulan,
                     tahun: tahun,
                     status: status
                 },

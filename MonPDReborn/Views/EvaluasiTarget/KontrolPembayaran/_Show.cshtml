@@ -4,7 +4,7 @@
 {
     <div class="table-responsive">
         @(Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.KontrolPembayaran>()
-            .ID($"gridPembayaran-{ViewBag.Pajak}")
+            .ID("gridPembayaran_" + Model.Pajak)
             .DataSource(Model.Data)
             .ShowBorders(true)
             .ShowColumnLines(true)
@@ -229,7 +229,7 @@ else
 {
     <div class="table-responsive">
         @(Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.KontrolPembayaran>()
-            .ID("kontrolPembayaranGrid")
+            .ID("gridPembayaran_" + Model.Pajak)
             .DataSource(Model.Data)
             .ShowBorders(true)
             .ShowColumnLines(true)
@@ -248,6 +248,8 @@ else
             {
 
                 columns.AddFor(m => m.Kategori).Caption("Kategori").Fixed(true).FixedPosition(HorizontalEdge.Left);
+                columns.AddFor(m => m.kategoriId).Caption("kategoriId");
+
 
                 columns.Add().Caption("Januari").Columns(subColumns =>
                 {
