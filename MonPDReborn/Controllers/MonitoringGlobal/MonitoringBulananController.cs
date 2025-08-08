@@ -25,13 +25,21 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
             URLView = string.Concat("../MonitoringGlobal/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
-        public IActionResult Index()
+        public IActionResult Index(int? jenisPajak)
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.MonitoringGlobal.MonitoringBulananVM.Index();
-                return View($"{URLView}{actionName}", model);
+                if (jenisPajak != null)
+                {
+                    var model = new Models.MonitoringGlobal.MonitoringBulananVM.Index((EnumFactory.EPajak)jenisPajak);
+                    return View($"{URLView}{actionName}", model);
+                }
+                else
+                {
+                    var model = new Models.MonitoringGlobal.MonitoringBulananVM.Index();
+                    return View($"{URLView}{actionName}", model);
+                }
             }
             catch (ArgumentException e)
             {
