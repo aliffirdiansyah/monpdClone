@@ -84,7 +84,8 @@
                             .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                             columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                            .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                            .Format("#,##0").Alignment(HorizontalAlignment.Right)
+                            .CellTemplate(new JS("bulananPajakRealisasi"));
 
                             columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
                             .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
@@ -171,11 +172,11 @@
                         columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
-                        .Format("#,##0").Alignment(HorizontalAlignment.Right)
-                        .CellTemplate(new JS("bulananPajakRealisasi")); ;
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right)
+                        .CellTemplate(new JS("bulananPajakRealisasi"));
 
                         columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
                         .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
