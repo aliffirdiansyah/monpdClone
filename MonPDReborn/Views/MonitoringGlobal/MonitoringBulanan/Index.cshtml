@@ -12,19 +12,29 @@
     <div class="card-body">
         @using DevExtreme.AspNet.Mvc
 
-        @using DevExtreme.AspNet.Mvc
-
         <div class="row g-3 align-items-center mb-3">
 
             <div class="col-lg-3 col-md-4">
                 @(Html.DevExtreme().SelectBoxFor(m => m.SelectedPajak)
                     .DataSource(Model.JenisPajakList)
                     .ValueExpr("Value")
+                    .Value(Model.SelectedPajak.ToString())
                     .DisplayExpr("Text")
                     .ID("select-jnspajak")
                     .Placeholder("Semua Jenis Pajak...")
                     .StylingMode(EditorStylingMode.Outlined)
                     .ElementAttr("class", "")
+                    )
+            </div>
+            <div class="col-lg-3 col-md-4">
+                @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTahun)
+                    .ID("ddlTahun")
+                    .DataSource(Model.TahunList)
+                    .Value(Model.SelectedTahun.ToString())
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                    .Placeholder("Pilih Tahun")
+                    .StylingMode(EditorStylingMode.Outlined)
                     )
             </div>
 
@@ -64,9 +74,10 @@
         function fnShow() {
             var tglCutOff = $("#TanggalCutOff").val();
             var selectedPajak = $("#select-jnspajak").dxSelectBox("instance").option("value");
+            var selectedTahun = $("#ddlTahun").dxSelectBox("instance").option("value");
             var filterData = {
                 jenisPajak: selectedPajak,
-                tahun: new Date().getFullYear() // Mengirim tahun saat ini sebagai default
+                tahun: selectedTahun
             };
             $.ajax({
                 url: '@Url.Action("Show")',
