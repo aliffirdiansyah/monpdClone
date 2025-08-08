@@ -405,6 +405,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
@@ -605,6 +606,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
@@ -805,6 +807,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
@@ -1005,6 +1008,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
@@ -1205,6 +1209,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
@@ -1414,6 +1419,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.PBB.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranAwalList
@@ -1517,6 +1523,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.Reklame.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
@@ -1717,6 +1724,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
