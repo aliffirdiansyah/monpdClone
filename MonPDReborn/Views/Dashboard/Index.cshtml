@@ -522,7 +522,7 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-12">
+    @* <div class="col-lg-12">
         <div class="card card-height-100">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1 mb-0">
@@ -574,7 +574,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
     <div class="col-lg-12">
         <div class="card card-height-100">
             <div class="card-header d-flex bg-header-color align-items-center">
@@ -850,66 +850,66 @@
               }
            });
         }
-        function fnJumlahObjekPajakTahunan()
-        {
-            $.ajax({
-              url: '@(Url.Action("JumlahObjekPajakTahunan"))',
-              type: 'GET',
-              beforeSend: function () {
-                 $('#loading2-JumlahObjekPajakTahunan').show();
-                 $('#JumlahObjekPajakTahunan').hide();
-              },
-              success: function (response) {
-                    if (response.Status === undefined) {
-                        $('#loading2-JumlahObjekPajakTahunan').hide();
-                        $('#JumlahObjekPajakTahunan').show();
-                        $('#JumlahObjekPajakTahunan').html(response);
-                    }
-                    else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
-              },
-              error: function (xhr, status, error) {
-                 $('#loading2-JumlahObjekPajakTahunan').hide();
-                 $('#JumlahObjekPajakTahunan').hide();
-                 $('#JumlahObjekPajakTahunan').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-              }
-           });
-        }
-        function fnJumlahObjekPajakSeries()
-        {
-            $.ajax({
-              url: '@(Url.Action("JumlahObjekPajak"))',
-              type: 'GET',
-              beforeSend: function () {
-                 $('#loading2-JumlahObjekPajakSeries').show();
-                 $('#JumlahObjekPajakSeries').hide();
-              },
-              success: function (response) {
-                    if (response.Status === undefined) {
-                        $('#loading2-JumlahObjekPajakSeries').hide();
-                        $('#JumlahObjekPajakSeries').show();
-                        $('#JumlahObjekPajakSeries').html(response);
-                    }
-                    else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
-              },
-              error: function (xhr, status, error) {
-                 $('#loading2-JumlahObjekPajakSeries').hide();
-                 $('#JumlahObjekPajakSeries').hide();
-                 $('#JumlahObjekPajakSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-              }
-           });
-        }
+        // function fnJumlahObjekPajakTahunan()
+        // {
+        //     $.ajax({
+        //       url: '@(Url.Action("JumlahObjekPajakTahunan"))',
+        //       type: 'GET',
+        //       beforeSend: function () {
+        //          $('#loading2-JumlahObjekPajakTahunan').show();
+        //          $('#JumlahObjekPajakTahunan').hide();
+        //       },
+        //       success: function (response) {
+        //             if (response.Status === undefined) {
+        //                 $('#loading2-JumlahObjekPajakTahunan').hide();
+        //                 $('#JumlahObjekPajakTahunan').show();
+        //                 $('#JumlahObjekPajakTahunan').html(response);
+        //             }
+        //             else {
+        //                 swal.fire({
+        //                     icon: 'warning',
+        //                     title: '<b style="color:orange">Peringatan</b>',
+        //                     text: response.Message
+        //                 })
+        //             }
+        //       },
+        //       error: function (xhr, status, error) {
+        //          $('#loading2-JumlahObjekPajakTahunan').hide();
+        //          $('#JumlahObjekPajakTahunan').hide();
+        //          $('#JumlahObjekPajakTahunan').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+        //       }
+        //    });
+        // }
+        // function fnJumlahObjekPajakSeries()
+        // {
+        //     $.ajax({
+        //       url: '@(Url.Action("JumlahObjekPajak"))',
+        //       type: 'GET',
+        //       beforeSend: function () {
+        //          $('#loading2-JumlahObjekPajakSeries').show();
+        //          $('#JumlahObjekPajakSeries').hide();
+        //       },
+        //       success: function (response) {
+        //             if (response.Status === undefined) {
+        //                 $('#loading2-JumlahObjekPajakSeries').hide();
+        //                 $('#JumlahObjekPajakSeries').show();
+        //                 $('#JumlahObjekPajakSeries').html(response);
+        //             }
+        //             else {
+        //                 swal.fire({
+        //                     icon: 'warning',
+        //                     title: '<b style="color:orange">Peringatan</b>',
+        //                     text: response.Message
+        //                 })
+        //             }
+        //       },
+        //       error: function (xhr, status, error) {
+        //          $('#loading2-JumlahObjekPajakSeries').hide();
+        //          $('#JumlahObjekPajakSeries').hide();
+        //          $('#JumlahObjekPajakSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+        //       }
+        //    });
+        // }
         function fnPemasanganAlatRekamDetail()
         {
             $.ajax({

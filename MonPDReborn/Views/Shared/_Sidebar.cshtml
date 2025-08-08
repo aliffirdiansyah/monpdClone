@@ -405,13 +405,17 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-laporanStrategis">Laporan Strategis</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link collapse @EvaluasiTargetActiveClass" 
+                    <a class="nav-link menu-link @(currentController == "KONTROLPEMBAYARAN" ? "active" : "")"
+                       href="@Url.Action("Index", "KontrolPembayaran")" role="button">
+                        <i class="bx bx-target-lock"></i><span data-key="t-harian">Monitoring Pembayaran</span>
+                    </a>
+                    @* <a class="nav-link menu-link collapse @EvaluasiTargetActiveClass" 
                         href="#sidebarEvaluasiTarget" 
                         data-bs-toggle="collapse" 
                         role="button" 
                         aria-expanded="@EvaluasiTargetExpanded"
                        aria-controls="#sidebarEvaluasiTarget" style="background-color: #5EA8A4">
-                        <i class="bx bx-target-lock"></i><span data-key="t-monitoring">Evaluasi Target VS Realisasi</span>
+                        <i class=""></i><span data-key="t-monitoring">Evaluasi Target VS Realisasi</span>
                     </a>
                     <div id="sidebarEvaluasiTarget" class="menu-dropdown collapse @EvaluasiTargetShowClass">
                         <ul class="nav nav-sm flex-column">
@@ -422,7 +426,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </div>
+                    </div> *@
                 </li>
                 <li class="nav-item @AnalisisTrenShowClass">
                     <a class="nav-link menu-link @(currentController == "KONTROLPREDIKSI" ? "active" : "")"
