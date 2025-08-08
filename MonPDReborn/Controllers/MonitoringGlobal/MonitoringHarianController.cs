@@ -25,7 +25,7 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
             _logger = logger;
         }
 
-        public IActionResult Index(int? jenisPajak, int? bulan, int? tahun)
+        public IActionResult Index(int? jenisPajak, int? tahun, int? bulan)
         {
             try
             {
