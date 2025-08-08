@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models.EvaluasiTarget;
@@ -166,7 +167,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
-        public IActionResult ShowDetailPajak(int jenisPajak, string kategori, int tahun = 2025, string status = "")
+        public IActionResult DetailPembayaran(int jenisPajak, int kategoriId, int bulan, int tahun, int status)
         {
             try
             {
@@ -178,7 +179,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                 //    Status = status,
                 //    DataDetailList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataDetailPajakList(jenisPajak, kategori, tahun, status)
                 //};
-                var model = new ShowDetailPajak((EnumFactory.EPajak)jenisPajak, kategori, tahun, status);
+                var model = new DetailPembayaran((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan, status);
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailPajak.cshtml", model);
             }
