@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MonPDLib.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,24 @@ namespace MonPDLib.General
                 Tahun4 = tahunList[3],
                 Tahun5 = tahunList[4],
             };
+        }
+        public string GetFormattedNOP(string NOP)
+        {
+            try
+            {
+                //35 78 010 001 902 00001
+                var prop = NOP.Substring(0, 2);
+                var dati = NOP.Substring(2, 2);
+                var kec = NOP.Substring(4, 3);
+                var kel = NOP.Substring(7, 3);
+                var jnspajak = NOP.Substring(10, 3);
+                var seq = NOP.Substring(13, 5);
+                return prop + "." + dati + "." + kec + "." + kel + "." + jnspajak + "." + seq;
+            }
+            catch
+            {
+                return NOP;
+            }
         }
         public static int GetMaxValueSpecifyColumn<T>(DbContext ctx, Expression<Func<T, bool>>? expression, string propertyNameEntityEf = "Id")
         where T : class
