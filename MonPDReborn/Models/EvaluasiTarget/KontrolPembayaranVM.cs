@@ -6,6 +6,7 @@ using System.Globalization;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
 using static MonPDReborn.Models.DataOP.ProfilePotensiOPVM;
+using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Method;
 
 namespace MonPDReborn.Models.EvaluasiTarget
@@ -51,6 +52,15 @@ namespace MonPDReborn.Models.EvaluasiTarget
             }
         }
 
+        public class DetailPembayaran
+        {
+            public List<DetailPajak> Data { get; set; }
+
+            public DetailPembayaran(EnumFactory.EPajak jenisPajak, int kategoriId, int tahun, int bulan, int status)
+            {
+                Data = Method.GetDetailKontrolPembayaranList(jenisPajak, kategoriId, tahun, bulan, status);
+            }
+        }
 
         public class ShowUpaya
         {
@@ -194,6 +204,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
                     re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
                     re.JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription();
 
                     re.OPbuka1 = kontrolPembayaranList
@@ -1872,7 +1883,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
             #endregion
 
             #region Data Detail KontrolPembayaran
-            public List<DetailPajak> GetDetailKontrolPembayaranList(EnumFactory.EPajak jenisPajak, int tahun, int bulan, int status)
+            public static List<DetailPajak> GetDetailKontrolPembayaranList(EnumFactory.EPajak jenisPajak, int kategoriId, int tahun, int bulan, int status)
             {
                 // STATUS
                 // 0 = belumBayar
@@ -1890,7 +1901,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         if (status == 3)
                         {
                             ret = context.DbCtrlByrRestos
-                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId == kategoriId)
                                 .Select(x => new DetailPajak
                                 {
                                     Kategori = x.NamaKategori,
@@ -1908,7 +1919,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         else
                         {
                             ret = context.DbCtrlByrRestos
-                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status && x.KategoriId == kategoriId)
                                 .Select(x => new DetailPajak
                                 {
                                     Kategori = x.NamaKategori,
@@ -1966,7 +1977,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         if (status == 3)
                         {
                             ret = context.DbCtrlByrHotels
-                                .Where(x => x.Tahun == tahun && x.Bulan == bulan)
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId == kategoriId)
                                 .Select(x => new DetailPajak
                                 {
                                     Kategori = x.NamaKategori,
@@ -1984,7 +1995,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         else
                         {
                             ret = context.DbCtrlByrHotels
-                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status)
+                                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == status && x.KategoriId == kategoriId)
                                 .Select(x => new DetailPajak
                                 {
                                     Kategori = x.NamaKategori,
@@ -2925,6 +2936,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
         {
             public string Kategori { get; set; } = null!;
             public string JenisPajak { get; set; } = null!;
+            public int kategoriId { get; set; }
             public int Tahun { get; set; }
 
             public decimal OPbuka1 { get; set; }

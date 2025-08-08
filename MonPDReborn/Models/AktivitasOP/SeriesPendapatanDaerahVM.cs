@@ -81,26 +81,33 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                     }
                     switch (item.Tahun)
                     {
-                        
-                        case 2021:
+                        case 2019:
                             existing.Target1 = item.JumlahTarget ?? 0;
                             existing.Realisasi1 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2022:
+                        case 2020:
                             existing.Target2 = item.JumlahTarget ?? 0;
                             existing.Realisasi2 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2023:
+                        case 2021:
                             existing.Target3 = item.JumlahTarget ?? 0;
                             existing.Realisasi3 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2024:
+                        case 2022:
                             existing.Target4 = item.JumlahTarget ?? 0;
                             existing.Realisasi4 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2025:
+                        case 2023:
                             existing.Target5 = item.JumlahTarget ?? 0;
                             existing.Realisasi5 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2024:
+                            existing.Target6 = item.JumlahTarget ?? 0;
+                            existing.Realisasi6 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2025:
+                            existing.Target7 = item.JumlahTarget ?? 0;
+                            existing.Realisasi7 = item.JumlahRealisasi ?? 0;
                             break;
                     }
                 }
@@ -130,25 +137,33 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                     }
                     switch (item.Tahun)
                     {
-                        case 2021:
+                        case 2019:
                             existing.Target1 = item.JumlahTarget ?? 0;
                             existing.Realisasi1 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2022:
+                        case 2020:
                             existing.Target2 = item.JumlahTarget ?? 0;
                             existing.Realisasi2 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2023:
+                        case 2021:
                             existing.Target3 = item.JumlahTarget ?? 0;
                             existing.Realisasi3 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2024:
+                        case 2022:
                             existing.Target4 = item.JumlahTarget ?? 0;
                             existing.Realisasi4 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2025:
+                        case 2023:
                             existing.Target5 = item.JumlahTarget ?? 0;
                             existing.Realisasi5 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2024:
+                            existing.Target6 = item.JumlahTarget ?? 0;
+                            existing.Realisasi6 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2025:
+                            existing.Target7 = item.JumlahTarget ?? 0;
+                            existing.Realisasi7 = item.JumlahRealisasi ?? 0;
                             break;
                     }
                 }
@@ -179,25 +194,33 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                     }
                     switch (item.Tahun)
                     {
-                        case 2021:
+                        case 2019:
                             existing.Target1 = item.JumlahTarget ?? 0;
                             existing.Realisasi1 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2022:
+                        case 2020:
                             existing.Target2 = item.JumlahTarget ?? 0;
                             existing.Realisasi2 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2023:
+                        case 2021:
                             existing.Target3 = item.JumlahTarget ?? 0;
                             existing.Realisasi3 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2024:
+                        case 2022:
                             existing.Target4 = item.JumlahTarget ?? 0;
                             existing.Realisasi4 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2025:
+                        case 2023:
                             existing.Target5 = item.JumlahTarget ?? 0;
                             existing.Realisasi5 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2024:
+                            existing.Target6 = item.JumlahTarget ?? 0;
+                            existing.Realisasi6 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2025:
+                            existing.Target7 = item.JumlahTarget ?? 0;
+                            existing.Realisasi7 = item.JumlahRealisasi ?? 0;
                             break;
                     }
                 }
@@ -228,25 +251,33 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                     }
                     switch (item.Tahun)
                     {
-                        case 2021:
+                        case 2019:
                             existing.Target1 = item.JumlahTarget ?? 0;
                             existing.Realisasi1 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2022:
+                        case 2020:
                             existing.Target2 = item.JumlahTarget ?? 0;
                             existing.Realisasi2 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2023:
+                        case 2021:
                             existing.Target3 = item.JumlahTarget ?? 0;
                             existing.Realisasi3 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2024:
+                        case 2022:
                             existing.Target4 = item.JumlahTarget ?? 0;
                             existing.Realisasi4 = item.JumlahRealisasi ?? 0;
                             break;
-                        case 2025:
+                        case 2023:
                             existing.Target5 = item.JumlahTarget ?? 0;
                             existing.Realisasi5 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2024:
+                            existing.Target6 = item.JumlahTarget ?? 0;
+                            existing.Realisasi6 = item.JumlahRealisasi ?? 0;
+                            break;
+                        case 2025:
+                            existing.Target7 = item.JumlahTarget ?? 0;
+                            existing.Realisasi7 = item.JumlahRealisasi ?? 0;
                             break;
                     }
                 }
@@ -289,16 +320,20 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 var ringkasanTransfer = new RingkasanPendapatan
                 {
                     Uraian = "PENDAPATAN TRANSFER",
-                    Target1 = dataTransfer.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
-                    Realisasi1 = dataTransfer.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
-                    Target2 = dataTransfer.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
-                    Realisasi2 = dataTransfer.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
-                    Target3 = dataTransfer.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
-                    Realisasi3 = dataTransfer.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
-                    Target4 = dataTransfer.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
-                    Realisasi4 = dataTransfer.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
-                    Target5 = dataTransfer.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
-                    Realisasi5 = dataTransfer.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
+                    Target1 = dataTransfer.FirstOrDefault(x => x.Tahun == 2019)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataTransfer.FirstOrDefault(x => x.Tahun == 2019)?.JumlahRealisasi ?? 0,
+                    Target2 = dataTransfer.FirstOrDefault(x => x.Tahun == 2020)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataTransfer.FirstOrDefault(x => x.Tahun == 2020)?.JumlahRealisasi ?? 0,
+                    Target3 = dataTransfer.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataTransfer.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target4 = dataTransfer.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataTransfer.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target5 = dataTransfer.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataTransfer.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target6 = dataTransfer.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi6 = dataTransfer.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target7 = dataTransfer.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi7 = dataTransfer.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
                 };
 
                 result.Add(ringkasanTransfer);
@@ -311,16 +346,20 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 var ringkasanLain = new RingkasanPendapatan
                 {
                     Uraian = "Lain - lain Pendapatan yang Sah",
-                    Target1 = dataLain.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
-                    Realisasi1 = dataLain.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
-                    Target2 = dataLain.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
-                    Realisasi2 = dataLain.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
-                    Target3 = dataLain.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
-                    Realisasi3 = dataLain.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
-                    Target4 = dataLain.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
-                    Realisasi4 = dataLain.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
-                    Target5 = dataLain.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
-                    Realisasi5 = dataLain.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
+                    Target1 = dataLain.FirstOrDefault(x => x.Tahun == 2019)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataLain.FirstOrDefault(x => x.Tahun == 2019)?.JumlahRealisasi ?? 0,
+                    Target2 = dataLain.FirstOrDefault(x => x.Tahun == 2020)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataLain.FirstOrDefault(x => x.Tahun == 2020)?.JumlahRealisasi ?? 0,
+                    Target3 = dataLain.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataLain.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target4 = dataLain.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataLain.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target5 = dataLain.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataLain.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target6 = dataLain.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi6 = dataLain.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target7 = dataLain.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi7 = dataLain.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
                 };
 
                 result.Add(ringkasanLain);
@@ -333,92 +372,23 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 var ringkasanPenerimaan = new RingkasanPendapatan
                 {
                     Uraian = "Lain - lain Pendapatan yang Sah",
-                    Target1 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
-                    Realisasi1 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
-                    Target2 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
-                    Realisasi2 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
-                    Target3 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
-                    Realisasi3 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
-                    Target4 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
-                    Realisasi4 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
-                    Target5 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
-                    Realisasi5 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
+                    Target1 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2019)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2019)?.JumlahRealisasi ?? 0,
+                    Target2 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2020)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2020)?.JumlahRealisasi ?? 0,
+                    Target3 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target4 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target5 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target6 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi6 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target7 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi7 = dataPenerimaan.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
                 };
 
                 result.Add(ringkasanPenerimaan);
-
-                return result;
-
-                // 2. Pendapatan Transfer
-                var listTransfer = GetDataPendapatanTransferList();
-                var totalTransfer = new RingkasanPendapatan
-                {
-                    Uraian = "Pendapatan Transfer",
-                    Target1 = listTransfer.Sum(x => x.Target1),
-                    Realisasi1 = listTransfer.Sum(x => x.Realisasi1),
-                    Target2 = listTransfer.Sum(x => x.Target2),
-                    Realisasi2 = listTransfer.Sum(x => x.Realisasi2),
-                    Target3 = listTransfer.Sum(x => x.Target3),
-                    Realisasi3 = listTransfer.Sum(x => x.Realisasi3),
-                    Target4 = listTransfer.Sum(x => x.Target4),
-                    Realisasi4 = listTransfer.Sum(x => x.Realisasi4),
-                    Target5 = listTransfer.Sum(x => x.Target5),
-                    Realisasi5 = listTransfer.Sum(x => x.Realisasi5),
-                };
-                result.Add(totalTransfer);
-
-                // 3. Lain-lain Pendapatan Daerah yang Sah
-                var listLain = GetDataLainLainPendapatanList();
-                var totalLain = new RingkasanPendapatan
-                {
-                    Uraian = "Lain-lain Pendapatan Daerah yang Sah",
-                    Target1 = listLain.Sum(x => x.Target1),
-                    Realisasi1 = listLain.Sum(x => x.Realisasi1),
-                    Target2 = listLain.Sum(x => x.Target2),
-                    Realisasi2 = listLain.Sum(x => x.Realisasi2),
-                    Target3 = listLain.Sum(x => x.Target3),
-                    Realisasi3 = listLain.Sum(x => x.Realisasi3),
-                    Target4 = listLain.Sum(x => x.Target4),
-                    Realisasi4 = listLain.Sum(x => x.Realisasi4),
-                    Target5 = listLain.Sum(x => x.Target5),
-                    Realisasi5 = listLain.Sum(x => x.Realisasi5),
-                };
-                result.Add(totalLain);
-
-                // 4. Penerimaan Pembiayaan
-                var listPembiayaan = GetDataPenerimaanPembiayaanList();
-                var totalPembiayaan = new RingkasanPendapatan
-                {
-                    Uraian = "Penerimaan Pembiayaan",
-                    Target1 = listPembiayaan.Sum(x => x.Target1),
-                    Realisasi1 = listPembiayaan.Sum(x => x.Realisasi1),
-                    Target2 = listPembiayaan.Sum(x => x.Target2),
-                    Realisasi2 = listPembiayaan.Sum(x => x.Realisasi2),
-                    Target3 = listPembiayaan.Sum(x => x.Target3),
-                    Realisasi3 = listPembiayaan.Sum(x => x.Realisasi3),
-                    Target4 = listPembiayaan.Sum(x => x.Target4),
-                    Realisasi4 = listPembiayaan.Sum(x => x.Realisasi4),
-                    Target5 = listPembiayaan.Sum(x => x.Target5),
-                    Realisasi5 = listPembiayaan.Sum(x => x.Realisasi5),
-                };
-                result.Add(totalPembiayaan);
-
-                // 5. TOTAL
-                var totalAll = new RingkasanPendapatan
-                {
-                    Uraian = "TOTAL",
-                    Target1 = result.Sum(x => x.Target1),
-                    Realisasi1 = result.Sum(x => x.Realisasi1),
-                    Target2 = result.Sum(x => x.Target2),
-                    Realisasi2 = result.Sum(x => x.Realisasi2),
-                    Target3 = result.Sum(x => x.Target3),
-                    Realisasi3 = result.Sum(x => x.Realisasi3),
-                    Target4 = result.Sum(x => x.Target4),
-                    Realisasi4 = result.Sum(x => x.Realisasi4),
-                    Target5 = result.Sum(x => x.Target5),
-                    Realisasi5 = result.Sum(x => x.Realisasi5),
-                };
-                result.Add(totalAll);
 
                 return result;
             }
@@ -443,9 +413,12 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
-           /* public decimal Target6 { get; set; }
+            public decimal Target6 { get; set; }
             public decimal Realisasi6 { get; set; }
-            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;*/
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
+            public decimal Target7 { get; set; }
+            public decimal Realisasi7 { get; set; }
+            public decimal Persentase7 => Target7 > 0 ? (Realisasi7 / Target7) * 100 : 0;
         }
 
         public class PendapatanTransfer
@@ -468,6 +441,12 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
+            public decimal Target6 { get; set; }
+            public decimal Realisasi6 { get; set; }
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
+            public decimal Target7 { get; set; }
+            public decimal Realisasi7 { get; set; }
+            public decimal Persentase7 => Target7 > 0 ? (Realisasi7 / Target7) * 100 : 0;
         }
 
         public class LainLainPendapatan
@@ -490,6 +469,12 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
+            public decimal Target6 { get; set; }
+            public decimal Realisasi6 { get; set; }
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
+            public decimal Target7 { get; set; }
+            public decimal Realisasi7 { get; set; }
+            public decimal Persentase7 => Target7 > 0 ? (Realisasi7 / Target7) * 100 : 0;
         }
 
         public class PenerimaanPembiayaan
@@ -512,6 +497,12 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
+            public decimal Target6 { get; set; }
+            public decimal Realisasi6 { get; set; }
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
+            public decimal Target7 { get; set; }
+            public decimal Realisasi7 { get; set; }
+            public decimal Persentase7 => Target7 > 0 ? (Realisasi7 / Target7) * 100 : 0;
         }
 
         public class PendapatanTotal
@@ -537,6 +528,12 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 > 0 ? (Realisasi5 / Target5) * 100 : 0;
+            public decimal Target6 { get; set; }
+            public decimal Realisasi6 { get; set; }
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
+            public decimal Target7 { get; set; }
+            public decimal Realisasi7 { get; set; }
+            public decimal Persentase7 => Target7 > 0 ? (Realisasi7 / Target7) * 100 : 0;
         }
         public class RingkasanPendapatan
         {
@@ -563,6 +560,14 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
             public decimal Target5 { get; set; }
             public decimal Realisasi5 { get; set; }
             public decimal Persentase5 => Target5 == 0 ? 0 : Realisasi5 / Target5 * 100;
+
+            public decimal Target6 { get; set; }
+            public decimal Realisasi6 { get; set; }
+            public decimal Persentase6 => Target6 > 0 ? (Realisasi6 / Target6) * 100 : 0;
+
+            public decimal Target7 { get; set; }
+            public decimal Realisasi7 { get; set; }
+            public decimal Persentase7 => Target7 > 0 ? (Realisasi7 / Target7) * 100 : 0;
         }
 
 
