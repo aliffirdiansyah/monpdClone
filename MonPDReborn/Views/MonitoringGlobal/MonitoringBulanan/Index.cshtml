@@ -116,7 +116,7 @@
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
                 .attr('href', 'javascript:void(0);')
-                .attr('title', `Lihat Monitoring Harian ${cellInfo.data.BulanNama;}`)
+                .attr('title', `Lihat Monitoring Harian ${cellInfo.data.BulanNama}`)
                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
                 .on('click', () => onPajakClick(jenisPajak, kategoriId, tahun, bulan, status));
 
