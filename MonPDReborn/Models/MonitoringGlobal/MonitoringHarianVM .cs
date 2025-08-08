@@ -49,8 +49,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                     });
                 }
             }
-            public Index(EnumFactory.EPajak jenisPajak, int bulan, int tahun)
+            public Index(EnumFactory.EPajak jenisPajak, int tahun, int bulan)
             {
+                SelectedPajak = (int)jenisPajak;
+                SelectedTahun = tahun;
+                SelectedBulan = bulan;
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
                     //.Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
@@ -76,9 +79,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         Text = i.ToString()
                     });
                 }
-                SelectedPajak = (int)jenisPajak;
-                SelectedTahun = tahun;
-                SelectedBulan = bulan;
+               
             }
         }
         public class Show
