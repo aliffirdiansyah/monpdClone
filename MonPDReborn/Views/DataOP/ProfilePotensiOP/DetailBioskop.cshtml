@@ -11,7 +11,7 @@
     <div class="col-lg-12">
         <div class="card border border-warning border-2">
             <div class="card-body">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-lg-8">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0">
@@ -54,22 +54,6 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-12">
-                        <div class="d-flex p-3">
-                            <div class="flex-shrink-0 ms-3">
-                                <p class="fs-14 text-muted mb-1">NOP</p>
-                                <p class="fs-14 fw-semibold mb-3">@Model.NOP</p>
-                            </div>
-                            <div class="flex-shrink-0 ms-5">
-                                <p class="fs-14 text-muted mb-1">Kapasitas Kursi Studio</p>
-                                <p class="fs-14 fw-semibold mb-3">@Model.KapasitasStudio.ToString("N0") Kursi</p>
-                            </div>
-                            <div class="flex-shrink-0 ms-3">
-                                <p class="fs-14 text-muted mb-1">Jumlah Pengunjung</p>
-                                <p class="fs-14 fw-semibold mb-3">@Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") Hari Kerja | @Model.JumlahPengunjungWeekendBioskop.ToString("N0") Akhir Pekan</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -134,7 +118,7 @@
             <div class="card-body">
                 <div class="info-row">
                     <p class="label">NOP</p>                    
-                    <p class="value">@Model.NOP</p>                    
+                    <p class="value">@Model.FormattedNOP</p>                    
                 </div>
                 <div class="info-row">
                     <p class="label">Nama Bioskop</p>                    
@@ -176,28 +160,28 @@
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Kapasitas = Jumlah Studio x Kapasitas Studio x 4 Kali Penayangan/Hari
                 </p>
-                <p class="fs-14 text-muted mb-2 fw-semibold">
+                <p class="fs-14  mb-2 fw-bold text-dark">
                     = @Model.JumlahStudio.ToString("N0") x @Model.KapasitasStudio.ToString("N0") x 4 = @Model.KapasitasBioskop.ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Jumlah Pengunjung Weekdays = Kapasitas x Turnover Weekdays
                 </p>
-                <p class="fs-14 text-muted mb-2 fw-semibold">
+                <p class="fs-14 mb-2 fw-bold text-dark">
                     = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Jumlah Pengunjung Weekend = Kapasitas x Turnover Weekend
                 </p>
-                <p class="fs-14 text-muted mb-2 fw-semibold">
+                <p class="fs-14 mb-2 fw-bold text-dark">
                     = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Model.JumlahPengunjungWeekendBioskop.ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Omzet/Bulan = (HTM x Pengunjung Weekdays x 22) + (HTM x Pengunjung Weekend x 8)
                 </p>
-                <p class="fs-14 text-muted mb-3 fw-semibold">
+                <p class="fs-14 mb-3 fw-bold text-dark">
                     = (Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") x 22) +
                     (Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendBioskop.ToString("N0") x 8) = Rp. @Model.OmzetPerBulanBioskop.ToString("N0")
                 </p>
@@ -209,14 +193,14 @@
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
                 </p>
-                <p class="fs-14 text-muted mb-2 fw-semibold">
+                <p class="fs-14 mb-2 fw-bold text-dark">
                     = Rp. @Model.OmzetPerBulanBioskop.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanBioskop.ToString("N0")
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
                 </p>
-                <p class="fs-14 text-muted fw-semibold">
+                <p class="fs-14 fw-bold text-dark">
                     = Rp. @Model.PotensiPajakPerBulanBioskop.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunBioskop.ToString("N0")
                 </p>
             </div>
