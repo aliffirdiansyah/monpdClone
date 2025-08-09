@@ -16,13 +16,13 @@ namespace MonPDReborn.Models.AktivitasOP
 
         public class Show
         {
-            public List<DataPemasanganAlat> DataPemasanganAlatList { get; set; } = new();
+            public List<SeriesPemasanganAlat> SeriesPemasanganAlatList { get; set; } = new();
 
             public Show() { }
 
             public Show(string keyword)
             {
-                DataPemasanganAlatList = Method.GetDataPemasanganAlatList();
+                SeriesPemasanganAlatList = Method.GetSeriesPemasanganAlatList();
             }
         }
 
