@@ -18,40 +18,48 @@
             </div>
             <div class="card-body">
                 
-                <!-- Filter Tahun -->
-                <div class="d-flex mb-3" id="tahunGroup">
-                    <button class="btn btn-outline-primary tahun-link me-2 active" data-tahun="2025">2025</button>
-                    <button class="btn btn-outline-primary tahun-link me-2" data-tahun="2024">2024</button>
-                    <button class="btn btn-outline-primary tahun-link me-2" data-tahun="2023">2023</button>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <!-- Tab Jenis Pajak -->
+                    <ul class="nav nav-tabs" id="jenisPajakTabs">
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab active" href="#" data-jenis="Hotel">Hotel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Restoran">Restoran</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Parkir">Parkir</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Hiburan">Hiburan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PPJ">PPJ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Reklame">Reklame</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="ABT">ABT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PBB">PBB</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="AirTanah">AirTanah</a>
+                        </li>
+                    </ul>
+
+                    <!-- Filter Tahun di kanan -->
+                    <div id="tahunGroup">
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1 active" data-tahun="2025">2025</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1" data-tahun="2024">2024</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1" data-tahun="2023">2023</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1" data-tahun="2022">2022</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link" data-tahun="2021">2021</button>
+                    </div>
                 </div>
 
-                <!-- Tab Jenis Pajak -->
-                <ul class="nav nav-tabs mb-4" id="jenisPajakTabs">
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab active" href="#" data-jenis="Hotel">Hotel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Restoran">Restoran</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Parkir">Parkir</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Hiburan">Hiburan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PPJ">PPJ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="ABT">ABT</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PBB">PBB</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link jenis-pajak-tab" href="#" data-jenis="AirTanah">AirTanah</a>
-                    </li>
-                </ul>
 
                 <!-- Kontainer Dinamis untuk Masing-Masing Jenis Pajak -->
                 @{
@@ -64,17 +72,33 @@
                     <div id="container-@jenis" class="tab-content" style="display:@(isFirst ? "block" : "none");">
                         <h4 class="card-title fs-16 mb-1">Kontrol Pembayaran Pajak</h4>
                         <div id="kontrolPembayaranContainer-@jenis" class="mb-5"></div>
-                        <div id="kontrolPembayaranSpinner-@jenis" style="display:none">Loading pembayaran…</div>
+                        <div id="kontrolPembayaranSpinner-@jenis" class="text-center py-3" style="display:none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading pembayaran…</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Loading pembayaran…</div>
+                        </div>
 
                         <h4 class="card-title fs-16 mb-1">Kontrol Upaya Pajak</h4>
                         <div id="kontrolUpayaContainer-@jenis" class="mb-5"></div>
-                        <div id="kontrolUpayaSpinner-@jenis" style="display:none">Loading upaya…</div>
+                        <div id="kontrolUpayaSpinner-@jenis" class="text-center py-3" style="display:none">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading upaya…</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Loading upaya…</div>
+                        </div>
 
                         <h4 class="card-title fs-16 mb-1">Kontrol Potensi Pajak</h4>
                         <div id="kontrolPotensiContainer-@jenis"></div>
-                        <div id="kontrolPotensiSpinner-@jenis" style="display:none">Loading potensi…</div>
+                        <div id="kontrolPotensiSpinner-@jenis" class="text-center py-3" style="display:none">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading potensi…</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Loading potensi…</div>
+                        </div>
                     </div>
                 }
+
 
                 
                 <div class="modal fade" id="modalDetailPajak" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
@@ -121,7 +145,7 @@
 
 @section Scripts {
     <script>
-        let currentJenis = 'Hotel';
+                let currentJenis = 'Hotel';
         let currentTahun = 2025;
 
         function showLoadingFor(jenisPajak) {
@@ -131,22 +155,41 @@
             // Tampilkan hanya kontainer jenis pajak saat ini
             $(`#container-${jenisPajak}`).show();
 
-            // Tampilkan semua spinner untuk jenis pajak ini
-            $(`#kontrolPembayaranSpinner-${jenisPajak}`).show();
-            $(`#kontrolUpayaSpinner-${jenisPajak}`).show();
-            $(`#kontrolPotensiSpinner-${jenisPajak}`).show();
+            // Sembunyikan semua konten data dan tampilkan semua spinner
+            ["Pembayaran", "Upaya", "Potensi"].forEach(section => {
+                $(`#kontrol${section}Container-${jenisPajak}`).hide().empty();
+                $(`#kontrol${section}Spinner-${jenisPajak}`).show();
+            });
+        }
 
-            // Sembunyikan semua konten data
-            $(`#kontrolPembayaranContainer-${jenisPajak}`).hide();
-            $(`#kontrolUpayaContainer-${jenisPajak}`).hide();
-            $(`#kontrolPotensiContainer-${jenisPajak}`).hide();
+        function loadSection(url, jenisPajak, tahun, spinnerId, containerId, errorMsg) {
+            const spinner = $(`#${spinnerId}`);
+            const container = $(`#${containerId}`);
+
+            $.ajax({
+                url: url,
+                data: { jenisPajak, tahun },
+                success: function (html) {
+                    spinner.hide();
+                    container.html(html).show();
+
+                    // Eksekusi script dari HTML yang dimuat
+                    container.find("script").each(function () {
+                        $.globalEval(this.text || this.textContent || this.innerHTML || '');
+                    });
+                },
+                error: function () {
+                    spinner.hide();
+                    container.html(`<div class="text-danger">${errorMsg}</div>`).show();
+                }
+            });
         }
 
         function loadShow(jenisPajak, tahun) {
-            currentJenis = jenisPajak; // pastikan variabel global ikut berubah
+            currentJenis = jenisPajak;
             currentTahun = tahun;
 
-            console.log(`Load untuk ${jenisPajak} tahun ${tahun}`);
+            console.log(`📡 Load untuk ${jenisPajak} tahun ${tahun}`);
 
             // Tab aktif untuk jenis pajak
             $('.jenis-pajak-tab').removeClass('active');
@@ -159,69 +202,21 @@
             // Tampilkan spinner loading
             showLoadingFor(jenisPajak);
 
-            // === AJAX: Pembayaran ===
-            $.ajax({
-                url: '/KontrolPembayaran/Show',
-                data: { jenisPajak, tahun },
-                success: function (html) {
-                    $(`#kontrolPembayaranSpinner-${jenisPajak}`).hide();
-                    const container = $(`#kontrolPembayaranContainer-${jenisPajak}`);
-                    container.html(html).show();
+            // Load data tiap section
+            loadSection('/KontrolPembayaran/Show', jenisPajak, tahun,
+                `kontrolPembayaranSpinner-${jenisPajak}`,
+                `kontrolPembayaranContainer-${jenisPajak}`,
+                'Gagal memuat data pembayaran.');
 
-                    // Eksekusi script di dalam HTML
-                    container.find("script").each(function () {
-                        $.globalEval(this.text || this.textContent || this.innerHTML || '');
-                    });
-                },
-                error: function () {
-                    $(`#kontrolPembayaranSpinner-${jenisPajak}`).hide();
-                    $(`#kontrolPembayaranContainer-${jenisPajak}`).html(
-                        '<div class="text-danger">Gagal memuat data pembayaran.</div>'
-                    ).show();
-                }
-            });
+            loadSection('/KontrolPembayaran/ShowUpaya', jenisPajak, tahun,
+                `kontrolUpayaSpinner-${jenisPajak}`,
+                `kontrolUpayaContainer-${jenisPajak}`,
+                'Gagal memuat data upaya.');
 
-            // === AJAX: Upaya ===
-            $.ajax({
-                url: '/KontrolPembayaran/ShowUpaya',
-                data: { jenisPajak, tahun },
-                success: function (html) {
-                    $(`#kontrolUpayaSpinner-${jenisPajak}`).hide();
-                    const container = $(`#kontrolUpayaContainer-${jenisPajak}`);
-                    container.html(html).show();
-
-                    container.find("script").each(function () {
-                        $.globalEval(this.text || this.textContent || this.innerHTML || '');
-                    });
-                },
-                error: function () {
-                    $(`#kontrolUpayaSpinner-${jenisPajak}`).hide();
-                    $(`#kontrolUpayaContainer-${jenisPajak}`).html(
-                        '<div class="text-danger">Gagal memuat data upaya.</div>'
-                    ).show();
-                }
-            });
-
-            // === AJAX: Potensi ===
-            $.ajax({
-                url: '/KontrolPembayaran/ShowPotensi',
-                data: { jenisPajak, tahun },
-                success: function (html) {
-                    $(`#kontrolPotensiSpinner-${jenisPajak}`).hide();
-                    const container = $(`#kontrolPotensiContainer-${jenisPajak}`);
-                    container.html(html).show();
-
-                    container.find("script").each(function () {
-                        $.globalEval(this.text || this.textContent || this.innerHTML || '');
-                    });
-                },
-                error: function () {
-                    $(`#kontrolPotensiSpinner-${jenisPajak}`).hide();
-                    $(`#kontrolPotensiContainer-${jenisPajak}`).html(
-                        '<div class="text-danger">Gagal memuat data potensi.</div>'
-                    ).show();
-                }
-            });
+            loadSection('/KontrolPembayaran/ShowPotensi', jenisPajak, tahun,
+                `kontrolPotensiSpinner-${jenisPajak}`,
+                `kontrolPotensiContainer-${jenisPajak}`,
+                'Gagal memuat data potensi.');
         }
 
         $(document).ready(function () {
@@ -242,6 +237,7 @@
                 loadShow(jenisDipilih, currentTahun);
             });
         });
+
 
         function showPajakCellTemplate(cellElement, cellInfo) {
             const jenisPajakMap = {

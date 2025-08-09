@@ -4,8 +4,8 @@
 <div class="table-responsive">
     @(
         Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Potensi>()
-            .ID("potensiGrid")
-            .DataSource(Model.DataPotensiList)
+            .ID("gridPotensi" + Model.Pajak)
+            .DataSource(Model.Data)
             .ShowBorders(true)
             .ShowColumnLines(true)
             .RowAlternationEnabled(true)

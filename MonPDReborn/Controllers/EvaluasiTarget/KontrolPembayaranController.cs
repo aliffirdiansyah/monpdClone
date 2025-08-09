@@ -78,6 +78,9 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                     case "pbb":
                         enumPajak = EPajak.PBB;
                         break;
+                    case "reklame":
+                        enumPajak = EPajak.Reklame;
+                        break;
                     case "bphtb":
                         enumPajak = EPajak.BPHTB;
                         break;
@@ -140,16 +143,58 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                 return Json(response);
             }
         }
-        public IActionResult ShowPotensi(string jenisPajak = "Hotel", int tahun = 2025)
+        public IActionResult ShowPotensi(int tahun, string jenisPajak)
         {
+            var response = new ResponseBase(); // Pastikan ResponseResult ini adalah class response standar kamu
+
             try
             {
+                EPajak enumPajak;
 
-                var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowPotensi
+                switch ((jenisPajak ?? "").ToLower())
                 {
-                    Tahun = tahun,
-                    DataPotensiList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataPotensiList(jenisPajak, tahun)
-                };
+                    case "hotel":
+                        enumPajak = EPajak.JasaPerhotelan;
+                        break;
+                    case "restoran":
+                        enumPajak = EPajak.MakananMinuman;
+                        break;
+                    case "ppj":
+                        enumPajak = EPajak.TenagaListrik;
+                        break;
+                    case "parkir":
+                        enumPajak = EPajak.JasaParkir;
+                        break;
+                    case "hiburan":
+                        enumPajak = EPajak.JasaKesenianHiburan;
+                        break;
+                    case "abt":
+                        enumPajak = EPajak.AirTanah;
+                        break;
+                    case "pbb":
+                        enumPajak = EPajak.PBB;
+                        break;
+                    case "reklame":
+                        enumPajak = EPajak.Reklame;
+                        break;
+                    case "bphtb":
+                        enumPajak = EPajak.BPHTB;
+                        break;
+                    case "opsenpkb":
+                        enumPajak = EPajak.OpsenPkb;
+                        break;
+                    case "opsenbbnkb":
+                        enumPajak = EPajak.OpsenBbnkb;
+                        break;
+                    case "semua":
+                        enumPajak = EPajak.Semua;
+                        break;
+                    default:
+                        return BadRequest("Jenis pajak tidak dikenal: " + jenisPajak);
+                }
+
+                // Inisialisasi ViewModel
+                var model = new KontrolPembayaranVM.ShowPotensi(tahun, enumPajak);
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowPotensi.cshtml", model);
             }
