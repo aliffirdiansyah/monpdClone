@@ -2170,7 +2170,7 @@ namespace MonPDReborn.Models.DataOP
                                 NamaOP = x.WpNama,
                                 Alamat = x.AlamatOp,
                                 JenisOP = "-",
-                                
+
                                 Wilayah = x.Uptb.ToString() ?? "-"
                             }).ToList();
                         }
@@ -2185,7 +2185,7 @@ namespace MonPDReborn.Models.DataOP
                                 NamaOP = x.WpNama,
                                 Alamat = x.AlamatOp,
                                 JenisOP = "-",
-                                
+
                                 Wilayah = x.Uptb.ToString() ?? "-"
                             }).ToList();
                         }
@@ -2200,7 +2200,7 @@ namespace MonPDReborn.Models.DataOP
                                 NamaOP = x.WpNama,
                                 Alamat = x.AlamatOp,
                                 JenisOP = "-",
-                                
+
                                 Wilayah = x.Uptb.ToString() ?? "-"
                             }).ToList();
                         }
@@ -2215,7 +2215,7 @@ namespace MonPDReborn.Models.DataOP
                                 NamaOP = x.WpNama,
                                 Alamat = x.AlamatOp,
                                 JenisOP = "-",
-                                
+
                                 Wilayah = x.Uptb.ToString() ?? "-"
                             }).ToList();
                         }
@@ -2382,7 +2382,7 @@ namespace MonPDReborn.Models.DataOP
                                 break;
 
                             case EnumFactory.EPajak.PBB:
-                                awal = context.DbMonPbbs.Where(x => x.TahunBuku == yearBefore).Select(x => x.Nop).Distinct().Count(); 
+                                awal = context.DbMonPbbs.Where(x => x.TahunBuku == yearBefore).Select(x => x.Nop).Distinct().Count();
                                 tutup = context.DbMonPbbs.Where(x => x.TahunBuku == year).Select(x => x.Nop).Distinct().Count();
                                 baru = context.DbMonPbbs.Where(x => x.TahunBuku == year).Select(x => x.Nop).Distinct().Count();
                                 akhir = context.DbMonPbbs.Where(x => x.TahunBuku == year).Select(x => x.Nop).Distinct().Count();
@@ -3171,7 +3171,7 @@ namespace MonPDReborn.Models.DataOP
                     NamaOP = x.NamaOP,
                     Alamat = x.Alamat,
                     JenisOP = x.JenisOP,
-                    Wilayah = x.Wilayah
+                    Wilayah = "SURABAYA " + x.Wilayah
                 }).ToList();
 
                 return result;
