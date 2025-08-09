@@ -4,8 +4,6 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using System.Globalization;
 using static MonPDLib.General.EnumFactory;
-using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
-using static MonPDReborn.Models.DataOP.ProfilePotensiOPVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Method;
 
