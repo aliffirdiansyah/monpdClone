@@ -135,6 +135,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbPotensiResto> DbPotensiRestos { get; set; }
 
+    public virtual DbSet<DbRekamAlatGabung> DbRekamAlatGabungs { get; set; }
+
     public virtual DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
 
     public virtual DbSet<DbRekamAlatTbsb> DbRekamAlatTbsbs { get; set; }
@@ -346,6 +348,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TSuratReklameTeguranFile> TSuratReklameTeguranFiles { get; set; }
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
+
+    public virtual DbSet<TempAlatRekam> TempAlatRekams { get; set; }
 
     public virtual DbSet<TempPerpanjangan> TempPerpanjangans { get; set; }
 
@@ -706,6 +710,7 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB' ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.KetetapanPokok).HasDefaultValueSql("0                     ");
         });
 
         modelBuilder.Entity<DbMonPpj>(entity =>
@@ -935,6 +940,11 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_RESTO_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DbRekamAlatGabung>(entity =>
+        {
+            entity.ToView("DB_REKAM_ALAT_GABUNG");
         });
 
         modelBuilder.Entity<DbRekamAlatT>(entity =>

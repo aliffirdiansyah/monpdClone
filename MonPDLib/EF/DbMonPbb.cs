@@ -127,4 +127,7 @@ public partial class DbMonPbb
 
     [Column("JUMLAH_BAYAR_SANKSI", TypeName = "NUMBER(38)")]
     public decimal? JumlahBayarSanksi { get; set; }
+
+    [Column("KETETAPAN_POKOK", TypeName = "NUMBER")]
+    public decimal KetetapanPokok { get; set; }
 }
