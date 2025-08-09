@@ -36,7 +36,7 @@ namespace MonPDLib.General
                 Tahun5 = tahunList[4],
             };
         }
-        public string GetFormattedNOP(string NOP)
+        public static string GetFormattedNOP(string NOP)
         {
             try
             {

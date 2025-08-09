@@ -3494,6 +3494,7 @@ namespace MonPDReborn.Models.DataOP
             public int Kategori_Id { get; set; }
             public string Kategori_Nama { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
@@ -3509,6 +3510,7 @@ namespace MonPDReborn.Models.DataOP
             public int Kategori_Id { get; set; }
             public string Kategori_Nama { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
@@ -3535,6 +3537,7 @@ namespace MonPDReborn.Models.DataOP
             public int Kategori_Id { get; set; }
             public string Kategori_Nama { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
@@ -3550,6 +3553,7 @@ namespace MonPDReborn.Models.DataOP
             public string AlamatLengkap { get; set; }
             public string WilayahPajak { get; set; }
             public string NOP { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string Telepon { get; set; }
             public DateTime TanggalBuka { get; set; }
             public EnumFactory.EPajak EnumPajak { get; set; }

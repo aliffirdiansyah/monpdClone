@@ -18,7 +18,8 @@
         )
         .Columns(columns =>
         {
-            columns.Add().DataField("NOP").Caption("NOP");
+            @* columns.Add().DataField("NOP").Caption("NOP"); *@
+            columns.Add().DataField("FormattedNOP").Caption("NOP");
             columns.Add().DataField("NamaOP").Caption("Nama OP");
             columns.Add().DataField("Alamat").Caption("Alamat");
             columns.Add().DataField("Wilayah").Caption("Wilayah");
