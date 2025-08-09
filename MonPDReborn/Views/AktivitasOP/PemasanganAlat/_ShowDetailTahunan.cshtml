@@ -1,0 +1,65 @@
+﻿@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 4).ToString();
+    var tahun2 = (currentYear - 3).ToString();
+    var tahun3 = (currentYear - 2).ToString();
+    var tahun4 = (currentYear - 1).ToString();
+    var tahun5 = currentYear.ToString();
+}
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.DetailDataPemasanganAlat>()
+        .DataSource(d => d.Mvc()
+        .LoadAction("GetDetailTahunan")
+        .Key("KategoriId")
+        .LoadParams(new { JenisPajak = ViewData["JenisPajakTahunan"] })
+        )
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .RowAlternationEnabled(true)
+        .Columns(columns =>
+        {
+            columns.AddFor(x => x.KategoriNama).Caption("Kategori").Fixed(true);
+            columns.AddFor(x => x.JumlahOP).Caption("Jumlah OP").Format("#,##0");
+            columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.KategoriNama)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("Total");
+
+                items.AddFor(m => m.JumlahOP)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            
+                items.AddFor(m => m.TerpasangTS)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.TerpasangTB)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.TerpasangSB)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            });
+        })
+        )
+</div>
+ 
