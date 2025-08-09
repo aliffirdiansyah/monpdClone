@@ -180,7 +180,6 @@
             fnShow(tglAwalFormatted, tglAkhirFormatted);
         });
 
-        // fnShow sekarang menerima string tanggal atau null
         function fnShow(tanggalAwal, tanggalAkhir) {
             $.ajax({
                 url: '@Url.Action("Show", "KontrolPrediksi")',
@@ -195,14 +194,33 @@
                 },
                 success: function (result) {
                     $('#loading2-Show').hide();
+
+                    // Kalau response JSON dan ada status error
+                    if (result.Status && result.Status === 'Error') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: result.Message || 'Terjadi kesalahan saat memproses data.',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
+
+                    // Kalau bukan error, tampilkan hasil HTML
                     $('#Show').html(result).show();
                 },
-                error: function () {
+                error: function (xhr) {
                     $('#loading2-Show').hide();
-                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data.</div>').show();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: '⚠ Gagal memuat data dari server.',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         }
+
     </script>
 }
 
