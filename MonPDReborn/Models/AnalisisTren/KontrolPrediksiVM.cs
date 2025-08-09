@@ -26,8 +26,8 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                 throw new ArgumentException("Tanggal akhir tidak boleh null.", nameof(tanggalAkhir));
             if (tanggalAkhir < tanggalAwal)
                 throw new ArgumentException("Tanggal akhir tidak boleh lebih kecil dari tanggal awal.");
-            if (tanggalAkhir > DateTime.Now)
-                throw new ArgumentException("Tanggal akhir tidak boleh melebihi tanggal hari ini.");
+            if (tanggalAwal > DateTime.Now)
+                throw new ArgumentException("Tanggal awal tidak boleh melebihi tanggal hari ini.");
             if (tanggalAwal.Value.Year != tanggalAkhir.Value.Year)
                 throw new ArgumentException("Tanggal awal dan akhir harus di tahun yang sama.");
 
