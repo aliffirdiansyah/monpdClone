@@ -150,7 +150,6 @@
         $(document).ready(function () {
             // Saat halaman pertama kali dimuat, langsung panggil klik tombol filter
             // untuk mengambil nilai default dan memuat data awal.
-            $('#btnTerapkanFilter').click();
         });
 
         // Event handler untuk klik tombol filter
@@ -195,19 +194,17 @@
                 success: function (result) {
                     $('#loading2-Show').hide();
 
-                    // Kalau response JSON dan ada status error
-                    if (result.Status && result.Status === 'Error') {
+                    if (result.Status === undefined) {
+                        // Ini berarti responsenya HTML PartialView
+                        $('#Show').html(result).show();
+                    } else {
+                        // Ini berarti responsenya JSON error
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: result.Message || 'Terjadi kesalahan saat memproses data.',
-                            confirmButtonText: 'OK'
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: result.Message
                         });
-                        return;
                     }
-
-                    // Kalau bukan error, tampilkan hasil HTML
-                    $('#Show').html(result).show();
                 },
                 error: function (xhr) {
                     $('#loading2-Show').hide();

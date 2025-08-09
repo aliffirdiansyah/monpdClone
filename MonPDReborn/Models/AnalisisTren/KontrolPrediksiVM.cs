@@ -21,9 +21,9 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
         public Show(DateTime? tanggalAwal, DateTime? tanggalAkhir)
         {
             if (tanggalAwal == null)
-                throw new ArgumentException("Tanggal awal tidak boleh null.", nameof(tanggalAwal));
+                throw new ArgumentException("Tanggal awal tidak boleh null.");
             if (tanggalAkhir == null)
-                throw new ArgumentException("Tanggal akhir tidak boleh null.", nameof(tanggalAkhir));
+                throw new ArgumentException("Tanggal akhir tidak boleh null.");
             if (tanggalAkhir < tanggalAwal)
                 throw new ArgumentException("Tanggal akhir tidak boleh lebih kecil dari tanggal awal.");
             if (tanggalAwal > DateTime.Now)
@@ -49,9 +49,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
         public static List<KontrolPrediksi> GetDataList(DateTime tanggalAwal, DateTime tanggalAkhir)
         {
-            if (tanggalAkhir < tanggalAwal)
-                throw new ArgumentException("Tanggal akhir tidak boleh lebih kecil dari tanggal awal.");
-
+           
             var context = DBClass.GetContext();
             var currentYear = DateTime.Now.Year;
             var bulanLaluCutoff = new DateTime(currentYear, DateTime.Now.Month, 1).AddDays(-1);
@@ -210,10 +208,12 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             DateTime tanggalAwal,
             DateTime tanggalAkhir)
         {
+            var currentYear = DateTime.Now.Year;
+            var awalTahun = new DateTime(currentYear, 1, 1);
             var id = (int)jenisPajak;
 
             var realisasiBulanLalu = data.Where(d => d.Tanggal <= bulanLaluCutoff).Sum(d => d.Nominal);
-            var realisasiBulanIni = data.Where(d => d.Tanggal > bulanLaluCutoff && d.Tanggal < tanggalAwal).Sum(d => d.Nominal);
+            var realisasiBulanIni = data.Where(d => d.Tanggal >= awalTahun && d.Tanggal <= tanggalAwal).Sum(d => d.Nominal);
             var realisasiHariIni = data.Where(d => d.Tanggal >= tanggalAwal && d.Tanggal <= tanggalAkhir).Sum(d => d.Nominal);
 
             return new KontrolPrediksi
