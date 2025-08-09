@@ -77,6 +77,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = string.Empty;
             public string NOP { get; set; } = string.Empty;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string ObjekPajak { get; set; } = string.Empty;
             public string Alamat { get; set; } = string.Empty;
             public decimal Omzet { get; set; }
@@ -241,7 +242,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tahun = tahun,
                         EnumPajak = (int)jenisPajak,
                         JenisPajak = jenisPajak.GetDescription(),
-                        NOP = x.Nop,
+                        NOP = Utility.GetFormattedNOP(x.Nop),
                         ObjekPajak = dbResto.NamaOp ?? "-",
                         Alamat = dbResto.AlamatOp ?? "-",
                         Hari = x.Tanggal,
@@ -278,7 +279,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tahun = tahun,
                         EnumPajak = (int)jenisPajak,
                         JenisPajak = jenisPajak.GetDescription(),
-                        NOP = x.Nop,
+                        NOP = Utility.GetFormattedNOP(x.Nop),
                         ObjekPajak = dbParkir.NamaOp ?? "-",
                         Alamat = dbParkir.AlamatOp ?? "-",
                         Hari = x.Tanggal,
@@ -327,6 +328,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string ObjekPajak { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public DateTime Hari { get; set; }
@@ -346,6 +348,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string ObjekPajak { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public DateTime Hari { get; set; }
