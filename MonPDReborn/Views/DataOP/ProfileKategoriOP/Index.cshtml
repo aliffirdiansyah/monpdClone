@@ -212,5 +212,57 @@
             });
         }
 
+        function onDetailOPClick(e) {
+            e.event.preventDefault();
+
+            const rowData = e.row?.data;
+            if (!rowData) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            // Ambil parameter dari row
+            const nop = rowData.Nop;
+            const pajak = rowData.jenisPajak; // pastikan field ini sesuai dengan model kamu
+
+            if (!nop || pajak === undefined) {
+                DevExpress.ui.notify("Parameter tidak lengkap", "error", 2000);
+                return;
+            }
+
+            // Buat URL tujuan
+            const url = `/ProfileOP/Detail?nop=${encodeURIComponent(nop)}&pajak=${pajak}`;
+
+            // Buka di tab baru
+            window.open(url, '_blank');
+        }
+
+        function onPotensiOPClick(e) {
+            e.event.preventDefault();
+
+            const rowData = e.row?.data;
+            if (!rowData) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            // Ambil parameter dari row
+            const nop = rowData.Nop;
+            const jenisPajak = rowData.jenisPajak;
+            const kategori = rowData.KategoriId; // pastikan sesuai property di model
+
+            if (!nop || jenisPajak === undefined || kategori === undefined) {
+                DevExpress.ui.notify("Parameter tidak lengkap", "error", 2000);
+                return;
+            }
+
+            // Buat URL tujuan
+            const url = `/ProfilePotensiOP/DetailPotensiOP?nop=${encodeURIComponent(nop)}&jenisPajak=${jenisPajak}&kategori=${kategori}`;
+
+            // Buka di tab baru
+            window.open(url, '_blank');
+        }
+
+
     </script>
 }
