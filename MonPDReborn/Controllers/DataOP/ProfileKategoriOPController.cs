@@ -86,7 +86,7 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
-        public IActionResult DetailKategoriPorfileOP(EnumFactory.EPajak jenisPajak, int kategoriId, string nip)
+        public IActionResult DetailKategoriProfileOP(EnumFactory.EPajak jenisPajak, int kategoriId, string nip)
         {
             try
             {

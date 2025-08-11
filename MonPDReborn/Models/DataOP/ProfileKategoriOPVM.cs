@@ -185,8 +185,6 @@ namespace MonPDReborn.Models.DataOP
                                 Keterangan = string.Empty
                             })
                             .ToList();
-
-
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         break;
