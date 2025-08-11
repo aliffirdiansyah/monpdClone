@@ -101,10 +101,10 @@ namespace HiburanWs
 
             }
 
-            //for (var i = tahunAmbil; i <= tglServer.Year; i++)
-            //{
-            //    GetRealisasi(i);
-            //}
+            for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            {
+                GetRealisasi(i);
+            }
 
             MailHelper.SendMail(
             false,
