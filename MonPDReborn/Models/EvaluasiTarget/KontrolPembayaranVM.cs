@@ -46,6 +46,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     EPajak.Reklame => Method.GetKontrolPembayaranReklameRekap(tahun),
                     EPajak.AirTanah => Method.GetKontrolPembayaranABTRekap(tahun),
                     EPajak.PBB => Method.GetKontrolPembayaranPBBRekap(tahun),
+                    EPajak.BPHTB => Method.GetKontrolPembayaranBphtbRekap(tahun),
                     _ => new List<KontrolPembayaran>()
                 };
             }
@@ -71,9 +72,10 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     EPajak.JasaParkir => Method.GetPotensiPajakParkir(tahun),
                     EPajak.JasaKesenianHiburan => Method.GetPotensiPajakHiburan(tahun),
                     EPajak.Reklame => Method.GetPotensiPajakReklame(tahun),
-                    //EPajak.TenagaListrik => Method.getpotensipajak(tahun),
+                    EPajak.TenagaListrik => Method.GetPotensiPajakPPJ(tahun),
                     EPajak.AirTanah => Method.GetPotensiPajakAirTanah(tahun),
                     EPajak.PBB => Method.GetPotensiPajakPbb(tahun),
+                    EPajak.BPHTB => Method.GetPotensiPajakBphtb(tahun),
                     _ => new List<Potensi>()
                 };
             }
@@ -2288,6 +2290,207 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
             #endregion
 
+            #region Data Upaya Pajak
+            public static List<UpayaPajak> GetUpayaPajakHotel(int tahun)
+            {
+                var ret = new List<UpayaPajak>();
+                var context = DBClass.GetContext();
+                var kategoriList = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                var upayaPajakList = context.DbMonUpayaPads
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan && x.Tahun == tahun)
+                    .GroupBy(x => new { x.PajakId, x.Tahun, x.Bulan })
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key.PajakId,
+                        Tahun = g.Key.Tahun,
+                        Bulan = g.Key.Bulan,
+                        himbauan = g.Count(x => x.IsHimbauan == 0),
+                        teguran = g.Count(x => x.IsTeguran == 1),
+                        silang = g.Count(x => x.IsPenyilangan == 2),
+                        kejaksaan = g.Count(x => x.IsKejaksaan == 3),
+
+                    })
+                    .AsQueryable();
+
+                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                {
+                    var re = new UpayaPajak();
+                    re.Kategori = item.Nama;
+                    re.Tahun = tahun;
+                    re.kategoriId = (int)item.Id;
+                    re.JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription();
+
+                    re.Himb1 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.himbauan);
+                    re.Tegur1 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.teguran);
+                    re.Sil1 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.silang);
+                    re.Kejak1 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb2 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.himbauan);
+                    re.Tegur2 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.teguran);
+                    re.Sil2 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.silang);
+                    re.Kejak2 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb3 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.himbauan);
+                    re.Tegur3 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.teguran);
+                    re.Sil3 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.silang);
+                    re.Kejak3 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb4 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.himbauan);
+                    re.Tegur4 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.teguran);
+                    re.Sil4 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.silang);
+                    re.Kejak4 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb5 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.himbauan);
+                    re.Tegur5 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.teguran);
+                    re.Sil5 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.silang);
+                    re.Kejak5 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb6 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.himbauan);
+                    re.Tegur6 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.teguran);
+                    re.Sil6 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.silang);
+                    re.Kejak6 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb7 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.himbauan);
+                    re.Tegur7 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.teguran);
+                    re.Sil7 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.silang);
+                    re.Kejak7 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb8 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.himbauan);
+                    re.Tegur8 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.teguran);
+                    re.Sil8 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.silang);
+                    re.Kejak8 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb9 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.himbauan);
+                    re.Tegur9 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.teguran);
+                    re.Sil9 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.silang);
+                    re.Kejak9 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb10 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.himbauan);
+                    re.Tegur10 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.teguran);
+                    re.Sil10 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.silang);
+                    re.Kejak10 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb11 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.himbauan);
+                    re.Tegur11 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.teguran);
+                    re.Sil11 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.silang);
+                    re.Kejak11 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
+                        .Sum(x => x.kejaksaan);
+
+                    re.Himb12 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.himbauan);
+                    re.Tegur12 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.teguran);
+                    re.Sil12 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.silang);
+                    re.Kejak12 = upayaPajakList
+                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
+                        .Sum(x => x.kejaksaan);
+
+                    ret.Add(re);
+                }
+                    return ret;
+            }
+            #endregion
+
             #region Data Rekap Potensi Pajak
             public static List<Potensi> GetPotensiPajakHotel(int tahun)
             {
@@ -3108,6 +3311,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
         public class UpayaPajak
         {
             public string Kategori { get; set; } = null!;
+            public int kategoriId { get; set; }
             public string JenisPajak { get; set; } = null!;
             public int Tahun { get; set; }
 
