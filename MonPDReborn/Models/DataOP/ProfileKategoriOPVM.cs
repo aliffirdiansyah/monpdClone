@@ -163,6 +163,7 @@ namespace MonPDReborn.Models.DataOP
                              {
                                  r.Nop,
                                  pj.KategoriId,
+                                 pj.Nip,
                                  pj.NipNavigation.Nama,
                                  Target = context.DbAkunTargetObjekRestos
                                      .Where(t => t.TahunBuku == DateTime.Now.Year && t.Nop == r.Nop)
@@ -174,9 +175,11 @@ namespace MonPDReborn.Models.DataOP
                                      .Sum(m => (decimal?)m.NominalPokokBayar) ?? 0
                              })
                             .AsEnumerable()
-                            .GroupBy(x => new { x.KategoriId, x.Nama })
+                            .GroupBy(x => new { x.KategoriId, x.Nama, x.Nip})
                             .Select(g => new DetailProfileKategori
                             {
+                                Nip = g.Key.Nip,
+                                EnumPajak = (int)jenisPajak,
                                 KategoriId = g.Key.KategoriId,
                                 PenanggungJawab = g.Key.Nama,
                                 TargetSdBulanIni = g.Sum(i => i.Target),
@@ -309,6 +312,7 @@ namespace MonPDReborn.Models.DataOP
         {
             public int EnumPajak { get; set; }
             public int KategoriId { get; set; }
+            public string Nip { get; set; } = string.Empty;
             public string PenanggungJawab { get; set; } = string.Empty;
 
             public decimal TargetSdBulanIni { get; set; }
