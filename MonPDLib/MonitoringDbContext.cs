@@ -21,6 +21,7 @@ namespace MonPDLib
         {
         }
 
+        public DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
         public DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
         public DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
         public DbSet<SSPDHPP> SSPDHPPs { get; set; }
@@ -59,6 +60,7 @@ namespace MonPDLib
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<DbMonUpayaPad>().HasNoKey();
             modelBuilder.Entity<SSPDHPP>().HasNoKey();
             modelBuilder.Entity<KetetapanPbbAsync>().HasKey(e => new { e.NOP, e.TAHUN_BUKU, e.TAHUN_PAJAK}).HasName("DB_MON_PBB_PK");
             modelBuilder.Entity<DbMonReklameUpaya>(entity =>

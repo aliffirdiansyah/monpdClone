@@ -3,6 +3,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
+using static MonPDLib.General.EnumFactory;
 
 namespace UpayaPADWs
 {
@@ -54,7 +55,7 @@ namespace UpayaPADWs
                     _logger.LogError(ex, "Error occurred while executing task.");
                     MailHelper.SendMail(
                     false,
-                    "ERROR TS WS",
+                    "ERROR UPAYAPAD WS",
                     $@"
                             Terjadi exception pada sistem:
 
@@ -82,132 +83,136 @@ namespace UpayaPADWs
                 var tglServer = DateTime.Now;
                 var _contMonPd = DBClass.GetContext();
 
-                //using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
-                //{
-                //    var sql = @"
-                //        SELECT  
-                //            PAJAK_ID, 
-                //            NOP, 
-                //            BULAN, 
-                //            TAHUN, 
-                //            MAX(IS_HIMBAUAN)     AS IS_HIMBAUAN, 
-                //            MAX(IS_PENYILANGAN)  AS IS_PENYILANGAN, 
-                //            MAX(IS_TEGURAN)      AS IS_TEGURAN, 
-                //            MAX(IS_PANGGILAN)    AS IS_PANGGILAN, 
-                //            MAX(IS_KEJAKSAAN)    AS IS_KEJAKSAAN, 
-                //            MAX(IS_ANGSURAN)     AS IS_ANGSURAN, 
-                //            MAX(IS_BANTIP)       AS IS_BANTIP, 
-                //            MAX(IS_PEMBONGKARAN) AS IS_PEMBONGKARAN, 
-                //            MAX(IS_RENCANA_TS)   AS IS_RENCANA_TS, 
-                //            MAX(IS_TS)           AS IS_TS, 
-                //            MIN(CREATE_DATE)     AS CREATE_DATE, 
-                //            MIN(CREATE_BY)       AS CREATE_BY, 
-                //            MAX(MODI_DATE)       AS MODI_DATE, 
-                //            MAX(MODI_BY)         AS MODI_BY
-                //        FROM (
-	               //         SELECT PAJAK_ID, 
-	               //         NOP, 
-	               //         BULAN, 
-	               //         TAHUN, 
-	               //         IS_HIMBAUAN, 
-	               //         IS_PENYILANGAN, 
-	               //         IS_TEGURAN, 
-	               //         IS_PANGGILAN, 
-	               //         IS_KEJAKSAAN, 
-	               //         IS_ANGSURAN, 
-	               //         IS_BANTIP, 
-	               //         IS_PEMBONGKARAN, 
-	               //         IS_RENCANA_TS, 
-	               //         IS_TS, 
-	               //         CREATE_DATE, 
-	               //         CREATE_BY, 
-	               //         MODI_DATE, 
-	               //         MODI_BY
-	               //         FROM
-	               //         (
-	               //             SELECT 
-	               //                 CASE 
-	               //                     WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 1 THEN 3
-	               //                     WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 2 THEN 1
-	               //                     WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 3 THEN 5
-	               //                     WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 4 THEN 7
-	               //                     WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 5 THEN 2
-	               //                     WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 7 THEN 4
-	               //                     WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 8 THEN 6
-	               //                     ELSE 0
-	               //                 END AS PAJAK_ID,
-	               //                 REPLACE(A.FK_NOP,'.','') NOP,
-	               //                 BULAN_SURAT AS BULAN, 
-	               //                 TAHUN_SURAT AS TAHUN, 
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'SURAT HIMBAUAN' THEN 1 ELSE 0 END AS IS_HIMBAUAN,                          
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'SURAT PENYILANGAN' THEN 1 ELSE 0 END AS IS_PENYILANGAN,
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'SURAT TEGURAN' THEN 1 ELSE 0 END AS IS_TEGURAN,
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'SURAT PANGGILAN' THEN 1 ELSE 0 END AS IS_PANGGILAN,
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'KEJAKSAAN' THEN 1 ELSE 0 END AS IS_KEJAKSAAN,
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'ANGSURAN' THEN 1 ELSE 0 END AS IS_ANGSURAN,
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'SURAT BANTIP' THEN 1 ELSE 0 END AS IS_BANTIP,
-	               //                 CASE WHEN JENIS_PENAGIHAN = 'SURAT BONGKAR' THEN 1 ELSE 0 END AS IS_PEMBONGKARAN,
-	               //                 0 AS IS_RENCANA_TS, 
-	               //                 0 AS IS_TS,
-	               //                 SYSDATE AS CREATE_DATE, 
-	               //                 '-' AS CREATE_BY, 
-	               //                 SYSDATE AS MODI_DATE, 
-	               //                 '-' AS MODI_BY
-	               //             FROM UPAYA_PENAGIHAN_PAD A 
-	               //         ) A
-                //        ) A
-                //        GROUP BY 
-                //            PAJAK_ID, 
-                //            NOP, 
-                //            BULAN, 
-                //            TAHUN
-                //    ";
+                using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
+                {
+                    var sql = @"
+                        SELECT  
+                            PAJAK_ID, 
+                            NOP, 
+                            BULAN, 
+                            TAHUN, 
+                            MAX(IS_HIMBAUAN)     AS IS_HIMBAUAN, 
+                            MAX(IS_PENYILANGAN)  AS IS_PENYILANGAN, 
+                            MAX(IS_TEGURAN)      AS IS_TEGURAN, 
+                            MAX(IS_PANGGILAN)    AS IS_PANGGILAN, 
+                            MAX(IS_KEJAKSAAN)    AS IS_KEJAKSAAN, 
+                            MAX(IS_ANGSURAN)     AS IS_ANGSURAN, 
+                            MAX(IS_BANTIP)       AS IS_BANTIP, 
+                            MAX(IS_PEMBONGKARAN) AS IS_PEMBONGKARAN, 
+                            MAX(IS_RENCANA_TS)   AS IS_RENCANA_TS, 
+                            MAX(IS_TS)           AS IS_TS, 
+                            MIN(CREATE_DATE)     AS CREATE_DATE, 
+                            MIN(CREATE_BY)       AS CREATE_BY, 
+                            MAX(MODI_DATE)       AS MODI_DATE, 
+                            MAX(MODI_BY)         AS MODI_BY
+                        FROM (
+	                        SELECT PAJAK_ID, 
+	                        NOP, 
+	                        BULAN, 
+	                        TAHUN, 
+	                        IS_HIMBAUAN, 
+	                        IS_PENYILANGAN, 
+	                        IS_TEGURAN, 
+	                        IS_PANGGILAN, 
+	                        IS_KEJAKSAAN, 
+	                        IS_ANGSURAN, 
+	                        IS_BANTIP, 
+	                        IS_PEMBONGKARAN, 
+	                        IS_RENCANA_TS, 
+	                        IS_TS, 
+	                        CREATE_DATE, 
+	                        CREATE_BY, 
+	                        MODI_DATE, 
+	                        MODI_BY
+	                        FROM
+	                        (
+	                            SELECT 
+	                                CASE 
+	                                    WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 1 THEN 3
+	                                    WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 2 THEN 1
+	                                    WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 3 THEN 5
+	                                    WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 4 THEN 7
+	                                    WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 5 THEN 2
+	                                    WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 7 THEN 4
+	                                    WHEN TO_NUMBER(a.FK_PAJAK_DAERAH) = 8 THEN 6
+	                                    ELSE 0
+	                                END AS PAJAK_ID,
+	                                REPLACE(A.FK_NOP,'.','') NOP,
+	                                BULAN_SURAT AS BULAN, 
+	                                TAHUN_SURAT AS TAHUN, 
+	                                CASE WHEN JENIS_PENAGIHAN = 'SURAT HIMBAUAN' THEN 1 ELSE 0 END AS IS_HIMBAUAN,                          
+	                                CASE WHEN JENIS_PENAGIHAN = 'SURAT PENYILANGAN' THEN 1 ELSE 0 END AS IS_PENYILANGAN,
+	                                CASE WHEN JENIS_PENAGIHAN = 'SURAT TEGURAN' THEN 1 ELSE 0 END AS IS_TEGURAN,
+	                                CASE WHEN JENIS_PENAGIHAN = 'SURAT PANGGILAN' THEN 1 ELSE 0 END AS IS_PANGGILAN,
+	                                CASE WHEN JENIS_PENAGIHAN = 'KEJAKSAAN' THEN 1 ELSE 0 END AS IS_KEJAKSAAN,
+	                                CASE WHEN JENIS_PENAGIHAN = 'ANGSURAN' THEN 1 ELSE 0 END AS IS_ANGSURAN,
+	                                CASE WHEN JENIS_PENAGIHAN = 'SURAT BANTIP' THEN 1 ELSE 0 END AS IS_BANTIP,
+	                                CASE WHEN JENIS_PENAGIHAN = 'SURAT BONGKAR' THEN 1 ELSE 0 END AS IS_PEMBONGKARAN,
+	                                0 AS IS_RENCANA_TS, 
+	                                0 AS IS_TS,
+	                                SYSDATE AS CREATE_DATE, 
+	                                '-' AS CREATE_BY, 
+	                                SYSDATE AS MODI_DATE, 
+	                                '-' AS MODI_BY
+	                            FROM UPAYA_PENAGIHAN_PAD A 
+	                        ) A
+                        ) A
+                        GROUP BY 
+                            PAJAK_ID, 
+                            NOP, 
+                            BULAN, 
+                            TAHUN
+                    ";
 
-                //    Console.WriteLine($@"{DateTime.Now} TS WS STARTED");
-                //    var result = await _contMonitoringDb.Set<DbMonUpayaPad>().FromSqlRaw(sql).ToListAsync();
-                //    int jmlData = result.Count;
-                //    int index = 0;
+                    Console.WriteLine($@"{DateTime.Now} TS WS STARTED");
+                    var result = await _contMonitoringDb.Set<DbMonUpayaPad>().FromSqlRaw(sql).ToListAsync();
+                    int jmlData = result.Count;
+                    int index = 0;
 
-                //    var source = _contMonPd.DbMonUpayaPads.ToList();
-                //    Console.WriteLine($@"{DateTime.Now} TS EXISTING REMOVED");
+                    var source = _contMonPd.DbMonUpayaPads.ToList();
+                    Console.WriteLine($@"{DateTime.Now} TS EXISTING REMOVED");
 
-                //    foreach (var item in result)
-                //    {
-                //        index++;
-                //        var existing = source.FirstOrDefault(x => x.Nop == item.Nop);
-                //        if (existing != null)
-                //        {
-                //            _contMonPd.DbMonUpayaPads.Remove(existing);
-                //        }
+                    foreach (var item in result)
+                    {
+                        index++;
+                        var existing = source.FirstOrDefault(x => x.Nop == item.Nop);
+                        if (existing != null)
+                        {
+                            _contMonPd.DbMonUpayaPads.Remove(existing);
+                        }
 
-                //        var newRow = new DbMonUpayaPad();
-                //        newRow.Kondisi = item.Kondisi;
-                //        newRow.Koderekening = item.Koderekening;
-                //        newRow.Nop = item.Nop;
-                //        newRow.Namaop = item.Namaop;
-                //        newRow.Alamat = item.Alamat;
-                //        newRow.CreateDate = item.CreateDate;
-                //        newRow.Namarekening = item.Namarekening;
-                //        newRow.Jenisusaha = item.Jenisusaha;
-                //        newRow.Jenis = item.Jenis;
-                //        newRow.LockSptpd = item.LockSptpd;
-                //        newRow.OpenTs = item.OpenTs;
-                //        newRow.Terpasang = item.Terpasang;
-                //        newRow.TerakhirAktif = item.TerakhirAktif;
-                //        newRow.HariIni = item.HariIni;
-                //        _contMonPd.DbMonUpayaPads.Add(newRow);
+                        var newRow = new DbMonUpayaPad();
+                        newRow.PajakId = item.PajakId;
+                        newRow.Nop = item.Nop;
+                        newRow.Bulan = item.Bulan;
+                        newRow.Tahun = item.Tahun;
+                        newRow.IsHimbauan = item.IsHimbauan;
+                        newRow.IsPenyilangan = item.IsPenyilangan;
+                        newRow.IsTeguran = item.IsTeguran;
+                        newRow.IsPanggilan = item.IsPanggilan;
+                        newRow.IsKejaksaan = item.IsKejaksaan;
+                        newRow.IsAngsuran = item.IsAngsuran;
+                        newRow.IsBantip = item.IsBantip;
+                        newRow.IsPembongkaran = item.IsPembongkaran;
+                        newRow.IsRencanaTs = item.IsRencanaTs;
+                        newRow.IsTs = item.IsTs;
+                        newRow.CreateDate = item.CreateDate;
+                        newRow.CreateBy = item.CreateBy;
+                        newRow.ModiDate = item.ModiDate;
+                        newRow.ModiBy = item.ModiBy;
+                        _contMonPd.DbMonUpayaPads.Add(newRow);
 
-                //        double persen = ((double)index / jmlData) * 100;
-                //        Console.Write($"\rTS MONITORINGDB JML OP {jmlData.ToString("n0")} {item.Nop} : {persen:F2}%   ");
-                //        _contMonPd.SaveChanges();
-                //    }
-                //}
+                        double persen = ((double)index / jmlData) * 100;
+                        Console.Write($"\rUPAYAPAD MONITORINGDB JML OP {jmlData.ToString("n0")} {item.Nop} : {persen:F2}%   ");
+                        _contMonPd.SaveChanges();
+                    }
+                }
 
 
                 MailHelper.SendMail(
                 false,
-                "DONE TS WS",
-                $@"TS WS FINISHED",
+                "DONE UPAYAPAD WS",
+                $@"UPAYAPAD WS FINISHED",
                 null
                 );
             }
