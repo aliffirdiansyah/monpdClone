@@ -175,7 +175,7 @@ namespace UpayaPADWs
                     foreach (var item in result)
                     {
                         index++;
-                        var existing = source.FirstOrDefault(x => x.Nop == item.Nop);
+                        var existing = source.FirstOrDefault(x => x.Nop == item.Nop && x.Tahun == item.Tahun && x.Bulan == item.Bulan && x.PajakId == item.PajakId);
                         if (existing != null)
                         {
                             _contMonPd.DbMonUpayaPads.Remove(existing);
