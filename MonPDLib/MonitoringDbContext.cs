@@ -27,6 +27,7 @@ namespace MonPDLib
         public DbSet<DbMonReklamePerpanjangan> DbMonReklamePerpanjangans { get; set; }
         public DbSet<DbMonReklameInsJumlah> DbMonReklameInsJumlahs { get; set; }
         public DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
+        public DbSet<DbRekamAlatTbsb> DbRekamAlatTbsbs { get; set; }
         public DbSet<KetetapanPbb> KetetapanPbbs { get; set; }
         public DbSet<KetetapanPbbAsync> KetetapanPbbAsyncs { get; set; }
         public DbSet<SSPD> SSPDs { get; set; }
@@ -78,6 +79,7 @@ namespace MonPDLib
             modelBuilder.Entity<DbMonReklamePerpanjangan>().HasNoKey();
             modelBuilder.Entity<DbMonReklameInsJumlah>().HasNoKey();
             modelBuilder.Entity<DbRekamAlatT>().HasNoKey();
+            modelBuilder.Entity<DbRekamAlatTbsb>().HasNoKey();
             modelBuilder.Entity<RealisasiPbb>().HasNoKey();
             modelBuilder.Entity<KetetapanPbb>().HasNoKey();
             modelBuilder.Entity<OPPbb>().HasNoKey();
