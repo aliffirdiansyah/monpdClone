@@ -126,7 +126,7 @@
                                             @Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0")
                                         </h3>
                                         <h4 class="fs-14 text-dark">
-                                            Rata-rata Pengunjung Hari Kerja
+                                            Rata-rata Pengunjung Weekdays
                                         </h4>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                                             @Model.RataRataPengunjungWeekendNonCatering.ToString("N0")
                                         </h3>
                                         <h4 class="fs-14 text-dark">
-                                            Rata-rata Pengunjung Akhir Pekan
+                                            Rata-rata Pengunjung Weekend
                                         </h4>
                                     </div>
                                 </div>
@@ -156,42 +156,32 @@
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Perputaran Hari Kerja</p>
+                                <p class="fs-14 text-muted flex-grow-1">Turnover Weekdays</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysNonCatering.ToString("N2")</p>
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysNonCatering.ToString("N2") Kali</p>
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Perputaran Akhir Pekan</p>
+                                <p class="fs-14 text-muted flex-grow-1">Turnover Weekend</p>
                                 <div class="flex-shrink-0">
-                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekendNonCatering.ToString("N2")</p>
+                                    <p class="fs-14 fw-semibold">@Model.TurnoverWeekendNonCatering.ToString("N2") Kali</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-6">
+                        @* <div class="col-lg-6">
                             <div class="card border-red">
                                 <div class="card-body">
                                     <h4 class="fs-14 fw-semibold mb-2">
                                         Distribusi Pengunjung
                                     </h4>
                                     <div class="d-flex p-0 py-0">
-                                        <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 hari/bulan)</p>
+                                        <p class="fs-14 text-muted flex-grow-1">Weekdays (22 hari/bulan)</p>
                                         <div class="flex-shrink-0">
                                             <p class="fs-14 fw-semibold">@Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0") Pengunjung</p>
                                         </div>
                                     </div>
-                                    @{
-                                        decimal pengunjungTotalWeekdays = (Model.RataRataPengunjungWeekdaysNonCatering * 22);
-                                        decimal pengunjungTotalWeekend = (Model.RataRataPengunjungWeekendNonCatering * 8);
-                                        decimal totalPengunjung = pengunjungTotalWeekdays + pengunjungTotalWeekend;
-
-                                        var pengunjungWeekdaysProgress = (totalPengunjung == 0 ? 0 : pengunjungTotalWeekdays / totalPengunjung * 100)
-                                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
-
-                                        var pengunjungWeekendProgress = (totalPengunjung == 0 ? 0 : pengunjungTotalWeekend / totalPengunjung * 100)
-                                        .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
-                                    }
+                                    
                                     <div class="progress mb-4" style="height:20px">
                                         <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-secondary-red text-dark"
                                              role="progressbar"
@@ -203,7 +193,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex p-0 py-0">
-                                        <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 Hari/bulan)</p>
+                                        <p class="fs-14 text-muted flex-grow-1">Weekend (8 Hari/bulan)</p>
                                         <div class="flex-shrink-0">
                                             <p class="fs-14 fw-semibold">@Model.RataRataPengunjungWeekendNonCatering.ToString("N0") Pengunjung</p>
                                         </div>
@@ -220,25 +210,35 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
+                        @{
+                            decimal pengunjungTotalWeekdays = (Model.RataRataPengunjungWeekdaysNonCatering * 22);
+                            decimal pengunjungTotalWeekend = (Model.RataRataPengunjungWeekendNonCatering * 8);
+                            decimal totalPengunjung = pengunjungTotalWeekdays + pengunjungTotalWeekend;
 
+                            var pengunjungWeekdaysProgress = (totalPengunjung == 0 ? 0 : pengunjungTotalWeekdays / totalPengunjung * 100)
+                            .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+                            var pengunjungWeekendProgress = (totalPengunjung == 0 ? 0 : pengunjungTotalWeekend / totalPengunjung * 100)
+                            .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                        }
                         <div class="col-lg-12">
                             <div class="card border border-danger border-2">
                                 <div class="card-body bg-light bg-opacity-25">
                                     <h4 class="fs-16 fw-bold mb-2">
-                                        Total Pengunjung Hari Kerja per Bulan :
+                                        Total Pengunjung Weekdays per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        Rata-rata Pengunjung Hari Kerja x 22 Hari
+                                        Rata-rata Pengunjung Weekdays x 22 Hari
                                     </p>
                                     <p class="fs-14 fw-semibold mb-2 text-dark">
                                         @Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0") x 22 = @pengunjungTotalWeekdays.ToString("N0") Pengunjung
                                     </p>
                                     <h4 class="fs-16 fw-semibold  mb-1">
-                                        Total Pengunjung Akhir Pekan per Bulan :
+                                        Total Pengunjung Weekend per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        Rata-rata Pengunjung Akhir Pekan x 8 Hari
+                                        Rata-rata Pengunjung Weekend x 8 Hari
                                     </p>
                                     <p class="fs-14 fw-semibold mb-2 text-dark">
                                         @Model.RataRataPengunjungWeekendNonCatering.ToString("N0") x 8 = @pengunjungTotalWeekend.ToString("N0") Pengunjung
@@ -341,27 +341,27 @@
                         <p class="value">Rp. @Model.RataRataBillPerOrang.ToString("N0")</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Perputaran Hari Kerja</p>
+                        <p class="label">Turnover Weekdays</p>
                         <p class="value">@Model.TurnoverWeekdaysNonCatering.ToString("N2") Kali</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Perputaran Akhir Pekan</p>
+                        <p class="label">Turnover Weekend</p>
                         <p class="value">@Model.TurnoverWeekendNonCatering.ToString("N2") Kali</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Rata-rata Pengunjung Hari Kerja</p>
+                        <p class="label">Rata-rata Pengunjung Weekdays</p>
                         <p class="value">@Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0") Orang</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Rata-rata Pengunjung Akhir Pekan</p>
+                        <p class="label">Rata-rata Pengunjung Weekend</p>
                         <p class="value">@Model.RataRataPengunjungWeekendNonCatering.ToString("N0") Orang</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Hari Kerja per Bulan</p>
+                        <p class="label">Weekdays per Bulan</p>
                         <p class="value">22 Hari</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Hari Kerja per Tahun</p>
+                        <p class="label">Weekend per Bulan</p>
                         <p class="value">8 Hari</p>
                     </div>
                     <div class="info-row">
@@ -392,7 +392,7 @@
                                         Perhitungan Omzet Makan di Tempat :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        (Rata-rata Transaksi x Rata-rata Pengunjung Hari Kerja x 22) + (Rata-rata Transaksi x Rata-rata Pengunjung Akhir Pekan x 8)
+                                        (Rata-rata Transaksi x Rata-rata Pengunjung Weekdays x 22) + (Rata-rata Transaksi x Rata-rata Pengunjung Weekend x 8)
                                     </p>
                                     @{
                                         decimal billPerOrang = Model.RataRataBillPerOrang;
