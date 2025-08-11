@@ -145,7 +145,7 @@
             });
         }
 
-        function onDetailKategoriClick(e) {
+                function onDetailKategoriClick(e) {
             e.event.preventDefault();
 
             const rowData = e.row?.data;
@@ -154,7 +154,6 @@
                 return;
             }
 
-            // Ambil data dari row
             const jenisPajak = rowData.EnumPajak;
             const kategoriId = rowData.KategoriId;
             const nip = rowData.NIP;
@@ -162,6 +161,11 @@
             console.log("Detail click:", jenisPajak, kategoriId, nip);
 
             const $modal = $("#modalDetailKategori");
+
+            // Atur z-index hanya saat klik
+            $modal.css("z-index", "1070");
+            $(".modal-backdrop").last().css("z-index", "1060");
+
             $modal.find(".modal-title").text(`Detail Kategori - ${jenisPajak}`);
             $modal.find(".modal-body").html(`
                 <div class="text-center my-3">
@@ -171,9 +175,8 @@
                 </div>
             `);
 
-            // Tampilkan modal kedua di atas modal pertama
             $modal.modal({
-                backdrop: false, // biar modal pertama tetap terlihat
+                backdrop: false,
                 keyboard: false
             });
 
@@ -197,6 +200,7 @@
                 }
             });
         }
+
 
     </script>
 }
