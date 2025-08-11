@@ -460,6 +460,7 @@ namespace MonPDReborn.Models.MonitoringPiutang
             public class DetailPiutang
             {
                 public string Nop { get; set; } = "";
+                public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOp { get; set; } = "";
                 public string AlamatOp { get; set; } = "";
                 public string WilayahPajak { get; set; } = "";

@@ -21,7 +21,7 @@
                 .OnExporting("exportGrid")
                 .Columns(columns =>
                 {
-                    columns.AddFor(x => x.Nop).Caption("NOP").Alignment(HorizontalAlignment.Left);
+                    columns.AddFor(x => x.FormattedNOP).Caption("NOP").Alignment(HorizontalAlignment.Left);
                     columns.AddFor(x => x.NamaOp).Caption("Nama OP").Alignment(HorizontalAlignment.Left);
                     columns.AddFor(x => x.AlamatOp).Caption("Allamat OP").Alignment(HorizontalAlignment.Left);
                     columns.AddFor(x => x.WilayahPajak).Caption("UPTB").Alignment(HorizontalAlignment.Left);
