@@ -103,6 +103,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonResto> DbMonRestos { get; set; }
 
+    public virtual DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
+
     public virtual DbSet<DbOpAbt> DbOpAbts { get; set; }
 
     public virtual DbSet<DbOpHiburan> DbOpHiburans { get; set; }
@@ -812,6 +814,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonUpayaPad>(entity =>
+        {
+            entity.HasKey(e => new { e.PajakId, e.Nop, e.Bulan, e.Tahun }).HasName("DB_MON_UPAYA_PAD_PK");
         });
 
         modelBuilder.Entity<DbOpAbt>(entity =>
