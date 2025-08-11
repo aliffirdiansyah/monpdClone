@@ -54,6 +54,15 @@ namespace MonPDReborn.Models.DataOP
             }
         }
 
+        public class DetailKategoriPorfileOP
+        {
+            public List<DetailOPProfileKategori> Data { get; set; }
+            public DetailKategoriPorfileOP(EnumFactory.EPajak jenisPajak, int kategoriId, string nip)
+            {
+                Data = Method.GetDetailOPProfileKategoriList(jenisPajak, kategoriId, nip);
+            }
+        }
+
         public class Method
         {
             public static List<ProfileKategori> GetProfileKategoriList(EnumFactory.EPajak jenisPajak)

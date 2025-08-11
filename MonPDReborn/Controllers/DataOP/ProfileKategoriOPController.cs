@@ -25,7 +25,6 @@ namespace MonPDReborn.Controllers.DataOP
         }
         public IActionResult Index()
         {
-            return View();
             try
             {
                 ViewData["Title"] = "Dashboard Kategori Objek Pajak";
@@ -71,6 +70,27 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 var model = new Models.DataOP.ProfileKategoriOPVM.DetailKategoriProfile(jenisPajak, kategoriId);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult DetailKategoriPorfileOP(EnumFactory.EPajak jenisPajak, int kategoriId, string nip)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfileKategoriOPVM.DetailKategoriPorfileOP(jenisPajak, kategoriId, nip);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
