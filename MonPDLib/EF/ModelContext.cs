@@ -185,6 +185,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MvSeriesTargetP> MvSeriesTargetPs { get; set; }
 
+    public virtual DbSet<MvUpayaPadKategori> MvUpayaPadKategoris { get; set; }
+
     public virtual DbSet<Npwpd> Npwpds { get; set; }
 
     public virtual DbSet<Op> Ops { get; set; }
@@ -1121,6 +1123,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MvSeriesTargetP>(entity =>
         {
             entity.ToView("MV_SERIES_TARGET_P");
+        });
+
+        modelBuilder.Entity<MvUpayaPadKategori>(entity =>
+        {
+            entity.ToView("MV_UPAYA_PAD_KATEGORI");
         });
 
         modelBuilder.Entity<Npwpd>(entity =>
