@@ -27,6 +27,8 @@
             columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
             columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
             columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            columns.AddFor(m => m.BelumTerpasang).Caption("Belum Terpasang").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            columns.AddFor(m => m.TotalTerpasang).Caption("Total Terpasang").Format("#,##0");
 
         })
         .Summary(summary =>
@@ -54,6 +56,16 @@
             .DisplayFormat("{0}");
 
                 items.AddFor(m => m.TerpasangSB)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.BelumTerpasang)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.TotalTerpasang)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");

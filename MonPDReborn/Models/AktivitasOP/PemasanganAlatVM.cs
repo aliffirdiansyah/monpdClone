@@ -450,6 +450,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public int BelumTerpasang2024 { get; set; }
             public int Terpasang2025 { get; set; }
             public int BelumTerpasang2025 { get; set; }
+            public int TotalTerpasang => Terpasang2021 + Terpasang2022 + Terpasang2023 + Terpasang2024 + Terpasang2025;
         }
         public class DetailSeriesPemasanganAlat
         {
@@ -468,6 +469,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public int BelumTerpasang2024 { get; set; }
             public int Terpasang2025 { get; set; }
             public int BelumTerpasang2025 { get; set; }
+            public int TotalTerpasang => Terpasang2021 + Terpasang2022 + Terpasang2023 + Terpasang2024 + Terpasang2025;
         }
 
         public class DataPemasanganAlat
@@ -478,6 +480,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public int TerpasangTS { get; set; }
             public int TerpasangTB { get; set; }
             public int TerpasangSB { get; set; }
+            public int TotalTerpasang => TerpasangTS + TerpasangTB + TerpasangSB;
+            public int BelumTerpasang => JumlahOP - TotalTerpasang;
         }
 
         public class DetailDataPemasanganAlat
@@ -490,6 +494,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public int TerpasangTS { get; set; }
             public int TerpasangTB { get; set; }
             public int TerpasangSB { get; set; }
+            public int TotalTerpasang => TerpasangTS + TerpasangTB + TerpasangSB;
+            public int BelumTerpasang => JumlahOP - TotalTerpasang;
         }
 
         public class SubDetailModal

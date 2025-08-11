@@ -32,24 +32,21 @@
             // Kolom-kolom tahunan
             columns.Add().Caption(tahun1).Columns(sub => {
                 sub.AddFor(m => m.Terpasang2021).Caption("Terpasang").Format("#,##0");
-                sub.AddFor(m => m.BelumTerpasang2021).Caption("Belum Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
             columns.Add().Caption(tahun2).Columns(sub => {
                 sub.AddFor(m => m.Terpasang2022).Caption("Terpasang").Format("#,##0");
-                sub.AddFor(m => m.BelumTerpasang2022).Caption("Belum Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
             columns.Add().Caption(tahun3).Columns(sub => {
                 sub.AddFor(m => m.Terpasang2023).Caption("Terpasang").Format("#,##0");
-                sub.AddFor(m => m.BelumTerpasang2023).Caption("Belum Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
             columns.Add().Caption(tahun4).Columns(sub => {
                 sub.AddFor(m => m.Terpasang2024).Caption("Terpasang").Format("#,##0");
-                sub.AddFor(m => m.BelumTerpasang2024).Caption("Belum Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
             columns.Add().Caption(tahun5).Columns(sub => {
                 sub.AddFor(m => m.Terpasang2025).Caption("Terpasang").Format("#,##0");
-                sub.AddFor(m => m.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0");
+            columns.AddFor(m => m.TotalTerpasang).Caption("Total Terpassang").Format("#,##0");
         })
         .Summary(summary =>
         {
@@ -60,12 +57,12 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("Total");
                
-                items.AddFor(m => m.Terpasang2021)
+                items.AddFor(m => m.JumlahOP)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
-
-                items.AddFor(m => m.BelumTerpasang2021)
+               
+                items.AddFor(m => m.Terpasang2021)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -75,27 +72,12 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                items.AddFor(m => m.BelumTerpasang2022)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-
                 items.AddFor(m => m.Terpasang2023)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                items.AddFor(m => m.BelumTerpasang2023)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-
                 items.AddFor(m => m.Terpasang2024)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-
-                items.AddFor(m => m.BelumTerpasang2024)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -106,6 +88,11 @@
                 .DisplayFormat("{0}");
 
                 items.AddFor(m => m.BelumTerpasang2025)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.TotalTerpasang)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
