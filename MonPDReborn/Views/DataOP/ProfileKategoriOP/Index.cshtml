@@ -64,7 +64,6 @@
         $(document).ready(function () {
             $('.btn-success').on('click', function () {
                 fnShow();
-                fnDetail();
             });
         });
 
@@ -115,7 +114,7 @@
             console.log("Detail click:", jenisPajak, kategoriId);
 
             const $modal = $("#staticBackdropFullScreenScrollable");
-            $modal.find(".modal-title").text(`Detail Realisasi`);
+            $modal.find(".modal-title").text(`Detail Penanggung Jawab`);
             $modal.find(".modal-body").html(`
                 <div class="text-center my-3">
                     <div class="spinner-border text-primary" role="status">

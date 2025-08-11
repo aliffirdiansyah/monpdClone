@@ -152,52 +152,35 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.Semua:
                         break;
                     case EnumFactory.EPajak.MakananMinuman:
-                        var dataResto = context.DbOpRestos
-                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategoriId)
-                            .ToList();
-
-                        var listNopResto = dataResto.Select(x => x.Nop).Distinct().ToList();
-
-                        var targetDict = context.DbAkunTargetObjekRestos
-                            .Where(x => x.TahunBuku == DateTime.Now.Year && listNopResto.Contains(x.Nop))
-                            .GroupBy(x => x.Nop)
-                            .ToDictionary(g => g.Key, g => g.Sum(q => q.Target) ?? 0);
-
-                        var realisasiDict = context.DbMonRestos
-                            .Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && listNopResto.Contains(x.Nop))
-                            .GroupBy(x => x.Nop)
-                            .ToDictionary(g => g.Key, g => g.Sum(q => q.NominalPokokBayar) ?? 0);
-
-                        var dataPj = context.DbMonPjOps
-                            .Where(x => x.PajakId == (int)jenisPajak && x.KategoriId == kategoriId)
-                            .Include(x => x.NipNavigation)
-                            .Select(x => new
-                            {
-                                x.Nip,
-                                NamaPj = x.NipNavigation.Nama,
-                                x.Nop,
-                                x.KategoriId
-                            })
-                            .ToList();
-
-                        var restoWithPj = (from r in dataResto
-                                           join pj in dataPj on r.Nop equals pj.Nop
-                                           select new
-                                           {
-                                               pj.KategoriId,
-                                               pj.NamaPj,
-                                               r.Nop
-                                           })
-                                          .ToList();
-
-                        ret = restoWithPj
-                            .GroupBy(x => new { x.KategoriId, x.NamaPj })
+                        ret =
+                            (from r in context.DbOpRestos
+                             join pj in context.DbMonPjOps on r.Nop equals pj.Nop
+                             where r.TahunBuku == DateTime.Now.Year
+                                   && (r.TglOpTutup == null || r.TglOpTutup.Value.Year > DateTime.Now.Year)
+                                   && r.KategoriId == kategoriId
+                                   && pj.PajakId == (int)jenisPajak
+                             select new
+                             {
+                                 r.Nop,
+                                 pj.KategoriId,
+                                 pj.NipNavigation.Nama,
+                                 Target = context.DbAkunTargetObjekRestos
+                                     .Where(t => t.TahunBuku == DateTime.Now.Year && t.Nop == r.Nop)
+                                     .Sum(t => (decimal?)t.Target) ?? 0,
+                                 Realisasi = context.DbMonRestos
+                                     .Where(m => m.TglBayarPokok.HasValue &&
+                                                 m.TglBayarPokok.Value.Year == DateTime.Now.Year &&
+                                                 m.Nop == r.Nop)
+                                     .Sum(m => (decimal?)m.NominalPokokBayar) ?? 0
+                             })
+                            .AsEnumerable()
+                            .GroupBy(x => new { x.KategoriId, x.Nama })
                             .Select(g => new DetailProfileKategori
                             {
                                 KategoriId = g.Key.KategoriId,
-                                PenanggungJawab = g.Key.NamaPj,
-                                TargetSdBulanIni = g.Sum(i => targetDict.ContainsKey(i.Nop) ? targetDict[i.Nop] : 0),
-                                RealisasiSdBulanIni = g.Sum(i => realisasiDict.ContainsKey(i.Nop) ? realisasiDict[i.Nop] : 0),
+                                PenanggungJawab = g.Key.Nama,
+                                TargetSdBulanIni = g.Sum(i => i.Target),
+                                RealisasiSdBulanIni = g.Sum(i => i.Realisasi),
                                 JumlahOP = g.Count(),
                                 Keterangan = string.Empty
                             })
