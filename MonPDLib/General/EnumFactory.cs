@@ -51,6 +51,7 @@ namespace MonPDLib.General
             DBOPALATREKAMTBSB,
             DBOPREKLAMEPERPANJANGAN,
             DBOPREKLAMEUPAYA,
+            DBMONUPAYAPAD,
         }
         public enum EStatePemeriksaanSkpdKbJabatan
         {
