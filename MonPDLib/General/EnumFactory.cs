@@ -47,7 +47,8 @@ namespace MonPDLib.General
             DBOPPBB4,
             DBOPPBB5,
             DBOPREKLAMEINSJML,
-            DBOPALATREKAM,
+            DBOPALATREKAMTS,
+            DBOPALATREKAMTBSB,
             DBOPREKLAMEPERPANJANGAN,
             DBOPREKLAMEUPAYA,
         }
