@@ -206,14 +206,14 @@
                                         Distribusi Transaksi Penjualan
                                     </h4>
                                     <div class="d-flex p-0 py-0">
-                                        <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 hari/bulan)</p>
+                                        <p class="fs-14 text-muted flex-grow-1">Hari Kerja (11 hari/bulan)</p>
                                         <div class="flex-shrink-0">
                                             <p class="fs-14 fw-semibold">@Model.RataRataTerjualWeekdaysCatering.ToString("N0") Terjual</p>
                                         </div>
                                     </div>
                                     @{
-                                        decimal terjualWeekdays = (Model.RataRataTerjualWeekdaysCatering * 22);
-                                        decimal terjualWeekend = (Model.RataRataTerjualWeekendCatering * 8);
+                                        decimal terjualWeekdays = (Model.RataRataTerjualWeekdaysCatering * 11);
+                                        decimal terjualWeekend = (Model.RataRataTerjualWeekendCatering * 4);
                                         decimal terjualBulan = terjualWeekdays + terjualWeekend;
 
                                         var persenTerjualWeekdaysCatering = (terjualBulan == 0 ? 0 :
@@ -263,17 +263,17 @@
                                         Total Terjual Hari Kerja per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        Rata-rata Terjual Hari Kerja x 22 Hari
+                                        Rata-rata Terjual Hari Kerja x 11 Hari
                                     </p>
                                     <p class="fs-14 text-muted mb-2">
-                                        @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22 =
+                                        @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 11 =
                                         @terjualWeekdays.ToString("N0") Terjual
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-1">
                                         Total Terjual Akhir Pekan per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        Rata-rata Terjual Akhir Pekan x 8 Hari
+                                        Rata-rata Terjual Akhir Pekan x 4 Hari
                                     </p>
                                     <p class="fs-14 text-muted mb-2">
                                         @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8 =
@@ -397,11 +397,11 @@
                     </div>
                     <div class="info-row">
                         <p class="label">Hari Kerja per Bulan</p>
-                        <p class="value">22 Hari</p>
+                        <p class="value">11 Hari</p>
                     </div>
                     <div class="info-row">
                         <p class="label">Hari Kerja per Tahun</p>
-                        <p class="value">8 Hari</p>
+                        <p class="value">4 Hari</p>
                     </div>
                     <div class="info-row">
                         <p class="label">Tarif Pajak</p>
@@ -485,11 +485,11 @@
                     </p>
 
                     <p class="fs-14 text-muted font-monospace mb-1">
-                        Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 22) + (Rata-Rata Bill/Orang x Terjual Weekend x 8)
+                        Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 11) + (Rata-Rata Bill/Orang x Terjual Weekend x 4)
                     </p>
                     <p class="fs-14 mb-3 fw-bold text-dark">
-                        = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22) +
-                        (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8) =
+                        = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 11) +
+                        (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 4) =
                         Rp. @Model.OmzetPerBulanCatering.ToString("N0")
                     </p>
 
