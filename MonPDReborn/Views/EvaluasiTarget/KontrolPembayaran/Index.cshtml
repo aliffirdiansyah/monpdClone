@@ -293,28 +293,43 @@
 
     <script>
 
-        
+
 
 
 
 
         function upayaPajakCellTemplate(cellElement, cellInfo) {
-            const jenisPajak = cellInfo.data.JenisPajak;
-            const kategori = cellInfo.data.Kategori;
-            const tahun = 2025; // atau bisa pakai cellInfo.data.Tahun jika tersedia
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const kategoriId = cellInfo.data.kategoriId;
+            const tahun = currentTahun;
 
-            // Tentukan status berdasarkan caption kolom
+            // Ambil angka bulan dari nama field (contoh: Byr1 → 1)
+            const fieldName = cellInfo.column.dataField || '';
+            const matchBulan = fieldName.match(/\d+$/);
+            const bulan = matchBulan ? parseInt(matchBulan[0]) : 0;
+
+            // Ambil status dari caption kolom
+            const colCaption = cellInfo.column.caption?.toUpperCase() || '';
             let status = '';
-            const caption = cellInfo.column.caption?.toUpperCase();
-
-            if (caption.includes('HIMB')) {
-                status = 'HIMB';
-            } else if (caption.includes('TEGUR')) {
-                status = 'TEGUR';
-            } else if (caption.includes('SIL')) {
-                status = 'SIL';
-            } else if (caption.includes('KEJAK')) {
-                status = 'KEJAK';
+            if (colCaption.includes('HIMB')) {
+                status = '0';
+            } else if (colCaption.includes('TEGUR')) {
+                status = '1';
+            } else if (colCaption.includes('SIL')) {
+                status = '2';
+            } else if (colCaption.includes('KEJAK')) {
+                status = '3';
             }
 
             const $link = $('<a>')
@@ -322,10 +337,11 @@
                 .attr('href', 'javascript:void(0);')
                 .attr('title', `Lihat Detail ${status}`)
                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                .on('click', () => onUpayaClick(jenisPajak, kategori, tahun, status));
+                .on('click', () => onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status));
 
             $(cellElement).append($link);
         }
+
 
 
 
@@ -333,8 +349,8 @@
             showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status);
         }
 
-        function onUpayaClick(jenisPajak, kategori, tahun, status) {
-            showDetailUpaya(jenisPajak, kategori, tahun, status);
+        function onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status) {
+            showDetailUpaya(jenisPajak, kategoriId, tahun, bulan, status);
         }
 
         function showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status) {
@@ -361,13 +377,14 @@
             });
         }
 
-        function showDetailUpaya(jenisPajak, kategori, tahun, status) {
+        function showDetailUpaya(jenisPajak, kategoriId, tahun, bulan, status) {
             $.ajax({
-                url: '/KontrolPembayaran/ShowDetailUpaya',
+                url: '/KontrolPembayaran/UpayaDetail',
                 type: 'GET',
                 data: {
                     jenisPajak: jenisPajak,
-                    kategori: kategori,
+                    kategoriId: kategoriId,
+                    bulan: bulan,
                     tahun: tahun,
                     status: status
                 },

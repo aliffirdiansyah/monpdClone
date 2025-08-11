@@ -3,8 +3,8 @@
 
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.UpayaPajak>()
-        .ID("gridUpaya" + Model.DataUpayaPajakList)
-        .DataSource(Model.DataUpayaPajakList)
+        .ID("gridUpaya" + Model.Pajak)
+        .DataSource(Model.Data)
         .ShowBorders(true)
         .ShowColumnLines(true)
         .RowAlternationEnabled(true)

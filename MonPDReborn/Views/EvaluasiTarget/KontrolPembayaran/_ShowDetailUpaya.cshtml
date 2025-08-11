@@ -1,9 +1,9 @@
-﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.ShowDetailUpaya
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.UpayaDetail
 
 <div class="card-header d-flex">
     <div class="flex-grow-1">
         <h4 class="card-title fs-16 mb-0">
-            Detail Upaya Pembayaran Pajak Kategori : @Model.Kategori
+            Detail Upaya Pembayaran Pajak Kategori : 
         </h4>
     </div>
 </div>
@@ -11,7 +11,7 @@
     @(
         Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailUpaya>()
         .ID("detailUpayaGrid")
-        .DataSource(Model.DataDetailUpayaList)
+        .DataSource(Model.Data)
         .ShowBorders(true)
         .ShowColumnHeaders(true)
         .ShowColumnLines(true)
@@ -32,7 +32,7 @@
         .OnExporting("exportGrid")
         .Columns(columns =>
         {
-            columns.AddFor(m => m.NOP).Caption("NOP");
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
             columns.AddFor(m => m.NamaOP).Caption("Nama OP");
             columns.AddFor(m => m.Alamat).Caption("Alamat");
             columns.AddFor(m => m.JenisPenagihan).Caption("Jenis Penagihan");
