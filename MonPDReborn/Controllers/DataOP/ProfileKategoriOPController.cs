@@ -23,13 +23,21 @@ namespace MonPDReborn.Controllers.DataOP
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
-        public IActionResult Index()
+        public IActionResult Index(int? jenisPajak)
         {
             try
             {
                 ViewData["Title"] = "Dashboard Kategori Objek Pajak";
-                var model = new Models.DataOP.ProfileKategoriOPVM.Index();
-                return View($"{URLView}{actionName}", model);
+                if (jenisPajak != null)
+                {
+                    var model = new Models.DataOP.ProfileKategoriOPVM.Index((EnumFactory.EPajak)jenisPajak);
+                    return View($"{URLView}{actionName}", model);
+                }
+                else
+                {
+                    var model = new Models.DataOP.ProfileKategoriOPVM.Index();
+                    return View($"{URLView}{actionName}", model);
+                }
             }
             catch (ArgumentException e)
             {

@@ -21,16 +21,16 @@
 
                     <div class="col-lg-3">
                         @(Html.DevExtreme().SelectBox()
-                                                .ID("SelectedPajak")
-                                                .Value(Model.SelectedPajak)
-                                                .DataSource(Model.JenisPajakList)
-                                                .DisplayExpr("Text")
-                                                .ValueExpr("Value")
-                                                .Value(0.ToString())
-                                                .SearchEnabled(true)
-                                                .StylingMode(EditorStylingMode.Outlined)
-                                                .ElementAttr("class", "form-select mb-3")
-                                                )
+                            .ID("SelectedPajak")
+                            .Value(Model.SelectedPajak.ToString())
+                            .DataSource(Model.JenisPajakList)
+                            .Placeholder("Pilih Jenis Pajak..")
+                            .DisplayExpr("Text")
+                            .ValueExpr("Value")
+                            .SearchEnabled(true)
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .ElementAttr("class", "mb-3")
+                            )
                     </div>
 
                     <div class="col-lg-2">
@@ -62,6 +62,7 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
+                fnShow();
             $('.btn-success').on('click', function () {
                 fnShow();
             });
