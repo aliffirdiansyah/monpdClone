@@ -103,6 +103,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonResto> DbMonRestos { get; set; }
 
+    public virtual DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
+
     public virtual DbSet<DbOpAbt> DbOpAbts { get; set; }
 
     public virtual DbSet<DbOpHiburan> DbOpHiburans { get; set; }
