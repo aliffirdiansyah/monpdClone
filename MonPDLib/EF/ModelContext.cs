@@ -73,6 +73,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonPbb> DbMonPbbs { get; set; }
 
+    public virtual DbSet<DbMonPjOp> DbMonPjOps { get; set; }
+
     public virtual DbSet<DbMonPpj> DbMonPpjs { get; set; }
 
     public virtual DbSet<DbMonReklame> DbMonReklames { get; set; }
@@ -162,6 +164,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MKategoriUpaya> MKategoriUpayas { get; set; }
 
     public virtual DbSet<MPajak> MPajaks { get; set; }
+
+    public virtual DbSet<MPegawai> MPegawais { get; set; }
 
     public virtual DbSet<MTindakanReklame> MTindakanReklames { get; set; }
 
@@ -717,6 +721,15 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KetetapanPokok).HasDefaultValueSql("0                     ");
         });
 
+        modelBuilder.Entity<DbMonPjOp>(entity =>
+        {
+            entity.HasKey(e => new { e.Nip, e.Nop }).HasName("DB_MON_PJ_OP_PK");
+
+            entity.HasOne(d => d.NipNavigation).WithMany(p => p.DbMonPjOps)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DB_MON_PJ_OP_M_PEGAWAI_FK");
+        });
+
         modelBuilder.Entity<DbMonPpj>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_PPJ_PK");
@@ -1047,6 +1060,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Aktif).HasDefaultValueSql("1                     ");
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<MPegawai>(entity =>
+        {
+            entity.HasKey(e => e.Nip).HasName("M_PEGAWAI_PK");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<MTindakanReklame>(entity =>
