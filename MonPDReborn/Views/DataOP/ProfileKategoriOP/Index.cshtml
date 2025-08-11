@@ -144,62 +144,60 @@
             });
         }
 
-                function onDetailKategoriClick(e) {
-            e.event.preventDefault();
+        // function onDetailKategoriClick(e) {
+        //     e.event.preventDefault();
 
-            const rowData = e.row?.data;
-            if (!rowData) {
-                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
-                return;
-            }
+        //     const rowData = e.row?.data;
+        //     if (!rowData) {
+        //         DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+        //         return;
+        //     }
 
-            const jenisPajak = rowData.EnumPajak;
-            const kategoriId = rowData.KategoriId;
-            const nip = rowData.NIP;
+        //     const jenisPajak = rowData.EnumPajak;
+        //     const kategoriId = rowData.KategoriId;
+        //     const nip = rowData.NIP;
 
-            console.log("Detail click:", jenisPajak, kategoriId, nip);
+        //     console.log("Detail click:", jenisPajak, kategoriId, nip);
 
-            const $modal = $("#modalDetailKategori");
+        //     const $modal = $("#modalDetailKategori");
 
-            // Atur z-index hanya saat klik
-            $modal.css("z-index", "1070");
-            $(".modal-backdrop").last().css("z-index", "1060");
+        //     $modal.css("z-index", "1070");
+        //     $(".modal-backdrop").last().css("z-index", "1060");
 
-            $modal.find(".modal-title").text(`Detail Kategori - ${jenisPajak}`);
-            $modal.find(".modal-body").html(`
-                <div class="text-center my-3">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            `);
+        //     $modal.find(".modal-title").text(`Detail Kategori - ${jenisPajak}`);
+        //     $modal.find(".modal-body").html(`
+        //         <div class="text-center my-3">
+        //             <div class="spinner-border text-primary" role="status">
+        //                 <span class="visually-hidden">Loading...</span>
+        //             </div>
+        //         </div>
+        //     `);
 
-            $modal.modal({
-                backdrop: false,
-                keyboard: false
-            });
+        //     var bsModal = new bootstrap.Modal(document.getElementById('modalDetailKategori'), {
+        //         backdrop: false,
+        //         keyboard: false
+        //     });
+        //     bsModal.show();
 
-            $.ajax({
-                url: '/ProfileKategoriOP/DetailKategoriProfileOP',
-                type: 'GET',
-                data: {
-                    jenisPajak: jenisPajak,
-                    kategoriId: kategoriId,
-                    nip: nip
-                },
-                success: function (response) {
-                    $modal.find(".modal-body").html(response);
-                },
-                error: function () {
-                    $modal.find(".modal-body").html(`
-                        <div class="alert alert-danger">
-                            Gagal memuat detail data.
-                        </div>
-                    `);
-                }
-            });
-        }
-
-
+        //     $.ajax({
+        //         url: '/ProfileKategoriOP/DetailKategoriProfileOP',
+        //         type: 'GET',
+        //         data: {
+        //             jenisPajak: jenisPajak,
+        //             kategoriId: kategoriId,
+        //             nip: nip
+        //         },
+        //         success: function (response) {
+        //             $modal.find(".modal-body").html(response);
+        //         },
+        //         error: function () {
+        //             $modal.find(".modal-body").html(`
+        //                 <div class="alert alert-danger">
+        //                     Gagal memuat detail data.
+        //                 </div>
+        //             `);
+        //         }
+        //     });
+        // }
     </script>
 }
