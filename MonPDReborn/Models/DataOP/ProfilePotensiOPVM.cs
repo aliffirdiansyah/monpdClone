@@ -55,19 +55,7 @@ namespace MonPDReborn.Models.DataOP
             }
         }
 
-        //public class ShowDetail
-        //{
-        //    public List<DetailPotensi> DataDetailPotensi { get; set; } = new();
-        //    public string JenisPajak { get; set; } = string.Empty;
-
-        //    public ShowDetail() { }
-        //    public ShowDetail(EnumFactory.EPajak jenisPajak)
-        //    {
-        //        JenisPajak = jenisPajak.GetDescription();
-        //        DataDetailPotensi = Method.GetDetailPotensiList(jenisPajak);
-        //    }
-        //}
-
+       
         public class ShowData
         {
             public string JenisPajak { get; set; } = string.Empty;
@@ -2001,6 +1989,7 @@ namespace MonPDReborn.Models.DataOP
         public class DataPotensi
         {
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public int EnumPajak { get; set; }
@@ -2061,6 +2050,7 @@ namespace MonPDReborn.Models.DataOP
         {
             // Informasi dasar
             public string NOP { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string Nama { get; set; }
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
@@ -2117,6 +2107,7 @@ namespace MonPDReborn.Models.DataOP
         {
             // Identitas
             public string NOP { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string Nama { get; set; }
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
@@ -2184,6 +2175,7 @@ namespace MonPDReborn.Models.DataOP
         {
             // Identitas
             public string NOP { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string Nama { get; set; }
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
@@ -2348,6 +2340,7 @@ namespace MonPDReborn.Models.DataOP
         {
             // Identitas
             public string NOP { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string Nama { get; set; }
             public string Alamat { get; set; }
             public string Wilayah { get; set; }
@@ -2424,6 +2417,7 @@ namespace MonPDReborn.Models.DataOP
         public class DetailPotensiPajakABT
         {
             public string NOP { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string NPWPD { get; set; }
             public string Nama { get; set; }
             public string Alamat { get; set; }
@@ -2454,6 +2448,7 @@ namespace MonPDReborn.Models.DataOP
         public class DetailPotensiPPJ
         {
             public string NOP { get; set; } = string.Empty;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string Status { get; set; } = "Aktif";
             public string PeriodeData { get; set; } = string.Empty; // Contoh: "Januari - Juni 2023"
             public string PeriodeTerakhir { get; set; } = string.Empty; // Contoh: "Juli 2023"
@@ -2479,6 +2474,7 @@ namespace MonPDReborn.Models.DataOP
         {
 
             public string NomorObjekReklame { get; set; } = string.Empty;
+            //public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string JenisReklame { get; set; } = string.Empty;
             public string Status { get; set; } = string.Empty;
             public DateTime TanggalPerhitungan { get; set; }

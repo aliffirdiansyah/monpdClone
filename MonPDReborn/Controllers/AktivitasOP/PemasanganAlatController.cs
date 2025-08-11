@@ -2,6 +2,9 @@
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 using MonPDReborn.Models.AktivitasOP;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using MonPDLib.General;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
@@ -43,11 +46,11 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult Show(string keyword)
+        public IActionResult Show()
         {
             try
             {
-                var model = new Models.AktivitasOP.PemasanganAlatVM.Show(keyword);
+                var model = new Models.AktivitasOP.PemasanganAlatVM.Show();
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -63,12 +66,18 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult Detail(string JenisPajak)
+        [HttpGet]
+        public object GetDetailSeries(DataSourceLoadOptions load_options, int JenisPajak)
+        {
+            var data = Models.AktivitasOP.PemasanganAlatVM.Method.GetDetailSeriesPemasanganAlatList((EnumFactory.EPajak)JenisPajak);
+            return DataSourceLoader.Load(data, load_options);
+        }
+        public IActionResult Tahunan()
         {
             try
             {
-                var model = new Models.AktivitasOP.PemasanganAlatVM.Detail(JenisPajak);
-                return PartialView($"{URLView}_{actionName}", model);
+                var model = new Models.AktivitasOP.PemasanganAlatVM.Tahunan();
+                return PartialView($"{URLView}_Show{actionName}", model);
             }
             catch (ArgumentException e)
             {
@@ -83,54 +92,18 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-
-        public IActionResult SubDetail(string jenisPajak)
+        [HttpGet]
+        public object GetDetailTahunan(DataSourceLoadOptions load_options, int JenisPajak)
         {
-            ViewBag.JenisPajak = jenisPajak;
-
-            var subData = PemasanganAlatVM.Method.GetSubDetailData()
-                .Where(x => x.JenisPajak.Equals(jenisPajak, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-
-            return PartialView("../AktivitasOP/PemasanganAlat/_SubDetail", subData);
+            var data = Models.AktivitasOP.PemasanganAlatVM.Method.GetDetailTahunanPemasanganAlatList((EnumFactory.EPajak)JenisPajak);
+            return DataSourceLoader.Load(data, load_options);
         }
-
-        public IActionResult SubDetailModal(string kategori, string status)
+        public IActionResult SubDetailOPModal(int jenisPajak, int kategori, int tahun, string status)
         {
             try
             {
-                var allData = PemasanganAlatVM.Method.GetSubDetailModalData();
-
-                // Filter utama berdasarkan kategori
-                var filteredData = allData
-                    .Where(x => x.Kategori != null && x.Kategori.Equals(kategori, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-
-                // Filter tambahan berdasarkan status (dummy logic, bisa kamu sesuaikan)
-                if (!string.IsNullOrEmpty(status))
-                {
-                    switch (status)
-                    {
-                        case "JumlahOP":
-                            // Semua data kategori
-                            break;
-
-                        case "TerpasangTS":
-                            filteredData = filteredData.Where(x => x.IsTerpasangTS).ToList();
-                            break;
-
-                        case "TerpasangTB":
-                            filteredData = filteredData.Where(x => x.IsTerpasangTB).ToList();
-                            break;
-
-                        case "TerpasangSB":
-                            filteredData = filteredData.Where(x => x.IsTerpasangSB).ToList();
-                            break;
-                    }
-                }
-
-                return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailModal", filteredData);
+                var model = new Models.AktivitasOP.PemasanganAlatVM.DetailOP(jenisPajak, kategori, tahun, status);
+                return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailModal", model);
             }
             catch (ArgumentException e)
             {

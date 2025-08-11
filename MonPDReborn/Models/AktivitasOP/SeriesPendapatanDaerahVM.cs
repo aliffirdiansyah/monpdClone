@@ -298,16 +298,20 @@ namespace MonPDReborn.Models.AktivitasOP // Pastikan namespace benar
                 var ringkasanPAD = new RingkasanPendapatan
                 {
                     Uraian = "PENDAPATAN",
-                    Target1 = dataPAD.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
-                    Realisasi1 = dataPAD.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
-                    Target2 = dataPAD.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
-                    Realisasi2 = dataPAD.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
-                    Target3 = dataPAD.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
-                    Realisasi3 = dataPAD.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
-                    Target4 = dataPAD.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
-                    Realisasi4 = dataPAD.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
-                    Target5 = dataPAD.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
-                    Realisasi5 = dataPAD.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
+                    Target1 = dataPAD.FirstOrDefault(x => x.Tahun == 2019)?.JumlahTarget ?? 0,
+                    Realisasi1 = dataPAD.FirstOrDefault(x => x.Tahun == 2019)?.JumlahRealisasi ?? 0,
+                    Target2 = dataPAD.FirstOrDefault(x => x.Tahun == 2020)?.JumlahTarget ?? 0,
+                    Realisasi2 = dataPAD.FirstOrDefault(x => x.Tahun == 2020)?.JumlahRealisasi ?? 0,
+                    Target3 = dataPAD.FirstOrDefault(x => x.Tahun == 2021)?.JumlahTarget ?? 0,
+                    Realisasi3 = dataPAD.FirstOrDefault(x => x.Tahun == 2021)?.JumlahRealisasi ?? 0,
+                    Target4 = dataPAD.FirstOrDefault(x => x.Tahun == 2022)?.JumlahTarget ?? 0,
+                    Realisasi4 = dataPAD.FirstOrDefault(x => x.Tahun == 2022)?.JumlahRealisasi ?? 0,
+                    Target5 = dataPAD.FirstOrDefault(x => x.Tahun == 2023)?.JumlahTarget ?? 0,
+                    Realisasi5 = dataPAD.FirstOrDefault(x => x.Tahun == 2023)?.JumlahRealisasi ?? 0,
+                    Target6 = dataPAD.FirstOrDefault(x => x.Tahun == 2024)?.JumlahTarget ?? 0,
+                    Realisasi6 = dataPAD.FirstOrDefault(x => x.Tahun == 2024)?.JumlahRealisasi ?? 0,
+                    Target7 = dataPAD.FirstOrDefault(x => x.Tahun == 2025)?.JumlahTarget ?? 0,
+                    Realisasi7 = dataPAD.FirstOrDefault(x => x.Tahun == 2025)?.JumlahRealisasi ?? 0
                 };
 
                 result.Add(ringkasanPAD);

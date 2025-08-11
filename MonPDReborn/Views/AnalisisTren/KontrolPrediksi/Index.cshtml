@@ -150,7 +150,6 @@
         $(document).ready(function () {
             // Saat halaman pertama kali dimuat, langsung panggil klik tombol filter
             // untuk mengambil nilai default dan memuat data awal.
-            $('#btnTerapkanFilter').click();
         });
 
         // Event handler untuk klik tombol filter
@@ -180,7 +179,6 @@
             fnShow(tglAwalFormatted, tglAkhirFormatted);
         });
 
-        // fnShow sekarang menerima string tanggal atau null
         function fnShow(tanggalAwal, tanggalAkhir) {
             $.ajax({
                 url: '@Url.Action("Show", "KontrolPrediksi")',
@@ -195,14 +193,31 @@
                 },
                 success: function (result) {
                     $('#loading2-Show').hide();
-                    $('#Show').html(result).show();
+
+                    if (result.Status === undefined) {
+                        // Ini berarti responsenya HTML PartialView
+                        $('#Show').html(result).show();
+                    } else {
+                        // Ini berarti responsenya JSON error
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: result.Message
+                        });
+                    }
                 },
-                error: function () {
+                error: function (xhr) {
                     $('#loading2-Show').hide();
-                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data.</div>').show();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: '⚠ Gagal memuat data dari server.',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         }
+
     </script>
 }
 

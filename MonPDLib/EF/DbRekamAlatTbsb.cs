@@ -29,6 +29,9 @@ public partial class DbRekamAlatTbsb
     [Unicode(false)]
     public string AlamatObjek { get; set; } = null!;
 
+    [Column("TGL_TERPASANG", TypeName = "DATE")]
+    public DateTime TglTerpasang { get; set; }
+
     [Column("KETERANGAN")]
     [StringLength(100)]
     [Unicode(false)]

@@ -1,6 +1,4 @@
-﻿
-
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using DevExpress.CodeParser;
 using DevExpress.DataAccess.Native.EntityFramework;
 using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
@@ -3430,6 +3428,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
         public class DataDetailModal
         {
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string NamaOP { get; set; } = null!;
             public string AlamatOP { get; set; } = null!;
             public string KategoriNama { get; set; } = null!;

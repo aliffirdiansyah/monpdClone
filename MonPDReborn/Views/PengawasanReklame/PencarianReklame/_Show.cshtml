@@ -1,0 +1,203 @@
+﻿@model MonPDReborn.Models.PengawasanReklame.PencarianReklameVM.Show
+
+@if (!Model.Data.Any())
+{
+    <div class="text-center py-5">
+        <svg class="mb-3 text-secondary" width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.562M15 6.306a7.962 7.962 0 00-6 0m6 0a7.962 7.962 0 105.824 8.132M9.172 16.172L6.343 19M15.828 16.172L18.657 19"></path>
+        </svg>
+        <h3 class="h5 fw-bold text-dark">Tidak ada data ditemukan</h3>
+        <p class="text-muted">Coba ubah kriteria pencarian Anda</p>
+    </div>
+}
+else
+{
+    <div class="d-lg-none mb-3">
+        <div class="search-wrapper">
+            <i class="ri-search-line search-icon"></i>
+            <input type="text" id="mobileSearchInput" class="form-control"
+                   placeholder="Cari berdasarkan nama jalan, isi reklame, atau alamat...">
+        </div>
+    </div>
+    <div id="mobileCards" class="d-lg-none mb-4">
+        @{
+            int index = 1;
+        }
+        @foreach (var item in Model.Data)
+        {
+            <div id="data_@(index)"
+                 data-index="@index"
+                 data-jalan="@item.Jalan"
+                 data-alamat="@item.Alamat"
+                 data-jenisreklame="@item.JenisReklame"
+                 data-isireklame="@item.IsiReklame"
+                 data-kategori="@item.Kategori"
+                 data-status="@item.Status"
+                 data-tglmulai="@item.tglMulai.ToString("yyyy-MM-dd")"
+                 data-tglakhir="@item.tglAkhir.ToString("yyyy-MM-dd")"
+                 data-jumlah="@item.Jumlah">
+                <div class="bg-white border border-success rounded-3 p-3 shadow-sm mb-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-semibold text-dark mb-0">@item.Jalan</h5>
+                        <span class="badge bg-soft-success  text-success fw-bold">
+                            Jumlah: @item.Jumlah
+                        </span>
+                    </div>
+
+                    <div class="small">
+                        <div class="d-flex mb-1">
+                            <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Alamat:</span>
+                            <span class="text-dark">@item.Alamat</span>
+                        </div>
+
+                        <div class="d-flex mb-1">
+                            <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Jenis:</span>
+                            <span class="badge bg-soft-success  text-success text-wrap">@item.JenisReklame</span>
+                        </div>
+
+                        <div class="d-flex mb-1">
+                            <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Isi Reklame:</span>
+                            <span class="badge bg-soft-success  text-success text-wrap">@item.IsiReklame</span>
+                        </div>
+
+                        <div class="d-flex mb-1">
+                            <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Kategori:</span>
+                            <span class="text-dark">@item.Kategori</span>
+                        </div>
+
+                        <div class="d-flex">
+                            <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Tayang:</span>
+                            <div class="d-flex align-items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar me-1 text-muted" viewBox="0 0 16 16">
+                                    <path d="M3.5 0a.5.5 0 0 0 0 1H4v1a.5.5 0 0 0 1 0V1h6v1a.5.5 0 0 0 1 0V1h.5a.5.5 0 0 0 0-1H12V0h-1v1H5V0H4v1h-.5zM1 3.5A1.5 1.5 0 0 1 2.5 2h11A1.5 1.5 0 0 1 15 3.5V5H1V3.5zM0 6v6.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6H0zm1 1h14v6.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7z" />
+                                </svg>
+                                <span class="text-dark text-wrap">@($"{item.tglMulai:dd MMM yyyy} - {item.tglAkhir:dd MMM yyyy}")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            index++;
+        }
+</div>
+<div id="mobilePaging" class="text-center mt-3 d-lg-none"></div>
+
+
+
+<div class="container-fluid mb-5">
+    <div class="d-none d-lg-block">
+        <div class="table-responsive">
+            @(Html.DevExtreme().DataGrid<MonPDReborn.Models.PengawasanReklame.PencarianReklameVM.ReklameJalan>()
+                        .ID("hasilReklameGrid")
+                        .DataSource(Model.Data)
+                        .ShowBorders(true)
+                        .ShowColumnLines(true)
+                        .ShowColumnHeaders(true)
+                        .AllowColumnResizing(true)
+                        .ShowRowLines(true)
+                        .ColumnAutoWidth(true)
+                        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(h => h.Visible(true))
+                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                            pager.ShowInfo(true);
+                        })
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.Jalan).Caption("Jalan");
+
+                            columns.AddFor(m => m.Alamat).Caption("Alamat").CssClass("WrappedColumnClass").Width(150);
+
+                            columns.AddFor(m => m.JenisReklame)
+                            .Caption("Jenis Reklame")
+                            .CellTemplate(@<text>
+                                               <span class="badge bg-soft-success text-success"><%- value %></span>
+                                           </text>);
+
+                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame").CssClass("WrappedColumnClass").Width(150);
+
+                            columns.AddFor(m => m.Kategori).Caption("Kategori Reklame").CssClass("WrappedColumnClass").Width(150);
+
+                            columns.AddFor(m => m.TanggalTayang).Caption("Tanggal Tayang").CssClass("WrappedColumnClass").Width(115);
+
+                            columns.AddFor(m => m.Jumlah).Caption("Jumlah").Alignment(HorizontalAlignment.Center).CssClass("fw-bold text-primary");
+                        })
+                        )
+        </div>
+    </div>
+</div>
+}
+
+<script>
+    $(document).ready(function () {
+        $("#mobileSearchInput").on("keydown", function () {
+            // Delay sedikit agar input val sudah berubah saat keydown
+            setTimeout(function () {
+                const keyword = $("#mobileSearchInput").val().toLowerCase();
+
+                $("#mobileCards > div[id^='data_']").each(function () {
+                    const jalan = $(this).data("jalan")?.toString().toLowerCase() || "";
+                    const alamat = $(this).data("alamat")?.toString().toLowerCase() || "";
+                    const jenis = $(this).data("jenisreklame")?.toString().toLowerCase() || "";
+                    const isi = $(this).data("isireklame")?.toString().toLowerCase() || "";
+                    const kategori = $(this).data("kategori")?.toString().toLowerCase() || "";
+                    const status = $(this).data("status")?.toString().toLowerCase() || "";
+                    const tglmulai = $(this).data("tglmulai")?.toString().toLowerCase() || "";
+                    const tglakhir = $(this).data("tglakhir")?.toString().toLowerCase() || "";
+                    const jumlah = $(this).data("jumlah")?.toString().toLowerCase() || "";
+
+                    const combinedText = `${jalan} ${alamat} ${jenis} ${isi} ${kategori} ${status} ${tglmulai} ${tglakhir} ${jumlah}`;
+
+                    if (keyword === "") {
+                        $(this).show(); // tampilkan semua jika kosong
+                    } else if (combinedText.includes(keyword)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }, 10); // tunggu sebentar agar input val sudah update
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        const itemsPerPage = 5;
+        const $cards = $("#mobileCards .bg-white");
+        const totalItems = $cards.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        function showPage(page) {
+            $cards.hide();
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            $cards.slice(start, end).show();
+
+            // Update active button
+            $("#mobilePaging button").removeClass("active");
+            $(`#mobilePaging button[data-page='${page}']`).addClass("active");
+        }
+
+        // Generate paging buttons
+        if (totalPages > 1) {
+            let pagingHtml = '';
+            for (let i = 1; i <= totalPages; i++) {
+                pagingHtml += `<button class="btn btn-sm btn-outline-primary me-1" data-page="${i}">${i}</button>`;
+            }
+            $("#mobilePaging").html(pagingHtml);
+
+            $("#mobilePaging").on("click", "button", function () {
+                const page = $(this).data("page");
+                showPage(page);
+            });
+
+            showPage(1); // Show first page initially
+        }
+    });
+</script>
