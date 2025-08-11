@@ -215,7 +215,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 int tahunSekarang = DateTime.Now.Year;
 
                 ret = context.DbRekamAlatGabungs
-                    .Where(x => x.Tahun == tahunSekarang)
+                    .Where(x => x.Tahun <= tahunSekarang)
                     .GroupBy(x => new { x.PajakId, x.Tahun })
                     .Select(g => new
                     {
@@ -275,7 +275,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 // Ambil data pemasangan alat
                 var query = context.DbRekamAlatGabungs
-                    .Where(x => x.Tahun == tahunSekarang
+                    .Where(x => x.Tahun <= tahunSekarang
                                 && x.PajakId == (int)jenisPajak)
                     .GroupBy(x => new { x.KategoriId })
                      .Select(g => new
@@ -330,7 +330,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 if (status == "TerpasangTS")
                 {
                     ret = context.DbRekamAlatGabungs
-                    .Where(x => x.IsTs == 1 && x.Tahun == tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
+                    .Where(x => x.IsTs == 1 && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
                     .Select(x => new SubDetailModal()
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
@@ -346,7 +346,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 else if (status == "TerpasangTB")
                 {
                     ret = context.DbRekamAlatGabungs
-                    .Where(x => x.IsTb == 1 && x.Tahun == tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
+                    .Where(x => x.IsTb == 1 && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
                     .Select(x => new SubDetailModal()
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
@@ -362,7 +362,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 else if (status == "TerpasangSB")
                 {
                     ret = context.DbRekamAlatGabungs
-                    .Where(x => x.IsSb == 1 && x.Tahun == tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
+                    .Where(x => x.IsSb == 1 && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
                     .Select(x => new SubDetailModal()
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
@@ -397,7 +397,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 else if (status == "BelumTerpasang")
                 {
                     ret = context.DbRekamAlatGabungs
-                    .Where(x => (x.IsTs == 0 && x.IsTb == 0 && x.IsSb == 0) && x.Tahun == tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
+                    .Where(x => (x.IsTs == 0 && x.IsTb == 0 && x.IsSb == 0) && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
                     .Select(x => new SubDetailModal()
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
