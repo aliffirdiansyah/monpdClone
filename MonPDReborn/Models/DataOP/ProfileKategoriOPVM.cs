@@ -133,22 +133,58 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.Semua:
                         break;
                     case EnumFactory.EPajak.MakananMinuman:
-                        var listOpResto = data.Select(x => x.Nop).ToList();
-                        var targetResto = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year && listOpResto.Contains(x.Nop)).Sum(q => q.Target) ?? 0;
-                        var realisasiResto = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && listOpResto.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
+                        var dataResto = context.DbOpRestos
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategoriId)
+                            .ToList();
 
-                        ret = data
-                            .GroupBy(x => new { x.Nip, x.NamaPj, x.KategoriId })
+                        var listNopResto = dataResto.Select(x => x.Nop).Distinct().ToList();
+
+                        var targetDict = context.DbAkunTargetObjekRestos
+                            .Where(x => x.TahunBuku == DateTime.Now.Year && listNopResto.Contains(x.Nop))
+                            .GroupBy(x => x.Nop)
+                            .ToDictionary(g => g.Key, g => g.Sum(q => q.Target) ?? 0);
+
+                        var realisasiDict = context.DbMonRestos
+                            .Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && listNopResto.Contains(x.Nop))
+                            .GroupBy(x => x.Nop)
+                            .ToDictionary(g => g.Key, g => g.Sum(q => q.NominalPokokBayar) ?? 0);
+
+                        var dataPj = context.DbMonPjOps
+                            .Where(x => x.PajakId == (int)jenisPajak && x.KategoriId == kategoriId)
+                            .Include(x => x.NipNavigation)
+                            .Select(x => new
+                            {
+                                x.Nip,
+                                NamaPj = x.NipNavigation.Nama,
+                                x.Nop,
+                                x.KategoriId
+                            })
+                            .ToList();
+
+                        var restoWithPj = (from r in dataResto
+                                           join pj in dataPj on r.Nop equals pj.Nop
+                                           select new
+                                           {
+                                               pj.KategoriId,
+                                               pj.NamaPj,
+                                               r.Nop
+                                           })
+                                          .ToList();
+
+                        ret = restoWithPj
+                            .GroupBy(x => new { x.KategoriId, x.NamaPj })
                             .Select(g => new DetailProfileKategori
                             {
                                 KategoriId = g.Key.KategoriId,
                                 PenanggungJawab = g.Key.NamaPj,
-                                TargetSdBulanIni = targetResto,
-                                RealisasiSdBulanIni = realisasiResto,
+                                TargetSdBulanIni = g.Sum(i => targetDict.ContainsKey(i.Nop) ? targetDict[i.Nop] : 0),
+                                RealisasiSdBulanIni = g.Sum(i => realisasiDict.ContainsKey(i.Nop) ? realisasiDict[i.Nop] : 0),
                                 JumlahOP = g.Count(),
                                 Keterangan = string.Empty
                             })
                             .ToList();
+
+
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         break;
