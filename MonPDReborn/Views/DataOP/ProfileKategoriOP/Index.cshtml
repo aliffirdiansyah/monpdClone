@@ -144,5 +144,58 @@
             });
         }
 
+        function onDetailKategoriClick(e) {
+            e.event.preventDefault();
+
+            const rowData = e.row?.data;
+            if (!rowData) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            // Ambil data dari row
+            const jenisPajak = rowData.EnumPajak;
+            const kategoriId = rowData.KategoriId;
+            const nip = rowData.NIP;
+
+            console.log("Detail click:", jenisPajak, kategoriId, nip);
+
+            const $modal = $("#modalDetailKategori");
+            $modal.find(".modal-title").text(`Detail Kategori - ${jenisPajak}`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+
+            // Tampilkan modal kedua di atas modal pertama
+            $modal.modal({
+                backdrop: false, // biar modal pertama tetap terlihat
+                keyboard: false
+            });
+
+            $.ajax({
+                url: '/ProfileKategoriOP/DetailKategoriPorfileOP',
+                type: 'GET',
+                data: {
+                    jenisPajak: jenisPajak,
+                    kategoriId: kategoriId,
+                    nip: nip
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
+
     </script>
 }
