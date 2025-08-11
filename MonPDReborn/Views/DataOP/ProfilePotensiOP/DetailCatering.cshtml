@@ -186,13 +186,13 @@
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Perputaran Hari Kerja</p>
+                                <p class="fs-14 text-muted flex-grow-1">TurnOver Hari Kerja</p>
                                 <div class="flex-shrink-0">
                                     <p class="fs-14 fw-semibold">@Model.TurnoverWeekdaysCatering.ToString("N2") Kali</p>
                                 </div>
                             </div>
                             <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Perputaran Akhir Pekan</p>
+                                <p class="fs-14 text-muted flex-grow-1">TurnOver Akhir Pekan</p>
                                 <div class="flex-shrink-0">
                                     <p class="fs-14 fw-semibold">@Model.TurnoverWeekendCatering.ToString("N2") Kali</p>
                                 </div>
@@ -232,7 +232,7 @@
                                     </div>
 
                                     <div class="d-flex p-0 py-0">
-                                        <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 Hari/bulan)</p>
+                                        <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (4 Hari/bulan)</p>
                                         <div class="flex-shrink-0">
                                             <p class="fs-14 fw-semibold">@Model.RataRataTerjualWeekendCatering.ToString("N0") Terjual</p>
                                         </div>
@@ -276,7 +276,7 @@
                                         Rata-rata Terjual Akhir Pekan x 4 Hari
                                     </p>
                                     <p class="fs-14 text-muted mb-2">
-                                        @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8 =
+                                        @Model.RataRataTerjualWeekendCatering.ToString("N0") x 4 =
                                         @terjualWeekend.ToString("N0") Terjual
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-1">
@@ -380,11 +380,11 @@
                         <p class="value">Rp. @Model.RataRataBillPerOrang.ToString("N0")</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Perputaran Hari Kerja</p>
+                        <p class="label">TurnOver Hari Kerja</p>
                         <p class="value">@Model.TurnoverWeekdaysCatering.ToString("N2") kali</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Perputaran Akhir Pekan</p>
+                        <p class="label">TurnOver Akhir Pekan</p>
                         <p class="value">@Model.TurnoverWeekendCatering.ToString("N2") kali</p>
                     </div>
                     <div class="info-row">
@@ -439,12 +439,12 @@
                                         Rumus Perhitungan Potensi Pajak Per Tahun :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-2">
-                                        Potensi Pajak per Bulan x 12
+                                        Potensi Pajak per Bulan x @Model.BulanSisa
                                     </p>
                                     <p class="fs-14 text-muted mb-1">
-                                        Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x 12 =
+                                        Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x @Model.BulanSisa =
                                         @{
-                                            decimal potensiTahun = (Model.PotensiPajakPerBulanCatering * 12);
+                                            decimal potensiTahun = (Model.PotensiPajakPerBulanCatering * @Model.BulanSisa);
                                         } Rp. @potensiTahun.ToString("N0")
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">
@@ -474,14 +474,14 @@
                         Rata-Rata Terjual (Weekdays) = Kapasitas Tenant/Catering x Turnover Weekdays
                     </p>
                     <p class="fs-14 mb-2 fw-bold text-dark">
-                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekdaysCatering.ToString("N1") = @Model.RataRataTerjualWeekdaysCatering.ToString("N0") orang
+                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekdaysCatering.ToString("N2") = @Model.RataRataTerjualWeekdaysCatering.ToString("N0") orang
                     </p>
 
                     <p class="fs-14 text-muted font-monospace mb-1">
                         Rata-Rata Terjual (Weekend) = Kapasitas Tenant/Catering x Turnover Weekend
                     </p>
                     <p class="fs-14 mb-2 fw-bold text-dark">
-                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekendCatering.ToString("N1") = @Model.RataRataTerjualWeekendCatering.ToString("N0") orang
+                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekendCatering.ToString("N2") = @Model.RataRataTerjualWeekendCatering.ToString("N0") orang
                     </p>
 
                     <p class="fs-14 text-muted font-monospace mb-1">
@@ -508,7 +508,7 @@
                         Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
                     </p>
                     <p class="fs-14 fw-bold text-dark">
-                        = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
+                        = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
                     </p>
 
                 </div>
