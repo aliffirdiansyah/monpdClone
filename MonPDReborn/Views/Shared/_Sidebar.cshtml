@@ -71,6 +71,18 @@
     var EvaluasiTargetExpanded = isEvaluasiTargetActive ? "true" : "false";
     var EvaluasiTargetShowClass = isEvaluasiTargetActive ? "show" : "";
 
+    //controller monitoring piutang
+    var MonitoringPiutangController = new[]
+    {
+        "KONTROLPIUTANG"
+    };
+
+    var isMonitoringPiutangActive = MonitoringPiutangController.Contains(currentController);
+
+    var MonitoringPiutangActiveClass = isMonitoringPiutangActive ? "active" : "";
+    var MonitoringPiutangExpanded = isEvaluasiTargetActive ? "true" : "false";
+    var MonitoringPiutangShowClass = isEvaluasiTargetActive ? "show" : "";
+
     //controller ANALISIS TREN
     var AnalisisTrenController = new[] {
         "KONTROLPREDIKSI"
@@ -129,6 +141,55 @@
         <div class="container-fluid">
             <div id="two-column-menu"></div>
             <ul class="navbar-nav" id="navbar-nav">
+                <div class="container-fluid">
+                    <div id="two-column-menu"></div>
+                    <ul class="navbar-nav" id="navbar-nav">
+                        <li class="menu-title"><span data-key="t-laporanStrategis">Laporan Strategis</span></li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link @(currentController == "KONTROLPEMBAYARAN" ? "active" : "")"
+                               href="@Url.Action("Index", "KontrolPembayaran")" role="button">
+                                <i class="bx bx-target-lock"></i><span data-key="t-harian">Monitoring Pembayaran</span>
+                            </a>
+                            @* <a class="nav-link menu-link collapse @EvaluasiTargetActiveClass" 
+                        href="#sidebarEvaluasiTarget" 
+                        data-bs-toggle="collapse" 
+                        role="button" 
+                        aria-expanded="@EvaluasiTargetExpanded"
+                       aria-controls="#sidebarEvaluasiTarget" style="background-color: #5EA8A4">
+                        <i class=""></i><span data-key="t-monitoring">Evaluasi Target VS Realisasi</span>
+                    </a>
+                    <div id="sidebarEvaluasiTarget" class="menu-dropdown collapse @EvaluasiTargetShowClass">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link @(currentController == "KONTROLPEMBAYARAN" ? "active" : "")"
+                                    href="@Url.Action("Index", "KontrolPembayaran")" data-key="t-harian">
+                                    Kontrol Pembayaran
+                                </a>
+                            </li>
+                        </ul>
+                    </div> *@
+                        </li>
+                        <li class="nav-item @MonitoringPiutangShowClass">
+                            <a class="nav-link menu-link @(currentController == "KONTROLPIUTANG" ? "active" : "")"
+                               href="@Url.Action("Index", "KontrolPiutang")" role="button">
+                                <i class="bx bx-receipt"></i><span data-key="t-KontrolPiutang">Monitoring Piutang</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item @AnalisisTrenShowClass">
+                            <a class="nav-link menu-link @(currentController == "KONTROLPREDIKSI" ? "active" : "")"
+                               href="@Url.Action("Index", "KontrolPrediksi")" role="button">
+                                <i class="bx bx-trending-up"></i><span data-key="t-analisisTren">Analisis Tren Pendapatan</span>
+                            </a>
+                        </li>
+                        @* <li class="nav-item">
+                    <a class="nav-link menu-link" href="@Url.Action("Index","PendataanObjekPajak")" role="button">
+                        <i class="bx bx-building"></i><span data-key="t-perbandinganWilayah">Perbandingan Wilayah</span>
+                    </a>
+                </li> *@
+                    </ul>
+                </div>
+
                 <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerah" ? "active" : "")"
@@ -240,7 +301,7 @@
                         role="button" 
                         aria-expanded="@MonitoringCapaianExpanded"
                        aria-controls="#sidebarMonitoring" style="background-color: #5EA8A4">
-                        <i class="bx bx-globe"></i><span data-key="t-monitoring">Monitoring Capaian</span>
+                        <i class="bx bx-globe"></i><span data-key="t-monitoring">Monitoring Capaian Pendapatan</span>
                     </a>
                     <div id="sidebarMonitoring" class="menu-dropdown collapse @MonitoringCapaianShowClass">
                         <ul class="nav nav-sm flex-column">
@@ -406,47 +467,7 @@
                 </li> *@
             </ul>
         </div>
-        <div class="container-fluid">
-            <div id="two-column-menu"></div>
-            <ul class="navbar-nav" id="navbar-nav">
-                <li class="menu-title"><span data-key="t-laporanStrategis">Laporan Strategis</span></li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link @(currentController == "KONTROLPEMBAYARAN" ? "active" : "")"
-                       href="@Url.Action("Index", "KontrolPembayaran")" role="button">
-                        <i class="bx bx-target-lock"></i><span data-key="t-harian">Monitoring Pembayaran</span>
-                    </a>
-                    @* <a class="nav-link menu-link collapse @EvaluasiTargetActiveClass" 
-                        href="#sidebarEvaluasiTarget" 
-                        data-bs-toggle="collapse" 
-                        role="button" 
-                        aria-expanded="@EvaluasiTargetExpanded"
-                       aria-controls="#sidebarEvaluasiTarget" style="background-color: #5EA8A4">
-                        <i class=""></i><span data-key="t-monitoring">Evaluasi Target VS Realisasi</span>
-                    </a>
-                    <div id="sidebarEvaluasiTarget" class="menu-dropdown collapse @EvaluasiTargetShowClass">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link @(currentController == "KONTROLPEMBAYARAN" ? "active" : "")"
-                                    href="@Url.Action("Index", "KontrolPembayaran")" data-key="t-harian">
-                                    Kontrol Pembayaran
-                                </a>
-                            </li>
-                        </ul>
-                    </div> *@
-                </li>
-                <li class="nav-item @AnalisisTrenShowClass">
-                    <a class="nav-link menu-link @(currentController == "KONTROLPREDIKSI" ? "active" : "")"
-                        href="@Url.Action("Index", "KontrolPrediksi")" role="button">
-                        <i class="bx bx-trending-up"></i><span data-key="t-analisisTren">Analisis Tren Pendapatan</span>
-                    </a>
-                </li>
-                @* <li class="nav-item">
-                    <a class="nav-link menu-link" href="@Url.Action("Index","PendataanObjekPajak")" role="button">
-                        <i class="bx bx-building"></i><span data-key="t-perbandinganWilayah">Perbandingan Wilayah</span>
-                    </a>
-                </li> *@
-            </ul>
-        </div>
+        
     </div>
 </div>
 <!-- Left Sidebar End -->
