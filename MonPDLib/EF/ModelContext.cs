@@ -816,6 +816,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<DbMonUpayaPad>(entity =>
+        {
+            entity.HasKey(e => new { e.PajakId, e.Nop, e.Bulan, e.Tahun }).HasName("DB_MON_UPAYA_PAD_PK");
+        });
+
         modelBuilder.Entity<DbOpAbt>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_ABT_PK");

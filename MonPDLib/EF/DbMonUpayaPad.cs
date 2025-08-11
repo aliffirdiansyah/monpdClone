@@ -6,23 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Keyless]
+[PrimaryKey("PajakId", "Nop", "Bulan", "Tahun")]
 [Table("DB_MON_UPAYA_PAD")]
 public partial class DbMonUpayaPad
 {
+    [Key]
     [Column("PAJAK_ID")]
     [Precision(15)]
     public long PajakId { get; set; }
 
+    [Key]
     [Column("NOP")]
     [StringLength(50)]
     [Unicode(false)]
     public string Nop { get; set; } = null!;
 
+    [Key]
     [Column("BULAN")]
     [Precision(15)]
     public long Bulan { get; set; }
 
+    [Key]
     [Column("TAHUN")]
     [Precision(15)]
     public long Tahun { get; set; }
