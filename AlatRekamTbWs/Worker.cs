@@ -123,11 +123,16 @@ namespace AlatRekamTbWs
                     int index = 0;
 
                     var source = _contMonPd.DbRekamAlatTbsbs.ToList();
-                    _contMonPd.DbRekamAlatTbsbs.RemoveRange(source);
                     Console.WriteLine($@"{DateTime.Now} TBSB EXISTING REMOVED");
 
                     foreach (var item in result)
                     {
+                        index++;
+                        var existing = source.FirstOrDefault(x => x.Nop == item.Nop);
+                        if (existing != null)
+                        {
+                            _contMonPd.DbRekamAlatTbsbs.Remove(existing);
+                        }
 
                         var newRow = new DbRekamAlatTbsb();
 
@@ -139,15 +144,14 @@ namespace AlatRekamTbWs
                         newRow.NamaObjek = op.NamaOp;
                         newRow.AlamatObjek = op.AlamatOp;
                         newRow.Keterangan = item.Keterangan;
+                        newRow.TglTerpasang = item.TglTerpasang;
 
                         _contMonPd.DbRekamAlatTbsbs.Add(newRow);
 
                         double persen = ((double)index / jmlData) * 100;
                         Console.Write($"\rTBSB MONITORINGDB JML OP {jmlData.ToString("n0")} {item.Nop} : {persen:F2}%   ");
-
-                        index++;
+                        _contMonPd.SaveChanges();
                     }
-                    _contMonPd.SaveChanges();
                 }
 
 

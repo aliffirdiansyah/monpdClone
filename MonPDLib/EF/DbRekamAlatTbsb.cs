@@ -20,12 +20,12 @@ public partial class DbRekamAlatTbsb
     public int PajakId { get; set; }
 
     [Column("NAMA_OBJEK")]
-    [StringLength(100)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaObjek { get; set; } = null!;
 
     [Column("ALAMAT_OBJEK")]
-    [StringLength(100)]
+    [StringLength(200)]
     [Unicode(false)]
     public string AlamatObjek { get; set; } = null!;
 

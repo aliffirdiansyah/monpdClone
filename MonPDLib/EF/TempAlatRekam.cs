@@ -22,7 +22,7 @@ public partial class TempAlatRekam
     public DateTime? TglTerpasang { get; set; }
 
     [Column("KET")]
-    [StringLength(200)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? Ket { get; set; }
 }

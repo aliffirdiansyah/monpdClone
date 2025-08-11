@@ -97,9 +97,9 @@ namespace AlatRekamTSWs
 		                        JENIS, 
 		                        LOCK_SPTPD, 
 		                        OPEN_TS,
-		                        TERPASANG,
-		                        MAX(TERAKHIR_AKTIF) TERAKHIR_AKTIF, 
-		                        MAX(HARI_INI) HARI_INI
+		                        TO_NUMBER(TERPASANG) TERPASANG,
+		                        MAX(TO_DATE(TERAKHIR_AKTIF, 'DD-MON-YYYY HH24:MI:SS')) TERAKHIR_AKTIF, 
+		                        MAX(TO_DATE(HARI_INI, 'DD-MON-YYYY HH24:MI:SS')) HARI_INI
                         FROM(
 	                        SELECT 
 	                            A.*, 
@@ -144,11 +144,16 @@ namespace AlatRekamTSWs
                     int index = 0;
 
                     var source = _contMonPd.DbRekamAlatTs.ToList();
-                    _contMonPd.DbRekamAlatTs.RemoveRange(source);
                     Console.WriteLine($@"{DateTime.Now} TS EXISTING REMOVED");
 
                     foreach (var item in result)
                     {
+                        index++;
+                        var existing = source.FirstOrDefault(x => x.Nop == item.Nop);
+                        if (existing != null)
+                        {
+                            _contMonPd.DbRekamAlatTs.Remove(existing);
+                        }
 
                         var newRow = new DbRekamAlatT();
                         newRow.Kondisi = item.Kondisi;
@@ -169,10 +174,8 @@ namespace AlatRekamTSWs
 
                         double persen = ((double)index / jmlData) * 100;
                         Console.Write($"\rTS MONITORINGDB JML OP {jmlData.ToString("n0")} {item.Nop} : {persen:F2}%   ");
-
-                        index++;
+                        _contMonPd.SaveChanges();
                     }
-                    _contMonPd.SaveChanges();
                 }
 
 

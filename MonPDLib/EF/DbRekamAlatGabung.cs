@@ -15,28 +15,28 @@ public partial class DbRekamAlatGabung
     [Column("NOP")]
     [StringLength(30)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
 
     [Column("PAJAK_ID", TypeName = "NUMBER")]
     public decimal? PajakId { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
-    public decimal KategoriId { get; set; }
+    public decimal? KategoriId { get; set; }
 
     [Column("KATEGORI_NAMA")]
     [StringLength(150)]
     [Unicode(false)]
-    public string KategoriNama { get; set; } = null!;
+    public string? KategoriNama { get; set; }
 
     [Column("NAMA_OP")]
     [StringLength(150)]
     [Unicode(false)]
-    public string NamaOp { get; set; } = null!;
+    public string? NamaOp { get; set; }
 
     [Column("ALAMAT_OP")]
     [StringLength(250)]
     [Unicode(false)]
-    public string AlamatOp { get; set; } = null!;
+    public string? AlamatOp { get; set; }
 
     [Column("IS_TS", TypeName = "NUMBER")]
     public decimal? IsTs { get; set; }
