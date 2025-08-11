@@ -25,6 +25,7 @@ namespace MonPDReborn.Controllers.DataOP
         }
         public IActionResult Index()
         {
+            return View();
             try
             {
                 ViewData["Title"] = "Dashboard Kategori Objek Pajak";
