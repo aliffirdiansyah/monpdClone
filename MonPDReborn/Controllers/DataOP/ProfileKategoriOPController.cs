@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MonPDReborn.Models.DataOP
+namespace MonPDReborn.Controllers.DataOP
 {
     public class ProfileKategoriOPController : Controller
     {
