@@ -28,27 +28,45 @@ namespace MonPDReborn.Models.PengawasanReklame
         public class Show
         {
             public List<ReklameJalan> Data { get; set; } = new List<ReklameJalan>();
-            public Show(string namaJalan)
+            public Show(string namaJalan, string status)
             {;
-                Data = Method.GetReklameJalanList(namaJalan);
+                Data = Method.GetReklameJalanList(namaJalan, status);
             }
         }
         public class Method
         {
-            public static List<ReklameJalan> GetReklameJalanList(string namaJalan)
+            public static List<ReklameJalan> GetReklameJalanList(string namaJalan, string status)
             {
                 var context = DBClass.GetContext();
                 var hariIni = DateTime.Today;
 
-                var query = context.MvReklameSummaries
-                    .Where(x => x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.Value.Date >= hariIni);
+                var query = context.MvReklameSummaries.AsQueryable();
 
+                // Filter berdasarkan status
+                if (!string.IsNullOrEmpty(status) && status.ToLower() != "semua")
+                {
+                    if (status.ToLower() == "aktif")
+                    {
+                        query = query.Where(x => x.TglMulaiBerlaku.HasValue &&
+                                                 x.TglAkhirBerlaku.HasValue &&
+                                                 x.TglMulaiBerlaku.Value.Date <= hariIni &&
+                                                 x.TglAkhirBerlaku.Value.Date >= hariIni);
+                    }
+                    else if (status.ToLower() == "expired")
+                    {
+                        query = query.Where(x => x.TglAkhirBerlaku.HasValue &&
+                                                 x.TglAkhirBerlaku.Value.Date < hariIni);
+                    }
+                }
+
+                // Filter nama jalan
                 if (!string.IsNullOrWhiteSpace(namaJalan))
                 {
                     query = query.Where(x => x.NamaJalan != null &&
                                              x.NamaJalan.ToLower().Contains(namaJalan.ToLower()));
                 }
 
+                // Proyeksi hasil
                 var result = query
                     .Select(x => new ReklameJalan
                     {
@@ -65,6 +83,7 @@ namespace MonPDReborn.Models.PengawasanReklame
 
                 return result;
             }
+
 
 
 
