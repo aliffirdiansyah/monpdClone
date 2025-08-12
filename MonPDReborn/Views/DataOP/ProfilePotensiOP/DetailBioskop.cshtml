@@ -70,7 +70,7 @@
                     <div class="col-lg-6">
                         <div class="card border border-danger border-2 h-100">
                             <div class="card-body bg-soft-danger bg-opacity-25 text-center">
-                                <h3 class="fs-18 fw-semibold mb-1">@Model.JumlahPengunjungWeekdaysBioskop.ToString("N0")</h3>
+                                <h3 class="fs-18 fw-semibold mb-1">@Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0")</h3>
                                 <h4 class="fs-14">Rata-rata Pengunjung Hari Kerja</h4>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                     <div class="col-lg-6">
                         <div class="card border border-warning border-2 h-100">
                             <div class="card-body bg-soft-warning bg-opacity-25 text-center">
-                                <h3 class="fs-18 fw-semibold mb-1">@Model.JumlahPengunjungWeekendBioskop.ToString("N0")</h3>
+                                <h3 class="fs-18 fw-semibold mb-1">@Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0")</h3>
                                 <h4 class="fs-14">Rata-rata Pengunjung Akhir Pekan</h4>
                             </div>
                         </div>
@@ -138,11 +138,11 @@
                 </div>
                 <div class="info-row">
                     <p class="label">Kursi Terjual per Hari Kerja</p>                    
-                    <p class="value">@Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") Tiket</p>
+                    <p class="value">@Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") Tiket</p>
                 </div>
                 <div class="info-row">
                     <p class="label">Kursi Terjual per Akhir Pekan</p>                    
-                    <p class="value">@Model.JumlahPengunjungWeekendBioskop.ToString("N0") Tiket</p>
+                    <p class="value">@Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") Tiket</p>
                 </div>
             </div>
         </div>
@@ -171,22 +171,22 @@
                     Jumlah Pengunjung Weekdays = Kapasitas x Turnover Weekdays
                 </p>
                 <p class="fs-14 mb-2 fw-bold text-dark">
-                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") orang
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Jumlah Pengunjung Weekend = Kapasitas x Turnover Weekend
                 </p>
                 <p class="fs-14 mb-2 fw-bold text-dark">
-                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Model.JumlahPengunjungWeekendBioskop.ToString("N0") orang
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Omzet/Bulan = (HTM x Pengunjung Weekdays x 22) + (HTM x Pengunjung Weekend x 8)
                 </p>
                 <p class="fs-14 mb-3 fw-bold text-dark">
-                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysBioskop.ToString("N0") x 22) +
-                    (Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendBioskop.ToString("N0") x 8) = Rp. @Model.OmzetPerBulanBioskop.ToString("N0")
+                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") x 22) +
+                    (Rp. @Model.HTMWeekend.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") x 8) = Rp. @Model.OmzetPerBulanBioskop.ToString("N0")
                 </p>
 
                 <hr>
