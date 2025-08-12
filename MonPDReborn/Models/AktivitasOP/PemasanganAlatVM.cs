@@ -10,7 +10,6 @@ namespace MonPDReborn.Models.AktivitasOP
     {
         public class Index
         {
-            public DashboardData Data { get; set; } = new();
             public Index()
             {
                 //Data = Method.GetDashboardData();
@@ -20,9 +19,21 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Show
         {
             public List<SeriesPemasanganAlat> SeriesPemasanganAlatList { get; set; } = new();
+            public DashboardData Data { get; set; } = new();
+
             public Show()
             {
                 SeriesPemasanganAlatList = Method.GetSeriesPemasanganAlatList();
+
+                Data.HotelTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.JumlahOP);
+                Data.RestoTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.JumlahOP);
+                Data.ParkirTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.JumlahOP);
+                Data.HiburanTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.JumlahOP);
+
+                Data.HotelTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Terpasang2025);
+                Data.RestoTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.Terpasang2025);
+                Data.ParkirTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.Terpasang2025);
+                Data.HiburanTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Terpasang2025);
             }
         }
 

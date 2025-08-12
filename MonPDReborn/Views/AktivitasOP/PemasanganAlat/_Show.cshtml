@@ -8,6 +8,90 @@
     var tahun4 = (currentYear - 1).ToString();
     var tahun5 = currentYear.ToString();
 }
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0">
+                        Dashboard Alat Rekam Online
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* dashboard baru *@
+    <div class="col-lg-3">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-cloud-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pajak Hotel</h5>
+                        <h2 class="mb-0 fw-bold">@Model.Data.HotelTerpasang.ToString("N0") / @Model.Data.HotelTotal.ToString("N0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-cloud-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pajak Resto</h5>
+                        <h2 class="mb-0 fw-bold">@Model.Data.RestoTerpasang.ToString("N0") / @Model.Data.RestoTotal.ToString("N0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-cloud-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pajak Hiburan</h5>
+                        <h2 class="mb-0 fw-bold">@Model.Data.HiburanTerpasang.ToString("N0") / @Model.Data.HiburanTotal.ToString("N0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-cloud-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pajak Parkir</h5>
+                        <h2 class="mb-0 fw-bold">@Model.Data.ParkirTerpasang.ToString("N0") / @Model.Data.ParkirTotal.ToString("N0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<PemasanganAlatVM.SeriesPemasanganAlat>()
         .ID("pemasanganAlatGrid")
@@ -28,21 +112,26 @@
         {
             columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Fixed(true);
             columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP").Format("#,##0");
-            
+
             // Kolom-kolom tahunan
-            columns.Add().Caption(tahun1).Columns(sub => {
+            columns.Add().Caption(tahun1).Columns(sub =>
+            {
                 sub.AddFor(m => m.Terpasang2021).Caption("Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun2).Columns(sub => {
+            columns.Add().Caption(tahun2).Columns(sub =>
+            {
                 sub.AddFor(m => m.Terpasang2022).Caption("Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun3).Columns(sub => {
+            columns.Add().Caption(tahun3).Columns(sub =>
+            {
                 sub.AddFor(m => m.Terpasang2023).Caption("Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun4).Columns(sub => {
+            columns.Add().Caption(tahun4).Columns(sub =>
+            {
                 sub.AddFor(m => m.Terpasang2024).Caption("Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun5).Columns(sub => {
+            columns.Add().Caption(tahun5).Columns(sub =>
+            {
                 sub.AddFor(m => m.Terpasang2025).Caption("Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
             columns.AddFor(m => m.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0");
@@ -53,59 +142,59 @@
             summary.TotalItems(items =>
             {
                 items.AddFor(m => m.JenisPajak)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("Total");
-               
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("Total");
+
                 items.AddFor(m => m.JumlahOP)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-               
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
                 items.AddFor(m => m.Terpasang2021)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Terpasang2022)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Terpasang2023)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Terpasang2024)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Terpasang2025)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.BelumTerpasang2025)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.TotalTerpasang)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
             });
         }).MasterDetail(md => md
         .Enabled(true)
         .Template(
-        @<text>
-            @{
-            ViewData["JenisPajak"] = new JS("data.EnumPajak");
-            }
-            @await Html.PartialAsync("/Views/AktivitasOP/PemasanganAlat/_ShowDetail.cshtml")
-        </text>)
+    @<text>
+        @{
+        ViewData["JenisPajak"] = new JS("data.EnumPajak");
+        }
+        @await Html.PartialAsync("/Views/AktivitasOP/PemasanganAlat/_ShowDetail.cshtml")
+    </text>)
         )
         )
 
