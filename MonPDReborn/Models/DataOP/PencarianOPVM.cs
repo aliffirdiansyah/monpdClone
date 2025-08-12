@@ -75,7 +75,7 @@ namespace MonPDReborn.Models.DataOP
                     })
                     .ToList();
                 var dataResto = context.DbOpRestos
-                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
                     .AsEnumerable()
                     .GroupBy(x => x.Nop)
@@ -115,7 +115,7 @@ namespace MonPDReborn.Models.DataOP
                 }
 
                 var dataHotel = context.DbOpHotels
-                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
                     .AsEnumerable()
                     .GroupBy(x => x.Nop)
@@ -155,7 +155,7 @@ namespace MonPDReborn.Models.DataOP
                 }
 
                 var dataHiburan = context.DbOpHiburans
-                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
                     .AsEnumerable()
                     .GroupBy(x => x.Nop)
@@ -196,7 +196,7 @@ namespace MonPDReborn.Models.DataOP
 
 
                 var dataParkir = context.DbOpParkirs
-                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
                     .AsEnumerable()
                     .GroupBy(x => x.Nop)
@@ -236,7 +236,7 @@ namespace MonPDReborn.Models.DataOP
                 }
 
                 var dataListrik = context.DbOpListriks
-                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
                     .AsEnumerable()
                     .GroupBy(x => x.Nop)
@@ -294,7 +294,7 @@ namespace MonPDReborn.Models.DataOP
                 }
 
                 var dataAbt = context.DbOpAbts
-                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
                     .AsEnumerable()
                     .GroupBy(x => x.Nop)
