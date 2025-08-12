@@ -87,7 +87,7 @@
                             <div class="card-body bg-soft-success bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-bold text-dark mb-1">
-                                        @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0")
+                                        @Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya).ToString("N0")
                                     </h3>
                                     <h4 class="fs-14">
                                         Rata-rata Kunjungan Hari Kerja
@@ -102,7 +102,7 @@
                             <div class="card-body bg-soft-warning bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-bold text-dark mb-1">
-                                        @Model.JumlahPengunjungWeekendLainnya.ToString("N0")
+                                        @Math.Ceiling(Model.JumlahPengunjungWeekendLainnya).ToString("N0")
                                     </h3>
                                     <h4 class="fs-14">
                                         Rata-rata Kunjungan Akhir Pekan
@@ -153,7 +153,7 @@
                                     Kapasitas Pengunjung x Turnover Hari Kerja
                                 </p>
                                 <p class="fs-14 fw-semibold text-dark mb-2">
-                                    @Model.Kapasitas x @Model.TurnoverWeekdays.ToString("N0") = @Model.JumlahPengunjungWeekdaysLainnya.ToString("NO") Pengunjung
+                                    @Model.Kapasitas x @Model.TurnoverWeekdays.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya).ToString("NO") Pengunjung
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Rata-rata Kunjungan Akhir Pekan :
@@ -162,7 +162,7 @@
                                     Kapasitas Pengunjung x Turnover Akhir Pekan
                                 </p>
                                 <p class="fs-14 fw-semibold text-dark mb-1">
-                                    @Model.Kapasitas x @Model.TurnoverWeekend.ToString("N0") = @Model.JumlahPengunjungWeekendLainnya.ToString("NO") Pengunjung
+                                    @Model.Kapasitas x @Model.TurnoverWeekend.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekendLainnya).ToString("NO") Pengunjung
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Rata-rata Member Bulanan :
@@ -171,7 +171,7 @@
                                     ((Rata-rata Kunjungan Hari kerja x 22 Hari) + (Rata-rata Kunjungan Akhir Pekan x 8 Hari))/12
                                 </p>
                                 <p class="fs-14 fw-semibold text-dark mb-2">
-                                    ((@Model.JumlahPengunjungWeekdaysLainnya.ToString("NO") x 22) + (@Model.JumlahPengunjungWeekendLainnya.ToString("NO") x 8))/12 = @Model.RataRataPengunjung.ToString("N0") Member
+                                    ((@Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya).ToString("NO") x 22) + (@Math.Ceiling(Model.JumlahPengunjungWeekendLainnya).ToString("NO") x 8))/12 = @Math.Ceiling(Model.RataRataPengunjung).ToString("N0") Member
                                 </p>
                             </div>
                         </div>
@@ -280,7 +280,7 @@
                                     Harga Tiket Hari Kerja x Rata-rata Kunjungan Hari Kerja x 22 Hari
                                 </p>
                                 <p class="fs-14 fw-semibold text-dark mb-2">
-                                    Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysLainnya.ToString("NO") x 22 = Rp. @Model.OmzetWeekdaysLainnya.ToString("N0")
+                                    Rp. @Model.HTMWeekdays.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya).ToString("NO") x 22 = Rp. @Model.OmzetWeekdaysLainnya.ToString("N0")
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Omzet Akhir Pekan :
@@ -289,7 +289,7 @@
                                     Harga Tiket Akhir Pekan x Rata-rata Kunjungan Akhir Pekan x 8 Hari
                                 </p>
                                 <p class="fs-14 fw-semibold text-dark mb-2">
-                                    Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendLainnya.ToString("NO") x 8 = Rp. @Model.OmzetWeekendLainnya.ToString("N0")
+                                    Rp. @Model.HTMWeekend.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekendLainnya).ToString("NO") x 8 = Rp. @Model.OmzetWeekendLainnya.ToString("N0")
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Total Omzet Bulanan :
@@ -474,17 +474,17 @@
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 hari/bulan)</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") Kunjungan</p>
+                        <p class="fs-14 fw-semibold mb-1">@Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya).ToString("N0") Kunjungan</p>
                     </div>
                 </div>
                 
                 @{
-                    decimal totalPengunjung = Model.JumlahPengunjungWeekdaysLainnya + Model.JumlahPengunjungWeekendLainnya;
+                    decimal totalPengunjung = Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya) + Math.Ceiling(Model.JumlahPengunjungWeekendLainnya);
 
-                    var kunjunganWeekdays = (totalPengunjung == 0 ? 0 : (decimal)Model.JumlahPengunjungWeekdaysLainnya / totalPengunjung * 100)
+                    var kunjunganWeekdays = (totalPengunjung == 0 ? 0 : (decimal)Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya) / totalPengunjung * 100)
                     .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
 
-                    var kunjunganWeekend = (totalPengunjung == 0 ? 0 : (decimal)Model.JumlahPengunjungWeekendLainnya / totalPengunjung * 100)
+                    var kunjunganWeekend = (totalPengunjung == 0 ? 0 : (decimal)Math.Ceiling(Model.JumlahPengunjungWeekendLainnya) / totalPengunjung * 100)
                     .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
                 }
 
@@ -501,14 +501,14 @@
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 hari/bulan)</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.JumlahPengunjungWeekendLainnya.ToString("N0") Kunjungan</p>
+                        <p class="fs-14 fw-semibold mb-1">@Math.Ceiling(Model.JumlahPengunjungWeekendLainnya).ToString("N0") Kunjungan</p>
                     </div>
                 </div>
 
                 <div class="progress mb-2" style="height:20px">
                     <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-second progress-bar-primary text-dark"
                          role="progressbar" style="width: @kunjunganWeekend%"
-                         aria-valuenow="@Model.JumlahPengunjungWeekendLainnya" aria-valuemin="0"
+                         aria-valuenow="@Math.Ceiling(Model.JumlahPengunjungWeekendLainnya)" aria-valuemin="0"
                          aria-valuemax="@totalPengunjung">
                         @kunjunganWeekend%
                     </div>
@@ -519,7 +519,7 @@
                     Total Kunjungan per Bulan
                 </h4>
                 <h4 class="fs-16 fw-semibold mb-2 text-center">
-                    @Model.JumlahPengunjungPerBulanLainnya.ToString("N0") Kunjungan
+                    @Math.Ceiling(Model.JumlahPengunjungPerBulanLainnya).ToString("N0") Kunjungan
                 </h4>
                 <h4 class="fs-14 text-muted mb-1 text-center">
                     Rata-rata @Model.RataRataPengunjung.ToString("N0") Kunjungan per Hari
@@ -618,22 +618,22 @@
                     Jumlah Pengunjung Weekdays = Kapasitas x Turnover Weekdays
                 </p>
                 <p class="fs-14 mb-2 fw-semibold text-dark">
-                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") orang
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya).ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Jumlah Pengunjung Weekend = Kapasitas x Turnover Weekend
                 </p>
                 <p class="fs-14 mb-2 fw-semibold text-dark">
-                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Model.JumlahPengunjungWeekendLainnya.ToString("N0") orang
+                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekendLainnya).ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Omzet/Bulan = (HTM Weekdays x Pengunjung Weekdays x 22 Hari) + (HTM Weekdays x Pengunjung Weekend x 8 Hari)
                 </p>
                 <p class="fs-14 mb-3 fw-semibold text-dark">
-                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") x 22 Hari) +
-                    (Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendLainnya.ToString("N0") x 8 Hari) = Rp. @Model.OmzetPerBulanLainnya.ToString("N0")
+                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya).ToString("N0") x 22 Hari) +
+                    (Rp. @Model.HTMWeekend.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekendLainnya).ToString("N0") x 8 Hari) = Rp. @Model.OmzetPerBulanLainnya.ToString("N0")
                 </p>
 
                 <hr>
