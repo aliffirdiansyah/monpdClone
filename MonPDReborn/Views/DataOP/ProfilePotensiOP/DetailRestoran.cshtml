@@ -395,9 +395,9 @@
                                         (Rata-rata Transaksi x Rata-rata Pengunjung Weekdays x 22) + (Rata-rata Transaksi x Rata-rata Pengunjung Weekend x 8)
                                     </p>
                                     @{
-                                        decimal billPerOrang = Model.RataRataBillPerOrang;
-                                        decimal pengunjungWeekdays = Model.RataRataPengunjungWeekdaysNonCatering;
-                                        decimal pengunjungWeekend = Model.RataRataPengunjungWeekendNonCatering;
+                                        decimal billPerOrang = Math.Ceiling(Model.RataRataBillPerOrang);
+                                        decimal pengunjungWeekdays = Math.Ceiling(Model.RataRataPengunjungWeekdaysNonCatering);
+                                        decimal pengunjungWeekend = Math.Ceiling(Model.RataRataPengunjungWeekendNonCatering);
 
                                         decimal total = (billPerOrang * pengunjungWeekdays * 22) +
                                         (billPerOrang * pengunjungWeekend * 8);
@@ -459,12 +459,12 @@
                                         Rumus Perhitungan Potensi Pajak Per Tahun :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        Potensi Pajak Per Bulan x 12
+                                        Potensi Pajak Per Bulan x @Model.BulanSisa
                                     </p>
                                     <p class="fs-14 fw-semibold mb-2 text-dark">
-                                        Rp. @omzetBulan.ToString("N0") x 12 =
+                                        Rp. @omzetBulan.ToString("N0") x @Model.BulanSisa =
                                         @{
-                                            decimal potensiTahun = (omzetBulan * 12);
+                                            decimal potensiTahun = (omzetBulan * Model.BulanSisa);
                                         }
                                         Rp. @potensiTahun.ToString("N0")
                                     </p>
@@ -496,22 +496,22 @@
                         Rata-Rata Pengunjung (Weekdays) = Jumlah Kursi x Turnover Weekdays
                     </p>
                     <p class="fs-14 text-dark mb-2 fw-bold">
-                        = @Model.JumlahKursi.ToString("N0") x @Model.TurnoverWeekdaysNonCatering.ToString("N1") = @Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0") orang
+                        = @Model.JumlahKursi.ToString("N0") x @Model.TurnoverWeekdaysNonCatering.ToString("N1") = @Math.Ceiling(Model.RataRataPengunjungWeekdaysNonCatering).ToString("N0") orang
                     </p>
 
                     <p class="fs-14 text-muted font-monospace mb-1">
                         Rata-Rata Pengunjung (Weekend) = Jumlah Kursi x Turnover Weekend
                     </p>
                     <p class="fs-14 text-dark mb-2 fw-bold">
-                        = @Model.JumlahKursi.ToString("N0") x @Model.TurnoverWeekendNonCatering.ToString("N1") = @Model.RataRataPengunjungWeekendNonCatering.ToString("N0") orang
+                        = @Model.JumlahKursi.ToString("N0") x @Model.TurnoverWeekendNonCatering.ToString("N1") = @Math.Ceiling(Model.RataRataPengunjungWeekendNonCatering).ToString("N0") orang
                     </p>
 
                     <p class="fs-14 text-muted font-monospace mb-1">
                         Omzet/Bulan = (Rata-Rata Bill/Orang x Pengunjung Weekdays x 22) + (Rata-Rata Bill/Orang x Pengunjung Weekend x 8)
                     </p>
                     <p class="fs-14 text-dark mb-3 fw-bold">
-                        = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0") x 22) +
-                        (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataPengunjungWeekendNonCatering.ToString("N0") x 8) =
+                        = (Rp. @Math.Ceiling(Model.RataRataBillPerOrang).ToString("N0") x @Math.Ceiling(Model.RataRataPengunjungWeekdaysNonCatering).ToString("N0") x 22) +
+                        (Rp. @Math.Ceiling(Model.RataRataBillPerOrang).ToString("N0") x @Math.Ceiling(Model.RataRataPengunjungWeekendNonCatering).ToString("N0") x 8) =
                         Rp. @Model.OmzetPerBulanNonCatering.ToString("N0")
                     </p>
 
