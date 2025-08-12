@@ -403,7 +403,7 @@
                                         (billPerOrang * pengunjungWeekend * 8);
                                     }
                                     <p class="fs-14 fw-semibold mb-2 text-dark">
-                                        ( Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0") x 22) + (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataPengunjungWeekendNonCatering.ToString("N0") x 8) = Rp. @total.ToString("N0")
+                                        ( Rp. @Math.Ceiling(Model.RataRataBillPerOrang).ToString("N0") x @Math.Ceiling(Model.RataRataPengunjungWeekdaysNonCatering).ToString("N0") x 22) + (Rp. @Math.Ceiling(Model.RataRataBillPerOrang).ToString("N0") x @Math.Ceiling(Model.RataRataPengunjungWeekendNonCatering).ToString("N0") x 8) = Rp. @Math.Ceiling(total).ToString("N0")
                                     </p>
                                 </div>
                             </div>
