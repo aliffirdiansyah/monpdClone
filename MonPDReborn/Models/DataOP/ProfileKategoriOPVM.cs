@@ -135,7 +135,7 @@ namespace MonPDReborn.Models.DataOP
                             .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                             .ToList();
-                        foreach (var item in kategoriList.OrderBy(x=>x.Id).ToList())
+                        foreach (var item in kategoriList.OrderBy(x => x.Id).ToList())
                         {
                             var listOpHotel = dataHotel.Where(x => x.KategoriId == item.Id).Select(x => x.Nop).ToList();
                             var targetHotel = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year && listOpHotel.Contains(x.Nop)).Sum(q => q.Target) ?? 0;
@@ -301,7 +301,7 @@ namespace MonPDReborn.Models.DataOP
                                      .Sum(m => (decimal?)m.NominalPokokBayar) ?? 0
                              })
                             .AsEnumerable()
-                            .GroupBy(x => new { x.KategoriId, x.Nama, x.Nip})
+                            .GroupBy(x => new { x.KategoriId, x.Nama, x.Nip })
                             .Select(g => new DetailProfileKategori
                             {
                                 Nip = g.Key.Nip,
@@ -581,12 +581,14 @@ namespace MonPDReborn.Models.DataOP
                         var targetResto = context.DbAkunTargetObjekRestos.Where(x => x.TahunBuku == DateTime.Now.Year && listOpResto.Contains(x.Nop)).Sum(q => q.Target) ?? 0;
                         var realisasiResto = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && listOpResto.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                         var dbOpResto = context.DbOpRestos
-                            .Where(x => data.Select(y =>y.Nop).Contains(x.Nop))
+                            .Where(x => data.Select(y => y.Nop).Contains(x.Nop))
                             .ToList();
                         ret = data
                             .GroupBy(x => new { x.Nip, x.Nop, x.NamaPj, x.KategoriId })
                             .Select(g => new DetailOPProfileKategori
                             {
+                                EnumPajak = (int)jenisPajak,
+                                KategoriId = kategoriId,
                                 Nop = g.Key.Nop,
                                 NamaOP = dbOpResto.Where(x => x.Nop == g.Key.Nop)
                                     .Select(x => x.NamaOp)
@@ -610,6 +612,8 @@ namespace MonPDReborn.Models.DataOP
                             .GroupBy(x => new { x.Nip, x.Nop, x.NamaPj, x.KategoriId })
                             .Select(g => new DetailOPProfileKategori
                             {
+                                EnumPajak = (int)jenisPajak,
+                                KategoriId = kategoriId,
                                 Nop = g.Key.Nop,
                                 NamaOP = dbOpListrik.Where(x => x.Nop == g.Key.Nop)
                                     .Select(x => x.NamaOp)
@@ -633,6 +637,8 @@ namespace MonPDReborn.Models.DataOP
                             .GroupBy(x => new { x.Nip, x.Nop, x.NamaPj, x.KategoriId })
                             .Select(g => new DetailOPProfileKategori
                             {
+                                EnumPajak = (int)jenisPajak,
+                                KategoriId = kategoriId,
                                 Nop = g.Key.Nop,
                                 NamaOP = dbOpHotel.Where(x => x.Nop == g.Key.Nop)
                                     .Select(x => x.NamaOp)
@@ -656,6 +662,8 @@ namespace MonPDReborn.Models.DataOP
                             .GroupBy(x => new { x.Nip, x.Nop, x.NamaPj, x.KategoriId })
                             .Select(g => new DetailOPProfileKategori
                             {
+                                EnumPajak = (int)jenisPajak,
+                                KategoriId = kategoriId,
                                 Nop = g.Key.Nop,
                                 NamaOP = dbOpParkir.Where(x => x.Nop == g.Key.Nop)
                                     .Select(x => x.NamaOp)
@@ -679,6 +687,8 @@ namespace MonPDReborn.Models.DataOP
                             .GroupBy(x => new { x.Nip, x.Nop, x.NamaPj, x.KategoriId })
                             .Select(g => new DetailOPProfileKategori
                             {
+                                EnumPajak = (int)jenisPajak,
+                                KategoriId = kategoriId,
                                 Nop = g.Key.Nop,
                                 NamaOP = dbOpHiburan.Where(x => x.Nop == g.Key.Nop)
                                     .Select(x => x.NamaOp)
@@ -702,6 +712,8 @@ namespace MonPDReborn.Models.DataOP
                             .GroupBy(x => new { x.Nip, x.Nop, x.NamaPj, x.KategoriId })
                             .Select(g => new DetailOPProfileKategori
                             {
+                                EnumPajak = (int)jenisPajak,
+                                KategoriId = kategoriId,
                                 Nop = g.Key.Nop,
                                 NamaOP = dbOpAbt.Where(x => x.Nop == g.Key.Nop)
                                     .Select(x => x.NamaOp)
@@ -725,6 +737,8 @@ namespace MonPDReborn.Models.DataOP
                             .GroupBy(x => new { x.Nip, x.Nop, x.NamaPj, x.KategoriId })
                             .Select(g => new DetailOPProfileKategori
                             {
+                                EnumPajak = (int)jenisPajak,
+                                KategoriId = kategoriId,
                                 Nop = g.Key.Nop,
                                 NamaOP = dbOpReklame.Where(x => x.Nop == g.Key.Nop)
                                     .Select(x => x.Nama)
@@ -811,8 +825,8 @@ namespace MonPDReborn.Models.DataOP
         }
         public class DetailOPProfileKategori
         {
-            //public int EnumPajak { get; set; }
-            //public int KategoriId { get; set; }
+            public int EnumPajak { get; set; }
+            public int KategoriId { get; set; }
             public string Nop { get; set; } = string.Empty;
             public string FormattedNOP => Utility.GetFormattedNOP(Nop);
             public string NamaOP { get; set; } = string.Empty;
