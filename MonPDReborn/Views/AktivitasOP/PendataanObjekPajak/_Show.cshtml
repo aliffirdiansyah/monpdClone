@@ -48,6 +48,37 @@
                 </text>);
 
         })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.JenisPajak)
+                .Alignment(HorizontalAlignment.Right)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Total");
+                
+                items.AddFor(m => m.JumlahOp)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Potensi)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.TotalRealisasi)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Selisih)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+            });
+        })
     )
 </div>
 
