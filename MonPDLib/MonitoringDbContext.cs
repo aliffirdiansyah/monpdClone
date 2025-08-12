@@ -22,6 +22,7 @@ namespace MonPDLib
         }
 
         public DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
+        public DbSet<SSPDPBB> SSPDPBBs { get; set; }
         public DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
         public DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
         public DbSet<SSPDHPP> SSPDHPPs { get; set; }
@@ -62,7 +63,7 @@ namespace MonPDLib
 
             modelBuilder.Entity<DbMonUpayaPad>().HasNoKey();
             modelBuilder.Entity<SSPDHPP>().HasNoKey();
-            modelBuilder.Entity<KetetapanPbbAsync>().HasKey(e => new { e.NOP, e.TAHUN_BUKU, e.TAHUN_PAJAK}).HasName("DB_MON_PBB_PK");
+            modelBuilder.Entity<KetetapanPbbAsync>().HasKey(e => new { e.NOP, e.TAHUN_BUKU, e.TAHUN_PAJAK }).HasName("DB_MON_PBB_PK");
             modelBuilder.Entity<DbMonReklameUpaya>(entity =>
             {
                 entity.HasKey(e => new { e.NoFormulir, e.TglUpaya, e.Seq }); // definisikan composite key
@@ -88,6 +89,7 @@ namespace MonPDLib
             modelBuilder.Entity<SSPD>().HasNoKey();
             modelBuilder.Entity<DbOpHotel>().HasNoKey();
 
+            modelBuilder.Entity<SSPDPBB>().HasNoKey();
             modelBuilder.Entity<DbOpReklame>().HasNoKey();
 
             modelBuilder.Entity<DbOpParkir>().HasNoKey();

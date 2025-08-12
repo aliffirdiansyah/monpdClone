@@ -499,5 +499,18 @@ namespace MonPDLib
             public decimal NOMINAL_SANKSI { get; set; }
             public DateTime TRANSACTION_DATE { get; set; }
         }
+
+        public class SSPDPBB
+        {
+            public string NOP { get; set; } = null!;            
+            public decimal TAHUN_PAJAK { get; set; }                        
+            public decimal POKOK { get; set; }
+            public string? LUNAS { get; set; }
+            public DateTime? TGL_BAYAR { get; set; }
+            public decimal BAYAR_POKOK { get; set; }
+            public decimal BAYAR_SANKSI { get; set; }
+            public int ID_PERUNTUKAN { get; set; }
+            public string PERUNTUKAN { get; set; }=null!;
+        }
     }
 }
