@@ -910,7 +910,7 @@
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
                                  role="progressbar"
                                  aria-valuenow="@persenMotorWeekdays"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasMotor"
                                  style="width: @persenMotorWeekdays%">
                                 @persenMotorWeekdays%
                             </div>
@@ -925,7 +925,7 @@
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
                                  role="progressbar"
                                  aria-valuenow="@persenMotorWeekend"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasMotor"
                                  style="width: @persenMotorWeekend%">
                                 @persenMotorWeekend%
                             </div>
@@ -943,7 +943,7 @@
                         <div class="progress mb-2" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
                                  aria-valuenow="@persenMobilWeekdays"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasMobil"
                                  style="width: @persenMobilWeekdays%">
                                 @persenMobilWeekdays%
                             </div>
@@ -957,7 +957,7 @@
                         <div class="progress" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
                                  aria-valuenow="@persenMobilWeekend"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasMobil"
                                  style="width: @persenMobilWeekend%">
                                 @persenMobilWeekend%
                             </div>
@@ -976,7 +976,7 @@
                         <div class="progress mb-2" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
                                  aria-valuenow="@persenTrukMiniWeekdays"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasTrukMini"
                                  style="width: @persenTrukMiniWeekdays%">
                                 @persenTrukMiniWeekdays%
                             </div>
@@ -990,7 +990,7 @@
                         <div class="progress" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
                                  aria-valuenow="@persenTrukMiniWeekend"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasTrukMini"
                                  style="width: @persenTrukMiniWeekend%">
                                 @persenTrukMiniWeekend%
                             </div>
@@ -1009,7 +1009,7 @@
                         <div class="progress mb-2" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
                                  aria-valuenow="@persenTrukBusWeekdays"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasTrukBus"
                                  style="width: @persenTrukBusWeekdays%">
                                 @persenTrukBusWeekdays%
                             </div>
@@ -1023,7 +1023,7 @@
                         <div class="progress" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
                                  aria-valuenow="@persenTrukBusWeekend"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasTrukBus"
                                  style="width: @persenTrukBusWeekend%">
                                 @persenTrukBusWeekend%
                             </div>
@@ -1042,7 +1042,7 @@
                         <div class="progress mb-2" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
                                  aria-valuenow="@persenTrailerWeekdays"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasTrailer"
                                  style="width: @persenTrailerWeekdays%">
                                 @persenTrailerWeekdays%
                             </div>
@@ -1056,7 +1056,7 @@
                         <div class="progress" style="height:20px">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
                                  aria-valuenow="@persenTrailerWeekend"
-                                 aria-valuemin="0" aria-valuemax="100"
+                                 aria-valuemin="0" aria-valuemax="@Model.KapasitasTrailer"
                                  style="width: @persenTrailerWeekend%">
                                 @persenTrailerWeekend%
                             </div>
@@ -1248,7 +1248,7 @@
                                         <hr />
                                         <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda :</h4>
                                         <p class="fs-14 text-muted font-monospace">
-                                            Omzet Sepeda = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                            Omzet Sepeda = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
                                             Omzet Sepeda = (@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirSepedaWeekend.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 8 Hari)
@@ -1261,7 +1261,7 @@
                                         <hr />
                                         <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda Motor :</h4>
                                         <p class="fs-14 text-muted font-monospace">
-                                            Omzet Sepeda Motor = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                            Omzet Sepeda Motor = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
                                             Omzet Sepeda Motor = (@Model.JumlahTerparkirMotorWeekdays.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMotorWeekend.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 8 Hari)
@@ -1274,7 +1274,7 @@
                                         <hr />
                                         <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Mobil :</h4>
                                         <p class="fs-14 text-muted font-monospace">
-                                            Omzet Mobil = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                            Omzet Mobil = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
                                             Omzet Mobil = (@Model.JumlahTerparkirMobilWeekdays.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMobilWeekend.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 8 Hari)
@@ -1287,7 +1287,7 @@
                                         <hr />
                                         <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk Mini :</h4>
                                         <p class="fs-14 text-muted font-monospace">
-                                            Omzet Truk Mini = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                            Omzet Truk Mini = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
                                             Omzet Truk Mini = (@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 8 Hari)
@@ -1300,7 +1300,7 @@
                                         <hr />
                                         <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk / Bus :</h4>
                                         <p class="fs-14 text-muted font-monospace">
-                                            Omzet Truk/Bus = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                            Omzet Truk/Bus = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
                                             Omzet Truk/Bus = (@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 8 Hari)
@@ -1313,7 +1313,7 @@
                                         <hr />
                                         <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Trailer :</h4>
                                         <p class="fs-14 text-muted font-monospace">
-                                            Omzet Trailer = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                            Omzet Trailer = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
                                             Omzet Trailer = (@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrailerWeekend.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 8 Hari)
@@ -1392,85 +1392,80 @@
 
                         @if (Model.KapasitasSepeda > 0)
                         {
-                            @* Sepeda *@
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Sepeda Weekdays = Turnover Weekdays x Kapasitas Sepeda
+                            <hr />
+                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda :</h4>
+                            <p class="fs-14 text-muted font-monospace">
+                                Omzet Sepeda = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Sepeda Weekend = Turnover Weekend x Kapasitas Sepeda
+                            <p class="fs-14 fw-semibold text-dark">
+                                Omzet Sepeda = (@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirSepedaWeekend.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted mb-3 fw-semibold">
-                                Omzet Sepeda = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetSepeda.ToString("N0")
-                            </p>
+                            <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda = Rp. @Model.OmzetSepeda.ToString("N0")</p>
                         }
+
                         @if (Model.KapasitasMotor > 0)
                         {
-                            @* Motor *@
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Motor Weekdays = Turnover Weekdays x Kapasitas Motor
+                            <hr />
+                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda Motor :</h4>
+                            <p class="fs-14 text-muted font-monospace">
+                                Omzet Sepeda Motor = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Motor Weekend = Turnover Weekend x Kapasitas Motor
+                            <p class="fs-14 fw-semibold text-dark">
+                                Omzet Sepeda Motor = (@Model.JumlahTerparkirMotorWeekdays.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMotorWeekend.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted mb-3 fw-semibold">
-                                Omzet Motor = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetMotor.ToString("N0")
-                            </p>
+                            <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda Motor= Rp. @Model.OmzetMotor.ToString("N0")</p>
                         }
 
                         @if (Model.KapasitasMobil > 0)
                         {
-                            @* Mobil *@
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Mobil Weekdays = Turnover Weekdays x Kapasitas Mobil
+                            <hr />
+                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Mobil :</h4>
+                            <p class="fs-14 text-muted font-monospace">
+                                Omzet Mobil = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Mobil Weekend = Turnover Weekend x Kapasitas Mobil
+                            <p class="fs-14 fw-semibold text-dark">
+                                Omzet Mobil = (@Model.JumlahTerparkirMobilWeekdays.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMobilWeekend.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted mb-3 fw-semibold">
-                                Omzet Mobil = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetMobil.ToString("N0")
-                            </p>
+                            <p class="fs-14 fw-semibold text-dark mb-3">Omzet Mobil = Rp. @Model.OmzetMobil.ToString("N0")</p>
                         }
 
                         @if (Model.KapasitasTrukMini > 0)
                         {
-                            @* Truk Mini *@
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Truk Mini Weekdays = Turnover Weekdays x Kapasitas Truk Mini
+                            <hr />
+                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk Mini :</h4>
+                            <p class="fs-14 text-muted font-monospace">
+                                Omzet Truk Mini = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Truk Mini Weekend = Turnover Weekend x Kapasitas Truk Mini
+                            <p class="fs-14 fw-semibold text-dark">
+                                Omzet Truk Mini = (@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted mb-3 fw-semibold">
-                                Omzet Truk Mini = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrukMini.ToString("N0")
-                            </p>
+                            <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk Mini = Rp. @Model.OmzetTrukMini.ToString("N0")</p>
                         }
 
                         @if (Model.KapasitasTrukBus > 0)
                         {
-                            @* Truk/Bus *@
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Truk/Bus Weekdays = Turnover Weekdays x Kapasitas Truk/Bus
+                            <hr />
+                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk / Bus :</h4>
+                            <p class="fs-14 text-muted font-monospace">
+                                Omzet Truk/Bus = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Truk/Bus Weekend = Turnover Weekend x Kapasitas Truk/Bus
+                            <p class="fs-14 fw-semibold text-dark">
+                                Omzet Truk/Bus = (@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted mb-3 fw-semibold">
-                                Omzet Truk/Bus = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrukBus.ToString("N0")
-                            </p>
+                            <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk/Bus = Rp. @Model.OmzetTrukBus.ToString("N0")</p>
                         }
 
                         @if (Model.KapasitasTrailer > 0)
                         {
-                            @* Trailer *@
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Trailer Weekdays = Turnover Weekdays x Kapasitas Trailer
+                            <hr />
+                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Trailer :</h4>
+                            <p class="fs-14 text-muted font-monospace">
+                                Omzet Trailer = (Weekdays x Tarif x 22 Hari) + (Weekend x Tarif x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Jumlah Terparkir Trailer Weekend = Turnover Weekend x Kapasitas Trailer
+                            <p class="fs-14 fw-semibold text-dark">
+                                Omzet Trailer = (@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrailerWeekend.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 8 Hari)
                             </p>
-                            <p class="fs-14 text-muted mb-3 fw-semibold">
-                                Omzet Trailer = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrailer.ToString("N0")
-                            </p>
+                            <p class="fs-14 fw-semibold text-dark mb-3">Omzet Trailer = Rp. @Model.OmzetTrailer.ToString("N0")</p>
                         }
                         <hr>
 
