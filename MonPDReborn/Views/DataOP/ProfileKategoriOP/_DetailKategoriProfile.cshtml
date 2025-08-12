@@ -1,0 +1,140 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileKategoriOPVM.DetailKategoriProfile
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileKategoriOPVM.DetailProfileKategori>()
+        .ID("profileKategoriDetailGrid")
+        .DataSource(Model.Data)
+        .KeyExpr("Nop")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.PenanggungJawab).Caption("Penanggung Jawab");
+            columns.AddFor(m => m.TargetSdBulanIni).Caption("Target S.D Bulan Ini").Format("#,##0");
+            columns.AddFor(m => m.RealisasiSdBulanIni).Caption("Realisasi S.d Bulan Ini").Format("#,##0");
+            columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
+            columns.AddFor(m => m.Persentase).Caption("%").Format("#,##0");
+            columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP");
+            columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+            columns.Add()
+                    .Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add()
+                    .Text("Detail")
+                    .Icon("search")
+                    .OnClick("onDetailKategoriClick");
+                    });
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.PenanggungJawab)
+            .SummaryType(SummaryType.Sum)
+            .Alignment(HorizontalAlignment.Right)
+            .DisplayFormat("TOTAL");
+
+                items.AddFor(m => m.TargetSdBulanIni)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.RealisasiSdBulanIni)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.Selisih)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.Persentase)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.JumlahOP)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+            });
+        })
+        )
+</div>
+
+<script>
+    function onDetailKategoriClick(e) {
+            e.event.preventDefault();
+
+            const rowData = e.row?.data;
+            if (!rowData) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            const jenisPajak = rowData.EnumPajak;
+            const kategoriId = rowData.KategoriId;
+            const nip = rowData.NIP;
+
+            console.log("Detail click:", jenisPajak, kategoriId, nip);
+
+            const $modal = $("#modalDetailKategori");
+
+            $modal.css("z-index", "1070");
+            $(".modal-backdrop").last().css("z-index", "1060");
+
+            $modal.find(".modal-title").text(`Detail Kategori - ${jenisPajak}`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+
+            var bsModal = new bootstrap.Modal(document.getElementById('modalDetailKategori'), {
+                backdrop: false,
+                keyboard: false
+            });
+            bsModal.show();
+
+            $.ajax({
+                url: '/ProfileKategoriOP/DetailKategoriProfileOP',
+                type: 'GET',
+                data: {
+                    jenisPajak: jenisPajak,
+                    kategoriId: kategoriId,
+                    nip: nip
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
+</script>

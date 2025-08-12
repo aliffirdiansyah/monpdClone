@@ -23,10 +23,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.DataRealisasiList)
+            @{
+                int seq = 1;
+            }
+            @foreach (var item in Model.DataRealisasiList.Where(x => x.No > 0).ToList())
             {
                 <tr>
-                    <td class="text-center">@item.No</td>
+                    <td class="text-center">@seq</td>
                     <td>@item.JenisPajak</td>
                     <td class="text-end">@item.Target.ToString("#,##0")</td>
                     <td class="text-end">@item.PembayaranBulanIni.AKP.ToString("#,##0")</td>
@@ -38,6 +41,8 @@
                     <td class="text-end">@item.PembayaranSDBI.PersenAkpRealisasi.ToString("n2")%</td>
                     <td class="text-end">@item.PembayaranSDBI.PersenTarget.ToString("n2")%</td>
                 </tr>
+
+                seq++;
             }
         </tbody>
         <tfoot>

@@ -1126,7 +1126,7 @@ namespace MonPDReborn.Models.Reklame
             : 0;
         public string Ukuran { get; set; } = null!;
         public decimal Pajak { get; set; }
-        public int Jumlah { get; set; }
+        public decimal Jumlah { get; set; }
     }
 
 }

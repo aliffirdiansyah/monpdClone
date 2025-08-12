@@ -89,30 +89,31 @@ namespace MonPDReborn.Models
                 Data = Method.GetDataKontrolPotensiOp();
             }
         }
-        public class DataPiutang
-        {
-            public List<ViewModel.DataPiutang> Data { get; set; } = new List<ViewModel.DataPiutang>();
-            public DataPiutang()
-            {
-                Data = Method.GetDataPiutangData();
-            }
-        }
-        public class DetailPiutang
-        {
-            public List<ViewModel.DetailPiutang> Data { get; set; } = new List<ViewModel.DetailPiutang>();
-            public DetailPiutang(EnumFactory.EPajak jenisPajak, int tahun)
-            {
-                Data = Method.GetDetailPiutangData(jenisPajak, tahun);
-            }
-        }
-        public class DataMutasi
-        {
-            public List<ViewModel.DataMutasi> Data { get; set; } = new List<ViewModel.DataMutasi>();
-            public DataMutasi()
-            {
-                Data = Method.GetDataMutasiData();
-            }
-        }
+        
+        //public class DataPiutang
+        //{
+        //    public List<ViewModel.DataPiutang> Data { get; set; } = new List<ViewModel.DataPiutang>();
+        //    public DataPiutang()
+        //    {
+        //        Data = Method.GetDataPiutangData();
+        //    }
+        //}
+        //public class DetailPiutang
+        //{
+        //    public List<ViewModel.DetailPiutang> Data { get; set; } = new List<ViewModel.DetailPiutang>();
+        //    public DetailPiutang(EnumFactory.EPajak jenisPajak, int tahun)
+        //    {
+        //        Data = Method.GetDetailPiutangData(jenisPajak, tahun);
+        //    }
+        //}
+        //public class DataMutasi
+        //{
+        //    public List<ViewModel.DataMutasi> Data { get; set; } = new List<ViewModel.DataMutasi>();
+        //    public DataMutasi()
+        //    {
+        //        Data = Method.GetDataMutasiData();
+        //    }
+        //}
 
         public class JumlahObjekPajak
         {

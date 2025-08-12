@@ -21,6 +21,7 @@ namespace MonPDLib
         {
         }
 
+        public DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
         public DbSet<SSPDPBB> SSPDPBBs { get; set; }
         public DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
         public DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
@@ -28,6 +29,7 @@ namespace MonPDLib
         public DbSet<DbMonReklamePerpanjangan> DbMonReklamePerpanjangans { get; set; }
         public DbSet<DbMonReklameInsJumlah> DbMonReklameInsJumlahs { get; set; }
         public DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
+        public DbSet<DbRekamAlatTbsb> DbRekamAlatTbsbs { get; set; }
         public DbSet<KetetapanPbb> KetetapanPbbs { get; set; }
         public DbSet<KetetapanPbbAsync> KetetapanPbbAsyncs { get; set; }
         public DbSet<SSPD> SSPDs { get; set; }
@@ -59,6 +61,7 @@ namespace MonPDLib
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<DbMonUpayaPad>().HasNoKey();
             modelBuilder.Entity<SSPDHPP>().HasNoKey();
             modelBuilder.Entity<KetetapanPbbAsync>().HasKey(e => new { e.NOP, e.TAHUN_BUKU, e.TAHUN_PAJAK }).HasName("DB_MON_PBB_PK");
             modelBuilder.Entity<DbMonReklameUpaya>(entity =>
@@ -79,6 +82,7 @@ namespace MonPDLib
             modelBuilder.Entity<DbMonReklamePerpanjangan>().HasNoKey();
             modelBuilder.Entity<DbMonReklameInsJumlah>().HasNoKey();
             modelBuilder.Entity<DbRekamAlatT>().HasNoKey();
+            modelBuilder.Entity<DbRekamAlatTbsb>().HasNoKey();
             modelBuilder.Entity<RealisasiPbb>().HasNoKey();
             modelBuilder.Entity<KetetapanPbb>().HasNoKey();
             modelBuilder.Entity<OPPbb>().HasNoKey();

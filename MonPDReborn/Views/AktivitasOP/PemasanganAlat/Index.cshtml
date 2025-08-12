@@ -98,13 +98,13 @@
 
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header d-flex bg-header-color align-items-center" >
+            <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 text-dark mb-0">
                         Pemasangan Alat Rekam Online - Series
                     </h4>
                 </div>
-                <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
+                <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="loadShow()">
                     <i class="mdi mdi-refresh align-middle"></i> Refresh
                 </button>
             </div>
@@ -121,10 +121,10 @@
 
     <div class="col-lg-12">
         <div class="card">
-            <div class="card-header d-flex bg-header-color align-items-center" >
+            <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 text-dark mb-0">
-                        Detail Pemasangan Alat Pada Objek Pajak
+                        Pemasangan Alat Pada Objek Pajak
                     </h4>
                 </div>
                 <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
@@ -133,12 +133,12 @@
             </div>
             <div class="card-body">
                 <div class="text-center">
-                    <div id="loading2-Detail" class="spinner-border text-primary" style="display: none">
+                    <div id="loading2-Tahunan" class="spinner-border text-primary" style="display: none">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <div id="Detail"></div>
-                <div class="modal fade" id="subDetailModal" tabindex="-1" role="dialog" aria-labelledby="subDetailModalLabel" aria-hidden="true">
+                <div id="Tahunan"></div>
+                <div class="modal fade" id="TahunanModal" tabindex="-1" role="dialog" aria-labelledby="TahunanModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -150,7 +150,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div id="subDetailModalContainer"></div>
+                                <div id="TahunanModalContainer"></div>
                             </div>
                         </div>
                     </div>
@@ -158,14 +158,14 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            loadShow("");      // Panggil data rekap jumlah
-            loadDetail("");  // Panggil semua data detail saat pertama load
+            loadShow("");
+            loadTahunan("");
         });
 
         function loadShow() {
@@ -189,76 +189,84 @@
             });
         }
 
-
-        function loadDetail(jenisPajak) {
+        function loadTahunan() {
             $.ajax({
-                url: '@Url.Action("Detail", "PemasanganAlat")',
+                url: '@Url.Action("Tahunan", "PemasanganAlat")',
                 type: 'GET',
-                data: { jenisPajak: jenisPajak },
                 beforeSend: function () {
-                    // Tampilkan spinner & sembunyikan konten
-                    $('#loading2-Detail').show();
-                    $('#Detail').hide();
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Tahunan').show();
+                    $('#Tahunan').hide();
                 },
                 success: function (result) {
-                    $('#loading2-Detail').hide();
-                    $('#Detail').html(result).show();
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Tahunan').hide();
+                    $('#Tahunan').html(result).show();
                 },
                 error: function () {
-                    $('#loading2-Detail').hide();
-                    $('#Detail').html('<div class="alert alert-danger">❌ Gagal memuat data Detail.</div>').show();
+                    $('#loading2-Tahunan').hide();
+                    $('#Tahunan').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
                 }
             });
         }
 
+        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+            const jenisPajak = cellInfo.data.EnumPajak;
+            const kategori = cellInfo.data.KategoriId;
 
-        function onDetailClick(id, jenis) {
-            console.log("Detail clicked:", id, jenis);
-            // Tambahkan aksi lain seperti buka modal, load data, dll.
+            const dataField = cellInfo.column.dataField;
+
+            const match = dataField.match(/(Terpasang|BelumTerpasang)(\d{4})/);
+            const status = match ? match[1] : '';
+            const tahun = match ? parseInt(match[2], 10) : 0;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => loadSubDetail(jenisPajak, kategori, tahun, status));
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
         }
 
+        function kategoriDataCellTemplate(cellElement, cellInfo) {
+            const jenisPajak = cellInfo.data.EnumPajak;
+            const kategori = cellInfo.data.KategoriId;
+            const tahun = new Date().getFullYear();
+            const status = cellInfo.column.dataField;
 
-        function subDetailTemplate(container, options) {
-            var jenisPajak = options.data?.JenisPajak;
-            console.log("subDetailTemplate - JenisPajak:", jenisPajak);
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => loadSubDetail(jenisPajak, kategori, tahun, status));
 
-            // Buat inner container
-            var innerContainer = $("<div>").addClass("p-2");
-            container.append(innerContainer);
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
 
-            if (!jenisPajak) {
-                innerContainer.html('<div class="text-danger">Jenis Pajak tidak ditemukan.</div>');
-                return;
-            }
-
-            // Loading spinner
-            innerContainer.html(`
-                <div class="text-center my-3">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div class="mt-2 text-muted">Memuat data sub-detail...</div>
-                </div>
-            `);
-
-            $.ajax({
-                url: '@Url.Action("SubDetail", "PemasanganAlat")',
-                type: 'GET',
-                data: { jenisPajak: jenisPajak },
-                success: function (result) {
-                    innerContainer.html(result);
-                },
-                error: function () {
-                    innerContainer.html('<div class="text-danger">❌ Gagal memuat data sub-detail.</div>');
-                }
-            });
+            $(cellElement).append($wrapper);
         }
 
-        function loadSubDetail(kategori, status) {
+        function loadSubDetail(jenisPajak, kategori, tahun, status) {
             $.ajax({
-                url: '/PemasanganAlat/SubDetailModal',
+                url: '/PemasanganAlat/SubDetailOPModal',
                 type: 'GET',
-                data: { kategori: kategori, status: status },
+                data: { jenisPajak, kategori, tahun, status},
                 beforeSend: function () {
                     $("#loader").show();
                     $("#staticBackdropLargeScrollable").modal('hide');
@@ -266,7 +274,7 @@
                 success: function (response) {
                     $("#loader").hide();
                     if (response.Status === undefined) {
-                        $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail OP Pemasangan Alat");
                         $("#staticBackdropLargeScrollable .modal-body").html(response);
                         $("#staticBackdropLargeScrollable").modal('show');
                     } else {
@@ -288,23 +296,6 @@
                 }
             });
         }
-
-        function onJumlahOPClick(kategori, value) {
-            loadSubDetail(kategori, 'JumlahOP');
-        }
-
-        function onTerpasangTSClick(kategori, value) {
-            loadSubDetail(kategori, 'TerpasangTS');
-        }
-
-        function onTerpasangTBClick(kategori, value) {
-            loadSubDetail(kategori, 'TerpasangTB');
-        }
-
-        function onTerpasangSBClick(kategori, value) {
-            loadSubDetail(kategori, 'TerpasangSB');
-        }
-
 
     </script>
 }

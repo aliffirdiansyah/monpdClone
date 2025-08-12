@@ -194,44 +194,6 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
-        public IActionResult DataPiutang()
-        {
-            var response = new ResponseBase();
-            try
-            {
-                var model = new Models.DashboardVM.DataPiutang();
-                return PartialView($"{URLView}{actionName}", model);
-            }
-            catch (ArgumentException ex)
-            {
-                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
-                return Json(response.ToErrorInfoMessage(ex.Message));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
-                return Json(response.ToInternalServerError());
-            }
-        }
-        public IActionResult DataMutasi()
-        {
-            var response = new ResponseBase();
-            try
-            {
-                var model = new Models.DashboardVM.DataMutasi();
-                return PartialView($"{URLView}{actionName}", model);
-            }
-            catch (ArgumentException ex)
-            {
-                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
-                return Json(response.ToErrorInfoMessage(ex.Message));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
-                return Json(response.ToInternalServerError());
-            }
-        }
 
         public IActionResult JumlahObjekPajak()
         {
@@ -253,24 +215,63 @@ namespace MonPDReborn.Controllers
             }
         }
 
-        public IActionResult DetailPiutang(int jenisPajak, int tahun)
-        {
-            var response = new ResponseBase();
-            try
-            {
-                var model = new Models.DashboardVM.DetailPiutang((EnumFactory.EPajak)jenisPajak, tahun);
-                return PartialView($"{URLView}_{actionName}", model);
-            }
-            catch (ArgumentException ex)
-            {
-                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
-                return Json(response.ToErrorInfoMessage(ex.Message));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
-                return Json(response.ToInternalServerError());
-            }
-        }
+        //public IActionResult DataPiutang()
+        //{
+        //    var response = new ResponseBase();
+        //    try
+        //    {
+        //        var model = new Models.DashboardVM.DataPiutang();
+        //        return PartialView($"{URLView}{actionName}", model);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+        //        return Json(response.ToErrorInfoMessage(ex.Message));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+        //        return Json(response.ToInternalServerError());
+        //    }
+        //}
+        //public IActionResult DataMutasi()
+        //{
+        //    var response = new ResponseBase();
+        //    try
+        //    {
+        //        var model = new Models.DashboardVM.DataMutasi();
+        //        return PartialView($"{URLView}{actionName}", model);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+        //        return Json(response.ToErrorInfoMessage(ex.Message));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+        //        return Json(response.ToInternalServerError());
+        //    }
+        //}
+
+        //public IActionResult DetailPiutang(int jenisPajak, int tahun)
+        //{
+        //    var response = new ResponseBase();
+        //    try
+        //    {
+        //        var model = new Models.DashboardVM.DetailPiutang((EnumFactory.EPajak)jenisPajak, tahun);
+        //        return PartialView($"{URLView}_{actionName}", model);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+        //        return Json(response.ToErrorInfoMessage(ex.Message));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+        //        return Json(response.ToInternalServerError());
+        //    }
+        //}
     }
 }

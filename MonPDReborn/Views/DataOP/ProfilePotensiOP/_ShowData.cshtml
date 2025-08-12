@@ -63,9 +63,11 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
         .Width(240)
         .Placeholder("Cari...")
     )
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
     .Columns(columns =>
     {
-        columns.AddFor(m => m.NOP).Caption("NOP").Fixed(true);
+        columns.AddFor(m => m.FormattedNOP).Caption("NOP").Fixed(true);
         columns.AddFor(m => m.NamaOP).Caption("Nama WP").Fixed(true);
         columns.AddFor(m => m.Alamat).Caption("Alamat");
         columns.AddFor(m => m.Kategori).Caption("Kategori Pajak");

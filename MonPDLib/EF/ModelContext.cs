@@ -39,6 +39,24 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbAkunTargetObjekResto> DbAkunTargetObjekRestos { get; set; }
 
+    public virtual DbSet<DbCtrlByrAbt> DbCtrlByrAbts { get; set; }
+
+    public virtual DbSet<DbCtrlByrBphtb> DbCtrlByrBphtbs { get; set; }
+
+    public virtual DbSet<DbCtrlByrHiburan> DbCtrlByrHiburans { get; set; }
+
+    public virtual DbSet<DbCtrlByrHotel> DbCtrlByrHotels { get; set; }
+
+    public virtual DbSet<DbCtrlByrParkir> DbCtrlByrParkirs { get; set; }
+
+    public virtual DbSet<DbCtrlByrPbb> DbCtrlByrPbbs { get; set; }
+
+    public virtual DbSet<DbCtrlByrPpj> DbCtrlByrPpjs { get; set; }
+
+    public virtual DbSet<DbCtrlByrReklame> DbCtrlByrReklames { get; set; }
+
+    public virtual DbSet<DbCtrlByrResto> DbCtrlByrRestos { get; set; }
+
     public virtual DbSet<DbMonAbt> DbMonAbts { get; set; }
 
     public virtual DbSet<DbMonBphtb> DbMonBphtbs { get; set; }
@@ -54,6 +72,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbMonParkir> DbMonParkirs { get; set; }
 
     public virtual DbSet<DbMonPbb> DbMonPbbs { get; set; }
+
+    public virtual DbSet<DbMonPjOp> DbMonPjOps { get; set; }
 
     public virtual DbSet<DbMonPpj> DbMonPpjs { get; set; }
 
@@ -84,6 +104,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
 
     public virtual DbSet<DbMonResto> DbMonRestos { get; set; }
+
+    public virtual DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
 
     public virtual DbSet<DbOpAbt> DbOpAbts { get; set; }
 
@@ -117,6 +139,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbPotensiResto> DbPotensiRestos { get; set; }
 
+    public virtual DbSet<DbRekamAlatGabung> DbRekamAlatGabungs { get; set; }
+
     public virtual DbSet<DbRekamAlatT> DbRekamAlatTs { get; set; }
 
     public virtual DbSet<DbRekamAlatTbsb> DbRekamAlatTbsbs { get; set; }
@@ -141,6 +165,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MPajak> MPajaks { get; set; }
 
+    public virtual DbSet<MPegawai> MPegawais { get; set; }
+
     public virtual DbSet<MTindakanReklame> MTindakanReklames { get; set; }
 
     public virtual DbSet<MTipekamarhotel> MTipekamarhotels { get; set; }
@@ -162,6 +188,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MvSeriesPendapatan> MvSeriesPendapatans { get; set; }
 
     public virtual DbSet<MvSeriesTargetP> MvSeriesTargetPs { get; set; }
+
+    public virtual DbSet<MvUpayaPadKategori> MvUpayaPadKategoris { get; set; }
 
     public virtual DbSet<Npwpd> Npwpds { get; set; }
 
@@ -329,6 +357,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TTeguranSptpd> TTeguranSptpds { get; set; }
 
+    public virtual DbSet<TempAlatRekam> TempAlatRekams { get; set; }
+
     public virtual DbSet<TempPerpanjangan> TempPerpanjangans { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
@@ -339,9 +369,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -568,6 +598,55 @@ public partial class ModelContext : DbContext
             entity.ToView("DB_AKUN_TARGET_OBJEK_RESTO");
         });
 
+        modelBuilder.Entity<DbCtrlByrAbt>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_ABT");
+        });
+
+        modelBuilder.Entity<DbCtrlByrBphtb>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_BPHTB");
+
+            entity.Property(e => e.WilayahPajak).IsFixedLength();
+        });
+
+        modelBuilder.Entity<DbCtrlByrHiburan>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_HIBURAN");
+        });
+
+        modelBuilder.Entity<DbCtrlByrHotel>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_HOTEL");
+        });
+
+        modelBuilder.Entity<DbCtrlByrParkir>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_PARKIR");
+        });
+
+        modelBuilder.Entity<DbCtrlByrPbb>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_PBB");
+        });
+
+        modelBuilder.Entity<DbCtrlByrPpj>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_PPJ");
+        });
+
+        modelBuilder.Entity<DbCtrlByrReklame>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_REKLAME");
+
+            entity.Property(e => e.WilayahPajak).IsFixedLength();
+        });
+
+        modelBuilder.Entity<DbCtrlByrResto>(entity =>
+        {
+            entity.ToView("DB_CTRL_BYR_RESTO");
+        });
+
         modelBuilder.Entity<DbMonAbt>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_ABT_PK");
@@ -639,6 +718,16 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB' ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.KetetapanPokok).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<DbMonPjOp>(entity =>
+        {
+            entity.HasKey(e => new { e.Nip, e.Nop }).HasName("DB_MON_PJ_OP_PK");
+
+            entity.HasOne(d => d.NipNavigation).WithMany(p => p.DbMonPjOps)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("DB_MON_PJ_OP_M_PEGAWAI_FK");
         });
 
         modelBuilder.Entity<DbMonPpj>(entity =>
@@ -740,6 +829,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonUpayaPad>(entity =>
+        {
+            entity.HasKey(e => new { e.PajakId, e.Nop, e.Bulan, e.Tahun }).HasName("DB_MON_UPAYA_PAD_PK");
         });
 
         modelBuilder.Entity<DbOpAbt>(entity =>
@@ -870,6 +964,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
         });
 
+        modelBuilder.Entity<DbRekamAlatGabung>(entity =>
+        {
+            entity.ToView("DB_REKAM_ALAT_GABUNG");
+        });
+
         modelBuilder.Entity<DbRekamAlatT>(entity =>
         {
             entity.HasKey(e => e.Nop).HasName("DB_REKAM_ALAT_TS_PK");
@@ -963,6 +1062,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<MPegawai>(entity =>
+        {
+            entity.HasKey(e => e.Nip).HasName("M_PEGAWAI_PK");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
+        });
+
         modelBuilder.Entity<MTindakanReklame>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("M_TINDAKAN_REKLAME_PK");
@@ -1037,6 +1143,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MvSeriesTargetP>(entity =>
         {
             entity.ToView("MV_SERIES_TARGET_P");
+        });
+
+        modelBuilder.Entity<MvUpayaPadKategori>(entity =>
+        {
+            entity.ToView("MV_UPAYA_PAD_KATEGORI");
         });
 
         modelBuilder.Entity<Npwpd>(entity =>

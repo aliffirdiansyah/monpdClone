@@ -58,8 +58,22 @@ namespace MonPDReborn.Models.DataOP
                 {
                     throw new ArgumentException("Keyword harus diisi minimal 3");
                 }
+                if (keyword.Length == 24 || keyword.Contains("."))
+                {
+                    keyword = keyword.Replace(".", "");
+                }
                 var context = DBClass.GetContext();
                 var ret = new List<DataPencarianOp>();
+                var dbrekapTs = context.DbRekamAlatGabungs
+                    .Select(x => new
+                    {
+                        Nop = x.Nop,
+                        JenisPajak = x.PajakId,
+                        IsTs = x.IsTs,
+                        IsTb = x.IsTb,
+                        IsSb = x.IsSb
+                    })
+                    .ToList();
                 var dataResto = context.DbOpRestos
                     .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
@@ -82,7 +96,12 @@ namespace MonPDReborn.Models.DataOP
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = "",
+                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
+                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
+                                : "Belum Terpasang")
+                            : "Tidak Terpasang",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
@@ -117,7 +136,12 @@ namespace MonPDReborn.Models.DataOP
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = "",
+                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
+                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
+                                : "Belum Terpasang")
+                            : "Tidak Terpasang",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
@@ -152,7 +176,12 @@ namespace MonPDReborn.Models.DataOP
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = "",
+                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
+                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
+                                : "Belum Terpasang")
+                            : "Tidak Terpasang",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
@@ -188,7 +217,12 @@ namespace MonPDReborn.Models.DataOP
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.JasaParkir.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = "",
+                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
+                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
+                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
+                                : "Belum Terpasang")
+                            : "Tidak Terpasang",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
@@ -223,7 +257,7 @@ namespace MonPDReborn.Models.DataOP
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                             KategoriOp = x.KategoriNama ?? "",
-                            JenisPenarikan = "",
+                            JenisPenarikan = "Tidak Ada",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
@@ -246,7 +280,7 @@ namespace MonPDReborn.Models.DataOP
                             Alamat = x.Alamat,
                             JenisOp = EnumFactory.EPajak.Reklame.GetDescription(),
                             KategoriOp = "Reklame",
-                            JenisPenarikan = "",
+                            JenisPenarikan = "Tidak Ada",
                             StatusNOP = "Buka",
                             Wilayah = "-",
                             EnumPajak = (int)EnumFactory.EPajak.Reklame,
@@ -274,14 +308,15 @@ namespace MonPDReborn.Models.DataOP
                     })
                     .Where(x => x != null)
                     .Select(
-                        x => new DataPencarianOp
+                        x => 
+                        new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.AirTanah.GetDescription(),
                             KategoriOp = x.KategoriNama ?? "",
-                            JenisPenarikan = "",
+                            JenisPenarikan = "Tidak Ada",
                             StatusNOP = "Buka",
                             Wilayah = "-",
                             EnumPajak = (int)EnumFactory.EPajak.AirTanah,
@@ -581,12 +616,13 @@ namespace MonPDReborn.Models.DataOP
             //public int No { get; set; }
             public string Wilayah { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string StatusNOP { get; set; } = null!;
             public string Nama { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOp { get; set; } = null!;
             public string KategoriOp { get; set; } = null!;
-            public string JenisPenarikan { get; set; } = null!;
+            public string JenisPenarikan { get; set; } = "Tidak Terapasang";
             public int EnumPajak { get; set; }
             public int Tahun { get; set; }
         }

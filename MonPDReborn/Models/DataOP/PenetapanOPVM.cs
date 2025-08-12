@@ -196,6 +196,7 @@ namespace MonPDReborn.Models.DataOP
         public class PenetapanOP
         {
             public string Nop { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
             public string NoPenetapan { get; set; } = null!;
             public string NamaWP { get; set; } = null!;
             public string Alamat { get; set; } = null!;

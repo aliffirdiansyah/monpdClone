@@ -233,6 +233,7 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string WajibPajak { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string UPTB { get; set; } = null!;

@@ -8,6 +8,7 @@ namespace MonPDLib.EF;
 
 [Keyless]
 [Table("DATAPBB_SATUPETA")]
+[Index("Kecamatan", "Kelurahan", Name = "DATAPBB_SATUPETA_KECAMATAN_IDX")]
 public partial class DatapbbSatupetum
 {
     [Column("ID_PERSIL")]

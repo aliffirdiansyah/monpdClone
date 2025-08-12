@@ -24,7 +24,7 @@
                                     @Model.Nama
                                 </h4>
                                 <p class="fs-16 lh-base">
-                                    NOP : @Model.NOP
+                                    NOP : @Model.FormattedNOP
                                 </p>
                                 <p class="fs-16 lh-base">
                                     ALAMAT : @Model.Alamat
@@ -229,7 +229,7 @@
                     <div class="d-flex p-3 py-0">
                         <p class="fs-14 text-muted flex-grow-1">NPA Range @(i + 1)</p>
                         <div class="flex-shrink-0">
-                            <p class="fs-16 fw-semibold">Rp @npa.ToString("n2")</p>
+                            <p class="fs-16 fw-semibold">Rp @npa.ToString("n0")</p>
                         </div>
                     </div>
                     @if (i != detail.Count - 1)
@@ -245,13 +245,13 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Total NPA</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp @Model.TotalNPA.ToString("n2")</p>
+                                        <p class="fs-16 fw-semibold">Rp @Model.TotalNPA.ToString("n0")</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Pajak Air (@tarif.ToString("n0")%)</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp @Model.PajakAir.ToString("n2")</p>
+                                        <p class="fs-16 fw-semibold">Rp @Model.PajakAir.ToString("n0")</p>
                                     </div>
                                 </div>
                             </div>

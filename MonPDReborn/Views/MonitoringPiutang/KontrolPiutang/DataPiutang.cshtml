@@ -1,0 +1,75 @@
+﻿@using static MonPDReborn.Models.MonitoringPiutang.KontrolPiutangVM
+@model MonPDReborn.Models.MonitoringPiutang.KontrolPiutangVM.DataPiutang
+
+@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 3).ToString();
+    var tahun2 = (currentYear - 2).ToString();
+    var tahun3 = (currentYear - 1).ToString();
+    var tahun4 = currentYear.ToString();
+}
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<ViewModel.DataPiutang>()
+        .ID("dg-Piutang")
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .AllowColumnResizing(true)
+        .DataSource(Model.Data)
+        .KeyExpr("ID")
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Left);
+            columns.AddFor(x => x.NominalPiutang1)
+            .Caption(tahun1)
+            .Alignment(HorizontalAlignment.Right)
+            .CellTemplate(new JS("detailPiutangCellTemplate"));
+
+            columns.AddFor(x => x.NominalPiutang2)
+            .Caption(tahun2)
+            .Alignment(HorizontalAlignment.Right)
+            .CellTemplate(new JS("detailPiutangCellTemplate"));
+
+            columns.AddFor(x => x.NominalPiutang3)
+            .Caption(tahun3)
+            .Alignment(HorizontalAlignment.Right)
+            .CellTemplate(new JS("detailPiutangCellTemplate"));
+
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(x => x.JenisPajak)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Total")
+                .SummaryType(SummaryType.Sum);
+                items.AddFor(x => x.NominalPiutang1)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+                items.AddFor(x => x.NominalPiutang2)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .SummaryType(SummaryType.Sum);
+                items.AddFor(x => x.NominalPiutang3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+            });
+        })
+        )
+</div>
+
+

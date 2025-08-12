@@ -409,6 +409,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.SumberNama = "-";
 
 
+                            newRow.TglBayarPokok = itemRealisasi.TRANSACTION_DATE;
                             newRow.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
                             newRow.AkunPokokBayar = AkunPokok.Akun;
                             newRow.Kelompok = AkunPokok.Kelompok;
@@ -484,7 +485,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.PeruntukanNama = "-";
                             newRow.SumberNama = "-";
 
-
+                            newRow.TglBayarPokok = itemRealisasi.TRANSACTION_DATE;
                             newRow.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
                             newRow.AkunPokokBayar = "-";
                             newRow.Kelompok = "-";

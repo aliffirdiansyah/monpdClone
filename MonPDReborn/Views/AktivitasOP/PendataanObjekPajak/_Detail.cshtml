@@ -37,7 +37,7 @@
     .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
     .OnExporting("exportGrid")
     .Columns(columns => {
-        columns.AddFor(m => m.NOP).Caption("NOP");
+        columns.AddFor(m => m.FormattedNOP).Caption("NOP");
         columns.AddFor(m => m.ObjekPajak).Caption("Objek Pajak");
         columns.AddFor(m => m.Alamat).Caption("Alamat");
         columns.AddFor(m => m.Omzet).Caption("Omzet").Format("#,##0");

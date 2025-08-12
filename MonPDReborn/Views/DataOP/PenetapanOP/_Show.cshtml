@@ -31,22 +31,6 @@
         .ID("penetapanGrid")
         .DataSource(Model.DataPenetapanOPList)
         .KeyExpr("Nop")
-        .Columns(columns =>
-        {
-            columns.AddFor(m => m.NoPenetapan).Caption("No. Penetapan");
-            columns.AddFor(m => m.Nop).Caption("NOP");
-            columns.AddFor(m => m.NamaWP).Caption("Nama WP");
-            columns.AddFor(m => m.Alamat).Caption("Alamat");
-            columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format("#,##0").Alignment(HorizontalAlignment.Right);
-            columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
-            columns.AddFor(m => m.Status).Caption("Status").CellTemplate(
-            @<text>
-                <span class='<%=
-                    data.Status === "Sudah Dibayar" ? "badge bg-success" : "badge bg-danger" %>'><%= data.Status %>
-                </span>
-            </text>);
-
-        })
         .ShowBorders(true)
         .ShowColumnLines(true)
         .ShowColumnHeaders(true)
@@ -63,6 +47,24 @@
             pager.ShowPageSizeSelector(true);
             pager.AllowedPageSizes(new[] { 10, 20, 50 });
             pager.ShowInfo(true);
+        })
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NoPenetapan).Caption("No. Penetapan");
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+            columns.AddFor(m => m.NamaWP).Caption("Nama WP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format("#,##0").Alignment(HorizontalAlignment.Right);
+            columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
+            columns.AddFor(m => m.Status).Caption("Status").CellTemplate(
+            @<text>
+                <span class='<%=
+                    data.Status === "Sudah Dibayar" ? "badge bg-success" : "badge bg-danger" %>'><%= data.Status %>
+                </span>
+            </text>);
+
         })
         .Summary(s =>
         {

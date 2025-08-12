@@ -1,0 +1,86 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileKategoriOPVM.DetailKategoriPorfileOP
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileKategoriOPVM.DetailOPProfileKategori>()
+        .ID("detailKategoriProfileGrid")
+        .DataSource(Model.Data)
+        .KeyExpr("Nop")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.AlamatOP).Caption("Alamat OP");
+            columns.AddFor(m => m.TargetSdBulanIni).Caption("Target S.D Bulan Ini").Format("#,##0");
+            columns.AddFor(m => m.RealisasiSdBulanIni).Caption("Realisasi S.d Bulan Ini").Format("#,##0");
+            columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
+            columns.AddFor(m => m.Persentase).Caption("%").Format("#,##0");
+            columns.Add()
+                    .Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add()
+                    .Text("Detail OP")
+                    .Icon("search")
+                    .OnClick("onDetailOPClick");
+                    });
+            columns.Add()
+                    .Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add()
+                    .Text("Potensi OP")
+                    .Icon("search")
+                    .OnClick("onPotensiOPClick");
+                    });
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.FormattedNOP)
+            .SummaryType(SummaryType.Sum)
+            .Alignment(HorizontalAlignment.Right)
+            .DisplayFormat("TOTAL");
+
+                items.AddFor(m => m.TargetSdBulanIni)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.RealisasiSdBulanIni)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.Selisih)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.Persentase)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+            });
+        })
+        )
+</div>

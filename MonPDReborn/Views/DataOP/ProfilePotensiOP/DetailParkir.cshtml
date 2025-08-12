@@ -12,7 +12,7 @@
         <div class="col-lg-12">
             <div class="card border border-secondary border-2">
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-lg-8">
                             <div class="d-flex p-3">
                                 <div class="flex-shrink-0">
@@ -22,48 +22,39 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="mt-2">
+                                <div class="mt-1">
                                     <h4 class="fs-16 fw-semibold text-dark">
                                         @Model.Nama
                                     </h4>
-                                    <p class="fs-16 lh-base text-dark">
+                                    <p class="fs-16 lh-base text-dark mb-1">
                                         @Model.Alamat
+                                    </p>
+                                    <p class="fs-16 text-dark">
+                                        @Model.FormattedNOP
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="d-flex p-3">
-                                <h3 class="fs-16 fw-semibold text-dark">
-                                    Potensi Pajak
-                                </h3>
-                            </div>
-                            <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
-                                <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-bold text-dark">Rp. @Model.PotensiPajakPerBulan.ToString("N0")</p>
-                                </div>
-                            </div>
-                            <div class="d-flex p-3 py-0">
-                                <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
-                                <div class="flex-shrink-0">
-                                    <p class="fs-16 fw-bold text-dark">Rp. @Model.PotensiPajakPerTahun.ToString("N0")</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="d-flex p-3">
-                                <div class="flex-shrink-0 ms-3">
-                                    <p class="fs-14 text-muted mb-1">NOP</p>
-                                    <p class="fs-14 fw-semibold mb-3">@Model.NOP</p>
-                                </div>
-                                <div class="flex-shrink-0 ms-5">
-                                    <p class="fs-14 text-muted mb-1">Total Kapasitas</p>
-                                    <p class="fs-14 fw-semibold mb-3">@Model.TotalKapasitas</p>
-                                </div>
-                                <div class="flex-shrink-0 ms-3">
-                                    <p class="fs-14 text-muted mb-1">Turnover</p>
-                                    <p class="fs-14 fw-semibold mb-3">@Model.TurnoverWeekdays.ToString("P2") WeekDays | @Model.TurnoverWeekend.ToString("P2") WeekEnd</p>
+                            <div class="card border border-secondary border-2">
+                                <div class="card-body bg-secondary bg-opacity-25">
+                                    <div class="d-flex p-3">
+                                        <h3 class="fs-16 fw-semibold text-dark">
+                                            Potensi Pajak
+                                        </h3>
+                                    </div>
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-bold text-dark">Rp. @Model.PotensiPajakPerBulan.ToString("N0")</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-bold text-dark">Rp. @Model.PotensiPajakPerTahun.ToString("N0")</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -386,7 +377,7 @@
                                             @Model.TotalTerparkirWeekdays.ToString("N0")
                                         </h3>
                                         <h4 class="fs-14">
-                                            Kendaraan terparkir WeekDays
+                                            Kendaraan Terparkir Hari Kerja
                                         </h4>
                                     </div>
                                 </div>
@@ -398,10 +389,10 @@
                                 <div class="card-body bg-soft-warning bg-opacity-25">
                                     <div class="text-center">
                                         <h3 class="fs-18 fw-semibold mb-1 text-dark">
-                                            @Model.TotalTerparkirWeekend
+                                            @Model.TotalTerparkirWeekend.ToString("N0")
                                         </h3>
                                         <h4 class="fs-14">
-                                            Kendaraan Terparkir WeekEnd
+                                            Kendaraan Terparkir Akhir Pekan
                                         </h4>
                                     </div>
                                 </div>
@@ -484,6 +475,118 @@
                                             }
                                         </tbody>
                                     </table>
+                                    <div class="mt-2">
+                                        @if (Model.KapasitasMotor > 0)
+                                        {
+                                            <hr />
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Sepeda Motor Hari Kerja</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Sepeda Motor Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Sepeda Motor
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Sepeda Motor Terparkir Hari Kerja = @Model.TurnoverWeekdays x @Model.KapasitasMotor.ToString("N0") = @Model.JumlahTerparkirMotorWeekdays.ToString("N0")
+                                            </p>
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Sepeda Motor Akhir Pekan</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Sepeda Motor Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Sepeda Motor
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Sepeda Motor Terparkir Akhir Pekan = @Model.TurnoverWeekend x @Model.KapasitasMotor.ToString("N0") = @Model.JumlahTerparkirMotorWeekend.ToString("N0")
+                                            </p>
+
+                                        }
+                                        @if (Model.KapasitasMobil > 0)
+                                        {
+                                            <hr />
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Mobil Hari Kerja</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Mobil Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Mobil
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Mobil Terparkir Hari Kerja = @Model.TurnoverWeekdays x @Model.KapasitasMobil.ToString("N0") = @Model.JumlahTerparkirMobilWeekdays.ToString("N0")
+                                            </p>
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Mobil Akhir Pekan</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Mobil Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Mobil
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Mobil Terparkir Akhir Pekan = @Model.TurnoverWeekend x @Model.KapasitasMobil.ToString("N0") = @Model.JumlahTerparkirMobilWeekend.ToString("N0")
+                                            </p>
+                                        }
+                                        @if (Model.KapasitasSepeda > 0)
+                                        {
+                                            <hr />
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Sepeda Hari Kerja</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Sepeda Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Sepeda
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Sepeda Terparkir Hari Kerja = @Model.TurnoverWeekdays x @Model.KapasitasSepeda.ToString("N0") = @Model.JumlahTerparkirSepedaWeekdays.ToString("N0")
+                                            </p>
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Sepeda Akhir Pekan</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Sepeda Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Sepeda
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Sepeda Terparkir Akhir Pekan = @Model.TurnoverWeekend x @Model.KapasitasSepeda.ToString("N0") = @Model.JumlahTerparkirSepedaWeekend.ToString("N0")
+                                            </p>
+                                        }
+                                        @if (Model.KapasitasTrukMini > 0)
+                                        {
+                                            <hr />
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Truk Mini Hari Kerja</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Truk Mini Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Truk Mini
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Truk Mini Terparkir Hari Kerja = @Model.TurnoverWeekdays x @Model.KapasitasTrukMini.ToString("N0") = @Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0")
+                                            </p>
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas TrukMini Akhir Pekan</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Truk Mini Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Truk Mini
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                TrukMini Terparkir Akhir Pekan = @Model.TurnoverWeekend x @Model.KapasitasTrukMini.ToString("N0") = @Model.JumlahTerparkirTrukMiniWeekend.ToString("N0")
+                                            </p>                                            
+                                        }
+                                        @if (Model.KapasitasTrukBus > 0)
+                                        {
+                                            <hr />
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Truk Bus Hari Kerja</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Truk Bus Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Truk Bus
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Truk Bus Terparkir Hari Kerja = @Model.TurnoverWeekdays x @Model.KapasitasTrukBus.ToString("N0") = @Model.JumlahTerparkirTrukBusWeekdays.ToString("N0")
+                                            </p>
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas TrukBus Akhir Pekan</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Truk Bus Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Truk Bus
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                TrukBus Terparkir Akhir Pekan = @Model.TurnoverWeekend x @Model.KapasitasTrukBus.ToString("N0") = @Model.JumlahTerparkirTrukBusWeekend.ToString("N0")
+                                            </p>
+                                        }
+                                        @if (Model.KapasitasTrailer > 0)
+                                        {
+                                            <hr />
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Trailer Hari Kerja</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Trailer Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Trailer
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Trailer Terparkir Hari Kerja = @Model.TurnoverWeekdays x @Model.KapasitasTrailer.ToString("N0") = @Model.JumlahTerparkirTrailerWeekdays.ToString("N0")
+                                            </p>
+                                            <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Trailer Akhir Pekan</h4>
+                                            <p class="fs-14 text-muted mb-1 font-monospace">
+                                                Trailer Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Trailer
+                                            </p>
+                                            <p class="fs-14 fw-semibold text-dark">
+                                                Trailer Terparkir Akhir Pekan = @Model.TurnoverWeekend x @Model.KapasitasTrailer.ToString("N0") = @Model.JumlahTerparkirTrailerWeekend.ToString("N0")
+                                            </p>                                            
+                                        }
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -503,12 +606,12 @@
                                             <p class="value">@Model.KapasitasMotor Unit</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekDays</p>
-                                            <p class="value">@Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit (@Model.PersentaseMotorWeekdays.ToString("P2"))</p>
+                                            <p class="label">Terparkir Hari Kerja</p>
+                                            <p class="value">@Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit (@Model.PersentaseMotorWeekdays.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
                                             <p class="label">Terparkir WeekEnd</p>
-                                            <p class="value">@Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit (@Model.PersentaseMotorWeekend.ToString("P2"))</p>
+                                            <p class="value">@Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit (@Model.PersentaseMotorWeekend.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
                                             <p class="label">Tarif</p>
@@ -534,12 +637,12 @@
                                             <p class="value">@Model.KapasitasMobil Unit</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekDays</p>
-                                            <p class="value">@Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit (@Model.PersentaseMobilWeekdays.ToString("P2"))</p>
+                                            <p class="label">Terparkir Hari Kerja</p>
+                                            <p class="value">@Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit (@Model.PersentaseMobilWeekdays.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekEnd</p>
-                                            <p class="value">@Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit (@Model.PersentaseMobilWeekend.ToString("P2"))</p>
+                                            <p class="label">Terparkir Akhir Pekan</p>
+                                            <p class="value">@Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit (@Model.PersentaseMobilWeekend.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
                                             <p class="label">Tarif</p>
@@ -566,12 +669,12 @@
                                             <p class="value">@Model.KapasitasSepeda Unit</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekDays</p>
-                                            <p class="value">@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit (@Model.PersentaseSepedaWeekdays.ToString("P2"))</p>
+                                            <p class="label">Terparkir Hari Kerja</p>
+                                            <p class="value">@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit (@Model.PersentaseSepedaWeekdays.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekEnd</p>
-                                            <p class="value">@Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit (@Model.PersentaseSepedaWeekend.ToString("P2"))</p>
+                                            <p class="label">Terparkir Akhir Pekan</p>
+                                            <p class="value">@Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit (@Model.PersentaseSepedaWeekend.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
                                             <p class="label">Tarif</p>
@@ -597,12 +700,12 @@
                                             <p class="value">@Model.KapasitasTrukMini Unit</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekDays</p>
-                                            <p class="value">@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekdays.ToString("P2"))</p>
+                                            <p class="label">Terparkir Hari Kerja</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekdays.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekEnd</p>
-                                            <p class="value">@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekend.ToString("P2"))</p>
+                                            <p class="label">Terparkir Akhir Pekan</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit (@Model.PersentaseTrukMiniWeekend.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
                                             <p class="label">Tarif</p>
@@ -628,12 +731,12 @@
                                             <p class="value">@Model.KapasitasTrukBus Unit</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekDays</p>
-                                            <p class="value">@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit (@Model.PersentaseTrukBusWeekdays.ToString("P2"))</p>
+                                            <p class="label">Terparkir Hari Kerja</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit (@Model.PersentaseTrukBusWeekdays.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekEnd</p>
-                                            <p class="value">@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit (@Model.PersentaseTrukBusWeekend.ToString("P2"))</p>
+                                            <p class="label">Terparkir Akhir Pekan</p>
+                                            <p class="value">@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit (@Model.PersentaseTrukBusWeekend.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
                                             <p class="label">Tarif</p>
@@ -659,12 +762,12 @@
                                             <p class="value">@Model.KapasitasTrailer Unit</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekDays</p>
-                                            <p class="value">@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit (@Model.PersentaseTrailerWeekdays.ToString("P2"))</p>
+                                            <p class="label">Terparkir Hari Kerja</p>
+                                            <p class="value">@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit (@Model.PersentaseTrailerWeekdays.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
-                                            <p class="label">Terparkir WeekEnd</p>
-                                            <p class="value">@Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit (@Model.PersentaseTrailerWeekend.ToString("P2"))</p>
+                                            <p class="label">Terparkir Akhir Pekan</p>
+                                            <p class="value">@Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit (@Model.PersentaseTrailerWeekend.ToString("P0"))</p>
                                         </div>
                                         <div class="info-row">
                                             <p class="label">Tarif</p>
@@ -674,271 +777,11 @@
                                 </div>
                             </div>
                         }
+                    
                     </div>
                 </div>
             </div>
-
-
-            <div class="card">
-                <div class="card-header d-flex bg-soft-secondary">
-                    <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0 text-dark">Detail Omzet</h4>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        @if (Model.KapasitasSepeda > 0)
-                        {
-                            <div class="col-lg-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="avatar-sm me-3 mb-2">
-                                            <span class="avatar-title bg-soft-secondary rounded-circle">
-                                                <i class="ri-e-bike-fill text-secondary" style="font-size: 16px;"></i>
-                                            </span>
-                                        </div>
-                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetSepeda.ToString("N0")</h4>
-                                        <p class="fs-12 text-muted mb-1">Omzet Sepeda</p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        
-                        @if (Model.KapasitasMotor > 0)
-                        {
-                            <div class="col-lg-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="avatar-sm me-3 mb-2">
-                                            <span class="avatar-title bg-soft-secondary rounded-circle">
-                                                <i class="ri-e-bike-fill text-secondary" style="font-size: 16px;"></i>
-                                            </span>
-                                        </div>
-                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetMotor.ToString("N0")</h4>
-                                        <p class="fs-12 text-muted mb-1">Omzet Sepeda Motor</p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @if (Model.KapasitasMobil > 0)
-                        {
-                            <div class="col-lg-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="avatar-sm me-3 mb-2">
-                                            <span class="avatar-title bg-soft-secondary rounded-circle">
-                                                <i class="ri-car-fill text-secondary" style="font-size: 16px;"></i>
-                                            </span>
-                                        </div>
-                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetMobil.ToString("N0")</h4>
-                                        <p class="fs-12 text-muted mb-1">Omzet Mobil</p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @if (Model.KapasitasSepeda > 0)
-                        {
-                            <div class="col-lg-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="avatar-sm me-3 mb-2">
-                                            <span class="avatar-title bg-soft-secondary rounded-circle">
-                                                <i class="ri-bike-line text-secondary" style="font-size: 16px;"></i>
-                                            </span>
-                                        </div>
-                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetSepeda.ToString("N0")</h4>
-                                        <p class="fs-12 text-muted mb-1">Omzet Sepeda</p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @if (Model.KapasitasTrukMini > 0)
-                        {
-                            <div class="col-lg-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="avatar-sm me-3 mb-2">
-                                            <span class="avatar-title bg-soft-secondary rounded-circle">
-                                                <i class="ri-truck-fill text-secondary" style="font-size: 16px;"></i>
-                                            </span>
-                                        </div>
-                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetTrukMini.ToString("N0")</h4>
-                                        <p class="fs-12 text-muted mb-1">Omzet Truk Mini</p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @if (Model.KapasitasTrukBus > 0)
-                        {
-                            <div class="col-lg-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="avatar-sm me-3 mb-2">
-                                            <span class="avatar-title bg-soft-secondary rounded-circle">
-                                                <i class="ri-bus-fill text-secondary" style="font-size: 16px;"></i>
-                                            </span>
-                                        </div>
-                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetTrukBus.ToString("N0")</h4>
-                                        <p class="fs-12 text-muted mb-1">Omzet Truk / Bus</p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @if (Model.KapasitasTrailer > 0)
-                        {
-                            <div class="col-lg-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="avatar-sm me-3 mb-2">
-                                            <span class="avatar-title bg-soft-secondary rounded-circle">
-                                                <i class="ri-truck-line text-secondary" style="font-size: 16px;"></i>
-                                            </span>
-                                        </div>
-                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetTrailer.ToString("N0")</h4>
-                                        <p class="fs-12 text-muted mb-1">Omzet Trailer</p>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        <div class="col-lg-6">
-                            <div class="card border border-secondary border-2 h-100">
-                                <div class="card-body bg-soft-secondary bg-opacity-25 d-flex flex-column justify-content-center">
-                                    <h4 class="fs-16 fw-semibold mb-3 text-center">Total Omzet Bulanan</h4>
-                                    <h4 class="fs-22 fw-bold mb-1 text-center">Rp. @Model.TotalOmzet.ToString("N0")</h4>
-                                    <p class="fs-14 text-muted mb-1 text-center">Total pendapatan dari parkir</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12">
-                            <div class="card border border-secondary border-2 mt-3">
-                                <div class="card-body bg-light bg-opacity-25">
-
-                                    @if (Model.KapasitasSepeda > 0)
-                                    {
-                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda :</h4>
-                                        <p class="fs-14 text-muted font-monospace">
-                                            (@Model.JumlahTerparkirSepedaWeekdays x Rp. @Model.TarifSepeda.ToString("N0") x 22) + (@Model.JumlahTerparkirSepedaWeekend x Rp. @Model.TarifSepeda.ToString("N0") x 8)
-                                        </p>
-                                        <p class="fs-14 text-muted fw-semibold mb-3">= Rp. @Model.OmzetSepeda.ToString("N0")</p>
-                                    }
-                                    
-                                    @if (Model.KapasitasMotor > 0)
-                                    {
-                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda Motor :</h4>
-                                        <p class="fs-14 text-muted font-monospace">
-                                            (@Model.JumlahTerparkirMotorWeekdays x Rp. @Model.TarifMotor.ToString("N0") x 22) + (@Model.JumlahTerparkirMotorWeekend x Rp. @Model.TarifMotor.ToString("N0") x 8)
-                                        </p>
-                                        <p class="fs-14 text-muted fw-semibold mb-3">= Rp. @Model.OmzetMotor.ToString("N0")</p>
-                                    }
-
-                                    @if (Model.KapasitasMobil > 0)
-                                    {
-                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Mobil :</h4>
-                                        <p class="fs-14 text-muted font-monospace">
-                                            (@Model.JumlahTerparkirMobilWeekdays x Rp. @Model.TarifMobil.ToString("N0") x 22) + (@Model.JumlahTerparkirMobilWeekend x Rp. @Model.TarifMobil.ToString("N0") x 8)
-                                        </p>
-                                        <p class="fs-14 text-muted fw-semibold mb-3">= Rp. @Model.OmzetMobil.ToString("N0")</p>
-                                    }
-
-                                    @if (Model.KapasitasSepeda > 0)
-                                    {
-                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda :</h4>
-                                        <p class="fs-14 text-muted font-monospace">
-                                            (@Model.JumlahTerparkirSepedaWeekdays x Rp. @Model.TarifSepeda.ToString("N0") x 22) + (@Model.JumlahTerparkirSepedaWeekend x Rp. @Model.TarifSepeda.ToString("N0") x 8)
-                                        </p>
-                                        <p class="fs-14 text-muted fw-semibold mb-3">= Rp. @Model.OmzetSepeda.ToString("N0")</p>
-                                    }
-
-                                    @if (Model.KapasitasTrukMini > 0)
-                                    {
-                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk Mini :</h4>
-                                        <p class="fs-14 text-muted font-monospace">
-                                            (@Model.JumlahTerparkirTrukMiniWeekdays x Rp. @Model.TarifTrukMini.ToString("N0") x 22) + (@Model.JumlahTerparkirTrukMiniWeekend x Rp. @Model.TarifTrukMini.ToString("N0") x 8)
-                                        </p>
-                                        <p class="fs-14 text-muted fw-semibold mb-3">= Rp. @Model.OmzetTrukMini.ToString("N0")</p>
-                                    }
-
-                                    @if (Model.KapasitasTrukBus > 0)
-                                    {
-                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk / Bus :</h4>
-                                        <p class="fs-14 text-muted font-monospace">
-                                            (@Model.JumlahTerparkirTrukBusWeekdays x Rp. @Model.TarifTrukBus.ToString("N0") x 22) + (@Model.JumlahTerparkirTrukBusWeekend x Rp. @Model.TarifTrukBus.ToString("N0") x 8)
-                                        </p>
-                                        <p class="fs-14 text-muted fw-semibold mb-3">= Rp. @Model.OmzetTrukBus.ToString("N0")</p>
-                                    }
-
-                                    @if (Model.KapasitasTrailer > 0)
-                                    {
-                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Trailer :</h4>
-                                        <p class="fs-14 text-muted font-monospace">
-                                            (@Model.JumlahTerparkirTrailerWeekdays x Rp. @Model.TarifTrailer.ToString("N0") x 22) + (@Model.JumlahTerparkirTrailerWeekend x Rp. @Model.TarifTrailer.ToString("N0") x 8)
-                                        </p>
-                                        <p class="fs-14 text-muted fw-semibold mb-3">= Rp. @Model.OmzetTrailer.ToString("N0")</p>
-                                    }
-
-                                    <hr>
-
-                                    <h4 class="fs-16 fw-semibold mb-2">Total Omzet Bulanan :</h4>
-                                    <p class="fs-14 text-muted font-monospace">Penjumlahan seluruh omzet kendaraan</p>
-                                    <p class="fs-14 text-muted fw-semibold">= Rp. @Model.TotalOmzet.ToString("N0")</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header d-flex bg-soft-secondary">
-                    <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0 text-dark">
-                            Perhitungan Potensi Pajak
-                        </h4>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card border border-secondary border-2">
-                                <div class="card-body bg-light bg-opacity-25">
-                                    <h4 class="fs-16 fw-semibold mb-2">
-                                        Rumus Potensi Pajak per Bulan:
-                                    </h4>
-                                    <p class="fs-14 text-muted mb-1 font-monospace">
-                                        Total Omzet Bulanan x Tarif Pajak
-                                    </p>
-                                    <p class="fs-14 text-muted mb-3 fw-semibold">
-                                        @Model.TotalOmzet.ToString("C0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulan.ToString("C0")
-                                    </p>
-                                    <hr>
-                                    <h4 class="fs-16 fw-semibold mb-2">
-                                        Rumus Potensi Pajak per Tahun:
-                                    </h4>
-                                    <p class="fs-14 text-muted mb-1 font-monospace">
-                                        Potensi Pajak per Bulan x 12
-                                    </p>
-                                    <p class="fs-14 text-muted mb-3 fw-semibold">
-                                        @Model.PotensiPajakPerBulan.ToString("C0") x 12 = @Model.PotensiPajakPerTahun.ToString("C0")
-                                    </p>
-                                    <hr>
-                                    <h4 class="fs-16 fw-semibold mb-2 text-end">
-                                        Total Potensi Pajak per Tahun: <span class="text-success">@Model.PotensiPajakPerTahun.ToString("C0")</span>
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            
         </div>
 
         <div class="col-lg-4">
@@ -954,7 +797,7 @@
                 <div class="card-body">
                     <div class="d-flex mb-2">
                         <p class="label">NOP</p>
-                        <p class="value">@Model.NOP</p>
+                        <p class="value">@Model.FormattedNOP</p>
                     </div>
                     <div class="d-flex mb-2">
                         <p class="label">Nama Usaha</p>
@@ -972,7 +815,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            @* <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
                     <div class="flex-grow-1">
                         <h4 class="card-title fs-16 mb-0 text-dark">
@@ -1010,7 +853,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
@@ -1233,24 +1076,24 @@
                 </div>
                 <div class="card-body">
                     <div class="info-row">
-                        <p class="label">Turnover WeekDays</p>
-                        <p class="value">@Model.TurnoverWeekdays.ToString("N2") %</p>
+                        <p class="label">Turnover Hari Kerja</p>
+                        <p class="value">@Model.TurnoverWeekdays.ToString("N2") Kali</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">Turnover WeekEnd</p>
-                        <p class="value">@Model.TurnoverWeekend.ToString("N2") %</p>
+                        <p class="label">Turnover Akhir Pekan</p>
+                        <p class="value">@Model.TurnoverWeekend.ToString("N2") Kali</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">WeekDays per Bulan</p>
+                        <p class="label">Hari Kerja per Bulan</p>
                         <p class="value">22 Hari</p>
                     </div>
                     <div class="info-row">
-                        <p class="label">WeekEnd per Bulan</p>
+                        <p class="label">Akhir Pekan per Bulan</p>
                         <p class="value">8 Hari</p>
                     </div>
                     <div class="info-row">
                         <p class="label">Tarif Pajak</p>
-                        <p class="value">@Model.TarifPajak.ToString("N2") %</p>
+                        <p class="value">@Model.TarifPajak.ToString("P0")</p>
                     </div>
 
                 </div>
@@ -1259,6 +1102,280 @@
         </div>
 
         <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex bg-soft-secondary">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-dark">Detail Omzet</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @if (Model.KapasitasSepeda > 0)
+                        {
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="avatar-sm me-3 mb-2">
+                                            <span class="avatar-title bg-soft-secondary border border-2 border-secondary rounded-circle">
+                                                <i class="ri-e-bike-fill text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetSepeda.ToString("N0")</h4>
+                                        <p class="fs-12 text-muted mb-1">Omzet Sepeda</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.KapasitasMotor > 0)
+                        {
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="avatar-sm me-3 mb-2">
+                                            <span class="avatar-title bg-soft-secondary border border-2 border-secondary rounded-circle">
+                                                <i class="ri-e-bike-fill text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetMotor.ToString("N0")</h4>
+                                        <p class="fs-12 text-muted mb-1">Omzet Sepeda Motor</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.KapasitasMobil > 0)
+                        {
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="avatar-sm me-3 mb-2">
+                                            <span class="avatar-title bg-soft-secondary border border-2 border-secondary rounded-circle">
+                                                <i class="ri-car-fill text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetMobil.ToString("N0")</h4>
+                                        <p class="fs-12 text-muted mb-1">Omzet Mobil</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.KapasitasSepeda > 0)
+                        {
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="avatar-sm me-3 mb-2">
+                                            <span class="avatar-title bg-soft-secondary border border-2 border-secondary rounded-circle">
+                                                <i class="ri-bike-line text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetSepeda.ToString("N0")</h4>
+                                        <p class="fs-12 text-muted mb-1">Omzet Sepeda</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.KapasitasTrukMini > 0)
+                        {
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="avatar-sm me-3 mb-2">
+                                            <span class="avatar-title bg-soft-secondary border border-2 border-secondary rounded-circle">
+                                                <i class="ri-truck-fill text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetTrukMini.ToString("N0")</h4>
+                                        <p class="fs-12 text-muted mb-1">Omzet Truk Mini</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.KapasitasTrukBus > 0)
+                        {
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="avatar-sm me-3 mb-2">
+                                            <span class="avatar-title bg-soft-secondary border border-2 border-secondary rounded-circle">
+                                                <i class="ri-bus-fill text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetTrukBus.ToString("N0")</h4>
+                                        <p class="fs-12 text-muted mb-1">Omzet Truk / Bus</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.KapasitasTrailer > 0)
+                        {
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="avatar-sm me-3 mb-2">
+                                            <span class="avatar-title bg-soft-secondary border border-2 border-secondary rounded-circle">
+                                                <i class="ri-truck-line text-secondary" style="font-size: 16px;"></i>
+                                            </span>
+                                        </div>
+                                        <h4 class="fs-14 fw-semibold mb-2">Rp. @Model.OmzetTrailer.ToString("N0")</h4>
+                                        <p class="fs-12 text-muted mb-1">Omzet Trailer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-lg-6">
+                            <div class="card border border-secondary border-2 h-100">
+                                <div class="card-body bg-soft-secondary bg-opacity-25 d-flex flex-column justify-content-center">
+                                    <h4 class="fs-16 fw-semibold mb-3 text-center">Total Omzet Bulanan</h4>
+                                    <h4 class="fs-22 fw-bold mb-1 text-center text-dark">Rp. @Model.TotalOmzet.ToString("N0")</h4>
+                                    <p class="fs-14 text-muted mb-1 text-center">Total pendapatan dari parkir</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="card border border-secondary border-2 mt-3">
+                                <div class="card-body bg-light bg-opacity-25">
+
+                                    @if (Model.KapasitasSepeda > 0)
+                                    {
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda :</h4>
+                                        <p class="fs-14 text-muted font-monospace">
+                                            Omzet Sepeda = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark">
+                                            Omzet Sepeda = (@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirSepedaWeekend.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda = Rp. @Model.OmzetSepeda.ToString("N0")</p>
+                                    }
+
+                                    @if (Model.KapasitasMotor > 0)
+                                    {
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda Motor :</h4>
+                                        <p class="fs-14 text-muted font-monospace">
+                                            Omzet Sepeda Motor = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark">
+                                            Omzet Sepeda Motor = (@Model.JumlahTerparkirMotorWeekdays.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMotorWeekend.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda Motor= Rp. @Model.OmzetMotor.ToString("N0")</p>
+                                    }
+
+                                    @if (Model.KapasitasMobil > 0)
+                                    {
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Mobil :</h4>
+                                        <p class="fs-14 text-muted font-monospace">
+                                            Omzet Mobil = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark">
+                                            Omzet Mobil = (@Model.JumlahTerparkirMobilWeekdays.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMobilWeekend.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark mb-3">Omzet Mobil = Rp. @Model.OmzetMobil.ToString("N0")</p>
+                                    }
+
+                                    @if (Model.KapasitasTrukMini > 0)
+                                    {
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk Mini :</h4>
+                                        <p class="fs-14 text-muted font-monospace">
+                                            Omzet Truk Mini = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark">
+                                            Omzet Truk Mini = (@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk Mini = Rp. @Model.OmzetTrukMini.ToString("N0")</p>
+                                    }
+
+                                    @if (Model.KapasitasTrukBus > 0)
+                                    {
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk / Bus :</h4>
+                                        <p class="fs-14 text-muted font-monospace">
+                                            Omzet Truk/Bus = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark">
+                                            Omzet Truk/Bus = (@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk/Bus = Rp. @Model.OmzetTrukBus.ToString("N0")</p>
+                                    }
+
+                                    @if (Model.KapasitasTrailer > 0)
+                                    {
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Trailer :</h4>
+                                        <p class="fs-14 text-muted font-monospace">
+                                            Omzet Trailer = (Hari Kerja x Tarif x 22 Hari) + (Akhir Pekan x Tarif x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark">
+                                            Omzet Trailer = (@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrailerWeekend.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 8 Hari)
+                                        </p>
+                                        <p class="fs-14 fw-semibold text-dark mb-3">Omzet Trailer = Rp. @Model.OmzetTrailer.ToString("N0")</p>
+                                    }
+
+                                    <hr>
+
+                                    <h4 class="fs-16 fw-semibold mb-2 text-dark">Total Omzet Bulanan :</h4>
+                                    <p class="fs-14 text-muted font-monospace">Penjumlahan seluruh omzet kendaraan</p>
+                                    <p class="fs-14 fw-semibold text-dark">= Rp. @Model.TotalOmzet.ToString("N0")</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex bg-soft-secondary">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
+                            Perhitungan Potensi Pajak
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card border border-secondary border-2">
+                                <div class="card-body bg-light bg-opacity-25">
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Rumus Potensi Pajak per Bulan:
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-1 font-monospace">
+                                        Total Omzet Bulanan x Tarif Pajak
+                                    </p>
+                                    <p class="fs-14 fw-semibold text-dark mb-3">
+                                        Rp. @Model.TotalOmzet.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")
+                                    </p>
+                                    <hr>
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Rumus Potensi Pajak per Tahun:
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-1 font-monospace">
+                                        Potensi Pajak per Bulan x 12
+                                    </p>
+                                    <p class="fs-14 fw-semibold text-dark mb-3">
+                                        Rp. @Model.PotensiPajakPerBulan.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
+                                    </p>
+                                    <hr>
+                                    <h4 class="fs-16 fw-semibold mb-2 text-end text-dark">
+                                        Total Potensi Pajak per Tahun: Rp. @Model.PotensiPajakPerTahun.ToString("N0")
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="card">
                 <div class="card-header d-flex bg-soft-secondary">
@@ -1281,7 +1398,7 @@
                             Jumlah Terparkir Sepeda Weekend = Turnover Weekend x Kapasitas Sepeda
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Sepeda = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetSepeda.ToString("C0")
+                            Omzet Sepeda = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetSepeda.ToString("N0")
                         </p>
 
                         @* Motor *@
@@ -1292,7 +1409,7 @@
                             Jumlah Terparkir Motor Weekend = Turnover Weekend x Kapasitas Motor
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Motor = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetMotor.ToString("C0")
+                            Omzet Motor = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetMotor.ToString("N0")
                         </p>
 
                         @* Mobil *@
@@ -1303,7 +1420,7 @@
                             Jumlah Terparkir Mobil Weekend = Turnover Weekend x Kapasitas Mobil
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Mobil = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetMobil.ToString("C0")
+                            Omzet Mobil = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetMobil.ToString("N0")
                         </p>
 
                         @* Truk Mini *@
@@ -1314,7 +1431,7 @@
                             Jumlah Terparkir Truk Mini Weekend = Turnover Weekend x Kapasitas Truk Mini
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Truk Mini = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetTrukMini.ToString("C0")
+                            Omzet Truk Mini = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrukMini.ToString("N0")
                         </p>
 
                         @* Truk/Bus *@
@@ -1325,7 +1442,7 @@
                             Jumlah Terparkir Truk/Bus Weekend = Turnover Weekend x Kapasitas Truk/Bus
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Truk/Bus = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetTrukBus.ToString("C0")
+                            Omzet Truk/Bus = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrukBus.ToString("N0")
                         </p>
 
                         @* Trailer *@
@@ -1336,27 +1453,27 @@
                             Jumlah Terparkir Trailer Weekend = Turnover Weekend x Kapasitas Trailer
                         </p>
                         <p class="fs-14 text-muted mb-3 fw-semibold">
-                            Omzet Trailer = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = @Model.OmzetTrailer.ToString("C0")
+                            Omzet Trailer = (Weekdays x Tarif x 22) + (Weekend x Tarif x 8) = Rp. @Model.OmzetTrailer.ToString("N0")
                         </p>
 
                         <hr>
 
                         <p class="fs-14 text-muted mb-1 fw-semibold">
-                            Total Omzet = @Model.TotalOmzet.ToString("C0")
+                            Total Omzet = Rp. @Model.TotalOmzet.ToString("N0")
                         </p>
 
                         <p class="fs-14 text-muted mb-1 font-monospace">
                             Potensi Pajak per Bulan = Total Omzet x Tarif Pajak
                         </p>
                         <p class="fs-14 text-muted mb-1 fw-semibold">
-                            = @Model.TotalOmzet.ToString("C0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulan.ToString("C0")
+                            = Rp. @Model.TotalOmzet.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")
                         </p>
 
                         <p class="fs-14 text-muted mb-1 font-monospace">
                             Potensi Pajak per Tahun = Pajak per Bulan x @Model.BulanSisa
                         </p>
                         <p class="fs-14 text-muted fw-semibold">
-                            = @Model.PotensiPajakPerBulan.ToString("C0") x 12 = @Model.PotensiPajakPerTahun.ToString("C0")
+                            = Rp. @Model.PotensiPajakPerBulan.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
                         </p>
                     </div>
                 </div>

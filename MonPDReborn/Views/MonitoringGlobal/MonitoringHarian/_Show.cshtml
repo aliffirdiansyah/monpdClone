@@ -57,7 +57,7 @@
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringGlobal.MonitoringHarianVM.MonitoringHarian>()
             .ID("KontrolPrediksiGrid")
-            .DataSource(Model.DataMonitoringHarianList)
+            .DataSource(Model.DataMonitoringHarianList.OrderBy(x => x.Tanggal).ToList())
             .KeyExpr("JenisPajak")
             .ShowBorders(true)
             .ShowColumnLines(true)
@@ -88,10 +88,10 @@
             .Caption("Jenis Pajak");
 
                 columns.AddFor(m => m.TargetHarian)
-            .Caption("Target Harian").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+            .Caption("Target Harian").Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                 columns.AddFor(m => m.Realisasi)
-            .Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+            .Caption("Realisasi").Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                 columns.AddFor(m => m.Pencapaian)
             .Caption("Pencapaian")

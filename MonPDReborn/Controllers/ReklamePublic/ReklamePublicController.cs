@@ -2,10 +2,13 @@
 using DocumentFormat.OpenXml.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using MonPDReborn.Models;
 using static MonPDReborn.Lib.General.ResponseBase;
-using static MonPDReborn.Models.AktivitasOP.ReklameSummaryVM;
 using static MonPDReborn.Models.ReklamePublic.ReklamePublicVM;
+using System.Text.Json.Nodes;
+using MonPDReborn.Models.ReklamePublic;
 
 namespace MonPDReborn.Controllers.ReklamePublic
 {
@@ -20,10 +23,12 @@ namespace MonPDReborn.Controllers.ReklamePublic
         const string TD_KEY = "TD_KEY";
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         ResponseBase response = new ResponseBase();
-        public ReklamePublicController(ILogger<ReklamePublicController> logger)
+        private IConfiguration configuration;
+        public ReklamePublicController(ILogger<ReklamePublicController> logger, IConfiguration configuration)
         {
             URLView = string.Concat("../ReklamePublic/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
+            this.configuration = configuration;
         }
         public IActionResult Index()
         {
@@ -32,7 +37,6 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 ViewData["Title"] = controllerName;
                 var model = new Models.ReklamePublic.ReklamePublicVM.Index();
 
-                HttpContext.Session.SetInt32("CaptchaAnswer", model.CaptchaAnswer);
                 return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -48,24 +52,84 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 return Json(response);
             }
         }
-        [HttpGet]
-        public IActionResult GetNewCaptcha()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Show(string namaJalan, string recaptchaToken)
         {
-            var model = new Models.ReklamePublic.ReklamePublicVM.Index(); 
-            HttpContext.Session.SetInt32("CaptchaAnswer", model.CaptchaAnswer);
-            return Json(new { number1 = model.Number1, number2 = model.Number2 });
-        }
-
-        public IActionResult Show(string namaJalan, int userAnswer)
-        {
+            var response = new ResponseBase();
             try
             {
-                var captchaAnswer = HttpContext.Session.GetInt32("CaptchaAnswer");
-                if(userAnswer != captchaAnswer)
+                // Ambil secret key dari appsettings.json
+                var secretKey = configuration["RecaptchaSettings:SecretKey"];
+
+                // Validasi captcha Google
+                bool successCaptcha = await RecaptchaService.verifyReCaptchaV2(
+                    recaptchaToken ?? "",
+                    secretKey ?? ""
+                );
+
+                if (!successCaptcha)
                 {
                     throw new ArgumentException("CAPTCHA TIDAK SESUAI");
                 }
 
+                // CAPTCHA valid → ambil data model
+                var model = new Models.ReklamePublic.ReklamePublicVM.Show(namaJalan);
+
+                // Kembalikan partial view dengan data model
+                return PartialView($"{URLView}_{nameof(Show)}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+
+        public class RecaptchaService
+        {
+            public static async Task<bool> verifyReCaptchaV2(string response, string secret)
+            {
+                using (var clienct = new HttpClient())
+                {
+                    string url = "https://www.google.com/recaptcha/api/siteverify";
+
+                    MultipartFormDataContent content = new MultipartFormDataContent();
+                    content.Add(new StringContent(response), "response");
+                    content.Add(new StringContent(secret), "secret");
+
+                    var result = await clienct.PostAsync(url, content);
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var strResponse = await result.Content.ReadAsStringAsync();
+
+                        var jsonResponse = JsonNode.Parse(strResponse);
+                        if (jsonResponse != null)
+                        {
+                            var success = ((bool?)jsonResponse["success"]);
+                            if (success != null && success == true) return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+        }
+
+
+        /*public IActionResult Show(string namaJalan)
+        {
+            try
+            {
                 var model = new Models.ReklamePublic.ReklamePublicVM.Show(namaJalan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
@@ -81,7 +145,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
-        }
+        }*/
         [HttpGet]
         public async Task<object> GetNama(DataSourceLoadOptions loadOptions, string filter)
         {

@@ -81,17 +81,18 @@
                             columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                             columns.AddFor(c => c.AkpTarget).Caption("Target")
-                            .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                            .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                             columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                            .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                            .Format("#,##0").Alignment(HorizontalAlignment.Right)
+                            .CellTemplate(new JS("bulananPajakRealisasi"));
 
                             columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
                             .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
                             .Alignment(HorizontalAlignment.Right);
 
                             columns.AddFor(c => c.Selisih).Caption("Selisih")
-                            .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                            .Format("#,##0").Alignment(HorizontalAlignment.Right);
                         })
                         .Summary(s =>
                         {
@@ -171,17 +172,18 @@
                         columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right)
+                        .CellTemplate(new JS("bulananPajakRealisasi"));
 
                         columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
                         .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
                         .Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
                     })
                     .Summary(s =>
                         {
@@ -260,17 +262,17 @@
                         columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
                         .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
                         .Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
                     })
                     .Summary(s =>
                         {
@@ -347,17 +349,17 @@
                         columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
 
                         columns.AddFor(c => c.AkpTarget).Caption("Target")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Realisasi).Caption("Realisasi")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
                         .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
                         .Alignment(HorizontalAlignment.Right);
 
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
-                        .Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
                     })
                     .Summary(s =>
                         {

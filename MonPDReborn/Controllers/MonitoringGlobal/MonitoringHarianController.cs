@@ -25,13 +25,21 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? jenisPajak, int? tahun, int? bulan)
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.MonitoringGlobal.MonitoringHarianVM.Index();
-                return View($"{URLView}{actionName}", model);
+                if (jenisPajak == null || bulan == null || tahun == null)
+                {
+                    var model = new Models.MonitoringGlobal.MonitoringHarianVM.Index();
+                    return View($"{URLView}{actionName}", model);
+                }
+                else
+                {
+                    var model = new Models.MonitoringGlobal.MonitoringHarianVM.Index((EnumFactory.EPajak)jenisPajak, tahun.Value, bulan.Value);
+                    return View($"{URLView}{actionName}", model);
+                }
             }
             catch (ArgumentException e)
             {

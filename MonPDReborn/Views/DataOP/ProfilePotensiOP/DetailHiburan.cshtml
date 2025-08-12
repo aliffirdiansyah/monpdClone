@@ -20,7 +20,7 @@
     <div class="col-lg-12">
         <div class="card border border-success border-2">
             <div class="card-body">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-lg-8">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0">
@@ -30,12 +30,15 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="mt-2">
-                                <h4 class="fs-16 fw-semibold">
+                            <div class="mt-1">
+                                <h4 class="fs-16 fw-semibold text-dark">
                                     @Model.Nama
                                 </h4>
-                                <p class="fs-16 lh-base">
+                                <p class="fs-16 lh-base text-dark mb-1">
                                     @Model.Alamat
+                                </p>
+                                <p class="fs-16 text-dark">
+                                    @Model.FormattedNOP
                                 </p>
                             </div>
                         </div>
@@ -58,22 +61,6 @@
                                         <p class="fs-16 fw-semibold text-dark">Rp @Model.PotensiPajakPerTahunLainnya.ToString("N0")</p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="d-flex p-3">
-                            <div class="flex-shrink-0 ms-3">
-                                <p class="fs-14 text-muted mb-1">NOP</p>
-                                <p class="fs-14 fw-semibold mb-3">@Model.NOP</p>
-                            </div>
-                            <div class="flex-shrink-0 ms-5">
-                                <p class="fs-14 text-muted mb-1">Kapasitas Pengunjung</p>
-                                <p class="fs-14 fw-semibold mb-3">@Model.Kapasitas Pengunjung</p>
-                            </div>
-                            <div class="flex-shrink-0 ms-3">
-                                <p class="fs-14 text-muted mb-1">Harga Tiket</p>
-                                <p class="fs-14 fw-semibold mb-3">Rp @Model.HTMWeekdays.ToString("N0") Hari Kerja| Rp. @Model.HTMWeekend.ToString("N0") Akhir Pekan</p>
                             </div>
                         </div>
                     </div>
@@ -100,7 +87,7 @@
                             <div class="card-body bg-soft-success bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-bold text-dark mb-1">
-                                        @Model.JumlahPengunjungWeekdaysLainnya
+                                        @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0")
                                     </h3>
                                     <h4 class="fs-14">
                                         Rata-rata Kunjungan Hari Kerja
@@ -115,7 +102,7 @@
                             <div class="card-body bg-soft-warning bg-opacity-25">
                                 <div class="text-center">
                                     <h3 class="fs-18 fw-bold text-dark mb-1">
-                                        @Model.JumlahPengunjungWeekendLainnya
+                                        @Model.JumlahPengunjungWeekendLainnya.ToString("N0")
                                     </h3>
                                     <h4 class="fs-14">
                                         Rata-rata Kunjungan Akhir Pekan
@@ -137,13 +124,13 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Turnover Hari Kerja</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.TurnoverWeekdays.ToString("P2") Kali</p>
+                                        <p class="fs-14 fw-semibold">@Model.TurnoverWeekdays.ToString("N2") Kali</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.TurnoverWeekend.ToString("P2") Kali</p>
+                                        <p class="fs-14 fw-semibold">@Model.TurnoverWeekend.ToString("N2") Kali</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
@@ -165,8 +152,8 @@
                                 <p class="fs-14 text-muted mb-1 font-monospace">
                                     Kapasitas Pengunjung x Turnover Hari Kerja
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    @Model.Kapasitas x @Model.TurnoverWeekdays.ToString("P2") = @Model.JumlahPengunjungWeekdaysLainnya Pengunjung
+                                <p class="fs-14 fw-semibold text-dark mb-2">
+                                    @Model.Kapasitas x @Model.TurnoverWeekdays.ToString("N0") = @Model.JumlahPengunjungWeekdaysLainnya.ToString("NO") Pengunjung
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Rata-rata Kunjungan Akhir Pekan :
@@ -174,8 +161,8 @@
                                 <p class="fs-14 text-muted mb-1 font-monospace">
                                     Kapasitas Pengunjung x Turnover Akhir Pekan
                                 </p>
-                                <p class="fs-14 text-muted mb-1">
-                                    @Model.Kapasitas x @Model.TurnoverWeekend.ToString("P2") = @Model.JumlahPengunjungWeekendLainnya Pengunjung
+                                <p class="fs-14 fw-semibold text-dark mb-1">
+                                    @Model.Kapasitas x @Model.TurnoverWeekend.ToString("N0") = @Model.JumlahPengunjungWeekendLainnya.ToString("NO") Pengunjung
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Rata-rata Member Bulanan :
@@ -183,8 +170,8 @@
                                 <p class="fs-14 text-muted mb-1 font-monospace">
                                     ((Rata-rata Kunjungan Hari kerja x 22 Hari) + (Rata-rata Kunjungan Akhir Pekan x 8 Hari))/12
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    ((@Model.JumlahPengunjungWeekdaysLainnya x 22) + (@Model.JumlahPengunjungWeekendLainnya x 8))/12 = @Model.RataRataPengunjung.ToString("N0") Member
+                                <p class="fs-14 fw-semibold text-dark mb-2">
+                                    ((@Model.JumlahPengunjungWeekdaysLainnya.ToString("NO") x 22) + (@Model.JumlahPengunjungWeekendLainnya.ToString("NO") x 8))/12 = @Model.RataRataPengunjung.ToString("N0") Member
                                 </p>
                             </div>
                         </div>
@@ -197,7 +184,7 @@
         <div class="card">
             <div class="card-header d-flex bg-soft-success">
                 <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
+                    <h4 class="card-title fs-16 mb-0 text-dark">
                         Detail Omzet
                     </h4>
                 </div>
@@ -211,13 +198,13 @@
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Harga Tiket Masuk Hari Kerja</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp @Model.HTMWeekdays.ToString("N0")</p>
+                                        <p class="fs-14 fw-semibold">Rp. @Model.HTMWeekdays.ToString("N0")</p>
                                     </div>
                                 </div>
                                 <div class="d-flex p-3 py-0">
                                     <p class="fs-14 text-muted flex-grow-1">Harga Tiket Masuk Akhir Pekan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp @Model.HTMWeekend.ToString("N0")</p>
+                                        <p class="fs-14 fw-semibold">Rp. @Model.HTMWeekend.ToString("N0")</p>
                                     </div>
                                 </div>
                                 @* <div class="d-flex p-3 py-0">
@@ -238,7 +225,7 @@
                                         Omzet Bulanan
                                     </h4>
                                     <h4 class="fs-16 fw-bold tex-dark mb-1">
-                                        Rp @Model.OmzetPerBulanLainnya.ToString("N0")
+                                        Rp. @Model.OmzetPerBulanLainnya.ToString("N0")
                                     </h4>
                                     <p class="fs-14 text-muted mb-2">Total pendapatan dari layanan</p>
                                 </div>
@@ -266,7 +253,7 @@
                                          aria-valuenow="@Model.OmzetWeekdaysLainnya" aria-valuemin="0" 
                                          aria-valuemax="@Model.OmzetPerBulanLainnya">@hariKerja%
                                     </div>
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-second"
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-second text-dark"
                                          role="progressbar" style="width: @akhirPekan%"
                                          aria-valuenow="@Model.OmzetWeekendLainnya" aria-valuemin="0"
                                          aria-valuemax="@Model.OmzetPerBulanLainnya">
@@ -292,8 +279,8 @@
                                 <p class="fs-14 text-muted font-monospace mb-1">
                                     Harga Tiket Hari Kerja x Rata-rata Kunjungan Hari Kerja x 22 Hari
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysLainnya x 22 = Rp. @Model.OmzetWeekdaysLainnya.ToString("N0")
+                                <p class="fs-14 fw-semibold text-dark mb-2">
+                                    Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysLainnya.ToString("NO") x 22 = Rp. @Model.OmzetWeekdaysLainnya.ToString("N0")
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Perhitungan Omzet Akhir Pekan :
@@ -301,8 +288,8 @@
                                 <p class="fs-14 text-muted font-monospace mb-1">
                                     Harga Tiket Akhir Pekan x Rata-rata Kunjungan Akhir Pekan x 8 Hari
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendLainnya x 8 = Rp. @Model.OmzetWeekendLainnya.ToString("N0")
+                                <p class="fs-14 fw-semibold text-dark mb-2">
+                                    Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendLainnya.ToString("NO") x 8 = Rp. @Model.OmzetWeekendLainnya.ToString("N0")
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Total Omzet Bulanan :
@@ -310,7 +297,7 @@
                                 <p class="fs-14 text-muted font-monospace mb-1">
                                     Omzet Hari Kerja + Omzet Akhir Pekan
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
+                                <p class="fs-14 fw-semibold text-dark mb-2">
                                     Rp. @Model.OmzetWeekdaysLainnya.ToString("N0") + Rp. @Model.OmzetWeekendLainnya.ToString("N0") = Rp. @Model.OmzetPerBulanLainnya.ToString("N0")
                                 </p>
                             </div>
@@ -355,18 +342,18 @@
                                     Potensi Pajak per Bulan
                                 </h4>
                                 <h4 class="card-title fs-18 fw-bold text-dark mb-3">
-                                    Rp @Model.PotensiPajakPerBulanLainnya.ToString("N0")
+                                    Rp. @Model.PotensiPajakPerBulanLainnya.ToString("N0")
                                 </h4>
                                 <div class="d-flex">
                                     <p class="fs-14 text-muted flex-grow-1">Hari Kerja</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold mb-1">Rp @Model.OmzetWeekdaysLainnya.ToString("N0")</p>
+                                        <p class="fs-14 fw-semibold mb-1">Rp. @Model.OmzetWeekdaysLainnya.ToString("N0")</p>
                                     </div>
                                 </div>
                                 <div class="d-flex">
                                     <p class="fs-14 text-muted flex-grow-1">Akhir Pekan</p>
                                     <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold mb-1">Rp @Model.OmzetWeekendLainnya.ToString("N0")</p>
+                                        <p class="fs-14 fw-semibold mb-1">Rp. @Model.OmzetWeekendLainnya.ToString("N0")</p>
                                     </div>
                                 </div>
                             </div>
@@ -382,8 +369,8 @@
                                 <p class="fs-14 text-muted font-monospace mb-1">
                                     Omzet Bulanan x Tarif Pajak
                                 </p>
-                                <p class="fs-14 text-muted mb-1">
-                                    Rp. @Model.OmzetPerBulanLainnya x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanLainnya.ToString("N0")
+                                <p class="fs-14 fw-semibold text-dark mb-1">
+                                    Rp. @Model.OmzetPerBulanLainnya.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanLainnya.ToString("N0")
                                 </p>
                                 <h4 class="fs-16 fw-semibold mb-2">
                                     Rumus Perhitungan Potensi Pajak per Tahun
@@ -391,10 +378,10 @@
                                 <p class="fs-14 text-muted font-monospace mb-1">
                                     Potensi Pajak per Bulan x 12
                                 </p>
-                                <p class="fs-14 text-muted mb-2">
-                                    Rp. @Model.PotensiPajakPerBulanLainnya x 12 = Rp. @Model.PotensiPajakPerTahunLainnya.ToString("N0")
+                                <p class="fs-14 fw-semibold text-dark mb-2">
+                                    Rp. @Model.PotensiPajakPerBulanLainnya.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahunLainnya.ToString("N0")
                                 </p>
-                                <h4 class="fs-16 fw-semibold">
+                                <h4 class="fs-16 fw-semibold text-dark">
                                     Total Potensi Pajak per Tahun : Rp. @Model.PotensiPajakPerTahunLainnya.ToString("N0")
                                 </h4>
                             </div>
@@ -418,7 +405,7 @@
             <div class="card-body">
                 <div class="info-row">
                     <p class="label">NOP</p>                    
-                    <p class="value">@Model.NOP</p>                    
+                    <p class="value">@Model.FormattedNOP</p>                    
                 </div>
                 <div class="info-row">
                     <p class="label">Nama Usaha</p>                    
@@ -435,7 +422,7 @@
             </div>
         </div>
 
-        <div class="card">
+        @* <div class="card">
             <div class="card-header d-flex bg-soft-success">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-0">
@@ -452,7 +439,7 @@
                                     Potensi Pajak per Bulan
                                 </h4>
                                 <h4 class="card-title fw-bold text-dark fs-18 mb-0">
-                                    Rp @Model.PotensiPajakPerBulanLainnya.ToString("N0")
+                                    Rp. @Model.PotensiPajakPerBulanLainnya.ToString("N0")
                                 </h4>
                                 <p class="fs-12">50% dari omzet bulanan</p>
                             </div>
@@ -465,7 +452,7 @@
                                     Potensi Pajak per Tahun
                                 </h4>
                                 <h4 class="card-title fw-bold text-dark fs-18 mb-0">
-                                    Rp @Model.PotensiPajakPerTahunLainnya.ToString("N0")
+                                    Rp. @Model.PotensiPajakPerTahunLainnya.ToString("N0")
                                 </h4>
                                 <p class="fs-12">Proyeksi untuk 12 bulan</p>
                             </div>
@@ -473,7 +460,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> *@
 
         <div class="card">
             <div class="card-header d-flex bg-soft-success">
@@ -487,7 +474,7 @@
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 hari/bulan)</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.JumlahPengunjungWeekdaysLainnya Kunjungan</p>
+                        <p class="fs-14 fw-semibold mb-1">@Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") Kunjungan</p>
                     </div>
                 </div>
                 
@@ -514,12 +501,12 @@
                 <div class="d-flex">
                     <p class="fs-14 text-muted flex-grow-1">Akhir Pekan (8 hari/bulan)</p>
                     <div class="flex-shrink-0">
-                        <p class="fs-14 fw-semibold mb-1">@Model.JumlahPengunjungWeekendLainnya Kunjungan</p>
+                        <p class="fs-14 fw-semibold mb-1">@Model.JumlahPengunjungWeekendLainnya.ToString("N0") Kunjungan</p>
                     </div>
                 </div>
 
                 <div class="progress mb-2" style="height:20px">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-second"
+                    <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-second progress-bar-primary text-dark"
                          role="progressbar" style="width: @kunjunganWeekend%"
                          aria-valuenow="@Model.JumlahPengunjungWeekendLainnya" aria-valuemin="0"
                          aria-valuemax="@totalPengunjung">
@@ -551,19 +538,19 @@
             <div class="card-body">
                 <div class="info-row">
                     <p class="label">Harga Tiket Hari Kerja</p>                  
-                    <p class="value">Rp @Model.HTMWeekdays.ToString("N0")</p>                   
+                    <p class="value">Rp. @Model.HTMWeekdays.ToString("N0")</p>                   
                 </div>
                 <div class="info-row">
                     <p class="label">Harga Tiket Akhir Pekan</p>                  
-                    <p class="value">Rp @Model.HTMWeekend.ToString("N0")</p>                   
+                    <p class="value">Rp. @Model.HTMWeekend.ToString("N0")</p>                   
                 </div>
                 <div class="info-row">
                     <p class="label">Turnover Hari Kerja</p>                  
-                    <p class="value">@Model.TurnoverWeekdays.ToString("P2") Kali</p>                   
+                    <p class="value">@Model.TurnoverWeekdays.ToString("N2") Kali</p>                   
                 </div>
                 <div class="info-row">
                     <p class="label">Turnover Akhir Pekan</p>                  
-                    <p class="value">@Model.TurnoverWeekend.ToString("P2") Kali</p>                   
+                    <p class="value">@Model.TurnoverWeekend.ToString("N2") Kali</p>                   
                 </div>
                 <div class="info-row">
                     <p class="label">Hari Kerja per Bulan</p>                  
@@ -630,23 +617,23 @@
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Jumlah Pengunjung Weekdays = Kapasitas x Turnover Weekdays
                 </p>
-                <p class="fs-14 text-muted mb-2 fw-semibold">
+                <p class="fs-14 mb-2 fw-semibold text-dark">
                     = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Jumlah Pengunjung Weekend = Kapasitas x Turnover Weekend
                 </p>
-                <p class="fs-14 text-muted mb-2 fw-semibold">
+                <p class="fs-14 mb-2 fw-semibold text-dark">
                     = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Model.JumlahPengunjungWeekendLainnya.ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
-                    Omzet/Bulan = (HTM Weekdays x Pengunjung Weekdays x 22) + (HTM Weekdays x Pengunjung Weekend x 8)
+                    Omzet/Bulan = (HTM Weekdays x Pengunjung Weekdays x 22 Hari) + (HTM Weekdays x Pengunjung Weekend x 8 Hari)
                 </p>
-                <p class="fs-14 text-muted mb-3 fw-semibold">
-                    = (@Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") x 22) +
-                    (@Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendLainnya.ToString("N0") x 8) = @Model.OmzetPerBulanLainnya.ToString("N0")
+                <p class="fs-14 mb-3 fw-semibold text-dark">
+                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Model.JumlahPengunjungWeekdaysLainnya.ToString("N0") x 22 Hari) +
+                    (Rp. @Model.HTMWeekend.ToString("N0") x @Model.JumlahPengunjungWeekendLainnya.ToString("N0") x 8 Hari) = Rp. @Model.OmzetPerBulanLainnya.ToString("N0")
                 </p>
 
                 <hr>
@@ -656,15 +643,15 @@
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
                 </p>
-                <p class="fs-14 text-muted mb-2 fw-semibold">
-                    = @Model.OmzetPerBulanLainnya.ToString("N0") x @Model.TarifPajak.ToString("P0") = @Model.PotensiPajakPerBulanLainnya.ToString("N0")
+                <p class="fs-14 mb-2 fw-semibold text-dark">
+                    = Rp. @Model.OmzetPerBulanLainnya.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanLainnya.ToString("N0")
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
-                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa Bulan
                 </p>
-                <p class="fs-14 text-muted fw-semibold">
-                    = @Model.PotensiPajakPerBulanLainnya.ToString("N0") x @Model.BulanSisa = @Model.PotensiPajakPerTahunLainnya.ToString("N0")
+                <p class="fs-14 fw-semibold text-dark">
+                    = Rp. @Model.PotensiPajakPerBulanLainnya.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunLainnya.ToString("N0")
                 </p>
             </div>
         </div>

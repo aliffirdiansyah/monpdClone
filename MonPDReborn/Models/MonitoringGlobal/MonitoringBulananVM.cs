@@ -13,7 +13,9 @@ namespace MonPDReborn.Models.MonitoringGlobal
         public class Index
         {
             public int SelectedPajak { get; set; }
+            public int SelectedTahun { get; set; } = DateTime.Now.Year;
             public List<SelectListItem> JenisPajakList { get; set; } = new();
+            public List<SelectListItem> TahunList { get; set; } = new();
             public Index()
             {
                 JenisPajakList.Add(new SelectListItem { Value = "0", Text = "Semua Jenis Pajak" });
@@ -24,6 +26,34 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         Value = ((int)x).ToString(),
                         Text = x.GetDescription()
                     }).ToList();
+                for (int i = 2025; i >= 2021; i--)
+                {
+                    TahunList.Add(new SelectListItem
+                    {
+                        Value = i.ToString(),
+                        Text = i.ToString()
+                    });
+                }
+            }
+            public Index(EnumFactory.EPajak jenisPajak)
+            {
+                SelectedPajak = (int)jenisPajak;
+                JenisPajakList.Add(new SelectListItem { Value = "0", Text = "Semua Jenis Pajak" });
+                JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
+                    .Cast<EnumFactory.EPajak>()
+                    .Select(x => new SelectListItem
+                    {
+                        Value = ((int)x).ToString(),
+                        Text = x.GetDescription()
+                    }).ToList();
+                for (int i = 2025; i >= 2021; i--)
+                {
+                    TahunList.Add(new SelectListItem
+                    {
+                        Value = i.ToString(),
+                        Text = i.ToString()
+                    });
+                }
             }
         }
         public class Show
@@ -85,6 +115,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -128,6 +159,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -171,6 +203,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -214,6 +247,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -257,6 +291,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -300,6 +335,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -343,6 +379,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -386,6 +423,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -429,6 +467,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -471,6 +510,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -513,6 +553,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -655,6 +696,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -715,6 +757,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -761,6 +804,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -806,6 +850,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -851,6 +896,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -897,6 +943,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -942,6 +989,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -988,6 +1036,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -1034,6 +1083,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -1080,6 +1130,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -1124,6 +1175,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -1169,6 +1221,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -1314,6 +1367,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                             ret.Add(new MonitoringBulananViewModels.BulananPajak()
                             {
+                                EnumPajak = (int)jenisPajak,
                                 JenisPajak = jenisPajak.GetDescription(),
                                 Tahun = tahun,
                                 Bulan = item.Bulan,
@@ -1334,6 +1388,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
         {
             public class BulananPajak
             {
+                public int EnumPajak { get; set; }
                 public string JenisPajak { get; set; } = null!;
                 public int Tahun { get; set; }
                 public int Bulan { get; set; }

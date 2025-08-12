@@ -4,8 +4,8 @@
 <div class="table-responsive">
     @(
         Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Potensi>()
-            .ID("potensiGrid")
-            .DataSource(Model.DataPotensiList)
+            .ID("gridPotensi" + Model.Pajak)
+            .DataSource(Model.Data)
             .ShowBorders(true)
             .ShowColumnLines(true)
             .RowAlternationEnabled(true)
@@ -23,22 +23,22 @@
             {
 
                 columns.AddFor(m => m.Kategori).Caption("Kategori").Fixed(true).FixedPosition(HorizontalEdge.Left);
-                columns.AddFor(m => m.Total).Caption("Total").Fixed(true).FixedPosition(HorizontalEdge.Left).Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                columns.AddFor(m => m.Total).Caption("Total").Fixed(true).FixedPosition(HorizontalEdge.Left).Format("#,##0");
 
                 columns.Add().Caption("Masa Pajak").Columns(subColumns =>
                 {
-                    subColumns.AddFor(m => m.Jan).Caption("JANUARI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Feb).Caption("FEBRUARI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Mar).Caption("MARET").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Apr).Caption("APRIL").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Mei).Caption("MEI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Jun).Caption("JUNI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Jul).Caption("JULI").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Agt).Caption("AGUSTUS").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Sep).Caption("SEPTEMBER").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Okt).Caption("OKTOBER").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Nov).Caption("NOVEMBER").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
-                    subColumns.AddFor(m => m.Des).Caption("DESEMBER").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+                    subColumns.AddFor(m => m.Jan).Caption("JANUARI").Format("#,##0");
+                    subColumns.AddFor(m => m.Feb).Caption("FEBRUARI").Format("#,##0");
+                    subColumns.AddFor(m => m.Mar).Caption("MARET").Format("#,##0");
+                    subColumns.AddFor(m => m.Apr).Caption("APRIL").Format("#,##0");
+                    subColumns.AddFor(m => m.Mei).Caption("MEI").Format("#,##0");
+                    subColumns.AddFor(m => m.Jun).Caption("JUNI").Format("#,##0");
+                    subColumns.AddFor(m => m.Jul).Caption("JULI").Format("#,##0");
+                    subColumns.AddFor(m => m.Agt).Caption("AGUSTUS").Format("#,##0");
+                    subColumns.AddFor(m => m.Sep).Caption("SEPTEMBER").Format("#,##0");
+                    subColumns.AddFor(m => m.Okt).Caption("OKTOBER").Format("#,##0");
+                    subColumns.AddFor(m => m.Nov).Caption("NOVEMBER").Format("#,##0");
+                    subColumns.AddFor(m => m.Des).Caption("DESEMBER").Format("#,##0");
 
                 });
             })
@@ -52,54 +52,67 @@
 
                 items.AddFor(m => m.Total)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Jan)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Feb)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Mar)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Apr)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Mei)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Jun)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Jul)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Agt)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Sep)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Okt)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Nov)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Des)
                     .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
                     .DisplayFormat("{0}");
 
 
