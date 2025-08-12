@@ -2164,6 +2164,9 @@ namespace MonPDReborn.Models.DataOP
             public decimal RataRataPengunjungWeekdaysNonCatering => JumlahKursi * TurnoverWeekdaysNonCatering;
             public decimal RataRataPengunjungWeekendNonCatering => JumlahKursi * TurnoverWeekendNonCatering;
 
+            public decimal TotalPengunjungWeekdaysNonCatering => Math.Ceiling(RataRataPengunjungWeekdaysNonCatering) * 22;
+            public decimal TotalPengunjungWeekendNonCatering => Math.Ceiling(RataRataPengunjungWeekendNonCatering) * 8;
+
             public decimal OmzetPerBulanNonCatering =>
                 (RataRataBillPerOrang * Math.Ceiling(RataRataPengunjungWeekdaysNonCatering) * 22) +
                 (RataRataBillPerOrang * Math.Ceiling(RataRataPengunjungWeekendNonCatering) * 8);
