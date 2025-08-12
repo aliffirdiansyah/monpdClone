@@ -110,12 +110,12 @@ else
                         })
                         .Columns(columns =>
                         {
-                            columns.AddFor(m => m.Jalan).Caption("Jalan");
+                            columns.AddFor(m => m.Jalan).Caption("Jalan").Width(150);
 
-                            columns.AddFor(m => m.Alamat).Caption("Alamat").CssClass("WrappedColumnClass").Width(150);
+                            columns.AddFor(m => m.Alamat).Caption("Alamat").CssClass("WrappedColumnClass").Width(250);
 
                             columns.AddFor(m => m.JenisReklame)
-                            .Caption("Jenis Reklame")
+                            .Caption("Jenis Reklame").Width(150)
                             .CellTemplate(@<text>
                                                <span class="badge bg-soft-success text-success"><%- value %></span>
                                            </text>);
@@ -124,9 +124,9 @@ else
 
                             columns.AddFor(m => m.Kategori).Caption("Kategori Reklame").CssClass("WrappedColumnClass").Width(150);
 
-                            columns.AddFor(m => m.TanggalTayang).Caption("Tanggal Tayang").CssClass("WrappedColumnClass").Width(115);
+                            columns.AddFor(m => m.TanggalTayang).Caption("Tanggal Tayang").CssClass("WrappedColumnClass").Width(180);
 
-                            columns.AddFor(m => m.Jumlah).Caption("Jumlah").Alignment(HorizontalAlignment.Center).CssClass("fw-bold text-primary");
+                            columns.AddFor(m => m.Jumlah).Caption("Jumlah").Alignment(HorizontalAlignment.Center).CssClass("fw-bold text-primary").Width(100);
                         })
                         )
         </div>
