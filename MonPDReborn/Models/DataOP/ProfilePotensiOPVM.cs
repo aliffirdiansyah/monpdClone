@@ -1765,6 +1765,7 @@ namespace MonPDReborn.Models.DataOP
                             ? (context.MKategoriPajaks.FirstOrDefault(k => k.Id == Convert.ToInt32(hiburan.KategoriId)).Nama ?? "Umum")
                             : "Umum",
                         TglOpBuka = hiburan != null ? hiburan.TglMulaiBukaOp : DateTime.MinValue,
+                        KategoriId = (int)hiburan.KategoriId,
                         KapasitasStudio = x.KapKursiStudio ?? 0,
                         JumlahStudio = x.JumlahStudio ?? 0,
                         Kapasitas = x.KapPengunjung ?? 0,
@@ -1773,7 +1774,7 @@ namespace MonPDReborn.Models.DataOP
                         HTMWeekend = x.HtmWe ?? 0,
                         TurnoverWeekdays = x.ToWd ?? 0,
                         TurnoverWeekend = x.ToWe ?? 0,
-                        TarifPajak = 0.1m
+                        TarifPajak = hiburan.KategoriId == 44 ? 0.5m : hiburan.KategoriId == 45 ? 0.4m : 0.1m
                     })
                     .FirstOrDefault();
                 return ret;
@@ -2148,8 +2149,8 @@ namespace MonPDReborn.Models.DataOP
 
 
             // PerhitunganCatering
-            public decimal RataRataTerjualWeekdaysCatering => KapasitasTenantCatering * TurnoverWeekdaysCatering;
-            public decimal RataRataTerjualWeekendCatering => KapasitasTenantCatering * TurnoverWeekendCatering;
+            public decimal RataRataTerjualWeekdaysCatering => Math.Ceiling(KapasitasTenantCatering * TurnoverWeekdaysCatering);
+            public decimal RataRataTerjualWeekendCatering => Math.Ceiling(KapasitasTenantCatering * TurnoverWeekendCatering);
             public decimal RataRataTerjualPerHariCatering =>
                 (RataRataTerjualWeekdaysCatering * 11) + (RataRataTerjualWeekendCatering * 4);
 
@@ -2161,8 +2162,8 @@ namespace MonPDReborn.Models.DataOP
             public decimal PotensiPajakPerTahunCatering => PotensiPajakPerBulanCatering * BulanSisa;
 
             // PerhitunganNonCatering
-            public decimal RataRataPengunjungWeekdaysNonCatering => JumlahKursi * TurnoverWeekdaysNonCatering;
-            public decimal RataRataPengunjungWeekendNonCatering => JumlahKursi * TurnoverWeekendNonCatering;
+            public decimal RataRataPengunjungWeekdaysNonCatering => Math.Ceiling(JumlahKursi * TurnoverWeekdaysNonCatering);
+            public decimal RataRataPengunjungWeekendNonCatering => Math.Ceiling(JumlahKursi * TurnoverWeekendNonCatering);
 
             public decimal TotalPengunjungWeekdaysNonCatering => Math.Ceiling(RataRataPengunjungWeekdaysNonCatering) * 22;
             public decimal TotalPengunjungWeekendNonCatering => Math.Ceiling(RataRataPengunjungWeekendNonCatering) * 8;
@@ -2251,43 +2252,43 @@ namespace MonPDReborn.Models.DataOP
                 TotalKapasitas == 0 ? 0 : (decimal)KapasitasTrailer / TotalKapasitas;
 
             // Jumlah terparkir weekdays & weekend
-            public decimal JumlahTerparkirSepedaWeekdays => KapasitasSepeda == 0 ? 0 : TurnoverWeekdays * KapasitasSepeda;
-            public decimal JumlahTerparkirSepedaWeekend => KapasitasSepeda == 0 ? 0 : TurnoverWeekend * KapasitasSepeda;
+            public decimal JumlahTerparkirSepedaWeekdays => KapasitasSepeda == 0 ? 0 : Math.Ceiling(TurnoverWeekdays * KapasitasSepeda);
+            public decimal JumlahTerparkirSepedaWeekend => KapasitasSepeda == 0 ? 0 : Math.Ceiling(TurnoverWeekend * KapasitasSepeda);
             public decimal OmzetSepeda =>
                 KapasitasSepeda == 0 ? 0 :
                 (Math.Ceiling(JumlahTerparkirSepedaWeekdays) * TarifSepeda * 22) +
                 (Math.Ceiling(JumlahTerparkirSepedaWeekend) * TarifSepeda * 8);
 
-            public decimal JumlahTerparkirMotorWeekdays => KapasitasMotor == 0 ? 0 : TurnoverWeekdays * KapasitasMotor;
-            public decimal JumlahTerparkirMotorWeekend => KapasitasMotor == 0 ? 0 : TurnoverWeekend * KapasitasMotor;
+            public decimal JumlahTerparkirMotorWeekdays => KapasitasMotor == 0 ? 0 : Math.Ceiling(TurnoverWeekdays * KapasitasMotor);
+            public decimal JumlahTerparkirMotorWeekend => KapasitasMotor == 0 ? 0 : Math.Ceiling(TurnoverWeekend * KapasitasMotor);
             public decimal OmzetMotor =>
                 KapasitasMotor == 0 ? 0 :
                 (Math.Ceiling(JumlahTerparkirMotorWeekdays) * TarifMotor * 22) +
                 (Math.Ceiling(JumlahTerparkirMotorWeekend) * TarifMotor * 8);
 
-            public decimal JumlahTerparkirMobilWeekdays => KapasitasMobil == 0 ? 0 : TurnoverWeekdays * KapasitasMobil;
-            public decimal JumlahTerparkirMobilWeekend => KapasitasMobil == 0 ? 0 : TurnoverWeekend * KapasitasMobil;
+            public decimal JumlahTerparkirMobilWeekdays => KapasitasMobil == 0 ? 0 : Math.Ceiling(TurnoverWeekdays * KapasitasMobil);
+            public decimal JumlahTerparkirMobilWeekend => KapasitasMobil == 0 ? 0 : Math.Ceiling(TurnoverWeekend * KapasitasMobil);
             public decimal OmzetMobil =>
                 KapasitasMobil == 0 ? 0 :
                 (Math.Ceiling(JumlahTerparkirMobilWeekdays) * TarifMobil * 22) +
                 (Math.Ceiling(JumlahTerparkirMobilWeekend) * TarifMobil * 8);
 
-            public decimal JumlahTerparkirTrukMiniWeekdays => KapasitasTrukMini == 0 ? 0 : TurnoverWeekdays * KapasitasTrukMini;
-            public decimal JumlahTerparkirTrukMiniWeekend => KapasitasTrukMini == 0 ? 0 : TurnoverWeekend * KapasitasTrukMini;
+            public decimal JumlahTerparkirTrukMiniWeekdays => KapasitasTrukMini == 0 ? 0 : Math.Ceiling(TurnoverWeekdays * KapasitasTrukMini);
+            public decimal JumlahTerparkirTrukMiniWeekend => KapasitasTrukMini == 0 ? 0 : Math.Ceiling(TurnoverWeekend * KapasitasTrukMini);
             public decimal OmzetTrukMini =>
                 KapasitasTrukMini == 0 ? 0 :
                 (Math.Ceiling(JumlahTerparkirTrukMiniWeekdays) * TarifTrukMini * 22) +
                 (Math.Ceiling(JumlahTerparkirTrukMiniWeekend) * TarifTrukMini * 8);
 
-            public decimal JumlahTerparkirTrukBusWeekdays => KapasitasTrukBus == 0 ? 0 : TurnoverWeekdays * KapasitasTrukBus;
-            public decimal JumlahTerparkirTrukBusWeekend => KapasitasTrukBus == 0 ? 0 : TurnoverWeekend * KapasitasTrukBus;
+            public decimal JumlahTerparkirTrukBusWeekdays => KapasitasTrukBus == 0 ? 0 : Math.Ceiling(TurnoverWeekdays * KapasitasTrukBus);
+            public decimal JumlahTerparkirTrukBusWeekend => KapasitasTrukBus == 0 ? 0 : Math.Ceiling(TurnoverWeekend * KapasitasTrukBus);
             public decimal OmzetTrukBus =>
                 KapasitasTrukBus == 0 ? 0 :
                 (Math.Ceiling(JumlahTerparkirTrukBusWeekdays) * TarifTrukBus * 22) +
                 (Math.Ceiling(JumlahTerparkirTrukBusWeekend) * TarifTrukBus * 8);
 
-            public decimal JumlahTerparkirTrailerWeekdays => KapasitasTrailer == 0 ? 0 : TurnoverWeekdays * KapasitasTrailer;
-            public decimal JumlahTerparkirTrailerWeekend => KapasitasTrailer == 0 ? 0 : TurnoverWeekend * KapasitasTrailer;
+            public decimal JumlahTerparkirTrailerWeekdays => KapasitasTrailer == 0 ? 0 : Math.Ceiling(TurnoverWeekdays * KapasitasTrailer);
+            public decimal JumlahTerparkirTrailerWeekend => KapasitasTrailer == 0 ? 0 : Math.Ceiling(TurnoverWeekend * KapasitasTrailer);
             public decimal OmzetTrailer =>
                 KapasitasTrailer == 0 ? 0 :
                 (Math.Ceiling(JumlahTerparkirTrailerWeekdays) * TarifTrailer * 22) +
@@ -2385,8 +2386,8 @@ namespace MonPDReborn.Models.DataOP
             public int KapasitasStudio { get; set; }
 
             // ========== Perhitungan Kategori Lainnya ==========
-            public decimal JumlahPengunjungWeekdaysLainnya => Kapasitas * TurnoverWeekdays;
-            public decimal JumlahPengunjungWeekendLainnya => Kapasitas * TurnoverWeekend;
+            public decimal JumlahPengunjungWeekdaysLainnya => Math.Ceiling(Kapasitas * TurnoverWeekdays);
+            public decimal JumlahPengunjungWeekendLainnya => Math.Ceiling(Kapasitas * TurnoverWeekend);
             public decimal JumlahPengunjungPerBulanLainnya =>
                 (JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8);
             public decimal RataRataPengunjung =>
@@ -2401,8 +2402,8 @@ namespace MonPDReborn.Models.DataOP
 
             // ========== Perhitungan Kategori Bioskop ==========
             public int KapasitasBioskop => JumlahStudio * KapasitasStudio * 4;
-            public decimal JumlahPengunjungWeekdaysBioskop => KapasitasBioskop * TurnoverWeekdays;
-            public decimal JumlahPengunjungWeekendBioskop => KapasitasBioskop * TurnoverWeekend;
+            public decimal JumlahPengunjungWeekdaysBioskop => Math.Ceiling(KapasitasBioskop * TurnoverWeekdays);
+            public decimal JumlahPengunjungWeekendBioskop => Math.Ceiling(KapasitasBioskop * TurnoverWeekend);
             public decimal OmzetPerBulanBioskop =>
                 (HTMWeekdays * Math.Ceiling(JumlahPengunjungWeekdaysBioskop) * 22) +
                 (HTMWeekend * Math.Ceiling(JumlahPengunjungWeekendBioskop) * 8);
