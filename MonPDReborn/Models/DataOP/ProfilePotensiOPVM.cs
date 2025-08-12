@@ -2035,13 +2035,13 @@ namespace MonPDReborn.Models.DataOP
             public string Kategori { get; set; } = null!;
             public decimal Target1 { get; set; }
             public decimal Realisasi1 { get; set; }
-            public decimal Capaian1 => Target1 == 0 ? 0 : Math.Round((Realisasi1 / Target1) * 100, 2);
+            public decimal Capaian1 => Target1 == 0 ? 0 : Realisasi1 / Target1;
             public decimal Target2 { get; set; }
             public decimal Realisasi2 { get; set; }
-            public decimal Capaian2 => Target2 == 0 ? 0 : Math.Round((Realisasi2 / Target2) * 100, 2);
+            public decimal Capaian2 => Target2 == 0 ? 0 : Realisasi2 / Target2;
             public decimal Target3 { get; set; }
             public decimal Realisasi3 { get; set; }
-            public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
+            public decimal Capaian3 => Target3 == 0 ? 0 : Realisasi3 / Target3;
             public decimal TotalPotensi { get; set; }
         }
 

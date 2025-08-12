@@ -60,11 +60,14 @@ namespace MonPDReborn.Models.PengawasanReklame
                 }
 
                 // Filter nama jalan
-                if (!string.IsNullOrWhiteSpace(namaJalan))
+                if (string.IsNullOrWhiteSpace(namaJalan))
                 {
-                    query = query.Where(x => x.NamaJalan != null &&
-                                             x.NamaJalan.ToLower().Contains(namaJalan.ToLower()));
+                    throw new Exception("Nama jalan harus diisi!");
                 }
+
+                // lanjut filter
+                query = query.Where(x => x.NamaJalan != null &&
+                                         x.NamaJalan.ToLower().Contains(namaJalan.ToLower()));
 
                 // Proyeksi hasil
                 var result = query
