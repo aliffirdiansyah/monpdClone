@@ -23,7 +23,7 @@ namespace MonPDReborn.Models.DataOP
 
         }
 
-        public class  Method
+        public class Method
         {
             public static void SimpanLampiranExcelHotel(IFormFile fileExcel, int tahun)
             {
@@ -35,7 +35,9 @@ namespace MonPDReborn.Models.DataOP
                 stream.Position = 0;
 
                 using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                var sheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null)
+                    throw new ArgumentException("Tidak ada sheet di file Excel.");
                 if (sheet == null)
                     throw new Exception("Sheet1 tidak ditemukan.");
 
@@ -45,7 +47,7 @@ namespace MonPDReborn.Models.DataOP
                 {
                     var nop = sheet.Cells[row, 1].Text;
 
-                    
+
                     var existingData = context.DbPotensiHotels
                         .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
 
@@ -56,7 +58,7 @@ namespace MonPDReborn.Models.DataOP
 
                     var dataHotel = new DbPotensiHotel
                     {
-                        TahunBuku = tahun, 
+                        TahunBuku = tahun,
                         Nop = sheet.Cells[row, 1].Text,
                         TotalRoom = TryInt(sheet.Cells[row, 2].Text),
                         AvgRoomPrice = TryDecimal(sheet.Cells[row, 3].Text),
@@ -86,7 +88,9 @@ namespace MonPDReborn.Models.DataOP
                 stream.Position = 0;
 
                 using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                var sheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null)
+                    throw new ArgumentException("Tidak ada sheet di file Excel.");
                 if (sheet == null)
                     throw new Exception("Sheet1 tidak ditemukan.");
 
@@ -161,7 +165,9 @@ namespace MonPDReborn.Models.DataOP
                 stream.Position = 0;
 
                 using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                var sheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null)
+                    throw new ArgumentException("Tidak ada sheet di file Excel.");
                 if (sheet == null)
                     throw new Exception("Sheet1 tidak ditemukan.");
 
@@ -208,7 +214,9 @@ namespace MonPDReborn.Models.DataOP
                 stream.Position = 0;
 
                 using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                var sheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null)
+                    throw new ArgumentException("Tidak ada sheet di file Excel.");
                 if (sheet == null)
                     throw new Exception("Sheet1 tidak ditemukan.");
 
@@ -259,32 +267,41 @@ namespace MonPDReborn.Models.DataOP
                 stream.Position = 0;
 
                 using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                var sheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null)
+                    throw new ArgumentException("Tidak ada sheet di file Excel.");
                 if (sheet == null)
                     throw new Exception("Sheet1 tidak ditemukan.");
 
                 using var context = DBClass.GetContext();
 
+                // counter per NOP
+                var seqCounter = new Dictionary<string, int>();
+
                 for (int row = 2; row <= sheet.Dimension.End.Row; row++)
                 {
-                    var nop = sheet.Cells[row, 1].Text;
+                    var nop = sheet.Cells[row, 1].Text?.Trim();
+                    if (string.IsNullOrEmpty(nop)) continue;
 
+                    // Hitung seq
+                    if (!seqCounter.ContainsKey(nop))
+                        seqCounter[nop] = 1;
+                    else
+                        seqCounter[nop]++;
+
+                    // Hapus data lama jika ada (untuk tahun dan NOP ini)
                     var existingData = context.TPemeriksaans
-                        .FirstOrDefault(x => x.TahunPajak == tahun && x.Nop == nop);
+                        .FirstOrDefault(x => x.TahunPajak == tahun && x.Nop == nop && x.Seq == seqCounter[nop]);
 
                     if (existingData != null)
-                    {
                         context.TPemeriksaans.Remove(existingData);
-                    }
 
                     var data = new TPemeriksaan
                     {
                         Nop = nop,
-                        TahunPajak = tahun, // dari variabel, bukan dari Excel
-                        MasaPajak = "Tahunan", // fixed value
-                        Seq = (byte)(row - 1),
+                        TahunPajak = tahun,
+                        Seq = (byte)seqCounter[nop],
 
-                        // Tanggal SP (yyyy-MM-dd)
                         TglSp = DateTime.TryParseExact(
                             sheet.Cells[row, 2].Text,
                             "yyyy-MM-dd",
@@ -294,28 +311,29 @@ namespace MonPDReborn.Models.DataOP
                         ) ? tgl : new DateTime(tahun, 1, 1),
 
                         NoSp = sheet.Cells[row, 3].Text ?? string.Empty,
-                        Pokok = TryDecimal(sheet.Cells[row, 4].Text) ?? 0,
-                        Denda = TryDecimal(sheet.Cells[row, 5].Text) ?? 0,
-                        Petugas = sheet.Cells[row, 6].Text ?? string.Empty,
-                        Ket = sheet.Cells[row, 7].Text ?? string.Empty,
-                        PajakId = TryDecimal(sheet.Cells[row, 8].Text) ?? 0,
+                        MasaPajak = sheet.Cells[row, 4].Text ?? string.Empty,
+                        Pokok = TryDecimal(sheet.Cells[row, 5].Text) ?? 0,
+                        Denda = TryDecimal(sheet.Cells[row, 6].Text) ?? 0,
+                        Petugas = sheet.Cells[row, 7].Text ?? string.Empty,
+                        Ket = sheet.Cells[row, 8].Text ?? string.Empty,
+                        PajakId = TryDecimal(sheet.Cells[row, 9].Text) ?? 0,
 
-                        JumlahKb = TryDecimal(sheet.Cells[row, 9].Text),
-                        Lhp = sheet.Cells[row, 10].Text,
+                        JumlahKb = TryDecimal(sheet.Cells[row, 10].Text),
+                        Lhp = sheet.Cells[row, 11].Text,
                         TglLhp = DateTime.TryParseExact(
-                            sheet.Cells[row, 11].Text,
-                            "yyyy-MM-dd",
-                            CultureInfo.InvariantCulture,
-                            DateTimeStyles.None,
-                            out var tglLhp
-                        ) ? tgl : new DateTime(tahun, 1, 1),
-                        TglByr = DateTime.TryParseExact(
                             sheet.Cells[row, 12].Text,
                             "yyyy-MM-dd",
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.None,
+                            out var tglLhp
+                        ) ? tglLhp : new DateTime(tahun, 1, 1),
+                        TglByr = DateTime.TryParseExact(
+                            sheet.Cells[row, 13].Text,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
                             out var tglByr
-                        ) ? tgl : new DateTime(tahun, 1, 1),
+                        ) ? tglByr : new DateTime(tahun, 1, 1),
                     };
 
                     context.TPemeriksaans.Add(data);
@@ -333,16 +351,27 @@ namespace MonPDReborn.Models.DataOP
                 stream.Position = 0;
 
                 using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                var sheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null)
+                    throw new ArgumentException("Tidak ada sheet di file Excel.");
                 if (sheet == null)
                     throw new Exception("Sheet1 tidak ditemukan.");
 
                 using var context = DBClass.GetContext();
 
+                // Counter per NOP
+                var nopCounter = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
                 for (int row = 2; row <= sheet.Dimension.End.Row; row++)
                 {
-                    var nop = sheet.Cells[row, 1].Text;
+                    var nop = sheet.Cells[row, 1].Text?.Trim();
+                    if (string.IsNullOrEmpty(nop)) continue;
 
+                    // Hitung seq per NOP
+                    if (!nopCounter.ContainsKey(nop))
+                        nopCounter[nop] = 1;
+                    else
+                        nopCounter[nop]++;
 
                     var existingData = context.DbRekamRestorans
                         .FirstOrDefault(x => x.Tanggal.Year == tahun && x.Nop == nop);
@@ -354,14 +383,15 @@ namespace MonPDReborn.Models.DataOP
 
                     var data = new DbRekamRestoran
                     {
-                        Nop = sheet.Cells[row, 1].Text,
+                        Nop = nop,
                         Tanggal = DateTime.TryParseExact(
                             sheet.Cells[row, 2].Text,
-                            "yyyy-MM-dd",
+                            "MM-dd",
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.None,
-                            out var tgl
-                        ) ? tgl : new DateTime(tahun, 1, 1),
+                            out var tglBulanHari
+                        ) ? new DateTime(tahun, tglBulanHari.Month, tglBulanHari.Day)
+                          : new DateTime(tahun, 1, 1),
 
                         JmlMeja = TryDecimal(sheet.Cells[row, 3].Text) ?? 0,
                         JmlKursi = TryDecimal(sheet.Cells[row, 4].Text) ?? 0,
@@ -372,7 +402,8 @@ namespace MonPDReborn.Models.DataOP
                         OmseBulan = TryDecimal(sheet.Cells[row, 9].Text) ?? 0,
                         PajakBulan = TryDecimal(sheet.Cells[row, 10].Text) ?? 0,
                         PajakId = 1,
-                        Seq = (decimal)(row - 1),
+
+                        Seq = nopCounter[nop], // urut per NOP
                     };
                     context.DbRekamRestorans.Add(data);
                 }
@@ -389,16 +420,27 @@ namespace MonPDReborn.Models.DataOP
                 stream.Position = 0;
 
                 using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                var sheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (sheet == null)
+                    throw new ArgumentException("Tidak ada sheet di file Excel.");
                 if (sheet == null)
                     throw new Exception("Sheet1 tidak ditemukan.");
 
                 using var context = DBClass.GetContext();
 
+                // Counter per NOP
+                var nopCounter = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
                 for (int row = 2; row <= sheet.Dimension.End.Row; row++)
                 {
-                    var nop = sheet.Cells[row, 1].Text;
+                    var nop = sheet.Cells[row, 1].Text?.Trim();
+                    if (string.IsNullOrEmpty(nop)) continue;
 
+                    // Hitung seq per NOP
+                    if (!nopCounter.ContainsKey(nop))
+                        nopCounter[nop] = 1;
+                    else
+                        nopCounter[nop]++;
 
                     var existingData = context.DbRekamParkirs
                         .FirstOrDefault(x => x.Tanggal.Year == tahun && x.Nop == nop);
@@ -410,17 +452,16 @@ namespace MonPDReborn.Models.DataOP
 
                     var data = new DbRekamParkir
                     {
+                        Nop = nop,
 
-                        Nop = sheet.Cells[row, 1].Text,
-
-                        // Tanggal format yyyy-MM-dd, fallback ke awal tahun
                         Tanggal = DateTime.TryParseExact(
                             sheet.Cells[row, 2].Text,
-                            "yyyy-MM-dd",
+                            "MM-dd",
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.None,
-                            out var tgl
-                        ) ? tgl : new DateTime(tahun, 1, 1),
+                            out var tglBulanHari
+                        ) ? new DateTime(tahun, tglBulanHari.Month, tglBulanHari.Day)
+                          : new DateTime(tahun, 1, 1),
 
                         JenisBiayaParkir = sheet.Cells[row, 3].Text ?? string.Empty,
 
@@ -454,8 +495,8 @@ namespace MonPDReborn.Models.DataOP
                         PajakBulan = TryDecimal(sheet.Cells[row, 22].Text) ?? 0,
                         PajakId = 4,
 
-                        // Sequence
-                        Seq = (decimal)(row - 1),
+                        // Sequence urut per NOP
+                        Seq = nopCounter[nop],
                     };
                     context.DbRekamParkirs.Add(data);
                 }
