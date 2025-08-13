@@ -725,7 +725,7 @@ namespace MonPDReborn.Models.DataOP
                             .Distinct()
                             .ToList();
 
-                        foreach (var item in kategoriList.OrderBy(x => x.Id).ToList())
+                        foreach (var item in kategoriList.OrderByDescending(x => x.Id).ToList())
                         {
 
                             var re = new DetailPotensi();
@@ -1050,11 +1050,11 @@ namespace MonPDReborn.Models.DataOP
                             re.EnumPajak = (int)jenisPajak;
                             re.EnumKategori = (int)item.Id;
 
-                            var targetReklame1 = context.DbAkunTargetObjekReklames.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.Target) ?? 0;
+                            var targetReklame1 = context.DbAkunTargetObjekReklames.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.TargetBulan) ?? 0;
                             var realisasiReklame1 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2 && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.NominalPokokBayar) ?? 0;
-                            var targetReklame2 = context.DbAkunTargetObjekReklames.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.Target) ?? 0;
+                            var targetReklame2 = context.DbAkunTargetObjekReklames.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.TargetBulan) ?? 0;
                             var realisasiReklame2 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1 && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.NominalPokokBayar) ?? 0;
-                            var targetReklame3 = context.DbAkunTargetObjekReklames.Where(x => x.TahunBuku == DateTime.Now.Year && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.Target) ?? 0;
+                            var targetReklame3 = context.DbAkunTargetObjekReklames.Where(x => x.TahunBuku == DateTime.Now.Year && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.TargetBulan) ?? 0;
                             var realisasiReklame3 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.NominalPokokBayar) ?? 0;
 
                             var totalPotensiReklame = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(q => q.Rata2Pajak) ?? 0;
