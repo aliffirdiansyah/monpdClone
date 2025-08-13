@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MonPDReborn.Models.DataOP
 {
-    public class PotensiUploadVM
+    public class UploadDataVM
     {
         public class Index
         {
@@ -245,6 +245,207 @@ namespace MonPDReborn.Models.DataOP
                     };
 
                     context.DbPotensiHiburans.Add(data);
+                }
+
+                context.SaveChanges();
+            }
+            public static void UploadPemeriksaanPajak(IFormFile fileExcel, int tahun)
+            {
+                if (fileExcel == null || fileExcel.Length == 0)
+                    throw new ArgumentException("File Excel kosong.");
+
+                using var stream = new MemoryStream();
+                fileExcel.CopyTo(stream);
+                stream.Position = 0;
+
+                using var package = new ExcelPackage(stream);
+                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                if (sheet == null)
+                    throw new Exception("Sheet1 tidak ditemukan.");
+
+                using var context = DBClass.GetContext();
+
+                for (int row = 2; row <= sheet.Dimension.End.Row; row++)
+                {
+                    var nop = sheet.Cells[row, 1].Text;
+
+                    var existingData = context.TPemeriksaans
+                        .FirstOrDefault(x => x.TahunPajak == tahun && x.Nop == nop);
+
+                    if (existingData != null)
+                    {
+                        context.TPemeriksaans.Remove(existingData);
+                    }
+
+                    var data = new TPemeriksaan
+                    {
+                        Nop = nop,
+                        TahunPajak = tahun, // dari variabel, bukan dari Excel
+                        MasaPajak = "Tahunan", // fixed value
+                        Seq = (byte)(row - 1),
+
+                        // Tanggal SP (yyyy-MM-dd)
+                        TglSp = DateTime.TryParseExact(
+                            sheet.Cells[row, 2].Text,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
+                            out var tgl
+                        ) ? tgl : new DateTime(tahun, 1, 1),
+
+                        NoSp = sheet.Cells[row, 3].Text ?? string.Empty,
+                        Pokok = TryDecimal(sheet.Cells[row, 4].Text) ?? 0,
+                        Denda = TryDecimal(sheet.Cells[row, 5].Text) ?? 0,
+                        Petugas = sheet.Cells[row, 6].Text ?? string.Empty,
+                        Ket = sheet.Cells[row, 7].Text ?? string.Empty,
+                        PajakId = TryDecimal(sheet.Cells[row, 8].Text) ?? 0,
+
+                        JumlahKb = TryDecimal(sheet.Cells[row, 9].Text),
+                        Lhp = sheet.Cells[row, 10].Text,
+                        TglLhp = DateTime.TryParse(sheet.Cells[row, 11].Text, out var tglLhp) ? tglLhp : null,
+                        TglByr = DateTime.TryParse(sheet.Cells[row, 12].Text, out var tglByr) ? tglByr : null
+                    };
+
+                    context.TPemeriksaans.Add(data);
+                }
+
+                context.SaveChanges();
+            }
+            public static void UploadPendataanResto(IFormFile fileExcel, int tahun)
+            {
+                if (fileExcel == null || fileExcel.Length == 0)
+                    throw new ArgumentException("File Excel kosong.");
+
+                using var stream = new MemoryStream();
+                fileExcel.CopyTo(stream);
+                stream.Position = 0;
+
+                using var package = new ExcelPackage(stream);
+                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                if (sheet == null)
+                    throw new Exception("Sheet1 tidak ditemukan.");
+
+                using var context = DBClass.GetContext();
+
+                for (int row = 2; row <= sheet.Dimension.End.Row; row++)
+                {
+                    var nop = sheet.Cells[row, 1].Text;
+
+
+                    var existingData = context.DbRekamRestorans
+                        .FirstOrDefault(x => x.Tanggal.Year == tahun && x.Nop == nop);
+
+                    if (existingData != null)
+                    {
+                        context.DbRekamRestorans.Remove(existingData);
+                    }
+
+                    var data = new DbRekamRestoran
+                    {
+                        Nop = sheet.Cells[row, 1].Text,
+                        Tanggal = DateTime.TryParseExact(
+                            sheet.Cells[row, 2].Text,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
+                            out var tgl
+                        ) ? tgl : new DateTime(tahun, 1, 1);
+
+                        JmlMeja = TryDecimal(sheet.Cells[row, 3].Text) ?? 0,
+                        JmlKursi = TryDecimal(sheet.Cells[row, 4].Text) ?? 0,
+                        JmlPengunjung = TryDecimal(sheet.Cells[row, 5].Text) ?? 0,
+                        Bill = TryDecimal(sheet.Cells[row, 6].Text) ?? 0,
+                        RataPengunjungHari = TryDecimal(sheet.Cells[row, 7].Text) ?? 0,
+                        RataBillPengunjung = TryDecimal(sheet.Cells[row, 8].Text) ?? 0,
+                        OmseBulan = TryDecimal(sheet.Cells[row, 9].Text) ?? 0,
+                        PajakBulan = TryDecimal(sheet.Cells[row, 10].Text) ?? 0,
+                        PajakId = 1,
+                        Seq = (decimal)(row - 1),
+                    };
+                    context.DbRekamRestorans.Add(data);
+                }
+
+                context.SaveChanges();
+            }
+            public static void UploadPendataanParkir(IFormFile fileExcel, int tahun)
+            {
+                if (fileExcel == null || fileExcel.Length == 0)
+                    throw new ArgumentException("File Excel kosong.");
+
+                using var stream = new MemoryStream();
+                fileExcel.CopyTo(stream);
+                stream.Position = 0;
+
+                using var package = new ExcelPackage(stream);
+                var sheet = package.Workbook.Worksheets[0]; // Sheet1
+                if (sheet == null)
+                    throw new Exception("Sheet1 tidak ditemukan.");
+
+                using var context = DBClass.GetContext();
+
+                for (int row = 2; row <= sheet.Dimension.End.Row; row++)
+                {
+                    var nop = sheet.Cells[row, 1].Text;
+
+
+                    var existingData = context.DbRekamParkirs
+                        .FirstOrDefault(x => x.Tanggal.Year == tahun && x.Nop == nop);
+
+                    if (existingData != null)
+                    {
+                        context.DbRekamParkirs.Remove(existingData);
+                    }
+
+                    var data = new DbRekamParkir
+                    {
+
+                        Nop = sheet.Cells[row, 1].Text,
+
+                        // Tanggal format yyyy-MM-dd, fallback ke awal tahun
+                        Tanggal = DateTime.TryParseExact(
+                            sheet.Cells[row, 2].Text,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
+                            out var tgl
+                        ) ? tgl : new DateTime(tahun, 1, 1),
+
+                        JenisBiayaParkir = sheet.Cells[row, 3].Text ?? string.Empty,
+
+                        // Kapasitas
+                        KapasitasMotor = TryDecimal(sheet.Cells[row, 4].Text) ?? 0,
+                        KapasitasMobil = TryDecimal(sheet.Cells[row, 5].Text) ?? 0,
+
+                        // Hasil Jumlah
+                        HasilJumlahMotor = TryDecimal(sheet.Cells[row, 6].Text) ?? 0,
+                        HasilJumlahMobil = TryDecimal(sheet.Cells[row, 8].Text) ?? 0,
+                        HasilJumlahMobilBox = TryDecimal(sheet.Cells[row, 9].Text) ?? 0,
+                        HasilJumlahTruk = TryDecimal(sheet.Cells[row, 10].Text) ?? 0,
+                        HasilJumlahTrailer = TryDecimal(sheet.Cells[row, 11].Text) ?? 0,
+
+                        // Estimasi Harian
+                        EstMotorHarian = TryDecimal(sheet.Cells[row, 12].Text) ?? 0,
+                        EstMobilHarian = TryDecimal(sheet.Cells[row, 13].Text) ?? 0,
+                        EstMobilBoxHarian = TryDecimal(sheet.Cells[row, 14].Text) ?? 0,
+                        EstTrukHarian = TryDecimal(sheet.Cells[row, 15].Text) ?? 0,
+                        EstTrailerHarian = TryDecimal(sheet.Cells[row, 16].Text) ?? 0,
+
+                        // Tarif
+                        TarifMotor = TryDecimal(sheet.Cells[row, 17].Text) ?? 0,
+                        TarifMobil = TryDecimal(sheet.Cells[row, 18].Text) ?? 0,
+                        TarifMobilBox = TryDecimal(sheet.Cells[row, 19].Text) ?? 0,
+                        TarifTruk = TryDecimal(sheet.Cells[row, 20].Text) ?? 0,
+                        TarifTrailer = TryDecimal(sheet.Cells[row, 21].Text) ?? 0,
+
+                        // Omzet & Pajak
+                        OmzetBulan = TryDecimal(sheet.Cells[row, 22].Text) ?? 0,
+                        PajakBulan = TryDecimal(sheet.Cells[row, 23].Text) ?? 0,
+                        PajakId = 4,
+
+                        // Sequence
+                        Seq = (decimal)(row - 1),
+                    };
+                    context.DbRekamParkirs.Add(data);
                 }
 
                 context.SaveChanges();
