@@ -1,0 +1,141 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowTPK
+
+@{
+    int tahunSekarang = (int)ViewData["Tahun"];
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Data Tingkat Penghuni Kamar (TPK) Hotel
+                    </h4>
+                    <p class="text-dark mb-0">Perbandingan TPK Hotel Bintang dan Non Bintang Tahun @DateTime.Now</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm rounded-xl p-3 text-center" style="height:75%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-search-eye-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Hotel Bintang</h5>
+                        <h4 class="mb-0 fw-bold">Rata-rata TPK</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm rounded-xl p-3 text-center" style="height:75%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-search-eye-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Hotel Non Bintang</h5>
+                        <h4 class="mb-0 fw-bold">Rata-rata TPK</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <span class="badge bg-primary-subtle text-primary badge-border">TPK Tahun: </span>
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- KIRI -->
+                    <div class="col-lg-6">
+                        <div class="d-flex justify-content-start mb-2">
+                            @(Html.DevExtreme().SelectBox()
+                                                .ID("selectTahunNow")
+                                                .DataSource(new[] { tahunSekarang })
+                                                .Value(tahunSekarang)
+                                                .ReadOnly(true)
+                                                .Width(120)
+                                                )
+                        </div>
+                        @(
+                            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.TPKHotel>()
+                                    .ID("gridTpkNow")
+                                    .DataSource(Model.Kiri)
+                                    .ShowBorders(true)
+                                    .ShowColumnLines(true)
+                                    .ShowRowLines(true)
+                                    .RowAlternationEnabled(true)
+                                    .ColumnAutoWidth(true)
+                                    .Paging(p => p.Enabled(false))
+                                    .HeaderFilter(h => h.Visible(false))
+                                    .SearchPanel(sp => sp.Visible(false))
+                                    .Columns(columns =>
+                                    {
+                                        columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
+
+                                        columns.AddFor(c => c.HotelBintang).Caption("Hotel Bintang")
+                                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                        columns.AddFor(c => c.HotelNonBintang).Caption("Realisasi")
+                                        .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                                    })
+                                    
+                                    )
+                    </div>
+
+                    <!-- KANAN -->
+                    <div class="col-lg-6">
+                        <div class="d-flex justify-content-end mb-2">
+                            @(Html.DevExtreme().SelectBox()
+                                .ID("selectTahunOld")
+                                .DataSource(new[] { 2024, 2023, 2022, 2021, 2020 })
+                                .Value(2024)
+                                .Width(120)
+                                .Placeholder("Pilih Tahun")
+                                .OnValueChanged("function(e) { $('#gridTpkKanan').dxDataGrid('instance').refresh(); }")
+                                )
+                        </div>
+                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.TPKHotel>()
+                            .ID("gridTpkKanan")
+                            .DataSource(Model.Kanan)
+                            .ShowBorders(true)
+                            .ShowColumnLines(true)
+                            .ShowRowLines(true)
+                            .RowAlternationEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .Paging(p => p.Enabled(false))
+                            .HeaderFilter(h => h.Visible(false))
+                            .SearchPanel(sp => sp.Visible(false))
+                            .Columns(columns =>
+                            {
+                                columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
+
+                                columns.AddFor(c => c.HotelBintang).Caption("Hotel Bintang")
+                                .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                columns.AddFor(c => c.HotelNonBintang).Caption("Realisasi")
+                                .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                            })
+
+                            )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

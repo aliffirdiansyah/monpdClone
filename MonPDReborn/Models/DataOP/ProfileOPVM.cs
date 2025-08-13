@@ -174,6 +174,17 @@ namespace MonPDReborn.Models.DataOP
             }
         }
 
+        public class ShowTPK
+        {
+            public List<TPKHotel> Kiri { get; set; }
+            public List<TPKHotel> Kanan { get; set; }
+            public ShowTPK(int tahun)
+            {
+                Kiri = Method.GenerateDummyTPKHotelData(tahun);
+                Kanan = Method.GenerateDummyTPKHotelData(tahun);
+            }
+        }
+
         public class Method
         {
             public static Dashboard GetDashboardData()
@@ -3354,6 +3365,46 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
+            public static List<TPKHotel> GenerateDummyTPKHotelData(int tahun)
+            {
+                var dummyData = new List<TPKHotel>
+                {
+                    new TPKHotel
+                    {
+                        EnumPajak = 1,
+                        JenisPajak = "Hotel",
+                        Tahun = 2025,
+                        Bulan = 1,
+                        BulanNama = "Januari",
+                        HotelBintang = 12000000m,
+                        HotelNonBintang = 5000000m
+                    },
+                    new TPKHotel
+                    {
+                        EnumPajak = 1,
+                        JenisPajak = "Hotel",
+                        Tahun = 2025,
+                        Bulan = 2,
+                        BulanNama = "Februari",
+                        HotelBintang = 11500000m,
+                        HotelNonBintang = 4800000m
+                    },
+                    new TPKHotel
+                    {
+                        EnumPajak = 1,
+                        JenisPajak = "Hotel",
+                        Tahun = 2025,
+                        Bulan = 3,
+                        BulanNama = "Maret",
+                        HotelBintang = 13000000m,
+                        HotelNonBintang = 5300000m
+                    },
+                    // Tambahkan data bulan lainnya jika perlu
+                };
+
+                return dummyData;
+            }
+
         }
 
         public class RekapOP
@@ -3665,6 +3716,19 @@ namespace MonPDReborn.Models.DataOP
             {
                 public string KelompokNama { get; set; }
             }
+        }
+
+        public class TPKHotel
+        {
+            public int EnumPajak { get; set; }
+            public string JenisPajak { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+            public string BulanNama { get; set; } = null!;
+            public decimal HotelBintang { get; set; }
+            public decimal HotelNonBintang { get; set; }
+            /*public decimal Pencapaian { get; set; }
+            public decimal Selisih => Realisasi - AkpTarget;*/
         }
     }
 }
