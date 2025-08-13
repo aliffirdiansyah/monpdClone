@@ -68,15 +68,15 @@ namespace MonPDReborn.Models.EvaluasiTarget
             {
                 return pajak switch
                 {
-                    EPajak.JasaPerhotelan => Method.GetPotensiPajakHotel(tahun),
-                    EPajak.MakananMinuman => Method.GetPotensiPajakResto(tahun),
-                    EPajak.JasaParkir => Method.GetPotensiPajakParkir(tahun),
-                    EPajak.JasaKesenianHiburan => Method.GetPotensiPajakHiburan(tahun),
-                    EPajak.Reklame => Method.GetPotensiPajakReklame(tahun),
-                    EPajak.TenagaListrik => Method.GetPotensiPajakPPJ(tahun),
-                    EPajak.AirTanah => Method.GetPotensiPajakAirTanah(tahun),
-                    EPajak.PBB => Method.GetPotensiPajakPbb(tahun),
-                    EPajak.BPHTB => Method.GetPotensiPajakBphtb(tahun),
+                    EPajak.JasaPerhotelan => Method.GetPotensiPajakHotelRekap(tahun),
+                    EPajak.MakananMinuman => Method.GetPotensiPajakRestoRekap(tahun),
+                    EPajak.JasaParkir => Method.GetPotensiPajakParkirRekap(tahun),
+                    EPajak.JasaKesenianHiburan => Method.GetPotensiPajakHiburanRekap(tahun),
+                    EPajak.Reklame => Method.GetPotensiPajakReklameRekap(tahun),
+                    EPajak.TenagaListrik => Method.GetPotensiPajakPPJRekap(tahun),
+                    EPajak.AirTanah => Method.GetPotensiPajakAirTanahRekap(tahun),
+                    EPajak.PBB => Method.GetPotensiPajakPbbRekap(tahun),
+                    EPajak.BPHTB => Method.GetPotensiPajakBphtbRekap(tahun),
                     _ => new List<Potensi>()
                 };
             }
@@ -5272,7 +5272,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
             #endregion
 
             #region Data Rekap Potensi Pajak
-            public static List<Potensi> GetPotensiPajakHotel(int tahun)
+            public static List<Potensi> GetPotensiPajakHotelRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5345,7 +5345,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakResto(int tahun)
+            public static List<Potensi> GetPotensiPajakRestoRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5418,7 +5418,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakPPJ(int tahun)
+            public static List<Potensi> GetPotensiPajakPPJRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5491,7 +5491,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakParkir(int tahun)
+            public static List<Potensi> GetPotensiPajakParkirRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5562,7 +5562,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakHiburan(int tahun)
+            public static List<Potensi> GetPotensiPajakHiburanRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5633,7 +5633,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakReklame(int tahun)
+            public static List<Potensi> GetPotensiPajakReklameRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5704,7 +5704,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakAirTanah(int tahun)
+            public static List<Potensi> GetPotensiPajakAirTanahRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5775,7 +5775,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakPbb(int tahun)
+            public static List<Potensi> GetPotensiPajakPbbRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
@@ -5846,7 +5846,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakBphtb(int tahun)
+            public static List<Potensi> GetPotensiPajakBphtbRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
