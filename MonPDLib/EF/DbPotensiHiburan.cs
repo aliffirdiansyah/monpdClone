@@ -65,4 +65,7 @@ public partial class DbPotensiHiburan
     [Column("TAHUN_BUKU")]
     [Precision(10)]
     public int TahunBuku { get; set; }
+
+    [Column("POTENSI_PAJAK_TAHUN", TypeName = "NUMBER(30)")]
+    public decimal? PotensiPajakTahun { get; set; }
 }
