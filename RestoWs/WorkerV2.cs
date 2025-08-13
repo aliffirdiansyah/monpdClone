@@ -97,7 +97,6 @@ namespace RestoWs
                 {
                     GetOPProcess(i);
                 }
-
             }
 
             for (var i = tahunAmbil; i <= tglServer.Year; i++)
@@ -602,58 +601,61 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 if (dr.Read())
                 {
                     var katname = dr.GetString(2);
-                    switch (katname)
+                    if (!string.IsNullOrEmpty(katname))
                     {
-                        case "DEPOT / KEDAI":
-                            ret[0] = "5";
-                            ret[1] = "DEPOT/KEDAI";
-                            break;
-                        case "CAFE":
-                            ret[0] = "3";
-                            ret[1] = "CAFE";
-                            break;
-                        case "RUMAH MAKAN":
-                            ret[0] = "7";
-                            ret[1] = "RESTORAN";
-                            break;
-                        case "BAKERY / PASTRY":
-                            ret[0] = "1";
-                            ret[1] = "BAKERY/PASTRY";
-                            break;
-                        case "TENANT MAKANAN/ MINUMAN":
-                            ret[0] = "11";
-                            ret[1] = "TENANT MAKANAN/MINUMAN";
-                            break;
-                        case "CATERING":
-                            ret[0] = "4";
-                            ret[1] = "CATERING";
-                            break;
-                        case "RESTORAN":
-                            ret[0] = "7";
-                            ret[1] = "RESTORAN";
-                            break;
-                        case "FAST FOOD":
-                            ret[0] = "6";
-                            ret[1] = "FAST FOOD";
-                            break;
-                        case "BUFFET / ALL YOU CAN EAT":
-                            ret[0] = "2";
-                            ret[1] = "BUFFET / ALL YOU CAN EAT";
-                            break;
-                        case "RESTORAN PADA OBJEK HIBURAN":
-                            ret[0] = "9";
-                            ret[1] = "RESTORAN PADA OBJEK HIBURAN";
-                            break;
-                        case "RESTORAN PADA MINIMARKET":
-                            ret[0] = "8";
-                            ret[1] = "RESTORAN PADA MINIMARKET";
-                            break;
-                        default:
-                            ret[0] = "7";
-                            ret[1] = "RESTORAN";
-                            break;
+                        katname = katname.Replace(" ", "").ToUpper().Trim();
+                        switch (katname)
+                        {
+                            case "DEPOT/KEDAI":
+                                ret[0] = "5";
+                                ret[1] = "DEPOT/KEDAI";
+                                break;
+                            case "CAFE":
+                                ret[0] = "3";
+                                ret[1] = "CAFE";
+                                break;
+                            case "RUMAHMAKAN":
+                                ret[0] = "7";
+                                ret[1] = "RESTORAN";
+                                break;
+                            case "BAKERY/PASTRY":
+                                ret[0] = "1";
+                                ret[1] = "BAKERY/PASTRY";
+                                break;
+                            case "TENANTMAKANAN/MINUMAN":
+                                ret[0] = "11";
+                                ret[1] = "TENANT MAKANAN/MINUMAN";
+                                break;
+                            case "CATERING":
+                                ret[0] = "4";
+                                ret[1] = "CATERING";
+                                break;
+                            case "RESTORAN":
+                                ret[0] = "7";
+                                ret[1] = "RESTORAN";
+                                break;
+                            case "FASTFOOD":
+                                ret[0] = "6";
+                                ret[1] = "FAST FOOD";
+                                break;
+                            case "BUFFET/ALLYOUCANEAT":
+                                ret[0] = "2";
+                                ret[1] = "BUFFET / ALL YOU CAN EAT";
+                                break;
+                            case "RESTORANPADAOBJEKHIBURAN":
+                                ret[0] = "9";
+                                ret[1] = "RESTORAN PADA OBJEK HIBURAN";
+                                break;
+                            case "RESTORANPADAMINIMARKET":
+                                ret[0] = "8";
+                                ret[1] = "RESTORAN PADA MINIMARKET";
+                                break;
+                            default:
+                                ret[0] = "7";
+                                ret[1] = "RESTORAN";
+                                break;
+                        }
                     }
-
                 }
                 dr.Close();
             }
