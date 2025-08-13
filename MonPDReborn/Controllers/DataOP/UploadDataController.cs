@@ -162,7 +162,7 @@ namespace MonPDReborn.Controllers.DataOP
             return Json(response);
         }
         [HttpPost]
-        public IActionResult UploadPemeriksaan(IFormFile file, int tahun)
+        public IActionResult UploadPemeriksaanExcel(IFormFile file, int tahun)
         {
             try
             {

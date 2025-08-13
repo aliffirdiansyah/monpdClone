@@ -42,6 +42,10 @@ public partial class MKategoriPajak
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
 
+    [Column("URUTAN")]
+    [Precision(10)]
+    public int? Urutan { get; set; }
+
     [InverseProperty("Kategori")]
     public virtual ICollection<OpAbtKetetapan> OpAbtKetetapans { get; set; } = new List<OpAbtKetetapan>();
 

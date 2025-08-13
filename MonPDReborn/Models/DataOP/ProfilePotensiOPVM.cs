@@ -725,7 +725,7 @@ namespace MonPDReborn.Models.DataOP
                             .Distinct()
                             .ToList();
 
-                        foreach (var item in kategoriList.OrderBy(x => x.Id).ToList())
+                        foreach (var item in kategoriList.OrderByDescending(x => x.Id).ToList())
                         {
 
                             var re = new DetailPotensi();

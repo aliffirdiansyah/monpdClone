@@ -113,6 +113,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbOpHotel> DbOpHotels { get; set; }
 
+    public virtual DbSet<DbOpHotelFix> DbOpHotelFixes { get; set; }
+
     public virtual DbSet<DbOpListrik> DbOpListriks { get; set; }
 
     public virtual DbSet<DbOpLocation> DbOpLocations { get; set; }
@@ -124,6 +126,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbOpReklame> DbOpReklames { get; set; }
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
+
+    public virtual DbSet<DbPendapatanDaerah> DbPendapatanDaerahs { get; set; }
 
     public virtual DbSet<DbPotensiAbt> DbPotensiAbts { get; set; }
 
@@ -869,6 +873,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
         });
 
+        modelBuilder.Entity<DbOpHotelFix>(entity =>
+        {
+            entity.ToView("DB_OP_HOTEL_FIX");
+        });
+
         modelBuilder.Entity<DbOpListrik>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_OP_LISTRIK_PK");
@@ -919,6 +928,14 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.MaksimalProduksiPorsiHari).HasDefaultValueSql("0                     ");
             entity.Property(e => e.RataTerjualPorsiHari).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<DbPendapatanDaerah>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.KodeOpd, e.KodeSubOpd, e.Bulan }).HasName("DB_PENDAPATAN_DAERAH_PK");
+
+            entity.Property(e => e.Realisasi).HasDefaultValueSql("0 ");
+            entity.Property(e => e.Target).HasDefaultValueSql("0 ");
         });
 
         modelBuilder.Entity<DbPotensiAbt>(entity =>
