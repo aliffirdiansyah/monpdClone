@@ -430,28 +430,28 @@ namespace MonPDReborn.Models.DataOP
 
                         // Hasil Jumlah
                         HasilJumlahMotor = TryDecimal(sheet.Cells[row, 6].Text) ?? 0,
-                        HasilJumlahMobil = TryDecimal(sheet.Cells[row, 8].Text) ?? 0,
-                        HasilJumlahMobilBox = TryDecimal(sheet.Cells[row, 9].Text) ?? 0,
-                        HasilJumlahTruk = TryDecimal(sheet.Cells[row, 10].Text) ?? 0,
-                        HasilJumlahTrailer = TryDecimal(sheet.Cells[row, 11].Text) ?? 0,
+                        HasilJumlahMobil = TryDecimal(sheet.Cells[row, 7].Text) ?? 0,
+                        HasilJumlahMobilBox = TryDecimal(sheet.Cells[row, 8].Text) ?? 0,
+                        HasilJumlahTruk = TryDecimal(sheet.Cells[row, 9].Text) ?? 0,
+                        HasilJumlahTrailer = TryDecimal(sheet.Cells[row, 10].Text) ?? 0,
 
                         // Estimasi Harian
-                        EstMotorHarian = TryDecimal(sheet.Cells[row, 12].Text) ?? 0,
-                        EstMobilHarian = TryDecimal(sheet.Cells[row, 13].Text) ?? 0,
-                        EstMobilBoxHarian = TryDecimal(sheet.Cells[row, 14].Text) ?? 0,
-                        EstTrukHarian = TryDecimal(sheet.Cells[row, 15].Text) ?? 0,
-                        EstTrailerHarian = TryDecimal(sheet.Cells[row, 16].Text) ?? 0,
+                        EstMotorHarian = TryDecimal(sheet.Cells[row, 11].Text) ?? 0,
+                        EstMobilHarian = TryDecimal(sheet.Cells[row, 12].Text) ?? 0,
+                        EstMobilBoxHarian = TryDecimal(sheet.Cells[row, 13].Text) ?? 0,
+                        EstTrukHarian = TryDecimal(sheet.Cells[row, 14].Text) ?? 0,
+                        EstTrailerHarian = TryDecimal(sheet.Cells[row, 15].Text) ?? 0,
 
                         // Tarif
-                        TarifMotor = TryDecimal(sheet.Cells[row, 17].Text) ?? 0,
-                        TarifMobil = TryDecimal(sheet.Cells[row, 18].Text) ?? 0,
-                        TarifMobilBox = TryDecimal(sheet.Cells[row, 19].Text) ?? 0,
-                        TarifTruk = TryDecimal(sheet.Cells[row, 20].Text) ?? 0,
-                        TarifTrailer = TryDecimal(sheet.Cells[row, 21].Text) ?? 0,
+                        TarifMotor = TryDecimal(sheet.Cells[row, 16].Text) ?? 0,
+                        TarifMobil = TryDecimal(sheet.Cells[row, 17].Text) ?? 0,
+                        TarifMobilBox = TryDecimal(sheet.Cells[row, 18].Text) ?? 0,
+                        TarifTruk = TryDecimal(sheet.Cells[row, 19].Text) ?? 0,
+                        TarifTrailer = TryDecimal(sheet.Cells[row, 20].Text) ?? 0,
 
                         // Omzet & Pajak
-                        OmzetBulan = TryDecimal(sheet.Cells[row, 22].Text) ?? 0,
-                        PajakBulan = TryDecimal(sheet.Cells[row, 23].Text) ?? 0,
+                        OmzetBulan = TryDecimal(sheet.Cells[row, 21].Text) ?? 0,
+                        PajakBulan = TryDecimal(sheet.Cells[row, 22].Text) ?? 0,
                         PajakId = 4,
 
                         // Sequence
