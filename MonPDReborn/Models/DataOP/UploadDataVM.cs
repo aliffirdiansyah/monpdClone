@@ -302,8 +302,20 @@ namespace MonPDReborn.Models.DataOP
 
                         JumlahKb = TryDecimal(sheet.Cells[row, 9].Text),
                         Lhp = sheet.Cells[row, 10].Text,
-                        TglLhp = DateTime.TryParse(sheet.Cells[row, 11].Text, out var tglLhp) ? tglLhp : null,
-                        TglByr = DateTime.TryParse(sheet.Cells[row, 12].Text, out var tglByr) ? tglByr : null
+                        TglLhp = DateTime.TryParseExact(
+                            sheet.Cells[row, 11].Text,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
+                            out var tglLhp
+                        ) ? tgl : new DateTime(tahun, 1, 1),
+                        TglByr = DateTime.TryParseExact(
+                            sheet.Cells[row, 12].Text,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
+                            out var tglByr
+                        ) ? tgl : new DateTime(tahun, 1, 1),
                     };
 
                     context.TPemeriksaans.Add(data);
@@ -349,7 +361,7 @@ namespace MonPDReborn.Models.DataOP
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.None,
                             out var tgl
-                        ) ? tgl : new DateTime(tahun, 1, 1);
+                        ) ? tgl : new DateTime(tahun, 1, 1),
 
                         JmlMeja = TryDecimal(sheet.Cells[row, 3].Text) ?? 0,
                         JmlKursi = TryDecimal(sheet.Cells[row, 4].Text) ?? 0,
