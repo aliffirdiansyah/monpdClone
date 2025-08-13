@@ -5,6 +5,7 @@ using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models.AktivitasOP;
 using MonPDReborn.Models.DataOP;
+using MonPDReborn.Models.MonitoringGlobal;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
@@ -201,6 +202,29 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
-       
+
+        public IActionResult ShowTPK(int tahun)
+        {
+            try
+            {
+                ViewData["Tahun"] = tahun; // Kita juga teruskan tahun utama
+                var model = new Models.DataOP.ProfileOPVM.ShowTPK(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+
     }
 }

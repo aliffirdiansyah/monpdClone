@@ -154,7 +154,7 @@
                                     Perhitungan Rata-rata Member Bulanan :
                                 </h4>
                                 <p class="fs-14 text-muted mb-1">
-                                    ((Kapasitas x TurnoverWeekdays x 22 Hari) + (Kapasitas x TurnoverWeekend x 8 Hari)) / 12
+                                    ((Kapasitas x TurnoverWeekdays x 22 Hari) + (Kapasitas x TurnoverWeekend x 8 Hari)) / Rata-Rata Kunjungan per Bulan
                                 </p>
                                 @{
                                     decimal kapasitas = Model.Kapasitas;
@@ -164,7 +164,7 @@
                                     decimal hasil = ((kapasitas * turnoverWeekdays * 22) + (kapasitas * turnoverWeekend * 8)) / 12;
                                 }
                                 <p class="fs-14 text-muted mb-1">
-                                    ((@Model.Kapasitas x @Model.TurnoverWeekdays.ToString("P2") x 22) + (@Model.Kapasitas x @Model.TurnoverWeekend.ToString("P2") x 8))/12 = @hasil.ToString("N0") Member
+                                    ((@Model.Kapasitas x @Model.TurnoverWeekdays.ToString("P2") x 22) + (@Model.Kapasitas x @Model.TurnoverWeekend.ToString("P2") x 8)) / 12 = @hasil.ToString("N0") Member
                                 </p>
                             </div>
                         </div>
@@ -363,7 +363,7 @@
                 </div>
                 <div class="d-flex">
                     <p class="label">Kapasitas Pengunjung</p>
-                    <p class="value">@Model.Kapasitas.ToString("N0") Pengunjung</p>
+                    <p class="value">@Model.Kapasitas.ToString("N0") Orang</p>
                 </div>
             </div>
         </div>
@@ -530,11 +530,11 @@
                 <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet</h4>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
-                    Estimasi Jumlah Member = [(Kapasitas x Turnover Weekdays x 22) + (Kapasitas x Turnover Weekend x 8)] / 12
+                    Estimasi Jumlah Member = [(Kapasitas x Turnover Weekdays x 22) + (Kapasitas x Turnover Weekend x 8)] / Rata-Rata Kunjungan per Bulan
                 </p>
                 <p class="fs-14 text-muted mb-2 fw-semibold">
                     = [(@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") x 22) +
-                    (@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") x 8)] / 12 = @Model.EstimasiJumlahMemberFitnes.ToString("N0") orang
+                    (@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") x 8)] / 12 = @Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">

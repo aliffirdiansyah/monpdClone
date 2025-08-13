@@ -91,11 +91,13 @@ namespace MonPDReborn.Models.ReklamePublic
                 var query = context.MvReklameSummaries
                     .Where(x => x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.Value.Date >= hariIni);
 
-                if (!string.IsNullOrWhiteSpace(namaJalan))
+                if (string.IsNullOrWhiteSpace(namaJalan))
                 {
-                    query = query.Where(x => x.NamaJalan != null &&
-                                             x.NamaJalan.ToLower().Contains(namaJalan.ToLower()));
+                    throw new Exception("Nama jalan harus diisi!");
                 }
+
+                query = query.Where(x => x.NamaJalan != null &&
+                                         x.NamaJalan.ToLower().Contains(namaJalan.ToLower()));
 
                 var result = query
                     .Select(x => new ReklameJalan
