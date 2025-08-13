@@ -4,6 +4,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Security.Policy;
@@ -117,8 +118,11 @@ namespace HotelWs
         private void GetOPProcess(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
+            
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
             {
+                sw.Start();
                 var sql = @"
                                                                                    SELECT *
 FROM (
@@ -280,7 +284,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} OP HOTEL TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP HOTEL TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
@@ -296,7 +300,8 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     _contMonPd.DbOpHotels.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
             }
         }
@@ -305,8 +310,11 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
         private void GetRealisasi(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
+            
             try
             {
+                sw.Start();
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
                 var sqlRealisasi = @"
@@ -561,7 +569,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} REALISASI HOTEL TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI HOTEL TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
                 if (newList.Any())
@@ -576,7 +584,8 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     _contMonPd.DbMonHotels.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
 
             }

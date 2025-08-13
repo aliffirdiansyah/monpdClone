@@ -287,6 +287,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PenTeguranBayar> PenTeguranBayars { get; set; }
 
+    public virtual DbSet<PlnPpj> PlnPpjs { get; set; }
+
     public virtual DbSet<PotensiCtrlAirTanah> PotensiCtrlAirTanahs { get; set; }
 
     public virtual DbSet<PotensiCtrlHiburan> PotensiCtrlHiburans { get; set; }
@@ -373,9 +375,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -673,7 +675,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonHiburan>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_HIBURAN_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_HIBURAN_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -683,7 +685,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonHotel>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_HOTEL_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_HOTEL_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -707,7 +709,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonParkir>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_PARKIR_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_PARKIR_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -736,7 +738,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonPpj>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_PPJ_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_PPJ_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -827,7 +829,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonResto>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_RESTO_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_RESTO_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");

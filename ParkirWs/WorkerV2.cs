@@ -4,6 +4,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Security.Policy;
@@ -117,6 +118,7 @@ namespace ParkirWs
         private void GetOPProcess(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
             {
                 var sql = @"
@@ -271,7 +273,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} OP PARKIR TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP PARKIR TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
@@ -287,7 +289,8 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     _contMonPd.DbOpParkirs.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done  {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")}  ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
             }
         }
@@ -296,8 +299,10 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
         private void GetRealisasi(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
             try
             {
+                sw.Start();
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
                 var sqlRealisasi = @"
@@ -333,7 +338,11 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
          
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
-                    var realisasi = _contMonPd.DbMonParkirs.Find(itemRealisasi.NOP, itemRealisasi.TAHUN_PAJAK, itemRealisasi.MASA_PAJAK, itemRealisasi.SEQ);
+                    var realisasi = _contMonPd.DbMonParkirs.SingleOrDefault(x => x.Nop == itemRealisasi.NOP &&
+                                                                          x.TahunPajakKetetapan == itemRealisasi.TAHUN_PAJAK &&
+                                                                          x.MasaPajakKetetapan == itemRealisasi.MASA_PAJAK &&
+                                                                          x.SeqPajakKetetapan == itemRealisasi.SEQ &&
+                                                                          x.TahunBuku == tahunBuku);
                     if (realisasi != null)
                     {
                         realisasi.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
@@ -346,11 +355,10 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }
                     else
                     {
-                        var OPL = _contMonPd.DbMonParkirs.Where(x => x.Nop == itemRealisasi.NOP).OrderByDescending(x => x.TahunBuku);
+                        var OP = _contMonPd.DbOpParkirs.Find(itemRealisasi.NOP, (decimal)tahunBuku);
 
-                        if (OPL.Count() > 0)
-                        {
-                            var OP = OPL.First();
+                        if (OP != null)
+                        {                            
                             var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
                             var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
 
@@ -431,6 +439,51 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                         }
                         else
                         {
+                            var newRowOP = new MonPDLib.EF.DbOpParkir();
+                            newRowOP.Nop = itemRealisasi.NOP;
+                            newRowOP.Npwpd = "-";
+                            newRowOP.NpwpdNama = "-";
+                            newRowOP.NpwpdAlamat = "-";
+                            newRowOP.PajakId = KDPajak;
+                            newRowOP.PajakNama = "Pajak Jasa Parkir";
+                            newRowOP.NamaOp = "-";
+                            newRowOP.AlamatOp = "-";
+                            newRowOP.AlamatOpNo = "-";
+                            newRowOP.AlamatOpRt = "-";
+                            newRowOP.AlamatOpRw = "-";
+                            newRowOP.Telp = "-";
+                            newRowOP.AlamatOpKdLurah = "-";
+                            newRowOP.AlamatOpKdCamat = "-";
+                            newRowOP.TglOpTutup = new DateTime(tahunBuku, 12, 31);
+                            newRowOP.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
+                            newRowOP.KategoriId = 38;
+                            newRowOP.KategoriNama = "USAHA LAINNYA";
+                            newRowOP.Dikelola ="0";
+                            newRowOP.PungutTarif = "0";
+                            newRowOP.MetodePembayaran = "0";
+                            newRowOP.JumlahKaryawan = 0;
+                            newRowOP.InsDate = DateTime.Now;
+                            newRowOP.InsBy = "JOB";
+                            newRowOP.IsTutup = 1;
+                            newRowOP.WilayahPajak = "0";
+
+                            newRowOP.TahunBuku = tahunBuku;
+                            newRowOP.Akun = "-";
+                            newRowOP.NamaAkun = "-";
+                            newRowOP.Kelompok = "-";
+                            newRowOP.NamaKelompok = "-";
+                            newRowOP.Jenis = "-";
+                            newRowOP.NamaJenis = "-";
+                            newRowOP.Objek = "-";
+                            newRowOP.NamaObjek = "-";
+                            newRowOP.Rincian = "-";
+                            newRowOP.NamaRincian = "-";
+                            newRowOP.SubRincian = "-";
+                            newRowOP.NamaSubRincian = "-";
+
+                            _contMonPd.DbOpParkirs.Add(newRowOP);
+                            _contMonPd.SaveChanges();
+
                             var newRow = new DbMonParkir();
                             newRow.Nop = itemRealisasi.NOP;
                             newRow.Npwpd = "-";
@@ -512,7 +565,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} REALISASI PARKIR TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI PARKIR TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
                 if (newList.Any())
@@ -527,7 +580,8 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     _contMonPd.DbMonParkirs.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
 
             }

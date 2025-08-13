@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("Nop", "TahunPajakKetetapan", "MasaPajakKetetapan", "SeqPajakKetetapan")]
+[PrimaryKey("Nop", "TahunPajakKetetapan", "MasaPajakKetetapan", "SeqPajakKetetapan", "TahunBuku")]
 [Table("DB_MON_PARKIR")]
 public partial class DbMonParkir
 {
@@ -86,6 +86,7 @@ public partial class DbMonParkir
     [Unicode(false)]
     public string PungutTarif { get; set; } = null!;
 
+    [Key]
     [Column("TAHUN_BUKU", TypeName = "NUMBER")]
     public decimal TahunBuku { get; set; }
 
