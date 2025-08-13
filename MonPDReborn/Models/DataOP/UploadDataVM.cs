@@ -70,6 +70,7 @@ namespace MonPDReborn.Models.DataOP
                         OkupansiRateBanquet = TryDecimal(sheet.Cells[row, 9].Text),
                         AvgPaxBanquetSold = TryDecimal(sheet.Cells[row, 10].Text),
                         BanquetOmzet = TryDecimal(sheet.Cells[row, 11].Text),
+                        PotensiPajakTahun = TryDecimal(sheet.Cells[row, 12].Text),
                     };
 
                     context.DbPotensiHotels.Add(dataHotel);
@@ -146,7 +147,8 @@ namespace MonPDReborn.Models.DataOP
                         TerparkirTrailerWe = TryInt(sheet.Cells[row, 33].Text),
                         TarifTrailer = TryDecimal(sheet.Cells[row, 34].Text),
                         OmzetTrailer = TryDecimal(sheet.Cells[row, 35].Text),
-                        TotalOmzet = TryDecimal(sheet.Cells[row, 36].Text)
+                        TotalOmzet = TryDecimal(sheet.Cells[row, 36].Text),
+                        PotensiPajakTahun = TryDecimal(sheet.Cells[row, 37].Text),
                     };
 
                     context.DbPotensiParkirs.Add(data);
@@ -198,6 +200,8 @@ namespace MonPDReborn.Models.DataOP
                         AvgVisWe = TryDecimal(sheet.Cells[row, 8].Text),
                         AvgTenatCatWd = TryDecimal(sheet.Cells[row, 9].Text),
                         AvgTenatCatWe = TryDecimal(sheet.Cells[row, 10].Text),
+                        Omzet = TryDecimal(sheet.Cells[row, 11].Text),
+                        PotensiPajakTahun = TryDecimal(sheet.Cells[row, 12].Text),
                     };
 
                     context.DbPotensiRestos.Add(data);
@@ -250,6 +254,7 @@ namespace MonPDReborn.Models.DataOP
                         AvgVisWe = TryDecimal(sheet.Cells[row, 11].Text),
                         AvgMemberBulan = TryDecimal(sheet.Cells[row, 12].Text),
                         OmzetBulan = TryDecimal(sheet.Cells[row, 13].Text),
+                        PotensiPajakTahun = TryDecimal(sheet.Cells[row, 14].Text),
                     };
 
                     context.DbPotensiHiburans.Add(data);
