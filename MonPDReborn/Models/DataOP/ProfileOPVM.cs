@@ -178,10 +178,15 @@ namespace MonPDReborn.Models.DataOP
         {
             public List<TPKHotel> Kiri { get; set; }
             public List<TPKHotel> Kanan { get; set; }
-            public ShowTPK(int tahun)
+            public int TahunKiri { get; set; }
+            public int TahunKanan { get; set; }
+            public ShowTPK(int tahunKiri, int tahunKanan)
             {
-                Kiri = Method.GenerateDummyTPKHotelData(tahun);
-                Kanan = Method.GenerateDummyTPKHotelData(tahun);
+                TahunKiri = tahunKiri;
+                TahunKanan = tahunKanan;
+
+                Kiri = Method.GenerateDummyTPKHotelData(tahunKiri);
+                Kanan = Method.GenerateDummyTPKHotelData(tahunKanan);
             }
         }
 

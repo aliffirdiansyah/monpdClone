@@ -1,0 +1,99 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowTPK
+
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Data Tingkat Penghuni Kamar (TPK) Hotel
+                    </h4>
+                    <p class="text-dark mb-0">Perbandingan TPK Hotel Bintang dan Non Bintang Tahun @DateTime.Now</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm rounded-xl p-3 text-center" style="height:75%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-search-eye-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Hotel Bintang</h5>
+                        <h4 class="mb-0 fw-bold">Rata-rata TPK</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm rounded-xl p-3 text-center" style="height:75%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-search-eye-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Hotel Non Bintang</h5>
+                        <h4 class="mb-0 fw-bold">Rata-rata TPK</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Data Tahun <span class="badge bg-primary">@Model.TahunKiri</span></h6>
+                <select id="tahunKiri" class="form-select form-select-sm w-auto">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year; i++)
+                    {
+                        if (i == Model.TahunKiri)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="card-body p-2" id="tabelKiri">
+                @Html.Partial("~/Views/DataOP/ProfileOP/_Tabel.cshtml", Model.Kiri)
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Data Tahun <span class="badge bg-primary">@Model.TahunKanan</span></h6>
+                <select id="tahunKanan" class="form-select form-select-sm w-auto">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year; i++)
+                    {
+                        if (i == Model.TahunKanan)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="card-body p-2" id="tabelKanan">
+                @Html.Partial("~/Views/DataOP/ProfileOP/_Tabel.cshtml", Model.Kanan)
+            </div>
+        </div>
+    </div>
+
+</div>

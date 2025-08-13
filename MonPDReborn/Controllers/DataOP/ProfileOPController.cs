@@ -203,12 +203,11 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
-        public IActionResult ShowTPK(int tahun)
+        public IActionResult ShowTPK(int tahunKiri, int tahunKanan)
         {
             try
             {
-                ViewData["Tahun"] = tahun; // Kita juga teruskan tahun utama
-                var model = new Models.DataOP.ProfileOPVM.ShowTPK(tahun);
+                var model = new Models.DataOP.ProfileOPVM.ShowTPK(tahunKiri, tahunKanan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

@@ -1,0 +1,31 @@
+﻿@model List<MonPDReborn.Models.DataOP.ProfileOPVM.TPKHotel>
+
+<table class="table table-hover table-bordered align-middle">
+    <thead class="table-light text-center">
+        <tr>
+            <th style="width: 30%;">Bulan</th>
+            <th style="width: 35%;">Hotel Bintang</th>
+            <th style="width: 35%;">Hotel Non Bintang</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-start">@item.BulanNama</td>
+                    <td class="text-end">@item.HotelBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
+                    <td class="text-end">@item.HotelNonBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">Tidak ada data realisasi untuk tahun ini.</td>
+            </tr>
+        }
+    </tbody>
+
+</table>

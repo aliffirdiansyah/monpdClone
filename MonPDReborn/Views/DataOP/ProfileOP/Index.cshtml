@@ -272,35 +272,65 @@
            });
         }
 
-         function fnShowTpk()
-         {
-             $.ajax({
-               url: '@(Url.Action("ShowTPK"))',
-               type: 'GET',
-               beforeSend: function () {
-                  $('#loading2-ShowTpk').show();
-                  $('#ShowTpk').hide();
-               },
-               success: function (response) {
-                     if (response.Status === undefined) {
-                         $('#loading2-ShowTpk').hide();
-                         $('#ShowTpk').show();
-                         $('#ShowTpk').html(response);
-                     }
-                     else {
-                         swal.fire({
-                             icon: 'warning',
-                             title: '<b style="color:orange">Peringatan</b>',
-                             text: response.Message
-                         })
-                     }
-               },
-               error: function (xhr, status, error) {
-                  $('#loading2-ShowTpk').hide();
-                  $('#ShowTpk').hide();
-                  $('#ShowTpk').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-               }
-            });
+                 function fnShowTpk()
+        {
+            const tahunKiri = $('#tahunKiri').val();
+            const tahunKanan = $('#tahunKanan').val();
+
+            $.ajax({
+              url: '@(Url.Action("ShowTPK"))',
+              type: 'GET',
+              data: {
+                  tahunKiri: tahunKiri,
+                  tahunKanan: tahunKanan
+              },
+              beforeSend: function () {
+                 $('#loading2-ShowTpk').show();
+                 $('#ShowTpk').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-ShowTpk').hide();
+                        $('#ShowTpk').show();
+                        $('#ShowTpk').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-ShowTpk').hide();
+                 $('#ShowTpk').hide();
+                 $('#ShowTpk').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+
+          $(document).on("change", "#tahunKiri", function () {
+             changeTahun('kiri', $(this).val());
+         });
+
+         $(document).on("change", "#tahunKanan", function () {
+             changeTahun('kanan', $(this).val());
+         });
+
+         function changeTahun(side, tahun) {
+             const nop = $('#DetailNOP').val();
+             const jenisPajak = $('#DetailJenisPajak').val();
+             const tahunKiri = (side === 'kiri') ? tahun : $('#tahunKiri').val();
+             const tahunKanan = (side === 'kanan') ? tahun : $('#tahunKanan').val();
+
+             $("#detailContainer").load('/ProfilePembayaranOP/Detail', {
+                 nop: nop,
+                 jenisPajak: jenisPajak,
+                 tahunKiri: tahunKiri,
+                 tahunKanan: tahunKanan
+             });
          }
         function onDetail(e) {
             var nop = e.row.data.NOP;
