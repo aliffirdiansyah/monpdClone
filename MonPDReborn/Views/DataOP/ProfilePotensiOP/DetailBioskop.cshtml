@@ -191,7 +191,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="fs-18 fw-semibold mb-2">
-                                        Perhitungan Omzet Hari Kerja:
+                                        Perhitungan Omzet per Bulan:
                                     </h4>
                                     <p class="fs-14 text-muted mb-1">
                                         (Harga Tiket Weekdays x Jumlah Pengunjung Weekdays x 22 Hari) + (Harga Tiket Weekend x Jumlah Pengunjung Weekend x 8 Hari)
@@ -282,22 +282,22 @@
                     Jumlah Pengunjung Weekdays = Kapasitas x Turnover Weekdays
                 </p>
                 <p class="fs-14 mb-2 fw-bold text-dark">
-                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") orang
+                    = @Model.KapasitasBioskop.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
                     Jumlah Pengunjung Weekend = Kapasitas x Turnover Weekend
                 </p>
                 <p class="fs-14 mb-2 fw-bold text-dark">
-                    = @Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") orang
+                    = @Model.KapasitasBioskop.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") = @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") orang
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
-                    Omzet/Bulan = (HTM x Pengunjung Weekdays x 22) + (HTM x Pengunjung Weekend x 8)
+                    Omzet/Bulan = (HTM x Pengunjung Weekdays x 22 Hari) + (HTM x Pengunjung Weekend x 8 Hari)
                 </p>
                 <p class="fs-14 mb-3 fw-bold text-dark">
-                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") x 22) +
-                    (Rp. @Model.HTMWeekend.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") x 8) = Rp. @Model.OmzetPerBulanBioskop.ToString("N0")
+                    = (Rp. @Model.HTMWeekdays.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") x 22 Hari) +
+                    (Rp. @Model.HTMWeekend.ToString("N0") x @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") x 8 Hari) = Rp. @Model.OmzetPerBulanBioskop.ToString("N0")
                 </p>
 
                 <hr>
@@ -312,7 +312,7 @@
                 </p>
 
                 <p class="fs-14 text-muted font-monospace mb-1">
-                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa Bulan
                 </p>
                 <p class="fs-14 fw-bold text-dark">
                     = Rp. @Model.PotensiPajakPerBulanBioskop.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunBioskop.ToString("N0")
