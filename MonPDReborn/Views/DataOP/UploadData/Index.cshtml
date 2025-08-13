@@ -1,4 +1,4 @@
-﻿@model MonPDReborn.Models.DataOP.PotensiUploadVM.Index
+﻿@model MonPDReborn.Models.DataOP.UploadDataVM.Index
 
 <div class="row">
 
@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadHotel" asp-action="UploadHotel" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                <form id="UploadHotel" asp-action="UploadHotel" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadResto" asp-action="UploadResto" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                <form id="UploadResto" asp-action="UploadResto" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadHiburan" asp-action="UploadHiburan" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                <form id="UploadHiburan" asp-action="UploadHiburan" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -114,7 +114,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadParkir" asp-action="UploadParkir" asp-controller="PotensiUpload" method="post" enctype="multipart/form-data">
+                <form id="UploadParkir" asp-action="UploadParkir" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -138,6 +138,109 @@
         </div>
     </div>
 
+    <hr />
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Pemeriksaan Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadPemeriksaanExcel" asp-action="UploadPemeriksaanExcel" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+
+                        <div class="mt-2">
+                            <a href="~/TemplateUpload/PEMERIKSAAN_UPLOAD.xlsx"
+                               class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-download"></i> Download Template
+                            </a>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadPemeriksaanExcel()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Pengedokan Resto
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadPengedokanResto" asp-action="UploadPengedokanResto" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+
+                        <div class="mt-2">
+                            <a href="~/TemplateUpload/PENGEDOKAN_RESTO_UPLOAD.xlsx"
+                               class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-download"></i> Download Template
+                            </a>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadPengedokanResto()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Pengedokan Parkir
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadPengedokanParkir" asp-action="UploadPengedokanParkir" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+
+                        <div class="mt-2">
+                            <a href="~/TemplateUpload/PENGEDOKAN_PARKIR_UPLOAD.xlsx"
+                               class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-download"></i> Download Template
+                            </a>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadPengedokanParkir()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @section Scripts{
@@ -146,7 +249,7 @@
             var formData = new FormData($('#UploadHotel')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadHotel", "PotensiUpload")',
+                url: '@Url.Action("UploadHotel", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -188,7 +291,7 @@
             var formData = new FormData($('#UploadResto')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadResto", "PotensiUpload")',
+                url: '@Url.Action("UploadResto", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -230,7 +333,7 @@
             var formData = new FormData($('#UploadHiburan')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadHiburan", "PotensiUpload")',
+                url: '@Url.Action("UploadHiburan", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -272,7 +375,7 @@
             var formData = new FormData($('#UploadParkir')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadParkir", "PotensiUpload")',
+                url: '@Url.Action("UploadParkir", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -292,6 +395,132 @@
                         });
 
                         $('#UploadParkir')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+
+        function UploadPemeriksaanExcel() {
+            var formData = new FormData($('#UploadPemeriksaanExcel')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadPemeriksaanExcel", "UploadData")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadPemeriksaanExcel')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+
+        function UploadPengedokanResto() {
+            var formData = new FormData($('#UploadPengedokanResto')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadPengedokanResto", "UploadData")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadPengedokanResto')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+
+        function UploadPengedokanParkir() {
+            var formData = new FormData($('#UploadPengedokanParkir')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadPengedokanParkir", "UploadData")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadPengedokanParkir')[0].reset();
                     } else {
                         Swal.fire({
                             icon: 'error',

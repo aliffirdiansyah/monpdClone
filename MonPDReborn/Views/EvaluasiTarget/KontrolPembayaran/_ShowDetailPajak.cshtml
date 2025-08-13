@@ -3,7 +3,7 @@
 <div class="card-header d-flex">
     <div class="flex-grow-1">
         <h4 class="card-title fs-16 mb-0">
-            Detail Kontrol Pembayaran Pajak : 
+            Detail Kontrol Pembayaran Pajak : @Model.Data?.FirstOrDefault()?.Kategori
         </h4>
     </div>
 </div>
@@ -35,9 +35,24 @@
             columns.AddFor(m => m.FormattedNOP).Caption("NOP");
             columns.AddFor(m => m.NamaOP).Caption("Nama OP");
             columns.AddFor(m => m.Alamat).Caption("Alamat");
-            columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR"));
+            columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
             columns.AddFor(m => m.Wilayah).Caption("Wilayah");
             columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.FormattedNOP)
+            .SummaryType(SummaryType.Sum)
+            .Alignment(HorizontalAlignment.Right)
+            .DisplayFormat("TOTAL");
+
+                items.AddFor(m => m.Realisasi)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+            });
         })
         
         )

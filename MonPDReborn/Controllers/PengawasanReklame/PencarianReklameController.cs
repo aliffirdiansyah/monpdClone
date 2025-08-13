@@ -44,11 +44,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
-        public IActionResult Show(string namaJalan)
+        public IActionResult Show(string namaJalan, string status)
         {
             try
             {
-                var model = new Models.PengawasanReklame.PencarianReklameVM.Show(namaJalan);
+                var model = new Models.PengawasanReklame.PencarianReklameVM.Show(namaJalan, status);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

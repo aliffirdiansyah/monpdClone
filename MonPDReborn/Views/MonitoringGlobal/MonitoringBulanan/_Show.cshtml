@@ -274,7 +274,7 @@
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
                         .Format("#,##0").Alignment(HorizontalAlignment.Right);
                     })
-                    .Summary(s =>
+                    @* .Summary(s =>
                         {
                             s.TotalItems(items =>
                             {
@@ -311,7 +311,7 @@
                                     .DisplayFormat("Rp {0}")
                                     .Alignment(HorizontalAlignment.Right);
                             });
-                        })
+                        }) *@
                     )
             </div>
             <div class="col-lg-6">
@@ -361,7 +361,7 @@
                         columns.AddFor(c => c.Selisih).Caption("Selisih")
                         .Format("#,##0").Alignment(HorizontalAlignment.Right);
                     })
-                    .Summary(s =>
+                    @* .Summary(s =>
                         {
                             s.TotalItems(items =>
                             {
@@ -398,7 +398,7 @@
                                     .DisplayFormat("Rp {0}")
                                     .Alignment(HorizontalAlignment.Right);
                             });
-                        })
+                        }) *@
                     )
             </div>
         </div>

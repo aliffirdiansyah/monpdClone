@@ -26,31 +26,29 @@
         .OnExporting("exportGrid")
         .Columns(columns =>
         {
-            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
-            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP").Fixed(true);
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP").Fixed(true);
             columns.AddFor(m => m.AlamatOP).Caption("Alamat OP");
             columns.AddFor(m => m.TargetSdBulanIni).Caption("Target S.D Bulan Ini").Format("#,##0");
             columns.AddFor(m => m.RealisasiSdBulanIni).Caption("Realisasi S.d Bulan Ini").Format("#,##0");
             columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
             columns.AddFor(m => m.Persentase).Caption("%").Format("#,##0");
             columns.Add()
-                    .Type(GridCommandColumnType.Buttons)
-                    .Buttons(b =>
-                    {
-                        b.Add()
-                    .Text("Detail OP")
-                    .Icon("search")
-                    .OnClick("onDetailOPClick");
-                    });
-            columns.Add()
-                    .Type(GridCommandColumnType.Buttons)
-                    .Buttons(b =>
-                    {
-                        b.Add()
-                    .Text("Potensi OP")
-                    .Icon("search")
-                    .OnClick("onPotensiOPClick");
-                    });
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b =>
+            {
+                b.Add()
+                .Text("Detail OP")
+                .Icon("search")
+                .CssClass("btn-icon-lg") // custom class
+                .OnClick("onDetailOPClick");
+
+                b.Add()
+                .Text("Potensi OP")
+                .Icon("chart")
+                .CssClass("btn-icon-lg")
+                .OnClick("onPotensiOPClick");
+            });
         })
         .Summary(s =>
         {

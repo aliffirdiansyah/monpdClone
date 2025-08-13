@@ -72,7 +72,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                     case "hiburan":
                         enumPajak = EPajak.JasaKesenianHiburan;
                         break;
-                    case "abt":
+                    case "airtanah":
                         enumPajak = EPajak.AirTanah;
                         break;
                     case "pbb":
@@ -142,7 +142,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                     case "hiburan":
                         enumPajak = EPajak.JasaKesenianHiburan;
                         break;
-                    case "abt":
+                    case "airtanah":
                         enumPajak = EPajak.AirTanah;
                         break;
                     case "pbb":
@@ -210,7 +210,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                     case "hiburan":
                         enumPajak = EPajak.JasaKesenianHiburan;
                         break;
-                    case "abt":
+                    case "airtanah":
                         enumPajak = EPajak.AirTanah;
                         break;
                     case "pbb":

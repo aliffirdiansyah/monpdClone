@@ -5,11 +5,11 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.DataOP
 {
-    public class PotensiUploadController : BaseController
+    public class UploadDataController : BaseController
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<PotensiUploadController> _logger;
+        private readonly ILogger<UploadDataController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
@@ -17,7 +17,7 @@ namespace MonPDReborn.Controllers.DataOP
         const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
         ResponseBase response = new ResponseBase();
 
-        public PotensiUploadController(ILogger<PotensiUploadController> logger)
+        public UploadDataController(ILogger<UploadDataController> logger)
         {
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
@@ -27,7 +27,7 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.DataOP.PotensiUploadVM.Index
+                var model = new Models.DataOP.UploadDataVM.Index
                 {
                     TahunList = Enumerable.Range(DateTime.Now.Year - 5, 6)
                         .Select(t => new SelectListItem { Value = t.ToString(), Text = t.ToString() })
@@ -42,7 +42,7 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
         [HttpPost]
-        public IActionResult UploadHotel(IFormFile file, int tahun)
+        public IActionResult UploadPotensiHotel(IFormFile file, int tahun)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace MonPDReborn.Controllers.DataOP
                 }
 
                 // Panggil method static untuk proses penyimpanan data
-                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelHotel(file, tahun);
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.SimpanLampiranExcelHotel(file, tahun);
 
                 response.Status = StatusEnum.Success;
                 response.Message = "Data Berhasil Disimpan";
@@ -72,7 +72,7 @@ namespace MonPDReborn.Controllers.DataOP
             return Json(response);
         }
         [HttpPost]
-        public IActionResult UploadParkir(IFormFile file, int tahun)
+        public IActionResult UploadPotensiParkir(IFormFile file, int tahun)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace MonPDReborn.Controllers.DataOP
                 }
 
                 // Panggil method static untuk proses penyimpanan data
-                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelParkir(file, tahun);
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.SimpanLampiranExcelParkir(file, tahun);
 
                 response.Status = StatusEnum.Success;
                 response.Message = "Data Berhasil Disimpan";
@@ -102,7 +102,7 @@ namespace MonPDReborn.Controllers.DataOP
             return Json(response);
         }
         [HttpPost]
-        public IActionResult UploadResto(IFormFile file, int tahun)
+        public IActionResult UploadPotensiResto(IFormFile file, int tahun)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace MonPDReborn.Controllers.DataOP
                 }
 
                 // Panggil method static untuk proses penyimpanan data
-                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelResto(file, tahun);
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.SimpanLampiranExcelResto(file, tahun);
 
                 response.Status = StatusEnum.Success;
                 response.Message = "Data Berhasil Disimpan";
@@ -132,7 +132,7 @@ namespace MonPDReborn.Controllers.DataOP
             return Json(response);
         }
         [HttpPost]
-        public IActionResult UploadHiburan(IFormFile file, int tahun)
+        public IActionResult UploadPotensiHiburan(IFormFile file, int tahun)
         {
             try
             {
@@ -142,7 +142,97 @@ namespace MonPDReborn.Controllers.DataOP
                 }
 
                 // Panggil method static untuk proses penyimpanan data
-                MonPDReborn.Models.DataOP.PotensiUploadVM.Method.SimpanLampiranExcelHiburan(file, tahun);
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.SimpanLampiranExcelHiburan(file, tahun);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
+        }
+        [HttpPost]
+        public IActionResult UploadPemeriksaanExcel(IFormFile file, int tahun)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+
+                // Panggil method static untuk proses penyimpanan data
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.UploadPemeriksaanPajak(file, tahun);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
+        }
+        [HttpPost]
+        public IActionResult UploadPengedokanResto(IFormFile file, int tahun)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+
+                // Panggil method static untuk proses penyimpanan data
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.UploadPendataanResto(file, tahun);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
+        }
+        [HttpPost]
+        public IActionResult UploadPengedokanParkir(IFormFile file, int tahun)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+
+                // Panggil method static untuk proses penyimpanan data
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.UploadPendataanParkir(file, tahun);
 
                 response.Status = StatusEnum.Success;
                 response.Message = "Data Berhasil Disimpan";

@@ -15,6 +15,9 @@ public partial class DbAkunTargetObjekParkir
     [Column("TAHUN_BUKU", TypeName = "NUMBER")]
     public decimal? TahunBuku { get; set; }
 
+    [Column("BULAN_BUKU", TypeName = "NUMBER")]
+    public decimal? BulanBuku { get; set; }
+
     [Column("NOP")]
     [StringLength(30)]
     [Unicode(false)]
@@ -34,4 +37,7 @@ public partial class DbAkunTargetObjekParkir
 
     [Column("TARGET_TAHUN", TypeName = "NUMBER")]
     public decimal? TargetTahun { get; set; }
+
+    [Column("TARGET_BULAN", TypeName = "NUMBER")]
+    public decimal? TargetBulan { get; set; }
 }

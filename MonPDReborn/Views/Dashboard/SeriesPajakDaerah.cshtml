@@ -99,74 +99,123 @@
                 subColumns.AddFor(x => x.Realisasi7).Caption("REALISASI").DataType(GridColumnDataType.Number).Format("#,##0");;
                 subColumns.AddFor(x => x.Persentase7).Format("#,#0%").Caption("%");
             });
-  
     })
-    .Summary(s => {
-        s.CalculateCustomSummary(@<text>
-            function(options) {
-                if (options.summaryProcess === "start") {
-                    options.totalValue = {
-                        t1: 0, r1: 0,
-                        t2: 0, r2: 0,
-                        t3: 0, r3: 0,
-                        t4: 0, r4: 0,
-                        t5: 0, r5: 0
-                    };
-                }
-                if (options.summaryProcess === "calculate") {
-                    const v = options.value;
-                    
-                    options.totalValue.t1 += v.target1 || 0;
-                    options.totalValue.r1 += v.realisasi1 || 0;
-                    options.totalValue.t2 += v.target2 || 0;
-                    options.totalValue.r2 += v.realisasi2 || 0;
-                    options.totalValue.t3 += v.target3 || 0;
-                    options.totalValue.r3 += v.realisasi3 || 0;
-                    options.totalValue.t4 += v.target4 || 0;
-                    options.totalValue.r4 += v.realisasi4 || 0;
-                    options.totalValue.t5 += v.target5 || 0;
-                    options.totalValue.r5 += v.realisasi5 || 0;
-                }
-                if (options.summaryProcess === "finalize") {
-                    const t = options.totalValue;
-                    if (options.name === "Persen1") options.totalValue = t.t1 > 0 ? (t.r1 / t.t1 * 100).toFixed(2) : 0;
-                    if (options.name === "Persen2") options.totalValue = t.t2 > 0 ? (t.r2 / t.t2 * 100).toFixed(2) : 0;
-                    if (options.name === "Persen3") options.totalValue = t.t3 > 0 ? (t.r3 / t.t3 * 100).toFixed(2) : 0;
-                    if (options.name === "Persen4") options.totalValue = t.t4 > 0 ? (t.r4 / t.t4 * 100).toFixed(2) : 0;
-                    if (options.name === "Persen5") options.totalValue = t.t5 > 0 ? (t.r5 / t.t5 * 100).toFixed(2) : 0;
-                }
-            }
-        </text>);
-
-        s.TotalItems(items => {
+    .Summary(s => s
+        .TotalItems(items =>
+        {
             items.AddFor(x => x.JenisPajak).SummaryType(SummaryType.Sum).DisplayFormat("TOTAL");
-            items.AddFor(x => x.Target1).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Realisasi1).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Persentase1).SummaryType(SummaryType.Custom).Name("Persen1").DisplayFormat("{0}%");
+            // Tahun 1
+            items.AddFor(x => x.Target1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Target2).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Realisasi2).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Persentase2).SummaryType(SummaryType.Custom).Name("Persen2").DisplayFormat("{0}%");
+            items.AddFor(x => x.Realisasi1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Target3).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Realisasi3).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Persentase3).SummaryType(SummaryType.Custom).Name("Persen3").DisplayFormat("{0}%");
+            items.AddFor(x => x.Persentase1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("0");
 
-            items.AddFor(x => x.Target4).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Realisasi4).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Persentase4).SummaryType(SummaryType.Custom).Name("Persen4").DisplayFormat("{0}%");
+            // Tahun 2
+            items.AddFor(x => x.Target2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Target5).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Realisasi5).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Persentase5).SummaryType(SummaryType.Custom).Name("Persen5").DisplayFormat("{0}%");
+            items.AddFor(x => x.Realisasi2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Target6).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Realisasi6).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Persentase6).SummaryType(SummaryType.Custom).Name("Persen6").DisplayFormat("{0}%");
+            items.AddFor(x => x.Persentase2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("0");
 
-            items.AddFor(x => x.Target7).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Realisasi7).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
-            items.AddFor(x => x.Persentase7).SummaryType(SummaryType.Custom).Name("Persen7").DisplayFormat("{0}%");
-        });
-    })
+            // Tahun 3
+            items.AddFor(x => x.Target3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Realisasi3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Persentase3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("0");
+
+            // Tahun 4
+            items.AddFor(x => x.Target4)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Realisasi4)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Persentase4)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("0");
+
+            // Tahun 5
+            items.AddFor(x => x.Target5)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Realisasi5)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Persentase5)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("0");
+
+            // Tahun 6
+            items.AddFor(x => x.Target6)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Realisasi6)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Persentase6)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("0");
+
+            // Tahun 7
+            items.AddFor(x => x.Target7)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Realisasi7)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Persentase7)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("0");
+        })
+    )
+    .OnContentReady("function(e) { hitungPersentase(e); }")
 )

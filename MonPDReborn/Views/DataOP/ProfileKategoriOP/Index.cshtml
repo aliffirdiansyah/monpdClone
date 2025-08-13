@@ -160,7 +160,7 @@
 
 
 
-            const $modalLarge = $("#staticBackdropLargeScrollable");
+            const $modalLarge = $("#staticBackdropExtraLargeScrollable");
             const $modalFull = $("#staticBackdropFullScreenScrollable");
 
             $modalLarge.find(".modal-title").text(`Detail Kategori - ${jenisPajak}`);
@@ -186,7 +186,7 @@
                 }
             });
 
-            var bsModal = new bootstrap.Modal(document.getElementById('staticBackdropLargeScrollable'), {
+                var bsModal = new bootstrap.Modal(document.getElementById('staticBackdropExtraLargeScrollable'), {
                 backdrop: 'static',
                 keyboard: false
             });
@@ -224,7 +224,7 @@
 
             // Ambil parameter dari row
             const nop = rowData.Nop;
-            const pajak = rowData.jenisPajak; // pastikan field ini sesuai dengan model kamu
+            const pajak = rowData.EnumPajak; // pastikan field ini sesuai dengan model kamu
 
             if (!nop || pajak === undefined) {
                 DevExpress.ui.notify("Parameter tidak lengkap", "error", 2000);
@@ -249,7 +249,7 @@
 
             // Ambil parameter dari row
             const nop = rowData.Nop;
-            const jenisPajak = rowData.jenisPajak;
+            const jenisPajak = rowData.EnumPajak;
             const kategori = rowData.KategoriId; // pastikan sesuai property di model
 
             if (!nop || jenisPajak === undefined || kategori === undefined) {

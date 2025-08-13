@@ -303,8 +303,8 @@ namespace MonPDReborn.Models.Reklame
                             KelasJalan = x.KelasJalan,
                             NamaJalan = x.NamaJalan,
                             Status = x.TglAkhirBerlaku.Value.Date < DateTime.Today ? "EXPIRED" : "AKTIF",
-                            TglMulai = x.TglMulaiBerlaku.Value,
-                            TglSelesai = x.TglAkhirBerlaku.Value,
+                            TglMulai = x.TglMulaiBerlakuA.Value,
+                            TglSelesai = x.TglAkhirBerlakuA.Value,
                             Pajak = x.PajakPokok.Value,
                             Jumlah = x.Jumlah ?? 0
                         })

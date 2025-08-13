@@ -3,6 +3,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using System.Globalization;
+using System.Linq.Dynamic.Core;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Method;
@@ -67,15 +68,15 @@ namespace MonPDReborn.Models.EvaluasiTarget
             {
                 return pajak switch
                 {
-                    EPajak.JasaPerhotelan => Method.GetPotensiPajakHotel(tahun),
-                    EPajak.MakananMinuman => Method.GetPotensiPajakResto(tahun),
-                    EPajak.JasaParkir => Method.GetPotensiPajakParkir(tahun),
-                    EPajak.JasaKesenianHiburan => Method.GetPotensiPajakHiburan(tahun),
-                    EPajak.Reklame => Method.GetPotensiPajakReklame(tahun),
-                    EPajak.TenagaListrik => Method.GetPotensiPajakPPJ(tahun),
-                    EPajak.AirTanah => Method.GetPotensiPajakAirTanah(tahun),
-                    EPajak.PBB => Method.GetPotensiPajakPbb(tahun),
-                    EPajak.BPHTB => Method.GetPotensiPajakBphtb(tahun),
+                    EPajak.JasaPerhotelan => Method.GetPotensiPajakHotelRekap(tahun),
+                    EPajak.MakananMinuman => Method.GetPotensiPajakRestoRekap(tahun),
+                    EPajak.JasaParkir => Method.GetPotensiPajakParkirRekap(tahun),
+                    EPajak.JasaKesenianHiburan => Method.GetPotensiPajakHiburanRekap(tahun),
+                    EPajak.Reklame => Method.GetPotensiPajakReklameRekap(tahun),
+                    EPajak.TenagaListrik => Method.GetPotensiPajakPPJRekap(tahun),
+                    EPajak.AirTanah => Method.GetPotensiPajakAirTanahRekap(tahun),
+                    EPajak.PBB => Method.GetPotensiPajakPbbRekap(tahun),
+                    EPajak.BPHTB => Method.GetPotensiPajakBphtbRekap(tahun),
                     _ => new List<Potensi>()
                 };
             }
@@ -202,8 +203,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -228,7 +228,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -403,11 +403,10 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
-                        x.Id,
+                        x.Id,    
                         Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
                     })
                     .ToList();
@@ -429,7 +428,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -604,8 +603,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -630,7 +628,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -805,8 +803,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -831,7 +828,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1006,8 +1003,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1032,7 +1028,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1207,8 +1203,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1233,7 +1228,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1408,8 +1403,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1443,7 +1437,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1521,8 +1515,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1547,7 +1540,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -2315,8 +2308,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2340,7 +2332,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -2513,8 +2505,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2538,7 +2529,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -2711,8 +2702,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2736,7 +2726,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -2909,8 +2899,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2934,7 +2923,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3107,8 +3096,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3132,7 +3120,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3305,8 +3293,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3330,7 +3317,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3503,8 +3490,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3528,7 +3514,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3701,8 +3687,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3726,7 +3711,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -4111,19 +4096,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpRestos
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
                                        JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4134,19 +4128,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpRestos
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
                                        JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4157,21 +4160,30 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpRestos
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
                                        JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
-                                   .Distinct() 
+                                   .Distinct()
                                    .ToList();
                         }
                         else if (status == 3)
@@ -4180,19 +4192,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpRestos
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
                                        JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4205,19 +4226,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpListriks
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4228,19 +4258,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpListriks
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4251,19 +4290,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpListriks
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4274,19 +4322,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpListriks
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4299,19 +4356,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHotels
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4322,19 +4388,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHotels
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4345,22 +4420,31 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHotels
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
-                                   .Distinct()
-                                   .ToList();
+                                    .Distinct()
+                                    .ToList();
                         }
                         else if (status == 3)
                         {
@@ -4368,19 +4452,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHotels
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4393,19 +4486,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpParkirs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4416,19 +4518,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpParkirs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4439,19 +4550,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpParkirs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4462,19 +4582,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpParkirs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4487,19 +4616,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHiburans
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4510,19 +4648,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHiburans
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4533,19 +4680,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHiburans
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4556,19 +4712,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpHiburans
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4581,19 +4746,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpAbts
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4604,19 +4778,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpAbts
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4627,19 +4810,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpAbts
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4650,19 +4842,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpAbts
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaOp : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4675,19 +4876,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpReklames
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.Nama : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4698,19 +4908,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpReklames
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.Nama : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4721,19 +4940,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpReklames
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.Nama : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
-                                       JenisPenagihan = "Silang"
-
+                                       JenisPenagihan = "silang"
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4744,19 +4972,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbOpReklames
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.Reklame.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.Nama : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4769,19 +5006,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonPbbs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.WpNama : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4792,19 +5038,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonPbbs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.WpNama : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4815,19 +5070,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonPbbs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.WpNama : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4838,19 +5102,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonPbbs
                                        on upaya.Nop equals ctrl.Nop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.WpNama : "-",
                                        Alamat = ctrl != null ? ctrl.AlamatOp : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4863,19 +5136,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonBphtbs
                                        on upaya.Nop equals ctrl.SpptNop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsHimbauan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaWp : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
                                        JenisPenagihan = "Himbauan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4886,19 +5168,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonBphtbs
                                        on upaya.Nop equals ctrl.SpptNop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsTeguran == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaWp : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
                                        JenisPenagihan = "Teguran"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4909,19 +5200,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonBphtbs
                                        on upaya.Nop equals ctrl.SpptNop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsPenyilangan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaWp : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
                                        JenisPenagihan = "Silang"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4932,19 +5232,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                                    join ctrl in context.DbMonBphtbs
                                        on upaya.Nop equals ctrl.SpptNop into gj
                                    from ctrl in gj.DefaultIfEmpty()
+
+                                   join kat in context.MKategoriPajaks
+                                       on upaya.KategoriId equals kat.Id into gk
+                                   from kat in gk.DefaultIfEmpty()
+
                                    where upaya.Tahun == tahun
                                          && upaya.Bulan == bulan
                                          && upaya.KategoriId == kategoriId
                                          && upaya.IsKejaksaan == 1
+
                                    select new DetailUpaya
                                    {
-                                       JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                                       JenisPajak = EnumFactory.EPajak.BPHTB.GetDescription(),
                                        NOP = upaya.Nop,
+                                       // ubah dari ID ke Nama TitleCase
+                                       Kategori = kat != null
+                                           ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kat.Nama.ToLower())
+                                           : "-",
                                        Tahun = (int)upaya.Tahun,
                                        NamaOP = ctrl != null ? ctrl.NamaWp : "-",
                                        Alamat = ctrl != null ? ctrl.Alamat : "-",
                                        JenisPenagihan = "Kejaksaan"
-
                                    })
                                    .Distinct()
                                    .ToList();
@@ -4963,14 +5272,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
             #endregion
 
             #region Data Rekap Potensi Pajak
-            public static List<Potensi> GetPotensiPajakHotel(int tahun)
+            public static List<Potensi> GetPotensiPajakHotelRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
 
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).OrderBy( x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -4989,7 +5297,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5037,14 +5345,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakResto(int tahun)
+            public static List<Potensi> GetPotensiPajakRestoRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
 
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5063,7 +5370,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5111,14 +5418,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakPPJ(int tahun)
+            public static List<Potensi> GetPotensiPajakPPJRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
 
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5137,7 +5443,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5185,13 +5491,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakParkir(int tahun)
+            public static List<Potensi> GetPotensiPajakParkirRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5209,7 +5514,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5257,13 +5562,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakHiburan(int tahun)
+            public static List<Potensi> GetPotensiPajakHiburanRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5281,7 +5585,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5329,13 +5633,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakReklame(int tahun)
+            public static List<Potensi> GetPotensiPajakReklameRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5353,7 +5656,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5401,13 +5704,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakAirTanah(int tahun)
+            public static List<Potensi> GetPotensiPajakAirTanahRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5425,7 +5727,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5473,13 +5775,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakPbb(int tahun)
+            public static List<Potensi> GetPotensiPajakPbbRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5497,7 +5798,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5545,7 +5846,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                 return ret;
             }
-            public static List<Potensi> GetPotensiPajakBphtb(int tahun)
+            public static List<Potensi> GetPotensiPajakBphtbRekap(int tahun)
             {
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
