@@ -3,6 +3,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using System.Globalization;
+using System.Linq.Dynamic.Core;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Method;
@@ -202,8 +203,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -228,7 +228,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -403,11 +403,10 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
-                        x.Id,
+                        x.Id,    
                         Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
                     })
                     .ToList();
@@ -429,7 +428,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -604,8 +603,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -630,7 +628,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -805,8 +803,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -831,7 +828,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1006,8 +1003,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1032,7 +1028,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1207,8 +1203,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1233,7 +1228,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1408,8 +1403,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1443,7 +1437,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -1521,8 +1515,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<KontrolPembayaran>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -1547,7 +1540,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new KontrolPembayaran();
                     re.Kategori = item.Nama;
@@ -2315,8 +2308,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2340,7 +2332,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -2513,8 +2505,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2538,7 +2529,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -2711,8 +2702,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2736,7 +2726,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -2909,8 +2899,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -2934,7 +2923,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3107,8 +3096,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3132,7 +3120,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3305,8 +3293,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3330,7 +3317,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3503,8 +3490,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3528,7 +3514,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -3701,8 +3687,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<UpayaPajak>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -3726,7 +3711,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new UpayaPajak();
                     re.Kategori = item.Nama;
@@ -5293,8 +5278,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var context = DBClass.GetContext();
 
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).OrderBy( x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5313,7 +5297,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5367,8 +5351,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var context = DBClass.GetContext();
 
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5387,7 +5370,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5441,8 +5424,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var context = DBClass.GetContext();
 
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5461,7 +5443,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .AsQueryable();
 
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5514,8 +5496,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5533,7 +5514,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5586,8 +5567,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5605,7 +5585,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5658,8 +5638,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.Reklame).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5677,7 +5656,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5730,8 +5709,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5749,7 +5727,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
@@ -5802,8 +5780,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 var ret = new List<Potensi>();
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB)
-                    .ToList()
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.PBB).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -5821,7 +5798,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Ketetapan = g.Sum(x => x.Ketetapan),
                     })
                     .AsQueryable();
-                foreach (var item in kategoriList.OrderBy(x => x.Id))
+                foreach (var item in kategoriList)
                 {
                     var re = new Potensi();
                     re.Kategori = item.Nama;
