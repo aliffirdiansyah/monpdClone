@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
 using MonPDLib;
 using MonPDLib.General;
+using System.Collections;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
 
@@ -575,7 +576,7 @@ namespace MonPDReborn.Models.DataOP
                 var context = DBClass.GetContext();
                 var ret = new List<RekapDetail>();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)JenisPajak)
+                    .Where(x => x.PajakId == (int)JenisPajak).OrderBy(x => x.Urutan)
                     .ToList() // pindah ke memory agar bisa pakai ToTitleCase
                     .Select(x => new
                     {
@@ -632,7 +633,7 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        foreach (var kat in kategoriList.OrderBy(x => x.Id).ToList())
+                        foreach (var kat in kategoriList)
                         {
                             var OpHotelTutup = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
                             var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kat.Id);
@@ -2506,7 +2507,7 @@ namespace MonPDReborn.Models.DataOP
 
                 // Ambil semua kategori untuk pajak ini
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)jenisPajak)
+                    .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
                     .Select(x => new { x.Id, x.Nama })
                     .ToList();
 
@@ -3475,6 +3476,7 @@ namespace MonPDReborn.Models.DataOP
 
             public string JenisPajak { get; set; } = null!;
             public int KategoriId { get; set; }
+            public int Urutan { get; set; }
             public string Kategori { get; set; } = null!;
             public int Tahun { get; set; }
             public int JmlOpAwal { get; set; }
