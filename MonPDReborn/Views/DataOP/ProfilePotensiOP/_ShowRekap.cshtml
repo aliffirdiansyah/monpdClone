@@ -97,6 +97,7 @@
         .HeaderFilter(h => h.Visible(true))
         .Sorting(s => s.Mode(GridSortingMode.Multiple))
         .AllowColumnResizing(true)
+        .Sorting(s => s.Mode(GridSortingMode.None))
         .DataSource(Model.DataRekapPotensi)
         .KeyExpr("JenisPajak")
         .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))

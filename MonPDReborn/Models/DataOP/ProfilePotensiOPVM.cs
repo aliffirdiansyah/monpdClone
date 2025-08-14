@@ -1826,12 +1826,12 @@ namespace MonPDReborn.Models.DataOP
                             }).ToList();
 
                         var dataPotensi = context.DbPotensiReklames
-                            .Where(x => distinctNor.Contains(x.Nor))
+                            .Where(x => distinctNor.Contains(x.Nor) && x.TahunBuku == DateTime.Now.Year + 1)
                             .GroupBy(x => new { x.Nor })
                             .Select(x => new
                             {
                                 Nor = x.Key.Nor,
-                                Nominal = x.Sum(q => q.Rata2Pajak)
+                                Nominal = x.Sum(q => q.Hit1bulan)
                             }).ToList();
 
                         var dictTarget1 = dataTarget1.ToDictionary(x => x.Nor, x => x.Nominal);

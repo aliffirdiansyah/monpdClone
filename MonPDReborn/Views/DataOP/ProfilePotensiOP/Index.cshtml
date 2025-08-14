@@ -192,6 +192,38 @@
                 }
             }
         }
+
+        function hitungPersentaseDataShow(e) {
+            var dataSource = e.component.getDataSource();
+            var items = dataSource.items();
+
+            var $summaryCells = e.element.find(".dx-datagrid-total-footer .dx-datagrid-summary-item");
+
+            for (var i = 1; i <= 3; i++) {
+                var totalTarget = 0;
+                var totalRealisasi = 0;
+
+                // Hitung total target & realisasi dari semua row
+                items.forEach(function(item) {
+                    totalTarget += item["Target" + i] || 0;
+                    totalRealisasi += item["Realisasi" + i] || 0;
+                });
+
+                var persentase = totalTarget > 0 ? totalRealisasi / totalTarget : 0;
+
+                // Index summary (1-based) → (i * 3) + 1
+                var persentaseIndex = (i * 4) + 2;
+
+                // eq() itu 0-based
+                var $persentaseCell = $summaryCells.eq(persentaseIndex - 1);
+
+                if ($persentaseCell.length) {
+                    $persentaseCell.text(
+                        DevExpress.localization.formatNumber(persentase, "#,##0.00%")
+                    );
+                }
+            }
+        }
         function onDataGridContentLoad() {
             $("#loading2-DataPotensi").show();
 

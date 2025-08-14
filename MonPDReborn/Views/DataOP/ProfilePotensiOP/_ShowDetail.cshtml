@@ -28,6 +28,7 @@
             .ShowColumnHeaders(true)
             .ColumnAutoWidth(true)
             .RowAlternationEnabled(true)
+            .Sorting(s => s.Mode(GridSortingMode.None))
             @* .Paging(p => p.PageSize(10))
             .Pager(p => p
             .ShowPageSizeSelector(true)
