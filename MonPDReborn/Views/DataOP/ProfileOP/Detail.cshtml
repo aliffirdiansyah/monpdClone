@@ -1,10 +1,11 @@
 ﻿@using MonPDLib.General
 @using System.Globalization
 @model MonPDReborn.Models.DataOP.ProfileOPVM.Detail
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 @{
+    var currentYear = DateTime.Now.Year;
+    var tahunMin1 = (currentYear - 1).ToString();
+    var tahunNow = currentYear.ToString();
 }
 <input type="hidden" id="DetailNOP" value="@Model.DataDetail.IdentitasPajak.NOP" />
 <input type="hidden" id="DetailJenisPajak" value="@((int)Model.Pajak)" />
@@ -163,9 +164,11 @@
     <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
         <!-- Identitas Objek Pajak Card -->
         <div class="card mb-4">
-            <div class="card bg-soft-secondary border-0 mb-0">
-                <div class="card-body px-4 py-3">
-                    <h4 class="fw-semibold mb-0">Identitas Objek Pajak</h4>
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        Identitas Objek Pajak
+                    </h4>
                 </div>
             </div>
             <ul class="list-group list-group-flush">
@@ -221,9 +224,11 @@
             <!-- Data Perizinan -->
             <div class="col-md-6 col-lg-6">
                 <div class="card mb-4">
-                    <div class="card bg-soft-secondary border-0">
-                        <div class="card-body px-4 py-3">
-                            <h4 class="fw-semibold mb-0">Data Perizinan</h4>
+                    <div class="card-header d-flex bg-header-color align-items-center">
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fs-16 text-dark mb-0">
+                                Data Perizinan
+                            </h4>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
@@ -249,9 +254,11 @@
                     <!-- Sarana Pendukung -->
                     <div class="col-md-6 col-lg-6">
                         <div class="card mb-4">
-                            <div class="card bg-soft-secondary border-0">
-                                <div class="card-body px-4 py-3">
-                                    <h4 class="fw-semibold mb-0">Sarana Pendukung</h4>
+                            <div class="card-header d-flex bg-header-color align-items-center">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title fs-16 text-dark mb-0">
+                                        Sarana Pendukung
+                                    </h4>
                                 </div>
                             </div>
                             <ul class="list-group list-group-flush">
@@ -276,9 +283,11 @@
                 case EnumFactory.EPajak.JasaPerhotelan:
                     <div class="col-md-6 col-lg-6">
                         <div class="card mb-4">
-                            <div class="card bg-soft-secondary border-0">
-                                <div class="card-body px-4 py-3">
-                                    <h4 class="fw-semibold mb-0">Sarana Pendukung</h4>
+                            <div class="card-header d-flex bg-header-color align-items-center">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title fs-16 text-dark mb-0">
+                                        Sarana Pendukung
+                                    </h4>
                                 </div>
                             </div>
                             <ul class="list-group list-group-flush">
@@ -348,51 +357,50 @@
 
     <!-- Lokasi Tab -->
     <div class="tab-pane fade show active" id="pills-pembayaran" role="tabpanel" aria-labelledby="pills-pembayaran-tab">
-        <div class="card mb-4">
-            <div class="card bg-info-subtle border-0 mb-0">
-                <div class="card-header d-flex">
-                    <div class="flex-grow-1">
-                        <h5 class="card-title fs-16 mb-0">
-                            🧾 PEMBAYARAN PAJAK @Model.Pajak.GetDescription().ToUpper() @Model.DataDetail.IdentitasPajak.NamaObjekPajak
-                        </h5>
-
-                    </div>
-                    <div class="flex-shrink-0">
-                        <button class="btn btn-sm btn-outline-info" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')">
-                            <i class="mdi mdi-refresh align-middle"></i>
-                            Refresh
-                        </button>
+        <div class="card">
+            <div class="card-header d-flex bg-header-color">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        🧾 PEMBAYARAN PAJAK @Model.Pajak.GetDescription().ToUpper() @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-dark" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-PembayaranPajak" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <div id="loading2-PembayaranPajak" class="spinner-border text-primary" style="display: none">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                    <div id="PembayaranPajak"></div>
-                </div>
+                <div id="PembayaranPajak"></div>
             </div>
         </div>
     </div>
     <!-- Lokasi Tab -->
     <div class="tab-pane fade" id="pills-lokasi" role="tabpanel" aria-labelledby="pills-lokasi-tab">
-        <div class="card mb-4">
-            <div class="card bg-info-subtle border-0 mb-0">
-                <div class="card-body px-4 py-3">
-                    <h4 class="fw-semibold mb-0">Lokasi Objek Pajak</h4>
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i>Lokasi Objek Pajak
+                    </h4>
                 </div>
             </div>
-            <div class="card-body px-0 py-3">
-                <iframe width="100%"
-                        height="400"
-                        style="border:0;"
-                        allowfullscreen
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
-                        src="https://www.google.com/maps?q=@(Uri.EscapeDataString(Model.DataDetail.IdentitasPajak.NamaObjekPajak??""))&output=embed">
-                </iframe>
-            </div>
+        </div>
+        <div class="card-body px-0 py-3">
+            <iframe width="100%"
+                    height="400"
+                    style="border:0;"
+                    allowfullscreen
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=@(Uri.EscapeDataString(Model.DataDetail.IdentitasPajak.NamaObjekPajak??""))&output=embed">
+            </iframe>
         </div>
     </div>
 
@@ -409,17 +417,18 @@
                 @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
                                 .ID("okupansiGrid")
                                 .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
-                                .KeyExpr("NOP")
+                                .KeyExpr("Bulan")
                                 .ShowBorders(true)
                                 .ShowColumnLines(true)
                                 .Paging(p => p.PageSize(12))
                                 .Columns(columns =>
                                 {
-                                    columns.AddFor(m => m.BulanNama);
-                                    columns.AddFor(m => m.TahunMines1);
-                                    columns.AddFor(m => m.TahunNow);
+                                    columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                                    columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
+                                    columns.AddFor(m => m.TahunNow).Caption(tahunNow);
                                 })
                                 )
+
             </div>
         </div>
     </div>
