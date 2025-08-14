@@ -56,31 +56,37 @@ namespace MonPDReborn.Models.AktivitasOP
                 var akunList = groupRekening
                     .GroupBy(x => new { x.Akun, x.NamaAkun })
                     .Select(x => new { x.Key.Akun, x.Key.NamaAkun })
+                    .OrderBy(x => x.Akun)
                     .ToList();
 
                 var kelompokList = groupRekening
                     .GroupBy(x => new { x.Akun, x.Kelompok, x.NamaKelompok })
                     .Select(x => new { x.Key.Akun, x.Key.Kelompok, x.Key.NamaKelompok })
+                    .OrderBy(x => x.Kelompok)
                     .ToList();
 
                 var jenisList = groupRekening
                     .GroupBy(x => new { x.Kelompok, x.Jenis, x.NamaJenis })
                     .Select(x => new { x.Key.Kelompok, x.Key.Jenis, x.Key.NamaJenis })
+                    .OrderBy(x => x.Jenis)
                     .ToList();
 
                 var objekList = groupRekening
                     .GroupBy(x => new { x.Jenis, x.Objek, x.NamaObjek })
                     .Select(x => new { x.Key.Jenis, x.Key.Objek, x.Key.NamaObjek })
+                    .OrderBy(x => x.Objek)
                     .ToList();
 
                 var rincianList = groupRekening
                     .GroupBy(x => new { x.Objek, x.Rincian, x.NamaRincian })
                     .Select(x => new { x.Key.Objek, x.Key.Rincian, x.Key.NamaRincian })
+                    .OrderBy(x => x.Rincian)
                     .ToList();
 
                 var subrincianList = groupRekening
                     .GroupBy(x => new { x.Rincian, x.SubRincian, x.NamaSubRincian })
                     .Select(x => new { x.Key.Rincian, x.Key.SubRincian, x.Key.NamaSubRincian })
+                    .OrderBy(x => x.SubRincian)
                     .ToList();
 
 
@@ -1053,21 +1059,25 @@ namespace MonPDReborn.Models.AktivitasOP
                 var jenisList = groupData
                     .GroupBy(x => new { x.Jenis, x.NamaJenis })
                     .Select(x => new { x.Key.Jenis, x.Key.NamaJenis })
+                    .OrderBy(x => x.Jenis)
                     .ToList();
 
                 var objekList = groupData
                     .GroupBy(x => new { x.Jenis, x.Objek, x.NamaObjek })
                     .Select(x => new { x.Key.Jenis, x.Key.Objek, x.Key.NamaObjek })
+                    .OrderBy(x => x.Objek)
                     .ToList();
 
                 var opdList = groupData
                     .GroupBy(x => new { x.Objek, x.KodeOpd, x.NamaOpd })
                     .Select(x => new { x.Key.Objek, x.Key.KodeOpd, x.Key.NamaOpd })
+                    .OrderBy(x => x.KodeOpd)
                     .ToList();
 
                 var subOpdList = groupData
                     .GroupBy(x => new { x.Objek, x.KodeOpd, x.KodeSubOpd, x.NamaSubOpd })
                     .Select(x => new { x.Key.Objek, x.Key.KodeOpd, x.Key.KodeSubOpd, x.Key.NamaSubOpd })
+                    .OrderBy(x => x.KodeOpd).ThenBy(x => x.KodeSubOpd)
                     .ToList();
 
                 var dataTahun1 = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangRekeningJenisObjekOpd(year1);

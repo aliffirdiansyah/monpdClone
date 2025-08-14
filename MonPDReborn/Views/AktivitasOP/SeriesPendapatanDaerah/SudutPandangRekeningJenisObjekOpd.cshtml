@@ -13,9 +13,9 @@
 
 
 @(
-Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSudutPandangRekening.Akun>()
-    .ID("dg-SudutPandangRekening")
-    .DataSource(Model.SudutPandangRekening)
+Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis>()
+    .ID("dg-SudutPandangRekeningJenisObjekOpd")
+    .DataSource(Model.SudutPandangRekeningJenisObjekOpd)
     .KeyExpr("Col.Kode")
     .ShowBorders(true)
     .ShowColumnHeaders(true)
@@ -29,14 +29,13 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
 
     .Sorting(s => s.Mode(GridSortingMode.Multiple))
     .FilterRow(f => f
-        .Visible(true)
-        .ApplyFilter(GridApplyFilterMode.Auto)  // Bisa juga OnClick
+    .Visible(true)
+    .ApplyFilter(GridApplyFilterMode.Auto)  // Bisa juga OnClick
     )
-    .Paging(p => p.PageSize(999999))
-    .Pager(p => p.Visible(false))
+
     .HeaderFilter(hf => hf.Visible(true))
     .Columns(columns => {
-        columns.AddFor(m => m.Col.Nama).Caption("Nama");
+        columns.AddFor(m => m.Col.Nama).Caption("Nama").Fixed(true).FixedPosition(HorizontalEdge.Left);
 
         columns.Add().Caption(year7.ToString())
             .Columns(sc =>
@@ -96,6 +95,6 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
     })
     .MasterDetail(md => md
     .Enabled(true)
-    .Template(new JS("SudutPandangRekeningKelompok"))
+    .Template(new JS("SudutPandangRekeningJenisObjekOpdObjek"))
     )
 )
