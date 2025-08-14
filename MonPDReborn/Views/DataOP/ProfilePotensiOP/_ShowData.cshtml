@@ -95,7 +95,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPote
         columns.AddFor(m => m.TotalPotensi).Caption("Total Potensi").Format("#,##0");
         columns.Add()
                .Type(GridCommandColumnType.Buttons)
-               .Fixed(false)
+               .Fixed(true)
                .Buttons(b =>
                {
                    b.Add()

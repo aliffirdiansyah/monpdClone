@@ -1,7 +1,7 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowRekap
 
 <div class="row">
-    
+
     @* dashboard baru *@
     <div class="col-lg-4">
         <div class="card card-animate h-80 shadow-lg rounded-3" style="border-top: 6px solid #7DF9FF;">
@@ -65,47 +65,50 @@
 <div class="table-responsive">
     @(
         Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapOP>()
-                .ID("RekapOPGrid")
-                .DataSource(Model.DataRekapOPList)
-                .ShowBorders(true)
-                .ShowRowLines(true)
-                .ShowColumnLines(true)
-                .ShowColumnHeaders(true)
-                .RowAlternationEnabled(true)
-                .AllowColumnResizing(true)
-                .ColumnAutoWidth(true)
-                .Columns(columns =>
-                {
-                    columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").CssClass("fw-bold");
-                    columns.AddFor(m => m.JmlOpAwal).Caption("OP Awal").Format("#,##0");
-                    columns.AddFor(m => m.JmlOpTutupPermanen).Caption("OP Tutup").Format("#,##0");
-                    columns.AddFor(m => m.JmlOpBaru).Caption("OP Baru").Format("#,##0");
-                    columns.AddFor(m => m.JmlOpAkhir).Caption("OP Akhir").Format("#,##0");
-                })
-                .Summary(summary =>
-                {
-                    summary.TotalItems(items =>
-                    {
-                        items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Sum).DisplayFormat("Total").ValueFormat("#,##0");
-                        items.AddFor(m => m.JmlOpAwal).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
-                        items.AddFor(m => m.JmlOpTutupPermanen).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
-                        items.AddFor(m => m.JmlOpBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
-                        items.AddFor(m => m.JmlOpAkhir).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
-                    });
-                })
-                .MasterDetail(md =>
-                {
-                md.Enabled(true);
-                md.Template(
-                @<text>
-                    @{
-                        ViewData["JenisPajakRekap"] = new JS("data.EnumPajak");
-                        ViewData["tahun"] = new JS("data.Tahun");
-                    }
-                @await Html.PartialAsync("/Views/DataOP/ProfileOP/_RekapDetail.cshtml")
-            </text>);
-                })
-       )
+        .ID("RekapOPGrid")
+        .DataSource(Model.DataRekapOPList)
+        .ShowBorders(true)
+        .ShowRowLines(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .AllowColumnResizing(true)
+        .ColumnAutoWidth(true)
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").CssClass("fw-bold");
+            columns.AddFor(m => m.JmlOpAwal).Caption("OP Awal").Format("#,##0");
+            columns.AddFor(m => m.JmlOpTutupPermanen).Caption("OP Tutup").Format("#,##0");
+            columns.AddFor(m => m.JmlOpBaru).Caption("OP Baru").Format("#,##0");
+            columns.AddFor(m => m.JmlOpAkhir).Caption("OP Akhir").Format("#,##0");
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Sum).DisplayFormat("Total").ValueFormat("#,##0");
+                items.AddFor(m => m.JmlOpAwal).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.JmlOpTutupPermanen).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.JmlOpBaru).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.JmlOpAkhir).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+            });
+        })
+        .MasterDetail(md =>
+        {
+        md.Enabled(true);
+        md.Template(
+        @<text>
+                @{
+                    ViewData["JenisPajakRekap"] = new JS("data.EnumPajak");
+                    ViewData["tahun"] = new JS("data.Tahun");
+                }
+            @await Html.PartialAsync("/Views/DataOP/ProfileOP/_RekapDetail.cshtml")
+            <% if (data.EnumPajak === 3) { %>
+            @await Html.PartialAsync("/Views/DataOP/ProfileOP/_RekapDetailHotel.cshtml")
+            <% } %>
+        </text>);
+        })
+        )
 </div>
 
 

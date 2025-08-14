@@ -11,16 +11,16 @@ namespace MonPDLib.EF;
 public partial class DataTpkHotel
 {
     [Column("TAHUN")]
-    [Precision(4)]
-    public byte? Tahun { get; set; }
+    [Precision(10)]
+    public int? Tahun { get; set; }
 
     [Column("BULAN")]
-    [Precision(2)]
-    public byte? Bulan { get; set; }
+    [Precision(10)]
+    public int? Bulan { get; set; }
 
-    [Column("HOTEL_BINTANG", TypeName = "NUMBER(5,2)")]
+    [Column("HOTEL_BINTANG", TypeName = "NUMBER(10,2)")]
     public decimal? HotelBintang { get; set; }
 
-    [Column("HOTEL_NON_BINTANG", TypeName = "NUMBER(5,2)")]
+    [Column("HOTEL_NON_BINTANG", TypeName = "NUMBER(10,2)")]
     public decimal? HotelNonBintang { get; set; }
 }
