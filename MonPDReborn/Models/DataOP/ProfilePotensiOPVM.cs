@@ -639,7 +639,7 @@ namespace MonPDReborn.Models.DataOP
                             re.Realisasi2 = realisasiResto2;
                             re.Target3 = targetResto3;
                             re.Realisasi3 = realisasiResto3;
-                            re.TotalPotensi = totalPotensiResto;
+                            re.TotalPotensi1 = totalPotensiResto;
 
 
                             ret.Add(re);
@@ -698,7 +698,7 @@ namespace MonPDReborn.Models.DataOP
                             re.Realisasi2 = realisasiListrik2;
                             re.Target3 = targetListrik3;
                             re.Realisasi3 = realisasiListrik3;
-                            re.TotalPotensi = totalPotensiListrik;
+                            re.TotalPotensi1 = totalPotensiListrik;
 
 
                             ret.Add(re);
@@ -781,7 +781,7 @@ namespace MonPDReborn.Models.DataOP
                             re.Realisasi2 = realisasiHotel2;
                             re.Target3 = targetHotel3;
                             re.Realisasi3 = realisasiHotel3;
-                            re.TotalPotensi = totalPotensiHotel;
+                            re.TotalPotensi1 = totalPotensiHotel;
 
 
                             ret.Add(re);
@@ -874,7 +874,7 @@ namespace MonPDReborn.Models.DataOP
                             re.Realisasi2 = realisasiParkir2;
                             re.Target3 = targetParkir3;
                             re.Realisasi3 = realisasiParkir3;
-                            re.TotalPotensi = totalPotensiParkir;
+                            re.TotalPotensi1 = totalPotensiParkir;
 
 
                             ret.Add(re);
@@ -976,7 +976,7 @@ namespace MonPDReborn.Models.DataOP
                             re.Realisasi2 = realisasiHiburan2;
 
                             re.Realisasi3 = realisasiHiburan3;
-                            re.TotalPotensi = totalPotensiHiburan;
+                            re.TotalPotensi1 = totalPotensiHiburan;
 
 
                             ret.Add(re);
@@ -1035,7 +1035,7 @@ namespace MonPDReborn.Models.DataOP
                             re.Realisasi2 = realisasiAbt2;
                             re.Target3 = targetAbt3;
                             re.Realisasi3 = realisasiAbt3;
-                            re.TotalPotensi = totalPotensiAbt;
+                            re.TotalPotensi1 = totalPotensiAbt;
 
 
                             ret.Add(re);
@@ -1068,7 +1068,7 @@ namespace MonPDReborn.Models.DataOP
                             re.Realisasi2 = realisasiReklame2;
                             re.Target3 = targetReklame3;
                             re.Realisasi3 = realisasiReklame3;
-                            re.TotalPotensi = totalPotensiReklame;
+                            re.TotalPotensi1 = totalPotensiReklame;
 
 
                             ret.Add(re);
