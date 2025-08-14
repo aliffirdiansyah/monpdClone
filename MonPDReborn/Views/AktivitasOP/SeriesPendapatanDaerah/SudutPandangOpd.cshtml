@@ -1,0 +1,101 @@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.Show
+
+@{
+    int year1 = DateTime.Now.Year;
+    int year2 = year1 - 1;
+    int year3 = year1 - 2;
+    int year4 = year1 - 3;
+    int year5 = year1 - 4;
+    int year6 = year1 - 5;
+    int year7 = year1 - 6;
+}
+
+
+@(
+Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSudutPandangOpd.Opd>()
+    .ID("dg-SudutPandangOpd")
+    .DataSource(Model.SudutPandangOpd)
+    .KeyExpr("Col.Kode")
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+
+    // Enable sorting & filtering
+    .AllowColumnResizing(true)
+    .AllowColumnReordering(true)
+    .ColumnAutoWidth(true)
+
+    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .FilterRow(f => f
+    .Visible(true)
+    .ApplyFilter(GridApplyFilterMode.Auto)  // Bisa juga OnClick
+    )
+
+    .HeaderFilter(hf => hf.Visible(true))
+    .Columns(columns => {
+        columns.AddFor(m => m.Col.Kode).Caption("Kode Akun");
+        columns.AddFor(m => m.Col.Nama).Caption("Nama Akun");
+
+        columns.Add().Caption(year7.ToString())
+            .Columns(sc =>
+            {
+                sc.AddFor(m => m.Col.TargetTahun7).Caption("Target").Format("#,##0");
+                sc.AddFor(m => m.Col.RealisasiTahun7).Caption("Realisasi").Format("#,##0");
+                sc.AddFor(m => m.Col.PersentaseTahun7).Caption("%").Format("#,#0%").Format("#,#0%");
+            });
+
+        columns.Add().Caption(year6.ToString())
+            .Columns(sc =>
+            {
+                sc.AddFor(m => m.Col.TargetTahun6).Caption("Target").Format("#,##0");
+                sc.AddFor(m => m.Col.RealisasiTahun6).Caption("Realisasi").Format("#,##0");
+                sc.AddFor(m => m.Col.PersentaseTahun6).Caption("%").Format("#,#0%");
+            });
+
+        columns.Add().Caption(year5.ToString())
+            .Columns(sc =>
+            {
+                sc.AddFor(m => m.Col.TargetTahun5).Caption("Target").Format("#,##0");
+                sc.AddFor(m => m.Col.RealisasiTahun5).Caption("Realisasi").Format("#,##0");
+                sc.AddFor(m => m.Col.PersentaseTahun5).Caption("%").Format("#,#0%");
+            });
+
+        columns.Add().Caption(year4.ToString())
+            .Columns(sc =>
+            {
+                sc.AddFor(m => m.Col.TargetTahun4).Caption("Target").Format("#,##0");
+                sc.AddFor(m => m.Col.RealisasiTahun4).Caption("Realisasi").Format("#,##0");
+                sc.AddFor(m => m.Col.PersentaseTahun4).Caption("%").Format("#,#0%");
+            });
+
+        columns.Add().Caption(year3.ToString())
+            .Columns(sc =>
+            {
+                sc.AddFor(m => m.Col.TargetTahun3).Caption("Target").Format("#,##0");
+                sc.AddFor(m => m.Col.RealisasiTahun3).Caption("Realisasi").Format("#,##0");
+                sc.AddFor(m => m.Col.PersentaseTahun3).Caption("%").Format("#,#0%");
+            });
+
+        columns.Add().Caption(year2.ToString())
+            .Columns(sc =>
+            {
+                sc.AddFor(m => m.Col.TargetTahun2).Caption("Target").Format("#,##0");
+                sc.AddFor(m => m.Col.RealisasiTahun2).Caption("Realisasi").Format("#,##0");
+                sc.AddFor(m => m.Col.PersentaseTahun2).Caption("%").Format("#,#0%");
+            });
+
+        columns.Add().Caption(year1.ToString())
+            .Columns(sc =>
+            {
+                sc.AddFor(m => m.Col.TargetTahun1).Caption("Target").Format("#,##0");
+                sc.AddFor(m => m.Col.RealisasiTahun1).Caption("Realisasi").Format("#,##0");
+                sc.AddFor(m => m.Col.PersentaseTahun1).Caption("%").Format("#,#0%");
+            });
+    })
+    .MasterDetail(md => md
+    .Enabled(true)
+    .Template(new JS("ShowSeriesSudutPandangOpdSubOpd"))
+    )
+)

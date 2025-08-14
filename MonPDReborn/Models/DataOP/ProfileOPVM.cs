@@ -3237,6 +3237,20 @@ namespace MonPDReborn.Models.DataOP
 
                     case EnumFactory.EPajak.TenagaListrik:
                         var opListrik = context.DbOpListriks.FirstOrDefault(x => x.Nop == nop);
+                        if (opListrik != null)
+                        {
+                            ret.IdentitasPajak.WilayahPajak = opListrik.WilayahPajak ?? "";
+                            ret.IdentitasPajak.NpwpdNo = opListrik.Npwpd;
+                            ret.IdentitasPajak.NamaNpwpd = opListrik.NpwpdNama;
+                            ret.IdentitasPajak.NOP = opListrik.Nop;
+                            ret.IdentitasPajak.NamaObjekPajak = opListrik.NamaOp;
+                            ret.IdentitasPajak.AlamatLengkap = opListrik.AlamatOp;
+                            ret.IdentitasPajak.Telepon = opListrik.Telp;
+                            ret.IdentitasPajak.TanggalBuka = opListrik.TglMulaiBukaOp;
+                            ret.IdentitasPajak.EnumPajak = pajak;
+                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                            ret.IdentitasPajak.KategoriPajak = opListrik.KategoriNama;
+                        }
                         break;
 
                     case EnumFactory.EPajak.JasaPerhotelan:
