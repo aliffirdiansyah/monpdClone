@@ -17,9 +17,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DataAirTanah> DataAirTanahs { get; set; }
 
+    public virtual DbSet<DataPpj> DataPpjs { get; set; }
+
     public virtual DbSet<DataReklame> DataReklames { get; set; }
 
     public virtual DbSet<DataTargetPajak> DataTargetPajaks { get; set; }
+
+    public virtual DbSet<DataTpkHotel> DataTpkHotels { get; set; }
 
     public virtual DbSet<DatapbbSatupetum> DatapbbSatupeta { get; set; }
 
@@ -378,6 +382,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DataAirTanah>(entity =>
         {
             entity.HasKey(e => e.Nop).HasName("SYS_C0033796");
+        });
+
+        modelBuilder.Entity<DataPpj>(entity =>
+        {
+            entity.ToView("DATA_PPJ");
         });
 
         modelBuilder.Entity<DataReklame>(entity =>
@@ -918,7 +927,6 @@ public partial class ModelContext : DbContext
         {
             entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_OP_REKLAME_PK");
 
-            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();
             entity.Property(e => e.KodeObyek).IsFixedLength();
@@ -971,11 +979,6 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_PARKIR_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
-        });
-
-        modelBuilder.Entity<DbPotensiPpj>(entity =>
-        {
-            entity.ToView("DB_POTENSI_PPJ");
         });
 
         modelBuilder.Entity<DbPotensiReklame>(entity =>

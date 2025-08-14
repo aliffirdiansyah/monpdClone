@@ -55,11 +55,11 @@
         justify-content: space-between;
         align-items: start;
         margin-bottom: 0.5rem;
-        gap: 2rem; 
+        gap: 2rem;
     }
 
     .label {
-        width: 160px; 
+        width: 160px;
         flex-shrink: 0;
         font-size: 14px;
         color: #6c757d;
@@ -283,7 +283,7 @@
                                         Total Terjual per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted">
-                                         @terjualBulan.ToString("N0") Terjual
+                                        @terjualBulan.ToString("N0") Terjual
                                     </p>
                                 </div>
                             </div>
@@ -292,7 +292,7 @@
                 </div>
             </div>
 
-            
+
 
         </div>
 
@@ -522,13 +522,29 @@
                 </div>
             </div>
 
-            
+
 
         </div>
-    </div>   
+    </div>
 }
 else
 {
-    <h4>Data Tidak Ditemukan</h4>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-12">
+                <div class="card text-center shadow-sm border-0">
+                    <div class="card-body">
+                        <img src="~/assets/images/coming-soon-img.png" alt="Tidak Ada Data" class="img-fluid mb-4" style="max-width: 180px;" />
+                        <h5 class="card-title text-danger">Data Tidak Ditemukan</h5>
+                        <p class="card-text text-muted">
+                            Maaf, data yang Anda cari belum tersedia atau tidak ditemukan.
+                            @* Coba ubah filter atau periksa kembali input Anda. *@
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
+
 
