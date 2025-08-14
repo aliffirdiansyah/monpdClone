@@ -144,7 +144,10 @@
             loadDetail();
         });
 
-         function loadDetail() {
+         
+
+        
+                 function loadDetail() {
             const nop = $("#Keyword").val();
             const jenisPajak = $("#JenisPajak").val();
 
@@ -157,36 +160,43 @@
                 return;
             }
 
-             $("#detailContainer").load('/ProfilePembayaranOP/Detail?' + $.param({
-                nop: nop,
-                jenisPajak: jenisPajak,
-                tahunKiri: new Date().getFullYear(),  // atau dari dropdown/tahun default
-                tahunKanan: new Date().getFullYear()  // atau dari dropdown/tahun default
-            }));
+            const tahunKiri = new Date().getFullYear();
+            const tahunKanan = tahunKiri - 1; // otomatis minus 1
 
-        }
+            $("#tahunKiri").val(tahunKiri);
+            $("#tahunKanan").val(tahunKanan);
 
-        $(document).on("change", "#tahunKiri", function () {
-            changeTahun('kiri', $(this).val());
-        });
-
-        $(document).on("change", "#tahunKanan", function () {
-            changeTahun('kanan', $(this).val());
-        });
-
-        function changeTahun(side, tahun) {
-            const nop = $('#DetailNOP').val();
-            const jenisPajak = $('#DetailJenisPajak').val();
-            const tahunKiri = (side === 'kiri') ? tahun : $('#tahunKiri').val();
-            const tahunKanan = (side === 'kanan') ? tahun : $('#tahunKanan').val();
-
-            $("#detailContainer").load('/ProfilePembayaranOP/Detail', {
+            $("#detailContainer").load('/ProfilePembayaranOP/Detail?' + $.param({
                 nop: nop,
                 jenisPajak: jenisPajak,
                 tahunKiri: tahunKiri,
                 tahunKanan: tahunKanan
-            });
+            }));
         }
+         $(document).on("change", "#tahunKiri", function () {
+             const tahunKiri = parseInt($(this).val()) || new Date().getFullYear();
+             $("#tahunKanan").val(tahunKiri - 1);
+             changeTahun('kiri', tahunKiri);
+         });
+
+         $(document).on("change", "#tahunKanan", function () {
+             changeTahun('kanan', $(this).val());
+         });
+
+         function changeTahun(side, tahun) {
+             const nop = $('#DetailNOP').val();
+             const jenisPajak = $('#DetailJenisPajak').val();
+
+             const tahunKiri = (side === 'kiri') ? tahun : $('#tahunKiri').val();
+             const tahunKanan = (side === 'kanan') ? tahun : $('#tahunKanan').val();
+
+             $("#detailContainer").load('/ProfilePembayaranOP/Detail', {
+                 nop: nop,
+                 jenisPajak: jenisPajak,
+                 tahunKiri: tahunKiri,
+                 tahunKanan: tahunKanan
+             });
+         }
 
 
     </script>

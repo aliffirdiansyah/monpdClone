@@ -1,31 +1,69 @@
-﻿@model List<MonPDReborn.Models.DataOP.ProfileOPVM.TPKHotel>
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowTPK
 
-<table class="table table-hover table-bordered align-middle">
-    <thead class="table-light text-center">
-        <tr>
-            <th style="width: 30%;">Bulan</th>
-            <th style="width: 35%;">Hotel Bintang</th>
-            <th style="width: 35%;">Hotel Non Bintang</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
-            {
+<div class="row">
+    <!-- Tabel Tahun Kiri -->
+    <div class="col-md-6">
+        <h5 class="text-center">Tahun @Model.TahunKiri</h5>
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light text-center">
                 <tr>
-                    <td class="text-start">@item.BulanNama</td>
-                    <td class="text-end">@item.HotelBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
-                    <td class="text-end">@item.HotelNonBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
+                    <th style="width: 30%;">Bulan</th>
+                    <th style="width: 35%;">Hotel Bintang</th>
+                    <th style="width: 35%;">Hotel Non Bintang</th>
                 </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="3" class="text-center text-muted">Tidak ada data realisasi untuk tahun ini.</td>
-            </tr>
-        }
-    </tbody>
+            </thead>
+            <tbody>
+                @if (Model.Kiri != null && Model.Kiri.Any())
+                {
+                    foreach (var item in Model.Kiri)
+                    {
+                        <tr>
+                            <td class="text-start">@item.BulanNama</td>
+                            <td class="text-end">@item.HotelBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
+                            <td class="text-end">@item.HotelNonBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">Tidak ada data untuk tahun ini.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-</table>
+    <!-- Tabel Tahun Kanan -->
+    <div class="col-md-6">
+        <h5 class="text-center">Tahun @Model.TahunKanan</h5>
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light text-center">
+                <tr>
+                    <th style="width: 30%;">Bulan</th>
+                    <th style="width: 35%;">Hotel Bintang</th>
+                    <th style="width: 35%;">Hotel Non Bintang</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Kanan != null && Model.Kanan.Any())
+                {
+                    foreach (var item in Model.Kanan)
+                    {
+                        <tr>
+                            <td class="text-start">@item.BulanNama</td>
+                            <td class="text-end">@item.HotelBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
+                            <td class="text-end">@item.HotelNonBintang.ToString("N0", new System.Globalization.CultureInfo("id-ID"))</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">Tidak ada data untuk tahun ini.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
