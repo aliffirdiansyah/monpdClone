@@ -458,62 +458,72 @@
             </div>
 
             <div class="card">
-                <div class="card-header d-flex bg-elegant-dark">
-                    <div class="flex-grow-1">
-                        <h4 class="card-title fs-16 mb-0 text-white">
-                            Rumus Lengkap Perhitungan Potensi Pajak
-                        </h4>
+                <div class="accordion" id="accordionPotensiPajak">
+
+                    <!-- Accordion Tunggal -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPotensi">
+                            <button class="accordion-button collapsed bg-elegant-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePotensi" aria-expanded="false" aria-controls="collapsePotensi">
+                                Rumus Lengkap Perhitungan Potensi Pajak
+                            </button>
+                        </h2>
+                        <div id="collapsePotensi" class="accordion-collapse collapse" aria-labelledby="headingPotensi" data-bs-parent="#accordionPotensiPajak">
+                            <div class="accordion-body">
+
+                                <!-- Perhitungan Omzet Tenant/Catering -->
+                                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet Tenant/Catering</h4>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Rata-Rata Terjual (Weekdays) = Kapasitas Tenant/Catering x Turnover Weekdays
+                                </p>
+                                <p class="fs-14 mb-2 fw-bold text-dark">
+                                    = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekdaysCatering.ToString("N2") = @Model.RataRataTerjualWeekdaysCatering.ToString("N0") orang
+                                </p>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Rata-Rata Terjual (Weekend) = Kapasitas Tenant/Catering x Turnover Weekend
+                                </p>
+                                <p class="fs-14 mb-2 fw-bold text-dark">
+                                    = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekendCatering.ToString("N2") = @Model.RataRataTerjualWeekendCatering.ToString("N0") orang
+                                </p>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 11) + (Rata-Rata Bill/Orang x Terjual Weekend x 4)
+                                </p>
+                                <p class="fs-14 mb-3 fw-bold text-dark">
+                                    = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 11) +
+                                    (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 4) =
+                                    Rp. @Model.OmzetPerBulanCatering.ToString("N0")
+                                </p>
+
+                                <hr>
+
+                                <!-- Perhitungan Potensi Pajak -->
+                                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
+                                </p>
+                                <p class="fs-14 mb-2 fw-bold text-dark">
+                                    = Rp. @Model.OmzetPerBulanCatering.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0")
+                                </p>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                                </p>
+                                <p class="fs-14 fw-bold text-dark">
+                                    = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
+                                </p>
+
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="card-body">
-
-                    <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet Tenant/Catering</h4>
-
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Rata-Rata Terjual (Weekdays) = Kapasitas Tenant/Catering x Turnover Weekdays
-                    </p>
-                    <p class="fs-14 mb-2 fw-bold text-dark">
-                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekdaysCatering.ToString("N2") = @Model.RataRataTerjualWeekdaysCatering.ToString("N0") orang
-                    </p>
-
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Rata-Rata Terjual (Weekend) = Kapasitas Tenant/Catering x Turnover Weekend
-                    </p>
-                    <p class="fs-14 mb-2 fw-bold text-dark">
-                        = @Model.KapasitasTenantCatering.ToString("N0") x @Model.TurnoverWeekendCatering.ToString("N2") = @Model.RataRataTerjualWeekendCatering.ToString("N0") orang
-                    </p>
-
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 11) + (Rata-Rata Bill/Orang x Terjual Weekend x 4)
-                    </p>
-                    <p class="fs-14 mb-3 fw-bold text-dark">
-                        = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 11) +
-                        (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 4) =
-                        Rp. @Model.OmzetPerBulanCatering.ToString("N0")
-                    </p>
-
-                    <hr>
-
-                    <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
-
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
-                    </p>
-                    <p class="fs-14 mb-2 fw-bold text-dark">
-                        = Rp. @Model.OmzetPerBulanCatering.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0")
-                    </p>
-
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
-                    </p>
-                    <p class="fs-14 fw-bold text-dark">
-                        = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
-                    </p>
 
                 </div>
-
             </div>
+
+            
+
         </div>
     </div>   
 }

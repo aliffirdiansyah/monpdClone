@@ -138,12 +138,9 @@
             $("#loading2-DataPotensi").hide();
         }
 
-        function onDetailClick(e) {
-            // Pastikan tidak submit default tombol
-            e.event.preventDefault();
-
-            // Ambil data baris terkait
-            const data = e.row?.data;
+        function onDetailClickCellTemplate(cellElement, cellInfo) {
+            // Ambil data dari row
+            const data = cellInfo.data;
 
             if (!data) {
                 DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
@@ -152,52 +149,90 @@
 
             const jenisPajak = data.EnumPajak;
             const kategori = data.EnumKategori;
+            const value = cellInfo.value ?? 0;
 
             if (!jenisPajak || !kategori) {
                 DevExpress.ui.notify("Jenis Pajak atau Kategori kosong", "error", 2000);
                 return;
             }
 
-            // Tampilkan loader
-            $("#loader").show();
-            const $modal = $("#staticBackdropLargeScrollable");
-            $modal.modal("hide");
+            // Buat link clickable
+            const $link = $('<a>')
+                .addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    // Tampilkan loader
+                    $("#loader").show();
+                    const $modal = $("#staticBackdropLargeScrollable");
+                    $modal.modal("hide");
 
-            // Panggil server
-            $.ajax({
-                url: '/ProfilePotensiOP/ShowData',
-                type: 'GET',
-                data: {
-                    JenisPajak: jenisPajak,
-                    Kategori: kategori
-                },
-                success: function (response) {
-                    $("#loader").hide();
+                    // Panggil server
+                    $.ajax({
+                        url: '/ProfilePotensiOP/ShowData',
+                        type: 'GET',
+                        data: {
+                            JenisPajak: jenisPajak,
+                            Kategori: kategori
+                        },
+                        success: function (response) {
+                            $("#loader").hide();
 
-                    if (response.Status === undefined) {
-                        $modal.find(".modal-title").html("Detail Potensi");
-                        $modal.find(".modal-body").html(response);
-                        $modal.modal('show');
-                        
-                    } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        });
-                    }
-                },
-                error: function () {
-                    $("#loader").hide();
-                    $modal.find(".modal-title").html("Detail WP");
-                    $modal.find(".modal-body").html('<div class="text-danger">❌ Gagal memuat data detail.</div>');
-                    $modal.modal('show');
-                },
-                complete: function () {
-                    $("#loader").hide();
-                }
-            });
+                            if (response.Status === undefined) {
+                                $modal.find(".modal-title").html("Detail Potensi");
+                                $modal.find(".modal-body").html(response);
+                                $modal.modal('show');
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '<b style="color:orange">Peringatan</b>',
+                                    text: response.Message
+                                });
+                            }
+                        },
+                        error: function () {
+                            $("#loader").hide();
+                            $modal.find(".modal-title").html("Detail WP");
+                            $modal.find(".modal-body").html('<div class="text-danger">❌ Gagal memuat data detail.</div>');
+                            $modal.modal('show');
+                        },
+                        complete: function () {
+                            $("#loader").hide();
+                        }
+                    });
+                });
+
+            $(cellElement).append($link);
         }
+
+        function detailOPCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            // Jika nilainya 0 atau null, tampilkan saja 0
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+
+            const nop = cellInfo.data.NOP;
+            const pajak = cellInfo.data.EnumPajak;
+
+            // Buat link klik
+            const $link = $('<a>')
+                .addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    const url = '@Url.Action("Detail", "ProfileOP")'
+                                + '?nop=' + nop
+                                + '&pajak=' + pajak;
+                    window.open(url, '_blank');
+                });
+
+            $(cellElement).append($link);
+        }
+
+
 
     </script>
 }

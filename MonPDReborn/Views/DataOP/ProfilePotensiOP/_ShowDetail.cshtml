@@ -3,6 +3,12 @@
     var tahun1 = (currentYear - 2).ToString();
     var tahun2 = (currentYear - 1).ToString();
     var tahun3 = currentYear.ToString();
+
+    var tahunnext1 = (currentYear + 1).ToString();
+    var tahunnext2 = (currentYear + 2).ToString();
+    var tahunnext3 = (currentYear + 3).ToString();
+    var tahunnext4 = (currentYear + 4).ToString();
+    var tahunnext5 = (currentYear + 5).ToString();
     var jen = ViewData["JenisPajak"];
 }
 <div class="table-responsive">
@@ -50,17 +56,15 @@
                     subColumns.AddFor(x => x.Realisasi3).Caption("Realisasi").Format("#,##0");
                     subColumns.AddFor(x => x.Capaian3).Caption("Capaian").Format("#,#0%");
                 });
-                columns.AddFor(x => x.TotalPotensi).Caption("Total Potensi").Format("#,##0");
-                columns.Add()
-                .Type(GridCommandColumnType.Buttons)
-                .Fixed(false)
-                .Buttons(b =>
+                columns.Add().Caption("POTENSI").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                 {
-                    b.Add()
-                .Text("Detail")
-                .Icon("search")
-                .OnClick("onDetailClick");
+                    subColumns.AddFor(x => x.TotalPotensi1).Caption("Total " + tahunnext1).Format("#,##0").CellTemplate(new JS("onDetailClickCellTemplate"));
+                    subColumns.AddFor(x => x.TotalPotensi2).Caption("Total " + tahunnext2).Format("#,##0");
+                    subColumns.AddFor(x => x.TotalPotensi3).Caption("Total " + tahunnext3).Format("#,##0");
+                    subColumns.AddFor(x => x.TotalPotensi4).Caption("Total " + tahunnext4).Format("#,##0");
+                    subColumns.AddFor(x => x.TotalPotensi5).Caption("Total " + tahunnext5).Format("#,##0");
                 });
+                
             })
             .Summary(summary =>
             {
@@ -106,18 +110,36 @@
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
+
                     items.AddFor(x => x.Capaian3)
                 .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
                 .ValueFormat("#,#0%").DisplayFormat("{0}");
 
-                    items.AddFor(x => x.TotalPotensi)
+                    items.AddFor(x => x.TotalPotensi1)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
+
+                    items.AddFor(x => x.TotalPotensi2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+                
+                    items.AddFor(x => x.TotalPotensi3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+                
+                    items.AddFor(x => x.TotalPotensi4)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
                 });
 
             })
             )
+            <h4>@jen</h4>
     @if (jen == 3.ToString())
     {
         Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DetailPotensi>()
@@ -158,17 +180,7 @@
                 subColumns.AddFor(x => x.Realisasi3).Caption("Realisasi").Format("#,##0");
                 subColumns.AddFor(x => x.Capaian3).Caption("Capaian").Format("#,#0%");
             });
-            columns.AddFor(x => x.TotalPotensi).Caption("Total Potensi").Format("#,##0");
-            columns.Add()
-            .Type(GridCommandColumnType.Buttons)
-            .Fixed(false)
-            .Buttons(b =>
-            {
-                b.Add()
-            .Text("Detail")
-            .Icon("search")
-            .OnClick("onDetailClick");
-            });
+            columns.AddFor(x => x.TotalPotensi1).Caption("Total Potensi").Format("#,##0");
         })
         .Summary(summary =>
         {
@@ -218,7 +230,7 @@
             .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
             .ValueFormat("#,#0%").DisplayFormat("{0}");
 
-                items.AddFor(x => x.TotalPotensi)
+                items.AddFor(x => x.TotalPotensi1)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");

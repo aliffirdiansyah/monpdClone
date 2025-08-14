@@ -40,28 +40,120 @@
     <!-- Navigation Tabs -->
     <div class="card bg-info-subtle shadow-none border-0 mt-4">
         <div class="card-body px-4 py-3">
-            <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
-                        <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
-                        <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
-                        <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-detail-tab" data-bs-toggle="pill" data-bs-target="#pills-detail" type="button" role="tab" aria-controls="pills-detail" aria-selected="false">
-                        <i class="ri ri-file-info-line fs-5 me-2"></i> Detail
-                    </button>
-                </li>
-            </ul>
+            @switch (Model.Pajak)
+            {
+                case EnumFactory.EPajak.MakananMinuman:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li>
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.JasaPerhotelan:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-okupansi-tab" data-bs-toggle="pill" data-bs-target="#pills-okupansi" type="button" role="tab" aria-controls="pills-okupansi" aria-selected="false">
+                                <i class="ri ri-file-info-line fs-5 me-2"></i> Okupansi
+                            </button>
+                        </li>
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.JasaKesenianHiburan:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li>
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.JasaParkir:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li>
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.TenagaListrik:
+                <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                            <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                            <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                            <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                        </button>
+                    </li>
+                </ul>
+                    break;
+                case EnumFactory.EPajak.Reklame:
+                    break;
+                case EnumFactory.EPajak.PBB:
+                    break;
+                case EnumFactory.EPajak.BPHTB:
+                    break;
+                case EnumFactory.EPajak.OpsenPkb:
+                    break;
+                case EnumFactory.EPajak.OpsenBbnkb:
+                    break;
+            }
+            
         </div>
     </div>
 </div>
@@ -304,236 +396,18 @@
         </div>
     </div>
 
-    @switch (Model.Pajak)
-    {
-        case EnumFactory.EPajak.MakananMinuman:
-            <!-- Detail Tab -->
-            <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="pills-detail-tab">
-                <div class="card mb-4">
-                    <div class="card bg-info-subtle border-0 mb-0">
-                        <div class="card-body px-4 py-3">
-                            <h4 class="fw-semibold mb-0">Detail</h4>
-                        </div>
-                    </div>
-                    <div class="card-body px-0 py-3">
-                        <div class="row">
-                            <!-- Detail Operasional -->
-                            <div class="col-lg-12 mb-4">
-                                <div class="card-body">
-                                    <h5 class="fw-bold">Detail Banquet</h5>
-                                    <table class="table table-bordered">
-                                        <thead class="table-light text-center">
-                                            <tr>
-                                                <th>Hari</th>
-                                                <th>Jam Buka</th>
-                                                <th>JAm Tutup</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var operasional in Model.DataDetail.RestoRow.OperasionalRestoDetailList)
-                                            {
-                                                <tr>
-                                                    <td>@operasional.Hari</td>
-                                                    <td class="text-center">@operasional.JamBuka</td>
-                                                    <td class="text-center">@operasional.JamTutup</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Detail Fasilitas -->
-                            <div class="col-lg-12 mb-4">
-                                <div class="card-body">
-                                    <h5 class="fw-bold">Detail Fasilitas</h5>
-                                    <table class="table table-bordered">
-                                        <thead class="table-light text-center">
-                                            <tr>
-                                                <td>Nama</td>
-                                                <td>Jumlah</td>
-                                                <td>Kapasitas</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var fasilitas in Model.DataDetail.RestoRow.FasilitasRestoDetailList)
-                                            {
-                                                <tr>
-                                                    <td>@fasilitas.Nama</td>
-                                                    <td class="text-center">@fasilitas.Jumlah</td>
-                                                    <td class="text-center">@fasilitas.Kapasitas</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-12 mb-4">
-                                <div class="card-body">
-                                    <h5 class="fw-bold">Detail Kapasitas</h5>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span class="fw-semibold">Jumlah Meja </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.JumlahMeja</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span class="fw-semibold">Jumlah Kursi </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.JumlahKursi</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span class="fw-semibold">Kapasitas Ruangan </span><span>@Model.DataDetail.RestoRow.KapasitasRestoDetailRow.KapasitasRuangan</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-
-                        </div>
-                    </div>
+    <div class="tab-pane fade" id="pills-okupansi" role="tabpanel" aria-labelledby="pills-okupansi-tab">
+        <div class="card mb-4">
+            <div class="card bg-info-subtle border-0 mb-0">
+                <div class="card-body px-4 py-3">
+                    <h4 class="fw-semibold mb-0">Okupansi @Model.DataDetail.IdentitasPajak.NamaObjekPajak</h4>
                 </div>
             </div>
-            break;
-
-        case EnumFactory.EPajak.TenagaListrik:
-
-            break;
-
-        case EnumFactory.EPajak.JasaPerhotelan:
-            <!-- Detail Tab -->
-            <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="pills-detail-tab">
-                <div class="card mb-4">
-                    <div class="card bg-info-subtle border-0 mb-0">
-                        <div class="card-body px-4 py-3">
-                            <h4 class="fw-semibold mb-0">Detail</h4>
-                        </div>
-                    </div>
-                    <div class="card-body px-0 py-3">
-                        <div class="row">
-                            <!-- Detail Banquet -->
-                            <div class="col-lg-12 mb-4">
-                                <div class="card-body">
-                                    <h5 class="fw-bold">Detail Banquet</h5>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Nama</th>
-                                                <th>Jumlah</th>
-                                                <th>Jenis Banquet</th>
-                                                <th>Kapasitas</th>
-                                                <th>Harga Sewa</th>
-                                                <th>Harga Paket</th>
-                                                <th>Okupansi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in Model.DataDetail.HotelRow.BanquetHotelDetailList)
-                                            {
-                                                <tr>
-                                                    <td>@item.Nama</td>
-                                                    <td>@item.Jumlah</td>
-                                                    <td>@item.JenisBanquet</td>
-                                                    <td>@item.Kapasitas</td>
-                                                    <td>@item.HargaSewa.ToString("N0")</td>
-                                                    <td>@item.HargaPaket.ToString("N0")</td>
-                                                    <td>@item.Okupansi %</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Detail Fasilitas -->
-                            <div class="col-lg-12 mb-4">
-                                <div class="card-body">
-                                    <h5 class="fw-bold">Detail Fasilitas</h5>
-                                    <table class="table table-bordered">
-                                        <thead class="table-light text-center">
-                                            <tr>
-                                                <td>Nama</td>
-                                                <td>Jumlah</td>
-                                                <td>Kapasitas</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var fasilitas in Model.DataDetail.HotelRow.FasilitasHotelDetailList)
-                                            {
-                                                <tr>
-                                                    <td>@fasilitas.Nama</td>
-                                                    <td class="text-center">@fasilitas.Jumlah</td>
-                                                    <td class="text-center">@fasilitas.Kapasitas</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Detail Kamar -->
-                            <div class="col-lg-12 mb-4">
-                                <div class="card-body">
-                                    <h5 class="fw-bold">Detail Kamar</h5>
-                                    <table class="table table-bordered">
-                                        <thead class="table-light text-center">
-                                            <tr>
-                                                <th>Tipe Kamar</th>
-                                                <th>Jumlah</th>
-                                                <th>Tarif per Malam</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var kamar in Model.DataDetail.HotelRow.KamarHotelDetailList)
-                                            {
-                                                <tr>
-                                                    <td>@kamar.Kamar</td>
-                                                    <td class="text-center">@kamar.Jumlah</td>
-                                                    <td class="text-end">@kamar.Tarif.ToString("C0")</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="card-body px-0 py-3">
+                
             </div>
-            break;
-
-        case EnumFactory.EPajak.JasaParkir:
-
-            break;
-
-        case EnumFactory.EPajak.JasaKesenianHiburan:
-
-            break;
-
-        case EnumFactory.EPajak.AirTanah:
-
-            break;
-
-        case EnumFactory.EPajak.Reklame:
-
-            break;
-
-        case EnumFactory.EPajak.PBB:
-
-            break;
-
-        case EnumFactory.EPajak.BPHTB:
-            //
-            break;
-
-        case EnumFactory.EPajak.OpsenPkb:
-            //
-            break;
-
-        case EnumFactory.EPajak.OpsenBbnkb:
-            //
-            break;
-
-        default:
-            break;
-    }
+        </div>
+    </div>
 
 
 </div>

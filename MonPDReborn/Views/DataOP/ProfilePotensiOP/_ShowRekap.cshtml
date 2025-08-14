@@ -1,17 +1,6 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.ShowRekap
 
 <div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex bg-header-color align-items-center">
-                <div class="flex-grow-1">
-                    <h4 class="card-title text-black fs-16 mb-0">
-                        Dashboard Potensi Pajak
-                    </h4>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-lg-6 mb-3">
         <div class="card shadow-sm border-0 card-animate">
             <div class="card-body d-flex align-items-center">
@@ -84,6 +73,13 @@
     var tahun1 = (currentYear - 2).ToString();
     var tahun2 = (currentYear - 1).ToString();
     var tahun3 = currentYear.ToString();
+
+    var tahunnext1 = (currentYear + 1).ToString();
+    var tahunnext2 = (currentYear + 2).ToString();
+    var tahunnext3 = (currentYear + 3).ToString();
+    var tahunnext4 = (currentYear + 4).ToString();
+    var tahunnext5 = (currentYear + 5).ToString();
+
 }
 
 
@@ -126,7 +122,14 @@
                 subColumns.AddFor(x => x.Realisasi3).Caption("Realisasi").Format("#,##0");
                 subColumns.AddFor(x => x.Capaian3).Caption("Capaian").Format("#,#0%");
             });
-            columns.AddFor(x => x.TotalPotensi).Caption("Total Potensi").Format("#,##0");
+            columns.Add().Caption("POTENSI").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+            {
+                subColumns.AddFor(x => x.TotalPotensi1).Caption("Total " + tahunnext1).Format("#,##0");
+                subColumns.AddFor(x => x.TotalPotensi2).Caption("Total " + tahunnext2).Format("#,##0");
+                subColumns.AddFor(x => x.TotalPotensi3).Caption("Total " + tahunnext3).Format("#,##0");
+                subColumns.AddFor(x => x.TotalPotensi4).Caption("Total " + tahunnext4).Format("#,##0");
+                subColumns.AddFor(x => x.TotalPotensi5).Caption("Total " + tahunnext5).Format("#,##0");
+            });
         })
         .Summary(summary =>
         {
@@ -181,7 +184,22 @@
             .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
             .ValueFormat("#,#0%").DisplayFormat("{0}");
 
-                items.AddFor(x => x.TotalPotensi)
+                items.AddFor(x => x.TotalPotensi1)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(x => x.TotalPotensi2)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(x => x.TotalPotensi3)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(x => x.TotalPotensi4)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
