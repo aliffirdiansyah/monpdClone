@@ -3274,15 +3274,15 @@ namespace MonPDReborn.Models.DataOP
                                  }).ToList();
 
                             var accDb = context.DbOpAccHotels
-                                .Where(x => x.Nop == nop)
+                                .Where(x => x.Nop == nop && x.Bulan.HasValue)
                                 .Select(x => new
                                 {
-                                    Bulan = x.Bulan ?? 0,
+                                    Bulan = (int)x.Bulan.Value,
                                     TahunMines1 = x.TahunMin1 ?? 0,
                                     TahunNow = x.TahunIni ?? 0
                                 }).ToList();
 
-                            var accHotelDetailList = (from b in semuaBulan
+                            ret.HotelRow.AccHotelDetailList  = (from b in semuaBulan
                                                       join d in accDb on b.Bulan equals d.Bulan into gj
                                                       from sub in gj.DefaultIfEmpty()
                                                       select new DetailHotel.AccHotel
@@ -3292,8 +3292,9 @@ namespace MonPDReborn.Models.DataOP
                                                           TahunMines1 = sub?.TahunMines1 ?? 0,
                                                           TahunNow = sub?.TahunNow ?? 0
                                                       })
-                                                      .OrderBy(x => x.Bulan) 
+                                                      .OrderBy(x => x.Bulan)
                                                       .ToList();
+
                             //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
                             //    .Where(x => x.Nop == nop)
                             //    .Select(x => new DetailHotel.DetailBanquet
