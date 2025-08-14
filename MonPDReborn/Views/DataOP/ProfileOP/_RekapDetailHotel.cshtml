@@ -1,0 +1,141 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}<div class="mt-4">
+
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetail>()
+        .ID("RekapDetailHotelNonBintangGrid")
+        .DataSource(d => d.Mvc()
+        .LoadAction("GetRekapDetailData")
+        .Key("Kategori")
+        .LoadParams(new
+        {
+            JenisPajak = ViewData["JenisPajakRekap"],
+            Tahun = ViewData["tahun"]
+        })
+        )
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 5, 10, 20 })
+            .ShowInfo(true)
+        )
+        .OnContentReady("function(e) { e.component.filter(['KategoriGroup', '=', 'Hotel Non Bintang']); }")
+        .Columns(columns =>
+        {
+
+            columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");
+            columns.AddFor(m => m.JmlOpAwal).Format("#,##0")
+                .DataField("OPAwal")
+                .Caption("OP Awal")
+                .CellTemplate(@<text>
+                    <div style="display: flex; align-items: center; justify-content: flex-end;">
+                        <a href="javascript:void(0);"
+                           class="value-link text-decoration-none"
+                           onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAwal', '<%- data.Tahun %>')"
+                           title="Lihat Detail">
+                            <%- (value || 0).toLocaleString('id-ID') %>
+                        </a>
+                    </div>
+                </text>)
+                .CalculateCellValue("data => data.JmlOpAwal");
+
+            columns.AddFor(m => m.JmlOpTutupPermanen)
+                .DataField("JmlOpTutupPermanen").Format("#,##0")
+                .Caption("OP Tutup")
+                .CellTemplate(@<text>
+                    <div style="display: flex; align-items: center; justify-content: flex-end;">
+                        <a href="javascript:void(0);"
+                            class="value-link text-decoration-none"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpTutupPermanen', '<%- data.Tahun %>')"
+                            title="Lihat Detail">
+                            <%- (value || 0).toLocaleString('id-ID') %>
+                        </a>
+                    </div>
+                </text>)
+                .CalculateCellValue("data => data.JmlOpTutupPermanen");
+
+            columns.AddFor(m => m.JmlOpBaru)
+                .DataField("JmlOpBaru").Format("#,##0")
+                .Caption("OP Baru")
+                .CellTemplate(@<text>
+                    <div style="display: flex; align-items: center; justify-content: flex-end;">
+                        <a href="javascript:void(0);"
+                            class="value-link text-decoration-none"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpBaru', '<%- data.Tahun %>')"
+                            title="Lihat Detail">
+                            <%- (value || 0).toLocaleString('id-ID') %>
+                        </a>
+                    </div>
+                </text>)
+                .CalculateCellValue("data => data.JmlOpBaru");
+
+
+            columns.AddFor(m => m.JmlOpAkhir)
+                .DataField("JmlOpAkhir").Format("#,##0")
+                .Caption("OP Akhir")
+                .CellTemplate(@<text>
+                    <div style="display: flex; align-items: center; justify-content: flex-end;">
+                        <a href="javascript:void(0);"
+                            class="value-link text-decoration-none"
+                            onclick="onDetailClick('<%- data.EnumPajak %>','<%- data.KategoriId %>', 'JmlOpAkhir', '<%- data.Tahun %>')"
+                            title="Lihat Detail">
+                            <%- (value || 0).toLocaleString('id-ID') %>
+                        </a>
+                    </div>
+                </text>)
+                .CalculateCellValue("data => data.JmlOpAkhir");
+
+
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.Add()
+                    .Column("Kategori")
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("Total")
+                    .Alignment(HorizontalAlignment.Center);
+
+                items.Add()
+                    .Column("OPAwal")
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}")
+                    .Alignment(HorizontalAlignment.Right);
+
+                items.Add()
+                    .Column("JmlOpTutupPermanen")
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}")
+                    .Alignment(HorizontalAlignment.Right);
+
+                items.Add()
+                    .Column("JmlOpBaru")
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}")
+                    .Alignment(HorizontalAlignment.Right);
+
+                items.Add()
+                    .Column("JmlOpAkhir")
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}")
+                    .Alignment(HorizontalAlignment.Right);
+
+               
+
+            });
+        })
+    )
+</div>

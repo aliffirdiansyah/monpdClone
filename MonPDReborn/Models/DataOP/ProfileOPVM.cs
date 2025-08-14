@@ -647,6 +647,21 @@ namespace MonPDReborn.Models.DataOP
                             var OpHotelBaru = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
                             var OpHotelAkhir = context.DbOpHotels.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kat.Id);
 
+                            // Determine KategoriGroup based on nama
+                            string kategoriGroup;
+                            if (kat.Nama.ToUpper().Contains("BINTANG") && !kat.Nama.ToUpper().Contains("NON"))
+                            {
+                                kategoriGroup = "Hotel Berbintang";
+                            }
+                            else if (kat.Nama.ToUpper().Contains("NON"))
+                            {
+                                kategoriGroup = "Hotel Non Bintang";
+                            }
+                            else
+                            {
+                                kategoriGroup = "Hotel Lainnya"; // fallback
+                            }
+
                             ret.Add(new RekapDetail
                             {
                                 JenisPajak = JenisPajak.GetDescription(),
@@ -654,6 +669,7 @@ namespace MonPDReborn.Models.DataOP
                                 Tahun = tahun,
                                 KategoriId = (int)kat.Id,
                                 Kategori = kat.Nama,
+                                KategoriGroup = kategoriGroup,
                                 JmlOpAwal = OpHotelAwal,
                                 JmlOpTutupPermanen = OpHotelTutup,
                                 JmlOpBaru = OpHotelBaru,
@@ -3560,6 +3576,8 @@ namespace MonPDReborn.Models.DataOP
         {
             public int EnumPajak { get; set; }
 
+            //property baru untuk split
+            public string KategoriGroup { get; set; }
             public string JenisPajak { get; set; } = null!;
             public int KategoriId { get; set; }
             public int Urutan { get; set; }
