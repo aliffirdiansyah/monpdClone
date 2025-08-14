@@ -1,0 +1,21 @@
+﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.Show
+@{
+
+}
+
+@{
+    switch (Model.Type)
+    {
+        case 1:
+            @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/ShowSudutPandangRekening.cshtml", Model);
+            break;
+        case 2:
+            @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/SudutPandangOpd.cshtml", Model);
+            break;
+        case 3:
+            @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/SudutPandangRekeningJenisObjekOpd.cshtml", Model);
+            break;
+        default:
+            break;
+    }
+} 

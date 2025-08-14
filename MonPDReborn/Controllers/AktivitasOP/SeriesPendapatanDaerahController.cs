@@ -46,5 +46,27 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+
+        public IActionResult Show(int type)
+        {
+            try
+            {
+                ViewData["Title"] = controllerName;
+                var model = new Models.AktivitasOP.SeriesPendapatanDaerahVM.Show(type);
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+    }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+}
+        }
     }
 }
