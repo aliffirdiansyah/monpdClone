@@ -19,8 +19,11 @@ namespace MonPDLib
         public MonitoringDbContext(DbContextOptions<MonitoringDbContext> options)
             : base(options)
         {
+        
         }
 
+        public DbSet<DbOpAbt> DbOpAbts { get; set; }
+        public DbSet<SSPDABT> SSPDABTs { get; set; }
         public DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
         public DbSet<SSPDPBB> SSPDPBBs { get; set; }
         public DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
@@ -60,7 +63,8 @@ namespace MonPDLib
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<DbOpAbt>().HasNoKey();
+            modelBuilder.Entity<SSPDABT>().HasNoKey();
             modelBuilder.Entity<DbMonUpayaPad>().HasNoKey();
             modelBuilder.Entity<SSPDHPP>().HasNoKey();
             modelBuilder.Entity<KetetapanPbbAsync>().HasKey(e => new { e.NOP, e.TAHUN_BUKU, e.TAHUN_PAJAK }).HasName("DB_MON_PBB_PK");
