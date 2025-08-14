@@ -291,22 +291,6 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PlnPpj> PlnPpjs { get; set; }
 
-    public virtual DbSet<PotensiCtrlAirTanah> PotensiCtrlAirTanahs { get; set; }
-
-    public virtual DbSet<PotensiCtrlHiburan> PotensiCtrlHiburans { get; set; }
-
-    public virtual DbSet<PotensiCtrlHotel> PotensiCtrlHotels { get; set; }
-
-    public virtual DbSet<PotensiCtrlParkir> PotensiCtrlParkirs { get; set; }
-
-    public virtual DbSet<PotensiCtrlPpj> PotensiCtrlPpjs { get; set; }
-
-    public virtual DbSet<PotensiCtrlReklame> PotensiCtrlReklames { get; set; }
-
-    public virtual DbSet<PotensiCtrlRestoran> PotensiCtrlRestorans { get; set; }
-
-    public virtual DbSet<PotensiCtrlTarget> PotensiCtrlTargets { get; set; }
-
     public virtual DbSet<SetLastRun> SetLastRuns { get; set; }
 
     public virtual DbSet<SetYearJobScan> SetYearJobScans { get; set; }
@@ -1734,63 +1718,6 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<PenTeguranBayar>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PEN_TEGURAN_BAYAR_PK");
-        });
-
-        modelBuilder.Entity<PotensiCtrlAirTanah>(entity =>
-        {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033437");
-        });
-
-        modelBuilder.Entity<PotensiCtrlHiburan>(entity =>
-        {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_HIBURAN");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlHotel>(entity =>
-        {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_PAJAK_HOTEL");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlParkir>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlPpj>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlReklame>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlRestoran>(entity =>
-        {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_RESTORAN");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlTarget>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
         });
 
         modelBuilder.Entity<SetLastRun>(entity =>
