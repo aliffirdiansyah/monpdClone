@@ -3303,12 +3303,14 @@ namespace MonPDReborn.Models.DataOP
                                 MetodePenjualan = opHotel.MetodePenjualan
                             };
 
+                            var bulanSekarang = DateTime.Now.Month;
+
                             var semuaBulan = Enumerable.Range(1, 12)
-                                 .Select(m => new
-                                 {
-                                     Bulan = m,
-                                     BulanNama = CultureInfo.GetCultureInfo("id-ID").DateTimeFormat.GetMonthName(m)
-                                 }).ToList();
+                                .Select(m => new
+                                {
+                                    Bulan = m,
+                                    BulanNama = CultureInfo.GetCultureInfo("id-ID").DateTimeFormat.GetMonthName(m)
+                                }).ToList();
 
                             var accDb = context.DbOpAccHotels
                                 .Where(x => x.Nop == nop && x.Bulan.HasValue)
@@ -3319,18 +3321,19 @@ namespace MonPDReborn.Models.DataOP
                                     TahunNow = x.TahunIni ?? 0
                                 }).ToList();
 
-                            ret.HotelRow.AccHotelDetailList  = (from b in semuaBulan
-                                                      join d in accDb on b.Bulan equals d.Bulan into gj
-                                                      from sub in gj.DefaultIfEmpty()
-                                                      select new DetailHotel.AccHotel
-                                                      {
-                                                          Bulan = b.Bulan,
-                                                          BulanNama = b.BulanNama,
-                                                          TahunMines1 = sub?.TahunMines1 ?? 0,
-                                                          TahunNow = sub?.TahunNow ?? 0
-                                                      })
-                                                      .OrderBy(x => x.Bulan)
-                                                      .ToList();
+                            ret.HotelRow.AccHotelDetailList = (from b in semuaBulan
+                                                               join d in accDb on b.Bulan equals d.Bulan into gj
+                                                               from sub in gj.DefaultIfEmpty()
+                                                               select new DetailHotel.AccHotel
+                                                               {
+                                                                   Bulan = b.Bulan,
+                                                                   BulanNama = b.BulanNama,
+                                                                   TahunMines1 = sub?.TahunMines1 ?? 0,
+                                                                   TahunNow = (b.Bulan <= bulanSekarang) ? (sub?.TahunNow ?? 0) : 0
+                                                               })
+                                                              .OrderBy(x => x.Bulan)
+                                                              .ToList();
+
 
                             //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
                             //    .Where(x => x.Nop == nop)
