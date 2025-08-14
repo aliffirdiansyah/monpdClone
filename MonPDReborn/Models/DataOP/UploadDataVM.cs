@@ -71,6 +71,7 @@ namespace MonPDReborn.Models.DataOP
                         AvgPaxBanquetSold = TryDecimal(sheet.Cells[row, 10].Text),
                         BanquetOmzet = TryDecimal(sheet.Cells[row, 11].Text),
                         PotensiPajakTahun = TryDecimal(sheet.Cells[row, 12].Text),
+                        AvgRoomPriceKos = TryDecimal(sheet.Cells[row, 13].Text),
                     };
 
                     context.DbPotensiHotels.Add(dataHotel);

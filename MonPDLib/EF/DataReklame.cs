@@ -6,43 +6,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Keyless]
-public partial class DbPotensiReklame
+[Table("DATA_REKLAME")]
+public partial class DataReklame
 {
+    [Key]
     [Column("NOR")]
-    [StringLength(100)]
+    [StringLength(20)]
     [Unicode(false)]
-    public string? Nor { get; set; }
+    public string Nor { get; set; } = null!;
 
     [Column("FLAG_PERMOHONAN")]
-    [StringLength(10)]
+    [StringLength(50)]
     [Unicode(false)]
     public string? FlagPermohonan { get; set; }
 
-    [Column("NSR4", TypeName = "NUMBER")]
+    [Column("NSR4", TypeName = "NUMBER(15,2)")]
     public decimal? Nsr4 { get; set; }
 
-    [Column("NSR3", TypeName = "NUMBER")]
+    [Column("NSR3", TypeName = "NUMBER(15,2)")]
     public decimal? Nsr3 { get; set; }
 
-    [Column("NSR2", TypeName = "NUMBER")]
+    [Column("NSR2", TypeName = "NUMBER(15,2)")]
     public decimal? Nsr2 { get; set; }
 
-    [Column("NSR1", TypeName = "NUMBER")]
+    [Column("NSR1", TypeName = "NUMBER(15,2)")]
     public decimal? Nsr1 { get; set; }
 
-    [Column("NSR0", TypeName = "NUMBER")]
+    [Column("NSR0", TypeName = "NUMBER(15,2)")]
     public decimal? Nsr0 { get; set; }
 
-    [Column("RATA2_NSR", TypeName = "NUMBER")]
+    [Column("RATA2_NSR", TypeName = "NUMBER(15,2)")]
     public decimal? Rata2Nsr { get; set; }
 
-    [Column("RATA2_PAJAK", TypeName = "NUMBER")]
+    [Column("RATA2_PAJAK", TypeName = "NUMBER(15,2)")]
     public decimal? Rata2Pajak { get; set; }
 
-    [Column("STATUS", TypeName = "NUMBER")]
+    [Column("STATUS", TypeName = "NUMBER(38)")]
     public decimal? Status { get; set; }
-
-    [Column("TAHUN_BUKU", TypeName = "NUMBER")]
-    public decimal? TahunBuku { get; set; }
 }
