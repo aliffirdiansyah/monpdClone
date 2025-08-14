@@ -109,6 +109,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbOpAbt> DbOpAbts { get; set; }
 
+    public virtual DbSet<DbOpAccHotel> DbOpAccHotels { get; set; }
+
     public virtual DbSet<DbOpHiburan> DbOpHiburans { get; set; }
 
     public virtual DbSet<DbOpHotel> DbOpHotels { get; set; }
@@ -375,9 +377,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -655,7 +657,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonAbt>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_ABT_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_ABT_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -853,6 +855,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.JumlahKaryawan).HasDefaultValueSql("0                     ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.PeruntukanId).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<DbOpAccHotel>(entity =>
+        {
+            entity.ToView("DB_OP_ACC_HOTEL");
         });
 
         modelBuilder.Entity<DbOpHiburan>(entity =>
