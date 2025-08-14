@@ -321,74 +321,86 @@
 
             </div>
         }
+
         <div class="card">
-            <div class="card-header d-flex bg-soft-info">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Rumus Lengkap Perhitungan Potensi Pajak Hotel
-                    </h4>
+            <div class="accordion" id="accordionPotensiPajakHotel">
+
+            <!-- Accordion Tunggal -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingPotensiHotel">
+                        <button class="accordion-button collapsed bg-soft-info text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePotensiHotel" aria-expanded="false" aria-controls="collapsePotensiHotel">
+                            Rumus Lengkap Perhitungan Potensi Pajak Hotel
+                        </button>
+                    </h2>
+                    <div id="collapsePotensiHotel" class="accordion-collapse collapse" aria-labelledby="headingPotensiHotel" data-bs-parent="#accordionPotensiPajakHotel">
+                        <div class="accordion-body">
+
+                            <!-- Perhitungan Omzet Room & Banquet -->
+                            <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet Room & Banquet</h4>
+
+                            <p class="fs-14 text-muted font-monospace mb-1">
+                                Rata-Rata Room Terjual/Hari = Jumlah Total Room × Okupansi Rate Room
+                            </p>
+                            <p class="fs-14 mb-2 fw-semibold text-dark">
+                                = @Model.JumlahTotalRoom.ToString("N0") × @Model.OkupansiRateRoom.ToString("P0") = @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") room/hari
+                            </p>
+
+                            <p class="fs-14 text-muted font-monospace mb-1">
+                                Potensi Omzet/Bulan atas Room = Harga Rata-Rata Room × Rata-Rata Room Terjual/Hari × 30 Hari
+                            </p>
+                            <p class="fs-14 mb-2 fw-semibold text-dark">
+                                = Rp. @Math.Ceiling(Model.HargaRataRataRoom).ToString("N0") × @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") × 30 = Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0")
+                            </p>
+
+                            @if (Model.KapasitasMaksimalPaxBanquetPerHari > 0)
+                            {
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Okupansi Rate Banquet = 30% × Okupansi Rate Room
+                                </p>
+                                <p class="fs-14 mb-2 fw-semibold text-dark">
+                                    = 30% × @Model.OkupansiRateRoom.ToString("P0") = @Model.OkupansiRateBanquet.ToString("P0")
+                                </p>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Rata-Rata Pax Banquet Terjual/Hari = Kapasitas Maksimal Pax Banquet/Hari × Okupansi Rate Banquet
+                                </p>
+                                <p class="fs-14 mb-2 fw-semibold text-dark">
+                                    = @Model.KapasitasMaksimalPaxBanquetPerHari.ToString("N0") × @Model.OkupansiRateBanquet.ToString("P0") = @Math.Ceiling(Model.RataRataPaxBanquetTerjualPerHari).ToString("N0") pax/hari
+                                </p>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Potensi Omzet/Bulan atas Banquet = Harga Rata-Rata Banquet/Pax × Rata-Rata Pax Banquet Terjual/Hari × 8 Hari
+                                </p>
+                                <p class="fs-14 mb-3 fw-semibold text-dark">
+                                    = Rp. @Math.Ceiling(Model.HargaRataRataBanquetPerPax).ToString("N0") × @Math.Ceiling(Model.RataRataPaxBanquetTerjualPerHari).ToString("N0") × 8 = Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")
+                                </p>
+                            }
+                            <hr>
+
+                            <!-- Perhitungan Potensi Pajak -->
+                            <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
+
+                            <p class="fs-14 text-muted font-monospace mb-1">
+                                Potensi Pajak/Bulan = (Potensi Omzet Room + Potensi Omzet Banquet) × Tarif Pajak
+                            </p>
+                            <p class="fs-14 mb-2 fw-semibold text-dark">
+                                = (Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0") + Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")) × @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")
+                            </p>
+
+                            <p class="fs-14 text-muted font-monospace mb-1">
+                                Potensi Pajak/Tahun = Potensi Pajak/Bulan × @Model.BulanSisa Bulan
+                            </p>
+                            <p class="fs-14 fw-semibold text-dark">
+                                = Rp. @Model.PotensiPajakPerBulan.ToString("N0") × @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
+                            </p>
+
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet Room & Banquet</h4>
-
-                <p class="fs-14 text-muted font-monospace mb-1">
-                    Rata-Rata Room Terjual/Hari = Jumlah Total Room × Okupansi Rate Room
-                </p>
-                <p class="fs-14 mb-2 fw-semibold text-dark">
-                    = @Model.JumlahTotalRoom.ToString("N0") × @Model.OkupansiRateRoom.ToString("P0") = @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") room/hari
-                </p>
-
-                <p class="fs-14 text-muted font-monospace mb-1">
-                    Potensi Omzet/Bulan atas Room = Harga Rata-Rata Room × Rata-Rata Room Terjual/Hari × 30 Hari
-                </p>
-                <p class="fs-14 mb-2 fw-semibold text-dark">
-                    = Rp. @Math.Ceiling(Model.HargaRataRataRoom).ToString("N0") × @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") × 30 = Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0")
-                </p>
-                @if (Model.KapasitasMaksimalPaxBanquetPerHari > 0)
-                {
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Okupansi Rate Banquet = 30% × Okupansi Rate Room
-                    </p>
-                    <p class="fs-14 mb-2 fw-semibold text-dark">
-                        = 30% × @Model.OkupansiRateRoom.ToString("P0") = @Model.OkupansiRateBanquet.ToString("P0")
-                    </p>
-
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Rata-Rata Pax Banquet Terjual/Hari = Kapasitas Maksimal Pax Banquet/Hari × Okupansi Rate Banquet
-                    </p>
-                    <p class="fs-14 mb-2 fw-semibold text-dark">
-                        = @Model.KapasitasMaksimalPaxBanquetPerHari.ToString("N0") × @Model.OkupansiRateBanquet.ToString("P0") = @Math.Ceiling(Model.RataRataPaxBanquetTerjualPerHari).ToString("N0") pax/hari
-                    </p>
-
-                    <p class="fs-14 text-muted font-monospace mb-1">
-                        Potensi Omzet/Bulan atas Banquet = Harga Rata-Rata Banquet/Pax × Rata-Rata Pax Banquet Terjual/Hari × 8 Hari
-                    </p>
-                    <p class="fs-14 mb-3 fw-semibold text-dark">
-                        = Rp. @Math.Ceiling(Model.HargaRataRataBanquetPerPax).ToString("N0") × @Math.Ceiling(Model.RataRataPaxBanquetTerjualPerHari).ToString("N0") × 8 = Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")
-                    </p>
-                }
-                <hr>
-
-                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
-
-                <p class="fs-14 text-muted font-monospace mb-1">
-                    Potensi Pajak/Bulan = (Potensi Omzet Room + Potensi Omzet Banquet) × Tarif Pajak
-                </p>
-                <p class="fs-14 mb-2 fw-semibold text-dark">
-                    = (Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0") + Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")) × @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")
-                </p>
-
-                <p class="fs-14 text-muted font-monospace mb-1">
-                    Potensi Pajak/Tahun = Potensi Pajak/Bulan × @Model.BulanSisa Bulan
-                </p>
-                <p class="fs-14 fw-semibold text-dark">
-                    = Rp. @Model.PotensiPajakPerBulan.ToString("N0") × @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
-                </p>
-
 
             </div>
         </div>
+
 
     </div>
 </div>
