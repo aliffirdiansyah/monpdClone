@@ -123,7 +123,11 @@ namespace RestoWs
                 var sql = @"
                                                                                       SELECT *
 FROM (
-SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Resto' PAJAK_NAMA,
+SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,     CASE 
+        WHEN KATEGORI_PAJAK='MAMIN' THEN 'MAMIN'
+        ELSE
+        'Pajak Jasa Resto' 
+        END PAJAK_NAMA,
               NVL(ALAMAT_OP, '-') ALAMAT_OP, '-'  ALAMAT_OP_NO,'-' ALAMAT_OP_RT,'-' ALAMAT_OP_RW,NVL(NOMOR_TELEPON, '-') TELP,
               NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT, CASE
               WHEN TGL_TUTUP IS NULL THEN NULL 
@@ -197,6 +201,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                         var sourceRow = _contMonPd.DbOpRestos.Find(item.Nop, (decimal)tahunBuku);
                         if (sourceRow != null)
                         {
+                            sourceRow.PajakNama = item.PajakNama;
                             sourceRow.TglOpTutup = item.TglOpTutup;
                             sourceRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
                             sourceRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
@@ -448,7 +453,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRowOP.NpwpdNama = "-";
                             newRowOP.NpwpdAlamat = "-";
                             newRowOP.PajakId = KDPajak;
-                            newRowOP.PajakNama = "Pajak Jasa Resto";
+                            newRowOP.PajakNama = "MAMIN";
                             newRowOP.NamaOp = "-";
                             newRowOP.AlamatOp = "-";
                             newRowOP.AlamatOpNo = "-";
