@@ -3850,9 +3850,7 @@ namespace MonPDReborn.Models.DataOP
             public string BulanNama { get; set; } = null!;
             public decimal HotelBintang { get; set; }
             public decimal HotelNonBintang { get; set; }
-
-            /*public decimal Pencapaian { get; set; }
-            public decimal Selisih => Realisasi - AkpTarget;*/
+            public decimal RataRata => (HotelBintang + HotelNonBintang) / 2m;
         }
 
         public class DashboardTPK

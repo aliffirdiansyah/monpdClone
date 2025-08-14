@@ -93,6 +93,7 @@
                             <th style="width: 30%;">Bulan</th>
                             <th style="width: 35%;">Hotel Bintang</th>
                             <th style="width: 35%;">Hotel Non Bintang</th>
+                            <th style="width: 35%">Rata-rata</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,6 +105,7 @@
                                     <td class="text-start">@item.BulanNama</td>
                                     <td class="text-end">@item.HotelBintang</td>
                                     <td class="text-end">@item.HotelNonBintang</td>
+                                    <td class="text-end">@item.RataRata</td>
                                 </tr>
                             }
                         }
@@ -114,6 +116,23 @@
                             </tr>
                         }
                     </tbody>
+                    @if (Model.Kiri != null && Model.Kiri.Any())
+                    {
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td class="text-center">Rata-rata</td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelNonBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.RataRata).ToString("N2")
+                                </td>
+                            </tr>
+                        </tfoot>
+                    }
                 </table>
             </div>
         </div>
@@ -145,6 +164,7 @@
                             <th style="width: 30%;">Bulan</th>
                             <th style="width: 35%;">Hotel Bintang</th>
                             <th style="width: 35%;">Hotel Non Bintang</th>
+                            <th style="width: 35%">Rata-rata</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -156,6 +176,7 @@
                                     <td class="text-start">@item.BulanNama</td>
                                     <td class="text-end">@item.HotelBintang</td>
                                     <td class="text-end">@item.HotelNonBintang</td>
+                                    <td class="text-end">@item.RataRata</td>
                                 </tr>
                             }
                         }
@@ -166,6 +187,23 @@
                             </tr>
                         }
                     </tbody>
+                    @if (Model.Kanan != null && Model.Kanan.Any())
+                    {
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td class="text-center">Rata-rata</td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelNonBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.RataRata).ToString("N2")
+                                </td>
+                            </tr>
+                        </tfoot>
+                    }
                 </table>
             </div>
         </div>
