@@ -67,6 +67,78 @@
                 </div>
             </div>
         </div>
+        <hr />
+        <div class="row">
+            <h4>Pembanding Data</h4>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex">
+                        <div class="flex-grow-1">
+                            @{
+                                int startYearA = DateTime.Now.Year - 6;   
+                                int currentYearA = DateTime.Now.Year;    
+                            }
+                            <div class="input-group">
+                                <label class="input-group-text" for="inputGroupSelect01">Tahun</label>
+                                <select class="form-select" id="TahunA" onchange="fnShowPembandingA()">
+                                    @for (int year = startYearA; year <= currentYearA; year++)
+                                    {
+                                        if (year == currentYearA)
+                                        {
+                                            <option value="@year" selected>@year</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0"></div>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-ShowPembandingA" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="ShowPembandingA"></div>
+                        <div id="ShowPembandingA"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex">
+                        <div class="flex-grow-1">
+                            @{
+                                int startYearB = DateTime.Now.Year - 6;
+                                int currentYearB = DateTime.Now.Year;
+                            }
+                            <div class="input-group">
+                                <label class="input-group-text" for="inputGroupSelect01">Tahun</label>
+                                <select class="form-select" id="TahunB" onchange="fnShowPembandingB()">
+                                    @for (int year = startYearB; year <= currentYearB; year++)
+                                    {
+                                        if (year == currentYearB)
+                                        {
+                                            <option value="@year" selected>@year</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="flex-shrink-0"></div>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-ShowPembandingB" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="ShowPembandingB"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
@@ -77,6 +149,8 @@
     $(document).ready(function () {
         loadShow();
         loadDetail();
+        fnShowPembandingA();
+        fnShowPembandingB();
     });
 
     function loadShow() {
@@ -98,6 +172,32 @@
             success: function (result) { $('#Detail').html(result); },
             error: function () { $('#Detail').html('<p class="text-danger">Gagal memuat data.</p>'); },
             complete: function () { $('#loading-Detail').hide(); }
+        });
+    }
+
+    function fnShowPembandingA() {
+        var tahun = $('#TahunA').val();
+        $.ajax({
+            url: '@Url.Action("ShowPembandingA")',
+            type: 'GET',
+            data:{tahun},
+            beforeSend: function () { $('#loading-ShowPembandingA').show(); },
+            success: function (result) { $('#ShowPembandingA').html(result); },
+            error: function () { $('#ShowPembandingA').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-ShowPembandingA').hide(); }
+        });
+    }
+
+    function fnShowPembandingB() {
+        var tahun = $('#TahunB').val();
+        $.ajax({
+            url: '@Url.Action("ShowPembandingB")',
+            type: 'GET',
+            data:{tahun},
+            beforeSend: function () { $('#loading-ShowPembandingB').show(); },
+            success: function (result) { $('#ShowPembandingB').html(result); },
+            error: function () { $('#ShowPembandingB').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-ShowPembandingB').hide(); }
         });
     }
 </script>
