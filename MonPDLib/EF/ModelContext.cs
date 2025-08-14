@@ -21,6 +21,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DataReklame> DataReklames { get; set; }
 
+    public virtual DbSet<DataReklamePotensi> DataReklamePotensis { get; set; }
+
     public virtual DbSet<DataTargetPajak> DataTargetPajaks { get; set; }
 
     public virtual DbSet<DataTpkHotel> DataTpkHotels { get; set; }
@@ -371,7 +373,7 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
@@ -392,6 +394,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DataReklame>(entity =>
         {
             entity.HasKey(e => e.Nor).HasName("SYS_C0033797");
+        });
+
+        modelBuilder.Entity<DataReklamePotensi>(entity =>
+        {
+            entity.ToView("DATA_REKLAME_POTENSI");
         });
 
         modelBuilder.Entity<DatapbbSatupetum>(entity =>
@@ -978,11 +985,6 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.Nop, e.TahunBuku }).HasName("DB_POTENSI_PARKIR_PK");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE");
-        });
-
-        modelBuilder.Entity<DbPotensiReklame>(entity =>
-        {
-            entity.ToView("DB_POTENSI_REKLAME");
         });
 
         modelBuilder.Entity<DbPotensiResto>(entity =>
