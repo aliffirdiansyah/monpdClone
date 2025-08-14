@@ -114,9 +114,9 @@ namespace MonPDReborn.Models.AktivitasOP
                         EnumPajak = (int)x.Key.PajakId,
                         JenisPajak = ((EnumFactory.EPajak)x.Key.PajakId).GetDescription(),
                         JumlahOp = x.Select(d => d.Nop.Replace(".", "")).Distinct().Count(),
-                        Potensi = x.Sum(x => x.PajakBulan),
-                        TotalRealisasi = restoRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0,
-                        Selisih = (restoRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0) - x.Sum(x => x.PajakBulan)
+                        Potensi = x.Sum(x => x.PajakBulan) * 12,
+                        TotalRealisasi = restoRealisasi.Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0,
+                        Selisih = (restoRealisasi.Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0) - x.Sum(x => x.PajakBulan)
                     })
                     .ToList();
 
@@ -131,9 +131,9 @@ namespace MonPDReborn.Models.AktivitasOP
                         EnumPajak = (int)x.Key.PajakId,
                         JenisPajak = ((EnumFactory.EPajak)x.Key.PajakId).GetDescription(),
                         JumlahOp = x.Select(d => d.Nop.Replace(".", "")).Distinct().Count(),
-                        Potensi = x.Sum(x => x.PajakBulan),
-                        TotalRealisasi = parkirRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0,
-                        Selisih = (parkirRealisasi.Where(s => s.TahunBuku == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0) - x.Sum(x => x.PajakBulan)
+                        Potensi = x.Sum(x => x.PajakBulan) * 12,
+                        TotalRealisasi = parkirRealisasi.Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0,
+                        Selisih = (parkirRealisasi.Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun).Sum(c => c.NominalPokokBayar) ?? 0) - x.Sum(x => x.PajakBulan)
                     })
                     .ToList();
 
