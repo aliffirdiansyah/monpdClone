@@ -29,7 +29,7 @@ namespace MonPDReborn.Controllers.DataOP
                 ViewData["Title"] = controllerName;
                 var model = new Models.DataOP.UploadDataVM.Index
                 {
-                    TahunList = Enumerable.Range(DateTime.Now.Year - 5, 6)
+                    TahunList = Enumerable.Range((DateTime.Now.Year + 6) - 10, 20)
                         .Select(t => new SelectListItem { Value = t.ToString(), Text = t.ToString() })
                         .ToList(),
                     Tahun = DateTime.Now.Year

@@ -18,7 +18,6 @@ namespace MonPDReborn.Models.DataOP
             public List<SelectListItem>? TahunList { get; set; } // untuk dropdown
             public Index()
             {
-
             }
 
         }
