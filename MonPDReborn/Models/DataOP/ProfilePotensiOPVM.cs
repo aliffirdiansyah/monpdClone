@@ -2025,7 +2025,10 @@ namespace MonPDReborn.Models.DataOP
             public decimal Target3 { get; set; }
             public decimal Realisasi3 { get; set; }
             public decimal Capaian3 => Target3 == 0 ? 0 : Math.Round((Realisasi3 / Target3) * 100, 2);
-            public decimal TotalPotensi { get; set; }
+            public decimal TotalPotensi1 { get; set; }
+            public decimal TotalPotensi2 { get; set; }
+            public decimal TotalPotensi3 { get; set; }
+            public decimal TotalPotensi4 { get; set; }
         }
 
         public class DetailPotensi
@@ -2043,7 +2046,10 @@ namespace MonPDReborn.Models.DataOP
             public decimal Target3 { get; set; }
             public decimal Realisasi3 { get; set; }
             public decimal Capaian3 => Target3 == 0 ? 0 : Realisasi3 / Target3;
-            public decimal TotalPotensi { get; set; }
+            public decimal TotalPotensi1 { get; set; }
+            public decimal TotalPotensi2 { get; set; }
+            public decimal TotalPotensi3 { get; set; }
+            public decimal TotalPotensi4 { get; set; }
         }
 
         #region CLASS DetailPotensiFix
