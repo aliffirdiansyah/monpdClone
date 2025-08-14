@@ -237,7 +237,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                             newRow.TglOpTutup = item.TglOpTutup;
                             newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
 
-                            var kategori = GetKategoriOvveride(item.Nop);
+                            var kategori = GetKategoriOvveride(item.Nop, item.KategoriNama);
                             item.KategoriId = Convert.ToInt32(kategori[0] ?? "54");
                             item.KategoriNama = kategori[1] ?? "HIBURAN";
 
@@ -626,7 +626,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
             return true;
         }
 
-        private List<string> GetKategoriOvveride(string nop)
+        private List<string> GetKategoriOvveride(string nop, string kategori)
         {
             var ret = new List<string>();
             ret.Add("54");
@@ -713,6 +713,58 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             case "BOWLING":
                                 ret[0] = "46";
                                 ret[1] = "OLAHRAGA";
+                                break;
+                            case "OLAHRAGA":
+                                ret[0] = "46";
+                                ret[1] = "OLAHRAGA";
+                                break;
+                            default:
+                                ret[0] = "54";
+                                ret[1] = "HIBURAN";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        katname = kategori.Replace(" ", "").ToUpper().Trim();
+                        switch (katname)
+                        {
+                            case "FITNESS/PUSATKEBUGARAN":
+                                ret[0] = "43";
+                                ret[1] = "FITNESS/PUSAT KEBUGARAN";
+                                break;
+                            case "KARAOKEKELUARGA":
+                                ret[0] = "45";
+                                ret[1] = "KARAOKE KELUARGA";
+                                break;
+                            case "PANTIPIJAT/THERAPY/SAUNA/SPA":
+                                ret[0] = "48";
+                                ret[1] = "PANTI PIJAT/THERAPY/SAUNA/SPA";
+                                break;
+                            case "OLAHRAGA":
+                                ret[0] = "46";
+                                ret[1] = "OLAHRAGA";
+                                break;
+                            case "PERMAINANANAK":
+                                case "PERMAINANKETANGKASAN":
+                                ret[0] = "50";
+                                ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                                break;
+                            case "BAR/CAFE/KLABMALAM/DISKOTIK":
+                                ret[0] = "41";
+                                ret[1] = "BAR/CAFE/KLAB MALAM/DISKOTIK";
+                                break;
+                            case "PERMAINANANAK/PERMAINANKETANGKASAN":
+                                ret[0] = "50";
+                                ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                                break;
+                            case "BIOSKOP":
+                                ret[0] = "42";
+                                ret[1] = "BIOSKOP";
+                                break;
+                            case "KARAOKEDEWASA":
+                                ret[0] = "44";
+                                ret[1] = "KARAOKE DEWASA";
                                 break;
                             default:
                                 ret[0] = "54";
