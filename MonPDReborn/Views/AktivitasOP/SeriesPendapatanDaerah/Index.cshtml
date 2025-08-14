@@ -3,16 +3,13 @@
     ViewData["Title"] = "Series Pendapatan Daerah";
 }
 
-
-
-<p>TES</p>
-
-
 <div class="col-lg-12">
     <div class="card">
         <div class="card-header">
             <div class="d-flex">
-                <div class="flex-grow-1">Data Series Pendapatan</div>
+                <div class="flex-grow-1">
+                    <h4 class="card-title">Data Series Pendapatan</h4>
+                </div>
                 <div class="flex-shrink-0">
                     <select id="typeSeries" class="form-select mb-3" aria-label="Default select example" onchange="loadShow()">
                         <option value="1" selected>Sudut Pandang Akun</option>
@@ -57,6 +54,7 @@
         }
     </script>
 
+    @* TIPE 1 *@
     <script>
         function SudutPandangRekeningKelompok(container, options) {
             var data = options.data.RekKelompoks;
@@ -86,7 +84,6 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Kode", caption: "Kode" },
                         { dataField: "Col.Nama", caption: "Nama" },
                         {
                         caption: year7.toString(),
@@ -180,7 +177,6 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Kode", caption: "Kode" },
                         { dataField: "Col.Nama", caption: "Nama" },
                         {
                         caption: year7.toString(),
@@ -274,7 +270,6 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Kode", caption: "Kode" },
                         { dataField: "Col.Nama", caption: "Nama" },
                         {
                         caption: year7.toString(),
@@ -368,7 +363,6 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Kode", caption: "Kode" },
                         { dataField: "Col.Nama", caption: "Nama" },
                         {
                         caption: year7.toString(),
@@ -462,7 +456,6 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Kode", caption: "Kode" },
                         { dataField: "Col.Nama", caption: "Nama" },
                         {
                         caption: year7.toString(),
@@ -526,6 +519,7 @@
         }
     </script>
 
+    @* TIPE 2 *@
     <script>
         function ShowSeriesSudutPandangOpdSubOpd(container, options) {
             var data = options.data.RekSubOpds;
@@ -555,7 +549,285 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Kode", caption: "Kode" },
+                        { dataField: "Col.Nama", caption: "Nama" },
+                        {
+                        caption: year7.toString(),
+                        columns: [
+                                { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year6.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year5.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year4.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year3.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year2.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year1.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                            ]
+                        }
+                    ],
+                    width: "100%"
+                })
+        }
+    </script>
+
+    @* TIPE 3 *@
+    <script>
+        function SudutPandangRekeningJenisObjekOpdObjek(container, options) {
+            var data = options.data.RekObyeks;
+            var $wrapper = $("<div>").appendTo(container);
+
+            $("<p>")
+                .text("Per Objek")
+                .css({ "font-weight": "bold", "margin-bottom": "5px" })
+                .appendTo($wrapper);
+            $("<div>")
+                .appendTo($wrapper)
+                .dxDataGrid({
+                    dataSource: data,
+                    showBorders: true,
+                    showColumnHeaders: true,
+                    showColumnLines: true,
+                    showRowLines: true,
+                    allowColumnResizing: true,
+                    allowColumnReordering: true,
+                    columnAutoWidth: true,
+                    sorting: { mode: "multiple" }, // Multiple column sorting
+                    filterRow: {
+                        visible: true,
+                        applyFilter: "auto" // atau "onClick"
+                    },
+                    headerFilter: { visible: true },
+                    paging: { pageSize: 99999 },
+                    pager: { visible: false  },
+                    columns: [
+                        { dataField: "Col.Nama", caption: "Nama" },
+                        {
+                        caption: year7.toString(),
+                        columns: [
+                                { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year6.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year5.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year4.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year3.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year2.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year1.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                            ]
+                        }
+                    ],
+                    masterDetail: {
+                        enabled: true,
+                        template: SudutPandangRekeningJenisObjekOpdOpd
+                    },
+                    width: "100%"
+                })
+        }
+        function SudutPandangRekeningJenisObjekOpdOpd(container, options) {
+            var data = options.data.RekOpds;
+            var $wrapper = $("<div>").appendTo(container);
+
+            $("<p>")
+                .text("Per OPD")
+                .css({ "font-weight": "bold", "margin-bottom": "5px" })
+                .appendTo($wrapper);
+            $("<div>")
+                .appendTo($wrapper)
+                .dxDataGrid({
+                    dataSource: data,
+                    showBorders: true,
+                    showColumnHeaders: true,
+                    showColumnLines: true,
+                    showRowLines: true,
+                    allowColumnResizing: true,
+                    allowColumnReordering: true,
+                    columnAutoWidth: true,
+                    sorting: { mode: "multiple" }, // Multiple column sorting
+                    filterRow: {
+                        visible: true,
+                        applyFilter: "auto" // atau "onClick"
+                    },
+                    headerFilter: { visible: true },
+                    paging: { pageSize: 99999 },
+                    pager: { visible: false  },
+                    columns: [
+                        { dataField: "Col.Nama", caption: "Nama" },
+                        {
+                        caption: year7.toString(),
+                        columns: [
+                                { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year6.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year5.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year4.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year3.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year2.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                            ]
+                        },
+                        {
+                            caption: year1.toString(),
+                            columns: [
+                                { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
+                                { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                            ]
+                        }
+                    ],
+                    masterDetail: {
+                        enabled: true,
+                        template: SudutPandangRekeningJenisObjekOpdSubOpd
+                    },
+                    width: "100%"
+                })
+        }
+        function SudutPandangRekeningJenisObjekOpdSubOpd(container, options) {
+            var data = options.data.RekSubOpds;
+            var $wrapper = $("<div>").appendTo(container);
+
+            $("<p>")
+                .text("Per Sub OPD")
+                .css({ "font-weight": "bold", "margin-bottom": "5px" })
+                .appendTo($wrapper);
+            $("<div>")
+                .appendTo($wrapper)
+                .dxDataGrid({
+                    dataSource: data,
+                    showBorders: true,
+                    showColumnHeaders: true,
+                    showColumnLines: true,
+                    showRowLines: true,
+                    allowColumnResizing: true,
+                    allowColumnReordering: true,
+                    columnAutoWidth: true,
+                    sorting: { mode: "multiple" }, // Multiple column sorting
+                    filterRow: {
+                        visible: true,
+                        applyFilter: "auto" // atau "onClick"
+                    },
+                    headerFilter: { visible: true },
+                    paging: { pageSize: 99999 },
+                    pager: { visible: false  },
+                    columns: [
                         { dataField: "Col.Nama", caption: "Nama" },
                         {
                         caption: year7.toString(),

@@ -35,8 +35,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
 
     .HeaderFilter(hf => hf.Visible(true))
     .Columns(columns => {
-        columns.AddFor(m => m.Col.Kode).Caption("Kode Akun");
-        columns.AddFor(m => m.Col.Nama).Caption("Nama Akun");
+        columns.AddFor(m => m.Col.Nama).Caption("Nama");
 
         columns.Add().Caption(year7.ToString())
             .Columns(sc =>
