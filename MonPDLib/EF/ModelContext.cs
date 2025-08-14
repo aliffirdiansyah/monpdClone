@@ -15,6 +15,12 @@ public partial class ModelContext : DbContext
     {
     }
 
+    public virtual DbSet<DataAirTanah> DataAirTanahs { get; set; }
+
+    public virtual DbSet<DataReklame> DataReklames { get; set; }
+
+    public virtual DbSet<DataTargetPajak> DataTargetPajaks { get; set; }
+
     public virtual DbSet<DatapbbSatupetum> DatapbbSatupeta { get; set; }
 
     public virtual DbSet<DbAkun> DbAkuns { get; set; }
@@ -368,6 +374,16 @@ public partial class ModelContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("MONPD");
+
+        modelBuilder.Entity<DataAirTanah>(entity =>
+        {
+            entity.HasKey(e => e.Nop).HasName("SYS_C0033796");
+        });
+
+        modelBuilder.Entity<DataReklame>(entity =>
+        {
+            entity.HasKey(e => e.Nor).HasName("SYS_C0033797");
+        });
 
         modelBuilder.Entity<DatapbbSatupetum>(entity =>
         {

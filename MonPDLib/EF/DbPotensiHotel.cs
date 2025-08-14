@@ -61,4 +61,7 @@ public partial class DbPotensiHotel
 
     [Column("POTENSI_PAJAK_TAHUN", TypeName = "NUMBER(30)")]
     public decimal? PotensiPajakTahun { get; set; }
+
+    [Column("AVG_ROOM_PRICE_KOS", TypeName = "NUMBER(12,2)")]
+    public decimal? AvgRoomPriceKos { get; set; }
 }
