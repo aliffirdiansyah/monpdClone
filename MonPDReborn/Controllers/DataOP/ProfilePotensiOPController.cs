@@ -88,6 +88,12 @@ namespace MonPDReborn.Controllers.DataOP
             return DataSourceLoader.Load(data, load_options);
         }
         [HttpGet]
+        public object GetDetailPotensiHotel(DataSourceLoadOptions load_options, int JenisPajak)
+        {
+            var data = Models.DataOP.ProfilePotensiOPVM.Method.GetDetailPotensiList((EnumFactory.EPajak)JenisPajak, true);
+            return DataSourceLoader.Load(data, load_options);
+        }
+        [HttpGet]
         public async Task<object> GetDataPotensi(DataSourceLoadOptions load_options, int JenisPajak, int kategori)
         {
             await Task.Delay(1000);
