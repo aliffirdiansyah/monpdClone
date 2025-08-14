@@ -1,9 +1,253 @@
 ﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.ShowPotensi
 
+@if (Model.Pajak == MonPDLib.General.EnumFactory.EPajak.JasaPerhotelan)
+{
+    <div class="table-responsive">
+        @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Potensi>()
+            .ID("gridPotensiBintang" + Model.Pajak)
+            .DataSource(Model.DataHotelBintang)
+            .ShowBorders(true)
+            .ShowColumnLines(true)
+            .Sorting(p => p.Mode(GridSortingMode.None))
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .AllowColumnResizing(true)
+            .Paging(p => p.PageSize(10))
+            .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 5, 10, 20 })
+            .ShowInfo(true)
+            )
+            .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+            .OnExporting("exportGrid")
+            .Columns(columns =>
+            {
 
-<div class="table-responsive">
-    @(
-        Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Potensi>()
+                columns.AddFor(m => m.Kategori).Caption("Kategori").Fixed(true).FixedPosition(HorizontalEdge.Left);
+                columns.AddFor(m => m.Total).Caption("Total").Fixed(true).FixedPosition(HorizontalEdge.Left).Format("#,##0");
+
+                columns.Add().Caption("Masa Pajak").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Jan).Caption("JANUARI").Format("#,##0");
+                subColumns.AddFor(m => m.Feb).Caption("FEBRUARI").Format("#,##0");
+                subColumns.AddFor(m => m.Mar).Caption("MARET").Format("#,##0");
+                subColumns.AddFor(m => m.Apr).Caption("APRIL").Format("#,##0");
+                subColumns.AddFor(m => m.Mei).Caption("MEI").Format("#,##0");
+                subColumns.AddFor(m => m.Jun).Caption("JUNI").Format("#,##0");
+                subColumns.AddFor(m => m.Jul).Caption("JULI").Format("#,##0");
+                subColumns.AddFor(m => m.Agt).Caption("AGUSTUS").Format("#,##0");
+                subColumns.AddFor(m => m.Sep).Caption("SEPTEMBER").Format("#,##0");
+                subColumns.AddFor(m => m.Okt).Caption("OKTOBER").Format("#,##0");
+                subColumns.AddFor(m => m.Nov).Caption("NOVEMBER").Format("#,##0");
+                subColumns.AddFor(m => m.Des).Caption("DESEMBER").Format("#,##0");
+
+            });
+            })
+            .Summary(summary =>
+            {
+                summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Kategori)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+
+                items.AddFor(m => m.Total)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Jan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Feb)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Mar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Apr)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Mei)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Jun)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Jul)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Agt)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sep)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Okt)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nov)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Des)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+
+            });
+            })
+            )
+</div>
+    <div class="table-responsive">
+        @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Potensi>()
+            .ID("gridPotensiNon" + Model.Pajak)
+            .DataSource(Model.DataHotelNonBintang)
+            .ShowBorders(true)
+            .ShowColumnLines(true)
+            .Sorting(p => p.Mode(GridSortingMode.None))
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .AllowColumnResizing(true)
+            .Paging(p => p.PageSize(10))
+            .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 5, 10, 20 })
+            .ShowInfo(true)
+            )
+            .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+            .OnExporting("exportGrid")
+            .Columns(columns =>
+            {
+
+                columns.AddFor(m => m.Kategori).Caption("Kategori").Fixed(true).FixedPosition(HorizontalEdge.Left);
+                columns.AddFor(m => m.Total).Caption("Total").Fixed(true).FixedPosition(HorizontalEdge.Left).Format("#,##0");
+
+                columns.Add().Caption("Masa Pajak").Columns(subColumns =>
+            {
+                subColumns.AddFor(m => m.Jan).Caption("JANUARI").Format("#,##0");
+                subColumns.AddFor(m => m.Feb).Caption("FEBRUARI").Format("#,##0");
+                subColumns.AddFor(m => m.Mar).Caption("MARET").Format("#,##0");
+                subColumns.AddFor(m => m.Apr).Caption("APRIL").Format("#,##0");
+                subColumns.AddFor(m => m.Mei).Caption("MEI").Format("#,##0");
+                subColumns.AddFor(m => m.Jun).Caption("JUNI").Format("#,##0");
+                subColumns.AddFor(m => m.Jul).Caption("JULI").Format("#,##0");
+                subColumns.AddFor(m => m.Agt).Caption("AGUSTUS").Format("#,##0");
+                subColumns.AddFor(m => m.Sep).Caption("SEPTEMBER").Format("#,##0");
+                subColumns.AddFor(m => m.Okt).Caption("OKTOBER").Format("#,##0");
+                subColumns.AddFor(m => m.Nov).Caption("NOVEMBER").Format("#,##0");
+                subColumns.AddFor(m => m.Des).Caption("DESEMBER").Format("#,##0");
+
+            });
+            })
+            .Summary(summary =>
+            {
+                summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Kategori)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+
+                items.AddFor(m => m.Total)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Jan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Feb)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Mar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Apr)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Mei)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Jun)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Jul)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Agt)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Sep)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Okt)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Nov)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Des)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+
+            });
+            })
+            )
+</div>
+}
+else
+{
+    <div class="table-responsive">
+        @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Potensi>()
             .ID("gridPotensi" + Model.Pajak)
             .DataSource(Model.Data)
             .ShowBorders(true)
@@ -27,97 +271,98 @@
                 columns.AddFor(m => m.Total).Caption("Total").Fixed(true).FixedPosition(HorizontalEdge.Left).Format("#,##0");
 
                 columns.Add().Caption("Masa Pajak").Columns(subColumns =>
-                {
-                    subColumns.AddFor(m => m.Jan).Caption("JANUARI").Format("#,##0");
-                    subColumns.AddFor(m => m.Feb).Caption("FEBRUARI").Format("#,##0");
-                    subColumns.AddFor(m => m.Mar).Caption("MARET").Format("#,##0");
-                    subColumns.AddFor(m => m.Apr).Caption("APRIL").Format("#,##0");
-                    subColumns.AddFor(m => m.Mei).Caption("MEI").Format("#,##0");
-                    subColumns.AddFor(m => m.Jun).Caption("JUNI").Format("#,##0");
-                    subColumns.AddFor(m => m.Jul).Caption("JULI").Format("#,##0");
-                    subColumns.AddFor(m => m.Agt).Caption("AGUSTUS").Format("#,##0");
-                    subColumns.AddFor(m => m.Sep).Caption("SEPTEMBER").Format("#,##0");
-                    subColumns.AddFor(m => m.Okt).Caption("OKTOBER").Format("#,##0");
-                    subColumns.AddFor(m => m.Nov).Caption("NOVEMBER").Format("#,##0");
-                    subColumns.AddFor(m => m.Des).Caption("DESEMBER").Format("#,##0");
+            {
+                subColumns.AddFor(m => m.Jan).Caption("JANUARI").Format("#,##0");
+                subColumns.AddFor(m => m.Feb).Caption("FEBRUARI").Format("#,##0");
+                subColumns.AddFor(m => m.Mar).Caption("MARET").Format("#,##0");
+                subColumns.AddFor(m => m.Apr).Caption("APRIL").Format("#,##0");
+                subColumns.AddFor(m => m.Mei).Caption("MEI").Format("#,##0");
+                subColumns.AddFor(m => m.Jun).Caption("JUNI").Format("#,##0");
+                subColumns.AddFor(m => m.Jul).Caption("JULI").Format("#,##0");
+                subColumns.AddFor(m => m.Agt).Caption("AGUSTUS").Format("#,##0");
+                subColumns.AddFor(m => m.Sep).Caption("SEPTEMBER").Format("#,##0");
+                subColumns.AddFor(m => m.Okt).Caption("OKTOBER").Format("#,##0");
+                subColumns.AddFor(m => m.Nov).Caption("NOVEMBER").Format("#,##0");
+                subColumns.AddFor(m => m.Des).Caption("DESEMBER").Format("#,##0");
 
-                });
+            });
             })
             .Summary(summary =>
             {
-            summary.TotalItems(items =>
+                summary.TotalItems(items =>
             {
                 items.AddFor(m => m.Kategori)
-                    .SummaryType(SummaryType.Sum)
-                    .DisplayFormat("Total");
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
 
                 items.AddFor(m => m.Total)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Jan)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Feb)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Mar)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Apr)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Mei)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Jun)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Jul)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Agt)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Sep)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Okt)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Nov)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Des)
-                    .SummaryType(SummaryType.Sum)
-                    .ValueFormat("#,##0")
-                    .DisplayFormat("{0}");
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
 
             });
             })
-        )
+            )
 </div>
+}
