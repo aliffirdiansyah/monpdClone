@@ -760,7 +760,6 @@ public partial class ModelContext : DbContext
         {
             entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_MON_REKLAME_PK");
 
-            entity.Property(e => e.Seq).ValueGeneratedOnAdd();
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();

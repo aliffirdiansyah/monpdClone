@@ -44,8 +44,8 @@ public partial class DbPotensiPpj
     public bool? Status { get; set; }
 
     [Column("TAHUN_BUKU")]
-    [Precision(4)]
-    public byte? TahunBuku { get; set; }
+    [Precision(10)]
+    public int? TahunBuku { get; set; }
 
     [Column("HIT_1BULAN", TypeName = "NUMBER(15,2)")]
     public decimal? Hit1bulan { get; set; }

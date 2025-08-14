@@ -328,8 +328,8 @@ namespace MonPDReborn.Models.DataOP
 
                 //var totalPotensiPpj = context.PotensiCtrlPpjs.Where(x => listOpPpjAll.Contains(x.Nop)).Sum(q => q.PotensiPajakTahun) ?? 0;
                 var totalPotensiPpj = context.DbPotensiPpjs
-                    .Where(x => dataPpj3.Select(v => v.Nop).ToList().Contains(x.Nop))
-                    .Sum(q => q.JumlahPajak) ?? 0;
+                    .Where(x => dataPpj3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
+                    .Sum(q => q.Hit1bulan) ?? 0;
 
                 var potensiHotel = context.DbPotensiHotels
                     .Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
@@ -2003,7 +2003,7 @@ namespace MonPDReborn.Models.DataOP
                     return null;
 
                 // Ambil volume existing
-                var data = context.DbPotensiAbts.Where(x => x.Nop == nop).FirstOrDefault();
+                var data = context.DbPotensiAbts.Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year + 1).FirstOrDefault();
                 if (data == null)
                 {
                     return null;
@@ -2030,7 +2030,7 @@ namespace MonPDReborn.Models.DataOP
                 };
 
                 detail.TotalNPA = detail.DetailPerhitungan.Sum(x => x.NPA);
-                detail.PajakAir = data.PajakAirTanah ?? 0;
+                detail.PajakAir = data.Hit1bulan ?? 0;
 
                 return detail;
             }
@@ -2076,7 +2076,7 @@ namespace MonPDReborn.Models.DataOP
 
                 // Ambil data potensi pajak terakhir untuk NOP
                 var data = context.DbPotensiPpjs
-                    .Where(x => x.Nop == nop)
+                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year + 1)
                     .FirstOrDefault();
 
                 if (data == null)
@@ -2104,7 +2104,7 @@ namespace MonPDReborn.Models.DataOP
                     TarifPajak = pju == null
                         ? 0.015m
                         : (pju.Peruntukan == 58 ? 0.10m : 0.015m),
-                    TotalPajak = data.JumlahPajak ?? 0,
+                    TotalPajak = data.Hit1bulan ?? 0,
                     DetailNJTLBulanan = detail,
                     KonsistensiNJTL = HitungKonsistensi(detail),
                 };
