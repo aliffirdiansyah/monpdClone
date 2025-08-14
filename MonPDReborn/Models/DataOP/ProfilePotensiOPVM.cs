@@ -1867,7 +1867,7 @@ namespace MonPDReborn.Models.DataOP
                 var hotel = context.DbOpHotels
                     .FirstOrDefault(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year && !x.TglOpTutup.HasValue);
                 ret = context.DbPotensiHotels
-                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year + 1)
+                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year)
                     .Select(x => new DetailPotensiPajakHotel
                     {
                         NOP = x.Nop,
