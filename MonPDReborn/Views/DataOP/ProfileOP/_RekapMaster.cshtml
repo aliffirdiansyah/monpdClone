@@ -16,6 +16,14 @@
         .AllowedPageSizes(new[] { 5, 10, 20 })
         .ShowInfo(true)
         )
+
+        .SearchPanel(sp => sp
+        .Visible(true)
+        .Width(240)
+        .Placeholder("Cari...")
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
         .Columns(columns =>
         {
             @* columns.Add().DataField("NOP").Caption("NOP"); *@
