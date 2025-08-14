@@ -12,16 +12,16 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static MonPDLib.General.EnumFactory;
 using static MonPDLib.Helper;
 
-namespace HotelWs
+namespace AbtWs
 {
-    public class WorkerV2 : BackgroundService
+    public class WorkerOld : BackgroundService
     {
         private bool isFirst = true;
-        private readonly ILogger<WorkerV2> _logger;
-        private static int KDPajak = 3;
-        private static string NAMA_PAJAK = "HOTEL";
+        private readonly ILogger<WorkerOld> _logger;
+        private static int KDPajak = 6;
+        private static string NAMA_PAJAK = "ABT";
 
-        public WorkerV2(ILogger<WorkerV2> logger)
+        public WorkerOld(ILogger<WorkerOld> logger)
         {
             _logger = logger;
         }
@@ -63,7 +63,7 @@ namespace HotelWs
                     _logger.LogError(ex, "Error occurred while executing task.");
                     MailHelper.SendMail(
                     false,
-                    "ERROR HOTEL WS",
+                    "ERROR Abt WS",
                     $@"
                             Terjadi exception pada sistem:
 
@@ -88,28 +88,22 @@ namespace HotelWs
         {
             var tglServer = DateTime.Now;
             var _contMonPd = DBClass.GetContext();
-            int tahunAmbil = tglServer.Year;
-            var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
-            tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
+            int tahunAmbil = 2009;
 
-            if (IsGetDBOp())
+            for (var i = tahunAmbil; i <= 2024; i++)
             {
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                {
-                    GetOPProcess(i);
-                }
-
+                GetOPProcess(i);
             }
 
-            for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            for (var i = tahunAmbil; i <= 2024; i++)
             {
                 GetRealisasi(i);
             }
 
             MailHelper.SendMail(
             false,
-            "DONE PBB WS",
-            $@"PBB WS FINISHED",
+            "DONE Abt WS",
+            $@"Abt WS FINISHED",
             null
             );
         }
@@ -119,36 +113,23 @@ namespace HotelWs
         {
             var tglMulai = DateTime.Now;
             var sw = new Stopwatch();
-            
+            sw.Start();
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
             {
-                sw.Start();
                 var sql = @"
-                                                                                   SELECT *
+                                                                             SELECT *
 FROM (
-SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 3 PAJAK_ID,  'Pajak Jasa Perhotelan' PAJAK_NAMA,
+SELECT NVL(REPLACE(A.FK_NOP, '.', ''), '-') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 5 PAJAK_ID,  'Pajak Jasa Abt' PAJAK_NAMA,
               NVL(ALAMAT_OP, '-') ALAMAT_OP, '-'  ALAMAT_OP_NO,'-' ALAMAT_OP_RT,'-' ALAMAT_OP_RW,NVL(NOMOR_TELEPON, '-') TELP,
-              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT, CASE
-              WHEN TGL_TUTUP IS NULL THEN NULL 
-              WHEN TO_CHAR(TGL_TUTUP,'YYYY') <= 1990 THEN NULL
-              ELSE
-              TGL_TUTUP
-              END  TGL_OP_TUTUP,
+              NVL(FK_KELURAHAN, '000') ALAMAT_OP_KD_LURAH, NVL(FK_KECAMATAN, '000') ALAMAT_OP_KD_CAMAT,
+              CASE
+                  WHEN EXTRACT(YEAR FROM TGL_TUTUP) <= 1990 THEN NULL
+                  WHEN EXTRACT(YEAR FROM TGL_TUTUP) IS NULL THEN NULL
+                  ELSE TGL_TUTUP
+              END AS TGL_OP_TUTUP,
               NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP, 0 METODE_PENJUALAN,        0 METODE_PEMBAYARAN,        0 JUMLAH_KARYAWAN,  
-              CASE                             
-                        WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG TIGA' THEN 14
-                        WHEN NAMA_JENIS_PAJAK = 'RESTORAN' THEN 17
-                        WHEN NAMA_JENIS_PAJAK = 'HOTEL NON BINTANG' THEN 17
-                        WHEN NAMA_JENIS_PAJAK = 'KATERING' THEN 17
-                        WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG LIMA' THEN 16
-                        WHEN NAMA_JENIS_PAJAK = 'RUMAH KOS' THEN 17
-                        WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG SATU' THEN 12
-                        WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG LIMA BERLIAN' THEN 16
-                        WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG EMPAT' THEN 15    
-                        WHEN NAMA_JENIS_PAJAK = 'HOTEL BINTANG DUA' THEN 13
-            ELSE 17
-            END AS KATEGORI_ID,
-            NAMA_JENIS_PAJAK   KATEGORI_NAMA,
+             56 KATEGORI_ID,
+            'AIR TANAH'   KATEGORI_NAMA,
              sysdate INS_dATE, 'JOB' INS_BY ,CASE
     WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 1' THEN '1'
     WHEN TO_CHAR(fk_wilayah_pajak) = 'SURABAYA 2' THEN '2'
@@ -178,28 +159,29 @@ SELECT REPLACE(A.FK_NOP, '.', '') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP, 3 PAJAK_
 END AS WILAYAH_PAJAK,
             '-' AKUN,'-'  NAMA_AKUN,'-'  JENIS,'-'  NAMA_JENIS,'-'  OBJEK,'-'  NAMA_OBJEK,'-'  RINCIAN,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
-            '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU
+            '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU,'0' DIKELOLA, '0' PUNGUT_TARIF,
+0 IS_METERAN_AIR,2 PERUNTUKAN_ID,'NON NIAGA' PERUNTUKAN_NAMA
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
 WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL
 )
 WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN) OR  TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
                     ";
 
-                var result = _contMonitoringDB.Set<DbOpHotel>().FromSqlRaw(sql, new[] {
+                var result = _contMonitoringDB.Set<DbOpAbt>().FromSqlRaw(sql, new[] {
                     new OracleParameter("PAJAK", NAMA_PAJAK),
                     new OracleParameter("TAHUN", tahunBuku)
                 }).ToList();
                 var _contMonPd = DBClass.GetContext();
                 int jmlData = result.Count;
                 int index = 0;
-                var newList = new List<MonPDLib.EF.DbOpHotel>();
-                var updateList = new List<MonPDLib.EF.DbOpHotel>();
+                var newList = new List<MonPDLib.EF.DbOpAbt>();
+                var updateList = new List<MonPDLib.EF.DbOpAbt>();
                 foreach (var item in result)
                 {
                     // DATA OP
                     try
                     {
-                        var sourceRow = _contMonPd.DbOpHotels.Find(item.Nop, (decimal)tahunBuku);
+                        var sourceRow = _contMonPd.DbOpAbts.Find(item.Nop, (decimal)tahunBuku);
                         if (sourceRow != null)
                         {
                             sourceRow.TglOpTutup = item.TglOpTutup;
@@ -222,7 +204,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                         }
                         else
                         {
-                            var newRow = new MonPDLib.EF.DbOpHotel();
+                            var newRow = new MonPDLib.EF.DbOpAbt();
                             newRow.Nop = item.Nop;
                             newRow.Npwpd = item.Npwpd;
                             // set manual
@@ -242,20 +224,14 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                             newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
                             newRow.TglOpTutup = item.TglOpTutup;
                             newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
-
-                            var kategori = GetKategoriOvveride(item.Nop);
-                            item.KategoriId = Convert.ToInt32(kategori[0] ?? "17");
-                            item.KategoriNama = kategori[1] ?? "HOTEL NON BINTANG";
-
+                            newRow.PeruntukanId = 2;
+                            newRow.PeruntukanNama = "NON NIAGA";
                             newRow.KategoriId = item.KategoriId;
                             newRow.KategoriNama = item.KategoriNama;
-
-                            newRow.MetodePenjualan = item.MetodePenjualan;
-                            newRow.MetodePembayaran = item.MetodePembayaran;
                             newRow.JumlahKaryawan = item.JumlahKaryawan;
                             newRow.InsDate = item.InsDate;
                             newRow.InsBy = item.InsBy;
-                            newRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
+                            newRow.IsTutup = item.IsTutup;
                             newRow.WilayahPajak = item.WilayahPajak;
 
                             newRow.TahunBuku = tahunBuku;
@@ -272,6 +248,9 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                             newRow.NamaRincian = dbakun.NamaRincian;
                             newRow.SubRincian = dbakun.SubRincian;
                             newRow.NamaSubRincian = dbakun.NamaSubRincian;
+
+                            newRow.Kelompok = "-";
+                            newRow.NamaKelompok = "-";
                             newList.Add(newRow);
                         }
 
@@ -284,20 +263,20 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP HOTEL TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP Abt TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
                 if (newList.Any())
                 {
-                    _contMonPd.DbOpHotels.AddRange(newList);
+                    _contMonPd.DbOpAbts.AddRange(newList);
                     _contMonPd.SaveChanges();
                 }
 
 
                 if (updateList.Any())
                 {
-                    _contMonPd.DbOpHotels.UpdateRange(updateList);
+                    _contMonPd.DbOpAbts.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
                 sw.Stop();
@@ -311,50 +290,49 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
         {
             var tglMulai = DateTime.Now;
             var sw = new Stopwatch();
-            
             try
             {
                 sw.Start();
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
                 var sqlRealisasi = @"
-            SELECT     NOP,MASA_PAJAK,TAHUN_PAJAK, SEQ ,MAX(JATUH_TEMPO) AS JATUH_TEMPO,
+           SELECT     NOP,MASA_PAJAK,TAHUN_PAJAK, SEQ ,MAX(JATUH_TEMPO) AS JATUH_TEMPO,JENIS_PERUNTUKAN,
         SUM(NOMINAL_POKOK) NOMINAL_POKOK,
         SUM(NOMINAL_SANKSI) NOMINAL_SANKSI,
         MAX(TRANSACTION_DATE) TRANSACTION_DATE
-FROM (
-    SELECT  TO_DATE(nvl( MP_AKHIR, LAST_DAY(TO_DATE(bulan_pajak || '-' || tahun_pajak, 'MM-YYYY')) ) ) JATUH_TEMPO, 
-                REPLACE(NVL(FK_NOP,0),'.','') NOP,
-                TO_NUMBER( NVL(BULAN_PAJAK,0)) MASA_PAJAK, 
-                TO_NUMBER(NVL(TAHUN_PAJAK,0)) TAHUN_PAJAK,
-                1 SEQ, 
-               TO_NUMBER(NVL(JML_POKOK,0)) NOMINAL_POKOK, 
-               TO_NUMBER(NVL(JML_DENDA,0)) NOMINAL_SANKSI,
-               TO_DATE(TGL_SETORAN) TRANSACTION_DATE           
-    FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR@LIHATHR A    
-    WHERE NAMA_PAJAK_DAERAH=:PAJAK  AND TAHUN_SETOR=:TAHUN    
+FROM (            
+    select  LAST_DAY(TO_DATE(BULAN || '-' || TAHUN, 'MM-YYYY'))  JATUH_TEMPO,
+     REPLACE(NVL(NOP,0),'.','') NOP,
+            TO_NUMBER( NVL(BULAN,0)) MASA_PAJAK,
+            TO_NUMBER(NVL(TAHUN,0)) TAHUN_PAJAK, 
+            1 SEQ, 
+             TO_NUMBER(NVL(SKPD,0)) NOMINAL_POKOK, 
+               TO_NUMBER(NVL(DENDA,0)) NOMINAL_SANKSI,
+               TO_DATE(TANGGAL) TRANSACTION_DATE
+               ,JENIS_PERUNTUKAN              
+from    PHRH_USER.VW_SIMPADAHPP_SSPD_abt@LIHATHR
+WHERE   TO_CHAR(tanggal,'YYYY')=:TAHUN
 ) A
-GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ                                            
+GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ,JENIS_PERUNTUKAN                                     
                 ";
 
-                var realisasiMonitoringDb = _contMonitoringDB.Set<SSPDHPP>()
-                    .FromSqlRaw(sqlRealisasi, new[] {
-                                new OracleParameter("PAJAK", NAMA_PAJAK),
+                var realisasiMonitoringDb = _contMonitoringDB.Set<SSPDABT>()
+                    .FromSqlRaw(sqlRealisasi, new[] {                                
                                 new OracleParameter("TAHUN", tahunBuku.ToString())
                     }).ToList();
                 
                 int jmlData = realisasiMonitoringDb.Count;
                 int index = 0;
-                var newList = new List<MonPDLib.EF.DbMonHotel>();
-                var updateList = new List<MonPDLib.EF.DbMonHotel>();
+                var newList = new List<MonPDLib.EF.DbMonAbt>();
+                var updateList = new List<MonPDLib.EF.DbMonAbt>();
          
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
-                    var realisasi = _contMonPd.DbMonHotels.SingleOrDefault(x => x.Nop == itemRealisasi.NOP &&
-                                                                           x.TahunPajakKetetapan == itemRealisasi.TAHUN_PAJAK &&
-                                                                           x.MasaPajakKetetapan == itemRealisasi.MASA_PAJAK &&
-                                                                           x.SeqPajakKetetapan == itemRealisasi.SEQ &&
-                                                                           x.TahunBuku == tahunBuku);
+                    var realisasi = _contMonPd.DbMonAbts.SingleOrDefault(x => x.Nop == itemRealisasi.NOP &&
+                                                                          x.TahunPajakKetetapan == itemRealisasi.TAHUN_PAJAK &&
+                                                                          x.MasaPajakKetetapan == itemRealisasi.MASA_PAJAK &&
+                                                                          x.SeqPajakKetetapan == itemRealisasi.SEQ &&
+                                                                          x.TahunBuku == tahunBuku);
                     if (realisasi != null)
                     {
                         realisasi.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
@@ -363,18 +341,38 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                         realisasi.TglBayarSanksi = itemRealisasi.TRANSACTION_DATE;
                         realisasi.NominalSanksiKenaikanBayar = 0;
                         realisasi.TglBayarSanksiKenaikan = itemRealisasi.TRANSACTION_DATE;
+                        switch (itemRealisasi.JENIS_PERUNTUKAN)
+                        {
+                            case "Niaga":
+                                realisasi.PeruntukanId = 1;
+                                realisasi.PeruntukanNama = "NIAGA";
+                                break;
+                            case "Bhn Baku Air":
+                                realisasi.PeruntukanId = 3;
+                                realisasi.PeruntukanNama = "BAHAN BAKU AIR";
+                                break;
+                            case "Non Niaga":
+                                realisasi.PeruntukanId = 2;
+                                realisasi.PeruntukanNama = "NON NIAGA";
+                                break;
+                            default:
+                                realisasi.PeruntukanId = 2;
+                                realisasi.PeruntukanNama = "NON NIAGA";
+                                break;
+                        }
+                        
                         updateList.Add(realisasi);
                     }
                     else
                     {
-                        var OP = _contMonPd.DbOpHotels.Find(itemRealisasi.NOP, (decimal)tahunBuku);
+                        var OP = _contMonPd.DbOpAbts.Find(itemRealisasi.NOP, (decimal)tahunBuku);
 
                         if (OP != null)
                         {                            
                             var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
                             var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
 
-                            var newRow = new DbMonHotel();
+                            var newRow = new DbMonAbt();
                             newRow.Nop = OP.Nop;
                             newRow.Npwpd = OP.Npwpd;
                             newRow.NpwpdNama = OP.NpwpdNama;
@@ -389,7 +387,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.TglMulaiBukaOp = OP.TglMulaiBukaOp;
                             newRow.IsTutup = OP.TglOpTutup == null ? 0 : OP.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
                             newRow.KategoriId = OP.KategoriId;
-                            newRow.KategoriNama = OP.KategoriNama;
+                            newRow.KategoriNama = OP.KategoriNama;                            
                             newRow.TahunBuku = tahunBuku;
                             newRow.Akun = OP.Akun;
                             newRow.NamaAkun = OP.NamaAkun;
@@ -404,12 +402,41 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.TahunPajakKetetapan = itemRealisasi.TAHUN_PAJAK;
                             newRow.MasaPajakKetetapan = itemRealisasi.MASA_PAJAK;
                             newRow.SeqPajakKetetapan = itemRealisasi.SEQ;
-                            newRow.KategoriKetetapan = "4";
+                            newRow.KategoriKetetapan = "3";
                             newRow.TglKetetapan = itemRealisasi.TRANSACTION_DATE;
                             newRow.TglJatuhTempoBayar = itemRealisasi.JATUH_TEMPO;
                             newRow.PokokPajakKetetapan = itemRealisasi.NOMINAL_POKOK;
                             newRow.PengurangPokokKetetapan = 0;
                             newRow.AkunKetetapan = AkunPokok.Akun;
+
+                            switch (itemRealisasi.JENIS_PERUNTUKAN)
+                            {
+                                case "Niaga":
+                                    newRow.PeruntukanId = 1;
+                                    newRow.PeruntukanNama = "NIAGA";
+                                    OP.PeruntukanId = 1;
+                                    OP.PeruntukanNama= "NIAGA";
+                                    break;
+                                case "Bhn Baku Air":
+                                    newRow.PeruntukanId = 3;
+                                    newRow.PeruntukanNama = "BAHAN BAKU AIR";
+                                    OP.PeruntukanId = 3;
+                                    OP.PeruntukanNama = "BAHAN BAKU AIR";
+                                    break;
+                                case "Non Niaga":
+                                    newRow.PeruntukanId = 2;
+                                    newRow.PeruntukanNama = "NON NIAGA";
+                                    OP.PeruntukanId = 2;
+                                    OP.PeruntukanNama = "NON NIAGA";
+                                    break;
+                                default:
+                                    newRow.PeruntukanId = 2;
+                                    newRow.PeruntukanNama = "NON NIAGA";
+                                    OP.PeruntukanId = 2;
+                                    OP.PeruntukanNama = "NON NIAGA";
+                                    break;
+                            }
+
                             newRow.KelompokKetetapan = AkunPokok.Kelompok;
                             newRow.JenisKetetapan = AkunPokok.Jenis;
                             newRow.ObjekKetetapan = AkunPokok.Objek;
@@ -444,17 +471,19 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.ObjekSanksiBayar = AkunSanksi.Objek;
                             newRow.RincianSanksiBayar = AkunSanksi.Rincian;
                             newRow.SubRincianSanksiBayar = AkunSanksi.SubRincian;
+                            newRow.NoKetetapan = "-";
                             newList.Add(newRow);
                         }
                         else
                         {
-                            var newRowOP = new DbOpHotel();
+
+                            var newRowOP = new MonPDLib.EF.DbOpAbt();
                             newRowOP.Nop = itemRealisasi.NOP;
                             newRowOP.Npwpd = "-";
                             newRowOP.NpwpdNama = "-";
                             newRowOP.NpwpdAlamat = "-";
                             newRowOP.PajakId = KDPajak;
-                            newRowOP.PajakNama = "Pajak Jasa Resto";
+                            newRowOP.PajakNama = "Pajak Air Tanah";
                             newRowOP.NamaOp = "-";
                             newRowOP.AlamatOp = "-";
                             newRowOP.AlamatOpNo = "-";
@@ -465,16 +494,18 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRowOP.AlamatOpKdCamat = "-";
                             newRowOP.TglOpTutup = new DateTime(tahunBuku, 12, 31);
                             newRowOP.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
-                            newRowOP.KategoriId = 17;
-                            newRowOP.KategoriNama = "HOTEL NON BINTANG";
-                            newRowOP.MetodePembayaran = "0";
-                            newRowOP.MetodePenjualan = "0";
-                            newRowOP.JumlahKaryawan = 0;                            
+                            newRowOP.KategoriId = 56;
+                            newRowOP.KategoriNama = "AIR TANAH";
+                            newRowOP.JumlahKaryawan = 0;
                             newRowOP.InsDate = DateTime.Now;
                             newRowOP.InsBy = "JOB";
+                            newRowOP.IsTutup = 1;
+                            newRowOP.WilayahPajak = "0";
                             newRowOP.TahunBuku = tahunBuku;
                             newRowOP.Akun = "-";
                             newRowOP.NamaAkun = "-";
+                            newRowOP.Kelompok = "-";
+                            newRowOP.NamaKelompok = "-";
                             newRowOP.Jenis = "-";
                             newRowOP.NamaJenis = "-";
                             newRowOP.Objek = "-";
@@ -483,29 +514,30 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRowOP.NamaRincian = "-";
                             newRowOP.SubRincian = "-";
                             newRowOP.NamaSubRincian = "-";
+                            newRowOP.PeruntukanId = 2;
+                            newRowOP.PeruntukanNama = "NON NIAGA";
                             newRowOP.Kelompok = "-";
-                            newRowOP.NamaKelompok = "-";
-                            newRowOP.WilayahPajak = "0";
-                            newRowOP.IsTutup = 1;
-                            _contMonPd.DbOpHotels.Add(newRowOP);
+                            newRowOP.NamaKelompok = "-";                          
+                            _contMonPd.DbOpAbts.Add(newRowOP);
                             _contMonPd.SaveChanges();
 
-                            var newRow = new DbMonHotel();
+                            var newRow = new DbMonAbt();
                             newRow.Nop = itemRealisasi.NOP;
                             newRow.Npwpd = "-";
                             newRow.NpwpdNama = "-";
                             newRow.NpwpdAlamat = "-";
                             newRow.PajakId = KDPajak;
-                            newRow.PajakNama = "Pajak Jasa Perhotelan";
+                            newRow.PajakNama = "Pajak Jasa Abt";
                             newRow.NamaOp = "-";
                             newRow.AlamatOp = "-";
                             newRow.AlamatOpKdLurah = "-";
                             newRow.AlamatOpKdCamat = "-";
+                            
                             newRow.TglOpTutup = itemRealisasi.TRANSACTION_DATE;
                             newRow.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
                             newRow.IsTutup = 1;
-                            newRow.KategoriId = -1;
-                            newRow.KategoriNama = "-";
+                            newRow.KategoriId = 56;
+                            newRow.KategoriNama = "ABT";
                             newRow.TahunBuku = tahunBuku;
                             newRow.Akun = "-";
                             newRow.NamaAkun = "-";
@@ -560,28 +592,43 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.ObjekSanksiBayar = "-";
                             newRow.RincianSanksiBayar = "-";
                             newRow.SubRincianSanksiBayar = "-";
+                            switch (itemRealisasi.JENIS_PERUNTUKAN)
+                            {
+                                case "Niaga":
+                                    newRow.PeruntukanId = 1;
+                                    newRow.PeruntukanNama = "NIAGA";                                    
+                                    break;
+                                case "Bhn Baku Air":
+                                    newRow.PeruntukanId = 3;
+                                    newRow.PeruntukanNama = "BAHAN BAKU AIR";                                    
+                                    break;
+                                case "Non Niaga":
+                                    newRow.PeruntukanId = 2;
+                                    newRow.PeruntukanNama = "NON NIAGA";                                    
+                                    break;
+                                default:
+                                    newRow.PeruntukanId = 2;
+                                    newRow.PeruntukanNama = "NON NIAGA";                                    
+                                    break;
+                            }
                             newList.Add(newRow);
                         }
-
-
-
-
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI HOTEL TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI ABT TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
                 if (newList.Any())
                 {
-                    _contMonPd.DbMonHotels.AddRange(newList);
+                    _contMonPd.DbMonAbts.AddRange(newList);
                     _contMonPd.SaveChanges();
                 }
 
 
                 if (updateList.Any())
                 {
-                    _contMonPd.DbMonHotels.UpdateRange(updateList);
+                    _contMonPd.DbMonAbts.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
                 sw.Stop();
@@ -591,137 +638,11 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing REALISASI {ex.Message}");
+
+                Console.WriteLine($"Error processing REALISASI {ex.Message} | Inner: {ex.InnerException?.Message ?? ""}");
             }
         }
-
-        private bool IsGetDBOp()
-        {
-            var _contMonPd = DBClass.GetContext();
-            var row = _contMonPd.SetLastRuns.FirstOrDefault(x => x.Job.ToUpper() == EnumFactory.EJobName.DBOPHOTEL.ToString().ToUpper());
-            if (row != null)
-            {
-                if (row.InsDate.HasValue)
-                {
-                    var tglTarik = row.InsDate.Value.Date;
-                    var tglServer = DateTime.Now.Date;
-                    if (tglTarik >= tglServer)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        row.InsDate = DateTime.Now;
-                        _contMonPd.SaveChanges();
-                        return true;
-                    }
-                }
-                else
-                {
-                    row.InsDate = DateTime.Now;
-                    _contMonPd.SaveChanges();
-                    return true;
-                }
-            }
-            var newRow = new MonPDLib.EF.SetLastRun();
-            newRow.Job = EnumFactory.EJobName.DBOPHOTEL.ToString().ToUpper();
-            newRow.InsDate = DateTime.Now;
-            _contMonPd.SetLastRuns.Add(newRow);
-            _contMonPd.SaveChanges();
-            return true;
-        }
-
-        private List<string> GetKategoriOvveride(string nop)
-        {
-            var ret = new List<string>();
-            ret.Add("17");
-            ret.Add("HOTEL NON BINTANG");
-
-            var c = DBClass.GetMonitoringDbContext();
-            var connection = c.Database.GetDbConnection();
-            if (connection.State == ConnectionState.Closed)
-            {
-                connection.Open();
-            }
-            try
-            {
-                var command = connection.CreateCommand();
-                command.CommandText = @" SELECT *
-                                        FROM T_OP_KATEGORI_STATUS
-                                        WHERE REPLACE(FK_NOP,'.','')=:NOP  AND ROWNUM=1";
-                var param = command.CreateParameter();
-                param.ParameterName = "NOP";
-                param.Value = nop;
-                command.Parameters.Add(param);
-                var dr = command.ExecuteReader();
-
-                if (dr.Read())
-                {
-                    var katname = dr.GetString(2);
-                    switch (katname)
-                    {
-                        //HOTEL BINTANG TIGA
-                        //RUMAH KOS
-                        //HOTEL BINTANG EMPAT
-                        //HOTEL BINTANG DUA
-                        //RESTORAN
-                        //HOTEL NON BINTANG
-                        //HOTEL BINTANG SATU
-                        //KATERING
-                        //HOTEL BINTANG LIMA
-                        case "HOTEL BINTANG TIGA":
-                            ret[0] = "14";
-                            ret[1] = "HOTEL BINTANG TIGA";
-                            break;
-                        case "RUMAH KOS":
-                            ret[0] = "17";
-                            ret[1] = "HOTEL NON BINTANG";
-                            break;
-                        case "HOTEL BINTANG EMPAT":
-                            ret[0] = "15";
-                            ret[1] = "HOTEL BINTANG EMPAT";
-                            break;
-                        case "HOTEL BINTANG DUA":
-                            ret[0] = "13";
-                            ret[1] = "HOTEL BINTANG DUA";
-                            break;
-                        case "RESTORAN":
-                            ret[0] = "17";
-                            ret[1] = "HOTEL NON BINTANG";
-                            break;
-                        case "HOTEL NON BINTANG":
-                            ret[0] = "17";
-                            ret[1] = "HOTEL NON BINTANG";
-                            break;
-                        case "HOTEL BINTANG SATU":
-                            ret[0] = "12";
-                            ret[1] = "HOTEL BINTANG SATU";
-                            break;
-                        case "KATERING":
-                            ret[0] = "17";
-                            ret[1] = "HOTEL NON BINTANG";
-                            break;
-                        case "HOTEL BINTANG LIMA":
-                            ret[0] = "16";
-                            ret[1] = "HOTEL BINTANG LIMA";
-                            break;
-                        default:
-                            ret[0] = "17";
-                            ret[1] = "HOTEL NON BINTANG";
-                            break;
-                    }
-
-                }
-                dr.Close();
-            }
-            catch
-            {
-
-            }
-
-            connection.Close();
-            return ret;
-        }
+                
         public static List<string> GetInfoWPHPP(string npwpd)
         {
             var ret = new List<string>();

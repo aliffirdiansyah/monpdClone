@@ -4,6 +4,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Security.Policy;
@@ -117,6 +118,7 @@ namespace PPJWs
         private void GetOPProcess(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
             {
                 var sql = @"
@@ -278,7 +280,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} OP LISTRIK TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP LISTRIK TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
@@ -294,7 +296,8 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     _contMonPd.DbOpListriks.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
             }
         }
@@ -303,8 +306,10 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
         private void GetRealisasi(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
             try
             {
+                sw.Start();
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
                 var _contMonPd = DBClass.GetContext();
                 var sqlRealisasi = @"
@@ -340,7 +345,11 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
 
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
-                    var realisasi = _contMonPd.DbMonPpjs.Find(itemRealisasi.NOP, itemRealisasi.TAHUN_PAJAK, itemRealisasi.MASA_PAJAK, itemRealisasi.SEQ);
+                    var realisasi = _contMonPd.DbMonPpjs.SingleOrDefault(x => x.Nop == itemRealisasi.NOP &&
+                                                                           x.TahunPajakKetetapan == itemRealisasi.TAHUN_PAJAK &&
+                                                                           x.MasaPajakKetetapan == itemRealisasi.MASA_PAJAK &&
+                                                                           x.SeqPajakKetetapan == itemRealisasi.SEQ &&
+                                                                           x.TahunBuku == tahunBuku);
                     if (realisasi != null)
                     {
                         realisasi.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
@@ -353,11 +362,10 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }
                     else
                     {
-                        var OPL = _contMonPd.DbOpListriks.Where(x => x.Nop == itemRealisasi.NOP).OrderByDescending(x => x.TahunBuku);
+                        var OP = _contMonPd.DbOpListriks.Find(itemRealisasi.NOP, (decimal)tahunBuku);
 
-                        if (OPL.Count() > 0)
-                        {
-                            var OP = OPL.First();
+                        if (OP != null)
+                        {                            
                             var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
                             var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
 
@@ -438,6 +446,56 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                         }
                         else
                         {
+                            var newRowOp = new MonPDLib.EF.DbOpListrik();
+                            newRowOp.Nop = itemRealisasi.NOP;
+                            newRowOp.Npwpd = "-";
+                            newRowOp.NpwpdNama = "-";
+                            newRowOp.NpwpdAlamat = "-";
+                            newRowOp.JumlahKaryawan = 0;
+                            newRowOp.PajakId = KDPajak;
+                            newRowOp.PajakNama = "Pajak Jasa Listrik";
+                            newRowOp.NamaOp = "-"; 
+                            newRowOp.AlamatOp = "-" ;
+                            newRowOp.AlamatOpNo = "-";
+                            newRowOp.AlamatOpRt = "-";
+                            newRowOp.AlamatOpRw = "-";
+                            newRowOp.Telp = "-";
+                            newRowOp.AlamatOpKdLurah = "-";
+                            newRowOp.AlamatOpKdCamat = "-";
+                            newRowOp.TglOpTutup = new DateTime(tahunBuku, 12, 31);
+                            newRowOp.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
+                            newRowOp.KategoriId = 55;
+                            newRowOp.KategoriNama = "PPJ NON PLN";
+                            newRowOp.Sumber = 0;
+                            newRowOp.SumberNama = "-";
+                            newRowOp.JumlahKaryawan = 0;
+                            newRowOp.InsDate = DateTime.Now;
+                            newRowOp.InsBy = "JOB";
+                            newRowOp.IsTutup = 1;
+                            newRowOp.WilayahPajak = "0";
+                            newRowOp.Peruntukan = 0;
+                            newRowOp.PeruntukanNama = "-" ;
+                            newRowOp.Sumber = 0;
+                            newRowOp.SumberNama = "-";
+
+                            newRowOp.TahunBuku = tahunBuku;
+                            newRowOp.Akun = "-"; 
+                            newRowOp.NamaAkun = "-";
+                            newRowOp.Kelompok = "-";
+                            newRowOp.NamaKelompok = "-";
+                            newRowOp.Jenis = "-";
+                            newRowOp.NamaJenis = "-";
+                            newRowOp.Objek = "-";
+                            newRowOp.NamaObjek = "-";
+                            newRowOp.Rincian = "-";
+                            newRowOp.NamaRincian = "-";
+                            newRowOp.SubRincian = "-";
+                            newRowOp.NamaSubRincian = "-";
+
+
+                            _contMonPd.DbOpListriks.Add(newRowOp);
+                            _contMonPd.SaveChanges();
+
                             var newRow = new DbMonPpj();
                             newRow.Nop = itemRealisasi.NOP;
                             newRow.Npwpd = "-";
@@ -530,7 +588,8 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     _contMonPd.DbMonPpjs.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
 
             }

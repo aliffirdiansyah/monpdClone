@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
 using MonPDLib;
 using MonPDLib.General;
+using System.Collections;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
 
@@ -575,7 +576,7 @@ namespace MonPDReborn.Models.DataOP
                 var context = DBClass.GetContext();
                 var ret = new List<RekapDetail>();
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)JenisPajak)
+                    .Where(x => x.PajakId == (int)JenisPajak).OrderBy(x => x.Urutan)
                     .ToList() // pindah ke memory agar bisa pakai ToTitleCase
                     .Select(x => new
                     {
@@ -632,7 +633,7 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        foreach (var kat in kategoriList.OrderBy(x => x.Id).ToList())
+                        foreach (var kat in kategoriList)
                         {
                             var OpHotelTutup = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
                             var OpHotelAwal = context.DbOpHotels.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kat.Id);
@@ -2506,7 +2507,7 @@ namespace MonPDReborn.Models.DataOP
 
                 // Ambil semua kategori untuk pajak ini
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)jenisPajak)
+                    .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
                     .Select(x => new { x.Id, x.Nama })
                     .ToList();
 
@@ -3264,6 +3265,36 @@ namespace MonPDReborn.Models.DataOP
                                 MetodePembayaran = opHotel.MetodePembayaran,
                                 MetodePenjualan = opHotel.MetodePenjualan
                             };
+
+                            var semuaBulan = Enumerable.Range(1, 12)
+                                 .Select(m => new
+                                 {
+                                     Bulan = m,
+                                     BulanNama = CultureInfo.GetCultureInfo("id-ID").DateTimeFormat.GetMonthName(m)
+                                 }).ToList();
+
+                            var accDb = context.DbOpAccHotels
+                                .Where(x => x.Nop == nop && x.Bulan.HasValue)
+                                .Select(x => new
+                                {
+                                    Bulan = (int)x.Bulan.Value,
+                                    TahunMines1 = x.TahunMin1 ?? 0,
+                                    TahunNow = x.TahunIni ?? 0
+                                }).ToList();
+
+                            ret.HotelRow.AccHotelDetailList  = (from b in semuaBulan
+                                                      join d in accDb on b.Bulan equals d.Bulan into gj
+                                                      from sub in gj.DefaultIfEmpty()
+                                                      select new DetailHotel.AccHotel
+                                                      {
+                                                          Bulan = b.Bulan,
+                                                          BulanNama = b.BulanNama,
+                                                          TahunMines1 = sub?.TahunMines1 ?? 0,
+                                                          TahunNow = sub?.TahunNow ?? 0
+                                                      })
+                                                      .OrderBy(x => x.Bulan)
+                                                      .ToList();
+
                             //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
                             //    .Where(x => x.Nop == nop)
                             //    .Select(x => new DetailHotel.DetailBanquet
@@ -3475,6 +3506,7 @@ namespace MonPDReborn.Models.DataOP
 
             public string JenisPajak { get; set; } = null!;
             public int KategoriId { get; set; }
+            public int Urutan { get; set; }
             public string Kategori { get; set; } = null!;
             public int Tahun { get; set; }
             public int JmlOpAwal { get; set; }
@@ -3631,6 +3663,7 @@ namespace MonPDReborn.Models.DataOP
             public List<DetailBanquet> BanquetHotelDetailList { get; set; } = new();
             public List<DetailFasilitas> FasilitasHotelDetailList { get; set; } = new();
             public List<DetailKamar> KamarHotelDetailList { get; set; } = new();
+            public List<AccHotel> AccHotelDetailList { get; set; } = new();
 
             public class Pendapatan
             {
@@ -3666,6 +3699,14 @@ namespace MonPDReborn.Models.DataOP
                 public string Kamar { get; set; }
                 public int Jumlah { get; set; }
                 public int Tarif { get; set; }
+            }
+
+            public class AccHotel
+            {
+                public string BulanNama { get; set; } = null!;
+                public decimal Bulan { get; set; }
+                public decimal TahunMines1 { get; set; }
+                public decimal TahunNow { get; set; }
             }
         }
         //DETAIL OP RESTO

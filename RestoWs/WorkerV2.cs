@@ -4,6 +4,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Security.Policy;
@@ -116,6 +117,7 @@ namespace RestoWs
         private void GetOPProcess(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
             using (var _contMonitoringDB = DBClass.GetMonitoringDbContext())
             {
                 var sql = @"
@@ -277,7 +279,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} OP RESTORAN TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP RESTORAN TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
@@ -293,7 +295,8 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     _contMonPd.DbOpRestos.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
             }
         }
@@ -302,6 +305,7 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
         private void GetRealisasi(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
+            var sw = new Stopwatch();
             try
             {
                 var _contMonitoringDB = DBClass.GetMonitoringDbContext();
@@ -321,7 +325,7 @@ FROM (
                TO_NUMBER(NVL(JML_DENDA,0)) NOMINAL_SANKSI,
                TO_DATE(TGL_SETORAN) TRANSACTION_DATE           
     FROM PHRH_USER.VW_SIMPADAHPP_SSPD_PHR@LIHATHR A    
-    WHERE NAMA_PAJAK_DAERAH=:PAJAK AND TO_CHAR(TGL_SETORAN,'YYYY')=:TAHUN    
+    WHERE NAMA_PAJAK_DAERAH=:PAJAK AND TAHUN_SETOR=:TAHUN    
 ) A
 GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ                                            
                 ";
@@ -333,13 +337,18 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }).ToList();
                 
                 int jmlData = realisasiMonitoringDb.Count;
+                decimal jml_pokok = realisasiMonitoringDb.Sum(x => x.NOMINAL_POKOK);
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbMonResto>();
                 var updateList = new List<MonPDLib.EF.DbMonResto>();
          
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
-                    var realisasi = _contMonPd.DbMonRestos.Find(itemRealisasi.NOP, itemRealisasi.TAHUN_PAJAK, itemRealisasi.MASA_PAJAK, itemRealisasi.SEQ);
+                    var realisasi = _contMonPd.DbMonRestos.SingleOrDefault(x=>x.Nop==itemRealisasi.NOP &&
+                                                                           x.TahunPajakKetetapan==itemRealisasi.TAHUN_PAJAK &&
+                                                                           x.MasaPajakKetetapan== itemRealisasi.MASA_PAJAK &&
+                                                                           x.SeqPajakKetetapan== itemRealisasi.SEQ &&
+                                                                           x.TahunBuku ==tahunBuku);
                     if (realisasi != null)
                     {
                         realisasi.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
@@ -352,11 +361,10 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }
                     else
                     {
-                        var OPL = _contMonPd.DbMonRestos.Where(x => x.Nop == itemRealisasi.NOP).OrderByDescending(x => x.TahunBuku);
+                        var OP = _contMonPd.DbOpRestos.Find(itemRealisasi.NOP ,(decimal)tahunBuku);
 
-                        if (OPL.Count() > 0)
-                        {
-                            var OP = OPL.First();
+                        if (OP != null)
+                        {                            
                             var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
                             var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
 
@@ -434,6 +442,53 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                         }
                         else
                         {
+                            var newRowOP = new DbOpResto();
+                            newRowOP.Nop = itemRealisasi.NOP;
+                            newRowOP.Npwpd = "-";
+                            newRowOP.NpwpdNama = "-";
+                            newRowOP.NpwpdAlamat = "-";
+                            newRowOP.PajakId = KDPajak;
+                            newRowOP.PajakNama = "Pajak Jasa Resto";
+                            newRowOP.NamaOp = "-";
+                            newRowOP.AlamatOp = "-";
+                            newRowOP.AlamatOpNo = "-";
+                            newRowOP.AlamatOpRt = "-";
+                            newRowOP.AlamatOpRw = "-";
+                            newRowOP.Telp = "-";
+                            newRowOP.AlamatOpKdLurah = "-";
+                            newRowOP.AlamatOpKdCamat = "-";
+                            newRowOP.TglOpTutup = new DateTime(tahunBuku,12,31);
+                            newRowOP.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
+                            newRowOP.KategoriId = 7;
+                            newRowOP.KategoriNama = "RESTORAN";
+                            newRowOP.MetodePembayaran = "0";
+                            newRowOP.MetodePenjualan = "0";
+                            newRowOP.JumlahKaryawan = 0;
+                            newRowOP.JumlahMeja = 0;
+                            newRowOP.JumlahKursi = 0;
+                            newRowOP.KapasitasRuanganOrang = 0;
+                            newRowOP.MaksimalProduksiPorsiHari = 0;
+                            newRowOP.RataTerjualPorsiHari = 0;
+                            newRowOP.InsDate = DateTime.Now;
+                            newRowOP.InsBy = "JOB";
+                            newRowOP.TahunBuku = tahunBuku;
+                            newRowOP.Akun = "-";
+                            newRowOP.NamaAkun = "-";
+                            newRowOP.Jenis = "-";
+                            newRowOP.NamaJenis = "-";
+                            newRowOP.Objek = "-";
+                            newRowOP.NamaObjek = "-";
+                            newRowOP.Rincian = "-";
+                            newRowOP.NamaRincian = "-";
+                            newRowOP.SubRincian = "-";
+                            newRowOP.NamaSubRincian = "-";
+                            newRowOP.Kelompok = "-";
+                            newRowOP.NamaKelompok = "-";
+                            newRowOP.WilayahPajak = "0";
+                            newRowOP.IsTutup = 1;
+                            _contMonPd.DbOpRestos.Add(newRowOP);
+                            _contMonPd.SaveChanges();
+
                             var newRow = new DbMonResto();
                             newRow.Nop = itemRealisasi.NOP;
                             newRow.Npwpd = "-";
@@ -506,14 +561,10 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.SubRincianSanksiBayar = "-";
                             newList.Add(newRow);
                         }
-
-
-
-
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} REALISASI RESTORAN TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI RESTORAN TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}       [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
                 if (newList.Any())
@@ -528,7 +579,8 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     _contMonPd.DbMonRestos.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
-                Console.Write($"Done {DateTime.Now.ToString("dd MMM yyyy HH:mm:ss")} ");
+                sw.Stop();
+                Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
 
             }

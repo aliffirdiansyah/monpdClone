@@ -93,9 +93,9 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        WajibPajak = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NpwpdNama ?? "-" : "-",
+                        NamaOP = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NamaOp ?? "-" : "-",
                         Alamat = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].WilayahPajak ?? "-" : "-",
+                        UPTB = "SURABAYA " + (dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
@@ -118,9 +118,9 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        WajibPajak = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NpwpdNama ?? "-" : "-",
+                        NamaOP = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NamaOp ?? "-" : "-",
                         Alamat = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].WilayahPajak ?? "-" : "-",
+                        UPTB = "SURABAYA " + (dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
@@ -142,9 +142,9 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        WajibPajak = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NpwpdNama ?? "-" : "-",
+                        NamaOP = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NamaOp ?? "-" : "-",
                         Alamat = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].WilayahPajak ?? "-" : "-",
+                        UPTB = "SURABAYA " + (dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
@@ -166,9 +166,9 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        WajibPajak = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NpwpdNama ?? "-" : "-",
+                        NamaOP = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NamaOp ?? "-" : "-",
                         Alamat = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].WilayahPajak ?? "-" : "-",
+                        UPTB = "SURABAYA " + (dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
                         TglST = x.TglSp,
                         Tahun = x.TahunPajak,
@@ -234,7 +234,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string FormattedNOP => Utility.GetFormattedNOP(NOP);
-            public string WajibPajak { get; set; } = null!;
+            public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string UPTB { get; set; } = null!;
             public string NoSP { get; set; } = null!;

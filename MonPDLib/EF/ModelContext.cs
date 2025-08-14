@@ -109,6 +109,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbOpAbt> DbOpAbts { get; set; }
 
+    public virtual DbSet<DbOpAccHotel> DbOpAccHotels { get; set; }
+
     public virtual DbSet<DbOpHiburan> DbOpHiburans { get; set; }
 
     public virtual DbSet<DbOpHotel> DbOpHotels { get; set; }
@@ -287,21 +289,7 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PenTeguranBayar> PenTeguranBayars { get; set; }
 
-    public virtual DbSet<PotensiCtrlAirTanah> PotensiCtrlAirTanahs { get; set; }
-
-    public virtual DbSet<PotensiCtrlHiburan> PotensiCtrlHiburans { get; set; }
-
-    public virtual DbSet<PotensiCtrlHotel> PotensiCtrlHotels { get; set; }
-
-    public virtual DbSet<PotensiCtrlParkir> PotensiCtrlParkirs { get; set; }
-
-    public virtual DbSet<PotensiCtrlPpj> PotensiCtrlPpjs { get; set; }
-
-    public virtual DbSet<PotensiCtrlReklame> PotensiCtrlReklames { get; set; }
-
-    public virtual DbSet<PotensiCtrlRestoran> PotensiCtrlRestorans { get; set; }
-
-    public virtual DbSet<PotensiCtrlTarget> PotensiCtrlTargets { get; set; }
+    public virtual DbSet<PlnPpj> PlnPpjs { get; set; }
 
     public virtual DbSet<SetLastRun> SetLastRuns { get; set; }
 
@@ -653,7 +641,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonAbt>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_ABT_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_ABT_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -673,7 +661,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonHiburan>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_HIBURAN_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_HIBURAN_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -683,7 +671,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonHotel>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_HOTEL_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_HOTEL_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -707,7 +695,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonParkir>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_PARKIR_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_PARKIR_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -736,7 +724,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonPpj>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_PPJ_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_PPJ_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -827,7 +815,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonResto>(entity =>
         {
-            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan }).HasName("DB_MON_RESTO_PK");
+            entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_RESTO_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
@@ -851,6 +839,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.JumlahKaryawan).HasDefaultValueSql("0                     ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.PeruntukanId).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<DbOpAccHotel>(entity =>
+        {
+            entity.ToView("DB_OP_ACC_HOTEL");
         });
 
         modelBuilder.Entity<DbOpHiburan>(entity =>
@@ -1725,63 +1718,6 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<PenTeguranBayar>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PEN_TEGURAN_BAYAR_PK");
-        });
-
-        modelBuilder.Entity<PotensiCtrlAirTanah>(entity =>
-        {
-            entity.HasKey(e => e.Nop).HasName("SYS_C0033437");
-        });
-
-        modelBuilder.Entity<PotensiCtrlHiburan>(entity =>
-        {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_HIBURAN");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlHotel>(entity =>
-        {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_PAJAK_HOTEL");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlParkir>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlPpj>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlReklame>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlRestoran>(entity =>
-        {
-            entity.HasKey(e => new { e.Nop, e.KdPajak }).HasName("PK_RESTORAN");
-
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
-            entity.Property(e => e.Status).HasDefaultValueSql("1                     ");
-        });
-
-        modelBuilder.Entity<PotensiCtrlTarget>(entity =>
-        {
-            entity.Property(e => e.Nop).IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSDATE               ");
         });
 
         modelBuilder.Entity<SetLastRun>(entity =>
