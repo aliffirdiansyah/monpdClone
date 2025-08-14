@@ -94,6 +94,7 @@ namespace MonPDLib
             public DateTime? UPD_DATE { get; set; }
             public string? UPD_BY { get; set; }
             public string? NO_KETETAPAN { get; set; }
+            public int SEQ { get; set; }
         }
         public class DbAkun
         {
