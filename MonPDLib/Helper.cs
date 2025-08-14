@@ -500,6 +500,18 @@ namespace MonPDLib
             public DateTime TRANSACTION_DATE { get; set; }
         }
 
+        public class SSPDABT
+        {
+            public string NOP { get; set; } = null!;
+            public decimal MASA_PAJAK { get; set; }
+            public decimal TAHUN_PAJAK { get; set; }
+            public decimal SEQ { get; set; }
+            public DateTime JATUH_TEMPO { get; set; }
+            public decimal NOMINAL_POKOK { get; set; }
+            public decimal NOMINAL_SANKSI { get; set; }
+            public DateTime TRANSACTION_DATE { get; set; }
+            public string JENIS_PERUNTUKAN { get; set; } = null!;
+        }
         public class SSPDPBB
         {
             public string NOP { get; set; } = null!;            

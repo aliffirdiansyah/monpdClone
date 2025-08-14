@@ -182,6 +182,12 @@
                                 <i class="bx bx-trending-up"></i><span data-key="t-analisisTren">Analisis Tren Pendapatan</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerah" ? "active" : "")"
+                               href="@Url.Action("Index", "SeriesPendapatanDaerah")" role="button">
+                                <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerah">Series Pendapatan Daerah</span>
+                            </a>
+                        </li>
                         @* <li class="nav-item">
                     <a class="nav-link menu-link" href="@Url.Action("Index","PendataanObjekPajak")" role="button">
                         <i class="bx bx-building"></i><span data-key="t-perbandinganWilayah">Perbandingan Wilayah</span>
@@ -191,12 +197,7 @@
                 </div>
 
                 <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerah" ? "active" : "")"
-                       href="@Url.Action("Index", "SeriesPendapatanDaerah")" role="button">
-                        <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerah">Series Pendapatan Daerah</span>
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PendataanObjekPajak" ? "active" : "")"
                        href="@Url.Action("Index", "PendataanObjekPajak")" role="button">

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.General;
 using System.Globalization;
+using System.Linq.Dynamic.Core;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
@@ -137,7 +138,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 // Ambil daftar kategori
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)jenisPajak)
+                    .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -168,7 +169,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 var result = new List<DetailSeriesPemasanganAlat>();
 
-                foreach (var kategori in kategoriList.OrderBy(x => x.Id).ToList())
+                foreach (var kategori in kategoriList)
                 {
                     var s = new DetailSeriesPemasanganAlat
                     {
@@ -276,7 +277,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 // Ambil daftar kategori
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)jenisPajak)
+                    .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -310,7 +311,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 var result = new List<DetailDataPemasanganAlat>();
 
-                foreach (var kategori in kategoriList.OrderBy(x => x.Id).ToList())
+                foreach (var kategori in kategoriList)
                 {
                     var s = new DetailDataPemasanganAlat
                     {

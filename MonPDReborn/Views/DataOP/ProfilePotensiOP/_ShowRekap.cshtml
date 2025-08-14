@@ -213,6 +213,7 @@
     @<text>
         @{
         ViewData["JenisPajak"] = new JS("data.EnumPajak");
+        ViewData["JenisPajakId"] = Model.DataRekapPotensi.FirstOrDefault().EnumPajak;
         }
         @await Html.PartialAsync("/Views/DataOP/ProfilePotensiOP/_ShowDetail.cshtml")
     </text>)
