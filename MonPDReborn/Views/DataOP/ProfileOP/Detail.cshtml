@@ -397,14 +397,29 @@
     </div>
 
     <div class="tab-pane fade" id="pills-okupansi" role="tabpanel" aria-labelledby="pills-okupansi-tab">
-        <div class="card mb-4">
-            <div class="card bg-info-subtle border-0 mb-0">
-                <div class="card-body px-4 py-3">
-                    <h4 class="fw-semibold mb-0">Okupansi @Model.DataDetail.IdentitasPajak.NamaObjekPajak</h4>
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i>Okupansi @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                    </h4>
                 </div>
             </div>
-            <div class="card-body px-0 py-3">
-                
+            <div class="card-body">
+                @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
+                                .ID("okupansiGrid")
+                                .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
+                                .KeyExpr("NOP")
+                                .ShowBorders(true)
+                                .ShowColumnLines(true)
+                                .Paging(p => p.PageSize(12))
+                                .Columns(columns =>
+                                {
+                                    columns.AddFor(m => m.BulanNama);
+                                    columns.AddFor(m => m.TahunMines1);
+                                    columns.AddFor(m => m.TahunNow);
+                                })
+                                )
             </div>
         </div>
     </div>
