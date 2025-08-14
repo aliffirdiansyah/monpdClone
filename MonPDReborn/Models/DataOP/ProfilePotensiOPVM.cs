@@ -241,7 +241,7 @@ namespace MonPDReborn.Models.DataOP
                 var realisasiParkirNow = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear && dataParkir3.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetListrikNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
-                var realisasiListrikNow = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear && dataHiburan3.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikNow = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear && dataPpj3.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetReklameNow = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
                 var realisasiReklameNow = context.DbMonReklames.Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -266,7 +266,7 @@ namespace MonPDReborn.Models.DataOP
                 var realisasiParkirMines1 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1 && dataParkir2.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetListrikMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
-                var realisasiListrikMines1 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1 && dataHiburan2.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikMines1 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 1 && dataPpj2.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetReklameMines1 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 1 && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
                 var realisasiReklameMines1 = context.DbMonReklames.Where(x => x.TahunBuku == currentYear - 1 && x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -290,7 +290,7 @@ namespace MonPDReborn.Models.DataOP
                 var realisasiParkirMines2 = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2 && dataParkir1.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetListrikMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
-                var realisasiListrikMines2 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2 && dataHiburan1.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiListrikMines2 = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear - 2 && dataPpj1.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetReklameMines2 = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear - 2 && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
                 var realisasiReklameMines2 = context.DbMonReklames.Where(x => x.TahunBuku == currentYear - 2 && x.TglBayarPokok.Value.Year == currentYear - 2).Sum(x => x.NominalPokokBayar) ?? 0;
@@ -328,8 +328,8 @@ namespace MonPDReborn.Models.DataOP
 
                 //var totalPotensiPpj = context.PotensiCtrlPpjs.Where(x => listOpPpjAll.Contains(x.Nop)).Sum(q => q.PotensiPajakTahun) ?? 0;
                 var totalPotensiPpj = context.DbPotensiPpjs
-                    .Where(x => dataPpj3.Select(v => v.Nop).ToList().Contains(x.Nop))
-                    .Sum(q => q.JumlahPajak) ?? 0;
+                    .Where(x => dataPpj3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
+                    .Sum(q => q.Hit1bulan) ?? 0;
 
                 var potensiHotel = context.DbPotensiHotels
                     .Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
@@ -352,7 +352,7 @@ namespace MonPDReborn.Models.DataOP
                         };
                     })
                     .ToList();
-                var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun);
+                var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun + x.PotensiPajakPerTahunKos);
 
                 var potensiParkir = context.DbPotensiParkirs
                     .Where(x => dataParkir3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
@@ -417,8 +417,8 @@ namespace MonPDReborn.Models.DataOP
 
                 //--------
                 var totalPotensiAbt = context.DbPotensiAbts
-                    .Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop))
-                    .Sum(q => q.PajakAirTanah) ?? 0;
+                    .Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
+                    .Sum(q => q.Hit1bulan) ?? 0;
 
                 var totalPotensiReklame = context.DbPotensiReklames.Sum(q => q.Rata2Pajak) ?? 0;
 
@@ -448,10 +448,10 @@ namespace MonPDReborn.Models.DataOP
                 var potensiHiburanNext3 = context.DbPotensiHiburans.Where(x => dataHiburan3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 4).Sum(x => x.PotensiPajakTahun) ?? 0;
                 var potensiHiburanNext4 = context.DbPotensiHiburans.Where(x => dataHiburan3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 5).Sum(x => x.PotensiPajakTahun) ?? 0;
 
-                //var potensiAbtNext1 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.PajakAirTanah) ?? 0;
-                //var potensiAbtNext2 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.PajakAirTanah) ?? 0;
-                //var potensiAbtNext3 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 4).Sum(x => x.PajakAirTanah) ?? 0;
-                //var potensiAbtNext4 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 5).Sum(x => x.PajakAirTanah) ?? 0;
+                var potensiAbtNext1 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.Hit1bulan) ?? 0;
+                var potensiAbtNext2 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.Hit1bulan) ?? 0;
+                var potensiAbtNext3 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 4).Sum(x => x.Hit1bulan) ?? 0;
+                var potensiAbtNext4 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 5).Sum(x => x.Hit1bulan) ?? 0;
 
                 //var potensiReklameNext1 = context.DbPotensiReklames.Where(x => x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.Rata2Pajak) ?? 0;
                 //var potensiReklameNext2 = context.DbPotensiReklames.Where(x => x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.Rata2Pajak) ?? 0;
@@ -553,7 +553,11 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiAbtMines1,
                     Target1 = targetAbtMines2,
                     Realisasi1 = realisasiAbtMines2,
-                    TotalPotensi1 = totalPotensiAbt
+                    TotalPotensi1 = totalPotensiAbt,
+                    TotalPotensi2 = potensiAbtNext1,
+                    TotalPotensi3 = potensiAbtNext2,
+                    TotalPotensi4 = potensiAbtNext3,
+                    TotalPotensi5 = potensiAbtNext4
                 });
 
                 ret.Add(new RekapPotensi
@@ -850,7 +854,7 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun);
+                            var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun + x.PotensiPajakPerTahunKos);
 
                             var potensiHotelNext1 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.PotensiPajakTahun) ?? 0;
                             var potensiHotelNext2 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.PotensiPajakTahun) ?? 0;
@@ -1128,6 +1132,11 @@ namespace MonPDReborn.Models.DataOP
 
                             var totalPotensiAbt = context.DbPotensiAbts.Where(x => listOpAbt3.Contains(x.Nop)).Sum(q => q.PajakAirTanah) ?? 0;
 
+                            var potensiAbtNext1 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.Hit1bulan) ?? 0;
+                            var potensiAbtNext2 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.Hit1bulan) ?? 0;
+                            var potensiAbtNext3 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 4).Sum(x => x.Hit1bulan) ?? 0;
+                            var potensiAbtNext4 = context.DbPotensiAbts.Where(x => dataAbt3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 5).Sum(x => x.Hit1bulan) ?? 0;
+
                             re.Target1 = targetAbt1;
                             re.Realisasi1 = realisasiAbt1;
                             re.Target2 = targetAbt2;
@@ -1135,7 +1144,10 @@ namespace MonPDReborn.Models.DataOP
                             re.Target3 = targetAbt3;
                             re.Realisasi3 = realisasiAbt3;
                             re.TotalPotensi1 = totalPotensiAbt;
-
+                            re.TotalPotensi2 = potensiAbtNext1;
+                            re.TotalPotensi3 = potensiAbtNext2;
+                            re.TotalPotensi4 = potensiAbtNext3;
+                            re.TotalPotensi5 = potensiAbtNext4;
 
                             ret.Add(re);
                         }
@@ -1261,7 +1273,7 @@ namespace MonPDReborn.Models.DataOP
                         };
                     })
                     .ToList();
-                var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun);
+                var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun + x.PotensiPajakPerTahunKos);
 
                 var potensiHotelNext1 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.PotensiPajakTahun) ?? 0;
                 var potensiHotelNext2 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.PotensiPajakTahun) ?? 0;
@@ -1371,7 +1383,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataResto3.Distinct())
                         {
                             var potensiResto = context.DbPotensiRestos
-                            .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
+                            .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year + 1)
                             .ToList()
                             .Select(x =>
                             {
@@ -1468,7 +1480,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataHotel3.Distinct())
                         {
                             var potensiHotel = context.DbPotensiHotels
-                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
+                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year + 1)
                                 .ToList()
                                 .Select(x =>
                                 {
@@ -1492,7 +1504,7 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun);
+                            var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun + x.PotensiPajakPerTahunKos);
 
                             var potensi = new DataPotensi
                             {
@@ -1528,7 +1540,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataParkir3.Distinct())
                         {
                             var potensiParkir = context.DbPotensiParkirs
-                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
+                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year + 1)
                                 .ToList()
                                 .Select(x =>
                                 {
@@ -1599,7 +1611,7 @@ namespace MonPDReborn.Models.DataOP
                         foreach (var item in dataHiburan3.Distinct())
                         {
                             var potensiHiburan = context.DbPotensiHiburans
-                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year)
+                                .Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year + 1)
                                 .ToList()
                                 .Select(x =>
                                 {
@@ -1687,7 +1699,7 @@ namespace MonPDReborn.Models.DataOP
 
                         foreach (var item in dataAbt3.Distinct())
                         {
-                            var totalPotensiAbt = context.DbPotensiAbts.Where(x => x.Nop == item.Nop).Sum(q => q.PajakAirTanah) ?? 0;
+                            var totalPotensiAbt = context.DbPotensiAbts.Where(x => x.Nop == item.Nop && x.TahunBuku == DateTime.Now.Year + 1).Sum(q => q.Hit1bulan) ?? 0;
 
                             var potensi = new DataPotensi
                             {
@@ -1868,6 +1880,7 @@ namespace MonPDReborn.Models.DataOP
                         TglOpBuka = hotel != null ? hotel.TglMulaiBukaOp : DateTime.MinValue,
                         JumlahTotalRoom = x.TotalRoom ?? 0,
                         HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                        HargaRataRataRoomKos = x.AvgRoomPriceKos ?? 0,
                         OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
                         KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
                         HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
@@ -1990,7 +2003,7 @@ namespace MonPDReborn.Models.DataOP
                     return null;
 
                 // Ambil volume existing
-                var data = context.DbPotensiAbts.Where(x => x.Nop == nop).FirstOrDefault();
+                var data = context.DbPotensiAbts.Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year + 1).FirstOrDefault();
                 if (data == null)
                 {
                     return null;
@@ -2017,7 +2030,7 @@ namespace MonPDReborn.Models.DataOP
                 };
 
                 detail.TotalNPA = detail.DetailPerhitungan.Sum(x => x.NPA);
-                detail.PajakAir = data.PajakAirTanah ?? 0;
+                detail.PajakAir = data.Hit1bulan ?? 0;
 
                 return detail;
             }
@@ -2063,7 +2076,7 @@ namespace MonPDReborn.Models.DataOP
 
                 // Ambil data potensi pajak terakhir untuk NOP
                 var data = context.DbPotensiPpjs
-                    .Where(x => x.Nop == nop)
+                    .Where(x => x.Nop == nop && x.TahunBuku == DateTime.Now.Year + 1)
                     .FirstOrDefault();
 
                 if (data == null)
@@ -2091,7 +2104,7 @@ namespace MonPDReborn.Models.DataOP
                     TarifPajak = pju == null
                         ? 0.015m
                         : (pju.Peruntukan == 58 ? 0.10m : 0.015m),
-                    TotalPajak = data.JumlahPajak ?? 0,
+                    TotalPajak = data.Hit1bulan ?? 0,
                     DetailNJTLBulanan = detail,
                     KonsistensiNJTL = HitungKonsistensi(detail),
                 };
@@ -2267,6 +2280,7 @@ namespace MonPDReborn.Models.DataOP
 
             // Room
             public int JumlahTotalRoom { get; set; }
+            public decimal HargaRataRataRoomKos { get; set; }
             public decimal HargaRataRataRoom { get; set; }
             public decimal OkupansiRateRoom { get; set; } // dalam 0.0 - 1.0
 
@@ -2299,6 +2313,8 @@ namespace MonPDReborn.Models.DataOP
             // Perhitungan otomatis
 
             public decimal RataRataRoomTerjualPerHari => JumlahTotalRoom * OkupansiRateRoom;
+            //KOS
+            public decimal PotensiOmzetRoomPerBulanKos => HargaRataRataRoom * Math.Ceiling(RataRataRoomTerjualPerHari);
 
             public decimal PotensiOmzetRoomPerBulan => HargaRataRataRoom * Math.Ceiling(RataRataRoomTerjualPerHari) * 30;
 
@@ -2310,6 +2326,10 @@ namespace MonPDReborn.Models.DataOP
 
             public decimal PotensiPajakPerBulan => (PotensiOmzetRoomPerBulan + PotensiOmzetBanquetPerBulan) * TarifPajak;
             public decimal PotensiPajakPerTahun => PotensiPajakPerBulan * BulanSisa;
+
+            //KOS
+            public decimal PotensiPajakPerBulanKos => (PotensiOmzetRoomPerBulanKos + PotensiOmzetBanquetPerBulan) * TarifPajak;
+            public decimal PotensiPajakPerTahunKos => PotensiPajakPerBulanKos * BulanSisa;
         }
         public class DetailPotensiPajakResto
         {

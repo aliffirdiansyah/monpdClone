@@ -28,7 +28,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tpk-hotel" role="tab" onclick="fnShowTpk()">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tpk-hotel" role="tab" onclick="fnShowTPK()">
                             TPK Hotel
                         </a>
                     </li>
@@ -119,12 +119,12 @@
 
                     <div class="tab-pane" id="tpk-hotel" role="tabpanel">
                         <div class="text-center">
-                            <div id="loading2-ShowTpk" class="spinner-border text-primary" style="display: none">
+                            <div id="loading2-ShowTPK" class="spinner-border text-primary" style="display: none">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
 
-                        <div id="ShowTpk"></div>
+                        <div id="ShowTPK"></div>
 
                     </div>
                 </div>
@@ -272,66 +272,43 @@
            });
         }
 
-                 function fnShowTpk()
-        {
-            const tahunKiri = $('#tahunKiri').val();
-            const tahunKanan = $('#tahunKanan').val();
-
-            $.ajax({
-              url: '@(Url.Action("ShowTPK"))',
-              type: 'GET',
-              data: {
-                  tahunKiri: tahunKiri,
-                  tahunKanan: tahunKanan
-              },
-              beforeSend: function () {
-                 $('#loading2-ShowTpk').show();
-                 $('#ShowTpk').hide();
-              },
-              success: function (response) {
-                    if (response.Status === undefined) {
-                        $('#loading2-ShowTpk').hide();
-                        $('#ShowTpk').show();
-                        $('#ShowTpk').html(response);
-                    }
-                    else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
-              },
-              error: function (xhr, status, error) {
-                 $('#loading2-ShowTpk').hide();
-                 $('#ShowTpk').hide();
-                 $('#ShowTpk').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-              }
-           });
-        }
-
-
-          $(document).on("change", "#tahunKiri", function () {
-             changeTahun('kiri', $(this).val());
+        $(document).on("change", "#tahunKiri", function () {
+             fnShowTPK();
          });
 
          $(document).on("change", "#tahunKanan", function () {
-             changeTahun('kanan', $(this).val());
+             fnShowTPK();
          });
 
-         function changeTahun(side, tahun) {
-             const nop = $('#DetailNOP').val();
-             const jenisPajak = $('#DetailJenisPajak').val();
-             const tahunKiri = (side === 'kiri') ? tahun : $('#tahunKiri').val();
-             const tahunKanan = (side === 'kanan') ? tahun : $('#tahunKanan').val();
+         function fnShowTPK() {
+             const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
+             const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
 
-             $("#detailContainer").load('/ProfilePembayaranOP/Detail', {
-                 nop: nop,
-                 jenisPajak: jenisPajak,
-                 tahunKiri: tahunKiri,
-                 tahunKanan: tahunKanan
+             $.ajax({
+                  url: '@(Url.Action("ShowTPK"))',
+                 type: 'GET',
+                 data: {
+                     tahunKiri: tahunKiri,
+                     tahunKanan: tahunKanan
+                 },
+                 beforeSend: function () {
+                     $('#loading2-ShowTPK').show();
+                     $('#ShowTPK').hide();
+                 },
+                 success: function (response) {
+                     $('#loading2-ShowTPK').hide();
+                     $('#ShowTPK').show().html(response);
+                 },
+                 error: function () {
+                     $('#loading2-ShowTPK').hide();
+                     $('#ShowTPK').show().html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                 }
              });
          }
+
+
+          
+
         function onDetail(e) {
             var nop = e.row.data.NOP;
             var pajak = e.row.data.EnumPajak;

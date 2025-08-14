@@ -5,52 +5,56 @@
     ViewBag.Title = "Detail Potensi Pajak Fitnes";
 }
 
-<div class="row">
+@if (Model != null)
+{
 
-    <div class="col-lg-12">
-        <div class="card border border-success border-2">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="d-flex p-3">
-                            <div class="flex-shrink-0">
-                                <div class="avatar-md me-3">
-                                    <span class="avatar-title bg-soft-success rounded-circle border border-success border-2 fs-1">
-                                        <i class="ri-boxing-line text-success"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="mt-1">
-                                <h4 class="fs-16 fw-semibold text-dark">
-                                    @Model.Nama
-                                </h4>
-                                <p class="fs-16 lh-base text-dark mb-1">
-                                    @Model.Alamat
-                                </p>
-                                <p class="fs-16 text-dark">
-                                    @Model.FormattedNOP
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card border border-success border-2">
-                            <div class="card-body bg-success bg-opacity-25">
-                                <div class="d-flex p-3">
-                                    <h3 class="fs-16 fw-semibold">
-                                        Potensi Pajak
-                                    </h3>
-                                </div>
-                                <div class="d-flex p-3 py-0">
-                                    <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")</p>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card border border-success border-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <div class="d-flex p-3">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-soft-success rounded-circle border border-success border-2 fs-1">
+                                            <i class="ri-boxing-line text-success"></i>
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="d-flex p-3 py-0">
-                                    <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")</p>
+                                <div class="mt-1">
+                                    <h4 class="fs-16 fw-semibold text-dark">
+                                        @Model.Nama
+                                    </h4>
+                                    <p class="fs-16 lh-base text-dark mb-1">
+                                        @Model.Alamat
+                                    </p>
+                                    <p class="fs-16 text-dark">
+                                        @Model.FormattedNOP
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border border-success border-2">
+                                <div class="card-body bg-success bg-opacity-25">
+                                    <div class="d-flex p-3">
+                                        <h3 class="fs-16 fw-semibold">
+                                            Potensi Pajak
+                                        </h3>
+                                    </div>
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Per Bulan</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Per Tahun</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-semibold">Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -59,68 +63,67 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-lg-8">
+        <div class="col-lg-8">
 
-        <div class="card">
-            <div class="card-header d-flex bg-soft-success">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Detail Kunjungan & Membership
-                    </h4>
+            <div class="card">
+                <div class="card-header d-flex bg-soft-success">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0">
+                            Detail Kunjungan & Membership
+                        </h4>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
+                <div class="card-body">
+                    <div class="row">
 
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Kapasitas Pengunjung</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.Kapasitas.ToString("N0") Orang</p>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        <p class="fs-14 text-muted flex-grow-1">Kapasitas Pengunjung</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">@Model.Kapasitas.ToString("N0") Orang</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Turnover Hari Kerja</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.TurnoverWeekdays.ToString("N2") Kali</p>
+                                    <div class="d-flex">
+                                        <p class="fs-14 text-muted flex-grow-1">Turnover Hari Kerja</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">@Model.TurnoverWeekdays.ToString("N2") Kali</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.TurnoverWeekend.ToString("N2") Kali</p>
+                                    <div class="d-flex">
+                                        <p class="fs-14 text-muted flex-grow-1">Turnover Akhir Pekan</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">@Model.TurnoverWeekend.ToString("N2") Kali</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
+                                    <div class="d-flex">
+                                        <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-6">
-                        <div class="card border border-success border-2">
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <h3 class="fs-18 fw-semibold mb-1">
-                                        @Model.EstimasiJumlahMemberFitnes.ToString("N0")
-                                    </h3>
-                                    <h4 class="fs-14 text-muted">
-                                        Estimasi Jumlah Member
-                                    </h4>
+                        <div class="col-lg-6">
+                            <div class="card border border-success border-2">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <h3 class="fs-18 fw-semibold mb-1">
+                                            @Model.EstimasiJumlahMemberFitnes.ToString("N0")
+                                        </h3>
+                                        <h4 class="fs-14 text-muted">
+                                            Estimasi Jumlah Member
+                                        </h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    @* <div class="col-lg-6">
+                        @* <div class="col-lg-6">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="fs-14 fw-semibold mb-2">
@@ -135,334 +138,354 @@
                         </div>
                     </div> *@
 
-                    
 
-                    <div class="col-lg-12">
-                        <div class="card border border-success border-2">
-                            <div class="card-body">
-                                <h4 class="fs-14 fw-semibold mb-1">
-                                    Perhitungan Rata-rata Member Bulanan :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    ((Kapasitas x TurnoverWeekdays x 22 Hari) + (Kapasitas x TurnoverWeekend x 8 Hari)) / Rata-Rata Kunjungan per Bulan
-                                </p>
-                                @{
-                                    decimal kapasitas = Model.Kapasitas;
-                                    decimal turnoverWeekdays = Model.TurnoverWeekdays; // Contoh: 0.75 untuk 75%
-                                    decimal turnoverWeekend = Model.TurnoverWeekend;   // Contoh: 0.50 untuk 50%
 
-                                    decimal hasil = ((kapasitas * turnoverWeekdays * 22) + (kapasitas * turnoverWeekend * 8)) / 12;
-                                }
-                                <p class="fs-14 fw-semibold text-dark mb-1">
-                                    ((@Model.Kapasitas x @Model.TurnoverWeekdays.ToString("N2") x 22) + (@Model.Kapasitas x @Model.TurnoverWeekend.ToString("N2") x 8)) / 12 = @hasil.ToString("N0") Member
-                                </p>
+                        <div class="col-lg-12">
+                            <div class="card border border-success border-2">
+                                <div class="card-body">
+                                    <h4 class="fs-14 fw-semibold mb-1">
+                                        Perhitungan Rata-rata Member Bulanan :
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-1">
+                                        ((Kapasitas x TurnoverWeekdays x 22 Hari) + (Kapasitas x TurnoverWeekend x 8 Hari)) / Rata-Rata Kunjungan per Bulan
+                                    </p>
+                                    @{
+                                        decimal kapasitas = Model.Kapasitas;
+                                        decimal turnoverWeekdays = Model.TurnoverWeekdays; // Contoh: 0.75 untuk 75%
+                                        decimal turnoverWeekend = Model.TurnoverWeekend;   // Contoh: 0.50 untuk 50%
+
+                                        decimal hasil = ((kapasitas * turnoverWeekdays * 22) + (kapasitas * turnoverWeekend * 8)) / 12;
+                                    }
+                                    <p class="fs-14 fw-semibold text-dark mb-1">
+                                        ((@Model.Kapasitas x @Model.TurnoverWeekdays.ToString("N2") x 22) + (@Model.Kapasitas x @Model.TurnoverWeekend.ToString("N2") x 8)) / 12 = @hasil.ToString("N0") Member
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-header d-flex bg-soft-success">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Detail Omzet
-                    </h4>
+            <div class="card">
+                <div class="card-header d-flex bg-soft-success">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0">
+                            Detail Omzet
+                        </h4>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
+                <div class="card-body">
+                    <div class="row">
 
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Harga Membership Bulanan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">Rp. @Model.HargaMemberFitness.ToString("N0")</p>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        <p class="fs-14 text-muted flex-grow-1">Harga Membership Bulanan</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">Rp. @Model.HargaMemberFitness.ToString("N0")</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
-                                    <div class="flex-shrink-0">
-                                        <p class="fs-14 fw-semibold">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
+                                    <div class="d-flex">
+                                        <p class="fs-14 text-muted flex-grow-1">Rata-rata Member Bulanan</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-14 fw-semibold">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-6">
-                        <div class="card border border-success border-2">
-                            <div class="card-body">
-                                <div class="p-1">
-                                    <h4 class="fs-16 fw-semibold mb-4">
-                                        Omzet Bulanan
-                                    </h4>
-                                    <h4 class="fs-16 fw-semibold mb-1">
-                                        Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
-                                    </h4>
-                                    <p class="fs-14 text-muted mb-1">Total pendapatan dari membership</p>
-                                </div>
-                                <br />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="card border border-success border-2">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        <i class="avatar-md ri-information-line text-success fs-3"></i>
-                                    </div>
-                                    <div class="flex-grow-1 px-3 mt-2">
-                                        <h4 class="fs-16 fw-semibold mb-1">
-                                            Informasi Omzet
+                        <div class="col-lg-6">
+                            <div class="card border border-success border-2">
+                                <div class="card-body">
+                                    <div class="p-1">
+                                        <h4 class="fs-16 fw-semibold mb-4">
+                                            Omzet Bulanan
                                         </h4>
+                                        <h4 class="fs-16 fw-semibold mb-1">
+                                            Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
+                                        </h4>
+                                        <p class="fs-14 text-muted mb-1">Total pendapatan dari membership</p>
                                     </div>
+                                    <br />
                                 </div>
-                                <p class="fs-14 text-muted mb-1">
-                                    Sebagai pusat kebugaran, Omzet Gym dihitung berdasarkan pendapatan dari membership bulanan, bukan dari penjualan tiket harian.
-                                </p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-12">
-                        <div class="card border border-success border-2">
-                            <div class="card-body bg-light bg-opacity-25">
-                                <h4 class="fs-16 fw-semibold mb-1">
-                                    Perhitungan Omzet Bulanan :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Harga Membership Bulanan x Rata-rata Member Bulanan
-                                </p>
-                                <p class="fs-14 fw-semibold text-dark mb-1">
-                                    Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0")  = Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
-                                </p>
+                        <div class="col-lg-12">
+                            <div class="card border border-success border-2">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="avatar-md ri-information-line text-success fs-3"></i>
+                                        </div>
+                                        <div class="flex-grow-1 px-3 mt-2">
+                                            <h4 class="fs-16 fw-semibold mb-1">
+                                                Informasi Omzet
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <p class="fs-14 text-muted mb-1">
+                                        Sebagai pusat kebugaran, Omzet Gym dihitung berdasarkan pendapatan dari membership bulanan, bukan dari penjualan tiket harian.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                        <div class="col-lg-12">
+                            <div class="card border border-success border-2">
+                                <div class="card-body bg-light bg-opacity-25">
+                                    <h4 class="fs-16 fw-semibold mb-1">
+                                        Perhitungan Omzet Bulanan :
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-1">
+                                        Harga Membership Bulanan x Rata-rata Member Bulanan
+                                    </p>
+                                    <p class="fs-14 fw-semibold text-dark mb-1">
+                                        Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0")  = Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex bg-soft-success">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0">
+                            Perhitungan Potensi Pajak
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Rumus Perhitungan Potensi Pajak Per Bulan :
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-1">
+                                        Omzet Bulanan x Tarif Pajak
+                                    </p>
+                                    <p class="fs-14 fw-semibold text-dark mb-2">
+                                        Rp. @Model.OmzetPerBulanFitnes.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")
+                                    </p>
+                                    <h4 class="fs-16 fw-semibold mb-2">
+                                        Rumus Perhitungan Potensi Pajak Per Tahun :
+                                    </h4>
+                                    <p class="fs-14 text-muted mb-1">
+                                        Potensi Pajak Per Bulan x 12
+                                    </p>
+                                    <p class="fs-14 fw-semibold text-dark mb-2">
+                                        Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
+                                    </p>
+                                    <h4 class="fs-16 fw-semibold text-dark mb-2">
+                                        Total Potensi Pajak Per Tahun : Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="card border border-success border-2">
+                                <div class="card-body">
+                                    <h4 class="fs-18 fw-semibold mb-2">
+                                        Potensi Pajak per Bulan
+                                    </h4>
+                                    <h4 class="fs-18 fw-semibold mb-2">
+                                        Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header d-flex bg-soft-success">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Perhitungan Potensi Pajak
-                    </h4>
+        <div class="col-lg-4">
+
+            <div class="card">
+                <div class="card-header d-flex bg-soft-success">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0">
+                            Ringkasan
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <p class="label">NOP</p>
+                        <p class="value">@Model.NOP</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class="label">Nama Usaha</p>
+                        <p class="value">@Model.Nama</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class="label">Alamat</p>
+                        <p class="value">@Model.Alamat</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class="label">Kapasitas Pengunjung</p>
+                        <p class="value">@Model.Kapasitas.ToString("N0") Orang</p>
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="row">
 
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak Per Bulan :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Omzet Bulanan x Tarif Pajak
+            <div class="card">
+                <div class="card-header d-flex bg-soft-success">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0">
+                            Detail Membership
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <p class="label">Harga Membership</p>
+                        <p class="value">Rp. @Model.HargaMemberFitness.ToString("N0")</p>
+                    </div>
+
+                    <div class="info-row">
+                        <p class="label">Rata-rata Member</p>
+                        <p class="value">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
+                    </div>
+
+                    <div class="info-row">
+                        <p class="label">Omzet Bulanan</p>
+                        <p class="value">Rp. @Model.OmzetPerBulanFitnes.ToString("N0")</p>
+                    </div>
+
+                    <div class="info-row">
+                        <p class="label">Tarif Pajak</p>
+                        <p class="value">@Model.TarifPajak.ToString("P0")</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex bg-soft-success">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0">
+                            Parameter Perhitungan
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <p class="label">Kapasitas Pengunjung</p>
+                        <p class="value">@Model.Kapasitas.ToString("N0") Orang</p>
+                    </div>
+
+                    <div class="info-row">
+                        <p class="label">Turnover Hari Kerja</p>
+                        <p class="value">@Model.TurnoverWeekdays.ToString("N2") Kali</p>
+                    </div>
+
+                    <div class="info-row">
+                        <p class="label">Turnover Akhir Pekan</p>
+                        <p class="value">@Model.TurnoverWeekend.ToString("N2") Kali</p>
+                    </div>
+
+                    <div class="info-row">
+                        <p class="label">Tarif Pajak</p>
+                        <p class="value">@Model.TarifPajak.ToString("P0")</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="accordion" id="accordionPajakFitnes">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPajakFitnes">
+                            <button class="accordion-button bg-soft-success fw-bold text-dark" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapsePajakFitnes"
+                                    aria-expanded="true" aria-controls="collapsePajakFitnes">
+                                Rumus Lengkap Potensi Pajak Hiburan
+                            </button>
+                        </h2>
+                        <div id="collapsePajakFitnes" class="accordion-collapse collapse"
+                             aria-labelledby="headingPajakFitnes" data-bs-parent="#accordionPajakFitnes">
+                            <div class="accordion-body">
+
+                                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet</h4>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Estimasi Jumlah Member = ((Kapasitas x Turnover Weekdays x 22 Hari) + (Kapasitas x Turnover Weekend x 8 Hari)) / Rata-Rata Kunjungan per Bulan
                                 </p>
-                                <p class="fs-14 fw-semibold text-dark mb-2">
-                                    Rp. @Model.OmzetPerBulanFitnes.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")
+                                <p class="fs-14 text-dark mb-2 fw-semibold">
+                                    Estimasi Jumlah Member = ((@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") x 22 Hari) +
+                                    (@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") x 8 Hari)) / 12
+                                    = @Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang
                                 </p>
-                                <h4 class="fs-16 fw-semibold mb-2">
-                                    Rumus Perhitungan Potensi Pajak Per Tahun :
-                                </h4>
-                                <p class="fs-14 text-muted mb-1">
-                                    Potensi Pajak Per Bulan x 12
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Omzet/Bulan = Harga Member x Estimasi Jumlah Member
                                 </p>
-                                <p class="fs-14 fw-semibold text-dark mb-2">
-                                    Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
+                                <p class="fs-14 text-dark mb-3 fw-semibold">
+                                    Omzet/Bulan = Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0")
+                                    = Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
                                 </p>
-                                <h4 class="fs-16 fw-semibold text-dark mb-2">
-                                    Total Potensi Pajak Per Tahun : Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
-                                </h4>
+
+                                <hr>
+
+                                <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
+                                </p>
+                                <p class="fs-14 text-dark mb-2 fw-semibold">
+                                    Potensi Pajak/Bulan = Rp. @Model.OmzetPerBulanFitnes.ToString("N0") x @Model.TarifPajak.ToString("P0")
+                                    = Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")
+                                </p>
+
+                                <p class="fs-14 text-muted font-monospace mb-1">
+                                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                                </p>
+                                <p class="fs-14 text-dark fw-semibold">
+                                    Potensi Pajak/Tahun = Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0") x @Model.BulanSisa Bulan
+                                    = Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
+                                </p>
+
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-lg-6">
-                        <div class="card border border-success border-2">
-                            <div class="card-body">
-                                <h4 class="fs-18 fw-semibold mb-2">
-                                    Potensi Pajak per Bulan
-                                </h4>
-                                <h4 class="fs-18 fw-semibold mb-2">
-                                    Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")
-                                </h4>                                
-                            </div>
-                        </div>
+            </div>
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-12">
+                <div class="card text-center shadow-sm border-0">
+                    <div class="card-body">
+                        <img src="~/assets/images/coming-soon-img.png" alt="Tidak Ada Data" class="img-fluid mb-4" style="max-width: 180px;" />
+                        <h5 class="card-title text-danger">Data Tidak Ditemukan</h5>
+                        <p class="card-text text-muted">
+                            Maaf, data yang Anda cari belum tersedia atau tidak ditemukan.
+                            @* Coba ubah filter atau periksa kembali input Anda. *@
+                        </p>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-lg-4">
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-success">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Ringkasan
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="d-flex">
-                    <p class="label">NOP</p>
-                    <p class="value">@Model.NOP</p>
-                </div>
-                <div class="d-flex">
-                    <p class="label">Nama Usaha</p>
-                    <p class="value">@Model.Nama</p>
-                </div>
-                <div class="d-flex">
-                    <p class="label">Alamat</p>
-                    <p class="value">@Model.Alamat</p>
-                </div>
-                <div class="d-flex">
-                    <p class="label">Kapasitas Pengunjung</p>
-                    <p class="value">@Model.Kapasitas.ToString("N0") Orang</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-success">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Detail Membership
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="info-row">
-                    <p class="label">Harga Membership</p>
-                    <p class="value">Rp. @Model.HargaMemberFitness.ToString("N0")</p>
-                </div>
-
-                <div class="info-row">
-                    <p class="label">Rata-rata Member</p>
-                    <p class="value">@Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang</p>
-                </div>
-
-                <div class="info-row">
-                    <p class="label">Omzet Bulanan</p>
-                    <p class="value">Rp. @Model.OmzetPerBulanFitnes.ToString("N0")</p>
-                </div>
-
-                <div class="info-row">
-                    <p class="label">Tarif Pajak</p>
-                    <p class="value">@Model.TarifPajak.ToString("P0")</p>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex bg-soft-success">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Parameter Perhitungan
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="info-row">
-                    <p class="label">Kapasitas Pengunjung</p>
-                    <p class="value">@Model.Kapasitas.ToString("N0") Orang</p>
-                </div>
-
-                <div class="info-row">
-                    <p class="label">Turnover Hari Kerja</p>
-                    <p class="value">@Model.TurnoverWeekdays.ToString("N2") Kali</p>
-                </div>
-
-                <div class="info-row">
-                    <p class="label">Turnover Akhir Pekan</p>
-                    <p class="value">@Model.TurnoverWeekend.ToString("N2") Kali</p>
-                </div>
-
-                <div class="info-row">
-                    <p class="label">Tarif Pajak</p>
-                    <p class="value">@Model.TarifPajak.ToString("P0")</p>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="accordion" id="accordionPajakFitnes">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingPajakFitnes">
-                        <button class="accordion-button bg-soft-success fw-bold text-dark" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapsePajakFitnes"
-                                aria-expanded="true" aria-controls="collapsePajakFitnes">
-                            Rumus Lengkap Potensi Pajak Hiburan
-                        </button>
-                    </h2>
-                    <div id="collapsePajakFitnes" class="accordion-collapse collapse"
-                         aria-labelledby="headingPajakFitnes" data-bs-parent="#accordionPajakFitnes">
-                        <div class="accordion-body">
-
-                            <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet</h4>
-
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Estimasi Jumlah Member = ((Kapasitas x Turnover Weekdays x 22 Hari) + (Kapasitas x Turnover Weekend x 8 Hari)) / Rata-Rata Kunjungan per Bulan
-                            </p>
-                            <p class="fs-14 text-dark mb-2 fw-semibold">
-                                Estimasi Jumlah Member = ((@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") x 22 Hari) +
-                                (@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") x 8 Hari)) / 12
-                                = @Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang
-                            </p>
-
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Omzet/Bulan = Harga Member x Estimasi Jumlah Member
-                            </p>
-                            <p class="fs-14 text-dark mb-3 fw-semibold">
-                                Omzet/Bulan = Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0")
-                                = Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
-                            </p>
-
-                            <hr>
-
-                            <h4 class="fs-16 fw-semibold mb-3">Perhitungan Potensi Pajak</h4>
-
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Potensi Pajak/Bulan = Omzet/Bulan x Tarif Pajak
-                            </p>
-                            <p class="fs-14 text-dark mb-2 fw-semibold">
-                                Potensi Pajak/Bulan = Rp. @Model.OmzetPerBulanFitnes.ToString("N0") x @Model.TarifPajak.ToString("P0")
-                                = Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0")
-                            </p>
-
-                            <p class="fs-14 text-muted font-monospace mb-1">
-                                Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
-                            </p>
-                            <p class="fs-14 text-dark fw-semibold">
-                                Potensi Pajak/Tahun = Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0") x @Model.BulanSisa Bulan
-                                = Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
+}

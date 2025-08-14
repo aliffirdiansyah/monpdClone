@@ -179,15 +179,22 @@ namespace MonPDReborn.Models.DataOP
         {
             public List<TPKHotel> Kiri { get; set; }
             public List<TPKHotel> Kanan { get; set; }
+            public DashboardTPK Data { get; set; }
             public int TahunKiri { get; set; }
             public int TahunKanan { get; set; }
+            public ShowTPK()
+            {
+                Data = Method.GetDashboardTPK2025();
+            }
             public ShowTPK(int tahunKiri, int tahunKanan)
             {
+               
+
                 TahunKiri = tahunKiri;
                 TahunKanan = tahunKanan;
 
-                Kiri = Method.GenerateDummyTPKHotelData(tahunKiri);
-                Kanan = Method.GenerateDummyTPKHotelData(tahunKanan);
+                Kiri = Method.GetTPKHotelData(tahunKiri);
+                Kanan = Method.GetTPKHotelData(tahunKanan);
             }
         }
 
@@ -640,6 +647,21 @@ namespace MonPDReborn.Models.DataOP
                             var OpHotelBaru = context.DbOpHotels.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
                             var OpHotelAkhir = context.DbOpHotels.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kat.Id);
 
+                            // Determine KategoriGroup based on nama
+                            string kategoriGroup;
+                            if (kat.Nama.ToUpper().Contains("BINTANG") && !kat.Nama.ToUpper().Contains("NON"))
+                            {
+                                kategoriGroup = "Hotel Berbintang";
+                            }
+                            else if (kat.Nama.ToUpper().Contains("NON"))
+                            {
+                                kategoriGroup = "Hotel Non Bintang";
+                            }
+                            else
+                            {
+                                kategoriGroup = "Hotel Lainnya"; // fallback
+                            }
+
                             ret.Add(new RekapDetail
                             {
                                 JenisPajak = JenisPajak.GetDescription(),
@@ -647,6 +669,7 @@ namespace MonPDReborn.Models.DataOP
                                 Tahun = tahun,
                                 KategoriId = (int)kat.Id,
                                 Kategori = kat.Nama,
+                                KategoriGroup = kategoriGroup,
                                 JmlOpAwal = OpHotelAwal,
                                 JmlOpTutupPermanen = OpHotelTutup,
                                 JmlOpBaru = OpHotelBaru,
@@ -3280,12 +3303,14 @@ namespace MonPDReborn.Models.DataOP
                                 MetodePenjualan = opHotel.MetodePenjualan
                             };
 
+                            var bulanSekarang = DateTime.Now.Month;
+
                             var semuaBulan = Enumerable.Range(1, 12)
-                                 .Select(m => new
-                                 {
-                                     Bulan = m,
-                                     BulanNama = CultureInfo.GetCultureInfo("id-ID").DateTimeFormat.GetMonthName(m)
-                                 }).ToList();
+                                .Select(m => new
+                                {
+                                    Bulan = m,
+                                    BulanNama = CultureInfo.GetCultureInfo("id-ID").DateTimeFormat.GetMonthName(m)
+                                }).ToList();
 
                             var accDb = context.DbOpAccHotels
                                 .Where(x => x.Nop == nop && x.Bulan.HasValue)
@@ -3296,18 +3321,19 @@ namespace MonPDReborn.Models.DataOP
                                     TahunNow = x.TahunIni ?? 0
                                 }).ToList();
 
-                            ret.HotelRow.AccHotelDetailList  = (from b in semuaBulan
-                                                      join d in accDb on b.Bulan equals d.Bulan into gj
-                                                      from sub in gj.DefaultIfEmpty()
-                                                      select new DetailHotel.AccHotel
-                                                      {
-                                                          Bulan = b.Bulan,
-                                                          BulanNama = b.BulanNama,
-                                                          TahunMines1 = sub?.TahunMines1 ?? 0,
-                                                          TahunNow = sub?.TahunNow ?? 0
-                                                      })
-                                                      .OrderBy(x => x.Bulan)
-                                                      .ToList();
+                            ret.HotelRow.AccHotelDetailList = (from b in semuaBulan
+                                                               join d in accDb on b.Bulan equals d.Bulan into gj
+                                                               from sub in gj.DefaultIfEmpty()
+                                                               select new DetailHotel.AccHotel
+                                                               {
+                                                                   Bulan = b.Bulan,
+                                                                   BulanNama = b.BulanNama,
+                                                                   TahunMines1 = sub?.TahunMines1 ?? 0,
+                                                                   TahunNow = (b.Bulan <= bulanSekarang) ? (sub?.TahunNow ?? 0) : 0
+                                                               })
+                                                              .OrderBy(x => x.Bulan)
+                                                              .ToList();
+
 
                             //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
                             //    .Where(x => x.Nop == nop)
@@ -3415,6 +3441,41 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
+
+            public static List<TPKHotel> GetTPKHotelData(int tahun)
+            {
+                var context = DBClass.GetContext();
+
+                var data = context.DataTpkHotels
+                    .Where(x => x.Tahun == tahun)
+                    .Select(g => new TPKHotel
+                    {
+                        Tahun = g.Tahun ?? 0,
+                        Bulan = g.Bulan ?? 0,
+                        BulanNama = CultureInfo
+                            .GetCultureInfo("id-ID")
+                            .DateTimeFormat
+                            .GetMonthName(g.Bulan ?? 0),
+                        HotelBintang = g.HotelBintang ?? 0,
+                        HotelNonBintang = g.HotelNonBintang ?? 0
+                    })
+                    .ToList();
+
+                return data; // langsung kembalikan hasil query
+            }
+            public static DashboardTPK GetDashboardTPK2025()
+            {
+                var data2025 = GetTPKHotelData(2025);
+
+                var dashboard = new DashboardTPK
+                {
+                    rataBintang = data2025.Any() ? Math.Round(data2025.Average(x => x.HotelBintang), 2) : 0,
+                    rataNonBintang = data2025.Any() ? Math.Round(data2025.Average(x => x.HotelNonBintang), 2) : 0
+                };
+
+                return dashboard;
+            }
+
             public static List<TPKHotel> GenerateDummyTPKHotelData(int tahun)
             {
                 var dummyData = new List<TPKHotel>
@@ -3518,6 +3579,8 @@ namespace MonPDReborn.Models.DataOP
         {
             public int EnumPajak { get; set; }
 
+            //property baru untuk split
+            public string KategoriGroup { get; set; }
             public string JenisPajak { get; set; } = null!;
             public int KategoriId { get; set; }
             public int Urutan { get; set; }
@@ -3787,8 +3850,13 @@ namespace MonPDReborn.Models.DataOP
             public string BulanNama { get; set; } = null!;
             public decimal HotelBintang { get; set; }
             public decimal HotelNonBintang { get; set; }
-            /*public decimal Pencapaian { get; set; }
-            public decimal Selisih => Realisasi - AkpTarget;*/
+            public decimal RataRata => (HotelBintang + HotelNonBintang) / 2m;
+        }
+
+        public class DashboardTPK
+        {
+            public decimal rataBintang { get; set; }
+            public decimal rataNonBintang { get; set; }
         }
     }
 }

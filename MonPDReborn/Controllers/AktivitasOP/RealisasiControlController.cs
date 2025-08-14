@@ -62,6 +62,46 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+        public IActionResult ShowPembandingA(int tahun)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.RealisasiControlVM.ShowPembandingA(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult ShowPembandingB(int tahun)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.RealisasiControlVM.ShowPembandingB(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
 
         public IActionResult Detail()
         {
