@@ -414,21 +414,43 @@
                 </div>
             </div>
             <div class="card-body">
-                @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
-                                .ID("okupansiGrid")
-                                .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
-                                .KeyExpr("Bulan")
-                                .ShowBorders(true)
-                                .ShowColumnLines(true)
-                                .Paging(p => p.PageSize(12))
-                                .Columns(columns =>
-                                {
-                                    columns.AddFor(m => m.BulanNama).Caption("Bulan");
-                                    columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
-                                    columns.AddFor(m => m.TahunNow).Caption(tahunNow);
-                                })
-                                )
+                <div class="row">
+                    <div class="col-lg-6">
+                        @(
+                            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
+                            .ID("okupansiGrid")
+                            .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
+                            .KeyExpr("Bulan")
+                            .ShowBorders(true)
+                            .ShowColumnLines(true)
+                            .Paging(p => p.PageSize(12))
+                            .Columns(columns =>
+                            {
+                                columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                                columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
+                                columns.AddFor(m => m.TahunNow).Caption(tahunNow);
+                            })
+                            .Summary(s => {
+                                s.TotalItems(items => {
+                                    items.AddFor(x => x.BulanNama)
+                                        .SummaryType(SummaryType.Sum)
+                                        .DisplayFormat("Average");
 
+                                    items.AddFor(x => x.TahunMines1)
+                                        .SummaryType(SummaryType.Avg)
+                                        .ValueFormat("#,##0.00")
+                                        .DisplayFormat("{0}");
+
+                                    items.AddFor(x => x.TahunNow)
+                                        .SummaryType(SummaryType.Avg)
+                                        .ValueFormat("#,##0.00")
+                                        .DisplayFormat("{0}");
+                                });
+
+                            })
+                        )
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -526,7 +548,7 @@
         //     });
         // }
 
-        $(document).on("change", "#tahunKiri", function () {
+                $(document).on("change", "#tahunKiri", function () {
             fnPembayaranPajak();
         });
 
@@ -534,11 +556,12 @@
             fnPembayaranPajak();
         });
 
-         function fnPembayaranPajak() {
+        function fnPembayaranPajak() {
             const nop = $('#DetailNOP').val();
             const jenisPajak = $('#DetailJenisPajak').val();
-            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();   // fallback ke tahun sekarang
-            const tahunKanan = $('#tahunKanan').val() || new Date().getFullYear(); // fallback ke tahun sekarang
+
+            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
+            const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
 
             $.ajax({
                 url: '@Url.Action("Detail", "ProfilePembayaranOP")',
@@ -563,6 +586,7 @@
                 }
             });
         }
+
 
         // Bind event ke dropdown
         $(document).on("change", "#tahunKiri, #tahunKanan", function () {

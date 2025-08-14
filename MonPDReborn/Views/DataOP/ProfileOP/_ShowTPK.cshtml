@@ -1,8 +1,8 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowTPK
 
-
 <div class="row">
 
+    <!-- Header -->
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
@@ -10,11 +10,25 @@
                     <h4 class="card-title text-dark fs-16 mb-1">
                         Data Tingkat Penghuni Kamar (TPK) Hotel
                     </h4>
-                    <p class="text-dark mb-0">Perbandingan TPK Hotel Bintang dan Non Bintang Tahun @DateTime.Now</p>
+                    <p class="text-dark mb-0">
+                        Perbandingan TPK Hotel Bintang dan Non Bintang Tahun @DateTime.Now
+                    </p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Card Rata-rata Hotel Bintang -->
+    @{
+        decimal rataBintang = 0;
+        decimal rataNonBintang = 0;
+
+        if (Model.Kiri != null && Model.Kiri.Any())
+        {
+            rataBintang = Model.Kiri.Average(x => x.HotelBintang);
+            rataNonBintang = Model.Kiri.Average(x => x.HotelNonBintang);
+        }
+    }
 
     <div class="col-lg-6">
         <div class="card shadow-sm rounded-xl p-3 text-center" style="height:75%;">
@@ -25,7 +39,9 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">Hotel Bintang</h5>
-                        <h4 class="mb-0 fw-bold">Rata-rata TPK</h4>
+                        <h4 class="mb-0 fw-bold">
+                            Rata-rata TPK : @rataBintang.ToString("N2")
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -41,13 +57,17 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">Hotel Non Bintang</h5>
-                        <h4 class="mb-0 fw-bold">Rata-rata TPK</h4>
+                        <h4 class="mb-0 fw-bold">
+                            Rata-rata TPK : @rataNonBintang.ToString("N2")
+                        </h4>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+
+    <!-- Tabel Tahun Kiri -->
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -67,11 +87,58 @@
                 </select>
             </div>
             <div class="card-body p-2" id="tabelKiri">
-                @Html.Partial("~/Views/DataOP/ProfileOP/_Tabel.cshtml", Model.Kiri)
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th style="width: 30%;">Bulan</th>
+                            <th style="width: 35%;">Hotel Bintang</th>
+                            <th style="width: 35%;">Hotel Non Bintang</th>
+                            <th style="width: 35%">Rata-rata</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Kiri != null && Model.Kiri.Any())
+                        {
+                            foreach (var item in Model.Kiri)
+                            {
+                                <tr>
+                                    <td class="text-start">@item.BulanNama</td>
+                                    <td class="text-end">@item.HotelBintang</td>
+                                    <td class="text-end">@item.HotelNonBintang</td>
+                                    <td class="text-end">@item.RataRata</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Tidak ada data untuk tahun ini.</td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.Kiri != null && Model.Kiri.Any())
+                    {
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td class="text-center">Rata-rata</td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelNonBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.RataRata).ToString("N2")
+                                </td>
+                            </tr>
+                        </tfoot>
+                    }
+                </table>
             </div>
         </div>
     </div>
 
+    <!-- Tabel Tahun Kanan -->
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -91,7 +158,53 @@
                 </select>
             </div>
             <div class="card-body p-2" id="tabelKanan">
-                @Html.Partial("~/Views/DataOP/ProfileOP/_Tabel.cshtml", Model.Kanan)
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th style="width: 30%;">Bulan</th>
+                            <th style="width: 35%;">Hotel Bintang</th>
+                            <th style="width: 35%;">Hotel Non Bintang</th>
+                            <th style="width: 35%">Rata-rata</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Kanan != null && Model.Kanan.Any())
+                        {
+                            foreach (var item in Model.Kanan)
+                            {
+                                <tr>
+                                    <td class="text-start">@item.BulanNama</td>
+                                    <td class="text-end">@item.HotelBintang</td>
+                                    <td class="text-end">@item.HotelNonBintang</td>
+                                    <td class="text-end">@item.RataRata</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Tidak ada data untuk tahun ini.</td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.Kanan != null && Model.Kanan.Any())
+                    {
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td class="text-center">Rata-rata</td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.HotelNonBintang).ToString("N2")
+                                </td>
+                                <td class="text-end">
+                                    @Model.Kanan.Average(x => x.RataRata).ToString("N2")
+                                </td>
+                            </tr>
+                        </tfoot>
+                    }
+                </table>
             </div>
         </div>
     </div>

@@ -416,6 +416,7 @@ namespace MonPDReborn.Models
 
                 #region Method Get Jumlah OP
                 var OpRestoAkhir = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
+
                 var OpHotelAkhir = context.DbOpHotels.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
                 var OpHiburanAkhir = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
                 var OpParkirAkhir = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
@@ -424,6 +425,14 @@ namespace MonPDReborn.Models
                 var OpPbbAkhir = context.DbMonPbbs.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
                 var OpReklameAkhir = context.DbOpReklames.Count(x => x.TahunBuku == currentYear);
 
+                //var OpRestoAkhir =context.DbMonRestos.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                //var OpHotelAkhir = context.DbMonHotels.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                //var OpHiburanAkhir = context.DbMonHiburans.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                //var OpParkirAkhir = context.DbMonParkirs.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                //var OpListrikAkhir = context.DbMonPpjs.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                //var OpAbtAkhir = context.DbMonAbts.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                //var OpPbbAkhir = context.DbMonPbbs.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                //var OpReklameAkhir = context.DbMonReklames.Where(x => x.TahunBuku == currentYear).Select(x => x.NoFormulir).Distinct().Count();
                 #endregion
 
                 // Hasil akhir ViewModel
