@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using MonPDLib;
 using MonPDLib.EF;
@@ -628,6 +629,7 @@ namespace MonPDReborn.Models.DataOP
                 var context = DBClass.GetContext();
                 var kategoriList = context.MKategoriPajaks
                     .Where(x => x.PajakId == (int)jenisPajak)
+                    .OrderBy(x => x.Urutan)
                     .ToList()
                     .Select(x => new
                     {
@@ -803,7 +805,7 @@ namespace MonPDReborn.Models.DataOP
                             .Distinct()
                             .ToList();
 
-                        foreach (var item in kategoriList.OrderByDescending(x => x.Id).ToList())
+                        foreach (var item in kategoriList.Where(x => x.Id != 17).OrderByDescending(x => x.Id).ToList())
                         {
 
                             var re = new DetailPotensi();
@@ -1182,6 +1184,103 @@ namespace MonPDReborn.Models.DataOP
                     default:
                         break;
                 }
+
+                return ret;
+            }
+            public static List<DetailPotensi> GetDetailPotensiList(EnumFactory.EPajak jenisPajak, bool turu)
+            {
+                var ret = new List<DetailPotensi>();
+                var context = DBClass.GetContext();
+
+                var dataHotel1 = context.DbOpHotels
+                            .Where(x => x.TahunBuku == DateTime.Now.Year - 2)
+                            .GroupBy(x => new { x.Nop, x.KategoriId })
+                            .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                            .ToList();
+                var dataHotel2 = context.DbOpHotels
+                    .Where(x => x.TahunBuku == DateTime.Now.Year - 1)
+                    .GroupBy(x => new { x.Nop, x.KategoriId })
+                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .ToList();
+                var dataHotel3 = context.DbOpHotels
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
+                    .GroupBy(x => new { x.Nop, x.KategoriId })
+                    .Select(x => new { x.Key.Nop, x.Key.KategoriId })
+                    .ToList();
+
+                var dataHotelAll = dataHotel1
+                    .Concat(dataHotel2)
+                    .Concat(dataHotel3)
+                    .Select(x => (x.Nop, x.KategoriId))
+                .Distinct()
+                .ToList();
+
+                var kategori = context.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)jenisPajak && x.Id == 17)
+                    .FirstOrDefault();
+
+                var re = new DetailPotensi();
+                re.JenisPajak = jenisPajak.GetDescription();
+                re.Kategori = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kategori.Nama.ToLower());
+                re.EnumPajak = (int)jenisPajak;
+                re.EnumKategori = (int)kategori.Id;
+
+                var listOpHotel1 = dataHotel1.Where(x => x.KategoriId == kategori.Id).Select(x => x.Nop).ToList();
+                var listOpHotel2 = dataHotel2.Where(x => x.KategoriId == kategori.Id).Select(x => x.Nop).ToList();
+                var listOpHotel3 = dataHotel3.Where(x => x.KategoriId == kategori.Id).Select(x => x.Nop).ToList();
+                var listOpHotelAll = dataHotelAll.Where(x => x.KategoriId == kategori.Id).Select(x => x.Nop).ToList();
+
+                var targetHotel1 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year - 2 && listOpHotel1.Contains(x.Nop)).Sum(q => q.TargetBulan) ?? 0;
+                var targetHotel2 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year - 1 && listOpHotel2.Contains(x.Nop)).Sum(q => q.TargetBulan) ?? 0;
+                var targetHotel3 = context.DbAkunTargetObjekHotels.Where(x => x.TahunBuku == DateTime.Now.Year && listOpHotel3.Contains(x.Nop)).Sum(q => q.TargetBulan) ?? 0;
+                var realisasiHotel1 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year - 2 && listOpHotel1.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHotel2 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year - 1 && listOpHotel2.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiHotel3 = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && listOpHotel3.Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
+
+                var potensiHotel = context.DbPotensiHotels
+                    .Where(x => listOpHotel3.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
+                    .ToList()
+                    .Select(x =>
+                    {
+                        var op = context.DbOpHotels.FirstOrDefault(o => o.Nop == x.Nop);
+
+                        return new DetailPotensiPajakHotel
+                        {
+                            NOP = x.Nop,
+                            Nama = op?.NamaOp ?? "-",
+                            Alamat = op?.AlamatOp ?? "-",
+                            Wilayah = "SURABAYA " + op?.WilayahPajak ?? "-",
+                            Kategori = "-",
+                            TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
+                            JumlahTotalRoom = x.TotalRoom ?? 0,
+                            HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                            OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
+                            KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
+                            HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
+                            TarifPajak = 0.1m
+                        };
+                    })
+                    .ToList();
+                var totalPotensiHotel = potensiHotel.Sum(x => x.PotensiPajakPerTahun);
+
+                var potensiHotelNext1 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.PotensiPajakTahun) ?? 0;
+                var potensiHotelNext2 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.PotensiPajakTahun) ?? 0;
+                var potensiHotelNext3 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 4).Sum(x => x.PotensiPajakTahun) ?? 0;
+                var potensiHotelNext4 = context.DbPotensiHotels.Where(x => dataHotel3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 5).Sum(x => x.PotensiPajakTahun) ?? 0;
+
+                re.Target1 = targetHotel1;
+                re.Realisasi1 = realisasiHotel1;
+                re.Target2 = targetHotel2;
+                re.Realisasi2 = realisasiHotel2;
+                re.Target3 = targetHotel3;
+                re.Realisasi3 = realisasiHotel3;
+                re.TotalPotensi1 = totalPotensiHotel;
+                re.TotalPotensi2 = potensiHotelNext1;
+                re.TotalPotensi3 = potensiHotelNext2;
+                re.TotalPotensi4 = potensiHotelNext3;
+                re.TotalPotensi5 = potensiHotelNext4;
+
+                ret.Add(re);
 
                 return ret;
             }

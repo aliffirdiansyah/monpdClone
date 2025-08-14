@@ -15,7 +15,7 @@
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DetailPotensi>()
             .DataSource(d => d.Mvc()
-            .LoadAction("GetDetailPotensi")
+            .LoadAction("GetDetailPotensiHotel")
             .Key("Kategori")
             .LoadParams(new
             {
@@ -131,6 +131,12 @@
                 .DisplayFormat("{0}");
                 
                     items.AddFor(x => x.TotalPotensi4)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                
+                    items.AddFor(x => x.TotalPotensi5)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
