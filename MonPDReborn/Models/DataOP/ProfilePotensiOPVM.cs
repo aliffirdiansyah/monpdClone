@@ -36,7 +36,7 @@ namespace MonPDReborn.Models.DataOP
             {
                 DataRekapPotensi = Method.GetRekapPotensiList();
                 // Total Potensi dari seluruh data rekap
-                Data.Potensi = DataRekapPotensi.Sum(r => r.TotalPotensi);
+                Data.Potensi = DataRekapPotensi.Sum(r => r.TotalPotensi1);
 
                 // Realisasi total = total dari Realisasi1 + Realisasi2 + Realisasi3
                 Data.RealisasiTotal = DataRekapPotensi.Sum(q => q.Realisasi3);
@@ -405,6 +405,9 @@ namespace MonPDReborn.Models.DataOP
 
                 var totalPotensiReklame = context.DbPotensiReklames.Sum(q => q.Rata2Pajak) ?? 0;
 
+                //
+
+
                 #endregion
 
                 ret.Add(new RekapPotensi
@@ -417,7 +420,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiRestoMines1,
                     Target1 = targetRestoMines2,
                     Realisasi1 = realisasiRestoMines2,
-                    TotalPotensi = totalPotensiResto,
+                    TotalPotensi1 = totalPotensiResto,
                 });
 
                 ret.Add(new RekapPotensi
@@ -430,7 +433,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiListrikMines1,
                     Target1 = targetListrikMines2,
                     Realisasi1 = realisasiListrikMines2,
-                    TotalPotensi = totalPotensiPpj,
+                    TotalPotensi1 = totalPotensiPpj,
                 });
 
                 ret.Add(new RekapPotensi
@@ -443,7 +446,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiHotelMines1,
                     Target1 = targetHotelMines2,
                     Realisasi1 = realisasiHotelMines2,
-                    TotalPotensi = totalPotensiHotel
+                    TotalPotensi1 = totalPotensiHotel
                 });
 
                 ret.Add(new RekapPotensi
@@ -456,7 +459,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiParkirMines1,
                     Target1 = targetParkirMines2,
                     Realisasi1 = realisasiParkirMines2,
-                    TotalPotensi = totalPotensiParkir
+                    TotalPotensi1 = totalPotensiParkir
                 });
 
                 ret.Add(new RekapPotensi
@@ -469,7 +472,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiHiburanMines1,
                     Target1 = targetHiburanMines2,
                     Realisasi1 = realisasiHiburanMines2,
-                    TotalPotensi = totalPotensiHiburan
+                    TotalPotensi1 = totalPotensiHiburan
                 });
 
                 ret.Add(new RekapPotensi
@@ -482,7 +485,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiAbtMines1,
                     Target1 = targetAbtMines2,
                     Realisasi1 = realisasiAbtMines2,
-                    TotalPotensi = totalPotensiAbt
+                    TotalPotensi1 = totalPotensiAbt
                 });
 
                 ret.Add(new RekapPotensi
@@ -495,7 +498,7 @@ namespace MonPDReborn.Models.DataOP
                     Realisasi2 = realisasiReklameMines1,
                     Target1 = targetReklameMines2,
                     Realisasi1 = realisasiReklameMines2,
-                    TotalPotensi = totalPotensiReklame
+                    TotalPotensi1 = totalPotensiReklame
                 });
 
                 /*ret.Add(new RekapPotensi
