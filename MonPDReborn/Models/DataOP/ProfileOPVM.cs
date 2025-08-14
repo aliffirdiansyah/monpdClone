@@ -179,15 +179,22 @@ namespace MonPDReborn.Models.DataOP
         {
             public List<TPKHotel> Kiri { get; set; }
             public List<TPKHotel> Kanan { get; set; }
+            public DashboardTPK Data { get; set; }
             public int TahunKiri { get; set; }
             public int TahunKanan { get; set; }
+            public ShowTPK()
+            {
+                Data = Method.GetDashboardTPK2025();
+            }
             public ShowTPK(int tahunKiri, int tahunKanan)
             {
+               
+
                 TahunKiri = tahunKiri;
                 TahunKanan = tahunKanan;
 
-                Kiri = Method.GenerateDummyTPKHotelData(tahunKiri);
-                Kanan = Method.GenerateDummyTPKHotelData(tahunKanan);
+                Kiri = Method.GetTPKHotelData(tahunKiri);
+                Kanan = Method.GetTPKHotelData(tahunKanan);
             }
         }
 
@@ -3415,6 +3422,41 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
+
+            public static List<TPKHotel> GetTPKHotelData(int tahun)
+            {
+                var context = DBClass.GetContext();
+
+                var data = context.DataTpkHotels
+                    .Where(x => x.Tahun == tahun)
+                    .Select(g => new TPKHotel
+                    {
+                        Tahun = g.Tahun ?? 0,
+                        Bulan = g.Bulan ?? 0,
+                        BulanNama = CultureInfo
+                            .GetCultureInfo("id-ID")
+                            .DateTimeFormat
+                            .GetMonthName(g.Bulan ?? 0),
+                        HotelBintang = g.HotelBintang ?? 0,
+                        HotelNonBintang = g.HotelNonBintang ?? 0
+                    })
+                    .ToList();
+
+                return data; // langsung kembalikan hasil query
+            }
+            public static DashboardTPK GetDashboardTPK2025()
+            {
+                var data2025 = GetTPKHotelData(2025);
+
+                var dashboard = new DashboardTPK
+                {
+                    rataBintang = data2025.Any() ? Math.Round(data2025.Average(x => x.HotelBintang), 2) : 0,
+                    rataNonBintang = data2025.Any() ? Math.Round(data2025.Average(x => x.HotelNonBintang), 2) : 0
+                };
+
+                return dashboard;
+            }
+
             public static List<TPKHotel> GenerateDummyTPKHotelData(int tahun)
             {
                 var dummyData = new List<TPKHotel>
@@ -3787,8 +3829,15 @@ namespace MonPDReborn.Models.DataOP
             public string BulanNama { get; set; } = null!;
             public decimal HotelBintang { get; set; }
             public decimal HotelNonBintang { get; set; }
+
             /*public decimal Pencapaian { get; set; }
             public decimal Selisih => Realisasi - AkpTarget;*/
+        }
+
+        public class DashboardTPK
+        {
+            public decimal rataBintang { get; set; }
+            public decimal rataNonBintang { get; set; }
         }
     }
 }

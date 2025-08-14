@@ -526,7 +526,7 @@
         //     });
         // }
 
-        $(document).on("change", "#tahunKiri", function () {
+                $(document).on("change", "#tahunKiri", function () {
             fnPembayaranPajak();
         });
 
@@ -534,11 +534,12 @@
             fnPembayaranPajak();
         });
 
-         function fnPembayaranPajak() {
+        function fnPembayaranPajak() {
             const nop = $('#DetailNOP').val();
             const jenisPajak = $('#DetailJenisPajak').val();
-            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();   // fallback ke tahun sekarang
-            const tahunKanan = $('#tahunKanan').val() || new Date().getFullYear(); // fallback ke tahun sekarang
+
+            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
+            const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
 
             $.ajax({
                 url: '@Url.Action("Detail", "ProfilePembayaranOP")',
@@ -563,6 +564,7 @@
                 }
             });
         }
+
 
         // Bind event ke dropdown
         $(document).on("change", "#tahunKiri, #tahunKanan", function () {
