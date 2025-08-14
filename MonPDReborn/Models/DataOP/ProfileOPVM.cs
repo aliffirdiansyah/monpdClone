@@ -3265,6 +3265,35 @@ namespace MonPDReborn.Models.DataOP
                                 MetodePembayaran = opHotel.MetodePembayaran,
                                 MetodePenjualan = opHotel.MetodePenjualan
                             };
+
+                            var semuaBulan = Enumerable.Range(1, 12)
+                                 .Select(m => new
+                                 {
+                                     Bulan = m,
+                                     BulanNama = CultureInfo.GetCultureInfo("id-ID").DateTimeFormat.GetMonthName(m)
+                                 }).ToList();
+
+                            var accDb = context.DbOpAccHotels
+                                .Where(x => x.Nop == nop)
+                                .Select(x => new
+                                {
+                                    Bulan = x.Bulan ?? 0,
+                                    TahunMines1 = x.TahunMin1 ?? 0,
+                                    TahunNow = x.TahunIni ?? 0
+                                }).ToList();
+
+                            var accHotelDetailList = (from b in semuaBulan
+                                                      join d in accDb on b.Bulan equals d.Bulan into gj
+                                                      from sub in gj.DefaultIfEmpty()
+                                                      select new DetailHotel.AccHotel
+                                                      {
+                                                          Bulan = b.Bulan,
+                                                          BulanNama = b.BulanNama,
+                                                          TahunMines1 = sub?.TahunMines1 ?? 0,
+                                                          TahunNow = sub?.TahunNow ?? 0
+                                                      })
+                                                      .OrderBy(x => x.Bulan) 
+                                                      .ToList();
                             //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
                             //    .Where(x => x.Nop == nop)
                             //    .Select(x => new DetailHotel.DetailBanquet
@@ -3633,6 +3662,7 @@ namespace MonPDReborn.Models.DataOP
             public List<DetailBanquet> BanquetHotelDetailList { get; set; } = new();
             public List<DetailFasilitas> FasilitasHotelDetailList { get; set; } = new();
             public List<DetailKamar> KamarHotelDetailList { get; set; } = new();
+            public List<AccHotel> AccHotelDetailList { get; set; } = new();
 
             public class Pendapatan
             {
@@ -3668,6 +3698,14 @@ namespace MonPDReborn.Models.DataOP
                 public string Kamar { get; set; }
                 public int Jumlah { get; set; }
                 public int Tarif { get; set; }
+            }
+
+            public class AccHotel
+            {
+                public string BulanNama { get; set; } = null!;
+                public decimal Bulan { get; set; }
+                public decimal TahunMines1 { get; set; }
+                public decimal TahunNow { get; set; }
             }
         }
         //DETAIL OP RESTO
