@@ -164,7 +164,7 @@
                 .on('click', () => {
                     // Tampilkan loader
                     $("#loader").show();
-                    const $modal = $("#staticBackdropLargeScrollable");
+                    const $modal = $("#staticBackdropExtraLargeScrollable");
                     $modal.modal("hide");
 
                     // Panggil server
@@ -219,7 +219,7 @@
 
             // Buat link klik
             const $link = $('<a>')
-                .addClass('text-primary fw-semibold')
+                .addClass('text-info')
                 .attr('href', 'javascript:void(0);')
                 .text(value.toLocaleString('id-ID'))
                 .on('click', () => {
