@@ -1,0 +1,101 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.BongkarDetail
+
+@{
+    ViewData["Title"] = "Detail Bongkar Reklame";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-0">
+                        @@JENISREKLAME
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-2">
+                        Kategori : @@KATEGORI_TERPILIH
+                    </h4>
+                    <h4 class="card-title fs-16 mb-1">
+                        Jenis : @@JENISREKLAME
+                    </h4>
+                </div>
+                <div class="table-responsive">
+                    @(
+                                        Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.DetailBongkar>()
+                                        .ID("detailBongkarGrid")
+                                        .DataSource(Model.Data)
+                                        .ShowBorders(true)
+                                        .ShowColumnHeaders(true)
+                                        .ShowColumnLines(true)
+                                        .ShowRowLines(true)
+                                        .AllowColumnResizing(true)
+                                        .RowAlternationEnabled(true)
+                                        .ColumnAutoWidth(true)
+                                        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                                        .FilterRow(f => f.Visible(true))
+                                        .HeaderFilter(h => h.Visible(true))
+                                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                                        .Paging(p => p.PageSize(10))
+                                        .Pager(p => p
+                                        .ShowPageSizeSelector(true)
+                                        .AllowedPageSizes(new[] { 10, 20, 50 })
+                                        .ShowInfo(true)
+                                        )
+                                        .SearchPanel(sp => sp
+                                        .Visible(true)
+                                        .Width(240)
+                                        .Placeholder("Cari...")
+                                        )
+                                        .Columns(columns =>
+                                        {
+                                            columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir").Fixed(true);
+                                            columns.AddFor(m => m.Nama).Caption("Nama (Nama Perusahaan)");
+                                            columns.AddFor(m => m.AlamatOP).Caption("Alamat OP");
+                                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
+                                            columns.AddFor(m => m.AkhirBerlaku).Caption("AKR Berlaku (Status)");
+                                            columns.AddFor(m => m.MasaTahunPajak).Caption("Tahun Pajak");
+                                            columns.AddFor(m => m.JumlahNilai).Caption("Jumlah Nilai").Format("#,##0");
+                                            columns.AddFor(m => m.InformasiEmail).Caption("Informasi Email");
+                                            columns.AddFor(m => m.JumlahUpaya).Caption("Jumlah Upaya");
+                                            
+
+                                        })
+                                        .Summary(s =>
+                                        {
+                                            s.TotalItems(items =>
+                                            {
+                                                items.AddFor(x => x.NoFormulir)
+                                            .DisplayFormat("Total")
+                                            .SummaryType(SummaryType.Sum);
+                                                items.AddFor(x => x.JumlahNilai)
+                                            .ValueFormat("#,##0")
+                                            .DisplayFormat("Rp {0}")
+                                            .SummaryType(SummaryType.Sum);
+
+                                            });
+                                        })
+
+                                        )
+                </div>
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

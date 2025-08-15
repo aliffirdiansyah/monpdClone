@@ -67,6 +67,15 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
+        public class BongkarDetail
+        {
+            public List<DetailBongkar> Data { get; set; } = new();
+            public BongkarDetail(int tahun, int bulan, int jenis, int kategori)
+            {
+                Data = Method.GetDetailBongkar(tahun, bulan, jenis, kategori);
+            }
+        }
+
         // Detail Upaya
 
         public class GetDetailUpaya
@@ -130,6 +139,9 @@ namespace MonPDReborn.Models.AktivitasOP
                         SKPDKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Count(),
                         NilaiKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
 
+                        SKPDPanjangKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.TglBayarPokokA.HasValue).Count(),
+                        NilaiPanjangKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.TglBayarPokokA.HasValue).Sum(x => x.PajakPokokA) ?? 0,
+
                         JmlBantipKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BantipA) ?? 0,
                         JmlSilangKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.SilangA) ?? 0,
                         JmlBongkarKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BongkarA) ?? 0,
@@ -181,6 +193,9 @@ namespace MonPDReborn.Models.AktivitasOP
                         SKPDKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Count(),
                         NilaiKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.PajakPokok) ?? 0,
 
+                        SKPDPanjangKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && x.TglBayarPokokA.HasValue).Count(),
+                        NilaiPanjangKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i && x.TglBayarPokokA.HasValue).Sum(x => x.PajakPokokA) ?? 0,
+
                         JmlBantipKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BantipA) ?? 0,
                         JmlSilangKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.SilangA) ?? 0,
                         JmlBongkarKB = dataTer.Where(x => x.IdFlagPermohonanA == 3 && x.TahunA == tahun && x.BulanA == i).Sum(x => x.BongkarA) ?? 0,
@@ -211,6 +226,9 @@ namespace MonPDReborn.Models.AktivitasOP
                     decimal JmlSilang = dataRekIns.Sum(q => q.SilangA) ?? 0;
                     decimal JmlBongkar = dataRekIns.Sum(q => q.BongkarA) ?? 0;
 
+                    int skpdPanjang = dataRekIns.Where(x => x.TglBayarPokokA.HasValue).Count();
+                    decimal nilaiPanjang = dataRekIns.Where(x => x.TglBayarPokokA.HasValue).Sum(q => q.PajakPokokA) ?? 0;
+
                     int skpdBlmByr = dataRekIns.Where(x => x.NominalPokokBayarA == null).Count();
                     decimal nilaiBlmByr = dataRekIns.Where(x => x.NominalPokokBayarA == null).Sum(q => q.PajakPokokA) ?? 0;
 
@@ -222,6 +240,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         Jenis = 1, // Jenis 1 untuk Insidentil
                         SKPD = skpd,
                         Nilai = nilai,
+                        SKPDPanjangKB = skpdPanjang,
+                        NilaiPanjangKB = nilaiPanjang,
                         SKPDBlmByr = skpdBlmByr,
                         NilaiBlmByr = nilaiBlmByr
                     });
@@ -314,7 +334,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         jumlahUpaya = $"{upayaList.Count}x: {string.Join(", ", upayaList)}";
                     }
-                    
+
                     return new DetailSummary
                     {
                         Bulan = bulan,
@@ -764,6 +784,161 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return model;
             }*/
+
+            public static List<DetailBongkar> GetDetailBongkar(int tahun, int bulan, int jenis, int kategori)
+            {
+                var ret = new List<DetailBongkar>();
+                var context = DBClass.GetContext();
+
+                var data = context.MvReklameSummaries.AsQueryable();
+
+                var upaya = context.DbMonReklameUpayas
+                    .Select(x => new { x.NoFormulir, x.Upaya })
+                    .ToList();
+
+                // Normalisasi key
+                var upayaGrouped = upaya
+                    .Where(x => !string.IsNullOrWhiteSpace(x.NoFormulir))
+                    .GroupBy(x => x.NoFormulir.Trim().ToLower())
+                    .ToDictionary(g => g.Key, g => g.Select(u => u.Upaya).ToList());
+
+                // default: kosongkan predicate
+                Func<MvReklameSummary, bool> predicate = x => false;
+
+                // Filter sesuai kategori dan jenis
+                if (jenis == 1 && kategori == 1) // JT
+                {
+                    predicate = x => x.IdFlagPermohonan == 1 &&
+                                     x.Tahun == tahun &&
+                                     x.Bulan == bulan &&
+                                     x.NoFormulir != null &&
+                                     x.Bongkar.HasValue && x.Bongkar.Value == 1;
+                }
+                else if (jenis == 1 && kategori == 2) // Panjang
+                {
+                    predicate = x => x.IdFlagPermohonan == 1 &&
+                                     x.Tahun == tahun &&
+                                     x.Bulan == bulan &&
+                                     x.IsPerpanjangan == 0 &&
+                                     x.Bongkar.HasValue && x.Bongkar.Value == 1;
+                }
+                else if (jenis == 1 && kategori == 3) // KB
+                {
+                    predicate = x => x.IdFlagPermohonanA == 1 &&
+                                     x.TahunA == tahun &&
+                                     x.BulanA == bulan &&
+                                     x.BongkarA.HasValue && x.BongkarA.Value == 1;
+                }
+                else if (jenis == 2 && kategori == 1) // JT
+                {
+                    predicate = x => x.IdFlagPermohonan == 2 &&
+                                     x.Tahun == tahun &&
+                                     x.Bulan == bulan &&
+                                     x.NoFormulir != null &&
+                                     x.Bongkar.HasValue && x.Bongkar.Value == 1;
+                }
+                else if (jenis == 2 && kategori == 2) // Panjang
+                {
+                    predicate = x => x.IdFlagPermohonan == 2 &&
+                                     x.Tahun == tahun &&
+                                     x.Bulan == bulan &&
+                                     x.IsPerpanjangan == 0 &&
+                                     x.Bongkar.HasValue && x.Bongkar.Value == 1;
+                }
+                else if (jenis == 2 && kategori == 3) // KB
+                {
+                    predicate = x => x.IdFlagPermohonanA == 2 &&
+                                     x.TahunA == tahun &&
+                                     x.BulanA == bulan &&
+                                     x.BongkarA.HasValue && x.BongkarA.Value == 1;
+                }
+                else if (jenis == 3 && kategori == 1) // JT
+                {
+                    predicate = x => x.IdFlagPermohonan == 3 &&
+                                     x.Tahun == tahun &&
+                                     x.Bulan == bulan &&
+                                     x.NoFormulir != null &&
+                                     x.Bongkar.HasValue && x.Bongkar.Value == 1;
+                }
+                else if (jenis == 3 && kategori == 2) // Panjang
+                {
+                    predicate = x => x.IdFlagPermohonan == 3 &&
+                                     x.Tahun == tahun &&
+                                     x.Bulan == bulan &&
+                                     x.IsPerpanjangan == 0 &&
+                                     x.Bongkar.HasValue && x.Bongkar.Value == 1;
+                }
+                else if (jenis == 3 && kategori == 3) // KB
+                {
+                    predicate = x => x.IdFlagPermohonanA == 3 &&
+                                     x.TahunA == tahun &&
+                                     x.BulanA == bulan &&
+                                     x.BongkarA.HasValue && x.BongkarA.Value == 1;
+                }
+
+
+                // Ambil data sesuai filter
+                ret = data.Where(predicate).Select(x =>
+                {
+                    string noFormulirDigunakan = (kategori == 3) ? x.NoFormulirA : x.NoFormulir;
+                    string flag = (kategori == 3) ? x.FlagPermohonanA : x.FlagPermohonan;
+                    string tampilFormulir = !string.IsNullOrEmpty(noFormulirDigunakan)
+                        ? $"{noFormulirDigunakan} ({flag})"
+                        : string.Empty;
+
+                    var key = noFormulirDigunakan?.Trim().ToLower();
+
+                    var email = context.DbMonReklameEmails
+                        .Where(e => e.NoFormulir == noFormulirDigunakan)
+                        .Select(e => e.Email)
+                        .FirstOrDefault();
+
+                    string informasiEmail = !string.IsNullOrEmpty(email) ? email : string.Empty;
+
+                    string jumlahUpaya = "0";
+                    if (!string.IsNullOrEmpty(key) && upayaGrouped.TryGetValue(key, out var upayaList))
+                    {
+                        jumlahUpaya = $"{upayaList.Count}x: {string.Join(", ", upayaList)}";
+                    }
+
+                    return new DetailBongkar
+                    {
+                        Bulan = bulan,
+                        BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Tahun = tahun,
+                        NoFormulir = tampilFormulir,
+                        Nama = (kategori == 3)
+                            ? string.Concat(x.NamaA ?? "", " (", x.NamaPerusahaanA ?? "", ")")
+                            : string.Concat(x.Nama ?? "", " (", x.NamaPerusahaan ?? "", ")"),
+                        AlamatOP = (kategori == 3)
+                            ? x.AlamatreklameA ?? string.Empty
+                            : x.Alamatreklame ?? string.Empty,
+                        IsiReklame = (kategori == 3)
+                            ? x.IsiReklameA ?? string.Empty
+                            : x.IsiReklame ?? string.Empty,
+                        AkhirBerlaku = (kategori == 3 && x.TglAkhirBerlakuA.HasValue)
+                            ? $"{x.TglAkhirBerlakuA.Value:dd MMM yyyy} (BONGKAR)"
+                            : (x.TglAkhirBerlaku.HasValue
+                                ? $"{x.TglAkhirBerlaku.Value:dd MMM yyyy} (BONGKAR)"
+                                : string.Empty),
+                        MasaTahunPajak = (kategori == 3 && x.TglMulaiBerlakuA.HasValue && x.TglAkhirBerlakuA.HasValue)
+                            ? $"{x.TahunA} ({x.TglMulaiBerlakuA.Value:dd MMM yyyy} - {x.TglAkhirBerlakuA.Value:dd MMM yyyy})"
+                            : (x.TglMulaiBerlaku.HasValue && x.TglAkhirBerlaku.HasValue
+                                ? $"{x.Tahun} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})"
+                                : string.Empty),
+                        JumlahNilai = (kategori == 3)
+                            ? x.PajakPokokA ?? 0
+                            : x.PajakPokok ?? 0,
+                        InformasiEmail = informasiEmail,
+                        JumlahUpaya = jumlahUpaya
+                    };
+                }).ToList();
+
+                return ret;
+            }
+
+
+
         }
 
         public class UpayaCbView
@@ -793,6 +968,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal NilaiBlmPanjang { get; set; }
             public int SKPDKB { get; set; }
             public decimal NilaiKB { get; set; }
+            public int SKPDPanjangKB { get; set; }
+            public decimal NilaiPanjangKB { get; set; }
             public int SKPDBlmKB { get; set; }
             public decimal NilaiBlmKB { get; set; }
 
@@ -825,6 +1002,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal NilaiBlmPanjang { get; set; }
             public int SKPDKB { get; set; }
             public decimal NilaiKB { get; set; }
+            public int SKPDPanjangKB { get; set; }
+            public decimal NilaiPanjangKB { get; set; }
             public int SKPDBlmKB { get; set; }
             public decimal NilaiBlmKB { get; set; }
 
@@ -848,6 +1027,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public int Tahun { get; set; }
             public int SKPD { get; set; }
             public decimal Nilai { get; set; }
+            public int SKPDPanjangKB { get; set; }
+            public decimal NilaiPanjangKB { get; set; }
             public int SKPDBlmByr { get; set; }
             public decimal NilaiBlmByr { get; set; }
 
@@ -912,6 +1093,21 @@ namespace MonPDReborn.Models.AktivitasOP
                 public string TahunPajak { get; set; } = null!;
                 public string MasaPajak { get; set; } = null!;
             }
+        }
+        public class DetailBongkar
+        {
+            public string BulanNama { get; set; } = null!;
+            public int Bulan { get; set; }
+            public int Tahun { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string AkhirBerlaku { get; set; } = null!;
+            public string MasaTahunPajak { get; set; } = null!;
+            public decimal JumlahNilai { get; set; }
+            public string? InformasiEmail { get; set; }
+            public string JumlahUpaya { get; set; } = null!;
         }
     }
 }
