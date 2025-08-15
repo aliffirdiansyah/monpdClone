@@ -107,6 +107,8 @@ namespace MonPDReborn.Models.AktivitasOP
                             TglST = x.TglSp,
                             Tahun = x.TahunPajak,
                             JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
                             Keterangan = x.Ket ?? "-",
                             LHP = x.Lhp ?? "-",
                             TglLHP = x.TglLhp,
@@ -137,6 +139,8 @@ namespace MonPDReborn.Models.AktivitasOP
                             TglST = x.TglSp,
                             Tahun = x.TahunPajak,
                             JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
                             Keterangan = x.Ket ?? "-",
                             LHP = x.Lhp ?? "-",
                             TglLHP = x.TglLhp,
@@ -167,6 +171,8 @@ namespace MonPDReborn.Models.AktivitasOP
                             TglST = x.TglSp,
                             Tahun = x.TahunPajak,
                             JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
                             Keterangan = x.Ket ?? "-",
                             LHP = x.Lhp ?? "-",
                             TglLHP = x.TglLhp,
@@ -197,6 +203,8 @@ namespace MonPDReborn.Models.AktivitasOP
                             TglST = x.TglSp,
                             Tahun = x.TahunPajak,
                             JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
                             Keterangan = x.Ket ?? "-",
                             LHP = x.Lhp ?? "-",
                             TglLHP = x.TglLhp,
@@ -266,6 +274,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public string NoSP { get; set; } = null!;
             public DateTime TglST { get; set; }
             public int Tahun { get; set; }
+            public decimal PokokBayar { get; set; }
+            public decimal Sanksi { get; set; }
             public decimal JumlahKB { get; set; }
             public string Keterangan { get; set; } = null!;
             public string LHP { get; set; } = null!;

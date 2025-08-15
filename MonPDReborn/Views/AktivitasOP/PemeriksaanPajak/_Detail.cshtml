@@ -49,7 +49,9 @@
         columns.AddFor(m => m.NoSP).Caption("No SP");
         columns.AddFor(m => m.TglST).Caption("Tgl ST").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
         columns.AddFor(m => m.Tahun).Caption("Tahun");
+        columns.AddFor(m => m.PokokBayar).Caption("Pokok KB").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
         columns.AddFor(m => m.JumlahKB).Caption("Jumlah KB").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+        columns.AddFor(m => m.Sanksi).Caption("Denda KB").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
         columns.AddFor(m => m.Keterangan).Caption("Keterangan");
         columns.AddFor(m => m.LHP).Caption("LHP");
         columns.AddFor(m => m.TglLHPDisplay).Caption("Tgl LHP");
