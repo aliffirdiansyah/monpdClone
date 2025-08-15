@@ -11,7 +11,7 @@
     int year7 = year1 - 6;
 }
 
-
+<p style="font-weight: bold; margin-bottom: 5px;">Per Opd</p>
 @(
 Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSudutPandangOpd.Opd>()
     .ID("dg-SudutPandangOpd")
@@ -35,7 +35,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
 
     .HeaderFilter(hf => hf.Visible(true))
     .Columns(columns => {
-        columns.AddFor(m => m.Col.Nama).Caption("Nama");
+        columns.AddFor(m => m.Col.Nama).Caption("Nama").Fixed(true).FixedPosition(HorizontalEdge.Left);
 
         columns.Add().Caption(year7.ToString())
             .Columns(sc =>

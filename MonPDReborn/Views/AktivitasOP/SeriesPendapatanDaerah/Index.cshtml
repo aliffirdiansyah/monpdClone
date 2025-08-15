@@ -84,7 +84,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -177,7 +177,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -270,7 +270,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -363,7 +363,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -456,7 +456,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -549,7 +549,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -642,7 +642,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -735,7 +735,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
@@ -795,17 +795,17 @@
                     ],
                     masterDetail: {
                         enabled: true,
-                        template: SudutPandangRekeningJenisObjekOpdSubOpd
+                        template: SudutPandangRekeningJenisObjekOpdSubrincian
                     },
                     width: "100%"
                 })
         }
-        function SudutPandangRekeningJenisObjekOpdSubOpd(container, options) {
-            var data = options.data.RekSubOpds;
+        function SudutPandangRekeningJenisObjekOpdSubrincian(container, options) {
+            var data = options.data.RekSubRincians;
             var $wrapper = $("<div>").appendTo(container);
 
             $("<p>")
-                .text("Per Sub OPD")
+                .text("Per Sub Rincian")
                 .css({ "font-weight": "bold", "margin-bottom": "5px" })
                 .appendTo($wrapper);
             $("<div>")
@@ -828,7 +828,7 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "Col.Nama", caption: "Nama" },
+                        { dataField: "Col.Nama", caption: "Nama", fixed: true,  fixedPosition: "left" },
                         {
                         caption: year7.toString(),
                         columns: [
