@@ -167,50 +167,13 @@
                                     <p class="fs-14 fw-semibold">@Model.TurnoverWeekendNonCatering.ToString("N2") Kali</p>
                                 </div>
                             </div>
-                        </div>
-
-                        @* <div class="col-lg-6">
-                            <div class="card border-red">
-                                <div class="card-body">
-                                    <h4 class="fs-14 fw-semibold mb-2">
-                                        Distribusi Pengunjung
-                                    </h4>
-                                    <div class="d-flex p-0 py-0">
-                                        <p class="fs-14 text-muted flex-grow-1">Weekdays (22 hari/bulan)</p>
-                                        <div class="flex-shrink-0">
-                                            <p class="fs-14 fw-semibold">@Model.RataRataPengunjungWeekdaysNonCatering.ToString("N0") Pengunjung</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="progress mb-4" style="height:20px">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-secondary-red text-dark"
-                                             role="progressbar"
-                                             aria-valuenow="@pengunjungWeekdaysProgress"
-                                             aria-valuemin="0"
-                                             aria-valuemax="@totalPengunjung"
-                                             style="width: @pengunjungWeekdaysProgress%">
-                                            @pengunjungWeekdaysProgress%
-                                        </div>
-                                    </div>
-                                    <div class="d-flex p-0 py-0">
-                                        <p class="fs-14 text-muted flex-grow-1">Weekend (8 Hari/bulan)</p>
-                                        <div class="flex-shrink-0">
-                                            <p class="fs-14 fw-semibold">@Model.RataRataPengunjungWeekendNonCatering.ToString("N0") Pengunjung</p>
-                                        </div>
-                                    </div>
-                                    <div class="progress mb-4" style="height:20px">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated progress-bar-primary-red text-dark"
-                                             role="progressbar"
-                                             aria-valuenow="@pengunjungWeekendProgress"
-                                             aria-valuemin="0"
-                                             aria-valuemax="@totalPengunjung"
-                                             style="width: @pengunjungWeekendProgress%">
-                                            @pengunjungWeekendProgress%
-                                        </div>
-                                    </div>
+                            <div class="d-flex p-3 py-0">
+                                <p class="fs-14 text-muted flex-grow-1">Jumlah Kursi</p>
+                                <div class="flex-shrink-0">
+                                    <p class="fs-14 fw-semibold">@Model.JumlahKursi Kursi</p>
                                 </div>
                             </div>
-                        </div> *@
+                        </div>
                         @{
                             decimal pengunjungTotalWeekdays = (Model.RataRataPengunjungWeekdaysNonCatering * 22);
                             decimal pengunjungTotalWeekend = (Model.RataRataPengunjungWeekendNonCatering * 8);
@@ -249,6 +212,7 @@
                                     <p class="fs-14 fw-semibold text-dark">
                                         @Model.TotalPengunjungWeekdaysNonCatering.ToString("N0") + @Model.TotalPengunjungWeekendNonCatering.ToString("N0") = @Math.Ceiling(totalPengunjung).ToString("N0") Pengunjung
                                     </p>
+
                                 </div>
                             </div>
                         </div>
@@ -347,6 +311,10 @@
                     <div class="info-row">
                         <p class="label">Turnover Weekend</p>
                         <p class="value">@Model.TurnoverWeekendNonCatering.ToString("N2") Kali</p>
+                    </div>
+                    <div class="info-row">
+                        <p class="label">Jumlah Kursi</p>
+                        <p class="value">@Model.JumlahKursi Kursi</p>
                     </div>
                     <div class="info-row">
                         <p class="label">Rata-rata Pengunjung Weekdays</p>
