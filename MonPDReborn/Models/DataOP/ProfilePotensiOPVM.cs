@@ -2348,7 +2348,7 @@ namespace MonPDReborn.Models.DataOP
 
             public decimal PotensiOmzetRoomPerBulan => HargaRataRataRoom * Math.Ceiling(RataRataRoomTerjualPerHari) * 30;
 
-            public decimal OkupansiRateBanquet => Math.Ceiling((0.3m * OkupansiRateRoom) * 100) / 100;
+            public decimal OkupansiRateBanquet => KapasitasMaksimalPaxBanquetPerHari > 0 ? Math.Round((0.3m * OkupansiRateRoom) * 100) / 100 : 0;
 
             public decimal RataRataPaxBanquetTerjualPerHari => KapasitasMaksimalPaxBanquetPerHari * OkupansiRateBanquet;
 
