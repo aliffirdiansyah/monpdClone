@@ -345,6 +345,7 @@ namespace MonPDReborn.Models.DataOP
                             TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             JumlahTotalRoom = x.TotalRoom ?? 0,
                             HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                            HargaRataRataRoomKos = x.AvgRoomPriceKos ?? 0,
                             OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
                             KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
                             HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
@@ -864,6 +865,7 @@ namespace MonPDReborn.Models.DataOP
                                         TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                                         JumlahTotalRoom = x.TotalRoom ?? 0,
                                         HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                                        HargaRataRataRoomKos = x.AvgRoomPriceKos ?? 0,
                                         OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
                                         KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
                                         HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
@@ -1292,6 +1294,7 @@ namespace MonPDReborn.Models.DataOP
                             TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                             JumlahTotalRoom = x.TotalRoom ?? 0,
                             HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                            HargaRataRataRoomKos = x.AvgRoomPriceKos ?? 0,
                             OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
                             KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
                             HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
@@ -1523,6 +1526,7 @@ namespace MonPDReborn.Models.DataOP
                                         TglOpBuka = op?.TglMulaiBukaOp ?? DateTime.MinValue,
                                         JumlahTotalRoom = x.TotalRoom ?? 0,
                                         HargaRataRataRoom = x.AvgRoomPrice ?? 0,
+                                        HargaRataRataRoomKos = x.AvgRoomPriceKos ?? 0,
                                         OkupansiRateRoom = x.OkupansiRateRoom ?? 0,
                                         KapasitasMaksimalPaxBanquetPerHari = x.MaxPaxBanquet ?? 0,
                                         HargaRataRataBanquetPerPax = x.AvgBanquetPrice ?? 0,
@@ -2340,11 +2344,11 @@ namespace MonPDReborn.Models.DataOP
 
             public decimal RataRataRoomTerjualPerHari => JumlahTotalRoom * OkupansiRateRoom;
             //KOS
-            public decimal PotensiOmzetRoomPerBulanKos => HargaRataRataRoom * Math.Ceiling(RataRataRoomTerjualPerHari);
+            public decimal PotensiOmzetRoomPerBulanKos => HargaRataRataRoomKos * Math.Ceiling(RataRataRoomTerjualPerHari);
 
             public decimal PotensiOmzetRoomPerBulan => HargaRataRataRoom * Math.Ceiling(RataRataRoomTerjualPerHari) * 30;
 
-            public decimal OkupansiRateBanquet => Math.Ceiling((0.3m * OkupansiRateRoom) * 10) / 10;
+            public decimal OkupansiRateBanquet => Math.Ceiling((0.3m * OkupansiRateRoom) * 100) / 100;
 
             public decimal RataRataPaxBanquetTerjualPerHari => KapasitasMaksimalPaxBanquetPerHari * OkupansiRateBanquet;
 
