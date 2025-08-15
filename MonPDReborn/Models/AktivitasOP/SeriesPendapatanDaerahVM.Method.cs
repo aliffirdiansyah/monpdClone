@@ -1041,8 +1041,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.NamaObjek,
                         x.KodeOpd,
                         x.NamaOpd,
-                        x.KodeSubOpd,
-                        x.NamaSubOpd
+                        x.SubRincian,
+                        x.NamaSubRincian
                     })
                     .Select(x => new {
                         x.Key.Jenis,
@@ -1051,8 +1051,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.Key.NamaObjek,
                         x.Key.KodeOpd,
                         x.Key.NamaOpd,
-                        x.Key.KodeSubOpd,
-                        x.Key.NamaSubOpd
+                        x.Key.SubRincian,
+                        x.Key.NamaSubRincian
                     })
                     .ToList();
 
@@ -1074,10 +1074,10 @@ namespace MonPDReborn.Models.AktivitasOP
                     .OrderBy(x => x.KodeOpd)
                     .ToList();
 
-                var subOpdList = groupData
-                    .GroupBy(x => new { x.Objek, x.KodeOpd, x.KodeSubOpd, x.NamaSubOpd })
-                    .Select(x => new { x.Key.Objek, x.Key.KodeOpd, x.Key.KodeSubOpd, x.Key.NamaSubOpd })
-                    .OrderBy(x => x.KodeOpd).ThenBy(x => x.KodeSubOpd)
+                var subRincianList = groupData
+                    .GroupBy(x => new { x.Objek, x.KodeOpd, x.SubRincian, x.NamaSubRincian })
+                    .Select(x => new { x.Key.Objek, x.Key.KodeOpd, x.Key.SubRincian, x.Key.NamaSubRincian })
+                    .OrderBy(x => x.SubRincian)
                     .ToList();
 
                 var dataTahun1 = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangRekeningJenisObjekOpd(year1);
@@ -1088,7 +1088,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataTahun6 = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangRekeningJenisObjekOpd(year6);
                 var dataTahun7 = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangRekeningJenisObjekOpd(year7);
 
-                int totalData = subOpdList.Count;
+                int totalData = subRincianList.Count;
                 int processed = 0;
 
                 foreach (var jenis in jenisList)
@@ -1372,132 +1372,132 @@ namespace MonPDReborn.Models.AktivitasOP
                             resOpd.Col.RealisasiTahun7 = realisasi7;
                             resOpd.Col.PersentaseTahun7 = persentase7;
 
-                            foreach (var subOpd in subOpdList.Where(x => x.Objek == objek.Objek && x.KodeOpd == opd.KodeOpd).ToList())
+                            foreach (var subRincian in subRincianList.Where(x => x.Objek == objek.Objek && x.KodeOpd == opd.KodeOpd).ToList())
                             {
-                                decimal subOpdtarget1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRinciantarget1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Target);
-                                decimal subOpdrealisasi1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRincianrealisasi1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Realisasi);
-                                decimal subOpdpersentase1 = subOpdtarget1 > 0 ? Math.Round((subOpdrealisasi1 / subOpdtarget1) * 100, 2) : 0;
+                                decimal subRincianpersentase1 = subRinciantarget1 > 0 ? Math.Round((subRincianrealisasi1 / subRinciantarget1) * 100, 2) : 0;
 
-                                decimal subOpdtarget2 = dataTahun2.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRinciantarget2 = dataTahun2.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Target);
-                                decimal subOpdrealisasi2 = dataTahun2.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRincianrealisasi2 = dataTahun2.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Realisasi);
-                                decimal subOpdpersentase2 = subOpdtarget2 > 0 ? Math.Round((subOpdrealisasi2 / subOpdtarget2) * 100, 2) : 0;
+                                decimal subRincianpersentase2 = subRinciantarget2 > 0 ? Math.Round((subRincianrealisasi2 / subRinciantarget2) * 100, 2) : 0;
 
-                                decimal subOpdtarget3 = dataTahun3.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRinciantarget3 = dataTahun3.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Target);
-                                decimal subOpdrealisasi3 = dataTahun3.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRincianrealisasi3 = dataTahun3.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Realisasi);
-                                decimal subOpdpersentase3 = subOpdtarget3 > 0 ? Math.Round((subOpdrealisasi3 / subOpdtarget3) * 100, 2) : 0;
+                                decimal subRincianpersentase3 = subRinciantarget3 > 0 ? Math.Round((subRincianrealisasi3 / subRinciantarget3) * 100, 2) : 0;
 
-                                decimal subOpdtarget4 = dataTahun4.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRinciantarget4 = dataTahun4.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Target);
-                                decimal subOpdrealisasi4 = dataTahun4.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRincianrealisasi4 = dataTahun4.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Realisasi);
-                                decimal subOpdpersentase4 = subOpdtarget4 > 0 ? Math.Round((subOpdrealisasi4 / subOpdtarget4) * 100, 2) : 0;
+                                decimal subRincianpersentase4 = subRinciantarget4 > 0 ? Math.Round((subRincianrealisasi4 / subRinciantarget4) * 100, 2) : 0;
 
-                                decimal subOpdtarget5 = dataTahun5.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRinciantarget5 = dataTahun5.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Target);
-                                decimal subOpdrealisasi5 = dataTahun5.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRincianrealisasi5 = dataTahun5.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Realisasi);
-                                decimal subOpdpersentase5 = subOpdtarget5 > 0 ? Math.Round((subOpdrealisasi5 / subOpdtarget5) * 100, 2) : 0;
+                                decimal subRincianpersentase5 = subRinciantarget5 > 0 ? Math.Round((subRincianrealisasi5 / subRinciantarget5) * 100, 2) : 0;
 
-                                decimal subOpdtarget6 = dataTahun6.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRinciantarget6 = dataTahun6.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Target);
-                                decimal subOpdrealisasi6 = dataTahun6.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRincianrealisasi6 = dataTahun6.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Realisasi);
-                                decimal subOpdpersentase6 = subOpdtarget6 > 0 ? Math.Round((subOpdrealisasi6 / subOpdtarget6) * 100, 2) : 0;
+                                decimal subRincianpersentase6 = subRinciantarget6 > 0 ? Math.Round((subRincianrealisasi6 / subRinciantarget6) * 100, 2) : 0;
 
-                                decimal subOpdtarget7 = dataTahun7.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRinciantarget7 = dataTahun7.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Target);
-                                decimal subOpdrealisasi7 = dataTahun7.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
+                                decimal subRincianrealisasi7 = dataTahun7.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
                                     .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
                                     .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
+                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
                                     .Sum(q => q.Col.Realisasi);
-                                decimal subOpdpersentase7 = subOpdtarget7 > 0 ? Math.Round((subOpdrealisasi7 / subOpdtarget7) * 100, 2) : 0;
+                                decimal subRincianpersentase7 = subRinciantarget7 > 0 ? Math.Round((subRincianrealisasi7 / subRinciantarget7) * 100, 2) : 0;
 
-                                var resSubOpd = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubOpd();
-                                resSubOpd.Col.Kode = subOpd.KodeSubOpd == "-" ? opd.KodeOpd : "-";
-                                resSubOpd.Col.Nama = subOpd.NamaSubOpd == "-" ? opd.NamaOpd : "-";
+                                var resSubOpd = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
+                                resSubOpd.Col.Kode = subRincian.SubRincian;
+                                resSubOpd.Col.Nama = $"{subRincian.SubRincian} - {subRincian.NamaSubRincian}";
 
                                 resSubOpd.Col.Tahun1 = year1;
-                                resSubOpd.Col.TargetTahun1 = subOpdtarget1;
-                                resSubOpd.Col.RealisasiTahun1 = subOpdrealisasi1;
-                                resSubOpd.Col.PersentaseTahun1 = subOpdpersentase1;
+                                resSubOpd.Col.TargetTahun1 = subRinciantarget1;
+                                resSubOpd.Col.RealisasiTahun1 = subRincianrealisasi1;
+                                resSubOpd.Col.PersentaseTahun1 = subRincianpersentase1;
 
                                 resSubOpd.Col.Tahun2 = year2;
-                                resSubOpd.Col.TargetTahun2 = subOpdtarget2;
-                                resSubOpd.Col.RealisasiTahun2 = subOpdrealisasi2;
-                                resSubOpd.Col.PersentaseTahun2 = subOpdpersentase2;
+                                resSubOpd.Col.TargetTahun2 = subRinciantarget2;
+                                resSubOpd.Col.RealisasiTahun2 = subRincianrealisasi2;
+                                resSubOpd.Col.PersentaseTahun2 = subRincianpersentase2;
 
                                 resSubOpd.Col.Tahun3 = year3;
-                                resSubOpd.Col.TargetTahun3 = subOpdtarget3;
-                                resSubOpd.Col.RealisasiTahun3 = subOpdrealisasi3;
-                                resSubOpd.Col.PersentaseTahun3 = subOpdpersentase3;
+                                resSubOpd.Col.TargetTahun3 = subRinciantarget3;
+                                resSubOpd.Col.RealisasiTahun3 = subRincianrealisasi3;
+                                resSubOpd.Col.PersentaseTahun3 = subRincianpersentase3;
 
                                 resSubOpd.Col.Tahun4 = year4;
-                                resSubOpd.Col.TargetTahun4 = subOpdtarget4;
-                                resSubOpd.Col.RealisasiTahun4 = subOpdrealisasi4;
-                                resSubOpd.Col.PersentaseTahun4 = subOpdpersentase4;
+                                resSubOpd.Col.TargetTahun4 = subRinciantarget4;
+                                resSubOpd.Col.RealisasiTahun4 = subRincianrealisasi4;
+                                resSubOpd.Col.PersentaseTahun4 = subRincianpersentase4;
 
                                 resSubOpd.Col.Tahun5 = year5;
-                                resSubOpd.Col.TargetTahun5 = subOpdtarget5;
-                                resSubOpd.Col.RealisasiTahun5 = subOpdrealisasi5;
-                                resSubOpd.Col.PersentaseTahun5 = subOpdpersentase5;
+                                resSubOpd.Col.TargetTahun5 = subRinciantarget5;
+                                resSubOpd.Col.RealisasiTahun5 = subRincianrealisasi5;
+                                resSubOpd.Col.PersentaseTahun5 = subRincianpersentase5;
 
                                 resSubOpd.Col.Tahun6 = year6;
-                                resSubOpd.Col.TargetTahun6 = subOpdtarget6;
-                                resSubOpd.Col.RealisasiTahun6 = subOpdrealisasi6;
-                                resSubOpd.Col.PersentaseTahun6 = subOpdpersentase6;
+                                resSubOpd.Col.TargetTahun6 = subRinciantarget6;
+                                resSubOpd.Col.RealisasiTahun6 = subRincianrealisasi6;
+                                resSubOpd.Col.PersentaseTahun6 = subRincianpersentase6;
 
                                 resSubOpd.Col.Tahun7 = year7;
-                                resSubOpd.Col.TargetTahun7 = subOpdtarget7;
-                                resSubOpd.Col.RealisasiTahun7 = subOpdrealisasi7;
-                                resSubOpd.Col.PersentaseTahun7 = subOpdpersentase7;
+                                resSubOpd.Col.TargetTahun7 = subRinciantarget7;
+                                resSubOpd.Col.RealisasiTahun7 = subRincianrealisasi7;
+                                resSubOpd.Col.PersentaseTahun7 = subRincianpersentase7;
 
-                                resOpd.RekSubOpds.Add(resSubOpd);
+                                resOpd.RekSubRincians.Add(resSubOpd);
 
                                 processed++;
                                 double percent = (processed / (double)totalData) * 100;
@@ -1581,9 +1581,9 @@ namespace MonPDReborn.Models.AktivitasOP
                 public class Opd
                 {
                     public FormatColumn.ColumnA Col { get; set; } = new();
-                    public List<SubOpd> RekSubOpds { get; set; } = new List<SubOpd>();
+                    public List<SubRincian> RekSubRincians { get; set; } = new List<SubRincian>();
                 }
-                public class SubOpd
+                public class SubRincian
                 {
                     public FormatColumn.ColumnA Col { get; set; } = new();
                 }
