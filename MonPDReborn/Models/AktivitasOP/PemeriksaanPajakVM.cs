@@ -93,7 +93,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        NamaOP = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NamaOp ?? "-" : "-",
+                        NamaOP = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NamaOp ?? "-" : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
                         Alamat = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].AlamatOp ?? "-" : "-",
                         UPTB = "SURABAYA " + (dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
@@ -118,7 +118,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        NamaOP = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NamaOp ?? "-" : "-",
+                        NamaOP = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NamaOp ?? "-" : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
                         Alamat = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].AlamatOp ?? "-" : "-",
                         UPTB = "SURABAYA " + (dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
@@ -142,7 +142,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        NamaOP = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NamaOp ?? "-" : "-",
+                        NamaOP = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NamaOp ?? "-" : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
                         Alamat = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].AlamatOp ?? "-" : "-",
                         UPTB = "SURABAYA " + (dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
@@ -166,7 +166,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                         NOP = x.Nop ?? "-",
-                        NamaOP = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NamaOp ?? "-" : "-",
+                        NamaOP = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NamaOp ?? "-" : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
                         Alamat = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].AlamatOp ?? "-" : "-",
                         UPTB = "SURABAYA " + (dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].WilayahPajak ?? "-" : "-"),
                         NoSP = x.NoSp ?? "-",
