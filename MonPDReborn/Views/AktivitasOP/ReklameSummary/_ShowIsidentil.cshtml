@@ -1,5 +1,11 @@
 ﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.ShowIsidentil
 
+@{
+    var curentYear = DateTime.Now.Year;
+    var TahunMin1 = (curentYear - 1).ToString();
+    var TahunNow = curentYear.ToString();
+}
+
 <div class="table-responsive">
     @(
                     Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.IsidentilReklame>()
@@ -30,18 +36,24 @@
                         .Columns(columns =>
                         {
                             columns.AddFor(m => m.BulanNama).Caption("Bulan");
-                            columns.Add().Caption("KETETAPAN BARU").Alignment(HorizontalAlignment.Center).Columns(kb =>
+                            columns.Add().Caption(TahunNow).Alignment(HorizontalAlignment.Center).Columns(kb =>
                             {
                                 kb.AddFor(m => m.SKPD).Caption("SKPD").Format("#,##0");
                                 kb.AddFor(m => m.Nilai).Caption("NILAI").Format("#,##0");
+
+                                kb.Add().Caption("SUDAH BAYAR").Alignment(HorizontalAlignment.Center).Columns(sb =>
+                                {
+                                    sb.AddFor(m => m.SKPDPanjangKB).Caption("SKPD").Format("#,##0");
+                                    sb.AddFor(m => m.NilaiPanjangKB).Caption("NILAI").Format("#,##0");
+                                });
     
                                 kb.Add().Caption("BELUM BAYAR").Alignment(HorizontalAlignment.Center).Columns(bk =>
                                 {
                                     bk.AddFor(m => m.SKPDBlmByr).Caption("SKPD").Format("#,##0").CellTemplate(new JS("skpdPermanenJTCellTemplate2"));
                                     bk.AddFor(m => m.NilaiBlmByr).Caption("NILAI").Format("#,##0");
-                                    bk.AddFor(m => m.JmlSilang).Caption("SILANG").Format("#,##0");
-                                    bk.AddFor(m => m.JmlBongkar).Caption("BONGKAR").Format("#,##0");
-                                    bk.AddFor(m => m.JmlBantip).Caption("BANTIP").Format("#,##0");
+                                    bk.AddFor(m => m.JmlSilang).Caption("SILANG").Format("#,##0").Visible(false);
+                                    bk.AddFor(m => m.JmlBongkar).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarKB").CellTemplate(new JS("BongkarCellTemplate"));
+                                    bk.AddFor(m => m.JmlBantip).Caption("BANTIP").Format("#,##0").Visible(false);
                                 });
                             });
                             @* columns.Add().Caption("Ketetapan Baru").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
@@ -70,6 +82,14 @@
                                      .SummaryType(SummaryType.Sum)
                                      .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
+                                items.AddFor(m => m.SKPDPanjangKB)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.NilaiPanjangKB)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
                                 items.AddFor(m => m.SKPDBlmByr)
                                      .SummaryType(SummaryType.Sum)
                                      .ValueFormat("#,##0")
@@ -78,15 +98,7 @@
                                      .SummaryType(SummaryType.Sum)
                                      .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
-                                items.AddFor(m => m.JmlSilang)
-                                     .SummaryType(SummaryType.Sum)
-                                     .ValueFormat("#,##0")
-                                     .DisplayFormat("{0}");
                                 items.AddFor(m => m.JmlBongkar)
-                                     .SummaryType(SummaryType.Sum)
-                                     .ValueFormat("#,##0")
-                                     .DisplayFormat("{0}");
-                                items.AddFor(m => m.JmlBantip)
                                      .SummaryType(SummaryType.Sum)
                                      .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
