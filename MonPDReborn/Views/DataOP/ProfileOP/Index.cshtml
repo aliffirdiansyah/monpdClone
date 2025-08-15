@@ -531,7 +531,30 @@
                         pager: { visible: false  },
                         columns: [
                             { dataField: "KategoriNama", caption: "Kategori" },
-                            { dataField: "JmlOpAwal", caption: "OP AWAL" },
+                            { 
+                                dataField: "JmlOpAwal", 
+                                caption: "OP AWAL",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "font-weight": "bold",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpAwal',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
                             { dataField: "JmlOpTutupPermanen", caption: "OP TUTUP" },
                             { dataField: "JmlOpBaru", caption: "OP BARU" },
                             { dataField: "JmlOpAkhir", caption: "OP AKHIR" },
