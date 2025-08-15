@@ -497,4 +497,112 @@
 
 
     </script>
+
+    <script>
+        function ShowDetailRekapOp(container, options){
+            var $wrapper = $("<div>").appendTo(container);
+            var data = options.data;
+            var dataDetail = options.data.RekapDetail;
+
+            console.log(data)
+            console.log(dataDetail)
+            //datagrid Hotel
+            if(data.EnumPajak == 3){
+                var dataDetailHotelBintang = dataDetail.filter(item => item.KategoriId !== 17);
+                var dataDetailHotelNonBintang = dataDetail.filter(item => item.KategoriId == 17);
+                $("<div>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailHotelBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            { dataField: "JmlOpAwal", caption: "OP AWAL" },
+                            { dataField: "JmlOpTutupPermanen", caption: "OP TUTUP" },
+                            { dataField: "JmlOpBaru", caption: "OP BARU" },
+                            { dataField: "JmlOpAkhir", caption: "OP AKHIR" },
+
+                        ],
+                        width: "100%"
+                    })
+
+                 
+                $("<div class= 'mt-4'>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailHotelNonBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            { dataField: "JmlOpAwal", caption: "OP AWAL" },
+                            { dataField: "JmlOpTutupPermanen", caption: "OP TUTUP" },
+                            { dataField: "JmlOpBaru", caption: "OP BARU" },
+                            { dataField: "JmlOpAkhir", caption: "OP AKHIR" },
+
+                        ],
+                        width: "100%"
+                    })
+                
+            } else {
+                $("<div>")
+                .appendTo($wrapper)
+                .dxDataGrid({
+                    dataSource: dataDetail,
+                    showBorders: true,
+                    showColumnHeaders: true,
+                    showColumnLines: true,
+                    showRowLines: true,
+                    allowColumnResizing: true,
+                    allowColumnReordering: true,
+                    columnAutoWidth: true,
+                    sorting: { mode: "multiple" }, // Multiple column sorting
+                    filterRow: {
+                        visible: true,
+                        applyFilter: "auto" // atau "onClick"
+                    },
+                    headerFilter: { visible: true },
+                    paging: { pageSize: 99999 },
+                    pager: { visible: false  },
+                    columns: [
+                        { dataField: "KategoriNama", caption: "Kategori" },
+                        { dataField: "JmlOpAwal", caption: "OP AWAL" },
+                        { dataField: "JmlOpTutupPermanen", caption: "OP TUTUP" },
+                        { dataField: "JmlOpBaru", caption: "OP BARU" },
+                        { dataField: "JmlOpAkhir", caption: "OP AKHIR" },
+
+                    ],
+                    width: "100%"
+                })
+            }
+            //selain Hotel
+        }
+    </script>
 }
