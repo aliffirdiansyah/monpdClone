@@ -249,7 +249,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
         public decimal RealisasiBulanLalu { get; set; }
         public decimal RealisasiBulanIni { get; set; }
         public decimal RealisasiHari { get; set; }
-        public decimal Jumlah => RealisasiBulanIni + RealisasiBulanLalu + RealisasiHari;
+        public decimal Jumlah => RealisasiBulanIni + RealisasiHari;
         public decimal Persentase => Target > 0
             ? Math.Round((Jumlah / Target) * 100, 2)
             : 0;
