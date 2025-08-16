@@ -7,7 +7,7 @@
         <div class="d-flex align-items-center">
             <i class=" mdi mdi-file-document-outline" style="font-size: 20px; line-height: 1;"></i>
             <h6 class="mb-0 fs-16 fw-bold">
-                @Model.DataDetailList.First().JenisPajak
+                @Model.DataDetailList.First().JenisPajak Tahun @Model.DataDetailList.First().Tahun
             </h6>
         </div>
     </div>
@@ -48,10 +48,9 @@
         columns.AddFor(m => m.UPTB).Caption("Wilayah");
         columns.AddFor(m => m.NoSP).Caption("No SP");
         columns.AddFor(m => m.TglST).Caption("Tgl ST").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
-        columns.AddFor(m => m.Tahun).Caption("Tahun");
-        columns.AddFor(m => m.PokokBayar).Caption("Pokok KB").Format("#,##0");
+        columns.AddFor(m => m.PokokBayar).Caption("Pokok").Format("#,##0");
+        columns.AddFor(m => m.Sanksi).Caption("Sanksi").Format("#,##0");
         columns.AddFor(m => m.JumlahKB).Caption("Jumlah KB").Format("#,##0");
-        columns.AddFor(m => m.Sanksi).Caption("Denda KB").Format("#,##0");
         columns.AddFor(m => m.Keterangan).Caption("Keterangan");
         columns.AddFor(m => m.LHP).Caption("LHP");
         columns.AddFor(m => m.TglLHPDisplay).Caption("Tgl LHP");
