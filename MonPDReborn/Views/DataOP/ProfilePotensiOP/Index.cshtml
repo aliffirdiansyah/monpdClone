@@ -254,7 +254,7 @@
             const $link = $('<a>')
                 .addClass('text-info')
                 .attr('href', 'javascript:void(0);')
-                .text(value.toLocaleString('id-ID'))
+                .text(value.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }))
                 .on('click', () => {
                     // Tampilkan loader
                     $("#loader").show();

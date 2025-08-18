@@ -179,12 +179,12 @@ namespace MonPDReborn.Models.DataOP
                 {
                     var nop = sheet.Cells[row, 1].Text;
 
-                    var existingData = context.DbOpRestos
+                    var existingData = context.DbPotensiRestos
                         .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
 
                     if (existingData != null)
                     {
-                        context.DbOpRestos.Remove(existingData);
+                        context.DbPotensiRestos.Remove(existingData);
                     }
 
                     var data = new DbPotensiResto

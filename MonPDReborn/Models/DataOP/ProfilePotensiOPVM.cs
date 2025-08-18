@@ -2358,7 +2358,7 @@ namespace MonPDReborn.Models.DataOP
             public decimal PotensiPajakPerTahun => PotensiPajakPerBulan * BulanSisa;
 
             //KOS
-            public decimal PotensiPajakPerBulanKos => (PotensiOmzetRoomPerBulanKos + PotensiOmzetBanquetPerBulan) * TarifPajak;
+            public decimal PotensiPajakPerBulanKos => (PotensiOmzetRoomPerBulanKos) * TarifPajak;
             public decimal PotensiPajakPerTahunKos => PotensiPajakPerBulanKos * BulanSisa;
         }
         public class DetailPotensiPajakResto
@@ -2409,11 +2409,11 @@ namespace MonPDReborn.Models.DataOP
             public decimal RataRataTerjualWeekdaysCatering => Math.Ceiling(KapasitasTenantCatering * TurnoverWeekdaysCatering);
             public decimal RataRataTerjualWeekendCatering => Math.Ceiling(KapasitasTenantCatering * TurnoverWeekendCatering);
             public decimal RataRataTerjualPerHariCatering =>
-                (RataRataTerjualWeekdaysCatering * 11) + (RataRataTerjualWeekendCatering * 4);
+                (RataRataTerjualWeekdaysCatering * 22) + (RataRataTerjualWeekendCatering * 8);
 
             public decimal OmzetPerBulanCatering =>
-                (RataRataBillPerOrang * Math.Ceiling(RataRataTerjualWeekdaysCatering) * 11) +
-                (RataRataBillPerOrang * Math.Ceiling(RataRataTerjualWeekendCatering) * 4);
+                (RataRataBillPerOrang * Math.Ceiling(RataRataTerjualWeekdaysCatering) * 22) +
+                (RataRataBillPerOrang * Math.Ceiling(RataRataTerjualWeekendCatering) * 8);
 
             public decimal PotensiPajakPerBulanCatering => OmzetPerBulanCatering * TarifPajak;
             public decimal PotensiPajakPerTahunCatering => PotensiPajakPerBulanCatering * BulanSisa;
