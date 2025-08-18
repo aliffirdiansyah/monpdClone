@@ -217,7 +217,7 @@ namespace MonPDReborn.Models.DataOP
                 var result = new List<RekapOP>();
                 var context = DBClass.GetContext();
 
-                var pajakList = context.MPajaks.Include(x => x.MKategoriPajaks).Where(x => x.Id > 0 ).ToList();
+                var pajakList = context.MPajaks.Include(x => x.MKategoriPajaks.OrderBy(x => x.Urutan).Where(x => x.Id > 0 ).ToList();
                 var dbOpResto = context.DbOpRestos
                         .Where(x => x.TahunBuku >= tahun - 1)
                         .Select(x => new
