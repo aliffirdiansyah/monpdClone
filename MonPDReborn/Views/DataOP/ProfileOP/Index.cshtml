@@ -503,13 +503,21 @@
             var $wrapper = $("<div>").appendTo(container);
             var data = options.data;
             var dataDetail = options.data.RekapDetail;
+            var dataOkupansiDetail = options.data.OkunpasiHotel;
 
-            console.log(data)
-            console.log(dataDetail)
+            // console.log(data)
+            // console.log(dataDetail)
+            // console.log(dataOkupansiDetail);
             //datagrid Hotel
             if(data.EnumPajak == 3){
                 var dataDetailHotelBintang = dataDetail.filter(item => item.KategoriId !== 17);
                 var dataDetailHotelNonBintang = dataDetail.filter(item => item.KategoriId == 17);
+                var dataDetailOkupansiBintang = dataOkupansiDetail.filter(item => item.KategoriId !== 17);
+                var dataDetailOkupansiNonBintang = dataOkupansiDetail.filter(item => item.KategoriId == 17);
+
+                 $("<h5>")
+                .text("JUMLAH OP PER KATEGORI")
+                .appendTo($wrapper);
                 $("<div>")
                     .appendTo($wrapper)
                     .dxDataGrid({
@@ -629,7 +637,7 @@
                     })
 
 
-                $("<div class= 'mt-4'>")
+                    $("<div class= 'mt-4'>")
                     .appendTo($wrapper)
                     .dxDataGrid({
                         dataSource: dataDetailHotelNonBintang,
@@ -743,6 +751,77 @@
                                 }
                             },
 
+                        ],
+                        width: "100%"
+                    })
+
+                     $("<h5 class= 'mt-4'>">")
+                    .text("JUMLAH OP PER KAMAR DAN OKUPANSI")
+                    .appendTo($wrapper);
+                    //Okupansi hotel bintang
+                    $("<div>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailOkupansiBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "TotalKamar",
+                                caption: "Total Kamar",
+                            },
+                            {
+                                dataField: "AvgRate",
+                                caption: "Rate Okupansi",
+                            },
+                        ],
+                        width: "100%"
+                    })
+
+                    //Okupansi hotel non bintang
+                    $("<div class= 'mt-4'>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailOkupansiNonBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "TotalKamar",
+                                caption: "Total Kamar",
+                            },
+                            {
+                                dataField: "AvgRate",
+                                caption: "Rate Okupansi",
+                            },
                         ],
                         width: "100%"
                     })

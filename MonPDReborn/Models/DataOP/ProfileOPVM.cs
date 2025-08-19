@@ -18,25 +18,55 @@ namespace MonPDReborn.Models.DataOP
             }
         }
 
+        //public class ShowOkupansi
+        //{
+        //    public List<OkupansiHotel> DataOkupansiList { get; set; } = new();
+
+        //    public RekapOkupansiTotal SummaryData { get; set; } = new();
+
+        //    public ShowOkupansi() { }
+        //    public ShowOkupansi(int tahunbuku)
+        //    {
+        //        DataOkupansiList = Method.GetOkupansiHotel(tahunbuku);
+
+        //        SummaryData.TotalRoom = DataOkupansiList.Sum(x => x.TotalKamar);
+        //        SummaryData.AvgRoomSold = DataOkupansiList.Sum(x => x.AvgRate);
+        //    }
+
+        //}
+
         public class ShowRekap
         {
             public List<RekapOP> DataRekapOPList { get; set; } = new();
+            public List<OkupansiHotel> DataOkupansiList { get; set; } = new();
             public Dashboard Data { get; set; } = new Dashboard();
             public RekapOPTotal SummaryData { get; set; } = new();
-
+            public RekapOkupansiTotal SummaryDataOkupansi { get; set; } = new();
             public ShowRekap() { }
 
             public ShowRekap(int tahun)
             {
                 DataRekapOPList = Method.GetDataRekapOPList(tahun);
+                DataOkupansiList = Method.GetOkupansiHotel(tahun);
                 Data = Method.GetDashboardData();
+
+                foreach (var rekap in DataRekapOPList)
+                {
+                    if (rekap.EnumPajak == 3)
+                    {
+                        rekap.OkunpasiHotel = DataOkupansiList;
+                    }
+                }
 
                 SummaryData.TotalOpAwal = DataRekapOPList.Sum(x => x.JmlOpAwal);
                 SummaryData.TotalOpTutup = DataRekapOPList.Sum(x => x.JmlOpTutupPermanen);
                 SummaryData.TotalOpBaru = DataRekapOPList.Sum(x => x.JmlOpBaru);
                 SummaryData.TotalOpAkhir = DataRekapOPList.Sum(x => x.JmlOpAkhir);
+                SummaryDataOkupansi.TotalRoom = DataOkupansiList.Sum(x => x.TotalKamar);
+                SummaryDataOkupansi.AvgRoomSold = DataOkupansiList.Sum(x => x.AvgRate);
             }
         }
+
 
         public class ShowSeries
         {
@@ -189,7 +219,7 @@ namespace MonPDReborn.Models.DataOP
             }
             public ShowTPK(int tahunKiri, int tahunKanan)
             {
-               
+
 
                 TahunKiri = tahunKiri;
                 TahunKanan = tahunKanan;
@@ -217,7 +247,7 @@ namespace MonPDReborn.Models.DataOP
                 var result = new List<RekapOP>();
                 var context = DBClass.GetContext();
 
-                var pajakList = context.MPajaks.Include(x => x.MKategoriPajaks.OrderBy(x => x.Urutan)).Where(x => x.Id > 0 ).ToList();
+                var pajakList = context.MPajaks.Include(x => x.MKategoriPajaks.OrderBy(x => x.Urutan)).Where(x => x.Id > 0).ToList();
                 var dbOpResto = context.DbOpRestos
                         .Where(x => x.TahunBuku >= tahun - 1)
                         .Select(x => new
@@ -323,7 +353,7 @@ namespace MonPDReborn.Models.DataOP
                     switch ((EnumFactory.EPajak)pajak.Id)
                     {
                         case EnumFactory.EPajak.MakananMinuman:
-                           
+
                             tutup = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
                             awal = dbOpResto.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
                             baru = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
@@ -332,27 +362,27 @@ namespace MonPDReborn.Models.DataOP
                             break;
 
                         case EnumFactory.EPajak.TenagaListrik:
-                         
+
                             tutup = dbOpListrik.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
                             awal = dbOpListrik.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
                             baru = dbOpListrik.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
                             akhir = dbOpListrik.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
-                            
+
                             break;
 
                         case EnumFactory.EPajak.JasaPerhotelan:
-                            
-                            
+
+
                             tutup = dbOpHotel.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
                             awal = dbOpHotel.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
                             baru = dbOpHotel.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
                             akhir = dbOpHotel.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
 
-                            
+
                             break;
 
                         case EnumFactory.EPajak.JasaParkir:
-                            
+
                             tutup = dbOpParkir.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
                             awal = dbOpParkir.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
                             baru = dbOpParkir.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
@@ -361,7 +391,7 @@ namespace MonPDReborn.Models.DataOP
                             break;
 
                         case EnumFactory.EPajak.JasaKesenianHiburan:
-                            
+
                             tutup = dbOpHiburan.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
                             awal = dbOpHiburan.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
                             baru = dbOpHiburan.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
@@ -378,8 +408,8 @@ namespace MonPDReborn.Models.DataOP
                             break;
 
                         case EnumFactory.EPajak.Reklame:
-                            
-                           
+
+
                             tutup = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
                             awal = dbOpReklame.Count(x => x.TahunBuku == tahun - 1 /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/);
                             baru = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
@@ -388,7 +418,7 @@ namespace MonPDReborn.Models.DataOP
                             break;
 
                         case EnumFactory.EPajak.PBB:
-                            
+
                             tutup = 0;
                             awal = dbOpPbb.Where(x => x.TahunBuku == tahun - 1).Select(x => x.Nop).Distinct().Count();
                             baru = 0;
@@ -410,7 +440,7 @@ namespace MonPDReborn.Models.DataOP
                         case EnumFactory.EPajak.OpsenBbnkb:
                             akhir = dbOpOpsenBbnkb.Count(x => x.TahunPajakSspd == tahun);
                             awal = dbOpOpsenBbnkb.Count(x => x.TahunPajakSspd == tahun - 1);
-                            
+
                             break;
 
                         default:
@@ -458,7 +488,7 @@ namespace MonPDReborn.Models.DataOP
                             case EnumFactory.EPajak.JasaPerhotelan:
 
 
-                                tutupKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id &&  x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
+                                tutupKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
                                 awalKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
                                 baruKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
                                 akhirKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
@@ -484,7 +514,7 @@ namespace MonPDReborn.Models.DataOP
 
                             case EnumFactory.EPajak.AirTanah:
 
-                                tutupKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id &&  x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
+                                tutupKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
                                 awalKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
                                 baruKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
                                 akhirKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
@@ -494,7 +524,7 @@ namespace MonPDReborn.Models.DataOP
                             case EnumFactory.EPajak.Reklame:
 
 
-                                tutupKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id &&  x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
+                                tutupKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
                                 awalKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/);
                                 baruKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
                                 akhirKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahu)n*/);
@@ -504,9 +534,9 @@ namespace MonPDReborn.Models.DataOP
                             case EnumFactory.EPajak.PBB:
 
                                 tutupKategori = 0;
-                                awalKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id &&  x.TahunBuku == tahun - 1).Select(x => x.Nop).Distinct().Count();
+                                awalKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1).Select(x => x.Nop).Distinct().Count();
                                 baruKategori = 0;
-                                akhirKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id &&  x.TahunBuku == tahun).Select(x => x.Nop).Distinct().Count();
+                                akhirKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun).Select(x => x.Nop).Distinct().Count();
 
                                 break;
 
@@ -3814,11 +3844,11 @@ namespace MonPDReborn.Models.DataOP
 
                 var potensiHotel = context.DbPotensiHotels
                     .Where(x => x.TahunBuku == tahunBuku)
-                    .Select(x => new { x.Nop, x.TotalRoom,  x.AvgRoomSold })
+                    .Select(x => new { x.Nop, x.TotalRoom, x.AvgRoomSold })
                     .ToList();
 
                 var kategoriHotels = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan)
+                    .Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).OrderBy(x => x.Urutan)
                     .ToList();
 
                 foreach (var kategori in kategoriHotels)
@@ -3826,9 +3856,10 @@ namespace MonPDReborn.Models.DataOP
                     var nopPerKategori = query.Where(x => x.KategoriId == kategori.Id).Select(x => x.Nop).ToList();
                     var getPotensi = potensiHotel.Where(x => nopPerKategori.Contains(x.Nop)).ToList();
 
-                    int totalKamar = Convert.ToInt32(getPotensi.Sum(q => q.TotalRoom));
+                    int totalKamar = getPotensi.Sum(q => (int?)q.TotalRoom) ?? 0;
                     decimal roomSold = getPotensi.Sum(q => q.AvgRoomSold) ?? 0;
-                    decimal avgRate = Math.Round((roomSold / totalKamar), 2);
+                    decimal avgRate = totalKamar > 0 ? Math.Round((roomSold / totalKamar) * 100m, 2, MidpointRounding.AwayFromZero)  : 0m;
+                    //decimal avgRate = Math.Round((roomSold / totalKamar), 2);
 
                     var res = new OkupansiHotel();
                     res.KategoriId = Convert.ToInt32(kategori.Id);
@@ -3861,9 +3892,11 @@ namespace MonPDReborn.Models.DataOP
             public int JmlOpBaru { get; set; }
             public int JmlOpAkhir { get; set; }
             public List<RekapDetailOP> RekapDetail { get; set; } = new();
+            public List<OkupansiHotel> OkunpasiHotel { get; set; } = new();
         }
 
-        public class RekapDetailOP {
+        public class RekapDetailOP
+        {
             public int KategoriId { get; set; }
             public string KategoriNama { get; set; }
             public int EnumPajak { get; set; }
@@ -3880,6 +3913,12 @@ namespace MonPDReborn.Models.DataOP
             public int TotalOpTutup { get; set; }
             public int TotalOpBaru { get; set; }
             public int TotalOpAkhir { get; set; }
+        }
+
+        public class RekapOkupansiTotal
+        {
+            public int TotalRoom { get; set; }
+            public decimal AvgRoomSold { get; set; }
         }
 
         public class SeriesOP
@@ -3928,9 +3967,6 @@ namespace MonPDReborn.Models.DataOP
         public class RekapDetail
         {
             public int EnumPajak { get; set; }
-
-            //property baru untuk split
-            //public string KategoriGroup { get; set; }
             public string JenisPajak { get; set; } = null!;
             public int KategoriId { get; set; }
             public int Urutan { get; set; }
