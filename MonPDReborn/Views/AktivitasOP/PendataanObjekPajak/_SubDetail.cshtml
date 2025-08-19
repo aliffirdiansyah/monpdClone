@@ -1,23 +1,82 @@
-﻿@model MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetail
+﻿@using System.Globalization
+@model MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetail
 
 
-    
+
 @if (Model.DataRestoranList != null && Model.DataRestoranList.Count > 0)
 {
     int no = 1;
 
+
+    // Ambil agregat dari Model.DataRestoranList
+    var totalMeja = Model.DataRestoranList.FirstOrDefault().JmlMeja;
+    var totalKursi = Model.DataRestoranList.FirstOrDefault().JmlKursi;
+    var rataPengunjung = Model.DataRestoranList.FirstOrDefault().RataPengunjung;
+    var rataBill = Model.DataRestoranList.FirstOrDefault().RataBill;
+
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0 text-primary">
+                        Detail Pengedokan Pajak - @Model.DataRestoranList.FirstOrDefault().ObjekPajak
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Informasi Utama -->
+    <div class="row text-sm mb-3">
+        <div class="col-md-6 mb-2">
+            <div class="p-3 border rounded bg-light-subtle">
+                <div class="text-muted fs-8">NOP</div>
+                <strong class="text-dark">@Model.DataRestoranList.FirstOrDefault().FormattedNOP</strong>
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <div class="p-3 border rounded bg-light-subtle">
+                <div class="text-muted fs-8">Alamat</div>
+                <strong class="text-dark">@Model.DataRestoranList.FirstOrDefault().Alamat</strong>
+            </div>
+        </div>
+    </div>
+    <!-- Statistik Summary -->
+    <div class="row text-sm mb-4">
+        <div class="col-md-4 mb-2">
+            <div class="p-3 border border-5 rounded bg-primary-subtle text-primary text-center">
+                <div class="fs-10">Jumlah Meja</div>
+                <strong>@totalMeja</strong>
+            </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="p-3 border border-5 rounded bg-info-subtle text-info text-center">
+                <div class="fs-10">Jumlah Kursi</div>
+                <strong>@totalKursi</strong>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-2">
+            <div class="p-3 border border-5 rounded bg-danger-subtle text-danger text-center">
+                <div class="fs-10">Rata-rata Pengunjung</div>
+                <strong>@rataPengunjung.ToString("n0")</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tambahkan rata-rata bill -->
+    <div class="row text-sm mb-4">
+        <div class="col-md-12">
+            <div class="p-3 border border-5 rounded bg-warning-subtle text-warning text-center">
+                <div class="fs-10">Rata-rata Bill</div>
+                <strong>Rp @rataBill.ToString("n0")</strong>
+            </div>
+        </div>
+    </div>
+
+
     @foreach (var data in Model.DataRestoranList)
     {
-        @* <div class="card-header d-flex align-items-center bg-header-color text-dark rounded-top">
-            <div class="flex-grow-1">
-                <h4 class="card-title fs-16 mb-0">
-                    <i class="mdi mdi-chart-bell-curve-cumulative me-2"></i>
-                    Data Objek Pajak @data.ObjekPajak
-                </h4>
-                <small class="text-dark-50">Informasi detail pajak restoran</small>
-            </div>
-        </div> *@
-
         <div class="card shadow-sm border-0 rounded-4 mb-4">
             <div class="card-body">
                 <!-- Header -->
@@ -28,71 +87,34 @@
                         </div>
                         <div>
                             <h5 class="mb-0 fw-semibold">@data.ObjekPajak</h5>
-                            <small class="text-muted"><i class="mdi mdi-calendar-clock me-1"></i>@data.Tgl.ToString("ddd, dd MMM yyyy")</small>
+                            <small class="text-muted">
+                                <i class="mdi mdi-calendar-clock me-1"></i>@data.Tgl.ToString("dddd, dd MMM yyyy", new CultureInfo("id-ID"))
+                            </small>
                         </div>
                     </div>
                     <div class="text-end">
-                        <div class="text-muted small">Jumlah Nominal Bill</div>
+                        <div class="text-muted fs-8">Jumlah Nominal Bill</div>
                         <div class="fw-bold fs-5 text-success">Rp @data.Bill.ToString("n0")</div>
                     </div>
                 </div>
 
-                <!-- Informasi Utama -->
-                <div class="row text-sm mb-3">
-                    <div class="col-md-6 mb-2">
-                        <div class="p-3 border rounded bg-light-subtle">
-                            <div class="text-muted small">NOP</div>
-                            <strong class="text-dark">@data.FormattedNOP</strong>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <div class="p-3 border rounded bg-light-subtle">
-                            <div class="text-muted small">Alamat</div>
-                            <strong class="text-dark">@data.Alamat</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Statistik -->
-                <div class="row text-sm mb-3">
-                    <div class="col-md-3 mb-2">
-                        <div class="p-3 border border-5 rounded bg-primary-subtle text-primary text-center">
-                            <div class="small">Jumlah Meja</div>
-                            <strong>@data.JmlMeja</strong>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <div class="p-3 border border-5 rounded bg-info-subtle text-info text-center">
-                            <div class="small">Jumlah Kursi</div>
-                            <strong>@data.JmlKursi</strong>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-2">
+                <!-- Statistik Summary -->
+                <div class="row text-sm mb-4">
+                    <div class="col-md-12 mb-2">
                         <div class="p-3 border border-5 rounded bg-success-subtle text-success text-center">
-                            <div class="small">Jumlah Pengunjung</div>
+                            <div class="fs-10">Jumlah Pengunjung</div>
                             <strong>@data.JmlPengunjung</strong>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-2">
-                        <div class="p-3 border border-5 rounded bg-danger-subtle text-danger text-center">
-                            <div class="small">Rata-rata Pengunjung</div>
-                            <strong>@data.RataPengunjung</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="border-top pt-3 d-flex justify-content-between align-items-center">
-                    <span class="text-muted">Rata-rata Bill</span>
-                    <span class="fw-bold fs-15 text-dark">Rp @data.RataBill.ToString("n0")</span>
                 </div>
             </div>
         </div>
 
-        no++; // Increment nomor
+        no++;
     }
 
-    
+
+
 
     @* @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM.SubDetailRestoran>()
         .ID("gridRestoran")
@@ -148,23 +170,118 @@
         })
     ) *@
 }
-    
+
 else if (Model.DataParkirList != null && Model.DataParkirList.Count > 0)
 {
     int no = 1;
 
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-0 text-primary">
+                        Detail Pengedokan Pajak - @Model.DataParkirList.FirstOrDefault().ObjekPajak
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Informasi Utama -->
+    <div class="row text-sm mb-3">
+        <div class="col-md-6 mb-2">
+            <div class="p-3 border rounded bg-light-subtle">
+                <div class="text-muted fs-8">NOP</div>
+                <strong class="text-dark">@Model.DataParkirList.FirstOrDefault().FormattedNOP</strong>
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <div class="p-3 border rounded bg-light-subtle">
+                <div class="text-muted fs-8">Alamat</div>
+                <strong class="text-dark">@Model.DataParkirList.FirstOrDefault().Alamat</strong>
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <div class="p-3 border rounded">
+                <h4 class="fs-14 fw-semibold mb-2">Kapasitas Motor</h4>
+                <div class="fw-bold">@Model.DataParkirList.FirstOrDefault().KapasitasMotor.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <div class="p-3 border rounded">
+                <h4 class="fs-14 fw-semibold mb-2">Kapasitas Mobil</h4>
+                <div class="fw-bold">@Model.DataParkirList.FirstOrDefault().KapasitasMobil.ToString("n0")</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estimasi & Tarif Summary -->
+    <div class="row text-sm mb-4">
+        <div class="col-md-2 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Est Motor</h4>
+                <div class="fw-bold">@Model.DataParkirList.FirstOrDefault().EstMotor.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Est Mobil</h4>
+                <div class="fw-bold">@Model.DataParkirList.FirstOrDefault().EstMobil.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Est Mobil Box</h4>
+                <div class="fw-bold">@Model.DataParkirList.FirstOrDefault().EstMobilBox.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Est Truk</h4>
+                <div class="fw-bold">@Model.DataParkirList.FirstOrDefault().EstTruk.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Est Trailer</h4>
+                <div class="fw-bold">@Model.DataParkirList.FirstOrDefault().EstTrailer.ToString("n0")</div>
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Tarif Motor</h4>
+                <div class="fw-bold">Rp @Model.DataParkirList.FirstOrDefault().TarifMotor.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Tarif Mobil</h4>
+                <div class="fw-bold">Rp @Model.DataParkirList.FirstOrDefault().TarifMobil.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Tarif Mobil Box</h4>
+                <div class="fw-bold">Rp @Model.DataParkirList.FirstOrDefault().TarifMobilBox.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Tarif Truk</h4>
+                <div class="fw-bold">Rp @Model.DataParkirList.FirstOrDefault().TarifTruk.ToString("n0")</div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="p-3 border rounded bg-light">
+                <h4 class="fs-14 fw-semibold mb-2">Tarif Trailer</h4>
+                <div class="fw-bold">Rp @Model.DataParkirList.FirstOrDefault().TarifTrailer.ToString("n0")</div>
+            </div>
+        </div>
+    </div>
+
     @foreach (var data in Model.DataParkirList)
     {
-        @* <div class="card-header d-flex align-items-center bg-header-color text-dark rounded-top">
-            <div class="flex-grow-1">
-                <h4 class="card-title fs-16 mb-0">
-                    <i class="mdi mdi-chart-bell-curve-cumulative me-2"></i>
-                    Data Objek Pajak @data.ObjekPajak
-                </h4>
-                <small class="text-dark-50">Informasi detail pajak restoran</small>
-            </div>
-        </div> *@
-
+       
         <div class="card shadow-sm border-0 rounded-4 mb-4">
             <div class="card-body">
                 <!-- Header -->
@@ -177,7 +294,7 @@ else if (Model.DataParkirList != null && Model.DataParkirList.Count > 0)
                             <h5 class="mb-0 fw-semibold">@data.ObjekPajak</h5>
                             <small class="text-muted">
                                 <i class="mdi mdi-calendar-clock me-1"></i>
-                                @data.Tgl.ToString("dddd, dd MMM yyyy")
+                                @data.Tgl.ToString("dddd, dd MMM yyyy", new CultureInfo("id-ID"))
                             </small>
                         </div>
                     </div>
@@ -205,18 +322,6 @@ else if (Model.DataParkirList != null && Model.DataParkirList.Count > 0)
 
                 <!-- Kapasitas -->
                 <div class="row text-sm mb-3">
-                    <div class="col-md-6 mb-2">
-                        <div class="p-3 border rounded">
-                            <h4 class="fs-14 fw-semibold mb-2">Kapasitas Motor</h4>
-                            <div class="fw-bold">@data.KapasitasMotor.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <div class="p-3 border rounded">
-                            <h4 class="fs-14 fw-semibold mb-2">Kapasitas Mobil</h4>
-                            <div class="fw-bold">@data.KapasitasMobil.ToString("n0")</div>
-                        </div>
-                    </div>
                     <div class="col-md-2 mb-2">
                         <div class="p-3 border rounded bg-light">
                             <h4 class="fs-14 fw-semibold mb-2">Jumlah Motor</h4>
@@ -247,68 +352,16 @@ else if (Model.DataParkirList != null && Model.DataParkirList.Count > 0)
                             <div class="fw-bold">@data.JmlTrailer.ToString("n0")</div>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Est Motor</h4>
-                            <div class="fw-bold">@data.EstMotor.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Est Mobil</h4>
-                            <div class="fw-bold">@data.EstMobil.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Est Mobil Box</h4>
-                            <div class="fw-bold">@data.EstMobilBox.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Est Truk</h4>
-                            <div class="fw-bold">@data.EstTruk.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Est Trailer</h4>
-                            <div class="fw-bold">@data.EstTrailer.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Tarif Motor</h4>
-                            <div class="fw-bold">Rp @data.TarifMotor.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Tarif Mobil</h4>
-                            <div class="fw-bold">Rp @data.TarifMobil.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Tarif Mobil Box</h4>
-                            <div class="fw-bold">Rp @data.TarifMobilBox.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Tarif Truk</h4>
-                            <div class="fw-bold">Rp @data.TarifTruk.ToString("n0")</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <div class="p-3 border rounded bg-light">
-                            <h4 class="fs-14 fw-semibold mb-2">Tarif Trailer</h4>
-                            <div class="fw-bold">Rp @data.TarifTrailer.ToString("n0")</div>
+                </div>
+
+                <div class="row text-sm mb-4">
+                    <div class="col-md-12">
+                        <div class="p-3 border border-5 rounded bg-warning-subtle text-warning text-center">
+                            <div class="fs-10">Potensi Hasil Pengedokan</div>
+                            <strong>Rp @data.PotensiHasilPengedokan.ToString("n0")</strong>
                         </div>
                     </div>
                 </div>
-
                 @* <!-- Footer -->
                 <div class="border-top pt-3 d-flex justify-content-between align-items-center">
                     <span class="text-muted">Rata-rata Bill</span>
@@ -416,4 +469,4 @@ else
         Data tidak tersedia.
     </div>
 }
-    
+

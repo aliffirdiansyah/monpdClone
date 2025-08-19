@@ -88,13 +88,20 @@ namespace MonPDReborn.Models.AktivitasOP
 
         public class Dashboard
         {
-            public decimal TotalPengedokan { get; set; }
-            public decimal TotalRealisasi { get; set; }
+            public decimal TotalPengedokanResto { get; set; }
+            public decimal TotalRealisasiResto { get; set; }
 
-            public decimal JumlahObjek { get; set; }
+            public decimal JumlahObjekResto { get; set; }
 
-            public decimal Ratarata =>
-                JumlahObjek > 0 ? TotalRealisasi / JumlahObjek : 0;
+            public decimal RatarataResto =>
+                JumlahObjekResto > 0 ? TotalRealisasiResto / JumlahObjekResto : 0;
+            public decimal TotalPengedokanParkir { get; set; }
+            public decimal TotalRealisasiParkir { get; set; }
+
+            public decimal JumlahObjekParkir { get; set; }
+
+            public decimal RatarataParkir =>
+                JumlahObjekParkir > 0 ? TotalRealisasiParkir / JumlahObjekParkir : 0;
         }
 
 
@@ -190,7 +197,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             .ToList();
 
                         var restoOpList = context.DbOpRestos
-                            .Where(x => restoDokNop.Contains(x.Nop) && x.TahunBuku == tahun)
+                            .Where(x => restoDokNop.Contains(x.Nop))
                             .ToList();
 
                         var restoDok = context.DbRekamRestorans
@@ -228,7 +235,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             .ToList();
 
                         var parkirOpList = context.DbOpParkirs
-                            .Where(x => parkirDokNop.Contains(x.Nop) && x.TahunBuku == tahun)
+                            .Where(x => parkirDokNop.Contains(x.Nop))
                             .ToList();
 
                         var parkirDok = context.DbRekamParkirs
@@ -345,7 +352,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         TarifMobil = x.TarifMobil,
                         TarifMobilBox = x.TarifMobilBox,
                         TarifTruk = x.TarifTruk,
-                        TarifTrailer = x.TarifTrailer
+                        TarifTrailer = x.TarifTrailer,
+                        PotensiHasilPengedokan = x.PajakBulan
                     })
                     .ToList();
 
@@ -357,9 +365,14 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return new Dashboard
                 {
-                    TotalPengedokan = ret.Sum(x => x.Potensi),
-                    TotalRealisasi = ret.Sum(x => x.TotalRealisasi),
-                    JumlahObjek = ret.Sum(x => x.JumlahOp)
+                    TotalPengedokanResto = ret.Where(x => x.JenisPajak == (EnumFactory.EPajak.MakananMinuman).GetDescription()).Sum(x => x.Potensi),
+                    TotalRealisasiResto = ret.Where(x => x.JenisPajak == (EnumFactory.EPajak.MakananMinuman).GetDescription()).Sum(x => x.TotalRealisasi),
+                    JumlahObjekResto = ret.Where(x => x.JenisPajak == (EnumFactory.EPajak.MakananMinuman).GetDescription()).Sum(x => x.JumlahOp),
+                    
+                    TotalPengedokanParkir = ret.Where(x => x.JenisPajak == (EnumFactory.EPajak.JasaParkir).GetDescription()).Sum(x => x.Potensi),
+                    TotalRealisasiParkir = ret.Where(x => x.JenisPajak == (EnumFactory.EPajak.JasaParkir).GetDescription()).Sum(x => x.TotalRealisasi),
+                    JumlahObjekParkir = ret.Where(x => x.JenisPajak == (EnumFactory.EPajak.JasaParkir).GetDescription()).Sum(x => x.JumlahOp)
+
                 };
             }
 
@@ -415,6 +428,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal TarifMobilBox { get; set; }
             public decimal TarifTruk { get; set; }
             public decimal TarifTrailer { get; set; }
+            public decimal PotensiHasilPengedokan { get; set; }
             public string? NamaHari => Hari.ToString("dddd", new CultureInfo("id-ID"));
         }
     }
