@@ -379,11 +379,11 @@ namespace MonPDReborn.Models.DataOP
                         nopCounter[nop]++;
 
                     var existingData = context.DbRekamRestorans
-                        .FirstOrDefault(x => x.Tanggal.Year == tahun && x.Nop == nop);
+                        .Where(x => x.Tanggal.Year == tahun && x.Nop == nop).ToList();
 
-                    if (existingData != null)
+                    if (existingData != null && existingData.Count > 0)
                     {
-                        context.DbRekamRestorans.Remove(existingData);
+                        context.DbRekamRestorans.RemoveRange(existingData);
                     }
 
                     var data = new DbRekamRestoran
@@ -448,11 +448,11 @@ namespace MonPDReborn.Models.DataOP
                         nopCounter[nop]++;
 
                     var existingData = context.DbRekamParkirs
-                        .FirstOrDefault(x => x.Tanggal.Year == tahun && x.Nop == nop);
+                        .Where(x => x.Tanggal.Year == tahun && x.Nop == nop).ToList();
 
-                    if (existingData != null)
+                    if (existingData != null && existingData.Count > 0)
                     {
-                        context.DbRekamParkirs.Remove(existingData);
+                        context.DbRekamParkirs.RemoveRange(existingData);
                     }
 
                     var data = new DbRekamParkir
