@@ -140,45 +140,67 @@ namespace MonPDReborn.Models.DataOP
                         break;
                     case EnumFactory.EPajak.Reklame:
                         var dataKetetapanReklame = context.DbMonReklames
-                            .Where(x => x.TglKetetapan.HasValue && x.TahunPajakKetetapan == tahun && x.MasaPajakKetetapan == bulan)
-                            .GroupBy(x => x.Nop)
-                            .Select(g => new PenetapanOP
+                            .Where(x => x.TglKetetapan.HasValue
+                                        && x.TahunPajakKetetapan == tahun
+                                        && x.MasaPajakKetetapan == bulan)
+                            .AsEnumerable() // biar bisa pakai DistinctBy
+                            .DistinctBy(x => x.Nor)
+                            .Select(x => new PenetapanOP
                             {
-                                Nop = g.Key,
-                                NoPenetapan = string.Concat(g.First().Nop, "-", g.First().MasaPajakKetetapan, "-", g.First().TahunPajakKetetapan),
-                                NamaWP = g.First().Nama,
-                                Alamat = g.First().Alamat,
-                                NilaiPenetapan = g.First().PokokPajakKetetapan ?? 0,
+                                Nop = x.Nor,
+                                NoPenetapan = string.Concat(x.Nor, "-", x.MasaPajakKetetapan, "-", x.TahunPajakKetetapan),
+                                NamaWP = x.Nama,
+                                Alamat = x.Alamat,
+                                NilaiPenetapan = x.PokokPajakKetetapan ?? 0,
                                 MasaPajak = new DateTime(
-                                    (int)(g.First().TahunPajakKetetapan),
-                                    (int)(g.First().MasaPajakKetetapan), 1
+                                    (int)x.TahunPajakKetetapan,
+                                    (int)x.MasaPajakKetetapan, 1
                                 ).ToString("MMMM", new CultureInfo("id-ID")),
-                                Status = g.First().NominalPokokBayar.HasValue
-                                    ? (g.First().NominalPokokBayar.Value > 0 ? "Sudah Dibayar" : "Belum Dibayar")
+                                Status = x.NominalPokokBayar.HasValue
+                                    ? (x.NominalPokokBayar.Value > 0 ? "Sudah Dibayar" : "Belum Dibayar")
                                     : "Belum Ada Pembayaran"
                             })
                             .ToList();
+
+                        ret.AddRange(dataKetetapanReklame);
                         break;
                     case EnumFactory.EPajak.PBB:
-                        //var dataKetetapanPbb = context.DbMonPbbs
-                        //    .Where(x => x.TglKetetapan.HasValue && x.TahunPajakKetetapan == tahun && x.MasaPajakKetetapan == bulan)
-                        //    .GroupBy(x => x.Nop)
-                        //    .Select(g => new PenetapanOP
-                        //    {
-                        //        Nop = g.Key,
-                        //        NoPenetapan = string.Concat(g.First().Nop, "-", g.First().MasaPajakKetetapan, "-", g.First().TahunPajakKetetapan),
-                        //        NamaWP = g.First().NamaOp,
-                        //        Alamat = g.First().AlamatOp,
-                        //        NilaiPenetapan = g.First().PokokPajakKetetapan ?? 0,
-                        //        MasaPajak = new DateTime(
-                        //            (int)(g.First().TahunPajakKetetapan),
-                        //            (int)(g.First().MasaPajakKetetapan), 1
-                        //        ).ToString("MMMM", new CultureInfo("id-ID")),
-                        //        Status = g.First().NominalPokokBayar.HasValue
-                        //            ? (g.First().NominalPokokBayar.Value > 0 ? "Sudah Dibayar" : "Belum Dibayar")
-                        //            : "Belum Ada Pembayaran"
-                        //    })
-                        //    .ToList();
+                        var dataKetetapanPbb = context.DbMonPbbs
+                            .Where(x => x.TahunPajak == tahun)
+                            .GroupBy(x => x.Nop)
+                            .Select(g => g
+                                .OrderByDescending(x => x.KategoriId) // ambil kategoriId terbesar
+                                .FirstOrDefault()
+                            )
+                            .AsEnumerable()
+                            .Select(g => new PenetapanOP
+                            {
+                                Nop = g.Nop,
+                                NoPenetapan = string.Concat(
+                                    g.Nop, "-",
+                                    g.TglBayar?.ToString("yyyyMMdd") ?? "", "-",
+                                    g.TahunPajak
+                                ),
+                                NamaWP = g.WpNama,
+                                Alamat = string.Concat(
+                                    g.AlamatOp ?? "",
+                                    string.IsNullOrEmpty(g.AlamatOpNo) ? "" : $" NO. {g.AlamatOpNo}"
+                                ),
+                                NilaiPenetapan = g.PokokPajak ?? 0,
+                                MasaPajak = $"Tahun Buku {g.TahunPajak}",
+                                Status = g.PokokPajak.HasValue
+                                    ? (g.PokokPajak.Value > 0 ? "Sudah Dibayar" : "Belum Dibayar")
+                                    : "Belum Ada Pembayaran"
+                            })
+                            .ToList();
+
+                        ret.AddRange(dataKetetapanPbb);
+
+
+
+
+
+
                         break;
                     case EnumFactory.EPajak.BPHTB:
                         break;

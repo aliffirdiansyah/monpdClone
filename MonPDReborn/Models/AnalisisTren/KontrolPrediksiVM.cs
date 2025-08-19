@@ -212,9 +212,13 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             var awalTahun = new DateTime(currentYear, 1, 1);
             var id = (int)jenisPajak;
 
+            // Batas hari ini
+            var startOfDay = tanggalAwal.Date; // 00:00
+            var endOfDay = startOfDay.AddDays(1).AddTicks(-1); // 23:59:59.9999999
+
             var realisasiBulanLalu = data.Where(d => d.Tanggal <= bulanLaluCutoff).Sum(d => d.Nominal);
-            var realisasiBulanIni = data.Where(d => d.Tanggal >= awalTahun && d.Tanggal <= tanggalAwal).Sum(d => d.Nominal);
-            var realisasiHariIni = data.Where(d => d.Tanggal >= tanggalAwal && d.Tanggal <= tanggalAkhir).Sum(d => d.Nominal);
+            var realisasiBulanIni = data.Where(d => d.Tanggal >= awalTahun && d.Tanggal < startOfDay).Sum(d => d.Nominal);
+            var realisasiHariIni = data.Where(d => d.Tanggal >= startOfDay && d.Tanggal <= endOfDay).Sum(d => d.Nominal);
 
             return new KontrolPrediksi
             {
@@ -225,6 +229,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                 RealisasiBulanIni = realisasiBulanIni,
                 RealisasiHari = realisasiHariIni
             };
+
         }
 
     }
