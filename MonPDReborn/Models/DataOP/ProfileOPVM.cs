@@ -18,23 +18,6 @@ namespace MonPDReborn.Models.DataOP
             }
         }
 
-        //public class ShowOkupansi
-        //{
-        //    public List<OkupansiHotel> DataOkupansiList { get; set; } = new();
-
-        //    public RekapOkupansiTotal SummaryData { get; set; } = new();
-
-        //    public ShowOkupansi() { }
-        //    public ShowOkupansi(int tahunbuku)
-        //    {
-        //        DataOkupansiList = Method.GetOkupansiHotel(tahunbuku);
-
-        //        SummaryData.TotalRoom = DataOkupansiList.Sum(x => x.TotalKamar);
-        //        SummaryData.AvgRoomSold = DataOkupansiList.Sum(x => x.AvgRate);
-        //    }
-
-        //}
-
         public class ShowRekap
         {
             public List<RekapOP> DataRekapOPList { get; set; } = new();

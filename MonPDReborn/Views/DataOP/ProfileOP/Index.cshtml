@@ -73,6 +73,7 @@
                                         <div id="detailContainer" class="mt-4" style="display: none;">
                                             @Html.Partial("~/Views/DataOP/ProfileOP/_RekapMaster.cshtml")
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -505,8 +506,8 @@
             var dataDetail = options.data.RekapDetail;
             var dataOkupansiDetail = options.data.OkunpasiHotel;
 
-            // console.log(data)
-            // console.log(dataDetail)
+            console.log(data)
+            console.log(dataDetail)
             // console.log(dataOkupansiDetail);
             //datagrid Hotel
             if(data.EnumPajak == 3){
@@ -755,7 +756,7 @@
                         width: "100%"
                     })
 
-                     $("<h5 class= 'mt-4'>">")
+                     $("<h5 class= 'mt-4'>")
                     .text("JUMLAH OP PER KAMAR DAN OKUPANSI")
                     .appendTo($wrapper);
                     //Okupansi hotel bintang
@@ -825,6 +826,7 @@
                         ],
                         width: "100%"
                     })
+
 
             } else {
                 $("<div>")
