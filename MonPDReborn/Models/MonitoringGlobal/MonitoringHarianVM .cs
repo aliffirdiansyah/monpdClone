@@ -137,7 +137,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiResto = context.DbMonRestos
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -147,7 +146,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                x.Key.PajakId,
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -155,7 +153,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetResto)
                         {
                             var totalRealisasi = dataRealisasiResto
-                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -185,7 +183,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiListrik = context.DbMonPpjs
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -195,7 +192,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                x.Key.PajakId,
+                                
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -203,7 +200,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetListrik)
                         {
                             var totalRealisasi = dataRealisasiListrik
-                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -233,7 +230,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiHotel = context.DbMonHotels
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -243,7 +239,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                x.Key.PajakId,
+                                
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -251,7 +247,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetHotel)
                         {
                             var totalRealisasi = dataRealisasiHotel
-                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -281,7 +277,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiParkir = context.DbMonParkirs
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -291,7 +286,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                x.Key.PajakId,
+                                
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -299,7 +294,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetParkir)
                         {
                             var totalRealisasi = dataRealisasiParkir
-                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -329,7 +324,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiHiburan = context.DbMonHiburans
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -339,7 +333,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                x.Key.PajakId,
+                                
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -347,7 +341,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetHiburan)
                         {
                             var totalRealisasi = dataRealisasiHiburan
-                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -377,7 +371,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiAbt = context.DbMonAbts
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -387,7 +380,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                x.Key.PajakId,
+                                
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -395,7 +388,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetAbt)
                         {
                             var totalRealisasi = dataRealisasiAbt
-                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -425,7 +418,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiReklame = context.DbMonReklames
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -435,7 +427,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                x.Key.PajakId,
+                                
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -443,7 +435,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetReklame)
                         {
                             var totalRealisasi = dataRealisasiReklame
-                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -473,7 +465,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
 
                         var dataRealisasiPbb = context.DbMonPbbs
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayar.HasValue &&
                                 x.TglBayar.Value.Year == tahun &&
                                 x.TglBayar.Value.Month == bulan
@@ -483,7 +474,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayar,
-                                x.Key.PajakId,
                                 Realisasi = x.Sum(q => q.JumlahBayarPokok)
                             })
                             .ToList();
@@ -491,7 +481,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetPbb)
                         {
                             var totalRealisasi = dataRealisasiPbb
-                                .Where(x => x.TglBayar.Value.Month == item.Bulan && x.TglBayar.Value.Day == item.Tgl && x.TglBayar.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayar.Value.Month == item.Bulan && x.TglBayar.Value.Day == item.Tgl && x.TglBayar.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -531,7 +521,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayar,
-                                x.Key.PajakId,
                                 Realisasi = x.Sum(q => q.Pokok)
                             })
                             .ToList();
@@ -539,7 +528,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetBphtb)
                         {
                             var totalRealisasi = dataRealisasiBphtb
-                                .Where(x => x.TglBayar.Value.Month == item.Bulan && x.TglBayar.Value.Day == item.Tgl && x.TglBayar.Value.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglBayar.Value.Month == item.Bulan && x.TglBayar.Value.Day == item.Tgl && x.TglBayar.Value.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -573,12 +562,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglSspd.Year == tahun &&
                                 x.TglSspd.Month == bulan
                             )
-                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd, PajakId = 20 })
+                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd})
                             .Select(x => new
                             {
                                 x.Key.Nop,
                                 x.Key.TglSspd,
-                                x.Key.PajakId,
                                 Realisasi = x.Sum(q => q.JmlPokok)
                             })
                             .ToList();
@@ -586,7 +574,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetOpsenPkb)
                         {
                             var totalRealisasi = dataRealisasiOpsenPkb
-                                .Where(x => x.TglSspd.Month == item.Bulan && x.TglSspd.Day == item.Tgl && x.TglSspd.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglSspd.Month == item.Bulan && x.TglSspd.Day == item.Tgl && x.TglSspd.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -620,12 +608,11 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglSspd.Year == tahun &&
                                 x.TglSspd.Month == bulan
                             )
-                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd, PajakId = 20 })
+                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd})
                             .Select(x => new
                             {
                                 x.Key.Nop,
                                 x.Key.TglSspd,
-                                x.Key.PajakId,
                                 Realisasi = x.Sum(q => q.JmlPokok)
                             })
                             .ToList();
@@ -633,7 +620,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         foreach (var item in dataTargetOpsenBbnkb)
                         {
                             var totalRealisasi = dataRealisasiOpsenBbnkb
-                                .Where(x => x.TglSspd.Month == item.Bulan && x.TglSspd.Day == item.Tgl && x.TglSspd.Year == tahun && x.PajakId == item.PajakId)
+                                .Where(x => x.TglSspd.Month == item.Bulan && x.TglSspd.Day == item.Tgl && x.TglSspd.Year == tahun)
                                 .Sum(x => x.Realisasi);
 
                             MonitoringHarian result = new MonitoringHarian
@@ -666,7 +653,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         realisasiPerHari.AddRange(
                             context.DbMonRestos
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -683,7 +669,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         realisasiPerHari.AddRange(
                             context.DbMonPpjs
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -700,7 +685,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         realisasiPerHari.AddRange(
                             context.DbMonHotels
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -717,7 +701,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         realisasiPerHari.AddRange(
                             context.DbMonHiburans
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -732,9 +715,24 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             .ToList()
                         );
                         realisasiPerHari.AddRange(
+                            context.DbMonParkirs
+                            .Where(x =>
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.JasaParkir
+                            ))
+                            .ToList()
+                        );
+                        realisasiPerHari.AddRange(
                             context.DbMonAbts
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -751,7 +749,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         realisasiPerHari.AddRange(
                             context.DbMonReklames
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
@@ -768,7 +765,6 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         realisasiPerHari.AddRange(
                             context.DbMonPbbs
                             .Where(x =>
-                                x.TahunBuku == tahun &&
                                 x.TglBayar.HasValue &&
                                 x.TglBayar.Value.Year == tahun &&
                                 x.TglBayar.Value.Month == bulan

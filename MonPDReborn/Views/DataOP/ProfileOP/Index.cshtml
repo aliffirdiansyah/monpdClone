@@ -504,13 +504,12 @@
             var data = options.data;
             var dataDetail = options.data.RekapDetail;
 
-            // console.log(data)
-            // console.log(dataDetail)
+            console.log(data)
+            console.log(dataDetail)
             //datagrid Hotel
             if(data.EnumPajak == 3){
                 var dataDetailHotelBintang = dataDetail.filter(item => item.KategoriId !== 17);
                 var dataDetailHotelNonBintang = dataDetail.filter(item => item.KategoriId == 17);
-                //buat grid untuk hotel bintang
                 $("<div>")
                     .appendTo($wrapper)
                     .dxDataGrid({
@@ -541,7 +540,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -564,7 +563,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -587,7 +586,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -600,7 +599,6 @@
                                         })
                                         .appendTo(container);
                                 }
-
                             },
                             {
                                 dataField: "JmlOpAkhir",
@@ -611,7 +609,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -630,7 +628,7 @@
                         width: "100%"
                     })
 
-                //buat grid untuk non bintang
+
                 $("<div class= 'mt-4'>")
                     .appendTo($wrapper)
                     .dxDataGrid({
@@ -661,7 +659,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -673,7 +671,8 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
+                                }
+                            },
                             {
                                 dataField: "JmlOpTutupPermanen",
                                 caption: "OP TUTUP",
@@ -683,7 +682,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -695,7 +694,7 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
+                                }
                             },
                             {
                                 dataField: "JmlOpBaru",
@@ -706,7 +705,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -718,7 +717,7 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
+                                }
                             },
                             {
                                 dataField: "JmlOpAkhir",
@@ -729,7 +728,7 @@
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -741,7 +740,7 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
+                                }
                             },
 
                         ],
@@ -749,7 +748,6 @@
                     })
 
             } else {
-                // buat grid selain hotel
                 $("<div>")
                 .appendTo($wrapper)
                 .dxDataGrid({
@@ -770,17 +768,17 @@
                     paging: { pageSize: 99999 },
                     pager: { visible: false  },
                     columns: [
-                        { dataField: "KategoriNama", caption: "Kategori" },
-                        {
-                            dataField: "JmlOpAwal",
-                            caption: "OP AWAL",
-                            cellTemplate: function (container, options) {
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "JmlOpAwal",
+                                caption: "OP AWAL",
+                                cellTemplate: function (container, options) {
                                     $("<a>")
                                         .text(options.value)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -792,19 +790,18 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
-
-                        },
-                        {
-                            dataField: "JmlOpTutupPermanen",
-                            caption: "OP TUTUP",
-                            cellTemplate: function (container, options) {
+                                }
+                            },
+                            {
+                                dataField: "JmlOpTutupPermanen",
+                                caption: "OP TUTUP",
+                                cellTemplate: function (container, options) {
                                     $("<a>")
                                         .text(options.value)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -816,20 +813,18 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
-                        },
-                        {
-                            dataField: "JmlOpBaru",
-                            caption: "OP BARU",
-                            dataField: "JmlOpTutupPermanen",
-                            caption: "OP TUTUP",
-                            cellTemplate: function (container, options) {
+                                }
+                            },
+                            {
+                                dataField: "JmlOpBaru",
+                                caption: "OP BARU",
+                                cellTemplate: function (container, options) {
                                     $("<a>")
                                         .text(options.value)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -841,19 +836,18 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
-
-                        },
-                        {
-                            dataField: "JmlOpAkhir",
-                            caption: "OP AKHIR",
-                            cellTemplate: function (container, options) {
+                                }
+                            },
+                            {
+                                dataField: "JmlOpAkhir",
+                                caption: "OP AKHIR",
+                                cellTemplate: function (container, options) {
                                     $("<a>")
                                         .text(options.value)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
-                                            "text-decoration": "underline",
+                                            "text-decoration": "underline"
                                         })
                                         .on("click", function () {
                                             let rowData = options.data;
@@ -865,13 +859,14 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }},
-                        },
+                                }
+                            },
 
-                    ],
+                        ],
                     width: "100%"
                 })
             }
+            //selain Hotel
         }
     </script>
 }
