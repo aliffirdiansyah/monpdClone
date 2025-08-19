@@ -31,8 +31,8 @@
             columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS").Format("#,##0");
             columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB").Format("#,##0");
             columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB").Format("#,##0");
-            columns.AddFor(m => m.BelumTerpasang).Caption("Belum Terpasang").Format("#,##0");
             columns.AddFor(m => m.TotalTerpasang).Caption("Total Terpasang").Format("#,##0");
+            columns.AddFor(m => m.BelumTerpasang).Caption("Belum Terpasang").Format("#,##0");
             
         })
         .Summary(summary =>
@@ -64,12 +64,12 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                items.AddFor(m => m.BelumTerpasang)
+                items.AddFor(m => m.TotalTerpasang)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                items.AddFor(m => m.TotalTerpasang)
+                items.AddFor(m => m.BelumTerpasang)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");

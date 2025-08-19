@@ -133,8 +133,8 @@
             {
                 sub.AddFor(m => m.Terpasang2025).Caption("Terpasang").Format("#,##0");
             }).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0");
             columns.AddFor(m => m.TotalTerpasang).Caption("Total Terpassang").Format("#,##0");
+            columns.AddFor(m => m.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0");
         })
         .Summary(summary =>
         {
@@ -175,15 +175,16 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
+                items.AddFor(m => m.TotalTerpasang)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            
                 items.AddFor(m => m.BelumTerpasang2025)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.TotalTerpasang)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
             });
         }).MasterDetail(md => md
         .Enabled(true)

@@ -1,5 +1,12 @@
 ﻿@model MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM.Show
-
+<style>
+    .dx-datagrid .dx-header-row .dx-datagrid-text-content {
+    white-space: normal !important;
+    word-wrap: break-word;
+    line-height: 1.2em;
+    text-align: center; /* opsional biar rapi */
+}
+</style>
 <div class="table-responsive">
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM.KontrolPrediksi>()
@@ -33,13 +40,17 @@
                    .Caption("Target").Format("#,##0");
 
                 columns.AddFor(m => m.RealisasiBulanLalu)
-                    .Caption("Realisasi Sampai Bulan Lalu").Format("#,##0");
+                    .Caption("Realisasi S.D Bulan Lalu").Format("#,##0");
 
                 columns.AddFor(m => m.RealisasiBulanIni)
-                    .Caption("Realisasi Sampai Hari Ini").Format("#,##0");
+                    .Caption("Realisasi S.D Hari Ini").Format("#,##0");
 
-                columns.AddFor(m => m.RealisasiHari)
-                    .Caption("Realisasi Sampai Dengan Tanggal").Format("#,##0");
+               columns.AddFor(m => m.RealisasiHari) 
+               .Name("RealisasiHari")  
+               .Caption("Prediksi Hari Ini S.D Dengan Tanggal") 
+               .Format("#,##0").Width(200);
+
+
 
                 columns.AddFor(m => m.Jumlah)
             .Caption("Jumlah").Format("#,##0");
