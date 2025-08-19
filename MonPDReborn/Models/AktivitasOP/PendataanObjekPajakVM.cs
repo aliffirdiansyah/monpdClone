@@ -105,7 +105,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var ret = new List<DataPendataan>();
                 var context = DBClass.GetContext();
 
-                var restoDokNop = context.DbRekamRestorans.GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).ToList();
+                var restoDokNop = context.DbRekamRestorans.GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).Distinct().ToList();
                 var restoRealisasi = context.DbMonRestos.Where(x => restoDokNop.Contains(x.Nop)).AsQueryable();
                 var restoDok = context.DbRekamRestorans
                     .GroupBy(x => new { PajakId = x.PajakId, Tahun = x.Tanggal.Year })
@@ -118,7 +118,12 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahOp = x.Select(d => d.Nop.Replace(".", "")).Distinct().Count(),
                         Potensi = x.GroupBy(d => d.Nop).Sum(g => g.Max(d => d.PajakBulan)) * 12,
                         TotalRealisasi = restoRealisasi
-                            .Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun)
+                            .Where(s =>
+                                s.Nop != null &&
+                                x.Select(d => d.Nop.Replace(".", "")).Contains(s.Nop) &&
+                                s.TglBayarPokok.HasValue &&
+                                s.TglBayarPokok.Value.Year == x.Key.Tahun
+                            )
                             .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0,
                         Selisih = (
                             restoRealisasi
@@ -133,6 +138,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var parkirDokNop = context.DbRekamParkirs
                     .GroupBy(x => new { Nop = x.Nop })
                     .Select(x => (x.Key.Nop).Replace(".", ""))
+                    .Distinct()
                     .ToList();
 
                 var parkirRealisasi = context.DbMonParkirs
@@ -150,7 +156,12 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahOp = x.Select(d => d.Nop.Replace(".", "")).Distinct().Count(),
                         Potensi = x.GroupBy(d => d.Nop).Sum(g => g.Max(d => d.PajakBulan)) * 12,
                         TotalRealisasi = parkirRealisasi
-                            .Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun)
+                            .Where(s =>
+                                s.Nop != null &&
+                                x.Select(d => d.Nop.Replace(".", "")).Contains(s.Nop) &&
+                                s.TglBayarPokok.HasValue &&
+                                s.TglBayarPokok.Value.Year == x.Key.Tahun
+                            )
                             .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0,
                         Selisih = (
                             parkirRealisasi
@@ -173,8 +184,12 @@ namespace MonPDReborn.Models.AktivitasOP
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        var restoDokNop = context.DbRekamRestorans.Where(x => x.Tanggal.Year == tahun).GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).ToList();
+                        var restoDokNop = context.DbRekamRestorans.Where(x => x.Tanggal.Year == tahun).GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).Distinct().ToList();
                         var restoRealisasiList = context.DbMonRestos
+                            .Where(x => restoDokNop.Contains(x.Nop) && x.TglBayarPokok.Value.Year == tahun)
+                            .ToList();
+
+                        var restoOpList = context.DbOpRestos
                             .Where(x => restoDokNop.Contains(x.Nop) && x.TahunBuku == tahun)
                             .ToList();
 
@@ -186,19 +201,20 @@ namespace MonPDReborn.Models.AktivitasOP
                             {
                                 var nop = (x.Key.Nop).Replace(".", "");
                                 var realisasi = restoRealisasiList.FirstOrDefault(r => r.Nop == nop);
+                                var op = restoOpList.FirstOrDefault(x => x.Nop == nop);
                                 return new DataDetailPendataan
                                 {
                                     Tahun = tahun,
                                     EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
                                     JenisPajak = ((EnumFactory.EPajak.MakananMinuman).GetDescription()),
                                     NOP = nop,
-                                    ObjekPajak = realisasi?.NamaOp ?? "-",
-                                    Alamat = realisasi?.AlamatOp ?? "-",
+                                    ObjekPajak = op?.NamaOp ?? "-",
+                                    Alamat = op?.AlamatOp ?? "-",
                                     Omzet = x.Max(x => x.OmseBulan),
                                     PajakBulanan = x.Max(x => x.PajakBulan),
                                     AvgRealisasi = restoRealisasiList
                                         .Where(r => r.Nop == nop)
-                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                        .Sum(r => (decimal?)r.NominalPokokBayar) ?? 0
                                 };
                             })
                             .ToList();
@@ -206,8 +222,12 @@ namespace MonPDReborn.Models.AktivitasOP
                         ret.AddRange(restoDok);
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        var parkirDokNop = context.DbRekamParkirs.Where(x => x.Tanggal.Year == tahun).GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).ToList();
+                        var parkirDokNop = context.DbRekamParkirs.Where(x => x.Tanggal.Year == tahun).GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).Distinct().ToList();
                         var parkirRealisasiList = context.DbMonParkirs
+                            .Where(x => parkirDokNop.Contains(x.Nop) && x.TglBayarPokok.Value.Year == tahun)
+                            .ToList();
+
+                        var parkirOpList = context.DbOpParkirs
                             .Where(x => parkirDokNop.Contains(x.Nop) && x.TahunBuku == tahun)
                             .ToList();
 
@@ -219,19 +239,20 @@ namespace MonPDReborn.Models.AktivitasOP
                             {
                                 var nop = (x.Key.Nop).Replace(".", "");
                                 var realisasi = parkirRealisasiList.FirstOrDefault(r => r.Nop == nop);
+                                var op = parkirOpList.FirstOrDefault(r => r.Nop == nop);
                                 return new DataDetailPendataan
                                 {
                                     Tahun = tahun,
                                     EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                                     JenisPajak = ((EnumFactory.EPajak.JasaParkir).GetDescription()),
                                     NOP = nop,
-                                    ObjekPajak = realisasi?.NamaOp ?? "-",
-                                    Alamat = realisasi?.AlamatOp ?? "-",
+                                    ObjekPajak = op?.NamaOp ?? "-",
+                                    Alamat = op?.AlamatOp ?? "-",
                                     Omzet = x.Max(x => x.OmzetBulan),
                                     PajakBulanan = x.Max(x => x.PajakBulan),
                                     AvgRealisasi = parkirRealisasiList
                                         .Where(r => r.Nop == nop)
-                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                        .Sum(r => (decimal?)r.NominalPokokBayar) ?? 0
                                 };
                             })
                             .ToList();
