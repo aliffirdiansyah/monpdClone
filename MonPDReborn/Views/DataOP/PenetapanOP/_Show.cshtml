@@ -1,31 +1,88 @@
 ﻿@model MonPDReborn.Models.DataOP.PenetapanOPVM.Show
 
-<div class="row justify-content">
-    <div class="col-lg-4">
-        <div class="card shadow-sm p-3 border border-warning border-3">
-            <h4 class="fs-14 text-muted mb-3">Total Penetapan</h4>
-            <h4 class="fs-16 fw-bold mb-1">@MonPDLib.General.Extension.FormatRupiahFull(Model.StatistikData.TotalNilaiPenetapan)</h4>
-            <small>+0.0% dari bulan lalu</small>
+<div class="row">
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class="bx bx-money-withdraw  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Total Penetapan</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        Rp. @Model.StatistikData.TotalNilaiPenetapan.ToString("N0")
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="col-lg-4">
-        <div class="card shadow-sm p-3 border border-success border-3">
-            <h4 class="fs-14 text-muted mb-3">Jumlah SKPD/SPPT</h4>
-            <h4 class="fs-16 fw-bold mb-1">@Model.StatistikData.JumlahPenetapan.ToString("N0")</h4>
-            <small>+0.0% dari bulan lalu</small>
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class="bx bx-file  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Jumlah SKPD/SPPT</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        @Model.StatistikData.JumlahPenetapan.ToString("N0")
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="col-lg-4">
-        <div class="card shadow-sm p-3 border border-danger border-3">
-            <h4 class="fs-14 text-muted mb-3">Belum Dibayar</h4>
-            <h4 class="fs-16 fw-bold mb-1">@MonPDLib.General.Extension.FormatRupiahFull(Model.StatistikData.TotalBelumTerbayar)</h4>
-            <small>+0.0% dari total penetapan</small>
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class=" bx bx-coin  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Total Bayar</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        Rp. @Model.StatistikData.TotalBayar.ToString("N0")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class="bx bx-money  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Total Belum Bayar</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        Rp. @Model.StatistikData.TotalBelumTerbayar.ToString("N0")
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
+<br />
 <div class="table-responsive">
     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PenetapanOPVM.PenetapanOP>()
         .ID("penetapanGrid")
