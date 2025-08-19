@@ -391,7 +391,7 @@ namespace MonPDReborn.Models.DataOP
                         Nop = nop,
                         Tanggal = DateTime.TryParseExact(
                             sheet.Cells[row, 2].Text,
-                            "MM-dd",
+                            "yyyy-MM-dd",
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.None,
                             out var tglBulanHari
@@ -461,7 +461,7 @@ namespace MonPDReborn.Models.DataOP
 
                         Tanggal = DateTime.TryParseExact(
                             sheet.Cells[row, 2].Text,
-                            "MM-dd",
+                            "yyyy-MM-dd",
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.None,
                             out var tglBulanHari
