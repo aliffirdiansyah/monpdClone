@@ -45,8 +45,8 @@
             {
                 sub.AddFor(x => x.Terpasang2025).Caption("Terpasang").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
             });
-            columns.AddFor(x => x.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
             columns.AddFor(x => x.TotalTerpasang).Caption("Total Terpasang").Format("#,##0");
+            columns.AddFor(x => x.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
         })
         .Summary(summary =>
         {
@@ -65,8 +65,8 @@
                 items.AddFor(x => x.Terpasang2024).SummaryType(SummaryType.Sum).ValueFormat("#,##0") .DisplayFormat("{0}");
 
                 items.AddFor(x => x.Terpasang2025).SummaryType(SummaryType.Sum).ValueFormat("#,##0") .DisplayFormat("{0}");
-                items.AddFor(x => x.BelumTerpasang2025).SummaryType(SummaryType.Sum).ValueFormat("#,##0") .DisplayFormat("{0}");                
                 items.AddFor(x => x.TotalTerpasang).SummaryType(SummaryType.Sum).ValueFormat("#,##0") .DisplayFormat("{0}");
+                items.AddFor(x => x.BelumTerpasang2025).SummaryType(SummaryType.Sum).ValueFormat("#,##0") .DisplayFormat("{0}");                
 
             });
         })

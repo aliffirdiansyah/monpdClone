@@ -178,7 +178,6 @@
             // Panggil kembali fnShow dengan nilai filter baru yang sudah diformat
             fnShow(tglAwalFormatted, tglAkhirFormatted);
         });
-
         function fnShow(tanggalAwal, tanggalAkhir) {
             $.ajax({
                 url: '@Url.Action("Show", "KontrolPrediksi")',
@@ -195,10 +194,19 @@
                     $('#loading2-Show').hide();
 
                     if (result.Status === undefined) {
-                        // Ini berarti responsenya HTML PartialView
+                        // Render PartialView (Grid)
                         $('#Show').html(result).show();
+
+                        // ⬇️ Update caption grid setelah grid selesai di-render
+                        setTimeout(function () {
+                            var grid = $("#KontrolPrediksiGrid").dxDataGrid("instance");
+                            if (grid) {
+                                var tgl = DevExpress.localization.formatDate(new Date(tanggalAkhir), "dd/MM/yyyy");
+                                grid.columnOption("RealisasiHari", "caption", "Prediksi Hari Ini S.D Dengan Tanggal " + tgl);
+                            }
+                        }, 200); // kasih delay kecil biar grid sempat ter-render
+
                     } else {
-                        // Ini berarti responsenya JSON error
                         Swal.fire({
                             icon: 'warning',
                             title: '<b style="color:orange">Peringatan</b>',
@@ -217,6 +225,7 @@
                 }
             });
         }
+
 
     </script>
 }
