@@ -7,15 +7,15 @@
     switch (Model.Type)
     {
         case 1:
-            <h4>SUDUT PANDANG AKUN</h4>
+            <h4 class="text-center">SUDUT PANDANG AKUN @(Model.Tahun)</h4>
             @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/ShowSudutPandangRekening.cshtml", Model);
             break;
         case 2:
-            <h4>SUDUT PANDANG OPD - SUB OPD</h4>
+            <h4 class="text-center">SUDUT PANDANG OPD - SUB OPD @(Model.Tahun)</h4>
             @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/SudutPandangOpd.cshtml", Model);
             break;
         case 3:
-            <h4>SUDUT PANDANG AKUN [JENIS - OPD - SUBRINCIAN]</h4>
+            <h4 class="text-center">SUDUT PANDANG AKUN [JENIS - OPD - SUBRINCIAN] @(Model.Tahun)</h4>
             @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/SudutPandangRekeningJenisObjekOpd.cshtml", Model);
             break;
         default:

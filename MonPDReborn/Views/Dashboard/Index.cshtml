@@ -1531,7 +1531,7 @@
 
             var $summaryCells = e.element.find(".dx-datagrid-total-footer .dx-datagrid-summary-item");
 
-            for (var i = 1; i <= 7; i++) {
+             for (var i = 7; i >= 1; i--) {
                 var totalTarget = 0;
                 var totalRealisasi = 0;
 
@@ -1543,8 +1543,9 @@
 
                 var persentase = totalTarget > 0 ? totalRealisasi / totalTarget : 0;
 
-                // Index summary (1-based) → (i * 3) + 1
-                var persentaseIndex = (i * 3) + 2;
+                // mapping index (supaya tetap 1..7 walau i berjalan 7..1)
+                var order = 8 - i;
+                var persentaseIndex = (order * 3) + 2;
 
                 // eq() itu 0-based
                 var $persentaseCell = $summaryCells.eq(persentaseIndex - 1);
