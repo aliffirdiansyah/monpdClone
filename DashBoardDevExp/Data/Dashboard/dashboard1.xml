@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Target dan Realisasi" />
+  <DataSources>
+    <SqlDataSource Name="Oracle Data Source" ComponentName="sqlDataSource1">
+      <Connection Name="connection" ProviderKey="Oracle">
+        <Parameters>
+          <Parameter Name="server" Value="10.21.39.80:1521/devdb" />
+          <Parameter Name="database" Value="" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="OracleProviderType" Value="ODPManaged" />
+          <Parameter Name="userid" Value="monpd" />
+          <Parameter Name="password" Value="monpd2025" />
+        </Parameters>
+      </Connection>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+</Dashboard>
