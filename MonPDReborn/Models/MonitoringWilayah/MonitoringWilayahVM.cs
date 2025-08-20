@@ -84,7 +84,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                 RealisasiWilayahList = Method.GetDataRealisasiWilayahList(wilayah, tahun, bulan, jenisPajak);
 
-                if(wilayah == EnumFactory.EUPTB.SEMUA && jenisPajak == EnumFactory.EPajak.Semua)
+                if (wilayah == EnumFactory.EUPTB.SEMUA && jenisPajak == EnumFactory.EPajak.Semua)
                 {
                     RealisasiJenisList = Method.GetDataRealisasiJenisList(tahun, bulan);
                 }
@@ -537,7 +537,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         break;
                     case EnumFactory.EPajak.Reklame:
-                        
+
                         break;
                     case EnumFactory.EPajak.PBB:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
@@ -637,10 +637,10 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                         break;
                     case EnumFactory.EPajak.BPHTB:
-                        
+
                         break;
                     case EnumFactory.EPajak.OpsenPkb:
-                        
+
 
                         break;
                     case EnumFactory.EPajak.OpsenBbnkb:
@@ -733,8 +733,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 foreach (var item in totalTarget)
                                 {
                                     var re = new RealisasiWilayah();
-                                    if (item.PajakId != null) 
-                                    { 
+                                    if (item.PajakId != null)
+                                    {
                                         switch ((EnumFactory.EPajak)item.PajakId)
                                         {
                                             case EPajak.MakananMinuman:
@@ -1059,7 +1059,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Status = ""
                                 }).ToList();
                         }
-                    break;
+                        break;
                 }
 
                 return ret;
@@ -1156,7 +1156,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                 foreach (var item in targetPajak)
                 {
-                    if(item.PajakId != null)
+                    if (item.PajakId != null)
                     {
                         var ret = new RealisasiJenis();
                         switch ((EnumFactory.EPajak)item.PajakId)
@@ -1321,8 +1321,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     result.Tanggal = tanggal;
                                     result.Tahun = (int)bulan;
                                     result.Bulan = (int)tahun;
-                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.JenisPajak = ((jenisPajak)).GetDescription();
+                                    result.EnumPajak = (int)(jenisPajak);
                                     result.Target = dataTargetWilayahResto.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                     result.Realisasi = dataRealisasiWilayahResto.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1378,8 +1378,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 result.Tanggal = tanggal;
                                 result.Tahun = (int)bulan;
                                 result.Bulan = (int)tahun;
-                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.JenisPajak = ((jenisPajak)).GetDescription();
+                                result.EnumPajak = (int)(jenisPajak);
                                 result.Target = dataTargetWilayahResto.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                 result.Realisasi = dataRealisasiWilayahResto.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1441,8 +1441,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     result.Tanggal = tanggal;
                                     result.Tahun = (int)bulan;
                                     result.Bulan = (int)tahun;
-                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.JenisPajak = ((jenisPajak)).GetDescription();
+                                    result.EnumPajak = (int)(jenisPajak);
                                     result.Target = dataTargetWilayahListrik.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                     result.Realisasi = dataRealisasiWilayahListrik.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1498,8 +1498,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 result.Tanggal = tanggal;
                                 result.Tahun = (int)bulan;
                                 result.Bulan = (int)tahun;
-                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.JenisPajak = ((jenisPajak)).GetDescription();
+                                result.EnumPajak = (int)(jenisPajak);
                                 result.Target = dataTargetWilayahListrik.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                 result.Realisasi = dataRealisasiWilayahListrik.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1561,8 +1561,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     result.Tanggal = tanggal;
                                     result.Tahun = (int)bulan;
                                     result.Bulan = (int)tahun;
-                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.JenisPajak = ((jenisPajak)).GetDescription();
+                                    result.EnumPajak = (int)(jenisPajak);
                                     result.Target = dataTargetWilayahHotel.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                     result.Realisasi = dataRealisasiWilayahHotel.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1618,8 +1618,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 result.Tanggal = tanggal;
                                 result.Tahun = (int)bulan;
                                 result.Bulan = (int)tahun;
-                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.JenisPajak = ((jenisPajak)).GetDescription();
+                                result.EnumPajak = (int)(jenisPajak);
                                 result.Target = dataTargetWilayahHotel.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                 result.Realisasi = dataRealisasiWilayahHotel.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1681,8 +1681,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     result.Tanggal = tanggal;
                                     result.Tahun = (int)bulan;
                                     result.Bulan = (int)tahun;
-                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.JenisPajak = ((jenisPajak)).GetDescription();
+                                    result.EnumPajak = (int)(jenisPajak);
                                     result.Target = dataTargetWilayahParkir.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                     result.Realisasi = dataRealisasiWilayahParkir.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1738,8 +1738,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 result.Tanggal = tanggal;
                                 result.Tahun = (int)bulan;
                                 result.Bulan = (int)tahun;
-                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.JenisPajak = ((jenisPajak)).GetDescription();
+                                result.EnumPajak = (int)(jenisPajak);
                                 result.Target = dataTargetWilayahParkir.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                 result.Realisasi = dataRealisasiWilayahParkir.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1802,8 +1802,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     result.Tanggal = tanggal;
                                     result.Tahun = (int)bulan;
                                     result.Bulan = (int)tahun;
-                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.JenisPajak = ((jenisPajak)).GetDescription();
+                                    result.EnumPajak = (int)(jenisPajak);
                                     result.Target = dataTargetWilayahHiburan.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                     result.Realisasi = dataRealisasiWilayahHiburan.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1859,8 +1859,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 result.Tanggal = tanggal;
                                 result.Tahun = (int)bulan;
                                 result.Bulan = (int)tahun;
-                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.JenisPajak = ((jenisPajak)).GetDescription();
+                                result.EnumPajak = (int)(jenisPajak);
                                 result.Target = dataTargetWilayahHiburan.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                 result.Realisasi = dataRealisasiWilayahHiburan.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -1946,8 +1946,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
+                                    JenisPajak = (jenisPajak).GetDescription(),
+                                    EnumPajak = (int)jenisPajak,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -1999,8 +1999,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
                                     Tahun = (int)item.Bulan,
                                     Bulan = (int)item.Tahun,
-                                    JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
-                                    EnumPajak = (int)(EnumFactory.EPajak)item.PajakId,
+                                    JenisPajak = (jenisPajak).GetDescription(),
+                                    EnumPajak = (int)jenisPajak,
                                     Target = item.TotalTarget,
                                     Realisasi = totalRealisasi ?? 0
                                 };
@@ -2061,8 +2061,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     result.Tanggal = tanggal;
                                     result.Tahun = (int)bulan;
                                     result.Bulan = (int)tahun;
-                                    result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                    result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                    result.JenisPajak = (jenisPajak).GetDescription();
+                                    result.EnumPajak = (int)jenisPajak;
                                     result.Target = dataTargetWilayahPbb.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                     result.Realisasi = dataRealisasiWilayahPbb.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -2114,8 +2114,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 result.Tanggal = tanggal;
                                 result.Tahun = (int)bulan;
                                 result.Bulan = (int)tahun;
-                                result.JenisPajak = ((EnumFactory.EPajak.PBB)).GetDescription();
-                                result.EnumPajak = (int)(EnumFactory.EPajak.PBB);
+                                result.JenisPajak = (jenisPajak).GetDescription();
+                                result.EnumPajak = (int)jenisPajak;
                                 result.Target = dataTargetWilayahPbb.Where(x => x.Tgl == tanggal.Day && x.Bulan == tanggal.Month && x.TahunBuku == tanggal.Year).Sum(q => q.TotalTarget);
                                 result.Realisasi = dataRealisasiWilayahPbb.Where(x => x.Tanggal == tanggal).Sum(q => q.TotalRealisasi) ?? 0;
 
@@ -2173,13 +2173,13 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListAbt.Contains(x.Nop)
                                         ).GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 6 })
-            .Select(x => new
-            {
-                Tanggal = x.Key.TglBayarPokok,
-                x.Key.PajakId,
-                TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
-            })
-            .ToList();
+                                        .Select(x => new
+                                        {
+                                            Tanggal = x.Key.TglBayarPokok,
+                                            x.Key.PajakId,
+                                            TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                        })
+                                        .ToList();
 
                                 var totalRealisasiResto = context.DbMonRestos
                                         .Where(x =>
@@ -2188,13 +2188,13 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListResto.Contains(x.Nop)
                                         ).GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 1 })
-            .Select(x => new
-            {
-                Tanggal = x.Key.TglBayarPokok,
-                x.Key.PajakId,
-                TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
-            })
-            .ToList();
+                                        .Select(x => new
+                                        {
+                                            Tanggal = x.Key.TglBayarPokok,
+                                            x.Key.PajakId,
+                                            TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                        })
+                                        .ToList();
 
                                 var totalRealisasiHotel = context.DbMonHotels
                                         .Where(x =>
@@ -2203,13 +2203,13 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListHotel.Contains(x.Nop)
                                         ).GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 3 })
-            .Select(x => new
-            {
-                Tanggal = x.Key.TglBayarPokok,
-                x.Key.PajakId,
-                TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
-            })
-            .ToList();
+                                        .Select(x => new
+                                        {
+                                            Tanggal = x.Key.TglBayarPokok,
+                                            x.Key.PajakId,
+                                            TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                        })
+                                        .ToList();
 
                                 var totalRealisasiListrik = context.DbMonPpjs
                                         .Where(x =>
@@ -2218,13 +2218,13 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListListrik.Contains(x.Nop)
                                         ).GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 2 })
-            .Select(x => new
-            {
-                Tanggal = x.Key.TglBayarPokok,
-                x.Key.PajakId,
-                TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
-            })
-            .ToList();
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                    })
+                                    .ToList();
 
                                 var totalRealisasiParkir = context.DbMonParkirs
                                         .Where(x =>
@@ -2233,13 +2233,13 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListParkir.Contains(x.Nop)
                                         ).GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 4 })
-            .Select(x => new
-            {
-                Tanggal = x.Key.TglBayarPokok,
-                x.Key.PajakId,
-                TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
-            })
-            .ToList();
+                                    .Select(x => new
+                                    {
+                                        Tanggal = x.Key.TglBayarPokok,
+                                        x.Key.PajakId,
+                                        TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                    })
+                                    .ToList();
 
                                 var totalRealisasiHiburan = context.DbMonHiburans
                                         .Where(x =>
@@ -2248,13 +2248,13 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TglBayarPokok.Value.Month <= bulan
                                             && nopListHiburan.Contains(x.Nop)
                                         ).GroupBy(x => new { TglBayarPokok = x.TglBayarPokok.Value.Date, PajakId = 5 })
-            .Select(x => new
-            {
-                Tanggal = x.Key.TglBayarPokok,
-                x.Key.PajakId,
-                TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
-            })
-            .ToList();
+                                .Select(x => new
+                                {
+                                    Tanggal = x.Key.TglBayarPokok,
+                                    x.Key.PajakId,
+                                    TotalRealisasi = x.Sum(q => q.NominalPokokBayar)
+                                })
+                                .ToList();
 
                                 var totalRealisasiPbb = context.DbMonPbbs
                                         .Where(x =>
@@ -2275,7 +2275,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 {
                                     var tanggal = new DateTime(tahun, bulan, Convert.ToInt32(item.Tgl));
                                     var re = new DataHarian();
-                                    if(item.PajakId != null)
+                                    if (item.PajakId != null)
                                     {
                                         switch ((EnumFactory.EPajak)item.PajakId)
                                         {
@@ -2827,7 +2827,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             .Select(x => new
                             {
                                 x.Nop,
-                               x.WilayahPajak,
+                                x.WilayahPajak,
                                 x.NamaOp,
                                 x.AlamatOp,
                                 x.KategoriNama,
