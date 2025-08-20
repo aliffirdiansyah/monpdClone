@@ -42,7 +42,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
             {
                 sc.AddFor(m => m.Col.TargetTahun7).Caption("Target").Format("#,##0");
                 sc.AddFor(m => m.Col.RealisasiTahun7).Caption("Realisasi").Format("#,##0");
-                sc.AddFor(m => m.Col.PersentaseTahun7).Caption("%").Format("#,#0%").Format("#,#0%");
+                sc.AddFor(m => m.Col.PersentaseTahun7).Caption("%").Format("#,##0.##'%'");
             });
 
         columns.Add().Caption(year6.ToString())
@@ -50,7 +50,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
             {
                 sc.AddFor(m => m.Col.TargetTahun6).Caption("Target").Format("#,##0");
                 sc.AddFor(m => m.Col.RealisasiTahun6).Caption("Realisasi").Format("#,##0");
-                sc.AddFor(m => m.Col.PersentaseTahun6).Caption("%").Format("#,#0%");
+                sc.AddFor(m => m.Col.PersentaseTahun6).Caption("%").Format("#,##0.##'%'");
             });
 
         columns.Add().Caption(year5.ToString())
@@ -58,7 +58,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
             {
                 sc.AddFor(m => m.Col.TargetTahun5).Caption("Target").Format("#,##0");
                 sc.AddFor(m => m.Col.RealisasiTahun5).Caption("Realisasi").Format("#,##0");
-                sc.AddFor(m => m.Col.PersentaseTahun5).Caption("%").Format("#,#0%");
+                sc.AddFor(m => m.Col.PersentaseTahun5).Caption("%").Format("#,##0.##'%'");
             });
 
         columns.Add().Caption(year4.ToString())
@@ -66,7 +66,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
             {
                 sc.AddFor(m => m.Col.TargetTahun4).Caption("Target").Format("#,##0");
                 sc.AddFor(m => m.Col.RealisasiTahun4).Caption("Realisasi").Format("#,##0");
-                sc.AddFor(m => m.Col.PersentaseTahun4).Caption("%").Format("#,#0%");
+                sc.AddFor(m => m.Col.PersentaseTahun4).Caption("%").Format("#,##0.##'%'");
             });
 
         columns.Add().Caption(year3.ToString())
@@ -74,7 +74,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
             {
                 sc.AddFor(m => m.Col.TargetTahun3).Caption("Target").Format("#,##0");
                 sc.AddFor(m => m.Col.RealisasiTahun3).Caption("Realisasi").Format("#,##0");
-                sc.AddFor(m => m.Col.PersentaseTahun3).Caption("%").Format("#,#0%");
+                sc.AddFor(m => m.Col.PersentaseTahun3).Caption("%").Format("#,##0.##'%'");
             });
 
         columns.Add().Caption(year2.ToString())
@@ -82,7 +82,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
             {
                 sc.AddFor(m => m.Col.TargetTahun2).Caption("Target").Format("#,##0");
                 sc.AddFor(m => m.Col.RealisasiTahun2).Caption("Realisasi").Format("#,##0");
-                sc.AddFor(m => m.Col.PersentaseTahun2).Caption("%").Format("#,#0%");
+                sc.AddFor(m => m.Col.PersentaseTahun2).Caption("%").Format("#,##0.##'%'");
             });
 
         columns.Add().Caption(year1.ToString())
@@ -90,7 +90,7 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
             {
                 sc.AddFor(m => m.Col.TargetTahun1).Caption("Target").Format("#,##0");
                 sc.AddFor(m => m.Col.RealisasiTahun1).Caption("Realisasi").Format("#,##0");
-                sc.AddFor(m => m.Col.PersentaseTahun1).Caption("%").Format("#,#0%");
+                sc.AddFor(m => m.Col.PersentaseTahun1).Caption("%").Format("#,##0.##'%'");
             });
     })
     .MasterDetail(md => md
