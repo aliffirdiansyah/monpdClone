@@ -1,0 +1,10 @@
+{
+    "name": "gssdashboard",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {
+        "devextreme-dist": "23.2.5",
+        "@devexpress/analytics-core": "23.2.5",
+        "devexpress-dashboard": "23.2.5"
+    }
+}

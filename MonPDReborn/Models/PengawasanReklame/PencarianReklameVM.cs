@@ -89,6 +89,7 @@ namespace MonPDReborn.Models.PengawasanReklame
                         Jumlah = x.Jumlah ?? 0,
                         Jalan = x.NamaJalan ?? "-",
                         Alamat = x.Alamatreklame ?? "-",
+                        Letak = x.LetakReklame ?? "-",
                         IsiReklame = x.IsiReklame ?? "-",
                         tglMulai = x.TglMulaiBerlaku ?? DateTime.MinValue,
                         tglAkhir = x.TglAkhirBerlaku ?? DateTime.MinValue
@@ -119,6 +120,7 @@ namespace MonPDReborn.Models.PengawasanReklame
             public string IsiReklame { get; set; }
             public string Kategori { get; set; }
             public string Status { get; set; }
+            public string Letak { get; set; }
             public DateTime tglMulai { get; set; }
             public DateTime tglAkhir { get; set; }
             public string TanggalTayang => string.Concat(tglMulai.ToString("dd MMM yyyy", new CultureInfo("id-ID")), " - ", tglAkhir.ToString("dd MMM yyyy", new CultureInfo("id-ID")));

@@ -21,7 +21,8 @@ namespace MonPDLib
         {
         
         }
-
+        public DbSet<KETETAPANHR> KETETAPANHRs { get; set; }
+        public DbSet<KETETAPANPBJT> KETETAPANPBJTs { get; set; }
         public DbSet<DbOpAbt> DbOpAbts { get; set; }
         public DbSet<SSPDABT> SSPDABTs { get; set; }
         public DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
@@ -63,6 +64,8 @@ namespace MonPDLib
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<KETETAPANHR>().HasNoKey();
+            modelBuilder.Entity<KETETAPANPBJT>().HasNoKey();
             modelBuilder.Entity<DbOpAbt>().HasNoKey();
             modelBuilder.Entity<SSPDABT>().HasNoKey();
             modelBuilder.Entity<DbMonUpayaPad>().HasNoKey();
