@@ -653,6 +653,8 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbCtrlByrHotel>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_HOTEL");
+
+            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrParkir>(entity =>
@@ -680,6 +682,8 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbCtrlByrResto>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_RESTO");
+
+            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbMonAbt>(entity =>
