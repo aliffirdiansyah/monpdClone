@@ -52,7 +52,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             var context = DBClass.GetContext();
             var currentYear = DateTime.Now.Year;
-            var bulanLaluCutoff = new DateTime(currentYear, DateTime.Now.Month, 1).AddDays(-1);
+            var bulanLaluCutoff = new DateTime(currentYear, tanggalAkhir.Month , 1).AddDays(-1);
             var awalTahun = new DateTime(currentYear, 1, 1);
 
             var list = new List<KontrolPrediksi>();
@@ -217,16 +217,16 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             var startOfDay = tanggalAwal.Date; // 00:00
             var endOfDay = startOfDay.AddDays(1).AddTicks(-1); // 23:59:59.9999999
 
-            var realisasiBulanLalu = data.Where(d => d.Tanggal <= bulanLaluCutoff).Sum(d => d.Nominal);
+            var realisasiBulanLalu = data.Where(d => d.Tanggal >= awalTahun && d.Tanggal <= bulanLaluCutoff).Sum(d => d.Nominal);
             var realisasiBulanIni = data.Where(d => d.Tanggal >= awalTahun && d.Tanggal < startOfDay).Sum(d => d.Nominal);
             if (jenisPajak == EnumFactory.EPajak.OpsenPkb)
             {
-                var realisasiHariIni = data.Where(d => d.Tanggal.Day == startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Average(d => d.Nominal);
+                var realisasiHariIni = data.Where(d => d.Tanggal.Day > startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Sum(d => d.Nominal);
 
                 return new KontrolPrediksi
                 {
                     tgl = DateTime.Now,
-                    JenisPajak = jenisPajak.ToString(),
+                    JenisPajak = jenisPajak.GetDescription(),
                     Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
                     RealisasiBulanLalu = realisasiBulanLalu,
                     RealisasiBulanIni = realisasiBulanIni,
@@ -235,12 +235,12 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             }
             if (jenisPajak == EnumFactory.EPajak.OpsenBbnkb)
             {
-                var realisasiHariIni = data.Where(d => d.Tanggal.Day == startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Average(d => d.Nominal);
+                var realisasiHariIni = data.Where(d => d.Tanggal.Day > startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Sum(d => d.Nominal);
 
                 return new KontrolPrediksi
                 {
                     tgl = DateTime.Now,
-                    JenisPajak = jenisPajak.ToString(),
+                    JenisPajak = jenisPajak.GetDescription(),
                     Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
                     RealisasiBulanLalu = realisasiBulanLalu,
                     RealisasiBulanIni = realisasiBulanIni,
@@ -249,11 +249,30 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             }
             else
             {
-                var realisasiHariIni = data.Where(d => d.Tanggal.Month == startOfDay.Month && d.Tanggal.Day == startOfDay.Day && d.Tanggal.Month <= endOfDay.Month && d.Tanggal.Day <= endOfDay.Day).Average(d => d.Nominal);
+                var start = new DateTime(2000, tanggalAwal.Month, tanggalAwal.Day);
+                var end = new DateTime(2000, tanggalAkhir.Month, tanggalAkhir.Day);
+
+                var check = data
+                    .Where(d =>
+                    {
+                        var t = new DateTime(2000, d.Tanggal.Month, d.Tanggal.Day);
+                        return t > start && t <= end;
+                    })
+                    .GroupBy(d => new { d.Tanggal.Year, d.Tanggal.Month, d.Tanggal.Day })
+                    .Select(g => new {
+                        g.Key.Year,
+                        g.Key.Month,
+                        g.Key.Day,
+                        TotalNominal = g.Sum(x => x.Nominal)  // ← jumlahkan nominal tiap grup
+                    })
+                    .ToList();
+
+
+                var realisasiHariIni = check.Sum(d => d.TotalNominal);
                 return new KontrolPrediksi
                 {
                     tgl = DateTime.Now,
-                    JenisPajak = jenisPajak.ToString(),
+                    JenisPajak = jenisPajak.GetDescription(),
                     Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
                     RealisasiBulanLalu = realisasiBulanLalu,
                     RealisasiBulanIni = realisasiBulanIni,

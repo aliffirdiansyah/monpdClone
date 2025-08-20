@@ -35,6 +35,7 @@
             columns.AddFor(m => m.FormattedNOP).Caption("NOP");
             columns.AddFor(m => m.NamaOP).Caption("Nama OP");
             columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.Ketetapan).Caption("Ketetapan").Format("#,##0");
             columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
             columns.AddFor(m => m.Wilayah).Caption("Wilayah");
             columns.AddFor(m => m.Keterangan).Caption("Keterangan");
@@ -47,6 +48,11 @@
             .SummaryType(SummaryType.Sum)
             .Alignment(HorizontalAlignment.Right)
             .DisplayFormat("TOTAL");
+
+                items.AddFor(m => m.Ketetapan)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
 
                 items.AddFor(m => m.Realisasi)
             .SummaryType(SummaryType.Sum)
