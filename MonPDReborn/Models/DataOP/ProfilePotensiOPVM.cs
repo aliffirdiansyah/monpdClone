@@ -1,18 +1,8 @@
-﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
-using MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using static MonPDLib.General.EnumFactory;
-using static MonPDReborn.Models.DashboardVM;
-using static MonPDReborn.Models.DashboardVM.ViewModel;
-using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 
 namespace MonPDReborn.Models.DataOP
 {

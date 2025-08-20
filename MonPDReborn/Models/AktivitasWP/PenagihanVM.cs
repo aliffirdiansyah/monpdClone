@@ -1,5 +1,4 @@
-﻿using static MonPDReborn.Models.DataWP.ProfilePiutangWPVM;
-using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
+﻿
 
 namespace MonPDReborn.Models.AktivitasWP
 {
