@@ -1,0 +1,18 @@
+﻿@* @model DevExpress.DashboardCommon.DashboardState *@
+@{
+    Layout = "_LayoutDashboard";
+}
+
+<div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;">
+    @(Html.DevExpress().Dashboard("dashboardControl1")
+        .ControllerName("DefaultDashboard")
+        .WorkingMode(DevExpress.DashboardWeb.WorkingMode.Designer)
+        .Extensions(ext =>
+        {
+            ext.DataSourceWizard(wiz => wiz.EnableCustomSql(true));
+        })
+        .Width("100%")
+        .Height("100%")
+        .OnBeforeRender("onBeforeRender")
+        )
+</div>

@@ -221,20 +221,17 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
-                    re.Nts1 = kontrolPembayaranList
-                        .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlNTs);
 
                     re.OPbuka2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -247,7 +244,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -260,7 +257,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -273,7 +270,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -286,7 +283,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -299,7 +296,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -312,7 +309,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -325,7 +322,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -338,7 +335,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -351,7 +348,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -364,7 +361,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -420,7 +417,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -433,7 +430,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -446,7 +443,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -459,7 +456,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -472,7 +469,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -485,7 +482,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -498,7 +495,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -511,7 +508,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -524,7 +521,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -537,7 +534,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -550,7 +547,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -563,7 +560,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -620,7 +617,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -633,7 +630,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -646,7 +643,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -659,7 +656,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -672,7 +669,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -685,7 +682,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -698,7 +695,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -711,7 +708,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -724,7 +721,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -737,7 +734,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -750,7 +747,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -763,7 +760,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -820,7 +817,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -833,7 +830,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -846,7 +843,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -859,7 +856,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -872,7 +869,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -885,7 +882,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -898,7 +895,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -911,7 +908,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -924,7 +921,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -937,7 +934,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -950,7 +947,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -963,7 +960,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -1020,7 +1017,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -1033,7 +1030,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -1046,7 +1043,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -1059,7 +1056,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -1072,7 +1069,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -1085,7 +1082,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -1098,7 +1095,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -1111,7 +1108,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -1124,7 +1121,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -1137,7 +1134,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -1150,7 +1147,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -1163,7 +1160,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -1220,7 +1217,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -1233,7 +1230,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -1246,7 +1243,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -1259,7 +1256,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -1272,7 +1269,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -1285,7 +1282,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -1298,7 +1295,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -1311,7 +1308,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -1324,7 +1321,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -1337,7 +1334,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -1350,7 +1347,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -1363,7 +1360,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -1420,7 +1417,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -1433,7 +1430,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -1446,7 +1443,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -1459,7 +1456,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -1472,7 +1469,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -1485,7 +1482,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -1498,7 +1495,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -1511,7 +1508,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -1524,7 +1521,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -1537,7 +1534,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -1550,7 +1547,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -1563,7 +1560,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -1629,7 +1626,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranAwalList
                         .Where(x => x.KategoriId == item.Id)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Nts1 = kontrolPembayaranAwalList
                         .Where(x => x.KategoriId == item.Id)
                         .Sum(x => x.JmlNTs);
@@ -1732,7 +1729,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -1745,7 +1742,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -1758,7 +1755,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -1771,7 +1768,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -1784,7 +1781,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -1797,7 +1794,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -1810,7 +1807,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -1823,7 +1820,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -1836,7 +1833,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -1849,7 +1846,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -1862,7 +1859,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -1875,7 +1872,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);
@@ -1933,7 +1930,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr1 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 1)
                         .Sum(x => x.JmlBayar);
@@ -1946,7 +1943,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr2 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 2)
                         .Sum(x => x.JmlBayar);
@@ -1959,7 +1956,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr3 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 3)
                         .Sum(x => x.JmlBayar);
@@ -1972,7 +1969,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr4 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 4)
                         .Sum(x => x.JmlBayar);
@@ -1985,7 +1982,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr5 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlBayar);
@@ -1998,7 +1995,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.JmlBayar);
@@ -2011,7 +2008,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr7 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 7)
                         .Sum(x => x.JmlBayar);
@@ -2024,7 +2021,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr8 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 8)
                         .Sum(x => x.JmlBayar);
@@ -2037,7 +2034,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr9 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 9)
                         .Sum(x => x.JmlBayar);
@@ -2050,7 +2047,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr10 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 10)
                         .Sum(x => x.JmlBayar);
@@ -2063,7 +2060,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr11 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 11)
                         .Sum(x => x.JmlBayar);
@@ -2076,7 +2073,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Sum(x => x.Jml);
                     re.Blm12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
-                        .Sum(x => x.JmlBlmBayar);
+                        .Sum(x => x.JmlBlmBayar + x.JmlNTs);
                     re.Byr12 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 12)
                         .Sum(x => x.JmlBayar);

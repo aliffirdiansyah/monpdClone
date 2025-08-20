@@ -1,0 +1,338 @@
+﻿ @using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
+
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    
+
+} 
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    @* <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">Kegiatan Telah Selesai</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div> *@
+    <div class="offcanvas-body" data-bs-spy="scroll">
+        <div>
+           @*  @foreach (var item in Model.listKegiatanSelesai)
+            {
+                <div class="d-flex justify-content-between">
+                    <div class="p-2 title-sub">@item.KegiatanName</div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="p-2 title-sub-x">Kegiatan</div>
+                    <div class="p-2 title-sub-x">Selesai</div>
+                </div>
+                <div class="d-flex justify-content-between ">
+                    <div class="p-2 title-sub-x-b">@(item.PolsekId != null ? item.MPolsek.Name : (item.PolresId != null ? item.MPolres.Name : item.MPolda.Name))</div>
+                    <div class="p-2 title-sub-x-b">@item.TglSelesai.ToString("d MMM yyyy")</div>
+                </div>
+                <div class="d-flex justify-content-between ">
+                    <a href="@Url.Action("Index","Kegiatan")" class="see-document">Update Kegiatan</a>
+                </div>
+                <hr>
+            }
+ *@
+
+        </div>
+    </div>
+</div>
+@* <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight2" aria-labelledby="offcanvasRightLabel2">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel2">Notifikasi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" data-bs-spy="scroll">
+        <div>
+            @foreach (var item in Model.listNotifikasi)
+            {
+                <div class="d-flex justify-content-between">
+                    <div class="p-2 title-sub">@item.DocumentName</div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="p-2 title-sub-x">Dokumen</div>
+                    <div class="p-2 title-sub-x">Persetujuan Akses</div>
+                </div>
+                <div class="d-flex justify-content-between ">
+                    <div class="p-2 title-sub-x-b">@(item.PolsekId != null ? item.MPolsek?.Name ?? "" : (item.PolresId != null ? item.MPolres?.Name ?? "" : item.MPolda?.Name ?? ""))</div>
+                    <div class="p-2 title-sub-x-b">Ditolak</div>
+                </div>
+                <div class="d-flex justify-content-between ">
+                    <a href="@Url.Action("Index","Document")" class="see-document">Lihat Dokumen</a>
+                </div>
+                <hr>
+            }
+
+        </div>
+    </div>
+</div> *@
+<!-- ======= Header ======= -->
+<header id="header" style="z-index:2" class="header fixed-top d-flex align-items-center" >
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn" title="Show/Hide Menu"></i>
+    </div>
+
+    <li class="nav-item dropdown p-1 group-filtersearch" style="display: none;">
+        <form>
+            @* <div class="mb-3">
+                <img src="~/images/logo/fi-rr-search.png" alt="" width="14" class="img-placeholder-search">
+                <input id="searchPanel" type="text" class="form-control filtersearch" aria-describedby="emailHelp" placeholder="Search">
+            </div> *@
+        </form>
+        @* <div class="search-box" style="display: none;">
+        <h5>Recent Search</h5>
+        <div class="filter-tag-option">
+        <button type="button" class="btn btn-primary">Dokumen <a href="" class="close-tag-options">x</a></button>
+        <button type="button" class="btn btn-primary">Persetujuan Dokumen <a href="" class="close-tag-options">x</a></button>
+        <button type="button" class="btn btn-primary">Rencana Kegiatan <a href="" class="close-tag-options">x</a></button>
+        <button type="button" class="btn btn-primary">Pengguna <a href="" class="close-tag-options">x</a></button>
+        <button type="button" class="btn btn-primary">Repositori <a href="" class="close-tag-options">x</a></button>
+        </div>
+        <hr>
+        <div class="recent-scroll" data-bs-spy="scroll">
+        <h5>Recent Files</h5>
+        <hr>
+        <div class="filter-recent-files">
+        <span><img src="~/images/logo/Doc (1).png" alt="" width="32"> Pembinaan Komunitas Motor Besar</span>
+        <hr>
+        <span><img src="~/images/logo/Ppt.png" alt="" width="32"> Presentasi Keselamatan Berkendara Masyarakat</span>
+        <hr>
+        <span><img src="~/images/logo/Pdf.png" alt="" width="32"> Laporan Sosialisasi Perpol No.5 2021 Penertiban SIM</span>
+        <hr>
+        <span><img src="~/images/logo/Doc (1).png" alt="" width="32"> Pembinaan Komunitas Motor Besar</span>
+        </div>
+        </div>
+        </div> *@
+    </li>
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+
+            @* <li class="nav-item icon-search">
+                <a class="nav-link nav-icon search-bar-toggle " href="#" title="Search">
+                    <img src="~/images/logo/fi-rr-search.png" alt="" width="20">
+                </a>
+            </li> *@
+
+            <li class="nav-item dropdown p-1">
+
+                @* <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown" title="Kegiatan Telah Selesai">
+                    <i class="fi fi-sr-calendar"></i>
+                   <span class="badge badge-number">@Model.listKegiatanSelesai.Count</span>
+                </a> *@
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                    @* <div class="d-flex justify-content-between">
+                        <div class="p-2 title-notif">Kegiatan Telah Selesai</div>
+                        <button class=" btn btn-primary-outline" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><img src="~/images/logo/settings.png" alt="" width="18"></button>
+                    </div> *@
+                    @* @foreach (var item in Model.listKegiatanSelesai)
+                    {
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-header">
+                            <div class="d-flex justify-content-between">
+                                <div class="p-2 title-sub">@item.KegiatanName</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div class="p-2 title-sub-x">Kegiatan</div>
+                                <div class="p-2 title-sub-x">Selesai</div>
+                            </div>
+                            <div class="d-flex justify-content-between ">
+                                <div class="p-2 title-sub-x-b">@(item.PolsekId != null ? item.MPolsek.Name : (item.PolresId != null ? item.MPolres.Name : item.MPolda.Name))</div>
+                                <div class="p-2 title-sub-x-b">@item.TglSelesai.ToString("d MMM yyyy")</div>
+                            </div>
+                            <div class="d-flex justify-content-between ">
+                                <a href="@Url.Action("Index","Kegiatan")" class="see-document">Update Kegiatan</a>
+                            </div>
+                        </li>
+                    }
+ *@
+
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown p-1">
+                @* <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown" title="Notifikasi">
+                    <i class="fi fi-sr-bell"></i>
+                    <span class="badge badge-number">@Model.listNotifikasi.Count</span>
+                </a> *@
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                    @* <div class="d-flex justify-content-between">
+                        <div class="p-2 title-notif">Notifikasi</div>
+                        <button class=" btn btn-primary-outline" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight2" aria-controls="offcanvasRight"><img src="~/images/logo/settings.png" alt="" width="18"></button>
+                    </div> *@
+                    @* @foreach (var item in Model.listNotifikasi)
+                    {
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-header">
+                            <div class="d-flex justify-content-between">
+                                <div class="p-2 title-sub">@item.DocumentName</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div class="p-2 title-sub-x">Dokumen</div>
+                                <div class="p-2 title-sub-x">Persetujuan Akses</div>
+                            </div>
+                            <div class="d-flex justify-content-between ">
+                                <div class="p-2 title-sub-x-b">@(item.PolsekId != null ? item.MPolsek?.Name ?? "" : (item.PolresId != null ? item.MPolres?.Name ?? "" : item.MPolda?.Name ?? ""))</div>
+                                <div class="p-2 title-sub-x-b">Ditolak</div>
+                            </div>
+                            <div class="d-flex justify-content-between ">
+                                <a href="@Url.Action("Index","Document")" class="see-document">Lihat Dokumen</a>
+                            </div>
+                        </li>
+                    } *@
+
+                </ul>
+            </li>
+
+            @* <li class="nav-item dropdown p-3" style="margin-top: -10px;">
+            <form asp-action="ChangeLanguage" asp-controller="Home" method="post">
+            <input type="hidden" id="returnUrl" name="returnUrl" value="@returnUrl" />
+            <select id="culture"
+            name="culture"
+            class="form-control"
+            onchange="this.form.submit();"
+            asp-items="cultureItems"
+            asp-for="@requestCulture.RequestCulture.UICulture.Name">
+            </select>
+            </form>
+            </li> *@
+
+
+            <form id="frmCulture" asp-action="ChangeLanguage" asp-controller="Home" method="post">
+
+            <li class="nav-item dropdown p-3" style="margin-top: -10px;">
+                    @* @if (requestCulture.RequestCulture.UICulture.Name == "id-ID")
+                    {
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown" title="Bahasa">
+                        <img src="~/images/logo/indonesia.png" alt="" width="30">
+                    </a>
+                    }
+                    else
+                    {
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown" title="Language">
+                        <img src="~/images/logo/usa.png" alt="" width="30">
+                    </a>
+                    } *@
+                @* <input type="hidden" id="returnUrl" name="returnUrl" value="@returnUrl" /> *@
+                <input type="hidden" id="culture" name="culture" />
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                    <li class="dropdown-header">
+                            @* @foreach (var item in cultureItems)
+                            {
+                                @if (item.Value == "id-ID")
+                                {
+                                    @if (requestCulture.RequestCulture.UICulture.Name == "id-ID")
+                                    {
+                                    <div id="languageChangeID" class="active-country" style="cursor:pointer;">
+                                        <img src="~/images/logo/Indonesia.png" alt="" width="28" class="me-3">
+                                        <span class="text-country me-4">@item.Text</span>
+                                        <img src="~/images/logo/check.png" alt="" width="14" class="me-0">
+                                    </div>
+                                    }else
+                                    {
+                                    <div id="languageChangeID" style="cursor:pointer;">
+                                        <img src="~/images/logo/Indonesia.png" alt="" width="28" class="me-3">
+                                        <span class="text-country me-4">@item.Text</span>
+                                    </div>
+                                    }
+                                }
+                                else
+                                {
+                                    @if (requestCulture.RequestCulture.UICulture.Name == "en-US")
+                                    {
+                                    <div id="languageChangeEN" class="active-country mt-3" style="cursor:pointer;">
+                                        <img src="~/images/logo/usa.png" alt="" width="28" class="me-3">
+                                        <span class="text-country me-4">@item.Text</span>
+                                        <img src="~/images/logo/check.png" alt="" width="14" class="me-0">
+                                    </div>
+                                    }
+                                    else
+                                    {
+                                    <div id="languageChangeEN" class="mt-3" style="cursor:pointer;">
+                                        <img src="~/images/logo/usa.png" alt="" width="28" class="me-3">
+                                        <span class="text-country me-4">@item.Text</span>
+                                    </div>
+                                    }
+                                }
+                            } *@
+                    </li>
+                    <i class="fi fi-rr-check"></i>
+                </ul>
+
+            </li>
+            </form>
+
+            <!-- <li class="nav-item dropdown pe-3">
+              <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                <img src="~/images/logo/Avatar.png" alt="Profile" class="rounded-circle">
+                <span class="d-none d-md-block ps-2">Surya Adi Sucipto <br> <font>Administrator</font></span>
+                <i class="fi fi-sr-caret-down" style="margin-left: 10px;"></i>
+              </a>
+
+              <ul class="dropdown dropdown-menu-arrow profile">
+
+               <div class="toggle-container">
+                <input type="checkbox" id="good" class="toggle" />
+                <label for="good" class="label">
+                  <div class="ball"></div>
+                </label>
+                <span>Gooddsd</span>
+              </div>
+
+
+              </ul>
+            </li> -->
+
+            <li class="nav-item dropdown pe-3">
+                <div class="dropdown">
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <img src="~/images/logo/Avatar.png" alt="Profile" class="rounded-circle">
+                        @* <span class="d-none d-md-block ps-2"> @username   <br> <font> @role </font></span> *@
+                        <i class="fi fi-sr-caret-down" style="margin-left: 10px;"></i>
+                    </a>
+                    <!-- <ul class="dropdown dropdown-menu-arrow profile"> -->
+                    <div class="dropdown-content">
+                        @* <div class="toggle-container">
+                            <span>Mode Gelap</span>
+                            <div class="switch">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input label" type="checkbox" name="darkMode" id="dark" onclick="fnDarkMode();" />
+                                </div>
+                            </div>
+                        </div> *@
+                        <a href="/identity/account/manage/changepassword">
+                            Ubah Password
+                        </a>
+                        <a href="@Url.Action("Logout","Home")">
+                            Sign Out
+                            <img src="~/images/logo/sign-out-alt.png" alt="" width="18px" class="sign-out-img">
+                        </a>
+                    </div>
+                    <!-- </ul> -->
+
+            </li>
+
+            </div>
+
+
+        </ul>
+    </nav>
+</header>
+<script>
+    $('#languageChangeID').on("click", function () {
+        document.getElementsByName('culture')[0].value = 'id-ID';
+        document.getElementById("frmCulture").submit();
+    });
+    $('#languageChangeEN').on("click", function () {
+        document.getElementsByName('culture')[0].value = 'en-US';
+        document.getElementById("frmCulture").submit();
+    });
+</script>

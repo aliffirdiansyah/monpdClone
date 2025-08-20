@@ -1,0 +1,85 @@
+﻿.loader {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0, 0.9);
+    z-index: 9999;
+}
+
+.logo_sby {
+    top: 50%;
+    left: 50%;
+    height: 130px;
+    width: 130px;
+    border-radius: 50%;
+    position: relative;
+    background-image: linear-gradient(0deg, #0f1013, #252730);
+    /* text-shadow: 0 1px 1px rgba(#fff, 0.6); */
+    /*    backdrop-filter: dropShadow(0 1px 1px rgba(#fff, 0.6));*/
+}
+
+    .logo_sby::after, .logo_sby::before {
+        position: absolute;
+        display: inline-block;
+        content: "";
+    }
+
+    .logo_sby:after {
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: inherit;
+        z-index: 2;
+        /* background-image: linear-gradient(0deg, #0f1013, #252730);*/
+        box-shadow: 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+    }
+
+    .logo_sby::before {
+        /* border: 4px solid transparent; 
+      top: -4px;
+      left: -4px; */
+
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        z-index: 1;
+        box-shadow: 0 -5px 5px rgba(#7575f1, 0.3);
+        top: -2px;
+        left: -1px;
+        height: calc(100% + 2px);
+        width: calc(100% + 2px);
+    }
+
+    .logo_sby img {
+        z-index: 3;
+    }
+
+.logo_sby,
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+        border-top-color: #cf3edc;
+        box-shadow: 0 -5px 5px rgba(#7575f1, 0.3);
+    }
+
+    50% {
+        transform: rotate(180deg);
+        border-top-color: #7575f1;
+        box-shadow: 0 -5px 5px rgba(#cf3edc, 0.3);
+    }
+
+    100% {
+        transform: rotate(360deg);
+        border-top-color: #cf3edc;
+        box-shadow: 0 -5px 5px rgba(#7575f1, 0.3);
+    }
+}

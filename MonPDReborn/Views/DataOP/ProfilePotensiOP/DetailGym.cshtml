@@ -113,7 +113,7 @@
                                 <div class="card-body">
                                     <div class="text-center">
                                         <h3 class="fs-18 fw-semibold mb-1">
-                                            @Model.EstimasiJumlahMemberFitnes.ToString("N0")
+                                            @Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang
                                         </h3>
                                         <h4 class="fs-14 text-muted">
                                             Estimasi Jumlah Member
@@ -157,7 +157,7 @@
                                         decimal hasil = ((kapasitas * turnoverWeekdays * 22) + (kapasitas * turnoverWeekend * 8)) / 12;
                                     }
                                     <p class="fs-14 fw-semibold text-dark mb-1">
-                                        ((@Model.Kapasitas x @Model.TurnoverWeekdays.ToString("N2") x 22) + (@Model.Kapasitas x @Model.TurnoverWeekend.ToString("N2") x 8)) / 12 = @hasil.ToString("N0") Member
+                                        ((@Model.Kapasitas Orang x @Model.TurnoverWeekdays.ToString("N2") x 22 Hari) + (@Model.Kapasitas Orang x @Model.TurnoverWeekend.ToString("N2") x 8 Hari)) / 12 Kali= @hasil.ToString("N0") Orang
                                     </p>
                                 </div>
                             </div>
@@ -243,7 +243,7 @@
                                         Harga Membership Bulanan x Rata-rata Member Bulanan
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-1">
-                                        Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0")  = Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
+                                        Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang  = Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
                                     </p>
                                 </div>
                             </div>
@@ -280,10 +280,10 @@
                                         Rumus Perhitungan Potensi Pajak Per Tahun :
                                     </h4>
                                     <p class="fs-14 text-muted mb-1">
-                                        Potensi Pajak Per Bulan x 12
+                                        Potensi Pajak Per Bulan x 12 Bulan
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-2">
-                                        Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
+                                        Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0") x 12 Bulan = Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
                                     </p>
                                     <h4 class="fs-16 fw-semibold text-dark mb-2">
                                         Total Potensi Pajak Per Tahun : Rp. @Model.PotensiPajakPerTahunFitnes.ToString("N0")
@@ -323,7 +323,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <p class="label">NOP</p>
-                        <p class="value">@Model.NOP</p>
+                        <p class="value">@Model.FormattedNOP</p>
                     </div>
                     <div class="d-flex">
                         <p class="label">Nama Usaha</p>
@@ -364,11 +364,6 @@
                         <p class="value">Rp. @Model.OmzetPerBulanFitnes.ToString("N0")</p>
                     </div>
 
-                    <div class="info-row">
-                        <p class="label">Tarif Pajak</p>
-                        <p class="value">@Model.TarifPajak.ToString("P0")</p>
-                    </div>
-
                 </div>
             </div>
 
@@ -401,6 +396,11 @@
                         <p class="value">@Model.TarifPajak.ToString("P0")</p>
                     </div>
 
+                    <div class="info-row">
+                        <p class="label">Rata-Rata Kunjungan Member per Bulan</p>
+                        <p class="value">12 Kali</p>
+                    </div>
+
                 </div>
             </div>
 
@@ -427,8 +427,8 @@
                                     Estimasi Jumlah Member = ((Kapasitas x Turnover Weekdays x 22 Hari) + (Kapasitas x Turnover Weekend x 8 Hari)) / Rata-Rata Kunjungan per Bulan
                                 </p>
                                 <p class="fs-14 text-dark mb-2 fw-semibold">
-                                    Estimasi Jumlah Member = ((@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekdays.ToString("N2") x 22 Hari) +
-                                    (@Model.Kapasitas.ToString("N0") x @Model.TurnoverWeekend.ToString("N2") x 8 Hari)) / 12
+                                    Estimasi Jumlah Member = ((@Model.Kapasitas.ToString("N0") Orang x @Model.TurnoverWeekdays.ToString("N2") x 22 Hari) +
+                                    (@Model.Kapasitas.ToString("N0") Orang x @Model.TurnoverWeekend.ToString("N2") x 8 Hari)) / 12 Kali
                                     = @Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang
                                 </p>
 
@@ -436,7 +436,7 @@
                                     Omzet/Bulan = Harga Member x Estimasi Jumlah Member
                                 </p>
                                 <p class="fs-14 text-dark mb-3 fw-semibold">
-                                    Omzet/Bulan = Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0")
+                                    Omzet/Bulan = Rp. @Model.HargaMemberFitness.ToString("N0") x @Model.EstimasiJumlahMemberFitnes.ToString("N0") Orang
                                     = Rp. @Model.OmzetPerBulanFitnes.ToString("N0")
                                 </p>
 
@@ -453,7 +453,7 @@
                                 </p>
 
                                 <p class="fs-14 text-muted font-monospace mb-1">
-                                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa
+                                    Potensi Pajak/Tahun = Potensi Pajak/Bulan x @Model.BulanSisa Bulan
                                 </p>
                                 <p class="fs-14 text-dark fw-semibold">
                                     Potensi Pajak/Tahun = Rp. @Model.PotensiPajakPerBulanFitnes.ToString("N0") x @Model.BulanSisa Bulan

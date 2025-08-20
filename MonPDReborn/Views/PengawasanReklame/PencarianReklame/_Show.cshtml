@@ -56,6 +56,11 @@ else
                         </div>
 
                         <div class="d-flex mb-1">
+                            <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Letak Reklame:</span>
+                            <span class="badge bg-soft-success  text-success text-wrap">@item.Letak</span>
+                        </div>
+
+                        <div class="d-flex mb-1">
                             <span class="text-muted me-2 fw-semibold" style="min-width: 70px; text-align: left; display: inline-block;">Isi Reklame:</span>
                             <span class="badge bg-soft-success  text-success text-wrap">@item.IsiReklame</span>
                         </div>
@@ -120,13 +125,15 @@ else
                                                <span class="badge bg-soft-success text-success"><%- value %></span>
                                            </text>);
 
+                            columns.AddFor(m => m.Letak).Caption("Letak Reklame").CssClass("WrappedColumnClass");
+
                             columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame").CssClass("WrappedColumnClass");
 
                             columns.AddFor(m => m.Kategori).Caption("Kategori Reklame").CssClass("WrappedColumnClass");
 
                             columns.AddFor(m => m.TanggalTayang).Caption("Tanggal Tayang").CssClass("WrappedColumnClass");
 
-                            columns.AddFor(m => m.Jumlah).Caption("Jumlah").Alignment(HorizontalAlignment.Center).CssClass("fw-bold text-primary");
+                            columns.AddFor(m => m.Jumlah).Caption("Jumlah").Alignment(HorizontalAlignment.Center);
                         })
                         )
         </div>
