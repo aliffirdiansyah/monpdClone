@@ -46,6 +46,10 @@ namespace MonPDReborn.Models.DataOP
                 {
                     var nop = sheet.Cells[row, 1].Text;
 
+                    if (string.IsNullOrEmpty(nop))
+                    {
+                        break;
+                    }
 
                     var existingData = context.DbPotensiHotels
                         .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
@@ -100,6 +104,11 @@ namespace MonPDReborn.Models.DataOP
                 for (int row = 2; row <= sheet.Dimension.End.Row; row++)
                 {
                     var nop = sheet.Cells[row, 1].Text;
+
+                    if (string.IsNullOrEmpty(nop))
+                    {
+                        break;
+                    }
 
                     var existingData = context.DbPotensiParkirs
                         .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
@@ -179,6 +188,11 @@ namespace MonPDReborn.Models.DataOP
                 {
                     var nop = sheet.Cells[row, 1].Text;
 
+                    if (string.IsNullOrEmpty(nop))
+                    {
+                        break;
+                    }
+
                     var existingData = context.DbPotensiRestos
                         .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
 
@@ -229,6 +243,11 @@ namespace MonPDReborn.Models.DataOP
                 for (int row = 2; row <= sheet.Dimension.End.Row; row++)
                 {
                     var nop = sheet.Cells[row, 1].Text;
+
+                    if (string.IsNullOrEmpty(nop))
+                    {
+                        break;
+                    }
 
                     var existingData = context.DbPotensiHiburans
                         .FirstOrDefault(x => x.TahunBuku == tahun && x.Nop == nop);
