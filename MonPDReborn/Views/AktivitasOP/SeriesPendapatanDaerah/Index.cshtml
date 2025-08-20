@@ -90,7 +90,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -98,7 +105,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -106,7 +120,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -114,7 +135,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -122,7 +150,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -130,7 +165,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -138,7 +180,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -183,7 +232,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -191,7 +247,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -199,7 +262,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -207,7 +277,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -215,7 +292,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -223,7 +307,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -231,7 +322,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -276,7 +374,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -284,7 +389,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -292,7 +404,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -300,7 +419,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -308,7 +434,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -316,7 +449,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -324,7 +464,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -369,7 +516,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -377,7 +531,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -385,7 +546,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -393,7 +561,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -401,7 +576,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -409,7 +591,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -417,7 +606,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -462,7 +658,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -470,7 +673,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -478,7 +688,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -486,7 +703,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -494,7 +718,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -502,7 +733,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -510,7 +748,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -555,7 +800,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -563,7 +815,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -571,7 +830,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -579,7 +845,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -587,7 +860,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -595,7 +875,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -603,7 +890,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -648,7 +942,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -656,7 +957,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -664,7 +972,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -672,7 +987,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -680,7 +1002,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -688,7 +1017,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -696,7 +1032,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -741,7 +1084,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -749,7 +1099,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -757,7 +1114,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -765,7 +1129,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -773,7 +1144,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -781,7 +1159,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -789,7 +1174,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
@@ -834,7 +1226,14 @@
                         columns: [
                                 { dataField: "Col.TargetTahun7", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun7", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun7", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun7", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -842,7 +1241,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun6", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun6", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun6", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun6", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -850,7 +1256,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun5", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun5", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun5", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun5", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -858,7 +1271,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun4", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun4", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun4", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun4", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -866,7 +1286,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun3", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun3", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun3", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun3", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -874,7 +1301,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun2", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun2", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun2", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun2", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         },
                         {
@@ -882,7 +1316,14 @@
                             columns: [
                                 { dataField: "Col.TargetTahun1", caption: "Target", format: "#,##0" },
                                 { dataField: "Col.RealisasiTahun1", caption: "Realisasi", format: "#,##0" },
-                                { dataField: "Col.PersentaseTahun1", caption: "%", format: "#,#0%" }
+                                { dataField: "Col.PersentaseTahun1", caption: "%", format: {
+        type: "fixedPoint",
+        precision: 2   // 2 angka di belakang koma
+    },
+    customizeText: function(e) {
+        if (e.value === null) return "";
+        return e.value + " %";
+    } }
                             ]
                         }
                     ],
