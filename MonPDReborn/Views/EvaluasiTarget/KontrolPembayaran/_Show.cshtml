@@ -27,7 +27,6 @@
                                                 columns.AddFor(m => m.Kategori).Caption("Kategori").Fixed(true).FixedPosition(HorizontalEdge.Left);
                                                 columns.AddFor(m => m.OPbuka1).Caption("OP Buka").Format("#,##0").Alignment(HorizontalAlignment.Right);
                                                 columns.AddFor(m => m.Blm1).Caption("Belum Bayar").Format("#,##0").Alignment(HorizontalAlignment.Right);
-                                                columns.AddFor(m => m.Nts1).Caption("Nihil").Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                                                 columns.Add().Caption("Januari").Columns(subColumns =>
                                                 {
@@ -268,7 +267,7 @@
                     subColumns.AddFor(m => m.Nts1)
                 .DataField("Nts1")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm1)
                 .DataField("Blm1")
@@ -292,7 +291,7 @@
                     subColumns.AddFor(m => m.Nts2)
                 .DataField("Nts2")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm2)
                 .DataField("Blm2")
@@ -315,7 +314,7 @@
                     subColumns.AddFor(m => m.Nts3)
                 .DataField("Nts3")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm3)
                 .DataField("Blm3")
@@ -338,7 +337,7 @@
                     subColumns.AddFor(m => m.Nts4)
                 .DataField("Nts4")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm4)
                 .DataField("Blm4")
@@ -361,7 +360,7 @@
                     subColumns.AddFor(m => m.Nts5)
                 .DataField("Nts5")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm5)
                 .DataField("Blm5")
@@ -384,7 +383,7 @@
                     subColumns.AddFor(m => m.Nts6)
                 .DataField("Nts6")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm6)
                 .DataField("Blm6")
@@ -407,7 +406,7 @@
                     subColumns.AddFor(m => m.Nts7)
                 .DataField("Nts7")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm7)
                 .DataField("Blm7")
@@ -430,7 +429,7 @@
                     subColumns.AddFor(m => m.Nts8)
                 .DataField("Nts8")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm8)
                 .DataField("Blm8")
@@ -453,7 +452,7 @@
                     subColumns.AddFor(m => m.Nts9)
                 .DataField("Nts9")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm9)
                 .DataField("Blm9")
@@ -476,7 +475,7 @@
                     subColumns.AddFor(m => m.Nts10)
                 .DataField("Nts10")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm10)
                 .DataField("Blm10")
@@ -499,7 +498,7 @@
                     subColumns.AddFor(m => m.Nts11)
                 .DataField("Nts11")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm11)
                 .DataField("Blm11")
@@ -522,7 +521,7 @@
                     subColumns.AddFor(m => m.Nts12)
                 .DataField("Nts12")
                 .Caption("N/TS")
-                .CellTemplate(new JS("showPajakCellTemplate"));
+                .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm12)
                 .DataField("Blm12")
@@ -550,10 +549,7 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts1)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                    
 
                     items.AddFor(m => m.Blm1)
                 .SummaryType(SummaryType.Sum)
@@ -570,10 +566,7 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts2)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                   
 
                     items.AddFor(m => m.Blm2)
                 .SummaryType(SummaryType.Sum)
@@ -590,10 +583,7 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts3)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                   
 
                     items.AddFor(m => m.Blm3)
                 .SummaryType(SummaryType.Sum)
@@ -610,10 +600,7 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts4)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                    
 
                     items.AddFor(m => m.Blm4)
                 .SummaryType(SummaryType.Sum)
@@ -630,11 +617,7 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts5)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-
+                   
                     items.AddFor(m => m.Blm5)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
@@ -650,10 +633,6 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts6)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Blm6)
                 .SummaryType(SummaryType.Sum)
@@ -670,10 +649,6 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts7)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Blm7)
                 .SummaryType(SummaryType.Sum)
@@ -690,10 +665,6 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts8)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Blm8)
                 .SummaryType(SummaryType.Sum)
@@ -710,10 +681,6 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts9)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Blm9)
                 .SummaryType(SummaryType.Sum)
@@ -730,10 +697,6 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts10)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Blm10)
                 .SummaryType(SummaryType.Sum)
@@ -750,11 +713,6 @@
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts11)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-
                     items.AddFor(m => m.Blm11)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
@@ -766,11 +724,6 @@
                 .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Byr12)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-
-                    items.AddFor(m => m.Nts12)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -823,7 +776,7 @@
                 subColumns.AddFor(m => m.Nts1)
             .DataField("Nts1")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm1)
             .DataField("Blm1")
@@ -847,7 +800,7 @@
                 subColumns.AddFor(m => m.Nts2)
             .DataField("Nts2")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm2)
             .DataField("Blm2")
@@ -870,7 +823,7 @@
                 subColumns.AddFor(m => m.Nts3)
             .DataField("Nts3")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm3)
             .DataField("Blm3")
@@ -893,7 +846,7 @@
                 subColumns.AddFor(m => m.Nts4)
             .DataField("Nts4")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm4)
             .DataField("Blm4")
@@ -916,7 +869,7 @@
                 subColumns.AddFor(m => m.Nts5)
             .DataField("Nts5")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm5)
             .DataField("Blm5")
@@ -939,7 +892,7 @@
                 subColumns.AddFor(m => m.Nts6)
             .DataField("Nts6")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm6)
             .DataField("Blm6")
@@ -962,7 +915,7 @@
                 subColumns.AddFor(m => m.Nts7)
             .DataField("Nts7")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm7)
             .DataField("Blm7")
@@ -985,7 +938,7 @@
                 subColumns.AddFor(m => m.Nts8)
             .DataField("Nts8")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm8)
             .DataField("Blm8")
@@ -1008,7 +961,7 @@
                 subColumns.AddFor(m => m.Nts9)
             .DataField("Nts9")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm9)
             .DataField("Blm9")
@@ -1031,7 +984,7 @@
                 subColumns.AddFor(m => m.Nts10)
             .DataField("Nts10")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm10)
             .DataField("Blm10")
@@ -1054,7 +1007,7 @@
                 subColumns.AddFor(m => m.Nts11)
             .DataField("Nts11")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm11)
             .DataField("Blm11")
@@ -1077,7 +1030,7 @@
                 subColumns.AddFor(m => m.Nts12)
             .DataField("Nts12")
             .Caption("N/TS")
-            .CellTemplate(new JS("showPajakCellTemplate"));
+            .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                 subColumns.AddFor(m => m.Blm12)
             .DataField("Blm12")
@@ -1105,10 +1058,7 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts1)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+
 
                 items.AddFor(m => m.Blm1)
             .SummaryType(SummaryType.Sum)
@@ -1125,10 +1075,7 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts2)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+
 
                 items.AddFor(m => m.Blm2)
             .SummaryType(SummaryType.Sum)
@@ -1145,10 +1092,7 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts3)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+
 
                 items.AddFor(m => m.Blm3)
             .SummaryType(SummaryType.Sum)
@@ -1165,10 +1109,7 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts4)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+
 
                 items.AddFor(m => m.Blm4)
             .SummaryType(SummaryType.Sum)
@@ -1185,10 +1126,6 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts5)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Blm5)
             .SummaryType(SummaryType.Sum)
@@ -1205,10 +1142,6 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts6)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Blm6)
             .SummaryType(SummaryType.Sum)
@@ -1225,10 +1158,6 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts7)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Blm7)
             .SummaryType(SummaryType.Sum)
@@ -1245,10 +1174,6 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts8)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Blm8)
             .SummaryType(SummaryType.Sum)
@@ -1265,10 +1190,6 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts9)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Blm9)
             .SummaryType(SummaryType.Sum)
@@ -1285,10 +1206,6 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts10)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Blm10)
             .SummaryType(SummaryType.Sum)
@@ -1305,11 +1222,6 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Nts11)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
-
                 items.AddFor(m => m.Blm11)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
@@ -1321,11 +1233,6 @@
             .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Byr12)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
-
-                items.AddFor(m => m.Nts12)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
@@ -1381,7 +1288,7 @@ else
                     subColumns.AddFor(m => m.Nts1)
                         .DataField("Nts1")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm1)
                         .DataField("Blm1")
@@ -1405,7 +1312,7 @@ else
                     subColumns.AddFor(m => m.Nts2)
                         .DataField("Nts2")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm2)
                         .DataField("Blm2")
@@ -1428,7 +1335,7 @@ else
                     subColumns.AddFor(m => m.Nts3)
                         .DataField("Nts3")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm3)
                         .DataField("Blm3")
@@ -1451,7 +1358,7 @@ else
                     subColumns.AddFor(m => m.Nts4)
                         .DataField("Nts4")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm4)
                         .DataField("Blm4")
@@ -1474,7 +1381,7 @@ else
                     subColumns.AddFor(m => m.Nts5)
                         .DataField("Nts5")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm5)
                         .DataField("Blm5")
@@ -1497,7 +1404,7 @@ else
                     subColumns.AddFor(m => m.Nts6)
                         .DataField("Nts6")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm6)
                         .DataField("Blm6")
@@ -1520,7 +1427,7 @@ else
                     subColumns.AddFor(m => m.Nts7)
                         .DataField("Nts7")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm7)
                         .DataField("Blm7")
@@ -1543,7 +1450,7 @@ else
                     subColumns.AddFor(m => m.Nts8)
                         .DataField("Nts8")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm8)
                         .DataField("Blm8")
@@ -1566,7 +1473,7 @@ else
                     subColumns.AddFor(m => m.Nts9)
                         .DataField("Nts9")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm9)
                         .DataField("Blm9")
@@ -1589,7 +1496,7 @@ else
                     subColumns.AddFor(m => m.Nts10)
                         .DataField("Nts10")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm10)
                         .DataField("Blm10")
@@ -1612,7 +1519,7 @@ else
                     subColumns.AddFor(m => m.Nts11)
                         .DataField("Nts11")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm11)
                         .DataField("Blm11")
@@ -1635,7 +1542,7 @@ else
                     subColumns.AddFor(m => m.Nts12)
                         .DataField("Nts12")
                         .Caption("N/TS")
-                        .CellTemplate(new JS("showPajakCellTemplate"));
+                        .CellTemplate(new JS("showPajakCellTemplate")).Visible(false);
 
                     subColumns.AddFor(m => m.Blm12)
                         .DataField("Blm12")
@@ -1649,249 +1556,203 @@ else
             {
                 summary.TotalItems(items =>
                 {
-                    items.AddFor(m => m.Kategori)
-                .SummaryType(SummaryType.Sum)
-                .DisplayFormat("Total");
+                items.AddFor(m => m.Kategori)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
 
-                    items.AddFor(m => m.OPbuka1)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka1)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr1)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr1)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts1)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm1)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka2)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm1)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr2)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka2)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts2)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr2)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm2)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka3)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr3)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm2)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts3)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka3)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm3)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr3)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka4)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr4)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts4)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm3)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm4)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka4)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka5)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr4)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr5)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts5)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm5)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm4)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka6)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka5)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr6)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr5)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts6)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm6)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm5)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka7)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka6)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr7)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr6)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts7)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm7)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm6)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka8)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka7)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr8)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr7)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts8)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm8)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm7)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka9)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka8)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr9)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr8)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts9)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm9)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm8)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka10)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka9)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr10)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr9)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts10)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm10)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm9)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka11)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka10)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr11)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr10)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts11)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm11)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm10)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.OPbuka12)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka11)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Byr12)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Byr11)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Nts12)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.Blm11)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
-                    items.AddFor(m => m.Blm12)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                items.AddFor(m => m.OPbuka12)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Byr12)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Blm12)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
 
                 });
             })

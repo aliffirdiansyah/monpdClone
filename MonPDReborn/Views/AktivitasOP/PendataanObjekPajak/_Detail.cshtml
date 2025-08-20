@@ -53,6 +53,39 @@
                 .OnClick("onDetailClick");
             });
     })
+    .Summary(s =>
+    {
+        // Summary di footer
+        s.TotalItems(items =>
+        {
+            items.AddFor(m => m.Alamat)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .Alignment(HorizontalAlignment.Right)
+            .DisplayFormat("TOTAL");
+            
+            items.AddFor(m => m.Omzet)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(m => m.PajakBulanan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(m => m.AvgRealisasi)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(m => m.Selisih)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+        });
+
+    })
 )
 </div>
 

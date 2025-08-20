@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadHotel" asp-action="UploadHotel" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                <form id="UploadHotel" asp-action="UploadPotensiHotel" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadResto" asp-action="UploadResto" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                <form id="UploadResto" asp-action="UploadPotensiResto" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadHiburan" asp-action="UploadHiburan" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                <form id="UploadHiburan" asp-action="UploadPotensiHiburan" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -114,7 +114,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form id="UploadParkir" asp-action="UploadParkir" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                <form id="UploadParkir" asp-action="UploadPotensiParkir" asp-controller="UploadData" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="Tahun">Tahun</label>
                         <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
@@ -249,7 +249,7 @@
             var formData = new FormData($('#UploadHotel')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadHotel", "UploadData")',
+                url: '@Url.Action("UploadPotensiHotel", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -291,7 +291,7 @@
             var formData = new FormData($('#UploadResto')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadResto", "UploadData")',
+                url: '@Url.Action("UploadPotensiResto", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -333,7 +333,7 @@
             var formData = new FormData($('#UploadHiburan')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadHiburan", "UploadData")',
+                url: '@Url.Action("UploadPotensiHiburan", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -375,7 +375,7 @@
             var formData = new FormData($('#UploadParkir')[0]);
 
             $.ajax({
-                url: '@Url.Action("UploadParkir", "UploadData")',
+                url: '@Url.Action("UploadPotensiParkir", "UploadData")',
                 type: 'POST',
                 data: formData,
                 contentType: false,

@@ -415,7 +415,7 @@ namespace MonPDReborn.Models
                 decimal TotalPersentase = TotalTarget != 0 ? (TotalRealisasi / TotalTarget) * 100 : 0;
 
                 #region Method Get Jumlah OP
-                var OpRestoAkhir = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
+                var OpRestoAkhir = context.DbOpRestos.Count(x => x.TahunBuku == currentYear && x.PajakNama != "MAMIN" && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
 
                 var OpHotelAkhir = context.DbOpHotels.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
                 var OpHiburanAkhir = context.DbOpHiburans.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));

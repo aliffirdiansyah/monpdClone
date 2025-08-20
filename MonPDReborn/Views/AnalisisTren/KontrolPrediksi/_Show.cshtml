@@ -1,5 +1,117 @@
 ﻿@model MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM.Show
+<style>
+    .dx-datagrid .dx-header-row .dx-datagrid-text-content {
+    white-space: normal !important;
+    word-wrap: break-word;
+    line-height: 1.2em;
+    text-align: center; /* opsional biar rapi */
+}
+</style>
+@{
+        var item = Model.DataKontrolPrediksiList.FirstOrDefault();
+        var persentaseBulan = (item != null && item.Target != 0)
+            ? (item.RealisasiBulanLalu / item.Target) * 100
+            : 0;
+        var persentaseHari = (item != null && item.Target != 0)
+            ? (item.RealisasiBulanIni / item.Target) * 100
+            : 0;
+        var persentasePrediksi = (item != null && item.Target != 0)
+            ? (item.RealisasiHari / item.Target) * 100
+            : 0;
 
+
+    }
+<div class="row">
+
+    
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-success rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
+                            <i class=" mdi mdi-calendar-month  text-success" style="font-size: 20px; line-height: 1;"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            Bulan Lalu
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@persentaseBulan.ToString("N2")%</h6>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2">
+                    <small>Target Tahunan</small><br>
+                    <span class="fw-bold fs-15">Rp. @Model.DataKontrolPrediksiList.Sum(x => x.Target).ToString("N0")</span>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2">
+                    <small>Realisasi</small><br>
+                    <span class="fw-bold fs-15 text-dark">Rp @Model.DataKontrolPrediksiList.Sum(x => x.RealisasiBulanLalu).ToString("n0")</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-success rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
+                            <i class=" mdi mdi-calendar-month-outline  text-success" style="font-size: 20px; line-height: 1;"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            s.d Hari Ini
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@persentaseHari.ToString("N2")%</h6>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2">
+                    <small>Target Tahunan</small><br>
+                    <span class="fw-bold fs-15">Rp. @Model.DataKontrolPrediksiList.Sum(x => x.Target).ToString("N0")</span>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2">
+                    <small>Realisasi</small><br>
+                    <span class="fw-bold fs-15 text-dark">Rp @Model.DataKontrolPrediksiList.Sum(x => x.RealisasiBulanIni).ToString("n0")</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm rounded-xl p-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-success rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
+                            <i class="mdi mdi-calendar-range-outline  text-success" style="font-size: 20px; line-height: 1;"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            Prediksi
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@persentasePrediksi.ToString("N2")%</h6>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2">
+                    <small>Target Tahunan</small><br>
+                    <span class="fw-bold fs-15">Rp. @Model.DataKontrolPrediksiList.Sum(x => x.Target).ToString("N0")</span>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2">
+                    <small>Realisasi</small><br>
+                    <span class="fw-bold fs-15 text-dark">Rp @Model.DataKontrolPrediksiList.Sum(x => x.RealisasiHari).ToString("n0")</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 <div class="table-responsive">
     @(
             Html.DevExtreme().DataGrid<MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM.KontrolPrediksi>()
@@ -17,12 +129,12 @@
             .FilterRow(f => f.Visible(true))
             .HeaderFilter(h => h.Visible(true))
             .Sorting(s => s.Mode(GridSortingMode.Multiple))
-            .Paging(p => p.PageSize(10))
+            @* .Paging(p => p.PageSize(10))
             .Pager(p => p
             .ShowPageSizeSelector(true)
             .AllowedPageSizes(new[] { 10, 20, 50 })
             .ShowInfo(true)
-            )
+            ) *@
             .Columns(columns =>
             {
 
@@ -33,13 +145,17 @@
                    .Caption("Target").Format("#,##0");
 
                 columns.AddFor(m => m.RealisasiBulanLalu)
-                    .Caption("Realisasi Sampai Bulan Lalu").Format("#,##0");
+                    .Caption("Realisasi S.D Bulan Lalu").Format("#,##0");
 
                 columns.AddFor(m => m.RealisasiBulanIni)
-                    .Caption("Realisasi Sampai Hari Ini").Format("#,##0");
+                    .Caption("Realisasi S.D Hari Ini").Format("#,##0");
 
-                columns.AddFor(m => m.RealisasiHari)
-                    .Caption("Realisasi Sampai Dengan Tanggal").Format("#,##0");
+               columns.AddFor(m => m.RealisasiHari) 
+               .Name("RealisasiHari")  
+               .Caption("Prediksi Hari Ini S.D Dengan Tanggal") 
+               .Format("#,##0").Width(200);
+
+
 
                 columns.AddFor(m => m.Jumlah)
             .Caption("Jumlah").Format("#,##0");

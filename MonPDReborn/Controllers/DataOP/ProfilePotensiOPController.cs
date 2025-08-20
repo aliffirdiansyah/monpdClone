@@ -115,7 +115,7 @@ namespace MonPDReborn.Controllers.DataOP
                         break;
                     case EnumFactory.EPajak.MakananMinuman:
                         var modelMakananMinuman = ProfilePotensiOPVM.Method.GetDataPotensiResto(nop);
-                        if (kategori == 4)
+                        if (kategori == 4 || kategori == 11)
                         {
                             return View("~/Views/DataOP/ProfilePotensiOP/DetailCatering.cshtml", modelMakananMinuman);
                         }

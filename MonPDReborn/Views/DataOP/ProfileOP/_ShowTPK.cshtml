@@ -90,9 +90,9 @@
                 <table class="table table-hover table-bordered align-middle">
                     <thead class="table-light text-center">
                         <tr>
-                            <th style="width: 30%;">Bulan</th>
-                            <th style="width: 35%;">Hotel Bintang</th>
-                            <th style="width: 35%;">Hotel Non Bintang</th>
+                            <th style="width: 20%;">Bulan</th>
+                            <th style="width: 25%;">Hotel Bintang</th>
+                            <th style="width: 25%;">Hotel Non Bintang</th>
                             <th style="width: 35%">Rata-rata</th>
                         </tr>
                     </thead>
@@ -105,7 +105,7 @@
                                     <td class="text-start">@item.BulanNama</td>
                                     <td class="text-end">@item.HotelBintang</td>
                                     <td class="text-end">@item.HotelNonBintang</td>
-                                    <td class="text-end">@item.RataRata</td>
+                                    <td class="text-end">@item.RataRata.ToString("N2")</td>
                                 </tr>
                             }
                         }
@@ -122,13 +122,13 @@
                             <tr>
                                 <td class="text-center">Rata-rata</td>
                                 <td class="text-end">
-                                    @Model.Kanan.Average(x => x.HotelBintang).ToString("N2")
+                                    @Model.Kiri.Average(x => x.HotelBintang).ToString("N2")
                                 </td>
                                 <td class="text-end">
-                                    @Model.Kanan.Average(x => x.HotelNonBintang).ToString("N2")
+                                    @Model.Kiri.Average(x => x.HotelNonBintang).ToString("N2")
                                 </td>
                                 <td class="text-end">
-                                    @Model.Kanan.Average(x => x.RataRata).ToString("N2")
+                                    @Model.Kiri.Average(x => x.RataRata).ToString("N2")
                                 </td>
                             </tr>
                         </tfoot>
@@ -161,9 +161,9 @@
                 <table class="table table-hover table-bordered align-middle">
                     <thead class="table-light text-center">
                         <tr>
-                            <th style="width: 30%;">Bulan</th>
-                            <th style="width: 35%;">Hotel Bintang</th>
-                            <th style="width: 35%;">Hotel Non Bintang</th>
+                            <th style="width: 20%;">Bulan</th>
+                            <th style="width: 25%;">Hotel Bintang</th>
+                            <th style="width: 25%;">Hotel Non Bintang</th>
                             <th style="width: 35%">Rata-rata</th>
                         </tr>
                     </thead>
@@ -176,7 +176,7 @@
                                     <td class="text-start">@item.BulanNama</td>
                                     <td class="text-end">@item.HotelBintang</td>
                                     <td class="text-end">@item.HotelNonBintang</td>
-                                    <td class="text-end">@item.RataRata</td>
+                                    <td class="text-end">@item.RataRata.ToString("N2")</td>
                                 </tr>
                             }
                         }

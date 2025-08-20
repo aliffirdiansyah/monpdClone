@@ -51,6 +51,34 @@
                     <div class="card-body">
                         <div id="loading-Show" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
                         <div id="Show"></div>
+                        <h4>Pembanding Data</h4>
+                        <div class="flex-grow-1">
+                            @{
+                                int startYearA = DateTime.Now.Year - 6;
+                                int currentYearA = DateTime.Now.Year;
+                            }
+                            <div class="input-group">
+                                <label class="input-group-text" for="inputGroupSelect01">Tahun</label>
+                                <select class="form-select" id="TahunA" onchange="fnShowPembandingA()">
+                                    @for (int year = startYearA; year <= currentYearA; year++)
+                                    {
+                                        if (year == currentYearA)
+                                        {
+                                            <option value="@year" selected>@year</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0"></div>
+                        
+                        <div id="loading-ShowPembandingA" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="ShowPembandingA"></div>
+
                     </div>
                 </div>
             </div>
@@ -68,7 +96,7 @@
             </div>
         </div>
         <hr />
-        <div class="row">
+        @* <div class="row">
             <h4>Pembanding Data</h4>
             <div class="col-lg-6">
                 <div class="card">
@@ -138,7 +166,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> *@
     </div>
 </body>
 </html>

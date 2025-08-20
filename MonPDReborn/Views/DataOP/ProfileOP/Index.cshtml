@@ -1,7 +1,7 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.Index
 
 @{
-   
+
     Layout = "_Layout";
 }
 
@@ -73,6 +73,7 @@
                                         <div id="detailContainer" class="mt-4" style="display: none;">
                                             @Html.Partial("~/Views/DataOP/ProfileOP/_RekapMaster.cshtml")
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +111,7 @@
                                         </div>
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -130,329 +131,329 @@
                 </div>
 
             </div>
-        </div> 
+        </div>
     </div>
 
 </div>
 
 
 
-@section Scripts{
+@section Scripts {
     <script>
-            // Mendapatkan tahun sekarang
-        const currentYear = new Date().getFullYear();
-        const startYear = 2021;
-        const endYear = 2025;
-        const ddlTahun = document.getElementById("ddlTahun");
+             // Mendapatkan tahun sekarang
+         const currentYear = new Date().getFullYear();
+         const startYear = 2021;
+         const endYear = 2025;
+         const ddlTahun = document.getElementById("ddlTahun");
 
-        for (let year = startYear; year <= endYear; year++) {
-            const option = document.createElement("option");
-            option.value = year;
-            option.text = year;
-            if (year === currentYear) {
-                option.selected = true;
-            }
-            ddlTahun.appendChild(option);
-        }
-
-        $('#ddlTahun').on('change', function () {
-            var tahun = $(this).val();
-            fnShowRekap("", tahun); // Kirim tahun dan kosongkan keyword jika tidak dipakai
-        });
-
-        $(document).ready(function () {
-            var tahun = $('#ddlTahun').val(); // ambil default tahun saat page load
-            fnShowRekap("", tahun);
-        });
-        
-        function fnShowRekap(keyword, tahun)
-        {
-            $.ajax({
-                url: '@(Url.Action("ShowRekap"))',
-                type: 'GET',
-                data: {
-                    keyword: keyword || "",   // aman walau undefined/null
-                    tahun: tahun || new Date().getFullYear()  // fallback
-                },
-                beforeSend: function () {
-                    $('#loading2-ShowRekap').show();
-                    $('#ShowRekap').hide();
-                },
-                success: function (response) {
-                    $('#loading2-ShowRekap').hide();
-                    $('#ShowRekap').show().html(response);
-                },
-                error: function (xhr) {
-                    $('#loading2-ShowRekap').hide();
-                    $('#ShowRekap').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                }
-            });
-        }
-
-          function kategoriSeriesCellTemplate(cellElement, cellInfo) {
-             const jenisPajak = cellInfo.data.EnumPajak;
-             const kategori = cellInfo.data.KategoriId;
-             const tahunKey = cellInfo.column.dataField;
-
-             const mapping = {
-                 'Tahun5_Awal': { tahun: 2021, status: 'JmlOpAwal' },
-                 'Tahun5_Baru': { tahun: 2021, status: 'JmlOpBaru' },
-                 'Tahun5_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
-                 'Tahun5_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
-
-                 'Tahun4_Awal': { tahun: 2022, status: 'JmlOpAwal' },
-                 'Tahun4_Baru': { tahun: 2022, status: 'JmlOpBaru' },
-                 'Tahun4_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
-                 'Tahun4_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
-
-                 'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
-                 'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
-                 'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
-                 'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
-
-                 'Tahun2_Awal': { tahun: 2024, status: 'JmlOpAwal' },
-                 'Tahun2_Baru': { tahun: 2024, status: 'JmlOpBaru' },
-                 'Tahun2_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
-                 'Tahun2_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
-
-                 'Tahun1_Awal': { tahun: 2025, status: 'JmlOpAwal' },
-                 'Tahun1_Baru': { tahun: 2025, status: 'JmlOpBaru' },
-                 'Tahun1_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
-                 'Tahun1_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
-             };
-
-             const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
-
-              const $link = $('<a>')
-                 .addClass('value-link text-decoration-none')
-                 .attr('href', 'javascript:void(0);')
-                 .attr('title', 'Lihat Detail')
-                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                 .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
-
-             const $wrapper = $('<div>')
-                 .css({
-                     display: 'flex',
-                     alignItems: 'center',
-                     justifyContent: 'flex-end'
-                 })
-                 .append($link);
-
-             $(cellElement).append($wrapper);
+         for (let year = startYear; year <= endYear; year++) {
+             const option = document.createElement("option");
+             option.value = year;
+             option.text = year;
+             if (year === currentYear) {
+                 option.selected = true;
+             }
+             ddlTahun.appendChild(option);
          }
 
-        function fnShowSeries()
-        {
-            $.ajax({
-              url: '@(Url.Action("JmlSeries"))',
-              type: 'GET',
-              beforeSend: function () {
-                 $('#loading2-ShowSeries').show();
-                 $('#ShowSeries').hide();
-              },
-              success: function (response) {
-                    if (response.Status === undefined) {
-                        $('#loading2-ShowSeries').hide();
-                        $('#ShowSeries').show();
-                        $('#ShowSeries').html(response);
-                    }
-                    else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
-              },
-              error: function (xhr, status, error) {
-                 $('#loading2-ShowSeries').hide();
-                 $('#ShowSeries').hide();
-                 $('#ShowSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-              }
-           });
-        }
-
-        $(document).on("change", "#tahunKiri", function () {
-             fnShowTPK();
+         $('#ddlTahun').on('change', function () {
+             var tahun = $(this).val();
+             fnShowRekap("", tahun); // Kirim tahun dan kosongkan keyword jika tidak dipakai
          });
 
-         $(document).on("change", "#tahunKanan", function () {
-             fnShowTPK();
+         $(document).ready(function () {
+             var tahun = $('#ddlTahun').val(); // ambil default tahun saat page load
+             fnShowRekap("", tahun);
          });
 
-         function fnShowTPK() {
-             const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
-             const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
-
+         function fnShowRekap(keyword, tahun)
+         {
              $.ajax({
-                  url: '@(Url.Action("ShowTPK"))',
+                 url: '@(Url.Action("ShowRekap"))',
                  type: 'GET',
                  data: {
-                     tahunKiri: tahunKiri,
-                     tahunKanan: tahunKanan
+                     keyword: keyword || "",   // aman walau undefined/null
+                     tahun: tahun || new Date().getFullYear()  // fallback
                  },
                  beforeSend: function () {
-                     $('#loading2-ShowTPK').show();
-                     $('#ShowTPK').hide();
+                     $('#loading2-ShowRekap').show();
+                     $('#ShowRekap').hide();
                  },
                  success: function (response) {
-                     $('#loading2-ShowTPK').hide();
-                     $('#ShowTPK').show().html(response);
+                     $('#loading2-ShowRekap').hide();
+                     $('#ShowRekap').show().html(response);
                  },
-                 error: function () {
-                     $('#loading2-ShowTPK').hide();
-                     $('#ShowTPK').show().html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                 error: function (xhr) {
+                     $('#loading2-ShowRekap').hide();
+                     $('#ShowRekap').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
                  }
              });
          }
 
+           function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+              const jenisPajak = cellInfo.data.EnumPajak;
+              const kategori = cellInfo.data.KategoriId;
+              const tahunKey = cellInfo.column.dataField;
 
-          
+              const mapping = {
+                  'Tahun5_Awal': { tahun: 2021, status: 'JmlOpAwal' },
+                  'Tahun5_Baru': { tahun: 2021, status: 'JmlOpBaru' },
+                  'Tahun5_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
+                  'Tahun5_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
 
-        function onDetail(e) {
-            var nop = e.row.data.NOP;
-            var pajak = e.row.data.EnumPajak;
-            var url = '@Url.Action("Detail", "ProfileOP")'
-                        + '?nop=' + nop
-                        + '&pajak=' + pajak;
-            window.open(url, '_blank');
-        }
-        // 📌 Rekap Master
-        function onDetailClick(enumPajak, kategori, status, tahun) {
-            // Tampilkan wrapper & spinner dulu
-            $('#detailModal').modal('show');
-            $('#detailLoading').show();
-            $('#detailContainer').hide();
+                  'Tahun4_Awal': { tahun: 2022, status: 'JmlOpAwal' },
+                  'Tahun4_Baru': { tahun: 2022, status: 'JmlOpBaru' },
+                  'Tahun4_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
+                  'Tahun4_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
 
-            $.ajax({
-                url: '/ProfileOP/RekapMaster',
-                type: 'GET',
-                data: {
-                    enumPajak: enumPajak,
-                    kategori: kategori,
-                    status: status,
-                    tahun:tahun
-                },
-                success: function (data) {
-                    const grid = $("#detailGrid").dxDataGrid("instance");
+                  'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
+                  'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
+                  'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
+                  'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
 
-                    grid.option("dataSource", data);
+                  'Tahun2_Awal': { tahun: 2024, status: 'JmlOpAwal' },
+                  'Tahun2_Baru': { tahun: 2024, status: 'JmlOpBaru' },
+                  'Tahun2_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
+                  'Tahun2_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
 
-                    setTimeout(function () {
-                        $("#detailLoading").fadeOut(300, function () {
-                            $("#detailContainer").fadeIn(300);
-                        });
-                    }, 500);
+                  'Tahun1_Awal': { tahun: 2025, status: 'JmlOpAwal' },
+                  'Tahun1_Baru': { tahun: 2025, status: 'JmlOpBaru' },
+                  'Tahun1_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
+                  'Tahun1_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
+              };
 
-                    // Sembunyikan panel Series
-                    $("#detailWrapperSeries").hide();
-                },
-                error: function () {
-                    swal.fire({
-                        icon: 'error',
-                        title: '<b style="color:orange">Peringatan</b>',
-                        text: "❌ Gagal memuat data Rekap."
-                    });
-                    hideDetail();
-                }
+              const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
 
-            });
-        }
+               const $link = $('<a>')
+                  .addClass('value-link text-decoration-none')
+                  .attr('href', 'javascript:void(0);')
+                  .attr('title', 'Lihat Detail')
+                  .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                  .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
 
-        function hideDetail() {
-            $("#detailWrapper").slideUp();
-        }
+              const $wrapper = $('<div>')
+                  .css({
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end'
+                  })
+                  .append($link);
 
-        // 📌 Series Master
-                function onSeriesClick(enumPajak, kategori, tahun, status ) {
-            const $modal = $('#detailModalSeries');
-            const $loading = $("#detailLoadingSeries");
-            const $container = $("#detailContainerSeries");
-            const $wrapper = $("#detailWrapper");
-
-            $modal.modal('show');
-            $container.hide();
-            $loading.show();
-
-            $.ajax({
-                url: '/ProfileOP/DetailOP',
-                method: 'GET',
-                data: {
-                    enumPajak,
-                    kategori,
-                    tahun,
-                    status
-                },
-                success: function (data) {
-                    const grid = $("#detailOPGrid").dxDataGrid("instance");
-                    if (grid) {
-                        grid.option("dataSource", data);
-                    }
-
-                    setTimeout(() => {
-                        $loading.fadeOut(300, () => {
-                            $container.fadeIn(300);
-                        });
-                    }, 500);
-
-                    // Sembunyikan panel Rekap
-                    $wrapper.hide();
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '<b style="color:orange">Peringatan</b>',
-                        html: "❌ Gagal memuat data Series."
-                    });
-                    hideDetailSeries?.();
-                }
-            });
-        }
-
-        function hideDetailSeries() {
-            $("#detailWrapperSeries").slideUp();
-        }
-
-        $(document).ready(function () {
-            $("#btnCloseDetail").on("click", hideDetail);
-            $("#btnCloseDetailSeries").on("click", hideDetailSeries);
-        });
-
-
-       // function onSeriesClick(jenisPajak, kategori, tahun) {
-       //      $.ajax({
-       //          url: '/ProfileOP/DetailOP',
-       //          type: 'GET',
-       //          data: {
-       //              jenisPajak: enumPajak,
-       //              kategori: kategori,
-       //              tahun: tahun
-       //          },
-       //          success: function (data) {
-       //              const grid = $("#SeriesGrid").dxDataGrid("instance"); 
-       //              grid.option("dataSource", data);
-
-       //              $("#detailWrapperSeries").show(); 
-       //              $("#detailWrapper").hide();       
-       //          },
-       //          error: function (xhr) {
-       //              swal.fire({
-       //                      icon: 'error',
-       //                      title: '<b style="color:orange">Peringatan</b>',
-       //                      text: "❌ Gagal memuat data Series."
-       //                  })
-       //          }
-       //      });
-       //  }
-
-
-
-
-          function onDetailSeries(e) {
-
-              window.open(url, '_blank');
+              $(cellElement).append($wrapper);
           }
-          
+
+         function fnShowSeries()
+         {
+             $.ajax({
+               url: '@(Url.Action("JmlSeries"))',
+               type: 'GET',
+               beforeSend: function () {
+                  $('#loading2-ShowSeries').show();
+                  $('#ShowSeries').hide();
+               },
+               success: function (response) {
+                     if (response.Status === undefined) {
+                         $('#loading2-ShowSeries').hide();
+                         $('#ShowSeries').show();
+                         $('#ShowSeries').html(response);
+                     }
+                     else {
+                         swal.fire({
+                             icon: 'warning',
+                             title: '<b style="color:orange">Peringatan</b>',
+                             text: response.Message
+                         })
+                     }
+               },
+               error: function (xhr, status, error) {
+                  $('#loading2-ShowSeries').hide();
+                  $('#ShowSeries').hide();
+                  $('#ShowSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+               }
+            });
+         }
+
+         $(document).on("change", "#tahunKiri", function () {
+              fnShowTPK();
+          });
+
+          $(document).on("change", "#tahunKanan", function () {
+              fnShowTPK();
+          });
+
+          function fnShowTPK() {
+              const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
+              const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
+
+              $.ajax({
+                   url: '@(Url.Action("ShowTPK"))',
+                  type: 'GET',
+                  data: {
+                      tahunKiri: tahunKiri,
+                      tahunKanan: tahunKanan
+                  },
+                  beforeSend: function () {
+                      $('#loading2-ShowTPK').show();
+                      $('#ShowTPK').hide();
+                  },
+                  success: function (response) {
+                      $('#loading2-ShowTPK').hide();
+                      $('#ShowTPK').show().html(response);
+                  },
+                  error: function () {
+                      $('#loading2-ShowTPK').hide();
+                      $('#ShowTPK').show().html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                  }
+              });
+          }
+
+
+
+
+         function onDetail(e) {
+             var nop = e.row.data.NOP;
+             var pajak = e.row.data.EnumPajak;
+             var url = '@Url.Action("Detail", "ProfileOP")'
+                         + '?nop=' + nop
+                         + '&pajak=' + pajak;
+             window.open(url, '_blank');
+         }
+         // 📌 Rekap Master
+         function onDetailClick(enumPajak, kategori, status, tahun) {
+             // Tampilkan wrapper & spinner dulu
+             $('#detailModal').modal('show');
+             $('#detailLoading').show();
+             $('#detailContainer').hide();
+
+             $.ajax({
+                 url: '/ProfileOP/RekapMaster',
+                 type: 'GET',
+                 data: {
+                     enumPajak: enumPajak,
+                     kategori: kategori,
+                     status: status,
+                     tahun:tahun
+                 },
+                 success: function (data) {
+                     const grid = $("#detailGrid").dxDataGrid("instance");
+
+                     grid.option("dataSource", data);
+
+                     setTimeout(function () {
+                         $("#detailLoading").fadeOut(300, function () {
+                             $("#detailContainer").fadeIn(300);
+                         });
+                     }, 500);
+
+                     // Sembunyikan panel Series
+                     $("#detailWrapperSeries").hide();
+                 },
+                 error: function () {
+                     swal.fire({
+                         icon: 'error',
+                         title: '<b style="color:orange">Peringatan</b>',
+                         text: "❌ Gagal memuat data Rekap."
+                     });
+                     hideDetail();
+                 }
+
+             });
+         }
+
+         function hideDetail() {
+             $("#detailWrapper").slideUp();
+         }
+
+         // 📌 Series Master
+                 function onSeriesClick(enumPajak, kategori, tahun, status ) {
+             const $modal = $('#detailModalSeries');
+             const $loading = $("#detailLoadingSeries");
+             const $container = $("#detailContainerSeries");
+             const $wrapper = $("#detailWrapper");
+
+             $modal.modal('show');
+             $container.hide();
+             $loading.show();
+
+             $.ajax({
+                 url: '/ProfileOP/DetailOP',
+                 method: 'GET',
+                 data: {
+                     enumPajak,
+                     kategori,
+                     tahun,
+                     status
+                 },
+                 success: function (data) {
+                     const grid = $("#detailOPGrid").dxDataGrid("instance");
+                     if (grid) {
+                         grid.option("dataSource", data);
+                     }
+
+                     setTimeout(() => {
+                         $loading.fadeOut(300, () => {
+                             $container.fadeIn(300);
+                         });
+                     }, 500);
+
+                     // Sembunyikan panel Rekap
+                     $wrapper.hide();
+                 },
+                 error: function () {
+                     Swal.fire({
+                         icon: 'error',
+                         title: '<b style="color:orange">Peringatan</b>',
+                         html: "❌ Gagal memuat data Series."
+                     });
+                     hideDetailSeries?.();
+                 }
+             });
+         }
+
+         function hideDetailSeries() {
+             $("#detailWrapperSeries").slideUp();
+         }
+
+         $(document).ready(function () {
+             $("#btnCloseDetail").on("click", hideDetail);
+             $("#btnCloseDetailSeries").on("click", hideDetailSeries);
+         });
+
+
+        // function onSeriesClick(jenisPajak, kategori, tahun) {
+        //      $.ajax({
+        //          url: '/ProfileOP/DetailOP',
+        //          type: 'GET',
+        //          data: {
+        //              jenisPajak: enumPajak,
+        //              kategori: kategori,
+        //              tahun: tahun
+        //          },
+        //          success: function (data) {
+        //              const grid = $("#SeriesGrid").dxDataGrid("instance");
+        //              grid.option("dataSource", data);
+
+        //              $("#detailWrapperSeries").show();
+        //              $("#detailWrapper").hide();
+        //          },
+        //          error: function (xhr) {
+        //              swal.fire({
+        //                      icon: 'error',
+        //                      title: '<b style="color:orange">Peringatan</b>',
+        //                      text: "❌ Gagal memuat data Series."
+        //                  })
+        //          }
+        //      });
+        //  }
+
+
+
+
+           function onDetailSeries(e) {
+
+               window.open(url, '_blank');
+           }
+
 
     </script>
     <script>
@@ -496,5 +497,457 @@
         // }
 
 
+    </script>
+
+    <script>
+        function ShowDetailRekapOp(container, options){
+            var $wrapper = $("<div>").appendTo(container);
+            var data = options.data;
+            var dataDetail = options.data.RekapDetail;
+            var dataOkupansiDetail = options.data.OkunpasiHotel;
+
+            console.log(data)
+            console.log(dataDetail)
+            // console.log(dataOkupansiDetail);
+            //datagrid Hotel
+            if(data.EnumPajak == 3){
+                var dataDetailHotelBintang = dataDetail.filter(item => item.KategoriId !== 17);
+                var dataDetailHotelNonBintang = dataDetail.filter(item => item.KategoriId == 17);
+                var dataDetailOkupansiBintang = dataOkupansiDetail.filter(item => item.KategoriId !== 17);
+                var dataDetailOkupansiNonBintang = dataOkupansiDetail.filter(item => item.KategoriId == 17);
+
+                 $("<h5>")
+                .text("JUMLAH OP PER KATEGORI")
+                .appendTo($wrapper);
+                $("<div>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailHotelBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "JmlOpAwal",
+                                caption: "OP AWAL",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpAwal',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpTutupPermanen",
+                                caption: "OP TUTUP",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpTutupPermanen',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpBaru",
+                                caption: "OP BARU",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpBaru',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpAkhir",
+                                caption: "OP AKHIR",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpAkhir',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+
+                        ],
+                        width: "100%"
+                    })
+
+
+                    $("<div class= 'mt-4'>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailHotelNonBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "JmlOpAwal",
+                                caption: "OP AWAL",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpAwal',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpTutupPermanen",
+                                caption: "OP TUTUP",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpTutupPermanen',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpBaru",
+                                caption: "OP BARU",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpBaru',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpAkhir",
+                                caption: "OP AKHIR",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpAkhir',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+
+                        ],
+                        width: "100%"
+                    })
+
+                     $("<h5 class= 'mt-4'>")
+                    .text("JUMLAH OP PER KAMAR DAN OKUPANSI")
+                    .appendTo($wrapper);
+                    //Okupansi hotel bintang
+                    $("<div>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailOkupansiBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "TotalKamar",
+                                caption: "Total Kamar",
+                            },
+                            {
+                                dataField: "AvgRate",
+                                caption: "Rate Okupansi",
+                            },
+                        ],
+                        width: "100%"
+                    })
+
+                    //Okupansi hotel non bintang
+                    $("<div class= 'mt-4'>")
+                    .appendTo($wrapper)
+                    .dxDataGrid({
+                        dataSource: dataDetailOkupansiNonBintang,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto" // atau "onClick"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 99999 },
+                        pager: { visible: false  },
+                        columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "TotalKamar",
+                                caption: "Total Kamar",
+                            },
+                            {
+                                dataField: "AvgRate",
+                                caption: "Rate Okupansi",
+                            },
+                        ],
+                        width: "100%"
+                    })
+
+
+            } else {
+                $("<div>")
+                .appendTo($wrapper)
+                .dxDataGrid({
+                    dataSource: dataDetail,
+                    showBorders: true,
+                    showColumnHeaders: true,
+                    showColumnLines: true,
+                    showRowLines: true,
+                    allowColumnResizing: true,
+                    allowColumnReordering: true,
+                    columnAutoWidth: true,
+                    sorting: { mode: "multiple" }, // Multiple column sorting
+                    filterRow: {
+                        visible: true,
+                        applyFilter: "auto" // atau "onClick"
+                    },
+                    headerFilter: { visible: true },
+                    paging: { pageSize: 99999 },
+                    pager: { visible: false  },
+                    columns: [
+                            { dataField: "KategoriNama", caption: "Kategori" },
+                            {
+                                dataField: "JmlOpAwal",
+                                caption: "OP AWAL",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpAwal',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpTutupPermanen",
+                                caption: "OP TUTUP",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpTutupPermanen',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpBaru",
+                                caption: "OP BARU",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpBaru',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+                            {
+                                dataField: "JmlOpAkhir",
+                                caption: "OP AKHIR",
+                                cellTemplate: function (container, options) {
+                                    $("<a>")
+                                        .text(options.value)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                'JmlOpAkhir',
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
+
+                        ],
+                    width: "100%"
+                })
+            }
+            //selain Hotel
+        }
     </script>
 }

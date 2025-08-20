@@ -6,6 +6,19 @@ namespace MonPDReborn.Models.AktivitasOP
     {
         public class Method
         {
+            public static List<ViewModel.TahunRow> GetTahunList()
+            {
+                var result = new List<ViewModel.TahunRow>();
+                var context = DBClass.GetContext();
+
+                result = context.DbPendapatanDaerahs
+                    .Select(x => new ViewModel.TahunRow { Tahun = Convert.ToInt32(x.TahunBuku) })
+                    .Distinct()
+                    .OrderByDescending(x => x.Tahun)
+                    .ToList();
+
+                return result;
+            }
             public static List<ViewModel.SudutPandangRekening.Akun> GetDataSudutPandangRekening(int tahunBuku)
             {
                 var result = new List<ViewModel.SudutPandangRekening.Akun>();
@@ -218,7 +231,6 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 var context = DBClass.GetContext();
 
-                // Ambil data & agregasi semua level yang dibutuhkan
                 var query = context.DbPendapatanDaerahs
                     .Where(x => x.TahunBuku == tahunBuku)
                     .GroupBy(x => new
@@ -229,8 +241,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.NamaObjek,
                         x.KodeOpd,
                         x.NamaOpd,
-                        x.KodeSubOpd,
-                        x.NamaSubOpd
+                        x.SubRincian,
+                        x.NamaSubRincian
                     })
                     .Select(x => new
                     {
@@ -240,14 +252,13 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.Key.NamaObjek,
                         x.Key.KodeOpd,
                         x.Key.NamaOpd,
-                        x.Key.KodeSubOpd,
-                        x.Key.NamaSubOpd,
+                        x.Key.SubRincian,
+                        x.Key.NamaSubRincian,
                         Target = x.Sum(y => y.Target),
                         Realisasi = x.Sum(y => y.Realisasi)
                     })
                     .ToList();
 
-                // Grouping level Kelompok
                 var groupByJenis = query
                     .GroupBy(x => new { x.Jenis, x.NamaJenis })
                     .Select(x => new
@@ -313,28 +324,28 @@ namespace MonPDReborn.Models.AktivitasOP
                             resOpd.Col.Persentase = opd.Target > 0 ? Math.Round((opd.Realisasi / opd.Target) * 100, 2) : 0;
 
                             // Grouping level Sub OPD
-                            var groupBySubOpd = query
+                            var groupBySubRincian = query
                                 .Where(x => x.Jenis == jenis.Jenis && x.Objek == objek.Objek && x.KodeOpd == opd.KodeOpd)
-                                .GroupBy(x => new { x.KodeSubOpd, x.NamaSubOpd })
+                                .GroupBy(x => new { x.SubRincian, x.NamaSubRincian })
                                 .Select(x => new
                                 {
-                                    x.Key.KodeSubOpd,
-                                    x.Key.NamaSubOpd,
+                                    x.Key.SubRincian,
+                                    x.Key.NamaSubRincian,
                                     Target = x.Sum(q => q.Target),
                                     Realisasi = x.Sum(q => q.Realisasi)
                                 })
                                 .ToList();
 
-                            foreach (var subopd in groupBySubOpd)
+                            foreach (var subrincian in groupBySubRincian)
                             {
-                                var resSubOpd = new ViewModel.SudutPandangRekeningJenisObjekOpd.SubOpd();
-                                resSubOpd.Col.Kode = subopd.KodeSubOpd;
-                                resSubOpd.Col.Nama = subopd.NamaSubOpd;
-                                resSubOpd.Col.Target = subopd.Target;
-                                resSubOpd.Col.Realisasi = subopd.Realisasi;
-                                resSubOpd.Col.Persentase = subopd.Target > 0 ? Math.Round((subopd.Realisasi / subopd.Target) * 100, 2) : 0;
+                                var resSubRincian = new ViewModel.SudutPandangRekeningJenisObjekOpd.SubRincian();
+                                resSubRincian.Col.Kode = subrincian.SubRincian;
+                                resSubRincian.Col.Nama = subrincian.NamaSubRincian;
+                                resSubRincian.Col.Target = subrincian.Target;
+                                resSubRincian.Col.Realisasi = subrincian.Realisasi;
+                                resSubRincian.Col.Persentase = subrincian.Target > 0 ? Math.Round((subrincian.Realisasi / subrincian.Target) * 100, 2) : 0;
 
-                                resOpd.RekSubOpds.Add(resSubOpd);
+                                resOpd.RekSubRincians.Add(resSubRincian);
                             }
 
                             resObjek.RekOpds.Add(resOpd);
@@ -413,12 +424,16 @@ namespace MonPDReborn.Models.AktivitasOP
             public class Opd
             {
                 public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<SubOpd> RekSubOpds { get; set; } = new List<SubOpd>();
+                public List<SubRincian> RekSubRincians { get; set; } = new List<SubRincian>();
             }
-            public class SubOpd
+            public class SubRincian
             {
                 public FormatColumn.ColumnA Col { get; set; } = new();
             }
+        }
+        public class TahunRow
+        {
+            public int Tahun { get; set; }
         }
     }
 

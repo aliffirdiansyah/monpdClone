@@ -258,6 +258,24 @@
             }
         }
 
+        function getKategoriText(kategori) {
+            switch (kategori) {
+                case 1: return "Belum Bayar";
+                case 2: return "Belum Perpanjangan";
+                case 3: return "Belum Bayar";
+                default: return "Kategori Tidak Diketahui";
+            }
+        }
+
+        function getJenisText(jenisId) {
+            switch (jenisId) {
+                case 1: return "Insidentil";
+                case 2: return "Permanen";
+                case 3: return "Terbatas";
+                default: return "Jenis Tidak Diketahui";
+            }
+        }
+
         function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
             const jumlah = cellInfo.value ?? 0;
             const tahun = cellInfo.data.Tahun;
@@ -265,14 +283,22 @@
             const jenis = cellInfo.data.Jenis;
 
             const namaKolom = cellInfo.column.dataField;
-            const kategori = getKategoriFromColumn(namaKolom); // Mapping dari nama kolom ke kategori
+            const kategori = getKategoriFromColumn(namaKolom); 
+            const kategoriText = getKategoriText(kategori);
+            const jenisText = getJenisText(jenis);   
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
                 .attr('href', 'javascript:void(0);')
                 .attr('title', 'Lihat Detail')
                 .text(jumlah.toLocaleString('id-ID'))
-                .on('click', () => loadDetailJT(tahun, bulan, jenis, kategori));
+                .on('click', () => {
+                    // update span kategori & jenis
+                    $("#kategoriSpan").text(kategoriText);
+                    $("#jenisSpan").text(jenisText);
+
+                    loadDetailJT(tahun, bulan, jenis, kategori);
+                });
 
             const $wrapper = $('<div>')
                 .css({
@@ -291,16 +317,22 @@
             const bulan = cellInfo.data.Bulan;
             const jenis = cellInfo.data.Jenis;
 
-            const kategori = 3; // langsung set ke 3
-            // const namaKolom = cellInfo.column.dataField;
-            // const kategori = getKategoriFromColumn(namaKolom);
+            const kategori = 3;
+            const kategoriText = getKategoriText(kategori);
+            const jenisText = getJenisText(jenis);
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
                 .attr('href', 'javascript:void(0);')
                 .attr('title', 'Lihat Detail')
                 .text(jumlah)
-                .on('click', () => loadDetailJT(tahun, bulan, jenis, kategori));
+                .on('click', () => {
+                    // update span kategori & jenis
+                    $("#kategoriSpan").text(kategoriText);
+                    $("#jenisSpan").text(jenisText);
+
+                    loadDetailJT(tahun, bulan, jenis, kategori);
+                });
 
             const $wrapper = $('<div>')
                 .css({
@@ -319,7 +351,72 @@
             window.open(url, '_blank');
         }
 
-        
+        function getNamaKategoriFromColumn(columnName) {
+            switch (columnName) {
+                case 'JmlBongkarJT': return 1;
+                case 'JmlBongkarPanjang': return 2;
+                case 'JmlBongkarKB': return 3;
+                default: return 0; // fallback
+            }
+        }
+
+        function kategoriText(kategori) {
+            switch (kategori) {
+                case 1: return "Belum Bayar";
+                case 2: return "Belum Perpanjangan";
+                case 3: return "Belum Bayar";
+                default: return "Kategori Tidak Diketahui";
+            }
+        }
+
+        function jenisText(jenisId) {
+            switch (jenisId) {
+                case 1: return "Insidentil";
+                case 2: return "Permanen";
+                case 3: return "Terbatas";
+                default: return "Jenis Tidak Diketahui";
+            }
+        }
+
+        function BongkarCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+
+            const namaKolom = cellInfo.column.dataField;
+            const kategori = getNamaKategoriFromColumn(namaKolom);
+            const kategoriLabel = kategoriText(kategori);
+            const jenisLabel = jenisText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                
+                $("#kategoriSpan").text(kategoriLabel);
+                $("#jenisSpan").text(jenisLabel);
+
+                loadDetailBongkar(tahun, bulan, jenis, kategori);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function loadDetailBongkar(tahun, bulan, jenis, kategori) {
+            const url = `/ReklameSummary/DetailBongkar?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+            window.open(url, '_blank');
+        }
 
     </script>
 }

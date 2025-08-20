@@ -47,12 +47,12 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
-        public IActionResult Show(int type)
+        public IActionResult Show(int type, int tahun, int seq)
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.AktivitasOP.SeriesPendapatanDaerahVM.Show(type);
+                var model = new Models.AktivitasOP.SeriesPendapatanDaerahVM.Show(type, tahun, seq);
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -60,13 +60,13 @@ namespace MonPDReborn.Controllers.Aktivitas
                 response.Status = StatusEnum.Error;
                 response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
                 return Json(response);
-    }
+            }
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
-}
+            }
         }
     }
 }

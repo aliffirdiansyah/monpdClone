@@ -7,7 +7,7 @@
         <div class="d-flex align-items-center">
             <i class=" mdi mdi-file-document-outline" style="font-size: 20px; line-height: 1;"></i>
             <h6 class="mb-0 fs-16 fw-bold">
-                @Model.DataDetailList.First().JenisPajak
+                @Model.DataDetailList.First().JenisPajak Tahun @Model.DataDetailList.First().Tahun
             </h6>
         </div>
     </div>
@@ -42,20 +42,42 @@
     .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
     .OnExporting("exportGrid")
     .Columns(columns => {
-        columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Fixed(true);
         columns.AddFor(m => m.FormattedNOP).Caption("NOP").Fixed(true);
         columns.AddFor(m => m.NamaOP).Caption("Nama OP");
         columns.AddFor(m => m.Alamat).Caption("Alamat");
         columns.AddFor(m => m.UPTB).Caption("Wilayah");
         columns.AddFor(m => m.NoSP).Caption("No SP");
         columns.AddFor(m => m.TglST).Caption("Tgl ST").DataType(GridColumnDataType.Date).Format("dd/MM/yyyy");
-        columns.AddFor(m => m.Tahun).Caption("Tahun");
-        columns.AddFor(m => m.JumlahKB).Caption("Jumlah KB").Format(f => f.Type(Format.Currency).Precision(0).Currency("IDR")).Alignment(HorizontalAlignment.Right);
+        columns.AddFor(m => m.PokokBayar).Caption("Pokok").Format("#,##0");
+        columns.AddFor(m => m.Sanksi).Caption("Sanksi").Format("#,##0");
+        columns.AddFor(m => m.JumlahKB).Caption("Jumlah KB").Format("#,##0");
         columns.AddFor(m => m.Keterangan).Caption("Keterangan");
         columns.AddFor(m => m.LHP).Caption("LHP");
         columns.AddFor(m => m.TglLHPDisplay).Caption("Tgl LHP");
         columns.AddFor(m => m.TglBayarDisplay).Caption("Tgl Bayar");
         columns.AddFor(m => m.Tim).Caption("Tim");
+    })
+    .Summary(s => {
+        s.TotalItems(items => {
+            items.AddFor(x => x.FormattedNOP)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total");
+
+            items.AddFor(x => x.PokokBayar)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Rp. {0}");
+
+            items.AddFor(x => x.JumlahKB)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Rp. {0}");
+
+            items.AddFor(x => x.Sanksi)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Rp. {0}");
+        });
     })
 )
 </div>

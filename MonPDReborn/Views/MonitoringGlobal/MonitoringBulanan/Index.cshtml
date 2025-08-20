@@ -117,7 +117,7 @@
                 .addClass('value-link text-decoration-none')
                 .attr('href', 'javascript:void(0);')
                 .attr('title', `Lihat Monitoring Harian ${cellInfo.data.BulanNama}`)
-                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }))
                 .on('click', () => fnMonitoringHarian(jenisPajak, tahun, bulan));
 
             $(cellElement).append($link);

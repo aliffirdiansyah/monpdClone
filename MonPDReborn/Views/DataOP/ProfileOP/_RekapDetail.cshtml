@@ -19,9 +19,8 @@
         .ShowPageSizeSelector(true)
         .AllowedPageSizes(new[] { 5, 10, 20 })
         .ShowInfo(true)
-    )
-    .OnContentReady("function(e) { e.component.filter(['KategoriGroup', '=', 'Hotel Berbintang']); }")
-    .Columns(columns =>
+     )
+     .Columns(columns =>
     {
 
         columns.AddFor(m => m.Kategori).Caption("Kategori").CssClass("fw-bold");

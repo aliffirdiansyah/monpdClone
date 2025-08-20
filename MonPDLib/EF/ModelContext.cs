@@ -954,7 +954,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbOpReklame>(entity =>
         {
-            entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_OP_REKLAME_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.Seq, e.TahunBuku }).HasName("DB_OP_REKLAME_PK");
 
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();

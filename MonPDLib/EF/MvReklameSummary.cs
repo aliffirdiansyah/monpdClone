@@ -109,6 +109,11 @@ public partial class MvReklameSummary
     [Unicode(false)]
     public string? NamaJalan { get; set; }
 
+    [Column("LETAK_REKLAME")]
+    [StringLength(26)]
+    [Unicode(false)]
+    public string? LetakReklame { get; set; }
+
     [Column("NO_FORMULIR_A")]
     [StringLength(20)]
     [Unicode(false)]
@@ -216,6 +221,11 @@ public partial class MvReklameSummary
     [StringLength(100)]
     [Unicode(false)]
     public string? NamaJalanA { get; set; }
+
+    [Column("LETAK_REKLAME_A")]
+    [StringLength(26)]
+    [Unicode(false)]
+    public string? LetakReklameA { get; set; }
 
     [Column("IS_PERPANJANGAN", TypeName = "NUMBER")]
     public decimal? IsPerpanjangan { get; set; }

@@ -75,6 +75,22 @@
         word-break: break-word;
     }
 
+    .accordion-button.bg-elegant-dark {
+        background-color: #343a40;
+        color: #fff;
+    }
+
+        /* Warna gelap tetap saat dibuka */
+        .accordion-button.bg-elegant-dark:not(.collapsed) {
+            background-color: #343a40;
+            color: #fff;
+            box-shadow: none;
+        }
+
+        /* Hilangkan border biru saat focus */
+        .accordion-button.bg-elegant-dark:focus {
+            box-shadow: none;
+        }
 </style>
 @if (Model != null)
 {
@@ -206,14 +222,14 @@
                                         Distribusi Transaksi Penjualan
                                     </h4>
                                     <div class="d-flex p-0 py-0">
-                                        <p class="fs-14 text-muted flex-grow-1">Hari Kerja (11 hari/bulan)</p>
+                                        <p class="fs-14 text-muted flex-grow-1">Hari Kerja (22 hari/bulan)</p>
                                         <div class="flex-shrink-0">
                                             <p class="fs-14 fw-semibold">@Model.RataRataTerjualWeekdaysCatering.ToString("N0") Terjual</p>
                                         </div>
                                     </div>
                                     @{
-                                        decimal terjualWeekdays = (Model.RataRataTerjualWeekdaysCatering * 11);
-                                        decimal terjualWeekend = (Model.RataRataTerjualWeekendCatering * 4);
+                                        decimal terjualWeekdays = (Model.RataRataTerjualWeekdaysCatering * 22);
+                                        decimal terjualWeekend = (Model.RataRataTerjualWeekendCatering * 8);
                                         decimal terjualBulan = terjualWeekdays + terjualWeekend;
 
                                         var persenTerjualWeekdaysCatering = (terjualBulan == 0 ? 0 :
@@ -263,20 +279,20 @@
                                         Total Terjual Hari Kerja per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        Rata-rata Terjual Hari Kerja x 11 Hari
+                                        Rata-rata Terjual Hari Kerja x 22 Hari
                                     </p>
                                     <p class="fs-14 text-muted mb-2">
-                                        @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 11 =
+                                        @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22 =
                                         @terjualWeekdays.ToString("N0") Terjual
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-1">
                                         Total Terjual Akhir Pekan per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted font-monospace mb-1">
-                                        Rata-rata Terjual Akhir Pekan x 4 Hari
+                                        Rata-rata Terjual Akhir Pekan x 8 Hari
                                     </p>
                                     <p class="fs-14 text-muted mb-2">
-                                        @Model.RataRataTerjualWeekendCatering.ToString("N0") x 4 =
+                                        @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8 =
                                         @terjualWeekend.ToString("N0") Terjual
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-1">
@@ -397,11 +413,11 @@
                     </div>
                     <div class="info-row">
                         <p class="label">Hari Kerja per Bulan</p>
-                        <p class="value">11 Hari</p>
+                        <p class="value">22 Hari</p>
                     </div>
                     <div class="info-row">
                         <p class="label">Hari Kerja per Tahun</p>
-                        <p class="value">4 Hari</p>
+                        <p class="value">8 Hari</p>
                     </div>
                     <div class="info-row">
                         <p class="label">Tarif Pajak</p>
@@ -459,18 +475,14 @@
 
             <div class="card">
                 <div class="accordion" id="accordionPotensiPajak">
-
-                    <!-- Accordion Tunggal -->
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingPotensi">
-                            <button class="accordion-button collapsed bg-elegant-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePotensi" aria-expanded="false" aria-controls="collapsePotensi">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button bg-elegant-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 Rumus Lengkap Perhitungan Potensi Pajak
                             </button>
                         </h2>
-                        <div id="collapsePotensi" class="accordion-collapse collapse" aria-labelledby="headingPotensi" data-bs-parent="#accordionPotensiPajak">
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-
-                                <!-- Perhitungan Omzet Tenant/Catering -->
                                 <h4 class="fs-16 fw-semibold mb-3">Perhitungan Omzet Tenant/Catering</h4>
 
                                 <p class="fs-14 text-muted font-monospace mb-1">
@@ -488,11 +500,11 @@
                                 </p>
 
                                 <p class="fs-14 text-muted font-monospace mb-1">
-                                    Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 11) + (Rata-Rata Bill/Orang x Terjual Weekend x 4)
+                                    Omzet/Bulan = (Rata-Rata Bill/Orang x Terjual Weekdays x 22) + (Rata-Rata Bill/Orang x Terjual Weekend x 8)
                                 </p>
                                 <p class="fs-14 mb-3 fw-bold text-dark">
-                                    = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 11) +
-                                    (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 4) =
+                                    = (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekdaysCatering.ToString("N0") x 22) +
+                                    (Rp. @Model.RataRataBillPerOrang.ToString("N0") x @Model.RataRataTerjualWeekendCatering.ToString("N0") x 8) =
                                     Rp. @Model.OmzetPerBulanCatering.ToString("N0")
                                 </p>
 
@@ -514,16 +526,11 @@
                                 <p class="fs-14 fw-bold text-dark">
                                     = Rp. @Model.PotensiPajakPerBulanCatering.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahunCatering.ToString("N0")
                                 </p>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
-
-
         </div>
     </div>
 }

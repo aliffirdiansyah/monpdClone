@@ -28,6 +28,7 @@
             .ShowColumnHeaders(true)
             .ColumnAutoWidth(true)
             .RowAlternationEnabled(true)
+            .Sorting(s => s.Mode(GridSortingMode.None))
             @* .Paging(p => p.PageSize(10))
             .Pager(p => p
             .ShowPageSizeSelector(true)
@@ -42,19 +43,19 @@
                 {
                     subColumns.AddFor(x => x.Target1).Caption("Target").Format("#,##0");
                     subColumns.AddFor(x => x.Realisasi1).Caption("Realisasi").Format("#,##0");
-                    subColumns.AddFor(x => x.Capaian1).Caption("Capaian").Format("##0%");
+                    subColumns.AddFor(x => x.Capaian1).Caption("Capaian (%)").Format("#,##0.00");
                 });
                 columns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                 {
                     subColumns.AddFor(x => x.Target2).Caption("Target").Format("#,##0");
                     subColumns.AddFor(x => x.Realisasi2).Caption("Realisasi").Format("#,##0");
-                    subColumns.AddFor(x => x.Capaian2).Caption("Capaian").Format("##0%");
+                    subColumns.AddFor(x => x.Capaian2).Caption("Capaian (%)").Format("#,##0.00");
                 });
                 columns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                 {
                     subColumns.AddFor(x => x.Target3).Caption("Target").Format("#,##0");
                     subColumns.AddFor(x => x.Realisasi3).Caption("Realisasi").Format("#,##0");
-                    subColumns.AddFor(x => x.Capaian3).Caption("Capaian").Format("##0%");
+                    subColumns.AddFor(x => x.Capaian3).Caption("Capaian (%)").Format("#,##0.00");
                 });
                 columns.Add().Caption("POTENSI").Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                 {
@@ -66,6 +67,7 @@
                 });
                 
             })
+            .OnContentReady("function(e) { hitungPersentaseDetail(e); }")
             .Summary(summary =>
             {
                 summary.TotalItems(items =>
@@ -86,7 +88,7 @@
 
                     items.AddFor(x => x.Capaian1)
                 .SummaryType(SummaryType.Avg)
-                .ValueFormat("#,#0%").DisplayFormat("{0}");
+                .ValueFormat("#,##0.00").DisplayFormat("{0}%");
 
                     items.AddFor(x => x.Target2)
                 .SummaryType(SummaryType.Sum)
@@ -99,7 +101,7 @@
                 .DisplayFormat("{0}");
                     items.AddFor(x => x.Capaian2)
                 .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
-                .ValueFormat("#,#0%").DisplayFormat("{0}");
+                .ValueFormat("#,##0.00").DisplayFormat("{0}%");
 
                     items.AddFor(x => x.Target3)
                 .SummaryType(SummaryType.Sum)
@@ -113,7 +115,7 @@
 
                     items.AddFor(x => x.Capaian3)
                 .SummaryType(SummaryType.Avg)   // atau Sum jika memang mau jumlah total
-                .ValueFormat("#,#0%").DisplayFormat("{0}");
+                .ValueFormat("#,##0.00").DisplayFormat("{0}%");
 
                     items.AddFor(x => x.TotalPotensi1)
                 .SummaryType(SummaryType.Sum)
@@ -131,6 +133,11 @@
                 .DisplayFormat("{0}");
                 
                     items.AddFor(x => x.TotalPotensi4)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+                
+                    items.AddFor(x => x.TotalPotensi5)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");

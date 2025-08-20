@@ -80,108 +80,142 @@ namespace MonPDReborn.Models.AktivitasOP
                 var ret = new List<DataDetailPemeriksaan>();
                 var context = DBClass.GetContext();
 
+                // Ambil data pemeriksaan sesuai filter pajak & tahun
                 var pemeriksaans = context.TPemeriksaans
                     .Where(x => x.PajakId == jenisPajak && x.TahunPajak == tahun)
-                    .ToList();
-                if (jenisPajak == 1)
+                    .ToList(); // sudah difilter, baru di-list
+
+                if (jenisPajak == 1) // Mamin / Restoran
                 {
                     var dbMamin = context.DbOpRestos
+                        .Where(o => o.Nop != null) // hindari null key
                         .GroupBy(x => x.Nop)
-                        .ToDictionary(g => g.Key, g => g.First());
+                        .Select(g => g.First())
+                        .ToDictionary(g => g.Nop, g => g);
 
-                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    ret = pemeriksaans.Select(x =>
                     {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        NOP = x.Nop ?? "-",
-                        NamaOP = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].NamaOp ?? "-" : "-",
-                        Alamat = dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = "SURABAYA " + (dbMamin.ContainsKey(x.Nop) ? dbMamin[x.Nop].WilayahPajak ?? "-" : "-"),
-                        NoSP = x.NoSp ?? "-",
-                        TglST = x.TglSp,
-                        Tahun = x.TahunPajak,
-                        JumlahKB = x.JumlahKb ?? 0,
-                        Keterangan = x.Ket ?? "-",
-                        LHP = x.Lhp ??  "-",
-                        TglLHP = x.TglLhp,
-                        TglBayar = x.TglByr,
-                        Tim = x.Petugas ?? "-"
+                        dbMamin.TryGetValue(x.Nop, out var mamin);
+                        return new DataDetailPemeriksaan
+                        {
+                            JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                            NOP = x.Nop ?? "-",
+                            NamaOP = mamin != null ? (mamin.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
+                            Alamat = mamin?.AlamatOp ?? "-",
+                            UPTB = "SURABAYA " + (mamin?.WilayahPajak ?? "-"),
+                            NoSP = x.NoSp ?? "-",
+                            TglST = x.TglSp,
+                            Tahun = x.TahunPajak,
+                            JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
+                            Keterangan = x.Ket ?? "-",
+                            LHP = x.Lhp ?? "-",
+                            TglLHP = x.TglLhp,
+                            TglBayar = x.TglByr,
+                            Tim = x.Petugas ?? "-"
+                        };
                     }).ToList();
                 }
                 else if (jenisPajak == 3) // Hotel
                 {
-                    // ✅ Hindari duplikat key NOP
                     var dbHotel = context.DbOpHotels
+                        .Where(o => o.Nop != null)
                         .GroupBy(x => x.Nop)
-                        .ToDictionary(g => g.Key, g => g.First());
+                        .Select(g => g.First())
+                        .ToDictionary(g => g.Nop, g => g);
 
-                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    ret = pemeriksaans.Select(x =>
                     {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        NOP = x.Nop ?? "-",
-                        NamaOP = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].NamaOp ?? "-" : "-",
-                        Alamat = dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = "SURABAYA " + (dbHotel.ContainsKey(x.Nop) ? dbHotel[x.Nop].WilayahPajak ?? "-" : "-"),
-                        NoSP = x.NoSp ?? "-",
-                        TglST = x.TglSp,
-                        Tahun = x.TahunPajak,
-                        JumlahKB = x.JumlahKb ?? 0,
-                        Keterangan = x.Ket ?? "-",
-                        LHP = x.Lhp ?? "-",
-                        TglLHP = x.TglLhp,
-                        TglBayar = x.TglByr,
-                        Tim = x.Petugas ?? "-"
+                        dbHotel.TryGetValue(x.Nop, out var hotel);
+                        return new DataDetailPemeriksaan
+                        {
+                            JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                            NOP = x.Nop ?? "-",
+                            NamaOP = hotel != null ? (hotel.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
+                            Alamat = hotel?.AlamatOp ?? "-",
+                            UPTB = "SURABAYA " + (hotel?.WilayahPajak ?? "-"),
+                            NoSP = x.NoSp ?? "-",
+                            TglST = x.TglSp,
+                            Tahun = x.TahunPajak,
+                            JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
+                            Keterangan = x.Ket ?? "-",
+                            LHP = x.Lhp ?? "-",
+                            TglLHP = x.TglLhp,
+                            TglBayar = x.TglByr,
+                            Tim = x.Petugas ?? "-"
+                        };
                     }).ToList();
                 }
-                else if (jenisPajak == 4)
+                else if (jenisPajak == 4) // Parkir
                 {
                     var dbParkir = context.DbOpParkirs
+                        .Where(o => o.Nop != null)
                         .GroupBy(x => x.Nop)
-                        .ToDictionary(g => g.Key, g => g.First());
+                        .Select(g => g.First())
+                        .ToDictionary(g => g.Nop, g => g);
 
-                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    ret = pemeriksaans.Select(x =>
                     {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        NOP = x.Nop ?? "-",
-                        NamaOP = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].NamaOp ?? "-" : "-",
-                        Alamat = dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = "SURABAYA " + (dbParkir.ContainsKey(x.Nop) ? dbParkir[x.Nop].WilayahPajak ?? "-" : "-"),
-                        NoSP = x.NoSp ?? "-",
-                        TglST = x.TglSp,
-                        Tahun = x.TahunPajak,
-                        JumlahKB = x.JumlahKb ?? 0,
-                        Keterangan = x.Ket ?? "-",
-                        LHP = x.Lhp ?? "-",
-                        TglLHP = x.TglLhp,
-                        TglBayar = x.TglByr,
-                        Tim = x.Petugas ?? "-"
+                        dbParkir.TryGetValue(x.Nop, out var parkir);
+                        return new DataDetailPemeriksaan
+                        {
+                            JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                            NOP = x.Nop ?? "-",
+                            NamaOP = parkir != null ? (parkir.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
+                            Alamat = parkir?.AlamatOp ?? "-",
+                            UPTB = "SURABAYA " + (parkir?.WilayahPajak ?? "-"),
+                            NoSP = x.NoSp ?? "-",
+                            TglST = x.TglSp,
+                            Tahun = x.TahunPajak,
+                            JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
+                            Keterangan = x.Ket ?? "-",
+                            LHP = x.Lhp ?? "-",
+                            TglLHP = x.TglLhp,
+                            TglBayar = x.TglByr,
+                            Tim = x.Petugas ?? "-"
+                        };
                     }).ToList();
                 }
-                else if (jenisPajak == 5)
+                else if (jenisPajak == 5) // Hiburan
                 {
                     var dbHiburan = context.DbOpHiburans
+                        .Where(o => o.Nop != null)
                         .GroupBy(x => x.Nop)
-                        .ToDictionary(g => g.Key, g => g.First());
+                        .Select(g => g.First())
+                        .ToDictionary(g => g.Nop, g => g);
 
-                    ret = pemeriksaans.Select(x => new DataDetailPemeriksaan
+                    ret = pemeriksaans.Select(x =>
                     {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        NOP = x.Nop ?? "-",
-                        NamaOP = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].NamaOp ?? "-" : "-",
-                        Alamat = dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].AlamatOp ?? "-" : "-",
-                        UPTB = "SURABAYA " + (dbHiburan.ContainsKey(x.Nop) ? dbHiburan[x.Nop].WilayahPajak ?? "-" : "-"),
-                        NoSP = x.NoSp ?? "-",
-                        TglST = x.TglSp,
-                        Tahun = x.TahunPajak,
-                        JumlahKB = x.JumlahKb ?? 0,
-                        Keterangan = x.Ket ?? "-",
-                        LHP = x.Lhp ?? "-",
-                        TglLHP = x.TglLhp,
-                        TglBayar = x.TglByr,
-                        Tim = x.Petugas ?? "-"
+                        dbHiburan.TryGetValue(x.Nop, out var hiburan);
+                        return new DataDetailPemeriksaan
+                        {
+                            JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                            NOP = x.Nop ?? "-",
+                            NamaOP = hiburan != null ? (hiburan.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
+                            Alamat = hiburan?.AlamatOp ?? "-",
+                            UPTB = "SURABAYA " + (hiburan?.WilayahPajak ?? "-"),
+                            NoSP = x.NoSp ?? "-",
+                            TglST = x.TglSp,
+                            Tahun = x.TahunPajak,
+                            JumlahKB = x.JumlahKb ?? 0,
+                            PokokBayar = x.Pokok,
+                            Sanksi = x.Denda,
+                            Keterangan = x.Ket ?? "-",
+                            LHP = x.Lhp ?? "-",
+                            TglLHP = x.TglLhp,
+                            TglBayar = x.TglByr,
+                            Tim = x.Petugas ?? "-"
+                        };
                     }).ToList();
                 }
-                    
-                    return ret;
+
+                return ret;
+
             }
 
             public static Dashboard GetDashboardAllPajak()
@@ -240,6 +274,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public string NoSP { get; set; } = null!;
             public DateTime TglST { get; set; }
             public int Tahun { get; set; }
+            public decimal PokokBayar { get; set; }
+            public decimal Sanksi { get; set; }
             public decimal JumlahKB { get; set; }
             public string Keterangan { get; set; } = null!;
             public string LHP { get; set; } = null!;
