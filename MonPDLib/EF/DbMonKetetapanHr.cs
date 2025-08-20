@@ -17,7 +17,7 @@ public partial class DbMonKetetapanHr
 
     [Key]
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(50)]
     [Unicode(false)]
     public string Nop { get; set; } = null!;
 

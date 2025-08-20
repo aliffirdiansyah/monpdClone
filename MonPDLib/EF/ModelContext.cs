@@ -786,7 +786,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonReklame>(entity =>
         {
-            entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_MON_REKLAME_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.Seq, e.TahunBuku }).HasName("DB_MON_REKLAME_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KelasJalan).IsFixedLength();
