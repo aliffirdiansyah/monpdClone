@@ -178,42 +178,42 @@ namespace MonPDReborn.Models.DataOP
                      .Where(x => x.TahunBuku == DateTime.Now.Year && x.PajakNama != "MAMIN" &&
                                  (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > DateTime.Now.Year))
                      .GroupBy(x => new { x.Nop })
-                     .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp) })
+                     .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
                      .ToList();
 
                 var dataPpj3 = context.DbOpListriks
                     .Where(x => x.TahunBuku == DateTime.Now.Year &&
                                 (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > DateTime.Now.Year))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp) })
+                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
                     .ToList();
 
                 var dataHotel3 = context.DbOpHotels
                     .Where(x => x.TahunBuku == DateTime.Now.Year &&
                                 (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > DateTime.Now.Year))
                     .GroupBy(x => new { x.Nop })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp) })
+                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
                     .ToList();
 
                 var dataParkir3 = context.DbOpParkirs
                     .Where(x => x.TahunBuku == DateTime.Now.Year &&
                                 (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > DateTime.Now.Year))
                     .GroupBy(x => new { x.Nop })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp) })
+                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
                     .ToList();
 
                 var dataHiburan3 = context.DbOpHiburans
                     .Where(x => x.TahunBuku == DateTime.Now.Year &&
                                 (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > DateTime.Now.Year))
                     .GroupBy(x => new { x.Nop })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp) })
+                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
                     .ToList();
 
                 var dataAbt3 = context.DbOpAbts
                     .Where(x => x.TahunBuku == DateTime.Now.Year &&
                                 (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > DateTime.Now.Year))
                     .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp) })
+                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
                     .ToList();
                 #endregion
 
@@ -399,7 +399,7 @@ namespace MonPDReborn.Models.DataOP
                             HTMWeekend = x.HtmWe ?? 0,
                             TurnoverWeekdays = x.ToWd ?? 0,
                             TurnoverWeekend = x.ToWe ?? 0,
-                            TarifPajak = 0.1m
+                            TarifPajak = op?.KategoriId == 44 ? 0.5m : op?.KategoriId == 41 ? 0.5m : op?.KategoriId == 48 ? 0.5m : op?.KategoriId == 45 ? 0.4m : 0.1m
                         };
                     })
                     .ToList();
@@ -1010,7 +1010,7 @@ namespace MonPDReborn.Models.DataOP
                             .Distinct()
                             .ToList();
 
-                        foreach (var item in kategoriList.Where(x => x.Id != 0).ToList())
+                        foreach (var item in kategoriList.Where(x => x.Id != 0 && x.Id != 64 && x.Id != 54).ToList())
                         {
 
                             var re = new DetailPotensi();
@@ -1070,7 +1070,7 @@ namespace MonPDReborn.Models.DataOP
                                         HTMWeekend = x.HtmWe ?? 0,
                                         TurnoverWeekdays = x.ToWd ?? 0,
                                         TurnoverWeekend = x.ToWe ?? 0,
-                                        TarifPajak = 0.1m
+                                        TarifPajak = op?.KategoriId == 44 ? 0.5m : op?.KategoriId == 41 ? 0.5m : op?.KategoriId == 48 ? 0.5m : op?.KategoriId == 45 ? 0.4m : 0.1m
                                     };
                                 })
                                 .ToList();
@@ -1653,7 +1653,7 @@ namespace MonPDReborn.Models.DataOP
                                         HTMWeekend = x.HtmWe ?? 0,
                                         TurnoverWeekdays = x.ToWd ?? 0,
                                         TurnoverWeekend = x.ToWe ?? 0,
-                                        TarifPajak = 0.1m
+                                        TarifPajak = op?.KategoriId == 44 ? 0.5m : op?.KategoriId == 41 ? 0.5m : op?.KategoriId == 48 ? 0.5m : op?.KategoriId == 45 ? 0.4m : 0.1m
                                     };
                                 })
                                 .ToList();
@@ -2006,7 +2006,7 @@ namespace MonPDReborn.Models.DataOP
                         HTMWeekend = x.HtmWe ?? 0,
                         TurnoverWeekdays = x.ToWd ?? 0,
                         TurnoverWeekend = x.ToWe ?? 0,
-                        TarifPajak = hiburan.KategoriId == 44 ? 0.5m : hiburan.KategoriId == 45 ? 0.4m : 0.1m
+                        TarifPajak = hiburan.KategoriId == 44 ? 0.5m : hiburan.KategoriId == 41 ? 0.5m : hiburan.KategoriId == 48 ? 0.5m : hiburan.KategoriId == 45 ? 0.4m : 0.1m
                     })
                     .FirstOrDefault();
                 return ret;
@@ -2637,7 +2637,7 @@ namespace MonPDReborn.Models.DataOP
             public decimal JumlahPengunjungWeekendLainnya => Math.Ceiling(Kapasitas * TurnoverWeekend);
             public decimal JumlahPengunjungPerBulanLainnya =>
                 (JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8);
-            public decimal RataRataPengunjung =>
+            public decimal RataRataPengunjungLainnya =>
                 ((JumlahPengunjungWeekdaysLainnya * 22) + (JumlahPengunjungWeekendLainnya * 8)) / 12;
             public decimal OmzetPerBulanLainnya =>
                 (HTMWeekdays * Math.Ceiling(JumlahPengunjungWeekdaysLainnya) * 22) +
@@ -2646,6 +2646,21 @@ namespace MonPDReborn.Models.DataOP
             public decimal OmzetWeekendLainnya => HTMWeekend * JumlahPengunjungWeekendLainnya * 8;
             public decimal PotensiPajakPerBulanLainnya => OmzetPerBulanLainnya * TarifPajak;
             public decimal PotensiPajakPerTahunLainnya => PotensiPajakPerBulanLainnya * BulanSisa;
+            
+            // ========== Perhitungan Kategori Lainnya Bar ==========
+            public decimal JumlahPengunjungWeekdaysLainnyaBar => Math.Ceiling(Kapasitas * TurnoverWeekdays);
+            public decimal JumlahPengunjungWeekendLainnyaBar => Math.Ceiling(Kapasitas * TurnoverWeekend);
+            public decimal JumlahPengunjungPerBulanLainnyaBar =>
+                (JumlahPengunjungWeekdaysLainnyaBar * 22) + (JumlahPengunjungWeekendLainnyaBar * 8);
+            public decimal RataRataPengunjungLainnyaBar =>
+                ((JumlahPengunjungWeekdaysLainnyaBar * 22) + (JumlahPengunjungWeekendLainnyaBar * 8)) / 12;
+            public decimal OmzetPerBulanLainnyaBar =>
+                (HTMWeekdays * Math.Ceiling(JumlahPengunjungWeekdaysLainnyaBar) * 22) +
+                (HTMWeekend * Math.Ceiling(JumlahPengunjungWeekendLainnyaBar) * 8);
+            public decimal OmzetWeekdaysLainnyaBar => HTMWeekdays * JumlahPengunjungWeekdaysLainnyaBar * 22;
+            public decimal OmzetWeekendLainnyaBar => HTMWeekend * JumlahPengunjungWeekendLainnyaBar * 8;
+            public decimal PotensiPajakPerBulanLainnyaBar => OmzetPerBulanLainnyaBar * TarifPajak * 0.1m;
+            public decimal PotensiPajakPerTahunLainnyaBar => PotensiPajakPerBulanLainnyaBar * BulanSisa;
 
             // ========== Perhitungan Kategori Bioskop ==========
             public int KapasitasBioskop => JumlahStudio * KapasitasStudio * 4;
