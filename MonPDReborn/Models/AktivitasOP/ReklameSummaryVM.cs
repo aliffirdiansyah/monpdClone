@@ -254,27 +254,18 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 using var context = DBClass.GetContext();
 
-                // ======================
-                // 1. Preload Upaya (jadi Dictionary)
-                // ======================
                 var upayaGrouped = context.DbMonReklameUpayas
                     .Where(x => !string.IsNullOrWhiteSpace(x.NoFormulir))
                     .GroupBy(x => x.NoFormulir.Trim().ToLower())
                     .Select(g => new { Key = g.Key, List = g.Select(u => u.Upaya).ToList() })
                     .ToDictionary(x => x.Key, x => x.List);
 
-                // ======================
-                // 2. Preload Email (jadi Dictionary)
-                // ======================
                 var emails = context.DbMonReklameEmails
                     .Where(e => !string.IsNullOrWhiteSpace(e.NoFormulir))
                     .GroupBy(e => e.NoFormulir.Trim().ToLower())
                     .Select(g => new { Key = g.Key, Email = g.FirstOrDefault().Email })
                     .ToDictionary(x => x.Key, x => x.Email);
 
-                // ======================
-                // 3. Buat filter predicate
-                // ======================
                 Func<MvReklameSummary, bool> predicate = x => false;
 
                 if (jenis == 1 && kategori == 1)
@@ -312,16 +303,10 @@ namespace MonPDReborn.Models.AktivitasOP
                                      !x.TglBayarPokokA.HasValue;
                 }
 
-                // ======================
-                // 4. Ambil data mentah (lebih ringan)
-                // ======================
                 var rawData = context.MvReklameSummaries
                     .Where(predicate)
-                    .ToList(); // sekali query saja
+                    .ToList(); 
 
-                // ======================
-                // 5. Transform ke DetailSummary
-                // ======================
                 var ret = rawData.Select(x =>
                 {
                     string noFormulirDigunakan = (kategori == 3) ? x.NoFormulirA : x.NoFormulir;
@@ -333,12 +318,10 @@ namespace MonPDReborn.Models.AktivitasOP
 
                     var key = noFormulirDigunakan?.Trim().ToLower();
 
-                    // ambil email dari dictionary
                     string informasiEmail = (key != null && emails.TryGetValue(key, out var email))
                         ? email
                         : string.Empty;
 
-                    // ambil upaya dari dictionary
                     string jumlahUpaya = "0";
                     if (!string.IsNullOrEmpty(key) && upayaGrouped.TryGetValue(key, out var upayaList))
                     {
@@ -379,248 +362,6 @@ namespace MonPDReborn.Models.AktivitasOP
                 return ret;
             }
 
-
-            //public static List<DetailSummary> GetDetailSummary(int tahun, int bulan, int jenis, int kategori)
-            //{
-            //    var ret = new List<DetailSummary>();
-            //    var context = DBClass.GetContext();
-
-            //    // Jenis Permohonan:
-            //    // 1 = Insidentil
-            //    // 2 = Permanen
-            //    // 3 = Terbatas
-
-            //    //NO EMAIL:
-            //    //kategori //2 = PJ BelumPerpanjangan
-
-            //    //1 = JT Belumbayar
-            //    //2 = PJ BelumPerpanjangan
-            //    //3 = KB BelumBayar  || INSIDENTIL PASTI 3 PASTI FLAG_PERMOHONAN_A
-
-            //    var data = context.MvReklameSummaries.AsQueryable();
-            //    //.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.IdFlagPermohonan == jenis)
-            //    //.ToList();
-            //    var upaya = context.DbMonReklameUpayas
-            //    .Select(x => new
-            //    {
-            //        x.NoFormulir,
-            //        x.Upaya
-            //    })
-            //    .ToList();
-
-            //    var upayaGrouped = upaya
-            //        .GroupBy(x => x.NoFormulir)
-            //        .ToDictionary(g => g.Key, g => g.Select(u => u.Upaya).ToList());
-
-            //    if (jenis == 1) //Insidentil
-            //    {
-            //        if (kategori == 3)
-            //        {
-            //            // KB BelumBayar atau INSIDENTIL
-            //            ret = data
-            //                .Where(x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis)
-            //                .Select(x => new DetailSummary
-            //                {
-            //                    Bulan = bulan,
-            //                    BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-            //                    Tahun = tahun,
-            //                    NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-            //                    Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-            //                    AlamatOP = x.Alamatreklame ?? string.Empty,
-            //                    IsiReklame = x.IsiReklame ?? string.Empty,
-            //                    AkhirBerlaku = string.Concat(
-            //                        x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-            //                        " (BELUM TERBAYAR)"
-            //                    ),
-            //                    MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
-            //                    JumlahNilai = x.PajakPokok ?? 0,
-            //                    InformasiEmail = string.Empty,
-            //                    JumlahUpaya = upayaGrouped
-            //                        .Where(f => f.Key == x.NoFormulir)
-            //                        .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-            //                        .FirstOrDefault() ?? "0"
-            //                })
-            //                .ToList();
-            //        }
-            //    }
-            //    else if (jenis == 2) //Permanen
-            //    {
-            //        if (kategori == 1)
-            //        {
-            //            // JT Belumbayar
-            //            ret = data
-            //                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis)
-            //                .Select(x => new DetailSummary
-            //                {
-            //                    Bulan = bulan,
-            //                    BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-            //                    Tahun = tahun,
-            //                    NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-            //                    Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-            //                    AlamatOP = x.Alamatreklame ?? string.Empty,
-            //                    IsiReklame = x.IsiReklame ?? string.Empty,
-            //                    AkhirBerlaku = string.Concat(
-            //                        x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-            //                        " (BELUM TERBAYAR)"
-            //                    ),
-            //                    MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
-            //                    JumlahNilai = x.PajakPokok ?? 0,
-            //                    InformasiEmail = string.Empty,
-            //                    JumlahUpaya = upayaGrouped
-            //                        .Where(f => f.Key == x.NoFormulir)
-            //                        .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-            //                        .FirstOrDefault() ?? "0"
-            //                })
-            //                .ToList();
-            //        }
-            //        else if (kategori == 2)
-            //        {
-            //            // PJ BelumPerpanjangan
-            //            ret = data
-            //                .Where(x => x.Tahun == tahun && x.Bulan == bulan && (!string.IsNullOrEmpty(x.NoFormulirA)) && x.IdFlagPermohonan == jenis)
-            //                .Select(x => new DetailSummary
-            //                {
-            //                    Bulan = bulan,
-            //                    BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-            //                    Tahun = tahun,
-            //                    NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-            //                    Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-            //                    AlamatOP = x.Alamatreklame ?? string.Empty,
-            //                    IsiReklame = x.IsiReklame ?? string.Empty,
-            //                    AkhirBerlaku = string.Concat(
-            //                        x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-            //                        " (BELUM TERBAYAR)"
-            //                    ),
-            //                    MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
-            //                    JumlahNilai = x.PajakPokok ?? 0,
-            //                    InformasiEmail = string.Empty,
-            //                    JumlahUpaya = upayaGrouped
-            //                        .Where(f => f.Key == x.NoFormulir)
-            //                        .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-            //                        .FirstOrDefault() ?? "0"
-            //                })
-            //                .ToList();
-            //        }
-            //        else if (kategori == 3)
-            //        {
-            //            // KB BelumBayar atau INSIDENTIL
-            //            ret = data
-            //                .Where(x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis)
-            //                .Select(x => new DetailSummary
-            //                {
-            //                    Bulan = bulan,
-            //                    BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-            //                    Tahun = tahun,
-            //                    NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-            //                    Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-            //                    AlamatOP = x.Alamatreklame ?? string.Empty,
-            //                    IsiReklame = x.IsiReklame ?? string.Empty,
-            //                    AkhirBerlaku = string.Concat(
-            //                        x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-            //                        " (BELUM TERBAYAR)"
-            //                    ),
-            //                    MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
-            //                    JumlahNilai = x.PajakPokok ?? 0,
-            //                    InformasiEmail = string.Empty,
-            //                    JumlahUpaya = upayaGrouped
-            //                        .Where(f => f.Key == x.NoFormulir)
-            //                        .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-            //                        .FirstOrDefault() ?? "0"
-            //                })
-            //                .ToList();
-            //        }
-            //    }
-            //    else if (jenis == 3) //Terbatas
-            //    {
-            //        if (kategori == 1)
-            //        {
-            //            // JT Belumbayar
-            //            ret = data
-            //                .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis)
-            //                .Select(x => new DetailSummary
-            //                {
-            //                    Bulan = bulan,
-            //                    BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-            //                    Tahun = tahun,
-            //                    NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-            //                    Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-            //                    AlamatOP = x.Alamatreklame ?? string.Empty,
-            //                    IsiReklame = x.IsiReklame ?? string.Empty,
-            //                    AkhirBerlaku = string.Concat(
-            //                        x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-            //                        " (BELUM TERBAYAR)"
-            //                    ),
-            //                    MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
-            //                    JumlahNilai = x.PajakPokok ?? 0,
-            //                    InformasiEmail = string.Empty,
-            //                    JumlahUpaya = upayaGrouped
-            //                        .Where(f => f.Key == x.NoFormulir)
-            //                        .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-            //                        .FirstOrDefault() ?? "0"
-            //                })
-            //                .ToList();
-            //        }
-            //        else if (kategori == 2)
-            //        {
-            //            // PJ BelumPerpanjangan
-            //            ret = data
-            //                .Where(x => x.Tahun == tahun && x.Bulan == bulan && (!string.IsNullOrEmpty(x.NoFormulirA)) && x.IdFlagPermohonan == jenis)
-            //                .Select(x => new DetailSummary
-            //                {
-            //                    Bulan = bulan,
-            //                    BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-            //                    Tahun = tahun,
-            //                    NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-            //                    Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-            //                    AlamatOP = x.Alamatreklame ?? string.Empty,
-            //                    IsiReklame = x.IsiReklame ?? string.Empty,
-            //                    AkhirBerlaku = string.Concat(
-            //                        x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-            //                        " (BELUM TERBAYAR)"
-            //                    ),
-            //                    MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
-            //                    JumlahNilai = x.PajakPokok ?? 0,
-            //                    InformasiEmail = string.Empty,
-            //                    JumlahUpaya = upayaGrouped
-            //                        .Where(f => f.Key == x.NoFormulir)
-            //                        .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-            //                        .FirstOrDefault() ?? "0"
-            //                })
-            //                .ToList();
-            //        }
-            //        else if (kategori == 3)
-            //        {
-            //            // KB BelumBayar atau INSIDENTIL
-            //            ret = data
-            //                 .Where(x => x.TahunA == tahun && x.BulanA == bulan && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.IdFlagPermohonanA == jenis)
-            //                 .Select(x => new DetailSummary
-            //                 {
-            //                     Bulan = bulan,
-            //                     BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-            //                     Tahun = tahun,
-            //                     NoFormulir = string.Concat(x.NoFormulir, " (", x.FlagPermohonan, ")") ?? string.Empty,
-            //                     Nama = string.Concat(x.Nama, " (", x.NamaPerusahaan, ")") ?? string.Empty,
-            //                     AlamatOP = x.Alamatreklame ?? string.Empty,
-            //                     IsiReklame = x.IsiReklame ?? string.Empty,
-            //                     AkhirBerlaku = string.Concat(
-            //                         x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy", new CultureInfo("id-ID")),
-            //                         " (BELUM TERBAYAR)"
-            //                     ),
-            //                     MasaTahunPajak = $"{x.TahunA} ({x.TglMulaiBerlaku.Value:dd MMM yyyy} - {x.TglAkhirBerlaku.Value:dd MMM yyyy})",
-            //                     JumlahNilai = x.PajakPokok ?? 0,
-            //                     InformasiEmail = string.Empty,
-            //                     JumlahUpaya = upayaGrouped
-            //                         .Where(f => f.Key == x.NoFormulir)
-            //                         .Select(f => $"{f.Value.Count}x: {string.Join(", ", f.Value)}")
-            //                         .FirstOrDefault() ?? "0"
-            //                 })
-            //                 .ToList();
-            //        }
-            //    }
-
-            //    return ret;
-            //    //}
-            //}
             public static void SimpanUpaya(DetailUpaya.NewRow NewRowUpaya)
             {
                 var context = DBClass.GetContext();
@@ -732,158 +473,88 @@ namespace MonPDReborn.Models.AktivitasOP
                 return model;
             }
 
-            /*public static DetailUpaya GetDetailUpaya(string noFormulir, int tahun, int bulan)
-            {
-                var context = DBClass.GetContext();
-
-                // Ambil data reklame yang cocok
-                var reklame = context.MvReklameSummaries
-                    .FirstOrDefault(x =>
-                        (x.NoFormulir == noFormulir || x.NoFormulirA == noFormulir) &&
-                        (x.Tahun == tahun || x.TahunA == tahun) &&
-                        (x.Bulan == bulan || x.BulanA == bulan)
-                    );
-
-                if (reklame == null)
-                    return null;
-
-                // Ambil data upaya
-                var upayaList = context.DbMonReklameUpayas.Include(x => x.DbMonReklameUpayaDok)
-                    .Where(x => x.NoFormulir == noFormulir)
-                    .OrderByDescending(x => x.TglUpaya)
-                    .ToList();
-
-                var dataUpayaList = upayaList.Select(x => new DetailUpaya.DataUpaya
-                {
-                    NoFormulir = x.NoFormulir,
-                    TglUpaya = x.TglUpaya.ToString("dd/MM/yyyy"),
-                    NamaUpaya = x.Upaya,
-                    Keterangan = x.Keterangan,
-                    Petugas = x.Petugas,
-                    Lampiran = x.DbMonReklameUpayaDok.Gambar != null ? Convert.ToBase64String(x.DbMonReklameUpayaDok.Gambar) : null
-                }).ToList();
-
-                var model = new DetailUpaya
-                {
-                    Tahun = tahun,
-                    Bulan = bulan,
-                    NoFormulir = noFormulir,
-                    InfoReklameUpaya = new DetailUpaya.InfoReklame
-                    {
-                        IsiReklame = reklame.IsiReklame ?? "-",
-                        AlamatReklame = reklame.Alamatreklame ?? "-",
-                        JenisReklame = reklame.NmJenis ?? "-",
-                        Panjang = reklame.Panjang ?? 0,
-                        Lebar = reklame.Lebar ?? 0,
-                        Luas = reklame.Luas ?? 0,
-                        Tinggi = reklame.Ketinggian ?? 0,
-                        TglMulaiBerlaku = reklame.TglMulaiBerlaku ?? DateTime.MinValue,
-                        TglAkhirBerlaku = reklame.TglAkhirBerlaku ?? DateTime.MinValue,
-                        TahunPajak = reklame.TahunA?.ToString() ?? reklame.Tahun.Value.ToString(),
-                        MasaPajak = (reklame.TglMulaiBerlaku.HasValue && reklame.TglAkhirBerlaku.HasValue)
-                            ? $"{reklame.TglMulaiBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))} - {reklame.TglAkhirBerlaku.Value.ToString("MMM yyyy", new CultureInfo("id-ID"))}"
-                            : "-"
-                    },
-                    DataUpayaList = dataUpayaList
-                };
-
-                return model;
-            }*/
-
             public static List<DetailBongkar> GetDetailBongkar(int tahun, int bulan, int jenis, int kategori)
             {
                 using var context = DBClass.GetContext();
 
-                // ======================
-                // 1. Preload Upaya ke Dictionary
-                // ======================
                 var upayaGrouped = context.DbMonReklameUpayas
                     .Where(x => !string.IsNullOrWhiteSpace(x.NoFormulir))
                     .GroupBy(x => x.NoFormulir.Trim().ToLower())
                     .Select(g => new { Key = g.Key, List = g.Select(u => u.Upaya).ToList() })
                     .ToDictionary(x => x.Key, x => x.List);
 
-                // ======================
-                // 2. Preload Email ke Dictionary
-                // ======================
                 var emails = context.DbMonReklameEmails
                     .Where(e => !string.IsNullOrWhiteSpace(e.NoFormulir))
                     .GroupBy(e => e.NoFormulir.Trim().ToLower())
                     .Select(g => new { Key = g.Key, Email = g.FirstOrDefault().Email })
                     .ToDictionary(x => x.Key, x => x.Email);
 
-                // ======================
-                // 3. Buat filter pakai Expression (supaya dieksekusi di SQL)
-                // ======================
                 Expression<Func<MvReklameSummary, bool>> predicate = x => false;
 
-                if (jenis == 1 && kategori == 1) // JT
+                if (jenis == 1 && kategori == 1) 
                 {
                     predicate = x => x.IdFlagPermohonan == 1 &&
                                      x.Tahun == tahun && x.Bulan == bulan &&
                                      x.NoFormulir != null &&
                                      x.Bongkar.HasValue && x.Bongkar.Value == 1;
                 }
-                else if (jenis == 1 && kategori == 2) // Panjang
+                else if (jenis == 1 && kategori == 2) 
                 {
                     predicate = x => x.IdFlagPermohonan == 1 &&
                                      x.Tahun == tahun && x.Bulan == bulan &&
                                      x.IsPerpanjangan == 0 &&
                                      x.Bongkar.HasValue && x.Bongkar.Value == 1;
                 }
-                else if (jenis == 1 && kategori == 3) // KB
+                else if (jenis == 1 && kategori == 3) 
                 {
                     predicate = x => x.IdFlagPermohonanA == 1 &&
                                      x.TahunA == tahun && x.BulanA == bulan &&
                                      x.BongkarA.HasValue && x.BongkarA.Value == 1;
                 }
-                else if (jenis == 2 && kategori == 1) // JT
+                else if (jenis == 2 && kategori == 1) 
                 {
                     predicate = x => x.IdFlagPermohonan == 2 &&
                                      x.Tahun == tahun && x.Bulan == bulan &&
                                      x.NoFormulir != null &&
                                      x.Bongkar.HasValue && x.Bongkar.Value == 1;
                 }
-                else if (jenis == 2 && kategori == 2) // Panjang
+                else if (jenis == 2 && kategori == 2) 
                 {
                     predicate = x => x.IdFlagPermohonan == 2 &&
                                      x.Tahun == tahun && x.Bulan == bulan &&
                                      x.IsPerpanjangan == 0 &&
                                      x.Bongkar.HasValue && x.Bongkar.Value == 1;
                 }
-                else if (jenis == 2 && kategori == 3) // KB
+                else if (jenis == 2 && kategori == 3) 
                 {
                     predicate = x => x.IdFlagPermohonanA == 2 &&
                                      x.TahunA == tahun && x.BulanA == bulan &&
                                      x.BongkarA.HasValue && x.BongkarA.Value == 1;
                 }
-                else if (jenis == 3 && kategori == 1) // JT
+                else if (jenis == 3 && kategori == 1) 
                 {
                     predicate = x => x.IdFlagPermohonan == 3 &&
                                      x.Tahun == tahun && x.Bulan == bulan &&
                                      x.NoFormulir != null &&
                                      x.Bongkar.HasValue && x.Bongkar.Value == 1;
                 }
-                else if (jenis == 3 && kategori == 2) // Panjang
+                else if (jenis == 3 && kategori == 2) 
                 {
                     predicate = x => x.IdFlagPermohonan == 3 &&
                                      x.Tahun == tahun && x.Bulan == bulan &&
                                      x.IsPerpanjangan == 0 &&
                                      x.Bongkar.HasValue && x.Bongkar.Value == 1;
                 }
-                else if (jenis == 3 && kategori == 3) // KB
+                else if (jenis == 3 && kategori == 3) 
                 {
                     predicate = x => x.IdFlagPermohonanA == 3 &&
                                      x.TahunA == tahun && x.BulanA == bulan &&
                                      x.BongkarA.HasValue && x.BongkarA.Value == 1;
                 }
 
-                // ======================
-                // 4. Ambil data dari SQL (lebih efisien karena pakai Expression)
-                // ======================
                 var rawData = context.MvReklameSummaries
                     .Where(predicate)
-                    .AsNoTracking()   // 🚀 tidak perlu tracking, lebih ringan
+                    .AsNoTracking()   
                     .ToList();
 
                 var ret = rawData.Select(x =>
@@ -896,12 +567,10 @@ namespace MonPDReborn.Models.AktivitasOP
 
                     var key = noFormulirDigunakan?.Trim().ToLower();
 
-                    // ambil email dari dictionary
                     string informasiEmail = (key != null && emails.TryGetValue(key, out var email))
                         ? email
                         : string.Empty;
 
-                    // ambil upaya dari dictionary
                     string jumlahUpaya = "0";
                     if (!string.IsNullOrEmpty(key) && upayaGrouped.TryGetValue(key, out var upayaList))
                     {
