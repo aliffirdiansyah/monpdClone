@@ -987,7 +987,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .ToList();
 
-                var kontrolPembayaranList = context.DbCtrlByrHotels
+                var kontrolPembayaranList = context.DbCtrlByrHiburans
                     .Where(x => x.Tahun == tahun)
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
                     .Select(g => new
