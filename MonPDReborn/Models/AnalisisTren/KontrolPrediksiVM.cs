@@ -49,7 +49,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
         public static List<KontrolPrediksi> GetDataList(DateTime tanggalAwal, DateTime tanggalAkhir)
         {
-           
+
             var context = DBClass.GetContext();
             var currentYear = DateTime.Now.Year;
             var bulanLaluCutoff = new DateTime(currentYear, DateTime.Now.Month, 1).AddDays(-1);
@@ -68,7 +68,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== Makanan Minuman ====
             var restoData = context.DbMonRestos
-                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year <= currentYear && x.TglBayarPokok.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayarPokok.Value,
@@ -80,7 +80,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== Hotel ====
             var hotelData = context.DbMonHotels
-                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year <= currentYear && x.TglBayarPokok.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayarPokok.Value,
@@ -92,7 +92,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== Hiburan ====
             var hiburanData = context.DbMonHiburans
-                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year <= currentYear && x.TglBayarPokok.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayarPokok.Value,
@@ -104,7 +104,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== Parkir ====
             var parkirData = context.DbMonParkirs
-                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year <= currentYear && x.TglBayarPokok.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayarPokok.Value,
@@ -116,7 +116,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== Listrik ====
             var listrikData = context.DbMonPpjs
-                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year <= currentYear && x.TglBayarPokok.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayarPokok.Value,
@@ -128,7 +128,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== Reklame ====
             var reklameData = context.DbMonReklames
-                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year <= currentYear && x.TglBayarPokok.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayarPokok.Value,
@@ -140,7 +140,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== PBB ====
             var pbbData = context.DbMonPbbs
-                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year == currentYear)
+                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayar.Value,
@@ -152,7 +152,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== BPHTB ====
             var bphtbData = context.DbMonBphtbs
-                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year == currentYear)
+                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayar.Value,
@@ -164,7 +164,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== Air Tanah ====
             var abtData = context.DbMonAbts
-                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year == currentYear)
+                .Where(x => x.TglBayarPokok != null && x.TglBayarPokok.Value.Year <= currentYear && x.TglBayarPokok.Value.Year >= currentYear - 2)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayarPokok.Value,
@@ -210,6 +210,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
         {
             var currentYear = DateTime.Now.Year;
             var awalTahun = new DateTime(currentYear, 1, 1);
+
             var id = (int)jenisPajak;
 
             // Batas hari ini
@@ -218,17 +219,49 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             var realisasiBulanLalu = data.Where(d => d.Tanggal <= bulanLaluCutoff).Sum(d => d.Nominal);
             var realisasiBulanIni = data.Where(d => d.Tanggal >= awalTahun && d.Tanggal < startOfDay).Sum(d => d.Nominal);
-            var realisasiHariIni = data.Where(d => d.Tanggal >= startOfDay && d.Tanggal <= endOfDay).Sum(d => d.Nominal);
-
-            return new KontrolPrediksi
+            if (jenisPajak == EnumFactory.EPajak.OpsenPkb)
             {
-                tgl = DateTime.Now,
-                JenisPajak = jenisPajak.ToString(),
-                Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
-                RealisasiBulanLalu = realisasiBulanLalu,
-                RealisasiBulanIni = realisasiBulanIni,
-                RealisasiHari = realisasiHariIni
-            };
+                var realisasiHariIni = data.Where(d => d.Tanggal.Day == startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Average(d => d.Nominal);
+
+                return new KontrolPrediksi
+                {
+                    tgl = DateTime.Now,
+                    JenisPajak = jenisPajak.ToString(),
+                    Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
+                    RealisasiBulanLalu = realisasiBulanLalu,
+                    RealisasiBulanIni = realisasiBulanIni,
+                    RealisasiHari = realisasiHariIni
+                };
+            }
+            if (jenisPajak == EnumFactory.EPajak.OpsenBbnkb)
+            {
+                var realisasiHariIni = data.Where(d => d.Tanggal.Day == startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Average(d => d.Nominal);
+
+                return new KontrolPrediksi
+                {
+                    tgl = DateTime.Now,
+                    JenisPajak = jenisPajak.ToString(),
+                    Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
+                    RealisasiBulanLalu = realisasiBulanLalu,
+                    RealisasiBulanIni = realisasiBulanIni,
+                    RealisasiHari = realisasiHariIni
+                };
+            }
+            else
+            {
+                var realisasiHariIni = data.Where(d => d.Tanggal.Month == startOfDay.Month && d.Tanggal.Day == startOfDay.Day && d.Tanggal.Month <= endOfDay.Month && d.Tanggal.Day <= endOfDay.Day).Average(d => d.Nominal);
+                return new KontrolPrediksi
+                {
+                    tgl = DateTime.Now,
+                    JenisPajak = jenisPajak.ToString(),
+                    Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
+                    RealisasiBulanLalu = realisasiBulanLalu,
+                    RealisasiBulanIni = realisasiBulanIni,
+                    RealisasiHari = realisasiHariIni
+                };
+            }
+
+
 
         }
 
