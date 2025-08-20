@@ -17,6 +17,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DataAirTanah> DataAirTanahs { get; set; }
 
+    public virtual DbSet<DataPbb> DataPbbs { get; set; }
+
     public virtual DbSet<DataPpj> DataPpjs { get; set; }
 
     public virtual DbSet<DataReklame> DataReklames { get; set; }
@@ -76,6 +78,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbMonHiburan> DbMonHiburans { get; set; }
 
     public virtual DbSet<DbMonHotel> DbMonHotels { get; set; }
+
+    public virtual DbSet<DbMonKetetapanHpp> DbMonKetetapanHpps { get; set; }
+
+    public virtual DbSet<DbMonKetetapanHr> DbMonKetetapanHrs { get; set; }
 
     public virtual DbSet<DbMonOpsenBbnkb> DbMonOpsenBbnkbs { get; set; }
 
@@ -373,7 +379,7 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
@@ -384,6 +390,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DataAirTanah>(entity =>
         {
             entity.HasKey(e => e.Nop).HasName("SYS_C0033796");
+        });
+
+        modelBuilder.Entity<DataPbb>(entity =>
+        {
+            entity.ToView("DATA_PBB");
         });
 
         modelBuilder.Entity<DataPpj>(entity =>
@@ -642,6 +653,8 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbCtrlByrHotel>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_HOTEL");
+
+            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrParkir>(entity =>
@@ -669,6 +682,8 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbCtrlByrResto>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_RESTO");
+
+            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbMonAbt>(entity =>
@@ -709,6 +724,16 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonKetetapanHpp>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.TahunPajak, e.MasaPajak, e.SeqPajak, e.JenisKetetapan, e.TahunBuku }).HasName("DB_MON_KETETAPAN_HPP_PK");
+        });
+
+        modelBuilder.Entity<DbMonKetetapanHr>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.TahunPajak, e.MasaPajak, e.SeqPajak, e.JenisKetetapan, e.TahunBuku }).HasName("DB_MON_KETETAPAN_HR_PK");
         });
 
         modelBuilder.Entity<DbMonOpsenBbnkb>(entity =>
