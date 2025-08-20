@@ -27,9 +27,10 @@
                         @(Html.DevExtreme().DateBox()
                                                 .ID("tanggalAwal")
                                                 .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal Awal") // Menggantikan <label>
-                                                .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
-                                                .Value(DateTime.Now) // Nilai default: hari ini
+                                                .Placeholder("Tanggal Awal")
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .Value(DateTime.Now)
+                                                .Max(DateTime.Now)
                                                 )
                     </div>
 
@@ -37,8 +38,8 @@
                         @(Html.DevExtreme().DateBox()
                                                 .ID("tanggalAkhir")
                                                 .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal Akhir") // Menggantikan <label>
-                                                .StylingMode(EditorStylingMode.Outlined) // Terapkan styling DevExtreme
+                                                .Placeholder("Tanggal Akhir")
+                                                .StylingMode(EditorStylingMode.Outlined)
                                                 )
                     </div>
 
@@ -148,21 +149,21 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Saat halaman pertama kali dimuat, langsung panggil klik tombol filter
-            // untuk mengambil nilai default dan memuat data awal.
+           
+           
         });
 
-        // Event handler untuk klik tombol filter
+       
         $('#btnTerapkanFilter').on('click', function() {
-            // Ambil objek Date dari DevExtreme
+           
             const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
             const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
 
-            // Format tanggal ke "YYYY-MM-DD" HANYA JIKA ada nilainya
+           
             let tglAwalFormatted = null;
             if (tglAwalDate) {
                 const yyyy = tglAwalDate.getFullYear();
-                const mm = String(tglAwalDate.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+                const mm = String(tglAwalDate.getMonth() + 1).padStart(2, '0');
                 const dd = String(tglAwalDate.getDate()).padStart(2, '0');
                 tglAwalFormatted = `${yyyy}-${mm}-${dd}`;
             }
@@ -175,7 +176,7 @@
                 tglAkhirFormatted = `${yyyy}-${mm}-${dd}`;
             }
 
-            // Panggil kembali fnShow dengan nilai filter baru yang sudah diformat
+           
             fnShow(tglAwalFormatted, tglAkhirFormatted);
         });
         function fnShow(tanggalAwal, tanggalAkhir) {
@@ -194,17 +195,17 @@
                     $('#loading2-Show').hide();
 
                     if (result.Status === undefined) {
-                        // Render PartialView (Grid)
+                       
                         $('#Show').html(result).show();
 
-                        // ⬇️ Update caption grid setelah grid selesai di-render
+                       
                         setTimeout(function () {
                             var grid = $("#KontrolPrediksiGrid").dxDataGrid("instance");
                             if (grid) {
                                 var tgl = DevExpress.localization.formatDate(new Date(tanggalAkhir), "dd/MM/yyyy");
                                 grid.columnOption("RealisasiHari", "caption", "Prediksi Hari Ini S.D Dengan Tanggal " + tgl);
                             }
-                        }, 200); // kasih delay kecil biar grid sempat ter-render
+                        }, 200);
 
                     } else {
                         Swal.fire({
