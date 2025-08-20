@@ -6,6 +6,19 @@ namespace MonPDReborn.Models.AktivitasOP
     {
         public class Method
         {
+            public static List<ViewModel.TahunRow> GetTahunList()
+            {
+                var result = new List<ViewModel.TahunRow>();
+                var context = DBClass.GetContext();
+
+                result = context.DbPendapatanDaerahs
+                    .Select(x => new ViewModel.TahunRow { Tahun = Convert.ToInt32(x.TahunBuku) })
+                    .Distinct()
+                    .OrderByDescending(x => x.Tahun)
+                    .ToList();
+
+                return result;
+            }
             public static List<ViewModel.SudutPandangRekening.Akun> GetDataSudutPandangRekening(int tahunBuku)
             {
                 var result = new List<ViewModel.SudutPandangRekening.Akun>();
@@ -417,6 +430,10 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 public FormatColumn.ColumnA Col { get; set; } = new();
             }
+        }
+        public class TahunRow
+        {
+            public int Tahun { get; set; }
         }
     }
 
