@@ -10,6 +10,7 @@ namespace ReklameWs
 {
     public class Worker : BackgroundService
     {
+        private bool isFirst = true;
         private readonly ILogger<Worker> _logger;
         private static int KDPajak = 7;
         public Worker(ILogger<Worker> logger)
@@ -22,19 +23,30 @@ namespace ReklameWs
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var now = DateTime.Now;
+                var now = DateTime.Now;
+                DateTime nextRun = now.AddSeconds(1); // besok jam 00:00
+                TimeSpan delay = nextRun - now;
+                if (isFirst)
+                {
+                    nextRun = now.AddSeconds(1); // besok jam 00:00
+                    delay = nextRun - now;
+                    isFirst = false;
+                }
+                else
+                {
+                    nextRun = now.AddHours(2); // next jam 00:00
+                    delay = nextRun - now;
+                }
 
-                //var nextRun = now.AddDays(1); // besok jam 00:00
-                //var delay = nextRun - now;
 
-                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                //await Task.Delay(delay, stoppingToken);
+                await Task.Delay(delay, stoppingToken);
 
-                //if (stoppingToken.IsCancellationRequested)
-                //    break;
+                if (stoppingToken.IsCancellationRequested)
+                    break;
 
-                //// GUNAKAN KETIKA EKSEKUSI TUGAS MANUAL
+                // Eksekusi tugas
                 try
                 {
                     await DoWorkFullScanAsync(stoppingToken);
@@ -44,7 +56,7 @@ namespace ReklameWs
                     _logger.LogError(ex, "Error occurred while executing task.");
                     MailHelper.SendMail(
                     false,
-                    "ERROR REKLAME WS",
+                    "ERROR REKLAME_SURAT WS",
                     $@"
                             Terjadi exception pada sistem:
 
@@ -74,12 +86,11 @@ namespace ReklameWs
             tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
             // do fill db op abt
-            if (IsGetDBOp())
+
+            using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
             {
-                using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
-                {
-                    Console.WriteLine($"{DateTime.Now} DB_OP_REKLAME_MONITORINGDB");
-                    var sql = @"
+                Console.WriteLine($"{DateTime.Now} DB_OP_REKLAME_MONITORINGDB");
+                var sql = @"
 SELECT 	NVL(NO_FORMULIR, '-') NO_FORMULIR, 
 		NO_PERUSAHAAN, 
 		NAMA_PERUSAHAAN, 
@@ -431,137 +442,130 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
 
                     ";
 
-                    var result = await _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToListAsync();
+                var result = _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToList();
 
-                    var existingr = await _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToListAsync();
-                    _contMonPd.DbOpReklames.RemoveRange(existingr);
+                var existingr = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
+                _contMonPd.DbOpReklames.RemoveRange(existingr);
 
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{DateTime.Now} DELETE DB_OP_REKLAME_MONITORINGDB (pending commit)");
-                    Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{DateTime.Now} DELETE DB_OP_REKLAME_MONITORINGDB (pending commit)");
+                Console.ResetColor();
 
-                    int process = 0;
-                    int totalDataa = result.Count;
-                    int batchSize = 500; // jumlah data per batch
+                int process = 0;
+                int totalDataa = result.Count;
 
-                    var allNewRows = new List<MonPDLib.EF.DbOpReklame>();
+                var allNewRows = new List<MonPDLib.EF.DbOpReklame>();
 
-
-                    for (int i = 0; i < totalDataa; i += batchSize)
+                foreach (var item in result)
+                {
+                    var newRow = new MonPDLib.EF.DbOpReklame
                     {
-                        var chunk = result.Skip(i).Take(batchSize).ToList();
+                        NoFormulir = item.NoFormulir,
+                        NoPerusahaan = item.NoPerusahaan,
+                        NamaPerusahaan = item.NamaPerusahaan,
+                        AlamatPerusahaan = item.AlamatPerusahaan,
+                        NoAlamatPerusahaan = item.NoAlamatPerusahaan,
+                        BlokAlamatPerusahaan = item.BlokAlamatPerusahaan,
+                        Alamatper = item.Alamatper,
+                        TelpPerusahaan = item.TelpPerusahaan,
+                        Clientnama = item.Clientnama,
+                        Clientalamat = item.Clientalamat,
+                        Jabatan = item.Jabatan,
+                        KodeJenis = item.KodeJenis,
+                        NamaJenis = item.NamaJenis,
+                        NoWp = item.NoWp,
+                        Nama = item.Nama,
+                        Alamat = item.Alamat,
+                        NoAlamat = item.NoAlamat,
+                        BlokAlamat = item.BlokAlamat,
+                        Alamatwp = item.Alamatwp,
+                        JenisPermohonan = item.JenisPermohonan,
+                        TglPermohonan = item.TglPermohonan,
+                        TglMulaiBerlaku = item.TglMulaiBerlaku,
+                        TglAkhirBerlaku = item.TglAkhirBerlaku,
+                        NamaJalan = item.NamaJalan,
+                        NoJalan = item.NoJalan,
+                        BlokJalan = item.BlokJalan,
+                        Alamatreklame = item.Alamatreklame,
+                        DetilLokasi = item.DetilLokasi,
+                        Kecamatan = item.Kecamatan,
+                        JenisProduk = item.JenisProduk,
+                        LetakReklame = item.LetakReklame,
+                        StatusTanah = item.StatusTanah,
+                        FlagPermohonan = item.FlagPermohonan,
+                        Statusproses = item.Statusproses,
+                        FlagSimpatik = item.FlagSimpatik,
+                        KodeObyek = item.KodeObyek,
+                        Panjang = item.Panjang,
+                        Lebar = item.Lebar,
+                        Luas = item.Luas,
+                        Luasdiskon = item.Luasdiskon,
+                        Sisi = item.Sisi,
+                        Ketinggian = item.Ketinggian,
+                        IsiReklame = item.IsiReklame,
+                        PermohonanBaru = item.PermohonanBaru,
+                        NoFormulirLama = item.NoFormulirLama,
+                        SudutPandang = item.SudutPandang,
+                        Nilaipajak = item.Nilaipajak,
+                        Nilaijambong = item.Nilaijambong,
+                        KelasJalan = item.KelasJalan,
+                        NoTelp = item.NoTelp,
+                        Timetrans = item.Timetrans,
+                        Npwpd = item.Npwpd,
+                        Flagtung = item.Flagtung,
+                        Statuscabut = item.Statuscabut,
+                        Nor = item.Nor,
+                        KodeLokasi = item.KodeLokasi,
+                        NamaPenempatan = item.NamaPenempatan,
+                        NoFormulirAwal = item.NoFormulirAwal,
+                        Ketpersil = item.Ketpersil,
+                        PerPenanggungjawab = item.PerPenanggungjawab,
+                        AlamatperPenanggungjawab = item.AlamatperPenanggungjawab,
+                        NpwpdPenanggungjawab = item.NpwpdPenanggungjawab,
+                        Potensi = item.Potensi,
+                        Flagmall = item.Flagmall,
+                        Flagjeda = item.Flagjeda,
+                        Flagbranded = item.Flagbranded,
+                        Nlpr = item.Nlpr,
+                        Username = item.Username,
+                        JenisWp = item.JenisWp,
+                        TglCetakPer = item.TglCetakPer,
+                        StatusAWp = item.StatusAWp,
+                        StatusAPer = item.StatusAPer,
+                        Nmkelurahan = item.Nmkelurahan,
+                        Nop = item.Nop,
+                        UnitKerja = item.UnitKerja,
+                        UnitBerkas = item.UnitBerkas,
+                        StatusVer = item.StatusVer,
+                        TglVer = item.TglVer,
+                        UserVer = item.UserVer,
+                        TahunBuku = DateTime.Now.Year,
+                        TglOpTutup = item.TglOpTutup,
+                        KategoriId = item.KategoriId,
+                        Seq = item.Seq
+                    };
 
-                        foreach (var item in chunk)
-                        {
-                            var newRow = new MonPDLib.EF.DbOpReklame
-                            {
-                                NoFormulir = item.NoFormulir,
-                                NoPerusahaan = item.NoPerusahaan,
-                                NamaPerusahaan = item.NamaPerusahaan,
-                                AlamatPerusahaan = item.AlamatPerusahaan,
-                                NoAlamatPerusahaan = item.NoAlamatPerusahaan,
-                                BlokAlamatPerusahaan = item.BlokAlamatPerusahaan,
-                                Alamatper = item.Alamatper,
-                                TelpPerusahaan = item.TelpPerusahaan,
-                                Clientnama = item.Clientnama,
-                                Clientalamat = item.Clientalamat,
-                                Jabatan = item.Jabatan,
-                                KodeJenis = item.KodeJenis,
-                                NamaJenis = item.NamaJenis,
-                                NoWp = item.NoWp,
-                                Nama = item.Nama,
-                                Alamat = item.Alamat,
-                                NoAlamat = item.NoAlamat,
-                                BlokAlamat = item.BlokAlamat,
-                                Alamatwp = item.Alamatwp,
-                                JenisPermohonan = item.JenisPermohonan,
-                                TglPermohonan = item.TglPermohonan,
-                                TglMulaiBerlaku = item.TglMulaiBerlaku,
-                                TglAkhirBerlaku = item.TglAkhirBerlaku,
-                                NamaJalan = item.NamaJalan,
-                                NoJalan = item.NoJalan,
-                                BlokJalan = item.BlokJalan,
-                                Alamatreklame = item.Alamatreklame,
-                                DetilLokasi = item.DetilLokasi,
-                                Kecamatan = item.Kecamatan,
-                                JenisProduk = item.JenisProduk,
-                                LetakReklame = item.LetakReklame,
-                                StatusTanah = item.StatusTanah,
-                                FlagPermohonan = item.FlagPermohonan,
-                                Statusproses = item.Statusproses,
-                                FlagSimpatik = item.FlagSimpatik,
-                                KodeObyek = item.KodeObyek,
-                                Panjang = item.Panjang,
-                                Lebar = item.Lebar,
-                                Luas = item.Luas,
-                                Luasdiskon = item.Luasdiskon,
-                                Sisi = item.Sisi,
-                                Ketinggian = item.Ketinggian,
-                                IsiReklame = item.IsiReklame,
-                                PermohonanBaru = item.PermohonanBaru,
-                                NoFormulirLama = item.NoFormulirLama,
-                                SudutPandang = item.SudutPandang,
-                                Nilaipajak = item.Nilaipajak,
-                                Nilaijambong = item.Nilaijambong,
-                                KelasJalan = item.KelasJalan,
-                                NoTelp = item.NoTelp,
-                                Timetrans = item.Timetrans,
-                                Npwpd = item.Npwpd,
-                                Flagtung = item.Flagtung,
-                                Statuscabut = item.Statuscabut,
-                                Nor = item.Nor,
-                                KodeLokasi = item.KodeLokasi,
-                                NamaPenempatan = item.NamaPenempatan,
-                                NoFormulirAwal = item.NoFormulirAwal,
-                                Ketpersil = item.Ketpersil,
-                                PerPenanggungjawab = item.PerPenanggungjawab,
-                                AlamatperPenanggungjawab = item.AlamatperPenanggungjawab,
-                                NpwpdPenanggungjawab = item.NpwpdPenanggungjawab,
-                                Potensi = item.Potensi,
-                                Flagmall = item.Flagmall,
-                                Flagjeda = item.Flagjeda,
-                                Flagbranded = item.Flagbranded,
-                                Nlpr = item.Nlpr,
-                                Username = item.Username,
-                                JenisWp = item.JenisWp,
-                                TglCetakPer = item.TglCetakPer,
-                                StatusAWp = item.StatusAWp,
-                                StatusAPer = item.StatusAPer,
-                                Nmkelurahan = item.Nmkelurahan,
-                                Nop = item.Nop,
-                                UnitKerja = item.UnitKerja,
-                                UnitBerkas = item.UnitBerkas,
-                                StatusVer = item.StatusVer,
-                                TglVer = item.TglVer,
-                                UserVer = item.UserVer,
-                                TahunBuku = item.TglMulaiBerlaku.HasValue ? item.TglMulaiBerlaku.Value.Year : DateTime.Now.Year,
-                                TglOpTutup = item.TglOpTutup,
-                                KategoriId = item.KategoriId,
-                                Seq = item.Seq
-                            };
+                    allNewRows.Add(newRow);
+                    process++;
 
-                            allNewRows.Add(newRow);
-                            process++;
-                        }
-
-                        double percent = (process / (double)totalDataa) * 100;
-                        Console.WriteLine($"\rProgress Reklame OP: {percent:F2}% ({process}/{totalDataa})");
-                    }
-
-
-                    _contMonPd.DbOpReklames.AddRange(allNewRows);
-                    // Sekali save di akhir
-                    await _contMonPd.SaveChangesAsync();
-                    _contMonPd.ChangeTracker.Clear();
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{DateTime.Now} [FINISHED] DB_OP_REKLAME_MONITORINGDB");
-                    Console.ResetColor();
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{DateTime.Now} [FINISHED] DB_OP_REKLAME_MONITORINGDB");
-                    Console.ResetColor();
+                    double percent = (process / (double)totalDataa) * 100;
+                    Console.Write($"\rProgress Reklame OP: {percent:F2}% ({process}/{totalDataa})");
                 }
+
+
+                _contMonPd.DbOpReklames.AddRange(allNewRows);
+                // Sekali save di akhir
+
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_OP_REKLAME_MONITORINGDB");
+                Console.ResetColor();
+
+                _contMonPd.SaveChanges();
+                _contMonPd.ChangeTracker.Clear();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{DateTime.Now} [FINISHED] DB_OP_REKLAME_MONITORINGDB");
+                Console.ResetColor();
             }
 
             // do fill realisasi
@@ -639,16 +643,16 @@ LEFT JOIN (
 WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
 ";
 
-                var pembayaranSspdList = await _contMonitoringDb2
+                var pembayaranSspdList = _contMonitoringDb2
                 .Set<OpSkpdSspdReklame>()
                 .FromSqlRaw(sql2)
-                .ToListAsync();
+                .ToList();
 
                 // --- 2. Ambil data Op Reklame ---
-                var opList2 = await _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToListAsync();
+                var opList2 = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
 
                 // --- 3. Kosongkan tabel Monitoring ---
-                var existing = await _contMonPd.DbMonReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToListAsync();
+                var existing = _contMonPd.DbMonReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
                 _contMonPd.DbMonReklames.RemoveRange(existing);
 
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -826,8 +830,12 @@ WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
                 // Masukkan semua data sekaligus
                 _contMonPd.DbMonReklames.AddRange(newRows);
 
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_MON_REKLAME_MONITORINGDB");
+                Console.ResetColor();
+
                 // Sekali commit di akhir
-                await _contMonPd.SaveChangesAsync();
+                _contMonPd.SaveChanges();
                 _contMonPd.ChangeTracker.Clear();
 
                 Console.ForegroundColor = ConsoleColor.Green;
