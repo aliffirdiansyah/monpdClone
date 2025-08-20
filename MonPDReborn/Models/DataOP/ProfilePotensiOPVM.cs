@@ -123,7 +123,7 @@ namespace MonPDReborn.Models.DataOP
 
                 #region LIST OP BUKA
                 var dataResto1 = context.DbOpRestos
-                    .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)))
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year - 2)) && x.PajakNama != "MAMIN")
                     .GroupBy(x => new { x.Nop })
                     .Select(x => new { x.Key.Nop })
                     .ToList();
@@ -154,7 +154,7 @@ namespace MonPDReborn.Models.DataOP
                     .ToList();
 
                 var dataResto2 = context.DbOpRestos
-                    .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)))
+                    .Where(x => ((x.TahunBuku == DateTime.Now.Year - 1)) && x.PajakNama != "MAMIN")
                     .GroupBy(x => new { x.Nop })
                     .Select(x => new { x.Key.Nop })
                     .ToList();
@@ -185,7 +185,7 @@ namespace MonPDReborn.Models.DataOP
                     .ToList();
 
                 var dataResto3 = context.DbOpRestos
-                     .Where(x => x.TahunBuku == DateTime.Now.Year &&
+                     .Where(x => x.TahunBuku == DateTime.Now.Year && x.PajakNama != "MAMIN" &&
                                  (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > DateTime.Now.Year))
                      .GroupBy(x => new { x.Nop })
                      .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp) })
@@ -656,17 +656,17 @@ namespace MonPDReborn.Models.DataOP
                 {
                     case EnumFactory.EPajak.MakananMinuman:
                         var dataResto1 = context.DbOpRestos
-                            .Where(x => x.TahunBuku == DateTime.Now.Year - 2)
+                            .Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.PajakNama != "MAMIN")
                             .GroupBy(x => new { x.Nop, x.KategoriId })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataResto2 = context.DbOpRestos
-                            .Where(x => x.TahunBuku == DateTime.Now.Year - 1)
+                            .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.PajakNama != "MAMIN")
                             .GroupBy(x => new { x.Nop, x.KategoriId })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId })
                             .ToList();
                         var dataResto3 = context.DbOpRestos
-                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))))
+                            .Where(x => ((x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year))) && x.PajakNama != "MAMIN")
                             .GroupBy(x => new { x.Nop, x.KategoriId, x.TglMulaiBukaOp })
                             .Select(x => new { x.Key.Nop, x.Key.KategoriId, x.Key.TglMulaiBukaOp })
                             .ToList();
@@ -1336,13 +1336,13 @@ namespace MonPDReborn.Models.DataOP
                         break;
                     case EnumFactory.EPajak.MakananMinuman:
                         var dataResto1 = context.DbOpRestos
-                            .Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.KategoriId == kategori)
+                            .Where(x => x.TahunBuku == DateTime.Now.Year - 2 && x.KategoriId == kategori && x.PajakNama != "MAMIN")
                             .ToList();
                         var dataResto2 = context.DbOpRestos
-                            .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori)
+                            .Where(x => x.TahunBuku == DateTime.Now.Year - 1 && x.KategoriId == kategori && x.PajakNama != "MAMIN")
                             .ToList();
                         var dataResto3 = context.DbOpRestos
-                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori)
+                            .Where(x => (x.TahunBuku == DateTime.Now.Year && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > DateTime.Now.Year)) && x.KategoriId == kategori && x.PajakNama != "MAMIN")
                             .ToList();
 
                         var distinctNopResto = dataResto3.Select(x => x.Nop).Distinct().ToList();
