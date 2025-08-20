@@ -424,23 +424,27 @@ namespace MonPDReborn.Models.AktivitasOP
                     return null;
 
                 // Ambil data upaya (pencocokan ke dua kemungkinan NoFormulir juga)
-                var upayaList = context.DbMonReklameUpayas
+                var dataUpayaList = context.DbMonReklameUpayas
                     .Include(x => x.DbMonReklameUpayaDok)
                     .Where(x => x.NoFormulir == reklame.NoFormulir || x.NoFormulir == reklame.NoFormulirA)
                     .OrderByDescending(x => x.TglUpaya)
+                    .Take(1)
+                    .Select(x => new DetailUpaya.DataUpaya
+                    {
+                        NoFormulir = x.NoFormulir,
+                        TglUpaya = x.TglUpaya.ToString("dd/MM/yyyy"),
+                        NamaUpaya = x.Upaya,
+                        Keterangan = x.Keterangan,
+                        Petugas = x.Petugas,
+                        Lampiran = x.DbMonReklameUpayaDok != null && x.DbMonReklameUpayaDok.Gambar != null
+                            ? Convert.ToBase64String(x.DbMonReklameUpayaDok.Gambar)
+                            : null
+                    })
                     .ToList();
 
-                var dataUpayaList = upayaList.Select(x => new DetailUpaya.DataUpaya
-                {
-                    NoFormulir = x.NoFormulir,
-                    TglUpaya = x.TglUpaya.ToString("dd/MM/yyyy"),
-                    NamaUpaya = x.Upaya,
-                    Keterangan = x.Keterangan,
-                    Petugas = x.Petugas,
-                    Lampiran = x.DbMonReklameUpayaDok.Gambar != null ? Convert.ToBase64String(x.DbMonReklameUpayaDok.Gambar) : null
-                }).ToList();
 
-                
+
+
 
                 var model = new DetailUpaya
                 {
