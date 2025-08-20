@@ -221,7 +221,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             var realisasiBulanIni = data.Where(d => d.Tanggal >= awalTahun && d.Tanggal < startOfDay).Sum(d => d.Nominal);
             if (jenisPajak == EnumFactory.EPajak.OpsenPkb)
             {
-                var realisasiHariIni = data.Where(d => d.Tanggal.Day >= startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Sum(d => d.Nominal);
+                var realisasiHariIni = data.Where(d => d.Tanggal.Day > startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Sum(d => d.Nominal);
 
                 return new KontrolPrediksi
                 {
@@ -235,7 +235,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             }
             if (jenisPajak == EnumFactory.EPajak.OpsenBbnkb)
             {
-                var realisasiHariIni = data.Where(d => d.Tanggal.Day >= startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Sum(d => d.Nominal);
+                var realisasiHariIni = data.Where(d => d.Tanggal.Day > startOfDay.Day && d.Tanggal.Day <= endOfDay.Day).Sum(d => d.Nominal);
 
                 return new KontrolPrediksi
                 {
@@ -256,7 +256,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                     .Where(d =>
                     {
                         var t = new DateTime(2000, d.Tanggal.Month, d.Tanggal.Day);
-                        return t >= start && t <= end;
+                        return t > start && t <= end;
                     })
                     .GroupBy(d => new { d.Tanggal.Year, d.Tanggal.Month, d.Tanggal.Day })
                     .Select(g => new {
