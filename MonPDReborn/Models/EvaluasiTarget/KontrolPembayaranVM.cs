@@ -333,7 +333,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 5)
                         .Sum(x => x.JmlNTs);
 
-                    re.OPbuka5 = kontrolPembayaranList
+                    re.OPbuka6 = kontrolPembayaranList
                         .Where(x => x.KategoriId == item.Id && x.Tahun == tahun && x.Bulan == 6)
                         .Sum(x => x.Jml);
                     re.Blm6 = kontrolPembayaranList
