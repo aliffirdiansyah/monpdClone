@@ -54,6 +54,8 @@ public partial class DbCtrlByrParkir
     [Unicode(false)]
     public string? Keterangan { get; set; }
 
-    [Column("STATUS_BAYAR", TypeName = "NUMBER")]
-    public decimal? StatusBayar { get; set; }
+    [Column("STATUS_BAYAR")]
+    [StringLength(1)]
+    [Unicode(false)]
+    public string? StatusBayar { get; set; }
 }
