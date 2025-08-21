@@ -467,7 +467,7 @@ namespace MonPDReborn.Models.DataOP
                     }
                     else // DLL
                     {
-                        totalPotensiHiburan += potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerBulanFitnes);
+                        totalPotensiHiburan += potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunFitnes);
                     }
                     if (item.Id == 64)
                     {
@@ -1187,7 +1187,7 @@ namespace MonPDReborn.Models.DataOP
                             }
                             else if (item.Id != 64)
                             {
-                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerBulanFitnes);
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunFitnes);
                             }
 
 
@@ -1797,7 +1797,7 @@ namespace MonPDReborn.Models.DataOP
                             }
                             else
                             {
-                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerBulanFitnes);
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunFitnes);
                             }
                             if (kategori != 64)
                             {

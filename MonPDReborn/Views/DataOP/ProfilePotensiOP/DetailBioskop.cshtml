@@ -130,7 +130,7 @@
                                         Kapasitas Bioskop = Jumlah Studio × Kapasitas Studio × 4 Kali Penayangan/Hari
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-2">
-                                        @Model.JumlahStudio.ToString("N0") x @Model.KapasitasStudio.ToString("N0") × 4 = @Model.KapasitasBioskop.ToString("N0") Kursi
+                                        @Model.JumlahStudio.ToString("N0") Studio x @Model.KapasitasStudio.ToString("N0") × 4 = @Model.KapasitasBioskop.ToString("N0") Kursi
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">
                                         Jumlah Pengunjung Weekdays:
@@ -263,7 +263,7 @@
                                     Kapasitas = Jumlah Studio x Kapasitas Studio x 4 Kali Penayangan/Hari
                                 </p>
                                 <p class="fs-14 mb-2 fw-bold text-dark">
-                                    = @Model.JumlahStudio.ToString("N0") x @Model.KapasitasStudio.ToString("N0") x 4
+                                    = @Model.JumlahStudio.ToString("N0") Studio x @Model.KapasitasStudio.ToString("N0") x 4
                                     = @Model.KapasitasBioskop.ToString("N0") Kursi
                                 </p>
 
@@ -271,7 +271,7 @@
                                     Jumlah Pengunjung Weekdays = Kapasitas x Okupansi Weekdays
                                 </p>
                                 <p class="fs-14 mb-2 fw-bold text-dark">
-                                    = @Model.KapasitasBioskop.ToString("N0") x @Model.TurnoverWeekdays.ToString("P")
+                                    = @Model.KapasitasBioskop.ToString("N0") Kursi x @Model.TurnoverWeekdays.ToString("P")
                                     = @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") Orang
                                 </p>
 
@@ -279,7 +279,7 @@
                                     Jumlah Pengunjung Weekend = Kapasitas x Okupansi Weekend
                                 </p>
                                 <p class="fs-14 mb-2 fw-bold text-dark">
-                                    = @Model.KapasitasBioskop.ToString("N0") x @Model.TurnoverWeekend.ToString("P")
+                                    = @Model.KapasitasBioskop.ToString("N0") Kursi x @Model.TurnoverWeekend.ToString("P")
                                     = @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") Orang
                                 </p>
 
