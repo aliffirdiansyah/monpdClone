@@ -589,8 +589,11 @@
                                 dataField: "JmlOpAwal",
                                 caption: "OP AWAL",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null 
+                                        ? new Intl.NumberFormat('id-ID').format(options.value) 
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -606,14 +609,17 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }
+                                },
                             },
                             {
                                 dataField: "JmlOpTutupPermanen",
                                 caption: "OP TUTUP",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -635,8 +641,11 @@
                                 dataField: "JmlOpBaru",
                                 caption: "OP BARU",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -658,8 +667,11 @@
                                 dataField: "JmlOpAkhir",
                                 caption: "OP AKHIR",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -708,8 +720,11 @@
                                 dataField: "JmlOpAwal",
                                 caption: "OP AWAL",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -731,8 +746,11 @@
                                 dataField: "JmlOpTutupPermanen",
                                 caption: "OP TUTUP",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -754,8 +772,11 @@
                                 dataField: "JmlOpBaru",
                                 caption: "OP BARU",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -777,8 +798,11 @@
                                 dataField: "JmlOpAkhir",
                                 caption: "OP AKHIR",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -816,10 +840,10 @@
                         allowColumnResizing: true,
                         allowColumnReordering: true,
                         columnAutoWidth: true,
-                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        sorting: { mode: "multiple" }, 
                         filterRow: {
                             visible: true,
-                            applyFilter: "auto" // atau "onClick"
+                            applyFilter: "auto" 
                         },
                         headerFilter: { visible: true },
                         paging: { pageSize: 99999 },
@@ -830,21 +854,17 @@
                                 dataField: "TotalKamar",
                                 caption: "Total Kamar",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
                                             "text-decoration": "underline"
                                         })
                                         .on("click", function () {
-                                            // console.log("👉 options.value:", options.value);
-                                            // console.log("👉 options.data:", options.data);
-
-                                            // Kalau mau cek field tertentu
-                                            // console.log("EnumPajak:", options.data.EnumPajak);
-                                            // console.log("KategoriId:", options.data.KategoriId);
-                                            // console.log("Tahun:", options.data.Tahun);
                                             let rowData = options.data;
                                             onDetailHotelOnClick(
                                                 rowData.EnumPajak,
@@ -875,10 +895,10 @@
                         allowColumnResizing: true,
                         allowColumnReordering: true,
                         columnAutoWidth: true,
-                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        sorting: { mode: "multiple" }, 
                         filterRow: {
                             visible: true,
-                            applyFilter: "auto" // atau "onClick"
+                            applyFilter: "auto" 
                         },
                         headerFilter: { visible: true },
                         paging: { pageSize: 99999 },
@@ -888,7 +908,28 @@
                             {
                                 dataField: "TotalKamar",
                                 caption: "Total Kamar",
-                                },
+                                cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
+                                    $("<a>")
+                                        .text(formattedValue)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailHotelOnClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
+                            },
                             {
                                 dataField: "AvgRate",
                                 caption: "Rate Okupansi",
@@ -924,8 +965,11 @@
                                 dataField: "JmlOpAwal",
                                 caption: "OP AWAL",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -947,8 +991,11 @@
                                 dataField: "JmlOpTutupPermanen",
                                 caption: "OP TUTUP",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -970,8 +1017,11 @@
                                 dataField: "JmlOpBaru",
                                 caption: "OP BARU",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",

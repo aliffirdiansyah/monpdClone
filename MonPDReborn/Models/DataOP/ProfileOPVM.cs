@@ -250,7 +250,8 @@ namespace MonPDReborn.Models.DataOP
                             x.TahunBuku,
                             x.TglOpTutup,
                             x.TglMulaiBukaOp,
-                            x.KategoriId
+                            x.KategoriId,
+                            x.PajakNama
                         }).AsQueryable();
 
                 var dbOpListrik = context.DbOpListriks
@@ -349,10 +350,10 @@ namespace MonPDReborn.Models.DataOP
                     {
                         case EnumFactory.EPajak.MakananMinuman:
 
-                            tutup = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                            awal = dbOpResto.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                            baru = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                            akhir = dbOpResto.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                            tutup = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.PajakNama != "MAMIN");
+                            awal = dbOpResto.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN" );
+                            baru = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN");
+                            akhir = dbOpResto.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
 
                             break;
 
@@ -464,10 +465,10 @@ namespace MonPDReborn.Models.DataOP
                         {
                             case EnumFactory.EPajak.MakananMinuman:
 
-                                tutupKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                                awalKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                                baruKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                                akhirKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                                tutupKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.PajakNama != "MAMIN");
+                                awalKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN");
+                                baruKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN");
+                                akhirKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
 
                                 break;
 
