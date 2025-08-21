@@ -154,10 +154,15 @@
                                         Total Pengunjung per Bulan :
                                     </h4>
                                     <p class="fs-14 text-muted mb-1">
-                                        Jumlah Pengunjung Weekdays + Jumlah Pengunjung Weekend
+                                        (Jumlah pengunjung weekdays x 22 Hari) + (Jumlah pengunjung weekend x 8 Hari)
                                     </p>
+                                    @{
+                                        var pengunjungWd22 = (Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop) * 22);
+                                        var pengunjungWe8 = (Math.Ceiling(Model.JumlahPengunjungWeekendBioskop) * 8);
+                                        var totalPengunjungBulan = pengunjungWd22 + pengunjungWe8;
+                                    }
                                     <p class="fs-14 fw-semibold text-dark mb-1">
-                                        @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop).ToString("N0") Orang + @Math.Ceiling(Model.JumlahPengunjungWeekendBioskop).ToString("N0") Orang = @Math.Ceiling(Model.JumlahPengunjungWeekdaysBioskop + Model.JumlahPengunjungWeekendBioskop).ToString("N0") Orang
+                                        @pengunjungWd22.ToString("N0") Orang + @pengunjungWe8.ToString("N0") Orang = @totalPengunjungBulan.ToString("N0") Orang
                                     </p>
                                 </div>
                             </div>
@@ -263,7 +268,7 @@
                                     Kapasitas = Jumlah Studio x Kapasitas Studio x 4 Kali Penayangan/Hari
                                 </p>
                                 <p class="fs-14 mb-2 fw-bold text-dark">
-                                    = @Model.JumlahStudio.ToString("N0") Studio x @Model.KapasitasStudio.ToString("N0") x 4
+                                    = @Model.JumlahStudio.ToString("N0") Studio x @Model.KapasitasStudio.ToString("N0") Kursi x 4 Kali Penayangan/Hari
                                     = @Model.KapasitasBioskop.ToString("N0") Kursi
                                 </p>
 

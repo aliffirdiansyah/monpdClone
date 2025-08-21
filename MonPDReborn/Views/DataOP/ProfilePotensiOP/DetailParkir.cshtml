@@ -417,9 +417,9 @@
                                             {
                                                 <tr>
                                                     <td class="text-dark">Motor</td>
-                                                    <td>@Model.KapasitasMotor.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirMotorWeekdays.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirMotorWeekend.ToString("N0")</td>
+                                                    <td>@Model.KapasitasMotor.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit</td>
                                                     <td class="text-end">Rp. @Model.TarifMotor.ToString("N0")</td>
                                                 </tr>
                                             }
@@ -427,9 +427,9 @@
                                             {
                                                 <tr>
                                                     <td class="text-dark">Mobil</td>
-                                                    <td>@Model.KapasitasMobil.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirMobilWeekdays.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirMobilWeekend.ToString("N0")</td>
+                                                    <td>@Model.KapasitasMobil.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit</td>
                                                     <td class="text-end">Rp. @Model.TarifMobil.ToString("N0")</td>
                                                 </tr>
                                             }
@@ -437,9 +437,9 @@
                                             {
                                                 <tr>
                                                     <td class="text-dark">Sepeda</td>
-                                                    <td>@Model.KapasitasSepeda.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirSepedaWeekdays.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirSepedaWeekend.ToString("N0")</td>
+                                                    <td>@Model.KapasitasSepeda.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit</td>
                                                     <td class="text-end">Rp. @Model.TarifSepeda.ToString("N0")</td>
                                                 </tr>
                                             }
@@ -447,9 +447,9 @@
                                             {
                                                 <tr>
                                                     <td class="text-dark">Truk Mini</td>
-                                                    <td>@Model.KapasitasTrukMini.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0")</td>
+                                                    <td>@Model.KapasitasTrukMini.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit</td>
                                                     <td class="text-end">Rp. @Model.TarifTrukMini.ToString("N0")</td>
                                                 </tr>
                                             }
@@ -457,9 +457,9 @@
                                             {
                                                 <tr>
                                                     <td class="text-dark">Truk/Bus</td>
-                                                    <td>@Model.KapasitasTrukBus.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirTrukBusWeekend.ToString("N0")</td>
+                                                    <td>@Model.KapasitasTrukBus.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit</td>
                                                     <td class="text-end">Rp. @Model.TarifTrukBus.ToString("N0")</td>
                                                 </tr>
                                             }
@@ -467,9 +467,9 @@
                                             {
                                                 <tr>
                                                     <td class="text-dark">Trailer</td>
-                                                    <td>@Model.KapasitasTrailer.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirTrailerWeekdays.ToString("N0")</td>
-                                                    <td>@Model.JumlahTerparkirTrailerWeekend.ToString("N0")</td>
+                                                    <td>@Model.KapasitasTrailer.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit</td>
+                                                    <td>@Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit</td>
                                                     <td class="text-end">Rp. @Model.TarifTrailer.ToString("N0")</td>
                                                 </tr>
                                             }
@@ -484,14 +484,14 @@
                                                 Sepeda Motor Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Sepeda Motor
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Sepeda Motor Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMotor.ToString("N0") = @Model.JumlahTerparkirMotorWeekdays.ToString("N0")
+                                                Sepeda Motor Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMotor.ToString("N0") Unit = @Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit
                                             </p>
                                             <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Sepeda Motor Akhir Pekan</h4>
                                             <p class="fs-14 text-muted mb-1 font-monospace">
                                                 Sepeda Motor Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Sepeda Motor
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Sepeda Motor Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMotor.ToString("N0") = @Model.JumlahTerparkirMotorWeekend.ToString("N0")
+                                                Sepeda Motor Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMotor.ToString("N0") Unit = @Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit
                                             </p>
 
                                         }
@@ -503,14 +503,14 @@
                                                 Mobil Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Mobil
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Mobil Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMobil.ToString("N0") = @Model.JumlahTerparkirMobilWeekdays.ToString("N0")
+                                                Mobil Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMobil.ToString("N0") Unit = @Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit
                                             </p>
                                             <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Mobil Akhir Pekan</h4>
                                             <p class="fs-14 text-muted mb-1 font-monospace">
                                                 Mobil Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Mobil
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Mobil Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMobil.ToString("N0") = @Model.JumlahTerparkirMobilWeekend.ToString("N0")
+                                                Mobil Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMobil.ToString("N0") Unit = @Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit
                                             </p>
                                         }
                                         @if (Model.KapasitasSepeda > 0)
@@ -521,14 +521,14 @@
                                                 Sepeda Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Sepeda
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Sepeda Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") = @Model.JumlahTerparkirSepedaWeekdays.ToString("N0")
+                                                Sepeda Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") Unit = @Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit
                                             </p>
                                             <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Sepeda Akhir Pekan</h4>
                                             <p class="fs-14 text-muted mb-1 font-monospace">
                                                 Sepeda Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Sepeda
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Sepeda Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") = @Model.JumlahTerparkirSepedaWeekend.ToString("N0")
+                                                Sepeda Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") Unit = @Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit
                                             </p>
                                         }
                                         @if (Model.KapasitasTrukMini > 0)
@@ -539,14 +539,14 @@
                                                 Truk Mini Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Truk Mini
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Truk Mini Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") = @Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0")
+                                                Truk Mini Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") Unit = @Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit
                                             </p>
                                             <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas TrukMini Akhir Pekan</h4>
                                             <p class="fs-14 text-muted mb-1 font-monospace">
                                                 Truk Mini Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Truk Mini
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                TrukMini Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") = @Model.JumlahTerparkirTrukMiniWeekend.ToString("N0")
+                                                TrukMini Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") Unit = @Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit
                                             </p>                                            
                                         }
                                         @if (Model.KapasitasTrukBus > 0)
@@ -557,14 +557,14 @@
                                                 Truk Bus Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Truk Bus
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Truk Bus Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") = @Model.JumlahTerparkirTrukBusWeekdays.ToString("N0")
+                                                Truk Bus Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") Unit = @Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit
                                             </p>
                                             <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas TrukBus Akhir Pekan</h4>
                                             <p class="fs-14 text-muted mb-1 font-monospace">
                                                 Truk Bus Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Truk Bus
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                TrukBus Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") = @Model.JumlahTerparkirTrukBusWeekend.ToString("N0")
+                                                TrukBus Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") Unit = @Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit
                                             </p>
                                         }
                                         @if (Model.KapasitasTrailer > 0)
@@ -575,14 +575,14 @@
                                                 Trailer Terparkir Hari Kerja = Turnover Hari Kerja x Kapasitas Trailer
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Trailer Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") = @Model.JumlahTerparkirTrailerWeekdays.ToString("N0")
+                                                Trailer Terparkir Hari Kerja = @Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") Unit = @Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit
                                             </p>
                                             <h4 class="fs-16 fw-semibold mb-2">Perhitungan Kapasitas Trailer Akhir Pekan</h4>
                                             <p class="fs-14 text-muted mb-1 font-monospace">
                                                 Trailer Terparkir Akhir Pekan = Turnover Akhir Pekan x Kapasitas Trailer
                                             </p>
                                             <p class="fs-14 fw-semibold text-dark">
-                                                Trailer Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") = @Model.JumlahTerparkirTrailerWeekend.ToString("N0")
+                                                Trailer Terparkir Akhir Pekan = @Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") Unit = @Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit
                                             </p>                                            
                                         }
 
@@ -809,7 +809,7 @@
                     </div>
                     <div class="d-flex mb-2">
                         <p class="label">Total Kapasitas</p>
-                        <p class="value">@Model.TotalKapasitas.ToString("N0") Kendaraan</p>
+                        <p class="value">@Model.TotalKapasitas.ToString("N0") Unit</p>
                     </div>
 
                 </div>
@@ -1251,7 +1251,7 @@
                                             Omzet Sepeda = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
-                                            Omzet Sepeda = (@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirSepedaWeekend.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 8 Hari)
+                                            Omzet Sepeda = (@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit x Rp. @Model.TarifSepeda.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit x Rp. @Model.TarifSepeda.ToString("N0") x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda = Rp. @Model.OmzetSepeda.ToString("N0")</p>
                                     }
@@ -1264,7 +1264,7 @@
                                             Omzet Sepeda Motor = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
-                                            Omzet Sepeda Motor = (@Model.JumlahTerparkirMotorWeekdays.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMotorWeekend.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 8 Hari)
+                                            Omzet Sepeda Motor = (@Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit x Rp. @Model.TarifMotor.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit x Rp. @Model.TarifMotor.ToString("N0") x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda Motor= Rp. @Model.OmzetMotor.ToString("N0")</p>
                                     }
@@ -1277,7 +1277,7 @@
                                             Omzet Mobil = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
-                                            Omzet Mobil = (@Model.JumlahTerparkirMobilWeekdays.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMobilWeekend.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 8 Hari)
+                                            Omzet Mobil = (@Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit x Rp. @Model.TarifMobil.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit x Rp. @Model.TarifMobil.ToString("N0") x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark mb-3">Omzet Mobil = Rp. @Model.OmzetMobil.ToString("N0")</p>
                                     }
@@ -1290,7 +1290,7 @@
                                             Omzet Truk Mini = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
-                                            Omzet Truk Mini = (@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 8 Hari)
+                                            Omzet Truk Mini = (@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit x Rp. @Model.TarifTrukMini.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit x Rp. @Model.TarifTrukMini.ToString("N0") x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk Mini = Rp. @Model.OmzetTrukMini.ToString("N0")</p>
                                     }
@@ -1303,7 +1303,7 @@
                                             Omzet Truk/Bus = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
-                                            Omzet Truk/Bus = (@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 8 Hari)
+                                            Omzet Truk/Bus = (@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit x Rp. @Model.TarifTrukBus.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit x Rp. @Model.TarifTrukBus.ToString("N0") x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk/Bus = Rp. @Model.OmzetTrukBus.ToString("N0")</p>
                                     }
@@ -1316,7 +1316,7 @@
                                             Omzet Trailer = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark">
-                                            Omzet Trailer = (@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrailerWeekend.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 8 Hari)
+                                            Omzet Trailer = (@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit x Rp. @Model.TarifTrailer.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit x Rp. @Model.TarifTrailer.ToString("N0") x 8 Hari)
                                         </p>
                                         <p class="fs-14 fw-semibold text-dark mb-3">Omzet Trailer = Rp. @Model.OmzetTrailer.ToString("N0")</p>
                                     }
@@ -1361,10 +1361,10 @@
                                         Rumus Potensi Pajak per Tahun:
                                     </h4>
                                     <p class="fs-14 text-muted mb-1 font-monospace">
-                                        Potensi Pajak per Bulan x 12
+                                        Potensi Pajak per Bulan x @Model.BulanSisa Bulan
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-3">
-                                        Rp. @Model.PotensiPajakPerBulan.ToString("N0") x 12 = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
+                                        Rp. @Model.PotensiPajakPerBulan.ToString("N0") x @Model.BulanSisa Bulan = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
                                     </p>
                                     <hr>
                                     <h4 class="fs-16 fw-semibold mb-2 text-end text-dark">
@@ -1401,20 +1401,20 @@
                                         Jumlah Kendaraan Terparkir Weekdays = (Turnover Weekdays x Kapasitas Sepeda)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasSepeda.ToString("N0")) = @Model.JumlahTerparkirSepedaWeekdays.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") Unit) = @Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit
                                     </p>
                                     <p class="fs-14 text-muted font-monospace">
                                         Jumlah Kendaraan Terparkir Weekend = (Turnover Weekend x Kapasitas Sepeda)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasSepeda.ToString("N0")) = @Model.JumlahTerparkirSepedaWeekend.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") Unit) = @Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda :</h4>
                                     <p class="fs-14 text-muted font-monospace">
                                         Omzet Sepeda = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Omzet Sepeda = (@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirSepedaWeekend.ToString("N0") x Rp. @Model.TarifSepeda.ToString("N0") x 8 Hari)
+                                        Omzet Sepeda = (@Model.JumlahTerparkirSepedaWeekdays.ToString("N0") Unit x Rp. @Model.TarifSepeda.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirSepedaWeekend.ToString("N0") Unit x Rp. @Model.TarifSepeda.ToString("N0") x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda = Rp. @Model.OmzetSepeda.ToString("N0")</p>
                                 }
@@ -1427,20 +1427,20 @@
                                         Jumlah Kendaraan Terparkir Weekdays = (Turnover Weekdays x Kapasitas Sepeda Motor)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMotor.ToString("N0")) = @Model.JumlahTerparkirMotorWeekdays.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMotor.ToString("N0") Unit) = @Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit
                                     </p>
                                     <p class="fs-14 text-muted font-monospace">
                                         Jumlah Kendaraan Terparkir Weekend = (Turnover Weekend x Kapasitas Sepeda Motor)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMotor.ToString("N0")) = @Model.JumlahTerparkirMotorWeekend.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMotor.ToString("N0") Unit) = @Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Sepeda Motor :</h4>
                                     <p class="fs-14 text-muted font-monospace">
                                         Omzet Sepeda Motor = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Omzet Sepeda Motor = (@Model.JumlahTerparkirMotorWeekdays.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMotorWeekend.ToString("N0") x Rp. @Model.TarifMotor.ToString("N0") x 8 Hari)
+                                        Omzet Sepeda Motor = (@Model.JumlahTerparkirMotorWeekdays.ToString("N0") Unit x Rp. @Model.TarifMotor.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMotorWeekend.ToString("N0") Unit x Rp. @Model.TarifMotor.ToString("N0") x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-3">Omzet Sepeda Motor= Rp. @Model.OmzetMotor.ToString("N0")</p>
                                 }
@@ -1453,20 +1453,20 @@
                                         Jumlah Kendaraan Terparkir Weekdays = (Turnover Weekdays x Kapasitas Mobil)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMobil.ToString("N0")) = @Model.JumlahTerparkirMobilWeekdays.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMobil.ToString("N0") Unit) = @Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit
                                     </p>
                                     <p class="fs-14 text-muted font-monospace">
                                         Jumlah Kendaraan Terparkir Weekend = (Turnover Weekend x Kapasitas Mobil)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMobil.ToString("N0")) = @Model.JumlahTerparkirMobilWeekend.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMobil.ToString("N0") Unit) = @Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Mobil :</h4>
                                     <p class="fs-14 text-muted font-monospace">
                                         Omzet Mobil = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Omzet Mobil = (@Model.JumlahTerparkirMobilWeekdays.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMobilWeekend.ToString("N0") x Rp. @Model.TarifMobil.ToString("N0") x 8 Hari)
+                                        Omzet Mobil = (@Model.JumlahTerparkirMobilWeekdays.ToString("N0") Unit x Rp. @Model.TarifMobil.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirMobilWeekend.ToString("N0") Unit x Rp. @Model.TarifMobil.ToString("N0") x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-3">Omzet Mobil = Rp. @Model.OmzetMobil.ToString("N0")</p>
                                 }
@@ -1479,20 +1479,20 @@
                                         Jumlah Kendaraan Terparkir Weekdays = (Turnover Weekdays x Kapasitas Truk Mini)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0")) = @Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") Unit) = @Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit
                                     </p>
                                     <p class="fs-14 text-muted font-monospace">
                                         Jumlah Kendaraan Terparkir Weekend = (Turnover Weekend x Kapasitas Truk Mini)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0")) = @Model.JumlahTerparkirTrukMiniWeekend.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") Unit) = @Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk Mini :</h4>
                                     <p class="fs-14 text-muted font-monospace">
                                         Omzet Truk Mini = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Omzet Truk Mini = (@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") x Rp. @Model.TarifTrukMini.ToString("N0") x 8 Hari)
+                                        Omzet Truk Mini = (@Model.JumlahTerparkirTrukMiniWeekdays.ToString("N0") Unit x Rp. @Model.TarifTrukMini.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukMiniWeekend.ToString("N0") Unit x Rp. @Model.TarifTrukMini.ToString("N0") x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk Mini = Rp. @Model.OmzetTrukMini.ToString("N0")</p>
                                 }
@@ -1505,20 +1505,20 @@
                                         Jumlah Kendaraan Terparkir Weekdays = (Turnover Weekdays x Kapasitas Truk / Bus)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0")) = @Model.JumlahTerparkirTrukBusWeekdays.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") Unit) = @Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit
                                     </p>
                                     <p class="fs-14 text-muted font-monospace">
                                         Jumlah Kendaraan Terparkir Weekend = (Turnover Weekend x Kapasitas Truk / Bus)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0")) = @Model.JumlahTerparkirTrukBusWeekend.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") Unit) = @Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Truk / Bus :</h4>
                                     <p class="fs-14 text-muted font-monospace">
                                         Omzet Truk/Bus = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Omzet Truk/Bus = (@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") x Rp. @Model.TarifTrukBus.ToString("N0") x 8 Hari)
+                                        Omzet Truk/Bus = (@Model.JumlahTerparkirTrukBusWeekdays.ToString("N0") Unit x Rp. @Model.TarifTrukBus.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrukBusWeekend.ToString("N0") Unit x Rp. @Model.TarifTrukBus.ToString("N0") x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-3">Omzet Truk/Bus = Rp. @Model.OmzetTrukBus.ToString("N0")</p>
                                 }
@@ -1531,20 +1531,20 @@
                                         Jumlah Kendaraan Terparkir Weekdays = (Turnover Weekdays x Kapasitas Trailer)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrailer.ToString("N0")) = @Model.JumlahTerparkirTrailerWeekdays.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekdays = (@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") Unit) = @Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit
                                     </p>
                                     <p class="fs-14 text-muted font-monospace">
                                         Jumlah Kendaraan Terparkir Weekend = (Turnover Weekend x Kapasitas Trailer)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrailer.ToString("N0")) = @Model.JumlahTerparkirTrailerWeekend.ToString("N0")
+                                        Jumlah Kendaraan Terparkir Weekend = (@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") Unit) = @Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit
                                     </p>
                                     <h4 class="fs-16 fw-semibold mb-2">Perhitungan Omzet Trailer :</h4>
                                     <p class="fs-14 text-muted font-monospace">
                                         Omzet Trailer = (Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark">
-                                        Omzet Trailer = (@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrailerWeekend.ToString("N0") x Rp. @Model.TarifTrailer.ToString("N0") x 8 Hari)
+                                        Omzet Trailer = (@Model.JumlahTerparkirTrailerWeekdays.ToString("N0") Unit x Rp. @Model.TarifTrailer.ToString("N0") x 22 Hari) + (@Model.JumlahTerparkirTrailerWeekend.ToString("N0") Unit x Rp. @Model.TarifTrailer.ToString("N0") x 8 Hari)
                                     </p>
                                     <p class="fs-14 fw-semibold text-dark mb-3">Omzet Trailer = Rp. @Model.OmzetTrailer.ToString("N0")</p>
                                 }
@@ -1552,8 +1552,8 @@
                                 <p class="fs-14 text-muted mb-1 fw-semibold">Total Omzet = Rp. @Model.TotalOmzet.ToString("N0")</p>
                                 <p class="fs-14 text-muted mb-1 font-monospace">Potensi Pajak per Bulan = Total Omzet x Tarif Pajak</p>
                                 <p class="fs-14 text-muted mb-1 fw-semibold">= Rp. @Model.TotalOmzet.ToString("N0") x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")</p>
-                                <p class="fs-14 text-muted font-monospace">Potensi Pajak per Tahun = Pajak per Bulan x @Model.BulanSisa</p>
-                                <p class="fs-14 text-muted fw-semibold">= Rp. @Model.PotensiPajakPerBulan.ToString("N0") x @Model.BulanSisa = Rp. @Model.PotensiPajakPerTahun.ToString("N0")</p>
+                                <p class="fs-14 text-muted font-monospace">Potensi Pajak per Tahun = Pajak per Bulan x @Model.BulanSisa Bulan</p>
+                                <p class="fs-14 text-muted fw-semibold">= Rp. @Model.PotensiPajakPerBulan.ToString("N0") x @Model.BulanSisa Bulan = Rp. @Model.PotensiPajakPerTahun.ToString("N0")</p>
 
                             </div>
                         </div>
