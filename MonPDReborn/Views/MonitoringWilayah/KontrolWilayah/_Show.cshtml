@@ -53,13 +53,24 @@
         string col1 = "col-lg-12";
         string col2 = "col-lg-12";
         bool col2Visible = false;
-        @if (Model.Wilayah == MonPDLib.General.EnumFactory.EUPTB.SEMUA && Model.JenisPajak == MonPDLib.General.EnumFactory.EPajak.Semua)
+
+        // Kondisi 1: Wilayah & Pajak = Semua
+        if (Model.Wilayah == MonPDLib.General.EnumFactory.EUPTB.SEMUA 
+            && Model.JenisPajak == MonPDLib.General.EnumFactory.EPajak.Semua)
+        {
+            col1 = "col-lg-6";
+            col2 = "col-lg-6";
+            col2Visible = true;
+        }
+        // Kondisi 2: Pajak = Semua (apapun wilayahnya)
+        else if (Model.JenisPajak == MonPDLib.General.EnumFactory.EPajak.Semua)
         {
             col1 = "col-lg-6";
             col2 = "col-lg-6";
             col2Visible = true;
         }
     }
+
 
     <div class="@(col1)">
         <div class="card">
