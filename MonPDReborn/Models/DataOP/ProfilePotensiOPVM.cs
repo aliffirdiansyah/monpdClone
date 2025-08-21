@@ -379,12 +379,23 @@ namespace MonPDReborn.Models.DataOP
                     .ToList();
                 var totalPotensiParkir = potensiParkir.Sum(x => x.PotensiPajakPerTahun);
 
-                var potensiHiburan = context.DbPotensiHiburans
-                    .Where(x => dataHiburan3.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
+                //var totalPotensiHiburanBar = 0m;
+                //var totalPotensiHiburanBioskop = 0m;
+                var totalPotensiHiburan = 0m;
+                
+                
+
+                var kategoriPajakHiburan = context.MKategoriPajaks.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).ToList();
+                foreach (var item in kategoriPajakHiburan.Where(x => x.Id != 0 && x.Id != 64 && x.Id != 54).ToList())
+                {
+                    var nopList = dataHiburan3.Where(x => x.KategoriId == item.Id).AsEnumerable();
+
+                    var potensiHiburan = context.DbPotensiHiburans
+                    .Where(x => nopList.Select(v => v.Nop).ToList().Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 1)
                     .ToList()
                     .Select(x =>
                     {
-                        var op = dataHiburan3.FirstOrDefault(o => o.Nop == x.Nop);
+                        var op = nopList.FirstOrDefault(o => o.Nop == x.Nop);
 
                         return new DetailPotensiPajakHiburan
                         {
@@ -403,7 +414,20 @@ namespace MonPDReborn.Models.DataOP
                         };
                     })
                     .ToList();
-                var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerTahunBioskop);
+
+                    if (item.Id == 41) //BAR/CAFE
+                    {
+                        totalPotensiHiburan += potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnyaBar);
+                    }
+                    else if (item.Id == 42) //BIOSKOP
+                    {
+                        totalPotensiHiburan += potensiHiburan.Sum(x => x.PotensiPajakPerTahunBioskop);
+                    }
+                    else // DLL
+                    {
+                        totalPotensiHiburan += potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerBulanFitnes);
+                    }
+                }
 
 
                 //--------
@@ -1074,7 +1098,19 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerBulanFitnes);
+                            var totalPotensiHiburan = 0m;
+                            if (item.Id == 41) //BAR/CAFE
+                            {
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnyaBar);
+                            }
+                            else if (item.Id == 42) //BIOSKOP
+                            {
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunBioskop);
+                            }
+                            else // DLL
+                            {
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerBulanFitnes);
+                            }
 
                             var potensiHiburanNext1 = context.DbPotensiHiburans.Where(x => listOpHiburan3.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.PotensiPajakTahun) ?? 0;
                             var potensiHiburanNext2 = context.DbPotensiHiburans.Where(x => listOpHiburan3.Contains(x.Nop) && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.PotensiPajakTahun) ?? 0;
@@ -1657,7 +1693,19 @@ namespace MonPDReborn.Models.DataOP
                                     };
                                 })
                                 .ToList();
-                            var totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerTahunBioskop + x.PotensiPajakPerBulanFitnes);
+                            var totalPotensiHiburan = 0m;
+                            if (kategori == 41)
+                            {
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnyaBar);
+                            }
+                            else if (kategori == 42)
+                            {
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunBioskop);
+                            }
+                            else
+                            {
+                                totalPotensiHiburan = potensiHiburan.Sum(x => x.PotensiPajakPerTahunLainnya + x.PotensiPajakPerBulanFitnes);
+                            }
                             if (kategori != 64)
                             {
                                 var potensi = new DataPotensi
@@ -2646,7 +2694,7 @@ namespace MonPDReborn.Models.DataOP
             public decimal OmzetWeekendLainnya => HTMWeekend * JumlahPengunjungWeekendLainnya * 8;
             public decimal PotensiPajakPerBulanLainnya => OmzetPerBulanLainnya * TarifPajak;
             public decimal PotensiPajakPerTahunLainnya => PotensiPajakPerBulanLainnya * BulanSisa;
-            
+
             // ========== Perhitungan Kategori Lainnya Bar ==========
             public decimal JumlahPengunjungWeekdaysLainnyaBar => Math.Ceiling(Kapasitas * TurnoverWeekdays);
             public decimal JumlahPengunjungWeekendLainnyaBar => Math.Ceiling(Kapasitas * TurnoverWeekend);
