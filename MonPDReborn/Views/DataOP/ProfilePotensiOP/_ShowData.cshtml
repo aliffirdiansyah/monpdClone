@@ -24,142 +24,287 @@
         </div>
     </div>
 </div>
-
-@(
-Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPotensi>()
-    .ID("dataPotensiGrid")
-    .DataSource(d => d.Mvc()
-        .LoadAction("GetDataPotensi")
-        .Key("NOP")
-        .LoadParams(new
+@if (Model.EnumKategori == 64)
+{
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPotensi>()
+        .ID("dataPotensiGrid")
+        .DataSource(d => d.Mvc()
+            .LoadAction("GetDataPotensi")
+            .Key("NOP")
+            .LoadParams(new
+            {
+                JenisPajak = Model.EnumPajak,
+                kategori = Model.EnumKategori
+            })
+            .OnLoading("onDataGridContentLoad")
+        )
+        .OnContentReady("onDataGridContentReady")
+        .ColumnAutoWidth(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .RowAlternationEnabled(true)
+            .Height("100%")
+            .Width("100%")
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+            .Visible(true)
+            .Width(240)
+            .Placeholder("Cari...")
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
         {
-            JenisPajak = Model.EnumPajak,
-            kategori = Model.EnumKategori
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP").CellTemplate(new JS("detailOPCellTemplate")).Fixed(true);
+            columns.AddFor(m => m.NamaOP).Caption("Nama WP").Fixed(true);
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.Kategori).Caption("Kategori Pajak");
+            columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                {
+                    subColumns.AddFor(m => m.Target1).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(m => m.Realisasi1).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(m => m.Capaian1).Caption("Capaian (%)").Format("#,##0.00");
+                    subColumns.AddFor(m => m.Selisih1).Caption("Selisih").Format("#,##0");
+                });
+            columns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                {
+                    subColumns.AddFor(m => m.Target2).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(m => m.Realisasi2).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(m => m.Capaian2).Caption("Capaian (%)").Format("#,##0.00");
+                    subColumns.AddFor(m => m.Selisih2).Caption("Selisih").Format("#,##0");
+                });
+            columns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                {
+                    subColumns.AddFor(m => m.Target3).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(m => m.Realisasi3).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(m => m.Capaian3).Caption("Capaian (%)").Format("#,##0.00");
+                    subColumns.AddFor(m => m.Selisih3).Caption("Selisih").Format("#,##0");
+                });
+            columns.AddFor(m => m.TotalPotensi).Caption("Total Potensi").Format("#,##0");
+            @* columns.Add()
+                   .Type(GridCommandColumnType.Buttons)
+                   .Fixed(true)
+                   .Buttons(b =>
+                   {
+                       b.Add()
+                       .Text("Detail")
+                       .Icon("search")
+                       .OnClick("onDetail");
+                   }); *@
         })
-        .OnLoading("onDataGridContentLoad")
-    )
-    .OnContentReady("onDataGridContentReady")
-    .ColumnAutoWidth(true)
-    .ShowBorders(true)
-    .ShowColumnHeaders(true)
-    .ShowColumnLines(true)
-    .ShowRowLines(true)
-    .AllowColumnResizing(true)
-    .RowAlternationEnabled(true)
-        .Height("100%")
-        .Width("100%")
-        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-        .FilterRow(f => f.Visible(true))
-        .HeaderFilter(h => h.Visible(true))
-        .Sorting(s => s.Mode(GridSortingMode.Multiple))
-    .Paging(p => p.PageSize(10))
-    .Pager(p => p
-        .ShowPageSizeSelector(true)
-        .AllowedPageSizes(new[] { 10, 20, 50 })
-        .ShowInfo(true)
-    )
-    .SearchPanel(sp => sp
-        .Visible(true)
-        .Width(240)
-        .Placeholder("Cari...")
-    )
-    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
-    .OnExporting("exportGrid")
-    .Columns(columns =>
-    {
-        columns.AddFor(m => m.FormattedNOP).Caption("NOP").CellTemplate(new JS("detailOPCellTemplate")).Fixed(true);
-        columns.AddFor(m => m.NamaOP).Caption("Nama WP").Fixed(true);
-        columns.AddFor(m => m.Alamat).Caption("Alamat");
-        columns.AddFor(m => m.Kategori).Caption("Kategori Pajak");
-        columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
-            {
-                subColumns.AddFor(m => m.Target1).Caption("Target").Format("#,##0");
-                subColumns.AddFor(m => m.Realisasi1).Caption("Realisasi").Format("#,##0");
-                subColumns.AddFor(m => m.Capaian1).Caption("Capaian (%)").Format("#,##0.00");
-                subColumns.AddFor(m => m.Selisih1).Caption("Selisih").Format("#,##0");
-            });
-        columns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
-            {
-                subColumns.AddFor(m => m.Target2).Caption("Target").Format("#,##0");
-                subColumns.AddFor(m => m.Realisasi2).Caption("Realisasi").Format("#,##0");
-                subColumns.AddFor(m => m.Capaian2).Caption("Capaian (%)").Format("#,##0.00");
-                subColumns.AddFor(m => m.Selisih2).Caption("Selisih").Format("#,##0");
-            });
-        columns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
-            {
-                subColumns.AddFor(m => m.Target3).Caption("Target").Format("#,##0");
-                subColumns.AddFor(m => m.Realisasi3).Caption("Realisasi").Format("#,##0");
-                subColumns.AddFor(m => m.Capaian3).Caption("Capaian (%)").Format("#,##0.00");
-                subColumns.AddFor(m => m.Selisih3).Caption("Selisih").Format("#,##0");
-            });
-        columns.AddFor(m => m.TotalPotensi).Caption("Total Potensi").Format("#,##0");
-        columns.Add()
-               .Type(GridCommandColumnType.Buttons)
-               .Fixed(true)
-               .Buttons(b =>
-               {
-                   b.Add()
-                   .Text("Detail")
-                   .Icon("search")
-                   .OnClick("onDetail");
-               });
-    })
-    @* .OnContentReady("function(e) { hitungPersentaseDataShow(e); }") *@
-    .Summary(summary =>
-    {
-        summary.TotalItems(items =>
+        @* .OnContentReady("function(e) { hitungPersentaseDataShow(e); }") *@
+        .Summary(summary =>
         {
-            items.AddFor(m => m.Kategori)
-                 .SummaryType(SummaryType.Sum)
-                 .DisplayFormat("Total");
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Kategori)
+                     .SummaryType(SummaryType.Sum)
+                     .DisplayFormat("Total");
 
-            items.AddFor(m => m.Target1)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                items.AddFor(m => m.Target1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(m => m.Realisasi1)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                items.AddFor(m => m.Realisasi1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(m => m.Capaian1)
-                .SummaryType(SummaryType.Avg)  
-                .ValueFormat("#,##0.00").DisplayFormat("{0}%");
+                items.AddFor(m => m.Capaian1)
+                    .SummaryType(SummaryType.Avg)  
+                    .ValueFormat("#,##0.00").DisplayFormat("{0}%");
 
-            items.AddFor(m => m.Target2)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                items.AddFor(m => m.Target2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(m => m.Realisasi2)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                items.AddFor(m => m.Realisasi2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(m => m.Capaian2)
-                .SummaryType(SummaryType.Avg)  
-                .ValueFormat("#,##0.00").DisplayFormat("{0}%");
+                items.AddFor(m => m.Capaian2)
+                    .SummaryType(SummaryType.Avg)  
+                    .ValueFormat("#,##0.00").DisplayFormat("{0}%");
 
-            items.AddFor(m => m.Target3)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                items.AddFor(m => m.Target3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(m => m.Realisasi3)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                items.AddFor(m => m.Realisasi3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            items.AddFor(m => m.Capaian3)
-                .SummaryType(SummaryType.Avg)  
-                .ValueFormat("#,##0.00").DisplayFormat("{0}%");
+                items.AddFor(m => m.Capaian3)
+                    .SummaryType(SummaryType.Avg)  
+                    .ValueFormat("#,##0.00").DisplayFormat("{0}%");
 
-            items.AddFor(m => m.TotalPotensi)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                items.AddFor(m => m.TotalPotensi)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-        });
-    })
-)
+            });
+        })
+        )
+}
+else
+{
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPotensi>()
+        .ID("dataPotensiGrid")
+        .DataSource(d => d.Mvc()
+            .LoadAction("GetDataPotensi")
+            .Key("NOP")
+            .LoadParams(new
+            {
+                JenisPajak = Model.EnumPajak,
+                kategori = Model.EnumKategori
+            })
+            .OnLoading("onDataGridContentLoad")
+        )
+        .OnContentReady("onDataGridContentReady")
+        .ColumnAutoWidth(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .RowAlternationEnabled(true)
+            .Height("100%")
+            .Width("100%")
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+            .Visible(true)
+            .Width(240)
+            .Placeholder("Cari...")
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP").CellTemplate(new JS("detailOPCellTemplate")).Fixed(true);
+            columns.AddFor(m => m.NamaOP).Caption("Nama WP").Fixed(true);
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.Kategori).Caption("Kategori Pajak");
+            columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                {
+                    subColumns.AddFor(m => m.Target1).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(m => m.Realisasi1).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(m => m.Capaian1).Caption("Capaian (%)").Format("#,##0.00");
+                    subColumns.AddFor(m => m.Selisih1).Caption("Selisih").Format("#,##0");
+                });
+            columns.Add().Caption(tahun2).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                {
+                    subColumns.AddFor(m => m.Target2).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(m => m.Realisasi2).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(m => m.Capaian2).Caption("Capaian (%)").Format("#,##0.00");
+                    subColumns.AddFor(m => m.Selisih2).Caption("Selisih").Format("#,##0");
+                });
+            columns.Add().Caption(tahun3).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
+                {
+                    subColumns.AddFor(m => m.Target3).Caption("Target").Format("#,##0");
+                    subColumns.AddFor(m => m.Realisasi3).Caption("Realisasi").Format("#,##0");
+                    subColumns.AddFor(m => m.Capaian3).Caption("Capaian (%)").Format("#,##0.00");
+                    subColumns.AddFor(m => m.Selisih3).Caption("Selisih").Format("#,##0");
+                });
+            columns.AddFor(m => m.TotalPotensi).Caption("Total Potensi").Format("#,##0");
+            columns.Add()
+                   .Type(GridCommandColumnType.Buttons)
+                   .Fixed(true)
+                   .Buttons(b =>
+                   {
+                       b.Add()
+                       .Text("Detail")
+                       .Icon("search")
+                       .OnClick("onDetail");
+                   });
+        })
+        @* .OnContentReady("function(e) { hitungPersentaseDataShow(e); }") *@
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Kategori)
+                     .SummaryType(SummaryType.Sum)
+                     .DisplayFormat("Total");
+
+                items.AddFor(m => m.Target1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Realisasi1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Capaian1)
+                    .SummaryType(SummaryType.Avg)  
+                    .ValueFormat("#,##0.00").DisplayFormat("{0}%");
+
+                items.AddFor(m => m.Target2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Realisasi2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Capaian2)
+                    .SummaryType(SummaryType.Avg)  
+                    .ValueFormat("#,##0.00").DisplayFormat("{0}%");
+
+                items.AddFor(m => m.Target3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Realisasi3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Capaian3)
+                    .SummaryType(SummaryType.Avg)  
+                    .ValueFormat("#,##0.00").DisplayFormat("{0}%");
+
+                items.AddFor(m => m.TotalPotensi)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
+
+            });
+        })
+        )
+}
+
+
