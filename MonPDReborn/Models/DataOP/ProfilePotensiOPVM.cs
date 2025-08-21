@@ -20,25 +20,25 @@ namespace MonPDReborn.Models.DataOP
         public class ShowRekap
         {
             public List<RekapPotensi> DataRekapPotensi { get; set; } = new();
-            public Dashboard Data { get; set; } = new();
+            public Dashboard DataDashboard { get; set; } = new();
 
             public ShowRekap() { }
             public ShowRekap(string jenisPajak)
             {
                 DataRekapPotensi = Method.GetRekapPotensiList();
+                DataDashboard = Method.GetDashboardData();
                 // Total Potensi dari seluruh data rekap
-                Data.Potensi = DataRekapPotensi.Sum(r => r.TotalPotensi1);
+                DataDashboard.Potensi = DataRekapPotensi.Sum(r => r.TotalPotensi1);
 
                 // Realisasi total = total dari Realisasi1 + Realisasi2 + Realisasi3
-                Data.RealisasiTotal = DataRekapPotensi.Sum(q => q.Realisasi3);
+                DataDashboard.RealisasiTotal = DataRekapPotensi.Sum(q => q.Realisasi3);
 
                 // Capaian dalam persen: (RealisasiTotal / Potensi) * 100
-                Data.Capaian = Data.Potensi == 0 ? 0 :
-                    Math.Round((Data.RealisasiTotal / Data.Potensi) * 100, 2);
+                DataDashboard.Capaian = DataDashboard.Potensi == 0 ? 0 :
+                    Math.Round((DataDashboard.RealisasiTotal / DataDashboard.Potensi) * 100, 2);
 
                 // Jumlah OP
-                //Data.TotalOP = totalOP;
-                Data.RealisasiOP = DataRekapPotensi.Sum(r => r.Realisasi3);
+                DataDashboard.RealisasiOP = DataRekapPotensi.Sum(r => r.Realisasi3);
 
                 // Capaian OP sebagai persen string
                 //Data.CapaianOP = totalOP == 0 ? "0%" :
@@ -88,23 +88,57 @@ namespace MonPDReborn.Models.DataOP
         {
             public static Dashboard GetDashboardData()
             {
-                decimal potensi = 125000000;
-                decimal realisasi = 110000000;
-                int totalOp = 500;
-                int realisasiOp = 450;
+                var context = DBClass.GetContext();
+                var Data = new Dashboard();
+                var tahun = DateTime.Now.Year + 1; // tahun berjalan
 
-                var dashboardData = new Dashboard
-                {
-                    Potensi = potensi,
-                    RealisasiTotal = realisasi,
-                    Capaian = (potensi > 0) ? Math.Round((realisasi / potensi) * 100, 0) : 0,
-                    TotalOP = totalOp,
-                    RealisasiOP = realisasiOp,
-                    CapaianOP = $"{realisasiOp} dari {totalOp} OP"
-                };
+                // Ambil jumlah OP unik dari masing-masing DbPotensi*
+                var dataResto3 = context.DbPotensiRestos
+                    .Where(x => x.TahunBuku == tahun)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .Count();
 
-                return dashboardData;
+                var dataPpj3 = context.DbPotensiPpjs
+                    .Where(x => x.TahunBuku == tahun)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .Count();
+
+                var dataHotel3 = context.DbPotensiHotels
+                    .Where(x => x.TahunBuku == tahun)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .Count();
+
+                var dataParkir3 = context.DbPotensiParkirs
+                    .Where(x => x.TahunBuku == tahun)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .Count();
+
+                var dataHiburan3 = context.DbPotensiHiburans
+                    .Where(x => x.TahunBuku == tahun)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .Count();
+
+                var dataAbt3 = context.DbPotensiAbts
+                    .Where(x => x.TahunBuku == tahun)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .Count();
+
+                // Hitung total OP
+                Data.TotalOP = dataResto3
+                             + dataPpj3
+                             + dataHotel3
+                             + dataParkir3
+                             + dataHiburan3
+                             + dataAbt3;
+                return Data;
             }
+
             public static List<RekapPotensi> GetRekapPotensiList()
             {
                 var ret = new List<RekapPotensi>();
