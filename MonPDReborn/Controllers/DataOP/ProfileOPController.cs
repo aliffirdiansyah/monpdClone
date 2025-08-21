@@ -119,6 +119,19 @@ namespace MonPDReborn.Controllers.DataOP
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        public IActionResult RekapDetailHotel(int enumPajak , int kategori , int tahun)
+        {
+            try
+            {
+                var model = new ProfileOPVM.RekapDetailHotel(enumPajak, kategori, tahun);
+                return PartialView($"{URLView}_{actionName}",model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ ERROR: " + ex.Message);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
         #endregion
         #region SERIES DATA
         [HttpGet]

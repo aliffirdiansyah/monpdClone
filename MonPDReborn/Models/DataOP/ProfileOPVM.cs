@@ -5,6 +5,7 @@ using MonPDLib.General;
 using System.Collections;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.DataOP
 {
@@ -209,6 +210,15 @@ namespace MonPDReborn.Models.DataOP
 
                 Kiri = Method.GetTPKHotelData(tahunKiri);
                 Kanan = Method.GetTPKHotelData(tahunKanan);
+            }
+        }
+
+        public class RekapDetailHotel
+        {
+            public List<DetailOkupansiHotel> DataOkupansiHotel { get; set; } = new();
+            public RekapDetailHotel(int enumPajak, int kategori, int tahun)
+            {
+                DataOkupansiHotel = ProfileOPVM.Method.GetRekapDetailHotel(EnumFactory.EPajak.JasaPerhotelan, kategori, tahun);
             }
         }
 
@@ -3515,10 +3525,6 @@ namespace MonPDReborn.Models.DataOP
                 return result;
             }
 
-
-
-
-
             #endregion
 
             public static DataDetailOP GetDetailObjekPajak(string nop, EnumFactory.EPajak pajak)
@@ -3814,7 +3820,6 @@ namespace MonPDReborn.Models.DataOP
                 return dummyData;
             }
 
-
             public static List<OkupansiHotel> GetOkupansiHotel(int tahunBuku)
             {
                 var result = new List<OkupansiHotel>();
@@ -3849,22 +3854,94 @@ namespace MonPDReborn.Models.DataOP
                     res.KategoriNama = kategori.Nama;
                     res.TotalKamar = totalKamar;
                     res.AvgRate = avgRate;
+                    res.Tahun = tahunBuku;
+                    res.EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan;
 
                     result.Add(res);
                 }
 
                 return result;
             }
+            public static List<DetailOkupansiHotel> GetRekapDetailHotel(EnumFactory.EPajak jenisPajak, int kategori, int tahun)
+            {
+                var context = DBClass.GetContext();
+                var result = new List<DetailOkupansiHotel>();
+
+                // ambil OP hotel per tahun & kategori
+                var dataOpHotels = context.DbOpHotelFixes
+                    .Where(x => x.TahunBuku == tahun && x.KategoriId == kategori && x.KategoriId > 0)
+                    .Select(x => new
+                    {
+                        x.Nop,
+                        x.NamaOp,
+                        x.AlamatOp,
+                        x.WilayahPajak,
+                        x.KategoriId,
+                        x.KategoriNama
+                    })
+                    .Distinct();
+
+                // ambil potensi hotel (room, room sold) per tahun
+                var potensiHotels = context.DbPotensiHotels
+                    .Where(x => x.TahunBuku == tahun)
+                    .Select(x => new
+                    {
+                        x.Nop,
+                        x.TotalRoom,
+                        x.AvgRoomSold
+                    })
+                    .ToList();
+
+                foreach (var op in dataOpHotels.OrderByDescending(o => o.KategoriId).ThenByDescending(o => o.KategoriNama))
+                {
+                    var potensi = potensiHotels.FirstOrDefault(p => p.Nop == op.Nop);
+
+                    var totalRoom = potensi?.TotalRoom ?? 0;
+                    var roomSold = potensi?.AvgRoomSold ?? 0m;
+                    var rateOkupansi = totalRoom > 0 ? Math.Round((roomSold / totalRoom) * 100m, 2, MidpointRounding.AwayFromZero) : 0m;
+
+                    result.Add(new DetailOkupansiHotel
+                    {
+                        EnumPajak = (int)jenisPajak,
+                        NOP = op.Nop,
+                        NamaOP = op.NamaOp,
+                        AlamatOP = op.AlamatOp,
+                        Wilayah = "SURABAYA " + op.WilayahPajak ?? "-" ,
+                        KategoriId = op.KategoriId.HasValue ? Convert.ToInt32(op.KategoriId.Value) : 0,
+                        KategoriNama = op.KategoriNama,
+                        TotalRoom = totalRoom.ToString(),
+                        RoomTerjual = roomSold.ToString(),
+                        RateOkupansi = rateOkupansi.ToString("F2")
+                    });
+                }
+                return result;
+            }
         }
 
         public class OkupansiHotel
-        {
+        {   
+            public int EnumPajak { get; set; }
+            public int Tahun { get; set; }
             public int KategoriId { get; set; }
             public string KategoriNama { get; set; }
             public int TotalKamar { get; set; }
             public decimal AvgRate { get; set; }
         }
 
+        public class DetailOkupansiHotel
+        {
+            public int EnumPajak { get; set; }
+            public int KategoriId { get; set; }
+            public string KategoriNama { get; set; } = null!;
+            public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string NamaOP { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string TotalRoom { get; set; } = null!;
+            public string RoomTerjual { get; set; } = null;
+            public string RateOkupansi { get; set; } = null;
+            public string Wilayah { get; set; } = null!;
+        }
         public class RekapOP
         {
             public int EnumPajak { get; set; }
