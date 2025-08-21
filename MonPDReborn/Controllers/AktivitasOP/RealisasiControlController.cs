@@ -4,7 +4,7 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.Aktivitas
 {
-    public class RealisasiControlController : BaseController
+    public class RealisasiControlController : Controller
     {
         string URLView = string.Empty;
 
