@@ -221,7 +221,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                     PajakBulanan = x.Max(x => x.PajakBulan),
                                     AvgRealisasi = restoRealisasiList
                                         .Where(r => r.Nop == nop)
-                                        .Sum(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
                                 };
                             })
                             .ToList();
@@ -259,7 +259,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                     PajakBulanan = x.Max(x => x.PajakBulan),
                                     AvgRealisasi = parkirRealisasiList
                                         .Where(r => r.Nop == nop)
-                                        .Sum(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
                                 };
                             })
                             .ToList();
