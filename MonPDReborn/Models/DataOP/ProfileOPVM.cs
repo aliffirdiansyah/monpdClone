@@ -1,6 +1,8 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
 using System.Collections;
 using System.Globalization;
@@ -557,7 +559,7 @@ namespace MonPDReborn.Models.DataOP
 
 
                         re.KategoriId = Convert.ToInt32(pajakKategori.Id);
-                        re.KategoriNama = pajakKategori.Nama;
+                        re.KategoriNama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(pajakKategori.Nama.ToLower());
                         re.EnumPajak = pajak.Id;
                         re.JenisPajak = pajak.Nama;
                         re.Tahun = tahun;
@@ -3851,7 +3853,7 @@ namespace MonPDReborn.Models.DataOP
 
                     var res = new OkupansiHotel();
                     res.KategoriId = Convert.ToInt32(kategori.Id);
-                    res.KategoriNama = kategori.Nama;
+                    res.KategoriNama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kategori.Nama.ToLower());
                     res.TotalKamar = totalKamar;
                     res.AvgRate = avgRate;
                     res.Tahun = tahunBuku;
@@ -3908,7 +3910,7 @@ namespace MonPDReborn.Models.DataOP
                         AlamatOP = op.AlamatOp,
                         Wilayah = "SURABAYA " + op.WilayahPajak ?? "-" ,
                         KategoriId = op.KategoriId.HasValue ? Convert.ToInt32(op.KategoriId.Value) : 0,
-                        KategoriNama = op.KategoriNama,
+                        KategoriNama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(op.KategoriNama.ToLower()),
                         TotalRoom = totalRoom.ToString(),
                         RoomTerjual = roomSold.ToString(),
                         RateOkupansi = rateOkupansi.ToString("F2")
