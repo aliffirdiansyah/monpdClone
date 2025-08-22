@@ -266,59 +266,42 @@
                         <p class="value">@Model.Alamat</p>
                     </div>
 
-                    <hr class="my-2" />
+                </div>
+            </div>
 
-                    <div class="d-flex mb-2">
+            <div class="card">
+                <div class="card-header d-flex bg-soft-info">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
+                            Detail Objek Pajak
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
                         <p class="label">Jumlah Kamar</p>
                         <p class="value">@Model.JumlahTotalRoom Kamar</p>
                     </div>
-                    <div class="d-flex mb-2">
-                        <p class="label">Kapasitas Banquet</p>
-                        <p class="value">@Model.KapasitasMaksimalPaxBanquetPerHari Pax</p>
-                    </div>
-
-                </div>
-            </div>
-
-            @* <div class="card">
-            <div class="card-header d-flex bg-soft-info">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 mb-0">
-                        Potensi Pajak
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card border border-info border-2">
-                            <div class="card-body bg-soft-info bg-opacity-25 text-center">
-                                <h5 class="card-title fs-14 mb-3">
-                                    Potensi Pajak per Bulan
-                                </h5>
-                                <h4 class="card-title fs-22 fw-bold text-dark mb-0">
-                                    Rp. @Model.PotensiPajakPerBulan.ToString("N0")
-                                </h4>
-                                <p class="fs-12 text-muted mt-1">Total Pajak Kamar dan Banquet</p>
-                            </div>
+                    @if (Model.KapasitasMaksimalPaxBanquetPerHari > 0)
+                    {
+                        <div class="info-row">
+                            <p class="label">Kapasitas Banquet</p>
+                            <p class="value">@Model.KapasitasMaksimalPaxBanquetPerHari Pax</p>
                         </div>
+                    }
+                    <div class="info-row">
+                        <p class="label">Rata-rata Kamar Terjual</p>
+                        <p class="value">@Model.RataRataRoomTerjualPerHari.ToString("N0") Kamar</p>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="card border border-info border-2">
-                            <div class="card-body bg-soft-info bg-opacity-25 text-center">
-                                <h5 class="card-title fs-14 mb-3">
-                                    Potensi Pajak per Tahun
-                                </h5>
-                                <h4 class="card-title fs-22 fw-bold text-dark mb-0">
-                                    Rp. @Model.PotensiPajakPerTahun.ToString("N0")
-                                </h4>
-                                <p class="fs-12 text-muted mt-1">Proyeksi untuk 12 bulan</p>
-                            </div>
+                    @if (Model.KapasitasMaksimalPaxBanquetPerHari > 0)
+                    {
+                        <div class="info-row">
+                            <p class="label">Rata-rata Banquet Terjual</p>
+                            <p class="value">@Model.RataRataPaxBanquetTerjualPerHari.ToString("N0") Pax</p>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
-        </div> *@
 
             <div class="card">
                 <div class="card-header d-flex bg-soft-info">
@@ -424,6 +407,77 @@
 
                 </div>
             }
+            <div class="card">
+                <div class="card-header d-flex bg-soft-info">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title fs-16 mb-0 text-dark">
+                            Perhitungan Total Potensi Pajak
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card border border-info border-2">
+                                <div class="card-body">
+                                    @if (Model.KapasitasMaksimalPaxBanquetPerHari > 0)
+                                    {
+                                        <h4 class="fs-16 fw-semibold mb-2">
+                                            Rumus Perhitungan Potensi per Bulan
+                                        </h4>
+                                        <p class="fs-14 text-muted mb-1 font-monospace">
+                                            (Potensi Omzet per Bulan atas Room + Potensi Omzet per Blan atas Banquet) x Tarif Pajak
+                                        </p>
+                                        <p class="fs-14 fw-semibold mb-2 text-dark">
+                                            (Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0") + Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")) x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulan.ToString("N0")
+                                        </p>
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-1">
+                                            Rumus Perhitungan Potensi per Tahun
+                                        </h4>
+                                        <p class="fs-14 text-muted mb-1 font-monospace">
+                                            Potensi per Bulan x 12 Bulan
+                                        </p>
+                                        <p class="fs-14 fw-semibold mb-2 text-dark">
+                                            @Model.PotensiPajakPerBulan.ToString("N0") x @Model.BulanSisa Bulan = Rp. @Model.PotensiPajakPerTahun.ToString("N0")
+                                        </p>
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold text-dark">
+                                            Total Potensi Pajak per Tahun : Rp. @Model.PotensiPajakPerTahun.ToString("N0")
+                                        </h4>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="fs-16 fw-semibold mb-2">
+                                            Rumus Perhitungan Potensi per Bulan
+                                        </h4>
+                                        <p class="fs-14 text-muted mb-1 font-monospace">
+                                            Potensi Omzet per Bulan atas Room x Tarif Pajak
+                                        </p>
+                                        <p class="fs-14 fw-semibold mb-2 text-dark">
+                                            @Model.PotensiOmzetRoomPerBulanKos x @Model.TarifPajak.ToString("P0") = Rp. @Model.PotensiPajakPerBulanKos.ToString("N0")
+                                        </p>
+                                        <hr />
+                                        <h4 class="fs-16 fw-semibold mb-1">
+                                            Rumus Perhitungan Potensi per Tahun
+                                        </h4>
+                                        <p class="fs-14 text-muted mb-1 font-monospace">
+                                            Potensi per Bulan x 12 Bulan
+                                        </p>
+                                        <p class="fs-14 fw-semibold mb-2 text-dark">
+                                            @Model.PotensiPajakPerBulanKos.ToString("N0") x @Model.BulanSisa Bulan = Rp. @Model.PotensiPajakPerTahunKos.ToString("N0")
+                                        </p>
+                                        <hr />
+                                        <h4 class="fs-16 fw-semiboldtext-dark">
+                                            Total Potensi Pajak per Tahun : Rp. @Model.PotensiPajakPerTahunKos.ToString("N0")
+                                        </h4>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="card">
                 <div class="accordion" id="accordionPotensiPajakHotel">

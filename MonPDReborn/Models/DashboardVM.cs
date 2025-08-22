@@ -1231,7 +1231,7 @@ namespace MonPDReborn.Models
                 //isi realisasi data
                 var dataRealisasi = new List<(int TahunBuku, int PajakId, decimal Realisasi)>();
                 dataRealisasi.AddRange(dataRealisasiResto.Select(x => (x.TahunBuku, x.PajakId, x.Realisasi)));
-                dataRealisasi.AddRange(dataRealisasiResto.Select(x => (x.TahunBuku, x.PajakId, x.Realisasi)));
+                dataRealisasi.AddRange(dataRealisasiListrik.Select(x => (x.TahunBuku, x.PajakId, x.Realisasi)));
                 dataRealisasi.AddRange(dataRealisasiHotel.Select(x => (x.TahunBuku, x.PajakId, x.Realisasi)));
                 dataRealisasi.AddRange(dataRealisasiParkir.Select(x => (x.TahunBuku, x.PajakId, x.Realisasi)));
                 dataRealisasi.AddRange(dataRealisasiHiburan.Select(x => (x.TahunBuku, x.PajakId, x.Realisasi)));
