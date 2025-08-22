@@ -75,7 +75,7 @@ namespace MonPDReborn.Models.DataOP
                     })
                     .ToList();
                 var dataResto = context.DbOpRestos
-                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Where(x => (x.Npwpd == keyword) || (x.NpwpdNama == keyword) || (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
                     .AsEnumerable()
                     .GroupBy(x => x.Nop)
