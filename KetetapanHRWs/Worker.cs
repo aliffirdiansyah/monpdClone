@@ -109,12 +109,13 @@ namespace KetetapanHRWs
                 var _contMonPd = DBClass.GetContext();
                 sw.Start();
                 var sqlKetetapan = @"
-                SELECT MAX(ID_KETETAPAN) ID_KETETAPAN , NOP,TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,MASA_PAJAK,SEQ, MAX(TGL_SPTPD) TGL_SPTPD,
-            SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL,MAX(TGL_JATUH_TEMPO) TGL_JATUH_TEMPO, MAX(JENIS_KEETETAPAN) JENIS_KETETAPAN,
-            PAJAK_ID,NAMA_PAJAK_DAERAH
+               SELECT MAX(ID_KETETAPAN) ID_KETETAPAN , 
+            NOP,TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,MASA_PAJAK,SEQ, 
+            MAX(TGL_SPTPD) TGL_SPTPD,SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL,MAX(TGL_JATUH_TEMPO) TGL_JATUH_TEMPO, 
+            JENIS_KETETAPAN,PAJAK_ID,NAMA_PAJAK_DAERAH
 FROM (
-SELECT ID_KETETAPAN,B.FK_NOP NOP,TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,BULAN_PAJAK MASA_PAJAK,1 SEQ,TGL_SPTPD_DISETOR TGL_SPTPD , KETETAPAN_TOTAL,
-            JATUHTEMPO TGL_JATUH_TEMPO, 'SPTPD' JENIS_KEETETAPAN,
+SELECT ID_KETETAPAN,REPLACE(B.FK_NOP,'.','')  NOP,TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,BULAN_PAJAK MASA_PAJAK,1 SEQ,TGL_SPTPD_DISETOR TGL_SPTPD , KETETAPAN_TOTAL,
+            JATUHTEMPO TGL_JATUH_TEMPO, 'SPTPD' JENIS_KETETAPAN,
             CASE
             WHEN A.NAMA_PAJAK_DAERAH='RESTORAN' THEN 1
             WHEN A.NAMA_PAJAK_DAERAH='HOTEL' THEN 3
@@ -127,29 +128,39 @@ JOIN VW_SIMPADA_OP_ALL_MON@LIHATHPPSERVER B ON A.FK_OP=B.ID_OP
 JOIN JATUHTEMPO_MPS@LIHATELANG C ON A.BULAN_PAJAK=C.BULAN AND A.TAHUN_PAJAK=C.TAHUN 
 WHERE A.NAMA_PAJAK_DAERAH  IN ('RESTORAN','HOTEL') AND TGL_SPTPD_DISETOR IS NOT NULL      
         AND TO_CHAR(TGL_SPTPD_DISETOR,'YYYY')=:TAHUN AND JATUHTEMPO IS NOT NULL
-)
-GROUP BY NOP,TAHUN_PAJAK,MASA_PAJAK,SEQ,PAJAK_ID,NAMA_PAJAK_DAERAH
 UNION ALL
-SELECT MAX(ID_KETETAPAN) ID_KETETAPAN , NOP,TO_NUMBER(TAHUN_PAJAK) TAHUN_PAJAK,MASA_PAJAK,SEQ, MAX(TGL_SPTPD) TGL_SPTPD,
-            SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL,MAX(TGL_JATUH_TEMPO) TGL_JATUH_TEMPO, MAX(JENIS_KEETETAPAN) JENIS_KETETAPAN,
-            PAJAK_ID,NAMA_PAJAK_DAERAH
-FROM (
-SELECT NOMORSKPD ID_KETETAPAN,NOP,TO_NUMBER(TAHUN) TAHUN_PAJAK,MASAPAJAK MASA_PAJAK,1 SEQ,TGLDIBUAT TGL_SPTPD , JUMLAHKESELURUHAN KETETAPAN_TOTAL,
+SELECT NOMORSKPD ID_KETETAPAN,REPLACE(NOP,'.','') NOP,TO_NUMBER(TAHUN) TAHUN_PAJAK,MASAPAJAK MASA_PAJAK,1 SEQ,TGLDIBUAT TGL_SPTPD , JUMLAHKESELURUHAN KETETAPAN_TOTAL,
             TANGGALJATUHTEMPO TGL_JATUH_TEMPO, JENISSKPD JENIS_KEETETAPAN,            
              CASE 
-         WHEN SUBSTR(NOP, 15, 3) = '902' THEN 3
-         WHEN SUBSTR(NOP, 15, 3) = '901' THEN 1
+         WHEN SUBSTR(NOP, 15, 3) = '901' THEN 3
+         WHEN SUBSTR(NOP, 15, 3) = '902' THEN 1
          ELSE -1                            
                 END PAJAK_ID,                
              CASE 
-         WHEN SUBSTR(NOP, 15, 3) = '902' THEN 'HOTEL'
-         WHEN SUBSTR(NOP, 15, 3) = '901' THEN 'RESTORAN'
+         WHEN SUBSTR(NOP, 15, 3) = '901' THEN 'HOTEL'
+         WHEN SUBSTR(NOP, 15, 3) = '902' THEN 'RESTORAN'
          ELSE '-'                            
                 END NAMA_PAJAK_DAERAH
 FROM SKPD@LIHATELANG
 WHERE NOP IS NOT NULL AND JENISSKPD='SKPDKB' AND NOMORSKPD IS NOT NULL and   TGLDIBUAT IS NOT NULL AND  TO_CHAR(TGLDIBUAT,'YYYY')=:TAHUN
-) 
-GROUP BY NOP,TAHUN_PAJAK,MASA_PAJAK,SEQ,PAJAK_ID,NAMA_PAJAK_DAERAH
+UNION ALL
+SELECT SURAT_KLASIFIKASI || '/' ||  SURAT_AGENDA || SURAT_BIDANG ||  SURAT_DOKUMEN ||   SURAT_PAJAK || '/' || SURAT_OPD  || '/' ||  SURAT_TAHUN SURAT,
+            A.NOP,A.TAHUN,A.MASAPAJAK,A.SEQ,TGL_SPTPD,CEIL( (PROSEN_TARIF_PAJAK / 100) * SUM(OMSET))  KETETAPAN_POKOK, TGL_JATUH_TEMPO_BAYAR,'SPTPD' JENIS_KETETAPAN,B.PAJAK_ID,
+            CASE 
+            WHEN PAJAK_ID=1 THEN 'RESTORAN'
+            WHEN PAJAK_ID=3 THEN 'HOTEL'
+            ELSE
+            '-'
+            END NAMA_PAJAK_DAERAH
+FROM SURABAYATAX.OBJEK_PAJAK_SPTPD@LIHATELANG A
+JOIN SURABAYATAX.OBJEK_PAJAK_SPTPD_PENETAPAN@LIHATELANG P ON A.NOP=P.NOP AND A.MASAPAJAK=P.MASAPAJAK AND A.TAHUN=P.TAHUN AND A.SEQ=P.SEQ
+JOIN SURABAYATAX.OBJEK_PAJAK@LIHATELANG B ON A.NOP=B.NOP AND B.PAJAK_ID IN (1,3)
+JOIN  SURABAYATAX.OBJEK_PAJAK_SPTPD_DET@LIHATELANG C ON A.NOP=C.NOP AND A.MASAPAJAK=C.MASAPAJAK AND A.TAHUN=C.TAHUN AND A.SEQ=C.SEQ
+WHERE STATUS=1 AND TO_CHAR(TGL_SPTPD,'YYYY')=:TAHUN
+GROUP BY SURAT_KLASIFIKASI || '/' ||  SURAT_AGENDA || SURAT_BIDANG ||  SURAT_DOKUMEN ||   SURAT_PAJAK || '/' || SURAT_OPD  || '/' ||  SURAT_TAHUN,
+                 A.NOP,A.TAHUN,A.MASAPAJAK,A.SEQ,TGL_SPTPD,TGL_JATUH_TEMPO_BAYAR,'SPTPD' ,B.PAJAK_ID,A.PROSEN_TARIF_PAJAK                                   
+)
+GROUP BY NOP,TAHUN_PAJAK,MASA_PAJAK,SEQ,PAJAK_ID,JENIS_KETETAPAN,NAMA_PAJAK_DAERAH 
                 ";
 
                 var result = _contMonitoringDB.Set<KETETAPANHR>()
@@ -161,28 +172,50 @@ GROUP BY NOP,TAHUN_PAJAK,MASA_PAJAK,SEQ,PAJAK_ID,NAMA_PAJAK_DAERAH
                 int jmlData = result.Count;
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbMonKetetapanHr>();
+                var kk = new KETETAPANHR();
                 foreach (var item in result)
                 {
+                    kk = item;
                     // DATA OP
                     try
                     {
                         if (!string.IsNullOrEmpty(item.NOP))
                         {
-                            newList.Add(new DbMonKetetapanHr()
+                            if (!item.NOP.Contains("-"))
                             {
-                                IdKetetapan = item.ID_KETETAPAN,
-                                JenisKetetapan = item.JENIS_KETETAPAN,
-                                KetetapanTotal = item.KETETAPAN_TOTAL,
-                                MasaPajak = item.MASA_PAJAK,
-                                NamaPajakDaerah = item.NAMA_PAJAK_DAERAH,
-                                Nop = item.NOP.Replace(".", ""),
-                                PajakId = item.PAJAK_ID,
-                                SeqPajak = item.SEQ,
-                                TahunBuku = tahunBuku,
-                                TahunPajak = item.TAHUN_PAJAK,
-                                TglJatuhTempo = item.TGL_JATUH_TEMPO.Value,
-                                TglSptpd = item.TGL_SPTPD.Value
-                            });
+                                newList.Add(new DbMonKetetapanHr()
+                                {
+                                    IdKetetapan = item.ID_KETETAPAN,
+                                    JenisKetetapan = item.JENIS_KETETAPAN,
+                                    KetetapanTotal = item.KETETAPAN_TOTAL,
+                                    MasaPajak = item.MASA_PAJAK,
+                                    NamaPajakDaerah = item.NAMA_PAJAK_DAERAH,
+                                    Nop = item.NOP.Replace(".", ""),
+                                    PajakId = item.PAJAK_ID,
+                                    SeqPajak = item.SEQ,
+                                    TahunBuku = tahunBuku,
+                                    TahunPajak = item.TAHUN_PAJAK,
+                                    TglJatuhTempo = item.TGL_JATUH_TEMPO.Value,
+                                    TglSptpd = item.TGL_SPTPD.Value
+                                });
+                                //_contMonPd.DbMonKetetapanHrs.Add(new DbMonKetetapanHr()
+                                //{
+                                //    IdKetetapan = item.ID_KETETAPAN,
+                                //    JenisKetetapan = item.JENIS_KETETAPAN,
+                                //    KetetapanTotal = item.KETETAPAN_TOTAL,
+                                //    MasaPajak = item.MASA_PAJAK,
+                                //    NamaPajakDaerah = item.NAMA_PAJAK_DAERAH,
+                                //    Nop = item.NOP.Replace(".", ""),
+                                //    PajakId = item.PAJAK_ID,
+                                //    SeqPajak = item.SEQ,
+                                //    TahunBuku = tahunBuku,
+                                //    TahunPajak = item.TAHUN_PAJAK,
+                                //    TglJatuhTempo = item.TGL_JATUH_TEMPO.Value,
+                                //    TglSptpd = item.TGL_SPTPD.Value
+                                //});
+                                //_contMonPd.SaveChanges();
+                            }
+                            
                         }
 
                     }
@@ -209,9 +242,11 @@ GROUP BY NOP,TAHUN_PAJAK,MASA_PAJAK,SEQ,PAJAK_ID,NAMA_PAJAK_DAERAH
                 sw.Stop();
                 Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
+
             }
             catch (Exception ex)
             {
+
                 Console.WriteLine($"Error processing NOP {ex.Message}");
             }
         }
