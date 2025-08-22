@@ -3026,345 +3026,303 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         };
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        // 1. Ambil master data OP Hotel
-                        var dataHotelWilayah = context.DbOpHotels
-                            .Where(x => x.TahunBuku == tanggal.Year)
-                            .Select(x => new
-                            {
-                                x.Nop,
-                                x.WilayahPajak,
-                                x.NamaOp,
-                                x.AlamatOp,
-                                x.KategoriNama,
-                                x.PajakId
-                            })
-                            .ToList();
+                        // 1. Ambil daftar NOP sesuai wilayah
+                        var nopListHotel = wilayah == EnumFactory.EUPTB.SEMUA
+                            ? context.DbOpHotels
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList()
+                            : context.DbOpHotels
+                                .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList();
 
-                        // 2. Ambil data realisasi bayar hotel per NOP (hanya sampai bulan & tahun berjalan)
-                        var dataRealisasiWilayahHotelQuery = context.DbMonHotels
+                        // 2. Ambil realisasi per NOP di tanggal tsb
+                        var dataRealisasiHotel = context.DbMonHotels
                             .Where(x =>
-                                x.TahunBuku == tanggal.Year &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tanggal.Year &&
-                                x.TglBayarPokok.Value.Month <= tanggal.Month
+                                x.TglBayarPokok.Value.Month == tanggal.Month &&
+                                x.TglBayarPokok.Value.Day == tanggal.Day &&
+                                nopListHotel.Contains(x.Nop)
                             )
-                            .GroupBy(x => new { x.Nop, x.PajakId })
-                            .Select(x => new
+                            .GroupBy(x => x.Nop)
+                            .Select(g => new
                             {
-                                x.Key.Nop,
-                                x.Key.PajakId,
-                                Realisasi = x.Sum(q => q.NominalPokokBayar)
+                                Nop = g.Key,
+                                TotalRealisasi = g.Sum(q => q.NominalPokokBayar)
                             })
+                            .ToList(); // <-- pindah ke memory
+
+                        // 3. Join ke master OP (agar tetap keluar meski realisasi 0)
+                        var opListHotel = context.DbOpHotels
+                            .Where(x => nopListHotel.Contains(x.Nop))
+                            .GroupBy(x => x.Nop)
+                            .Select(g => g.FirstOrDefault()) // ambil satu saja per NOP
                             .ToList();
 
-                        // 3. Filter NOP sesuai wilayah & jenis pajak
-                        var nopsUptbHotel = dataHotelWilayah
-                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
-                            .Select(w => w.Nop)
-                            .ToList();
-
-                        // 4. Join realisasi dengan master OP
-                        var realisasiDetailHotel = dataRealisasiWilayahHotelQuery
-                            .Where(x =>
-                                x.PajakId == (int)jenisPajak &&
-                                nopsUptbHotel.Contains(x.Nop)
-                            )
-                            .Select(r =>
+                        // 4. Mapping ke DataDetailModal
+                        var dataDetailHotel = opListHotel
+                            .Select(op => new DataDetailModal
                             {
-                                var master = dataHotelWilayah.FirstOrDefault(m => m.Nop == r.Nop);
-                                return new DataDetailModal
-                                {
-                                    NOP = r.Nop,
-                                    NamaOP = master?.NamaOp ?? "-",
-                                    AlamatOP = master?.AlamatOp ?? "-",
-                                    KategoriNama = master?.KategoriNama ?? "-",
-                                    Realisasi = r.Realisasi ?? 0
-                                };
+                                NOP = op.Nop,
+                                NamaOP = op.NamaOp,
+                                AlamatOP = op.AlamatOp,
+                                KategoriNama = op.KategoriNama,
+                                Realisasi = dataRealisasiHotel.FirstOrDefault(r => r.Nop == op.Nop)?.TotalRealisasi ?? 0
                             })
-                            .Where(d => d.Realisasi > 0) // ⬅ hilangkan yang Realisasi 0
+                            .Where(d => d.Realisasi > 0)
                             .ToList();
 
-                        // 5. Return model final
+                        // 5. Isi ke DataModal
                         ret = new DataModal
                         {
-                            Wilayah = $"UPTB {(int)wilayah}",
+                            Wilayah = wilayah == EnumFactory.EUPTB.SEMUA ? "SEMUA WILAYAH" : $"UPTB {(int)wilayah}",
                             EnumWilayah = (int)wilayah,
+                            JenisPajak = jenisPajak.GetDescription(),
                             Tanggal = tanggal,
                             Tahun = tanggal.Year,
                             Bulan = tanggal.Month,
-                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
-                            Detail = realisasiDetailHotel
+                            Detail = dataDetailHotel
                         };
 
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        // --- AMBIL MASTER OP PARKIR ---
-                        var dataParkirWilayah = context.DbOpParkirs
-                            .Where(x => x.TahunBuku == tanggal.Year)
-                            .Select(x => new
-                            {
-                                x.Nop,
-                                x.WilayahPajak,
-                                x.NamaOp,
-                                x.AlamatOp,
-                                x.KategoriNama,
-                                x.PajakId
-                            })
-                            .ToList();
+                        // 1. Ambil daftar NOP sesuai wilayah
+                        var nopListParkir = wilayah == EnumFactory.EUPTB.SEMUA
+                            ? context.DbOpParkirs
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList()
+                            : context.DbOpParkirs
+                                .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList();
 
-                        // --- AMBIL DATA REALISASI BAYAR PARKIR ---
-                        var dataRealisasiWilayahParkir = context.DbMonParkirs
+                        // 2. Ambil realisasi per NOP di tanggal tsb
+                        var dataRealisasiParkir = context.DbMonParkirs
                             .Where(x =>
-                                x.TahunBuku == tanggal.Year &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tanggal.Year &&
-                                x.TglBayarPokok.Value.Month <= tanggal.Month
+                                x.TglBayarPokok.Value.Month == tanggal.Month &&
+                                x.TglBayarPokok.Value.Day == tanggal.Day &&
+                                nopListParkir.Contains(x.Nop)
                             )
-                            .GroupBy(x => new { x.Nop, x.PajakId })
+                            .GroupBy(x => x.Nop)
                             .Select(g => new
                             {
-                                g.Key.Nop,
-                                g.Key.PajakId,
+                                Nop = g.Key,
                                 TotalRealisasi = g.Sum(q => q.NominalPokokBayar)
                             })
+                            .ToList(); // <-- pindah ke memory
+
+                        // 3. Join ke master OP (agar tetap keluar meski realisasi 0)
+                        var opListParkir = context.DbOpParkirs
+                            .Where(x => nopListParkir.Contains(x.Nop))
+                            .GroupBy(x => x.Nop)
+                            .Select(g => g.FirstOrDefault()) // ambil satu saja per NOP
                             .ToList();
 
-                        // --- FILTER NOP SESUAI WILAYAH & JENIS PAJAK ---
-                        var nopsUptbParkir = dataParkirWilayah
-                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah &&
-                                        w.PajakId == (int)jenisPajak)
-                            .Select(w => w.Nop)
-                            .Distinct()
+                        // 4. Mapping ke DataDetailModal
+                        var dataDetailParkir = opListParkir
+                            .Select(op => new DataDetailModal
+                            {
+                                NOP = op.Nop,
+                                NamaOP = op.NamaOp,
+                                AlamatOP = op.AlamatOp,
+                                KategoriNama = op.KategoriNama,
+                                Realisasi = dataRealisasiParkir.FirstOrDefault(r => r.Nop == op.Nop)?.TotalRealisasi ?? 0
+                            })
+                            .Where(d => d.Realisasi > 0)
                             .ToList();
 
-                        // --- JOIN MASTER & REALISASI ---
-                        var realisasiDetailParkir = (from op in dataParkirWilayah
-                                                     where nopsUptbParkir.Contains(op.Nop)
-                                                     join r in dataRealisasiWilayahParkir
-                                                          on op.Nop equals r.Nop into gj
-                                                     from subr in gj.DefaultIfEmpty()
-                                                     let total = subr != null ? subr.TotalRealisasi : 0
-                                                     where total > 0 // Hilangkan realisasi 0
-                                                     select new DataDetailModal
-                                                     {
-                                                         NOP = op.Nop,
-                                                         NamaOP = op.NamaOp,
-                                                         AlamatOP = op.AlamatOp,
-                                                         KategoriNama = op.KategoriNama,
-                                                         Realisasi = total ?? 0
-                                                     })
-                                                     .ToList();
-
-                        // --- KEMAS KE DATAMODAL ---
+                        // 5. Isi ke DataModal
                         ret = new DataModal
                         {
-                            Wilayah = $"UPTB {(int)wilayah}",
+                            Wilayah = wilayah == EnumFactory.EUPTB.SEMUA ? "SEMUA WILAYAH" : $"UPTB {(int)wilayah}",
                             EnumWilayah = (int)wilayah,
+                            JenisPajak = jenisPajak.GetDescription(),
                             Tanggal = tanggal,
                             Tahun = tanggal.Year,
                             Bulan = tanggal.Month,
-                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
-                            Detail = realisasiDetailParkir
+                            Detail = dataDetailParkir
                         };
-
-
-
 
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var dataHiburanWilayah = context.DbOpHiburans
-                            .Where(x => x.TahunBuku == tanggal.Year)
-                            .Select(x => new
-                            {
-                                x.Nop,
-                                x.WilayahPajak,
-                                x.NamaOp,
-                                x.AlamatOp,
-                                x.KategoriNama,
-                                x.PajakId
-                            })
-                            .ToList();
+                        // 1. Ambil daftar NOP sesuai wilayah
+                        var nopListHiburan = wilayah == EnumFactory.EUPTB.SEMUA
+                            ? context.DbOpHiburans
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList()
+                            : context.DbOpHiburans
+                                .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList();
 
-                        // Ambil data realisasi bayar hiburan per NOP, tanggal, pajak
-                        var dataRealisasiWilayahHiburanQuery = context.DbMonHiburans
+                        // 2. Ambil realisasi per NOP di tanggal tsb
+                        var dataRealisasiHiburan = context.DbMonHiburans
                             .Where(x =>
-                                x.TahunBuku == tanggal.Year &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tanggal.Year &&
-                                x.TglBayarPokok.Value.Month <= tanggal.Month
-                            )
-                            .GroupBy(x => new { x.Nop, x.TglBayarPokok, x.PajakId })
-                            .Select(x => new
-                            {
-                                x.Key.Nop,
-                                x.Key.TglBayarPokok,
-                                x.Key.PajakId,
-                                Realisasi = x.Sum(q => q.NominalPokokBayar)
-                            })
-                            .ToList();
-
-                        // Filter NOP sesuai UPTB & jenis pajak
-                        var nopsUptbHiburan = dataHiburanWilayah
-                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
-                            .Select(w => w.Nop)
-                            .ToList();
-
-                        // Ambil detail realisasi + join ke master dataHiburanWilayah
-                        var realisasiDetailHiburan = dataRealisasiWilayahHiburanQuery
-                            .Where(x =>
                                 x.TglBayarPokok.Value.Month == tanggal.Month &&
                                 x.TglBayarPokok.Value.Day == tanggal.Day &&
-                                x.TglBayarPokok.Value.Year == tanggal.Year &&
-                                x.PajakId == (int)jenisPajak &&
-                                nopsUptbHiburan.Contains(x.Nop)
+                                nopListHiburan.Contains(x.Nop)
                             )
-                            .Select(r =>
+                            .GroupBy(x => x.Nop)
+                            .Select(g => new
                             {
-                                var master = dataHiburanWilayah.FirstOrDefault(m => m.Nop == r.Nop);
-                                return new DataDetailModal
-                                {
-                                    NOP = r.Nop,
-                                    NamaOP = master?.NamaOp ?? "-",
-                                    AlamatOP = master?.AlamatOp ?? "-",
-                                    KategoriNama = master?.KategoriNama ?? "-",
-                                    Realisasi = r.Realisasi ?? 0
-                                };
+                                Nop = g.Key,
+                                TotalRealisasi = g.Sum(q => q.NominalPokokBayar)
                             })
+                            .ToList(); // <-- pindah ke memory
+
+                        // 3. Join ke master OP (agar tetap keluar meski realisasi 0)
+                        var opListHiburan = context.DbOpHiburans
+                            .Where(x => nopListHiburan.Contains(x.Nop))
+                            .GroupBy(x => x.Nop)
+                            .Select(g => g.FirstOrDefault()) // ambil satu saja per NOP
                             .ToList();
 
+                        // 4. Mapping ke DataDetailModal
+                        var dataDetailHiburan = opListHiburan
+                            .Select(op => new DataDetailModal
+                            {
+                                NOP = op.Nop,
+                                NamaOP = op.NamaOp,
+                                AlamatOP = op.AlamatOp,
+                                KategoriNama = op.KategoriNama,
+                                Realisasi = dataRealisasiHiburan.FirstOrDefault(r => r.Nop == op.Nop)?.TotalRealisasi ?? 0
+                            })
+                            .Where(d => d.Realisasi > 0)
+                            .ToList();
+
+                        // 5. Isi ke DataModal
                         ret = new DataModal
                         {
-                            Wilayah = $"UPTB {(int)wilayah}",
+                            Wilayah = wilayah == EnumFactory.EUPTB.SEMUA ? "SEMUA WILAYAH" : $"UPTB {(int)wilayah}",
                             EnumWilayah = (int)wilayah,
+                            JenisPajak = jenisPajak.GetDescription(),
                             Tanggal = tanggal,
                             Tahun = tanggal.Year,
                             Bulan = tanggal.Month,
-                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
-                            Detail = realisasiDetailHiburan
+                            Detail = dataDetailHiburan
                         };
 
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        var dataAbtWilayah = context.DbOpAbts
-                            .Where(x => x.TahunBuku == tanggal.Year)
-                            .Select(x => new
-                            {
-                                x.Nop,
-                                x.WilayahPajak,
-                                x.NamaOp,
-                                x.AlamatOp,
-                                x.KategoriNama,
-                                x.PajakId
-                            })
-                            .ToList();
+                        // 1. Ambil daftar NOP sesuai wilayah
+                        var nopListABT = wilayah == EnumFactory.EUPTB.SEMUA
+                            ? context.DbOpAbts
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList()
+                            : context.DbOpAbts
+                                .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .ToList();
 
-                        // Ambil data realisasi bayar ABT per NOP, tanggal, pajak
-                        var dataRealisasiWilayahAbtQuery = context.DbMonAbts
+                        // 2. Ambil realisasi per NOP di tanggal tsb
+                        var dataRealisasiABT = context.DbMonAbts
                             .Where(x =>
-                                x.TahunBuku == tanggal.Year &&
                                 x.TglBayarPokok.HasValue &&
                                 x.TglBayarPokok.Value.Year == tanggal.Year &&
-                                x.TglBayarPokok.Value.Month <= tanggal.Month
-                            )
-                            .GroupBy(x => new { x.Nop, x.TglBayarPokok, x.PajakId })
-                            .Select(x => new
-                            {
-                                x.Key.Nop,
-                                x.Key.TglBayarPokok,
-                                x.Key.PajakId,
-                                Realisasi = x.Sum(q => q.NominalPokokBayar)
-                            })
-                            .ToList();
-
-                        // Filter NOP sesuai UPTB & jenis pajak
-                        var nopsUptbAbt = dataAbtWilayah
-                            .Where(w => Convert.ToInt32(w.WilayahPajak) == (int)wilayah && w.PajakId == (int)jenisPajak)
-                            .Select(w => w.Nop)
-                            .ToList();
-
-                        // Ambil detail realisasi + join ke master dataAbtWilayah
-                        var realisasiDetailAbt = dataRealisasiWilayahAbtQuery
-                            .Where(x =>
                                 x.TglBayarPokok.Value.Month == tanggal.Month &&
                                 x.TglBayarPokok.Value.Day == tanggal.Day &&
-                                x.TglBayarPokok.Value.Year == tanggal.Year &&
-                                x.PajakId == (int)jenisPajak &&
-                                nopsUptbAbt.Contains(x.Nop)
+                                nopListABT.Contains(x.Nop)
                             )
-                            .Select(r =>
+                            .GroupBy(x => x.Nop)
+                            .Select(g => new
                             {
-                                var master = dataAbtWilayah.FirstOrDefault(m => m.Nop == r.Nop);
-                                return new DataDetailModal
-                                {
-                                    NOP = r.Nop,
-                                    NamaOP = master?.NamaOp ?? "-",
-                                    AlamatOP = master?.AlamatOp ?? "-",
-                                    KategoriNama = master?.KategoriNama ?? "-",
-                                    Realisasi = r.Realisasi ?? 0
-                                };
+                                Nop = g.Key,
+                                TotalRealisasi = g.Sum(q => q.NominalPokokBayar)
                             })
+                            .ToList(); // <-- pindah ke memory
+
+                        // 3. Join ke master OP (agar tetap keluar meski realisasi 0)
+                        var opListABT = context.DbOpAbts
+                            .Where(x => nopListABT.Contains(x.Nop))
+                            .GroupBy(x => x.Nop)
+                            .Select(g => g.FirstOrDefault()) // ambil satu saja per NOP
                             .ToList();
 
+                        // 4. Mapping ke DataDetailModal
+                        var dataDetailABT = opListABT
+                            .Select(op => new DataDetailModal
+                            {
+                                NOP = op.Nop,
+                                NamaOP = op.NamaOp,
+                                AlamatOP = op.AlamatOp,
+                                KategoriNama = op.KategoriNama,
+                                Realisasi = dataRealisasiABT.FirstOrDefault(r => r.Nop == op.Nop)?.TotalRealisasi ?? 0
+                            })
+                            .Where(d => d.Realisasi > 0)
+                            .ToList();
+
+                        // 5. Isi ke DataModal
                         ret = new DataModal
                         {
-                            Wilayah = $"UPTB {(int)wilayah}",
+                            Wilayah = wilayah == EnumFactory.EUPTB.SEMUA ? "SEMUA WILAYAH" : $"UPTB {(int)wilayah}",
                             EnumWilayah = (int)wilayah,
+                            JenisPajak = jenisPajak.GetDescription(),
                             Tanggal = tanggal,
                             Tahun = tanggal.Year,
                             Bulan = tanggal.Month,
-                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
-                            Detail = realisasiDetailAbt
+                            Detail = dataDetailABT
                         };
 
                         break;
                     case EnumFactory.EPajak.Reklame:
                         break;
                     case EnumFactory.EPajak.PBB:
+                        // 1. Ambil data master PBB berdasarkan TahunBuku
                         var dataPbbWilayah = context.DbMonPbbs
                             .Where(x => x.TahunBuku == tanggal.Year)
                             .Select(x => new
                             {
                                 x.Nop,
                                 Wilayah = Regex.Match(x.Uptb.ToString() ?? "", @"\d+").Value,
-                                NamaOp = "-",            // PBB biasanya tidak ada, default "-"
-                                AlamatOp = "-",          // PBB biasanya tidak ada, default "-"
-                                KategoriNama = "-",
-                                PajakId = 9m
+                                NamaOp = "-",            // default untuk PBB
+                                AlamatOp = "-",          // default untuk PBB
+                                KategoriNama = "-",      // default untuk PBB
+                                PajakId = 9m             // fix PajakId PBB
                             })
                             .ToList();
 
-                        // Ambil data realisasi bayar PBB per NOP, tanggal, pajak
-                        var dataRealisasiWilayahPbbQuery = context.DbMonPbbs
+                        // 2. Ambil data realisasi bayar PBB per NOP, tanggal, pajak
+                        var dataRealisasiPBB = context.DbMonPbbs
                             .Where(x =>
                                 x.TahunBuku == tanggal.Year &&
                                 x.TglBayar.HasValue &&
                                 x.TglBayar.Value.Year == tanggal.Year &&
-                                x.TglBayar.Value.Month <= tanggal.Month
+                                x.TglBayar.Value.Month == tanggal.Month &&
+                                x.TglBayar.Value.Day == tanggal.Day
                             )
-                            .GroupBy(x => new { x.Nop, x.TglBayar, PajakId = 9m })
-                            .Select(x => new
+                            .GroupBy(x => x.Nop)
+                            .Select(g => new
                             {
-                                x.Key.Nop,
-                                x.Key.TglBayar,
-                                x.Key.PajakId,
-                                Realisasi = x.Sum(q => q.JumlahBayarPokok)
+                                Nop = g.Key,
+                                TotalRealisasi = g.Sum(q => q.JumlahBayarPokok),
+                                PajakId = 9m
                             })
-                            .ToList();
+                            .ToList(); // <-- pindah ke memory
 
-                        // Filter NOP sesuai UPTB & jenis pajak
+                        // 3. Filter NOP sesuai UPTB & jenis pajak
                         var nopsUptbPbb = dataPbbWilayah
                             .Where(w => Convert.ToInt32(w.Wilayah) == (int)wilayah && w.PajakId == (int)jenisPajak)
                             .Select(w => w.Nop)
                             .ToList();
 
-                        // Ambil detail realisasi + join ke master dataPbbWilayah
-                        var realisasiDetailPbb = dataRealisasiWilayahPbbQuery
-                            .Where(x =>
-                                x.TglBayar.Value.Month == tanggal.Month &&
-                                x.TglBayar.Value.Day == tanggal.Day &&
-                                x.TglBayar.Value.Year == tanggal.Year &&
-                                x.PajakId == (int)jenisPajak &&
-                                nopsUptbPbb.Contains(x.Nop)
+                        // 4. Mapping ke DataDetailModal
+                        var dataDetailPBB = dataRealisasiPBB
+                            .Where(r =>
+                                r.PajakId == (int)jenisPajak &&
+                                nopsUptbPbb.Contains(r.Nop)
                             )
                             .Select(r =>
                             {
@@ -3375,21 +3333,24 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     NamaOP = master?.NamaOp ?? "-",
                                     AlamatOP = master?.AlamatOp ?? "-",
                                     KategoriNama = master?.KategoriNama ?? "-",
-                                    Realisasi = r.Realisasi ?? 0
+                                    Realisasi = r.TotalRealisasi ?? 0,
                                 };
                             })
+                            .Where(d => d.Realisasi > 0)
                             .ToList();
 
+                        // 5. Isi ke DataModal
                         ret = new DataModal
                         {
-                            Wilayah = $"UPTB {(int)wilayah}",
+                            Wilayah = wilayah == EnumFactory.EUPTB.SEMUA ? "SEMUA WILAYAH" : $"UPTB {(int)wilayah}",
                             EnumWilayah = (int)wilayah,
+                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
                             Tanggal = tanggal,
                             Tahun = tanggal.Year,
                             Bulan = tanggal.Month,
-                            JenisPajak = ((EnumFactory.EPajak)jenisPajak).GetDescription(),
-                            Detail = realisasiDetailPbb
+                            Detail = dataDetailPBB
                         };
+
 
                         break;
                     case EnumFactory.EPajak.BPHTB:
