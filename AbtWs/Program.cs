@@ -10,7 +10,7 @@ IHost host = Host.CreateDefaultBuilder(args)
        MonPDLib.DBClass.Phrh = hostContext.Configuration.GetSection("Conn:Phrh").Value ?? throw new InvalidOperationException("Connection string not found");
        MonPDLib.DBClass.Bima = hostContext.Configuration.GetSection("Conn:Bima").Value ?? throw new InvalidOperationException("Connection string not found");
        MonPDLib.DBClass.MonitoringDb = hostContext.Configuration.GetSection("Conn:MonitoringDb").Value ?? throw new InvalidOperationException("Connection string not found");
-       services.AddHostedService<WorkerOld>();
+       services.AddHostedService<Worker>();
    })
     .Build();
 host.Run();
