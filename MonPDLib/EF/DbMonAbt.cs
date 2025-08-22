@@ -341,4 +341,12 @@ public partial class DbMonAbt
     [StringLength(200)]
     [Unicode(false)]
     public string NoKetetapan { get; set; } = null!;
+
+    [Column("VOL_PENGGUNAAN_AIR", TypeName = "NUMBER(38)")]
+    public decimal? VolPenggunaanAir { get; set; }
+
+    [Column("KELOMPOK_ABT_NAMA")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? KelompokAbtNama { get; set; }
 }

@@ -418,6 +418,8 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
                             newRow.UpdDate = DateTime.Now;
                             newRow.UpdBy = "JOB";
                             newRow.NoKetetapan = itemKetetapan.NO_KETETAPAN;
+                            newRow.KelompokAbtNama = itemKetetapan.KELOMPOK_NAMA;
+                            newRow.VolPenggunaanAir = itemKetetapan.VOL_PENGGUNAAN_AIR;
                             _contMonPd.DbMonAbts.Add(newRow);
                             _contMonPd.SaveChanges();
                         }

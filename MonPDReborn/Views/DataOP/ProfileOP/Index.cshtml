@@ -36,12 +36,7 @@
 
                 <div class="tab-content text-muted">
                     <div class="tab-pane active" id="op-rekap" role="tabpanel">
-                        <div class="text-center">
-                            <div id="loading2-ShowRekap" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-
+                        
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="card-title fs-16 mb-0">Rekap Jumlah Objek Pajak</h4>
                             <div class="dropdown">
@@ -49,6 +44,12 @@
                                         style="background-color: #f0f8ff; color: #333; border-color: #0d6efd;">
                                     <!-- Tahun akan diisi dengan JavaScript -->
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <div id="loading2-ShowRekap" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
 
@@ -64,16 +65,20 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div id="detailLoading" class="text-center my-4">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </div>
 
                                         <div id="detailContainer" class="mt-4" style="display: none;">
                                             @Html.Partial("~/Views/DataOP/ProfileOP/_RekapMaster.cshtml")
                                         </div>
 
+                                        @* <div id="detailContainerHotel" class="mt-4" style="display: none;">
+                                            @Html.Partial("~/Views/DataOP/ProfileOP/_RekapDetailHotel.cshtml")
+                                        </div> *@
+
+                                        <div id="detailLoading" class="text-center my-4">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -100,15 +105,17 @@
                                     </div>
 
                                     <div class="modal-body">
+
+                                        <div id="detailContainerSeries" class="mt-4" style="display: none;">
+                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailOP.cshtml")
+                                        </div>
+
                                         <div id="detailLoadingSeries" class="text-center my-4">
                                             <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden">Loading...</span>
                                             </div>
                                         </div>
 
-                                        <div id="detailContainerSeries" class="mt-4" style="display: none;">
-                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailOP.cshtml")
-                                        </div>
                                     </div>
 
 
@@ -360,6 +367,44 @@
              });
          }
 
+         // 📌 Rekap Detail Hotel
+        function onDetailHotelOnClick(enumPajak, kategori, tahun) {
+
+            $.ajax({
+                url: '@(Url.Action("RekapDetailHotel"))',
+                type: 'GET',
+                data: {
+                    enumPajak: enumPajak,
+                    kategori: kategori,
+                    tahun: tahun
+                },
+               success: function (response) {
+                    $("#loader").hide();
+
+                    const $modal = $("#staticBackdropLargeScrollable");
+
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Rekap Detail Hotel");
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    swal.fire({
+                        icon: 'error',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: "❌ Gagal memuat data Rekap Hotel."
+                    });
+                }
+            });
+        }
+
          function hideDetail() {
              $("#detailWrapper").slideUp();
          }
@@ -504,10 +549,10 @@
             var $wrapper = $("<div>").appendTo(container);
             var data = options.data;
             var dataDetail = options.data.RekapDetail;
-            var dataOkupansiDetail = options.data.OkunpasiHotel;
+            var dataOkupansiDetail = options.data.OkunpasiHotel
 
-            console.log(data)
-            console.log(dataDetail)
+            // console.log(data)
+            // console.log(dataDetail)
             // console.log(dataOkupansiDetail);
             //datagrid Hotel
             if(data.EnumPajak == 3){
@@ -544,8 +589,11 @@
                                 dataField: "JmlOpAwal",
                                 caption: "OP AWAL",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null 
+                                        ? new Intl.NumberFormat('id-ID').format(options.value) 
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -561,14 +609,17 @@
                                             );
                                         })
                                         .appendTo(container);
-                                }
+                                },
                             },
                             {
                                 dataField: "JmlOpTutupPermanen",
                                 caption: "OP TUTUP",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -590,8 +641,11 @@
                                 dataField: "JmlOpBaru",
                                 caption: "OP BARU",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -613,8 +667,11 @@
                                 dataField: "JmlOpAkhir",
                                 caption: "OP AKHIR",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -663,8 +720,11 @@
                                 dataField: "JmlOpAwal",
                                 caption: "OP AWAL",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -686,8 +746,11 @@
                                 dataField: "JmlOpTutupPermanen",
                                 caption: "OP TUTUP",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -709,8 +772,11 @@
                                 dataField: "JmlOpBaru",
                                 caption: "OP BARU",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -732,8 +798,11 @@
                                 dataField: "JmlOpAkhir",
                                 caption: "OP AKHIR",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -756,10 +825,10 @@
                         width: "100%"
                     })
 
+                    //Okupansi hotel bintang
                      $("<h5 class= 'mt-4'>")
                     .text("JUMLAH OP PER KAMAR DAN OKUPANSI")
                     .appendTo($wrapper);
-                    //Okupansi hotel bintang
                     $("<div>")
                     .appendTo($wrapper)
                     .dxDataGrid({
@@ -771,10 +840,10 @@
                         allowColumnResizing: true,
                         allowColumnReordering: true,
                         columnAutoWidth: true,
-                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        sorting: { mode: "multiple" }, 
                         filterRow: {
                             visible: true,
-                            applyFilter: "auto" // atau "onClick"
+                            applyFilter: "auto" 
                         },
                         headerFilter: { visible: true },
                         paging: { pageSize: 99999 },
@@ -784,13 +853,34 @@
                             {
                                 dataField: "TotalKamar",
                                 caption: "Total Kamar",
+                                cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
+                                    $("<a>")
+                                        .text(formattedValue)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailHotelOnClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
                             },
                             {
                                 dataField: "AvgRate",
                                 caption: "Rate Okupansi",
                             },
                         ],
-                        width: "100%"
+                        width: "100%",
                     })
 
                     //Okupansi hotel non bintang
@@ -805,10 +895,10 @@
                         allowColumnResizing: true,
                         allowColumnReordering: true,
                         columnAutoWidth: true,
-                        sorting: { mode: "multiple" }, // Multiple column sorting
+                        sorting: { mode: "multiple" }, 
                         filterRow: {
                             visible: true,
-                            applyFilter: "auto" // atau "onClick"
+                            applyFilter: "auto" 
                         },
                         headerFilter: { visible: true },
                         paging: { pageSize: 99999 },
@@ -818,6 +908,27 @@
                             {
                                 dataField: "TotalKamar",
                                 caption: "Total Kamar",
+                                cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
+                                    $("<a>")
+                                        .text(formattedValue)
+                                        .css({
+                                            "cursor": "pointer",
+                                            "color": "blue",
+                                            "text-decoration": "underline"
+                                        })
+                                        .on("click", function () {
+                                            let rowData = options.data;
+                                            onDetailHotelOnClick(
+                                                rowData.EnumPajak,
+                                                rowData.KategoriId,
+                                                rowData.Tahun
+                                            );
+                                        })
+                                        .appendTo(container);
+                                }
                             },
                             {
                                 dataField: "AvgRate",
@@ -854,8 +965,11 @@
                                 dataField: "JmlOpAwal",
                                 caption: "OP AWAL",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -877,8 +991,11 @@
                                 dataField: "JmlOpTutupPermanen",
                                 caption: "OP TUTUP",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
@@ -900,8 +1017,11 @@
                                 dataField: "JmlOpBaru",
                                 caption: "OP BARU",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",

@@ -1,11 +1,13 @@
 ﻿@model MonPDReborn.Models.DataOP.PenetapanOPVM.Show
+@using MonPDLib;
+@using MonPDLib.General;
 
 <div class="row">
     <div class="col-lg-3">
         <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
             <div class="card-body d-flex align-items-center">
                 <!-- Icon -->
-                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
                      style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
                     <i class="bx bx-money-withdraw  fs-4 text-primary"></i>
                 </div>
@@ -25,7 +27,7 @@
         <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
             <div class="card-body d-flex align-items-center">
                 <!-- Icon -->
-                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
                      style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
                     <i class="bx bx-file  fs-4 text-primary"></i>
                 </div>
@@ -45,7 +47,7 @@
         <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
             <div class="card-body d-flex align-items-center">
                 <!-- Icon -->
-                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
                      style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
                     <i class=" bx bx-coin  fs-4 text-primary"></i>
                 </div>
@@ -66,7 +68,7 @@
         <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
             <div class="card-body d-flex align-items-center">
                 <!-- Icon -->
-                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3" 
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
                      style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
                     <i class="bx bx-money  fs-4 text-primary"></i>
                 </div>
@@ -83,59 +85,124 @@
     </div>
 </div>
 <br />
-<div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PenetapanOPVM.PenetapanOP>()
-        .ID("penetapanGrid")
-        .DataSource(Model.DataPenetapanOPList)
-        .KeyExpr("Nop")
-        .ShowBorders(true)
-        .ShowColumnLines(true)
-        .ShowColumnHeaders(true)
-        .AllowColumnResizing(true)
-        .ShowRowLines(true)
-        .ColumnAutoWidth(true)
-        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-        .FilterRow(f => f.Visible(true))
-        .HeaderFilter(h => h.Visible(true))
-        .Sorting(s => s.Mode(GridSortingMode.Multiple))
-        .Paging(p => p.PageSize(10))
-        .Pager(pager =>
-        {
-            pager.ShowPageSizeSelector(true);
-            pager.AllowedPageSizes(new[] { 10, 20, 50 });
-            pager.ShowInfo(true);
-        })
-        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
-        .OnExporting("exportGrid")
-        .Columns(columns =>
-        {
-            columns.AddFor(m => m.NoPenetapan).Caption("No. Penetapan");
-            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
-            columns.AddFor(m => m.NamaWP).Caption("Nama WP");
-            columns.AddFor(m => m.Alamat).Caption("Alamat");
-            columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format("#,##0").Alignment(HorizontalAlignment.Right);
-            columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
-            columns.AddFor(m => m.Status).Caption("Status").CellTemplate(
-            @<text>
-                <span class='<%=
+@if (Model.SelectedJenisPajak == EnumFactory.EPajak.AirTanah)
+{
+    <div class="table-responsive">
+        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PenetapanOPVM.PenetapanOP>()
+                .ID("penetapanGrid")
+                .DataSource(Model.DataPenetapanOPList)
+                .KeyExpr("Nop")
+                .ShowBorders(true)
+                .ShowColumnLines(true)
+                .ShowColumnHeaders(true)
+                .AllowColumnResizing(true)
+                .ShowRowLines(true)
+                .ColumnAutoWidth(true)
+                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                .FilterRow(f => f.Visible(true))
+                .HeaderFilter(h => h.Visible(true))
+                .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                .Paging(p => p.PageSize(10))
+                .Pager(pager =>
+                {
+                    pager.ShowPageSizeSelector(true);
+                    pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                    pager.ShowInfo(true);
+                })
+                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                .OnExporting("exportGrid")
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.NoPenetapan).Caption("No. Penetapan");
+                    columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+                    columns.AddFor(m => m.NamaWP).Caption("Nama OP");
+                    columns.AddFor(m => m.Alamat).Caption("Alamat");
+                    columns.AddFor(m => m.VolumePenggunaan).Caption("Volume Penggunaan");
+                    columns.AddFor(m => m.KelompokAbt).Caption("Kelompok");
+                    columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format("#,##0").Alignment(HorizontalAlignment.Right);
+                    columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
+                    columns.AddFor(m => m.Status).Caption("Status").CellTemplate(
+        @<text>
+        <span class='<%=
                     data.Status === "Sudah Dibayar" ? "badge bg-success" : "badge bg-danger" %>'><%= data.Status %>
                 </span>
-            </text>);
+    </text>);
 
-        })
-        .Summary(s =>
-        {
-            s.TotalItems(items =>
+                })
+            .Summary(s =>
             {
-                items.AddFor(m => m.Alamat)
+                s.TotalItems(items =>
+                {
+                    items.AddFor(m => m.Alamat)
                 .SummaryType(SummaryType.Sum)
                 .Alignment(HorizontalAlignment.Right)
                 .DisplayFormat("TOTAL");
-                items.AddFor(m => m.NilaiPenetapan)
+                    items.AddFor(m => m.NilaiPenetapan)
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("{0}")
                 .ValueFormat("#,##0");
-            });
-        })
-        )
-</div>
+                });
+            })
+            )
+    </div>
+}
+else
+{
+
+    <div class="table-responsive">
+        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PenetapanOPVM.PenetapanOP>()
+                .ID("penetapanGrid")
+                .DataSource(Model.DataPenetapanOPList)
+                .KeyExpr("Nop")
+                .ShowBorders(true)
+                .ShowColumnLines(true)
+                .ShowColumnHeaders(true)
+                .AllowColumnResizing(true)
+                .ShowRowLines(true)
+                .ColumnAutoWidth(true)
+                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                .FilterRow(f => f.Visible(true))
+                .HeaderFilter(h => h.Visible(true))
+                .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                .Paging(p => p.PageSize(10))
+                .Pager(pager =>
+                {
+                    pager.ShowPageSizeSelector(true);
+                    pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                    pager.ShowInfo(true);
+                })
+                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                .OnExporting("exportGrid")
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.NoPenetapan).Caption("No. Penetapan");
+                    columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+                    columns.AddFor(m => m.NamaWP).Caption("Nama WP");
+                    columns.AddFor(m => m.Alamat).Caption("Alamat");
+                    columns.AddFor(m => m.NilaiPenetapan).Caption("Nilai Penetapan").Format("#,##0").Alignment(HorizontalAlignment.Right);
+                    columns.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
+                    columns.AddFor(m => m.Status).Caption("Status").CellTemplate(
+        @<text>
+        <span class='<%=
+                    data.Status === "Sudah Dibayar" ? "badge bg-success" : "badge bg-danger" %>'><%= data.Status %>
+                </span>
+    </text>);
+
+                })
+            .Summary(s =>
+            {
+                s.TotalItems(items =>
+                {
+                    items.AddFor(m => m.Alamat)
+                .SummaryType(SummaryType.Sum)
+                .Alignment(HorizontalAlignment.Right)
+                .DisplayFormat("TOTAL");
+                    items.AddFor(m => m.NilaiPenetapan)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("{0}")
+                .ValueFormat("#,##0");
+                });
+            })
+            )
+    </div>
+}

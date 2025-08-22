@@ -379,9 +379,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -653,13 +653,13 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbCtrlByrHotel>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_HOTEL");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrParkir>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_PARKIR");
+
+            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrPbb>(entity =>
@@ -788,7 +788,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonReklame>(entity =>
         {
-            entity.HasKey(e => new { e.NoFormulir, e.Seq }).HasName("DB_MON_REKLAME_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.Seq, e.TahunBuku }).HasName("DB_MON_REKLAME_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KelasJalan).IsFixedLength();

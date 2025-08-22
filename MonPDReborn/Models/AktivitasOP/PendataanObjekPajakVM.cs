@@ -68,7 +68,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal JumlahOp { get; set; }
             public decimal Potensi { get; set; }
             public decimal TotalRealisasi { get; set; }
-            public decimal Selisih { get; set; }
+            public decimal Selisih => Potensi - TotalRealisasi;
         }
 
         public class DataDetailPendataan
@@ -132,11 +132,11 @@ namespace MonPDReborn.Models.AktivitasOP
                                 s.TglBayarPokok.Value.Year == x.Key.Tahun
                             )
                             .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0,
-                        Selisih = (
-                            restoRealisasi
-                                .Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun)
-                                .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0
-                        ) - x.GroupBy(d => d.Nop).Sum(g => g.Max(d => d.PajakBulan))
+                        //Selisih = (
+                        //    restoRealisasi
+                        //        .Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun)
+                        //        .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0
+                        //) - x.GroupBy(d => d.Nop).Sum(g => g.Max(d => d.PajakBulan))
                     })
                     .ToList();
 
@@ -170,11 +170,11 @@ namespace MonPDReborn.Models.AktivitasOP
                                 s.TglBayarPokok.Value.Year == x.Key.Tahun
                             )
                             .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0,
-                        Selisih = (
-                            parkirRealisasi
-                                .Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun)
-                                .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0
-                        ) - x.GroupBy(d => d.Nop).Sum(g => g.Max(d => d.PajakBulan))
+                        //Selisih = (
+                        //    parkirRealisasi
+                        //        .Where(s => s.TglBayarPokok.Value.Year == x.Key.Tahun)
+                        //        .Sum(c => (decimal?)c.NominalPokokBayar) ?? 0
+                        //) - x.GroupBy(d => d.Nop).Sum(g => g.Max(d => d.PajakBulan))
                     })
                     .ToList();
 
@@ -221,7 +221,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                     PajakBulanan = x.Max(x => x.PajakBulan),
                                     AvgRealisasi = restoRealisasiList
                                         .Where(r => r.Nop == nop)
-                                        .Sum(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
                                 };
                             })
                             .ToList();
@@ -259,7 +259,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                     PajakBulanan = x.Max(x => x.PajakBulan),
                                     AvgRealisasi = parkirRealisasiList
                                         .Where(r => r.Nop == nop)
-                                        .Sum(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
                                 };
                             })
                             .ToList();

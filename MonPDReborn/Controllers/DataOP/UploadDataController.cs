@@ -66,7 +66,8 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
             return Json(response);
@@ -96,7 +97,8 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
             return Json(response);
@@ -126,7 +128,8 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
             return Json(response);
@@ -156,7 +159,8 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
             return Json(response);
@@ -186,7 +190,8 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
             return Json(response);
@@ -216,7 +221,8 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
             return Json(response);
@@ -246,7 +252,8 @@ namespace MonPDReborn.Controllers.DataOP
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = "⚠ Server Error: Internal Server Error";
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
             return Json(response);
