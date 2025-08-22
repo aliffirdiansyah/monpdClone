@@ -507,7 +507,7 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
                                         }
                                     }
 
-                                    ketetapan.NominalPokokBayar = (ketetapan.NominalPokokBayar ?? 0) + itemSSPD.NOMINAL_POKOK;
+                                    ketetapan.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;
                                     ketetapan.AkunPokokBayar = akunBayar;
                                     ketetapan.Kelompok = kelompokBayar;
                                     ketetapan.JenisPokokBayar = jenisBayar;
@@ -527,7 +527,7 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
                                         }
                                     }
 
-                                    ketetapan.NominalSanksiBayar = (ketetapan.NominalSanksiBayar ?? 0) + itemSSPD.NOMINAL_SANKSI;
+                                    ketetapan.NominalSanksiBayar = itemSSPD.NOMINAL_SANKSI;
                                     ketetapan.AkunSanksiBayar = akunSanksi;
                                     ketetapan.KelompokSanksiBayar = kelompokSanksi;
                                     ketetapan.JenisSanksiBayar = jenisSanksi;
@@ -548,7 +548,7 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
                                         }
                                     }
 
-                                    ketetapan.NominalSanksiBayar = (ketetapan.NominalSanksiKenaikanBayar ?? 0) + itemSSPD.NOMINAL_ADMINISTRASI;
+                                    ketetapan.NominalSanksiBayar = itemSSPD.NOMINAL_ADMINISTRASI;
                                     ketetapan.AkunSanksiBayar = akunSanksi;
                                     ketetapan.KelompokSanksiBayar = kelompokSanksi;
                                     ketetapan.JenisSanksiBayar = jenisSanksi;

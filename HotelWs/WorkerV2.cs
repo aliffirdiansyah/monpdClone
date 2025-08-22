@@ -98,7 +98,6 @@ namespace HotelWs
                 {
                     GetOPProcess(i);
                 }
-
             }
 
             for (var i = tahunAmbil; i <= tglServer.Year; i++)
