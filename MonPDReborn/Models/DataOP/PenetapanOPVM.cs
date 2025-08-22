@@ -61,6 +61,7 @@ namespace MonPDReborn.Models.DataOP
         public class Show
         {
             public List<PenetapanOP> DataPenetapanOPList { get; set; } = new();
+            public EnumFactory.EPajak SelectedJenisPajak { get; set; }
             public PenetapanOPStatistik StatistikData { get; set; } = new();
 
             public Show()
@@ -69,6 +70,7 @@ namespace MonPDReborn.Models.DataOP
             }
             public Show(EnumFactory.EPajak JenisPajak, int tahun, int bulan)
             {
+                SelectedJenisPajak = JenisPajak;
                 if ((int)JenisPajak == 0)
                 {
                     throw new ArgumentException("Harap Pilih Jenis Pajak!");
@@ -113,6 +115,8 @@ namespace MonPDReborn.Models.DataOP
                                     (int)(g.First().TahunPajakKetetapan),
                                     (int)(g.First().MasaPajakKetetapan), 1
                                 ).ToString("MMMM", new CultureInfo("id-ID")),
+                                VolumePenggunaan = g.First().VolPenggunaanAir ?? 0,
+                                KelompokAbt = g.First().KelompokAbtNama ?? "-",
                                 Status = g.First().NominalPokokBayar.HasValue
                                     ? (g.First().NominalPokokBayar.Value > 0 ? "Sudah Dibayar" : "Belum Dibayar")
                                     : "Belum Ada Pembayaran"
@@ -267,6 +271,8 @@ namespace MonPDReborn.Models.DataOP
             public string Alamat { get; set; } = null!;
             public decimal NilaiPenetapan { get; set; } = 0;
             public string MasaPajak { get; set; } = null!;
+            public decimal VolumePenggunaan { get; set; } = 0;
+            public string KelompokAbt { get; set; } = null!;
             public string Status { get; set; } = null!;
         }
 

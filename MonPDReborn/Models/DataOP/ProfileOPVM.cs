@@ -1,6 +1,8 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
 using System.Collections;
 using System.Globalization;
@@ -248,7 +250,8 @@ namespace MonPDReborn.Models.DataOP
                             x.TahunBuku,
                             x.TglOpTutup,
                             x.TglMulaiBukaOp,
-                            x.KategoriId
+                            x.KategoriId,
+                            x.PajakNama
                         }).AsQueryable();
 
                 var dbOpListrik = context.DbOpListriks
@@ -347,10 +350,10 @@ namespace MonPDReborn.Models.DataOP
                     {
                         case EnumFactory.EPajak.MakananMinuman:
 
-                            tutup = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                            awal = dbOpResto.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                            baru = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                            akhir = dbOpResto.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                            tutup = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.PajakNama != "MAMIN");
+                            awal = dbOpResto.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN" );
+                            baru = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN");
+                            akhir = dbOpResto.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
 
                             break;
 
@@ -462,10 +465,10 @@ namespace MonPDReborn.Models.DataOP
                         {
                             case EnumFactory.EPajak.MakananMinuman:
 
-                                tutupKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                                awalKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                                baruKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                                akhirKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                                tutupKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.PajakNama != "MAMIN");
+                                awalKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN");
+                                baruKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN");
+                                akhirKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
 
                                 break;
 
@@ -557,7 +560,7 @@ namespace MonPDReborn.Models.DataOP
 
 
                         re.KategoriId = Convert.ToInt32(pajakKategori.Id);
-                        re.KategoriNama = pajakKategori.Nama;
+                        re.KategoriNama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(pajakKategori.Nama.ToLower());
                         re.EnumPajak = pajak.Id;
                         re.JenisPajak = pajak.Nama;
                         re.Tahun = tahun;
@@ -3851,7 +3854,7 @@ namespace MonPDReborn.Models.DataOP
 
                     var res = new OkupansiHotel();
                     res.KategoriId = Convert.ToInt32(kategori.Id);
-                    res.KategoriNama = kategori.Nama;
+                    res.KategoriNama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(kategori.Nama.ToLower());
                     res.TotalKamar = totalKamar;
                     res.AvgRate = avgRate;
                     res.Tahun = tahunBuku;
@@ -3908,7 +3911,7 @@ namespace MonPDReborn.Models.DataOP
                         AlamatOP = op.AlamatOp,
                         Wilayah = "SURABAYA " + op.WilayahPajak ?? "-" ,
                         KategoriId = op.KategoriId.HasValue ? Convert.ToInt32(op.KategoriId.Value) : 0,
-                        KategoriNama = op.KategoriNama,
+                        KategoriNama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(op.KategoriNama.ToLower()),
                         TotalRoom = totalRoom.ToString(),
                         RoomTerjual = roomSold.ToString(),
                         RateOkupansi = rateOkupansi.ToString("F2")

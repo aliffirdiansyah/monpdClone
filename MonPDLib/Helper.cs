@@ -528,17 +528,17 @@ namespace MonPDLib
 
         public class KETETAPANPBJT
         {
-            public string ID_KETETAPAN { get; set; } = null!;
+            public string? ID_KETETAPAN { get; set; } = null!;
             public string? NOP { get; set; } = null!;
-            public decimal TAHUN_PAJAK { get; set; }
-            public decimal MASA_PAJAK { get; set; }
+            public decimal? TAHUN_PAJAK { get; set; }
+            public decimal? MASA_PAJAK { get; set; }
             public decimal SEQ { get; set; }
-            public DateTime TGL_SPTPD { get; set; }
-            public decimal KETETAPAN_TOTAL { get; set; }
-            public DateTime TGL_JATUH_TEMPO { get; set; }            
-            public string JENIS_KETETAPAN { get; set; } = null!;
-            public int PAJAK_ID { get; set; }
-            public string NAMA_PAJAK_DAERAH { get; set; } = null!;
+            public DateTime? TGL_SPTPD { get; set; }
+            public decimal? KETETAPAN_TOTAL { get; set; }
+            public DateTime? TGL_JATUH_TEMPO { get; set; }            
+            public string? JENIS_KETETAPAN { get; set; } = null!;
+            public int? PAJAK_ID { get; set; }
+            public string? NAMA_PAJAK_DAERAH { get; set; } = null!;
 
         }
 

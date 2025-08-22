@@ -47,6 +47,9 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Realisasi Pendapatan Banding AKP Pendapatan</h5>
+                        <small id="lastRefresh" class="text-muted d-block mt-2">
+                            Terakhir di-refresh: -
+                        </small>
                     </div>
                     <div class="card-body">
                         <div id="loading-Show" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
@@ -55,7 +58,7 @@
                         <div class="flex-grow-1">
                             @{
                                 int startYearA = DateTime.Now.Year - 6;
-                                int currentYearA = DateTime.Now.Year;
+                                int currentYearA = DateTime.Now.Year -1;
                             }
                             <div class="input-group">
                                 <label class="input-group-text" for="inputGroupSelect01">Tahun</label>
@@ -228,4 +231,29 @@
             complete: function () { $('#loading-ShowPembandingB').hide(); }
         });
     }
+    function refreshAll() {
+        loadShow();
+        loadDetail();
+        fnShowPembandingA();
+        fnShowPembandingB();
+
+        // Update tulisan kapan terakhir refresh
+        var now = new Date();
+        var formattedTime = now.toLocaleString("id-ID", {
+            weekday: "long",  // Senin, Selasa, ...
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
+
+        $("#lastRefresh").text("Terakhir di-refresh: " + formattedTime);
+    }
+
+    setInterval(function () {
+        refreshAll();
+    }, 900000);
+
 </script>

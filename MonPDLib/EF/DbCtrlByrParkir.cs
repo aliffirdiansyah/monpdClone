@@ -57,5 +57,5 @@ public partial class DbCtrlByrParkir
     [Column("STATUS_BAYAR")]
     [StringLength(1)]
     [Unicode(false)]
-    public string? StatusBayar { get; set; }
+    public decimal? StatusBayar { get; set; }
 }

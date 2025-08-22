@@ -1,7 +1,88 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.ShowRekap
 
 <div class="row">
-    <div class="col-lg-6 mb-3">
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class="bx bx-money-withdraw  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Total Potensi</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        Rp. @Model.DataDashboard.Potensi.ToString("N0")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class="bx bx-file  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Total Realisasi</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        Rp. @Model.DataDashboard.RealisasiTotal.ToString("N0")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class=" bx bx-coin  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Total Objek Pajak</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        @Model.DataDashboard.TotalOP.ToString("N0")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-3">
+        <div class="card card-animate shadow-sm rounded-3" style="border-top: 5px solid #00712D; transition: transform 0.3s; height: 100%;">
+            <div class="card-body d-flex align-items-center">
+                <!-- Icon -->
+                <div class="bg-soft-primary rounded-circle d-flex justify-content-center align-items-center me-3"
+                     style="width: 45px; height: 45px; aspect-ratio: 1/1; flex-shrink: 0;">
+                    <i class="bx bx-money  fs-4 text-primary"></i>
+                </div>
+
+                <!-- Text -->
+                <div>
+                    <div class="text-uppercase fw-bold fs-14 text-muted mb-1">Persentase Capaian</div>
+                    <div class="fs-16 fw-semibold text-dark">
+                        @Model.DataDashboard.Capaian.ToString("N0")%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* <div class="col-lg-6 mb-3">
         <div class="card shadow-sm border-0 card-animate">
             <div class="card-body d-flex align-items-center">
                 <!-- Logo Besar -->
@@ -17,17 +98,17 @@
 
                     <div class="mb-2">
                         <span class="text-muted">Potensi:</span>
-                        <span class="fw-semibold float-end">Rp. @Model.Data.Potensi.ToString("N0")</span>
+                        <span class="fw-semibold float-end">Rp. @Model.DataDashboard.Potensi.ToString("N0")</span>
                     </div>
 
                     <div class="mb-2">
                         <span class="text-muted">Realisasi:</span>
-                        <span class="fw-semibold float-end">Rp. @Model.Data.RealisasiTotal.ToString("N0")</span>
+                        <span class="fw-semibold float-end">Rp. @Model.DataDashboard.RealisasiTotal.ToString("N0")</span>
                     </div>
 
                     <div>
                         <span class="text-muted">Capaian:</span>
-                        <span class="fw-semibold float-end">@Model.Data.Capaian.ToString("N0")%</span>
+                        <span class="fw-semibold float-end">@Model.DataDashboard.Capaian.ToString("N0")%</span>
                     </div>
                 </div>
             </div>
@@ -50,22 +131,22 @@
 
                     <div class="mb-2">
                         <span class="text-muted">Total OP:</span>
-                        <span class="fw-semibold float-end">@Model.Data.TotalOP</span>
+                        <span class="fw-semibold float-end">@Model.DataDashboard.TotalOP.ToString("N0")</span>
                     </div>
 
                     <div class="mb-2">
                         <span class="text-muted">Realisasi OP:</span>
-                        <span class="fw-semibold float-end">Rp. @Model.Data.RealisasiOP.ToString("N0")</span>
+                        <span class="fw-semibold float-end">Rp. @Model.DataDashboard.RealisasiOP.ToString("N0")</span>
                     </div>
 
                     <div>
                         <span class="text-muted">Terealisasi:</span>
-                        <span class="fw-semibold float-end">Rp. @Model.Data.RealisasiOP.ToString("N0")</span>
+                        <span class="fw-semibold float-end">Rp. @Model.DataDashboard.RealisasiOP.ToString("N0")</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
 </div>
 
 @{
