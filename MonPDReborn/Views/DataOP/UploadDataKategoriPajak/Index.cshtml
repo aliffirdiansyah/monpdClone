@@ -154,24 +154,7 @@
             });
         }
         function FixUploadKategoriOp() {
-            var formData = new FormData();
-            var grid = $("#dg-opViewModel").dxDataGrid("instance");
-            var dataSource = [];
-            grid.getDataSource().store().load().done(function (data) {
-                allData = data;
-            });
-
-            allData.forEach((item, index) => {
-                formData.append(`[${index}].rowNumber`, item.rowNumber ?? 0);
-                formData.append(`[${index}].IsValid`, item.IsValid ?? false);
-                formData.append(`[${index}].IsValidDescription`, item.IsValidDescription ?? "");
-                formData.append(`[${index}].Nop`, item.Nop ?? "");
-                formData.append(`[${index}].NamaOp`, item.NamaOp ?? "");
-                formData.append(`[${index}].IdPajak`, item.IdPajak ?? 0);
-                formData.append(`[${index}].NamaPajak`, item.NamaPajak ?? "");
-                formData.append(`[${index}].IdKategoriPajak`, item.IdKategoriPajak ?? 0);
-                formData.append(`[${index}].NamaKategoriPajak`, item.NamaKategoriPajak ?? "");
-            });
+            var formData = new FormData($('#frm-UploadKategoriOp')[0]);
 
             $.ajax({
                 url: '@Url.Action("Update")',
