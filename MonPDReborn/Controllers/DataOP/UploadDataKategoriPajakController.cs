@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDReborn.Lib.General;
+using static MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.ViewModel;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -49,11 +50,12 @@ namespace MonPDReborn.Controllers.DataOP
         }
 
         [HttpPost]
-        public IActionResult Update(Models.DataOP.UploadDataKategoriPajakVM.Show input)
+        public IActionResult Update(Models.DataOP.UploadDataKategoriPajakVM.Index input)
         {
             try
             {
-                Models.DataOP.UploadDataKategoriPajakVM.Method.UpdateKategoriOp(input.Data);
+                
+                Models.DataOP.UploadDataKategoriPajakVM.Method.UpdateKategoriOp(input.FileExcel);
                 return Json(response.ToSuccessInfoMessage("Data Berhasil Di Update"));
             }
             catch (Exception ex)
