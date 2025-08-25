@@ -1230,12 +1230,8 @@
         @Model.Data.PersentaseHiburan.ToString("n2").Replace(",", "."),
         @Model.Data.PersentaseListrik.ToString("n2").Replace(",", "."),
         @Model.Data.PersentaseParkir.ToString("n2").Replace(",", "."),
-        @Model.Data.PersentaseReklame.ToString("n2").Replace(",", "."),
         @Model.Data.PersentaseAbt.ToString("n2").Replace(",", "."),
         @Model.Data.PersentasePbb.ToString("n2").Replace(",", "."),
-        @Model.Data.PersentaseBphtb.ToString("n2").Replace(",", "."),
-        @Model.Data.PersentaseOpsenPkb.ToString("n2").Replace(",", "."),
-        @Model.Data.PersentaseOpsenBbnkb.ToString("n2").Replace(",", ".")
             ];
 
             var labelData = [
@@ -1244,12 +1240,8 @@
                 "@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())",
                 "@(EnumFactory.EPajak.TenagaListrik.GetDescription())",
                 "@(EnumFactory.EPajak.JasaParkir.GetDescription())",
-                "@(EnumFactory.EPajak.Reklame.GetDescription())",
                 "@(EnumFactory.EPajak.AirTanah.GetDescription())",
                 "@(EnumFactory.EPajak.PBB.GetDescription())",
-                "@(EnumFactory.EPajak.BPHTB.GetDescription())",
-                "@(EnumFactory.EPajak.OpsenPkb.GetDescription())",
-                "@(EnumFactory.EPajak.OpsenBbnkb.GetDescription())"
             ];
 
             var total = seriesData.reduce((a, b) => a + parseFloat(b), 0);
