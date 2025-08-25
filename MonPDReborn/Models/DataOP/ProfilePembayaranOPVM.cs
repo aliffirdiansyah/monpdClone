@@ -332,7 +332,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataResto.Where(x => x.MasaPajak == bln).OrderBy(x => x.MasaPajak).ToList();
+                            var rest = dataResto.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -363,7 +363,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataListrik.Where(x => x.MasaPajak== bln).OrderBy(x => x.MasaPajak).ToList();
+                            var rest = dataListrik.Where(x => x.MasaPajak== bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -394,7 +394,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataHotel.Where(x => x.MasaPajak == bln).OrderBy(x => x.MasaPajak).ToList();
+                            var rest = dataHotel.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -425,7 +425,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataParkir.Where(x => x.MasaPajak == bln).OrderBy(x => x.MasaPajak).ToList();
+                            var rest = dataParkir.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -456,7 +456,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataHiburan.Where(x => x.MasaPajak == bln).OrderBy(x => x.MasaPajak).ToList();
+                            var rest = dataHiburan.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -487,7 +487,7 @@ namespace MonPDReborn.Models.DataOP
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataAbt.Where(x => x.MasaPajak == bln).OrderBy(x => x.MasaPajak).ToList();
+                            var rest = dataAbt.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
