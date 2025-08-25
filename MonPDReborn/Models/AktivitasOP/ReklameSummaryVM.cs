@@ -728,6 +728,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tahun = tahun,
                         NoFormulir = tampilFormulir,
                         Lokasi = lokasi,
+                        Jenis = (kategori == 3) ? (x.FlagPermohonanA ?? string.Empty) : (x.FlagPermohonan ?? string.Empty),
+                        DetailReklame = (kategori == 3) ? (x.DetailLokasiA ?? string.Empty) : (x.DetailLokasi ?? string.Empty),
 
                         Nama = (kategori == 3)
                             ? string.Concat(x.NamaA ?? "", " (", x.NamaPerusahaanA ?? "", ")")
@@ -749,7 +751,15 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahNilai = (kategori == 3) ? (x.PajakPokokA ?? 0) : (x.PajakPokok ?? 0),
 
                         InformasiEmail = informasiEmail,
-                        JumlahUpaya = jumlahUpaya
+                        JumlahUpaya = jumlahUpaya,
+
+                        KategoriText = kategori switch
+                        {
+                            1 => "Belum Bayar",
+                            2 => "Belum Perpanjangan",
+                            3 => "Belum Bayar",
+                            _ => string.Empty
+                        }
                     };
                 }).ToList();
 
@@ -868,6 +878,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         IsiReklame = isFormulirA ? reklame.IsiReklameA ?? "-" : reklame.IsiReklame ?? "-",
                         AlamatReklame = isFormulirA ? reklame.AlamatreklameA ?? "-" : reklame.Alamatreklame ?? "-",
                         JenisReklame = isFormulirA ? reklame.NmJenisA ?? "-" : reklame.NmJenis ?? "-",
+                        DetailReklame = isFormulirA ? reklame.DetailLokasiA ?? "-" : reklame.DetailLokasi ?? "-",
                         Panjang = isFormulirA ? reklame.PanjangA ?? 0 : reklame.Panjang ?? 0,
                         Lebar = isFormulirA ? reklame.LebarA ?? 0 : reklame.Lebar ?? 0,
                         Luas = isFormulirA ? reklame.LuasA ?? 0 : reklame.Luas ?? 0,
@@ -1152,6 +1163,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Tahun = tahun,
                         NoFormulir = tampilFormulir,
+                        Jenis = (kategori == 3) ? (x.FlagPermohonanA ?? string.Empty) : (x.FlagPermohonan ?? string.Empty),
                         Nama = (kategori == 3)
                             ? string.Concat(x.NamaA ?? "", " (", x.NamaPerusahaanA ?? "", ")")
                             : string.Concat(x.Nama ?? "", " (", x.NamaPerusahaan ?? "", ")"),
@@ -1170,7 +1182,14 @@ namespace MonPDReborn.Models.AktivitasOP
                                 : string.Empty),
                         JumlahNilai = (kategori == 3) ? (x.PajakPokokA ?? 0) : (x.PajakPokok ?? 0),
                         InformasiEmail = informasiEmail,
-                        JumlahUpaya = jumlahUpaya
+                        JumlahUpaya = jumlahUpaya,
+                        KategoriText = kategori switch
+                        {
+                            1 => "Belum Bayar",
+                            2 => "Belum Perpanjangan",
+                            3 => "Belum Bayar",
+                            _ => string.Empty
+                        }
                     };
                 }).ToList();
 
@@ -1285,7 +1304,10 @@ namespace MonPDReborn.Models.AktivitasOP
         public class DetailSummary
         {
             public int Lokasi { get; set; }
+            public string Jenis { get; set; }
+            public string KategoriText { get; set; }
             public string BulanNama { get; set; } = null!;
+            public string DetailReklame { get; set; } = null!;
             public int Bulan { get; set; }
             public int Tahun { get; set; }
             public string NoFormulir { get; set; } = null!;
@@ -1329,6 +1351,7 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 public string IsiReklame { get; set; } = null!;
                 public string AlamatReklame { get; set; } = null!;
+                public string DetailReklame { get; set; } = null!;
                 public string JenisReklame { get; set; } = null!;
                 public decimal Panjang { get; set; }
                 public decimal Lebar { get; set; }
@@ -1343,6 +1366,9 @@ namespace MonPDReborn.Models.AktivitasOP
         public class DetailBongkar
         {
             public string Lokasi { get ; set; } = null!;
+            public string Jenis { get; set; }
+            public string KategoriText { get; set; }
+            public string DetailReklame { get; set; } = null!;
             public string BulanNama { get; set; } = null!;
             public int Bulan { get; set; }
             public int Tahun { get; set; }

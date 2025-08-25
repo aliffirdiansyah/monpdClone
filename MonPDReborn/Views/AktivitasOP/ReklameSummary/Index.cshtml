@@ -306,9 +306,11 @@
                 .attr('title', 'Lihat Detail')
                 .text(jumlah.toLocaleString('id-ID'))
                 .on('click', () => {
+                    console.log("Kategori:", kategoriText, "Jenis:", jenisText);
                     // update span kategori & jenis
                     $("#kategoriSpan").text(kategoriText);
-                    $("#jenisSpan").text(jenisText);
+                    $("#jenisHeaderSpan").text(jenisText);
+                    $("#jenisBodySpan").text(jenisText);
 
                     loadDetailJT(tahun, bulan, jenis, kategori, lokasi);
                 });
@@ -345,7 +347,7 @@
                     $("#kategoriSpan").text(kategoriText);
                     $("#jenisSpan").text(jenisText);
 
-                    loadDetailJT(tahun, bulan, jenis, kategori, lokasi);
+                loadDetailJT(tahun, bulan, jenis, kategori, lokasi);
                 });
 
             const $wrapper = $('<div>')
