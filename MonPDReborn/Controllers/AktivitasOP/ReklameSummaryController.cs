@@ -51,11 +51,11 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult Show(int tahun)
+        public IActionResult Show(int tahun , int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.Show(tahun);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.Show(tahun ,lokasi);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -72,11 +72,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
-        public IActionResult ShowTerbatas(int tahun)
+        public IActionResult ShowTerbatas(int tahun, int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowTerbatas(tahun);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowTerbatas(tahun , lokasi);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -93,7 +93,7 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
-        public IActionResult ShowIsidentil(int tahun)
+        public IActionResult ShowIsidentil(int tahun , int lokasi)
         {
             try
             {
@@ -115,11 +115,11 @@ namespace MonPDReborn.Controllers.Aktivitas
         }
 
         // Detail Reklame Permanen
-        public IActionResult DetailSummary(int tahun, int bulan, int jenis, int kategori)
+        public IActionResult DetailSummary(int tahun, int bulan, int jenis, int kategori, int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailSummary(tahun, bulan, jenis, kategori);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailSummary(tahun, bulan, jenis, kategori , lokasi);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -136,11 +136,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
-        public IActionResult DetailBongkar(int tahun, int bulan, int jenis, int kategori)
+        public IActionResult DetailBongkar(int tahun, int bulan, int jenis, int kategori, int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.BongkarDetail(tahun, bulan, jenis, kategori);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.BongkarDetail(tahun, bulan, jenis, kategori, lokasi);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -157,11 +157,11 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
         // Detail Upaya
-        public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan)
+        public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan , int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya(noFormulir, tahun, bulan);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya(noFormulir, tahun, bulan, lokasi);
                 return PartialView("../AktivitasOP/ReklameSummary/_DetailUpaya", model);
             }
             catch (ArgumentException e)
