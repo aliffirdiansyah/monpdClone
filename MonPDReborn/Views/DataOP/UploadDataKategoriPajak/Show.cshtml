@@ -12,7 +12,6 @@
         .ShowColumnHeaders(true)
         .ShowColumnLines(true)
         .ShowRowLines(true)
-        // Enable sorting & filtering
         .AllowColumnResizing(true)
         .AllowColumnReordering(true)
         .ColumnAutoWidth(true)
@@ -23,9 +22,8 @@
         )
         .OnRowPrepared("rowPreparedopViewModel")
         .HeaderFilter(hf => hf.Visible(true))
-        .Selection(s => s.Mode(SelectionMode.Multiple))
         .Columns(columns => {
-            columns.AddFor(m => m.rowNumber).Caption("#");
+            columns.AddFor(m => m.RowNumber).Caption("#");
             columns.AddFor(m => m.IsValid);
             columns.AddFor(m => m.IsValidDescription);
             columns.AddFor(m => m.Nop);
@@ -35,6 +33,13 @@
             columns.AddFor(m => m.IdKategoriPajak);
             columns.AddFor(m => m.NamaKategoriPajak);
         })
+    .Paging(p => p.PageSize(20))  // default 20 per halaman
+    .Pager(pager => {
+        pager.ShowPageSizeSelector(true);   // user bisa pilih jumlah baris per halaman
+        pager.AllowedPageSizes(new[] { 10, 20, 50, 100 });
+        pager.ShowInfo(true);               // tampilkan info jumlah data (contoh: "Page 1 of 10 (200 items)")
+        pager.ShowNavigationButtons(true);  // tampilkan tombol navigasi << < > >>
+    })
         .Export(e => e.Enabled(true).AllowExportSelectedData(true))
         .OnExporting("exporting")
     )
