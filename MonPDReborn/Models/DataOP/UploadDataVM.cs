@@ -16,16 +16,8 @@ namespace MonPDReborn.Models.DataOP
             public IFormFile FileExcel { get; set; } = null!;
             public int Tahun { get; set; }
             public List<SelectListItem>? TahunList { get; set; } // untuk dropdown
-
-            public List<MPajak> PajakList { get; set; } = new List<MPajak>();
             public Index()
             {
-                var context = DBClass.GetContext();
-
-                PajakList = context.MPajaks
-                    .Include(x => x.MKategoriPajaks)
-                    .Where(x => x.Id > 0)
-                    .ToList();
             }
 
         }
@@ -534,34 +526,6 @@ namespace MonPDReborn.Models.DataOP
                 }
 
                 context.SaveChanges();
-            }
-            public static void ViewUploadKategoriOp(IFormFile fileExcel, int tahun)
-            {
-                if (fileExcel == null || fileExcel.Length == 0)
-                    throw new ArgumentException("File Excel kosong.");
-
-                using var stream = new MemoryStream();
-                fileExcel.CopyTo(stream);
-                stream.Position = 0;
-
-                using var package = new ExcelPackage(stream);
-                var sheet = package.Workbook.Worksheets.FirstOrDefault();
-                if (sheet == null)
-                    throw new ArgumentException("Tidak ada sheet di file Excel.");
-                if (sheet == null)
-                    throw new Exception("Sheet1 tidak ditemukan.");
-
-                using var context = DBClass.GetContext();
-
-                // Counter per NOP
-                var nopCounter = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-
-                for (int row = 2; row <= sheet.Dimension.End.Row; row++)
-                {
-                    string? nop = (sheet.Cells[row, 1].GetValue<string?>() ?? "").Replace(".","").Trim();
-                    int? pajakId = (sheet.Cells[row, 2].GetValue<int?>() ?? 0);
-                    int? pajakKategoriId = (sheet.Cells[row, 3].GetValue<int?>() ?? 0);
-                }
             }
             private static int? TryInt(string value)
             {

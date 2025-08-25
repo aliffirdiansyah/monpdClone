@@ -1,0 +1,1350 @@
+﻿@using MonPDLib.General
+@model MonPDReborn.Models.DashboardUPTBVM.Index
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+@if (!string.IsNullOrEmpty(Model.Em))
+{
+    <div class="alert alert-danger">
+        @Model.Em
+    </div>
+}
+<style>
+    .apexcharts-legend.apexcharts-align-center {
+        justify-content: flex-start !important; /* Rata kiri */
+        text-align: left !important;
+    }</style>
+
+<div class="row g-2 mb-3">
+
+    <div class="col-lg-3 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #3B82F6; height:87%; ">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaPerhotelan)')">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-info rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
+                            <i class=" ri-hotel-line  text-info" style="font-size: 20px; line-height: 1;"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            @(EnumFactory.EPajak.JasaPerhotelan.GetDescription())
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.PersentaseHotel%</h6>
+                </div>
+
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: @Model.Data.PersentaseHotel.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseHotel.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaPerhotelan)')">
+                    <div class="col">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiHotel.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15">Rp @Model.Data.TargetHotel.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <span class="fw-bold">@Model.Data.JumlahOpHotel.ToString("n0") OP</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #00712D; height:87%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.MakananMinuman)')">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-success rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
+                            <i class="ri-restaurant-line  text-success" style="font-size: 20px; line-height: 1;"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            @(EnumFactory.EPajak.MakananMinuman.GetDescription())
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.PersentaseMamin%</h6>
+                </div>
+
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: @Model.Data.PersentaseMamin.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseMamin.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.MakananMinuman)')">
+                    <div class="col">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiMamin.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15">Rp @Model.Data.TargetMamin.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <span class="fw-bold">@Model.Data.JumlahOpMamin.ToString("n0") OP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #FF7A30; height:87%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaKesenianHiburan)')">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-danger rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
+                            <i class=" ri-film-line  text-danger" style="font-size: 20px; line-height: 1;"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            @(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.PersentaseHiburan%</h6>
+                </div>
+
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: @Model.Data.PersentaseHiburan.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseHiburan.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaKesenianHiburan)')">
+                    <div class="col">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiHiburan.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15">Rp @Model.Data.TargetHiburan.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <span class="fw-bold">@Model.Data.JumlahOpHiburan.ToString("n0") OP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #FACC15; height:87%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.TenagaListrik)')">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color: rgba(250, 204, 21, 0.2);">
+                            <i class="ri-lightbulb-flash-line " style="font-size: 20px; line-height: 1; color:#FACC15"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            @(EnumFactory.EPajak.TenagaListrik.GetDescription())
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.PersentaseListrik%</h6>
+                </div>
+
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color: #FACC15; width: @Model.Data.PersentaseListrik.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseListrik.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.TenagaListrik)')">
+                    <div class="col">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiListrik.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15">Rp @Model.Data.TargetListrik.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <span class="fw-bold">@Model.Data.JumlahOpListrik.ToString("n0") OP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #8B5CF6; height:87%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaParkir)')">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:rgba(139, 92, 246, 0.2)">
+                            <i class=" ri-car-line " style="font-size: 20px; line-height: 1; color: #8B5CF6;"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            @(EnumFactory.EPajak.JasaParkir.GetDescription())
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.PersentaseParkir%</h6>
+                </div>
+
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color:#8B5CF6; width: @Model.Data.PersentaseParkir.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseParkir.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaParkir)')">
+                    <div class="col">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiParkir.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15">Rp @Model.Data.TargetParkir.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <span class="fw-bold">@Model.Data.JumlahOpParkir.ToString("n0") OP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #EC4899; height:87%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.AirTanah)')">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:rgba(236, 72, 153, 0.2);">
+                            <i class="ri-mist-line " style="font-size: 20px; line-height: 1; color:#EC4899"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            @(EnumFactory.EPajak.AirTanah.GetDescription())
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.PersentaseAbt%</h6>
+                </div>
+
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color:#EC4899; width: @Model.Data.PersentaseAbt.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseAbt.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.AirTanah)')">
+                    <div class="col">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiAbt.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15">Rp @Model.Data.TargetAbt.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <span class="fw-bold">@Model.Data.JumlahOpAbt.ToString("n0") OP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #06B6D4; height:87%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.PBB)')">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:rgba(6, 182, 212, 0.2)">
+                            <i class=" ri-home-3-line " style="font-size: 20px; line-height: 1; color:#06B6D4"></i>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold">
+                            @(EnumFactory.EPajak.PBB.GetDescription())
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold">@Model.Data.PersentasePbb%</h6>
+                </div>
+
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color:#06B6D4; width: @Model.Data.PersentasePbb.ToString("N0")%;" aria-valuenow="@Model.Data.PersentasePbb.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.PBB)')">
+                    <div class="col">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiPbb.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15">Rp @Model.Data.TargetPbb.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <span class="fw-bold">@Model.Data.JumlahOpPbb.ToString("n0") OP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #39FF14; height:87%;">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-start flex-column">
+                        <div class="d-flex align-items-center mb-1">
+                            <div class="rounded-circle d-flex justify-content-center align-items-center me-2"
+                                 style="width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color: rgba(175, 212, 210, 0.2);">
+                                <i class="ri-funds-line" style="font-size: 20px; line-height: 1; color: #39FF14;"></i>
+                            </div>
+                            <h6 class="mb-0 fs-16 fw-bold">
+                                TOTAL SEMUA PAJAK
+                            </h6>
+                        </div>
+                        <div class="ms-5">
+                            <span class="fs-14 text-muted">
+                                <i class="bx bx-calendar me-1"></i>
+                                @DateTime.Now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                            </span>
+                        </div>
+                    </div>
+                    @* <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                        <button onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.Semua)')" class="btn btn-sm btn-outline-info">
+                            <i class="ri-file-search-line"></i> Detail
+                        </button>
+                    </div> *@
+                </div>
+            </div>
+            <div class="card-body">
+
+                <div class="row text-muted mb-2">
+                    <div class="col">
+                        <span class="fs-16">Realisasi</span><br>
+                        <span class="fw-bold fs-18 text-dark">Rp @Model.Data.TotalRealisasi.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end">
+                        <span class="fs-16">Terget</span><br>
+                        <span class="fw-bold fs-18">Rp @Model.Data.TotalTarget.ToString("n0")</span>
+                    </div>
+                </div>
+                <hr />
+                <!-- ApexCharts radial -->
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div id="gradient_radialbar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div id="simple_pie_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]' class="apex-charts" dir="ltr"></div>
+                        @* <div id="simple_dount_chart" data-colors='["#3B82F6", "#00712D", "#FF7A30", "#FACC15", "#8B5CF6", "#EF4444", "#EC4899", "#06B6D4", "#FF00FF", "#FFB347", "#374151"]' class="apex-charts w-100" dir="ltr"></div> *@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+    @* <div class="col-lg-12">
+        <div class="card card-height-100">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1 mb-0">
+                    <h5 class="card-title text-dark">
+                        <i class="mdi mdi-chart-bar align-middle me-1"></i>JUMLAH OBJEK PAJAK
+                    </h5>
+                </div>
+                <div class="flex-shrink-0 mb-0">
+                    <a href="@Url.Action("Index", "ProfileOP")" target="_blank" class="btn btn-sm btn-light">
+                        <i class="ri-file-list-3-line align-middle"></i>
+                        Detail
+                    </a>
+                    <button class="btn btn-sm btn-outline-light" onclick="fnJumlahObjekPajakTahunan()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#op-tahunan" role="tab" aria-selected="false">
+                            JML OP TAHUNAN
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" aria-selected="false" onclick="fnJumlahObjekPajakSeries()">
+                            JML OP SERIES
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content text-muted">
+                    <div class="tab-pane active" id="op-tahunan" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-JumlahObjekPajakTahunan" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="JumlahObjekPajakTahunan"></div>
+                    </div>
+                    <div class="tab-pane" id="op-series" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-JumlahObjekPajakSeries" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="JumlahObjekPajakSeries"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    <!-- Bagian PIUTANG -->
+    @* <div class="col-lg-12">
+        <div class="card card-height-100">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h5 class="card-title fs-16 text-dark mb-0">
+                        <i class="mdi mdi-cash-multiple align-middle me-1"></i> PIUTANG
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-light" onclick="fnDataPiutang()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title fs-16 mb-3">
+                    Data Piutang
+                </h4>
+
+                <div class="text-center mb-4">
+                    <div class="text-center">
+                        <div id="loading2-DataPiutang" class="spinner-border text-primary" style="display: none">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="DataPiutang" class="mb-5"></div>
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Isi modal akan diisi lewat JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div> *@
+
+    <!-- Bagian Mutasi -->
+    @* <div class="col-lg-12">
+        <div class="card card-height-100">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h5 class="card-title fs-16 text-dark mb-0">
+                        <i class="mdi mdi-account-cash-outline align-middle me-1"></i> MUTASI
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-light" onclick="fnDataMutasi()">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title fs-16 mb-3">
+                    Data Mutasi
+                </h4>
+
+                <div class="text-center mb-4">
+                    <div class="text-center">
+                        <div id="loading2-DataMutasi" class="spinner-border text-primary" style="display: none">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="DataMutasi"></div>
+            </div>
+
+        </div>
+    </div> *@
+</div>
+
+@section Scripts {
+    <script>
+        function getChartColorsArray(chartId) {
+            if (document.getElementById(chartId) !== null) {
+                var colors = document.getElementById(chartId).getAttribute("data-colors");
+                colors = JSON.parse(colors);
+                return colors.map(function (value) {
+                    var newValue = value.replace(" ", "");
+                    if (newValue.indexOf(",") === -1) {
+                        var color = getComputedStyle(document.documentElement).getPropertyValue(newValue);
+                        if (color) return color;
+                        else return newValue;;
+                    } else {
+                        var val = value.split(',');
+                        if (val.length == 2) {
+                            var rgbaColor = getComputedStyle(document.documentElement).getPropertyValue(val[0]);
+                            rgbaColor = "rgba(" + rgbaColor + "," + val[1] + ")";
+                            return rgbaColor;
+                        } else {
+                            return newValue;
+                        }
+                    }
+                });
+            }
+        }
+        var swiper = new Swiper(".pajakSlider", {
+            slidesPerView: 1,
+            spaceBetween: 24,
+            loop: true, // <--- ini penting
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+                1600: {
+                    slidesPerView: 4,
+                },
+            },
+        });
+                //  Line chart datalabel
+        var linechartDatalabelColors = getChartColorsArray("line_chart_datalabel");
+        var options = {
+            chart: {
+                height: 500,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: linechartDatalabelColors,
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                width: [3, 3],
+                curve: 'straight'
+            },
+            series: [{
+                name: "Target",
+                data: [@(Model.ChartData.Target1), @(Model.ChartData.Target2), @(Model.ChartData.Target3), @(Model.ChartData.Target4), @(Model.ChartData.Target5), @(Model.ChartData.Target6), @(Model.ChartData.Target7), @(Model.ChartData.Target8), @(Model.ChartData.Target9), @(Model.ChartData.Target10), @(Model.ChartData.Target11), @(Model.ChartData.Target12)]
+            }, {
+                name: "Realisasi",
+                data: [@(Model.ChartData.Realisasi1), @(Model.ChartData.Realisasi2), @(Model.ChartData.Realisasi3), @(Model.ChartData.Realisasi4), @(Model.ChartData.Realisasi5), @(Model.ChartData.Realisasi6), @(Model.ChartData.Realisasi7), @(Model.ChartData.Realisasi8), @(Model.ChartData.Realisasi9), @(Model.ChartData.Realisasi10), @(Model.ChartData.Realisasi11), @(Model.ChartData.Realisasi12)]
+            }],
+            title: {
+                text: 'Target & Realisasi PAD 2025',
+                align: 'left',
+                style: {
+                    fontWeight: 500,
+                },
+            },
+            grid: {
+                row: {
+                    colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.2
+                },
+                borderColor: '#f1f1f1'
+            },
+            markers: {
+                style: 'inverted',
+                size: 6
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
+                title: {
+                    text: 'Bulan'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Nominal'
+                },
+                labels: {
+                    formatter: function (val) {
+                        return 'Rp' + val.toLocaleString('id-ID');
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return 'Rp' + val.toLocaleString('id-ID');
+                    }
+                }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                floating: true,
+                offsetY: -25,
+                offsetX: -5
+            },
+            responsive: [{
+                breakpoint: 600,
+                options: {
+                    chart: {
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    legend: {
+                        show: false
+                    },
+                }
+            }]
+        }
+
+        var chart = new ApexCharts(
+            document.querySelector("#line_chart_datalabel"),
+            options
+        );
+
+        chart.render();
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            fnSeriesPajakDaerah();
+            fnDataPiutang();
+            fnDataMutasi();
+        });
+        // function fnMonitoringKategori(jenisPajak) {
+        //     window.location.href = `/ProfileKategoriOP?jenisPajak=${jenisPajak}`;
+        // }
+        function fnMonitoringWilayah(jenisPajak) {
+            window.location.href = `/KontrolWilayah?wilayah=${@Model.wil}&jenisPajak=${jenisPajak}`;
+        }
+        function fnSeriesPajakDaerah()
+        {
+            $.ajax({
+              url: '@(Url.Action("SeriesPajakDaerah"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-SeriesPajakDaerah').show();
+                 $('#SeriesPajakDaerah').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-SeriesPajakDaerah').hide();
+                        $('#SeriesPajakDaerah').show();
+                        $('#SeriesPajakDaerah').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-SeriesPajakDaerah').hide();
+                 $('#SeriesPajakDaerah').hide();
+                 $('#SeriesPajakDaerah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        // function fnJumlahObjekPajakTahunan()
+        // {
+        //     $.ajax({
+        //       url: '@(Url.Action("JumlahObjekPajakTahunan"))',
+        //       type: 'GET',
+        //       beforeSend: function () {
+        //          $('#loading2-JumlahObjekPajakTahunan').show();
+        //          $('#JumlahObjekPajakTahunan').hide();
+        //       },
+        //       success: function (response) {
+        //             if (response.Status === undefined) {
+        //                 $('#loading2-JumlahObjekPajakTahunan').hide();
+        //                 $('#JumlahObjekPajakTahunan').show();
+        //                 $('#JumlahObjekPajakTahunan').html(response);
+        //             }
+        //             else {
+        //                 swal.fire({
+        //                     icon: 'warning',
+        //                     title: '<b style="color:orange">Peringatan</b>',
+        //                     text: response.Message
+        //                 })
+        //             }
+        //       },
+        //       error: function (xhr, status, error) {
+        //          $('#loading2-JumlahObjekPajakTahunan').hide();
+        //          $('#JumlahObjekPajakTahunan').hide();
+        //          $('#JumlahObjekPajakTahunan').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+        //       }
+        //    });
+        // }
+        // function fnJumlahObjekPajakSeries()
+        // {
+        //     $.ajax({
+        //       url: '@(Url.Action("JumlahObjekPajak"))',
+        //       type: 'GET',
+        //       beforeSend: function () {
+        //          $('#loading2-JumlahObjekPajakSeries').show();
+        //          $('#JumlahObjekPajakSeries').hide();
+        //       },
+        //       success: function (response) {
+        //             if (response.Status === undefined) {
+        //                 $('#loading2-JumlahObjekPajakSeries').hide();
+        //                 $('#JumlahObjekPajakSeries').show();
+        //                 $('#JumlahObjekPajakSeries').html(response);
+        //             }
+        //             else {
+        //                 swal.fire({
+        //                     icon: 'warning',
+        //                     title: '<b style="color:orange">Peringatan</b>',
+        //                     text: response.Message
+        //                 })
+        //             }
+        //       },
+        //       error: function (xhr, status, error) {
+        //          $('#loading2-JumlahObjekPajakSeries').hide();
+        //          $('#JumlahObjekPajakSeries').hide();
+        //          $('#JumlahObjekPajakSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+        //       }
+        //    });
+        // }
+        function fnPemasanganAlatRekamDetail()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemasanganAlatRekamDetail"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemasanganAlatRekamDetail').show();
+                 $('#PemasanganAlatRekamDetail').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemasanganAlatRekamDetail').hide();
+                        $('#PemasanganAlatRekamDetail').show();
+                        $('#PemasanganAlatRekamDetail').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemasanganAlatRekamDetail').hide();
+                 $('#PemasanganAlatRekamDetail').hide();
+                 $('#PemasanganAlatRekamDetail').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemasanganAlatRekamSeries()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemasanganAlatRekamSeries"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemasanganAlatRekamSeries').show();
+                 $('#PemasanganAlatRekamSeries').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemasanganAlatRekamSeries').hide();
+                        $('#PemasanganAlatRekamSeries').show();
+                        $('#PemasanganAlatRekamSeries').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemasanganAlatRekamSeries').hide();
+                 $('#PemasanganAlatRekamSeries').hide();
+                 $('#PemasanganAlatRekamSeries').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPemeriksaanPajak()
+        {
+            $.ajax({
+              url: '@(Url.Action("PemeriksaanPajak"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PemeriksaanPajak').show();
+                 $('#PemeriksaanPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PemeriksaanPajak').hide();
+                        $('#PemeriksaanPajak').show();
+                        $('#PemeriksaanPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PemeriksaanPajak').hide();
+                 $('#PemeriksaanPajak').hide();
+                 $('#PemeriksaanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnPengedokanPajak()
+        {
+            $.ajax({
+              url: '@(Url.Action("PengedokanPajak"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PengedokanPajak').show();
+                 $('#PengedokanPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PengedokanPajak').hide();
+                        $('#PengedokanPajak').show();
+                        $('#PengedokanPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PengedokanPajak').hide();
+                 $('#PengedokanPajak').hide();
+                 $('#PengedokanPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataKontrolPotensiOp()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataKontrolPotensiOp"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataKontrolPotensiOp').show();
+                 $('#DataKontrolPotensiOp').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataKontrolPotensiOp').hide();
+                        $('#DataKontrolPotensiOp').show();
+                        $('#DataKontrolPotensiOp').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataKontrolPotensiOp').hide();
+                 $('#DataKontrolPotensiOp').hide();
+                 $('#DataKontrolPotensiOp').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataPiutang()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataPiutang"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataPiutang').show();
+                 $('#DataPiutang').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataPiutang').hide();
+                        $('#DataPiutang').show();
+                        $('#DataPiutang').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataPiutang').hide();
+                 $('#DataPiutang').hide();
+                 $('#DataPiutang').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDataMutasi()
+        {
+            $.ajax({
+              url: '@(Url.Action("DataMutasi"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-DataMutasi').show();
+                 $('#DataMutasi').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-DataMutasi').hide();
+                        $('#DataMutasi').show();
+                        $('#DataMutasi').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-DataMutasi').hide();
+                 $('#DataMutasi').hide();
+                 $('#DataMutasi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+        function detailPiutangCellTemplate(cellElement, cellInfo) {
+            const enumPajak = cellInfo.data.EnumPajak;
+
+            // Ambil tahun dari Caption kolom
+            const tahun = parseInt(cellInfo.column.caption);
+
+            const $link = $('<a>')
+                 .addClass('value-link text-decoration-none')
+                 .attr('href', 'javascript:void(0);')
+                 .attr('title', 'Lihat Detail')
+                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                 .on('click', () => ondetailPiutangClick(enumPajak, tahun));
+
+            const $wrapper = $('<div>')
+                 .css({
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end'
+                 })
+                 .append($link);
+
+             $(cellElement).append($wrapper);
+
+        }
+
+
+
+        function ondetailPiutangClick(enumPajak, tahun) {
+            const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+
+            $modal.find(".modal-title").text(`Detail Piutang - Tahun ${tahun}`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+
+            $modal.modal("show");
+
+            $.ajax({
+                url: '/Dashboard/DetailPiutang',
+                type: 'GET',
+                data: {
+                    jenisPajak: enumPajak, // perbaikan: pakai jenisPajak di server
+                    tahun: tahun
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        function getChartColorsArray(id) {
+            if (document.getElementById(id) !== null) {
+                let colors = document.getElementById(id).getAttribute("data-colors");
+                colors = JSON.parse(colors);
+
+                return colors.map(function (value) {
+                    let val = value.replace(" ", "");
+                    if (val.indexOf(",") === -1) {
+                        return getComputedStyle(document.documentElement).getPropertyValue(val) || val;
+                    } else {
+                        let valSplit = value.split(",");
+                        if (valSplit.length === 2) {
+                            return "rgba(" + getComputedStyle(document.documentElement).getPropertyValue(valSplit[0]) + "," + valSplit[1] + ")";
+                        }
+                        return val;
+                    }
+                });
+            }
+        }
+
+        var chartRadialbarGradientColors = getChartColorsArray("gradient_radialbar");
+
+        if (chartRadialbarGradientColors) {
+            var options = {
+                series: [@Model.Data.TotalPersentase.ToString("n2").Replace(",", ".")],
+                chart: {
+                    height: 400,
+                    type: "radialBar",
+                    toolbar: { show: false }
+                },
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 225,
+                        hollow: {
+                            margin: 0,
+                            size: "70%"
+                        },
+                        track: {
+                            strokeWidth: "67%",
+                            margin: 0
+                        },
+                        dataLabels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: "24px",
+                                fontWeight: 600,
+                                offsetY: 40, // jarak dari tengah
+                                color: "#666"
+                            },
+                            value: {
+                                offsetY: -10, // geser ke atas dari tengah
+                                formatter: function (val) {
+                                    return parseFloat(val).toFixed(2) + " %";
+                                },
+                                color: "#111",
+                                fontSize: "28px",
+                                fontWeight: 700,
+                                show: true
+                            }
+                        }
+                    }
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shade: "dark",
+                        type: "horizontal",
+                        shadeIntensity: 0.5,
+                        gradientToColors: chartRadialbarGradientColors,
+                        inverseColors: true,
+                        opacityFrom: 1,
+                        opacityTo: 1,
+                        stops: [0, 100]
+                    }
+                },
+                stroke: {
+                    lineCap: "round"
+                },
+                responsive: [
+                {
+                breakpoint: 1200, // jika layar < 992px
+                options: {
+                    chart: {
+                        height: 300
+                    },
+                    legend: {
+                        position: "bottom", // pindahkan legend ke bawah
+                        offsetX: 0,
+                        offsetY: 10,
+                        fontSize: "25px",
+                        itemMargin: {
+                            horizontal: 5,
+                            vertical: 2
+                        }
+                    }
+                }
+            }
+            ],
+                labels: ["Total Persentase"]
+            };
+
+            var chart = new ApexCharts(document.querySelector("#gradient_radialbar"), options);
+            chart.render();
+        }
+
+
+        var chartDonutBasicColors = getChartColorsArray("simple_dount_chart");
+
+        if (chartDonutBasicColors) {
+            var seriesData = [
+        @Model.Data.PersentaseHotel.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseMamin.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseHiburan.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseListrik.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseParkir.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseReklame.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseAbt.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentasePbb.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseBphtb.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseOpsenPkb.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseOpsenBbnkb.ToString("n2").Replace(",", ".")
+            ];
+
+            var labelData = [
+                "@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())",
+                "@(EnumFactory.EPajak.MakananMinuman.GetDescription())",
+                "@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())",
+                "@(EnumFactory.EPajak.TenagaListrik.GetDescription())",
+                "@(EnumFactory.EPajak.JasaParkir.GetDescription())",
+                "@(EnumFactory.EPajak.Reklame.GetDescription())",
+                "@(EnumFactory.EPajak.AirTanah.GetDescription())",
+                "@(EnumFactory.EPajak.PBB.GetDescription())",
+                "@(EnumFactory.EPajak.BPHTB.GetDescription())",
+                "@(EnumFactory.EPajak.OpsenPkb.GetDescription())",
+                "@(EnumFactory.EPajak.OpsenBbnkb.GetDescription())"
+            ];
+
+            var total = 100;
+
+                    var options = {
+            series: seriesData,
+            chart: {
+                height: 500,
+                type: "donut"
+            },
+            labels: labelData,
+            legend: {
+                position: "right", // default desktop
+                offsetY: 50,
+                offsetX: -20,
+                fontWeight: 600,
+                fontSize: "13px",
+                formatter: function (seriesName, opts) {
+                    var value = opts.w.globals.series[opts.seriesIndex];
+                    var percent = total > 0 ? ((value / total) * 100).toFixed(2) : 0;
+                    return seriesName + ": " + percent + " %";
+                },
+                labels: {
+                    useSeriesColors: false
+                },
+                itemMargin: {
+                    horizontal: 0,
+                    vertical: 2
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val, opts) {
+                    var value = opts.w.globals.series[opts.seriesIndex];
+                    return value.toFixed(2) + " %";
+                },
+                style: {
+                    fontWeight: "bold"
+                },
+                dropShadow: {
+                    enabled: false
+                }
+            },
+            responsive: [
+                    {
+            breakpoint: 1200, // jika layar < 992px
+            options: {
+                chart: {
+                    height: 500
+                },
+                legend: {
+                    position: "bottom", // pindahkan legend ke bawah
+                    offsetX: 0,
+                    offsetY: 10,
+                    fontSize: "5px",
+                    itemMargin: {
+                        horizontal: 5,
+                        vertical: 2
+                    }
+                }
+            }
+        }
+            ],
+            colors: chartDonutBasicColors.slice(0, 11)
+        };
+
+            var chart = new ApexCharts(document.querySelector("#simple_dount_chart"), options);
+            chart.render();
+        }
+
+                var chartPieBasicColors = getChartColorsArray("simple_pie_chart");
+
+        if (chartPieBasicColors) {
+            var seriesData = [
+        @Model.Data.PersentaseHotel.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseMamin.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseHiburan.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseListrik.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseParkir.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentaseAbt.ToString("n2").Replace(",", "."),
+        @Model.Data.PersentasePbb.ToString("n2").Replace(",", "."),
+            ];
+
+            var labelData = [
+                "@(EnumFactory.EPajak.JasaPerhotelan.GetDescription())",
+                "@(EnumFactory.EPajak.MakananMinuman.GetDescription())",
+                "@(EnumFactory.EPajak.JasaKesenianHiburan.GetDescription())",
+                "@(EnumFactory.EPajak.TenagaListrik.GetDescription())",
+                "@(EnumFactory.EPajak.JasaParkir.GetDescription())",
+                "@(EnumFactory.EPajak.AirTanah.GetDescription())",
+                "@(EnumFactory.EPajak.PBB.GetDescription())",
+            ];
+
+            var total = seriesData.reduce((a, b) => a + parseFloat(b), 0);
+
+            var options = {
+                series: seriesData,
+                chart: {
+                    height: 500,
+                    type: "pie"
+                },
+                labels: labelData,
+                legend: {
+                    position: "right",
+                    offsetY: 50,
+                    offsetX: -20,
+                    fontWeight: 600,
+                    fontSize: "13px",
+                    formatter: function (seriesName, opts) {
+                        var value = opts.w.globals.series[opts.seriesIndex];
+                        var percent = total > 0 ? ((value / total) * 100).toFixed(2) : 0;
+                        return seriesName + ": " + percent + " %";
+                    },
+                    labels: {
+                        useSeriesColors: false
+                    },
+                    itemMargin: {
+                        horizontal: 0,
+                        vertical: 2
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val, opts) {
+                        var value = opts.w.globals.series[opts.seriesIndex];
+                        return value.toFixed(2) + " %";
+                    },
+                    style: {
+                        fontWeight: "bold"
+                    },
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                responsive: [
+                    {
+                        breakpoint: 1200,
+                        options: {
+                            chart: {
+                                height: 500
+                            },
+                            legend: {
+                                position: "bottom",
+                                offsetX: 0,
+                                offsetY: 10,
+                                fontSize: "5px",
+                                itemMargin: {
+                                    horizontal: 5,
+                                    vertical: 2
+                                }
+                            }
+                        }
+                    }
+                ],
+                colors: chartPieBasicColors.slice(0, 11)
+            };
+
+            var chart = new ApexCharts(document.querySelector("#simple_pie_chart"), options);
+            chart.render();
+        }
+
+
+        function hitungPersentase(e) {
+            var dataSource = e.component.getDataSource();
+            var items = dataSource.items();
+
+            var $summaryCells = e.element.find(".dx-datagrid-total-footer .dx-datagrid-summary-item");
+
+             for (var i = 7; i >= 1; i--) {
+                var totalTarget = 0;
+                var totalRealisasi = 0;
+
+                // Hitung total target & realisasi dari semua row
+                items.forEach(function(item) {
+                    totalTarget += item["Target" + i] || 0;
+                    totalRealisasi += item["Realisasi" + i] || 0;
+                });
+
+                var persentase = totalTarget > 0 ? totalRealisasi / totalTarget : 0;
+
+                // mapping index (supaya tetap 1..7 walau i berjalan 7..1)
+                var order = 8 - i;
+                var persentaseIndex = (order * 3) + 2;
+
+                // eq() itu 0-based
+                var $persentaseCell = $summaryCells.eq(persentaseIndex - 1);
+
+                if ($persentaseCell.length) {
+                    $persentaseCell.text(
+                        DevExpress.localization.formatNumber(persentase, "#,##0.00%")
+                    );
+                }
+            }
+        }
+
+    </script>
+    }

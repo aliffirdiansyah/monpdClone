@@ -1,0 +1,45 @@
+﻿@model MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.Show
+@{
+}
+
+<div class="card-body">
+    @(
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.ViewModel.ObjekPajakViewModel>()
+        .ID($"dg-opViewModel")
+        .DataSource(Model.Data)
+        .KeyExpr("Id")
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        // Enable sorting & filtering
+        .AllowColumnResizing(true)
+        .AllowColumnReordering(true)
+        .ColumnAutoWidth(true)
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .FilterRow(f => f
+            .Visible(true)
+            .ApplyFilter(GridApplyFilterMode.Auto)  // Bisa juga OnClick
+        )
+        .OnRowPrepared("rowPreparedopViewModel")
+        .HeaderFilter(hf => hf.Visible(true))
+        .Selection(s => s.Mode(SelectionMode.Multiple))
+        .Columns(columns => {
+            columns.AddFor(m => m.rowNumber).Caption("#");
+            columns.AddFor(m => m.IsValid);
+            columns.AddFor(m => m.IsValidDescription);
+            columns.AddFor(m => m.Nop);
+            columns.AddFor(m => m.NamaOp);
+            columns.AddFor(m => m.IdPajak);
+            columns.AddFor(m => m.NamaPajak);
+            columns.AddFor(m => m.IdKategoriPajak);
+            columns.AddFor(m => m.NamaKategoriPajak);
+        })
+        .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+        .OnExporting("exporting")
+    )
+</div>
+
+<div class="card-body">
+    <button type="button" class="btn btn-primary mt-2" onclick="FixUploadKategoriOp()">Upload</button>
+</div>

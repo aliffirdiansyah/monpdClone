@@ -21,15 +21,23 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
             URLView = $"../MonitoringWilayah/{GetType().Name.Replace("Controller", "")}/";
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int? wilayah, int? jenisPajak)
         {
             try
             {
                 ViewData["Title"] = controllerName;
+                if (wilayah == null || jenisPajak == null)
+                {
+                    var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Index();
 
-                var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Index();
+                    return View($"{URLView}{actionName}", model);
+                }
+                else
+                {
+                    var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Index(wilayah.Value, jenisPajak.Value);
+                    return View($"{URLView}{actionName}", model);
+                }
 
-                return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
             {
