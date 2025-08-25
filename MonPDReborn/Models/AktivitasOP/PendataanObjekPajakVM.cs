@@ -1,4 +1,5 @@
-﻿using MonPDLib;
+﻿using DevExpress.Pdf.Native.BouncyCastle.Ocsp;
+using MonPDLib;
 using MonPDLib.General;
 using System.Collections.Generic;
 using System.Globalization;
@@ -303,9 +304,20 @@ namespace MonPDReborn.Models.AktivitasOP
                         JmlPengunjung = (int)x.JmlPengunjung,
                         Bill = x.Bill,
                         RataPengunjung = (int)x.RataPengunjungHari,
-                        RataBill = x.RataBillPengunjung
+                        RataBill = x.RataBillPengunjung,
+                        PajakBulanan = x.PajakBulan
                     })
                     .ToList();
+                
+                var avgRealisasi = context.DbMonRestos
+                    .Where(r => r.Nop == nop && r.TglBayarPokok.Value.Year == tahun)
+                    .Average(r => (decimal?)r.NominalPokokBayar) ?? 0;
+
+                
+                foreach (var item in restoData)
+                {
+                    item.AvgRealisasi = avgRealisasi;
+                }
 
                 return restoData;
             }
@@ -353,9 +365,20 @@ namespace MonPDReborn.Models.AktivitasOP
                         TarifMobilBox = x.TarifMobilBox,
                         TarifTruk = x.TarifTruk,
                         TarifTrailer = x.TarifTrailer,
-                        PotensiHasilPengedokan = x.PajakBulan
+                        PotensiHasilPengedokan = x.PajakBulan,
+                        PajakBulanan = x.PajakBulan
                     })
                     .ToList();
+
+                var avgRealisasi = context.DbMonParkirs
+                    .Where(r => r.Nop == nop && r.TglBayarPokok.Value.Year == tahun)
+                    .Average(r => (decimal?)r.NominalPokokBayar) ?? 0;
+
+
+                foreach (var item in parkirData)
+                {
+                    item.AvgRealisasi = avgRealisasi;
+                }
 
                 return parkirData;
             }
@@ -385,6 +408,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
+            public decimal PajakBulanan { get; set; }
+            public decimal AvgRealisasi { get; set; }
             public string FormattedNOP => Utility.GetFormattedNOP(NOP);
             public string ObjekPajak { get; set; } = null!;
             public string Alamat { get; set; } = null!;
@@ -406,6 +431,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public decimal PajakBulanan { get; set; }
+            public decimal AvgRealisasi { get; set; }
             public string ObjekPajak { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public DateTime Hari { get; set; }

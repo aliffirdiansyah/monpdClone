@@ -258,5 +258,37 @@ namespace MonPDReborn.Controllers.DataOP
             }
             return Json(response);
         }
+
+        [HttpPost]
+        public IActionResult UploadKategoriOp(IFormFile file, int tahun)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+
+                // Panggil method static untuk proses penyimpanan data
+                MonPDReborn.Models.DataOP.UploadDataVM.Method.UploadPendataanParkir(file, tahun);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = ex.Message;
+                //response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
+        }
     }
 }

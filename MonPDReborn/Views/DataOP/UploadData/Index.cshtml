@@ -139,7 +139,7 @@
     </div>
 
     <hr />
-    <div class="col-lg-12">
+    <div class="col-lg-6">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
@@ -172,7 +172,6 @@
             </div>
         </div>
     </div>
-    <hr />
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
@@ -206,7 +205,7 @@
             </div>
         </div>
     </div>
-
+    <hr />
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
@@ -236,6 +235,100 @@
                     </div>
 
                     <button type="button" class="btn btn-primary mt-2" onclick="UploadPengedokanParkir()">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Update Kategori Objek Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="UploadPengedokanParkir" asp-action="UploadPengedokanParkir" asp-controller="UploadData" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="Tahun">Tahun</label>
+                        <select asp-for="Tahun" asp-items="Model.TahunList" class="form-control"></select>
+                    </div>
+
+                    <!-- Base Example -->
+                    <div class="accordion" id="default-accordion-example">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    MASTER PAJAK
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#default-accordion-example">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID JENIS PAJAK</th>
+                                                            <th>Deskripsi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.PajakList)
+                                                        {
+                                                            <tr>
+                                                                <td>@(item.Id)</td>
+                                                                <td>@(item.Nama)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>JENIS PAJAK</th>
+                                                            <th>ID KATEGORI PAJAK</th>
+                                                            <th>Deskripsi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.PajakList.SelectMany(x => x.MKategoriPajaks).ToList())
+                                                        {
+                                                            <tr>
+                                                                <td>@(item.Pajak.Nama)</td>
+                                                                <td>@(item.Id)</td>
+                                                                <td>@(item.Nama)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="FileExcel">Upload Excel</label>
+                        <input type="file" class="form-control" asp-for="FileExcel" name="file" />
+
+                        <div class="mt-2">
+                            <a href="~/TemplateUpload/KATEGORI_PAJAK_UPLOAD.xlsx" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-download"></i> Download Template
+                            </a>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary mt-2" onclick="UploadKategoriOp()">Upload</button>
                 </form>
             </div>
         </div>
@@ -521,6 +614,48 @@
                         });
 
                         $('#UploadPengedokanParkir')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+
+        function UploadKategoriOp() {
+            var formData = new FormData($('#UploadKategoriOp')[0]);
+
+            $.ajax({
+                url: '@Url.Action("UploadKategoriOp", "UploadData")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#UploadKategoriOp')[0].reset();
                     } else {
                         Swal.fire({
                             icon: 'error',
