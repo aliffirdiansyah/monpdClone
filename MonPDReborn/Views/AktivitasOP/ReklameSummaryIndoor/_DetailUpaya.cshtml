@@ -1,0 +1,180 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM.GetDetailUpaya
+
+<div class="card">
+    <div class="card-body">
+        <div class="mb-4">
+            <label for="noFormulir" class="form-label fs-4">No. Formulir</label>
+            <input type="text" class="form-control" id="noFormulir" value="@Model.Data.NoFormulir" disabled>
+        </div>
+
+        <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#input-upaya" role="tab">
+                    Input Upaya
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#informasi-reklame" role="tab" onclick="fnShowSeries()">
+                    Informasi Reklame
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content text-muted">
+            <div class="tab-pane active" id="input-upaya" role="tabpanel">
+                <form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
+                    @Html.HiddenFor(m => m.Data.NewRowUpaya.NoFormulir)
+                    <div class="mb-3">
+                        <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
+                                                .ID("cbUpaya")
+                                                .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
+                                                .OnValueChanged("fnReloadTindakan")
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .SearchEnabled(true)
+                                                )
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
+                                                .ID("cbTindakan")
+                                                .ValueExpr("Value")
+                                                .DisplayExpr("Text")
+                                                .DataSource(x => x.Mvc().Controller("ReklameSummary").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
+                                                .SearchEnabled(true)
+                                                )
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Data.NewRowUpaya.NamaPetugas" class="form-label">Petugas</label>
+                        @Html.TextBoxFor(m => m.Data.NewRowUpaya.NamaPetugas, new { @class = "form-control" })
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
+                        @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
+                                                .Type(DateBoxType.Date)
+                                                .DisplayFormat("dd MMM yyyy")
+                                                .Value(DateTime.Today))
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Lampiran" class="form-label"></label>
+                        <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
+                        <small class="form-text text-muted">
+                            Hanya file gambar (.jpg, .jpeg, .png).
+                        </small>
+                        <span asp-validation-for="Lampiran" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3 text-end">
+                        <button type="button" class="btn btn-primary" onclick="simpanUpaya()">Simpan</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-pane" id="informasi-reklame" role="tabpanel">
+
+                <div class="container mt-4">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Isi Reklame</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.IsiReklame" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Alamat Reklame</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.AlamatReklame" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Detail Lokasi Reklame</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.DetailLokasi" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Jenis Reklame</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.JenisReklame" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label class="form-label">Panjang (P)</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.Panjang" readonly />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Lebar (L)</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.Lebar" readonly />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Luas (LS)</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.Luas" readonly />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Tinggi (T)</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.Tinggi" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-6">
+                            <label class="form-label">Tahun Pajak</label>
+                            <input type="text" class="form-control" value="@Model.Data.InfoReklameUpaya.TahunPajak" readonly />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Masa Pajak</label>
+                            <input type="text" class="form-control"
+                                   value="@Model.Data.InfoReklameUpaya.MasaPajak"
+                                   readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="card-title fs-16 mb-3 mt-2">
+            Data Upaya
+        </h4>
+        <div class="table-responsive">
+            @(
+                        Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM.DetailUpaya.DataUpaya>()
+                        .ID("detailUpayaInfoGrid")
+                        .DataSource(Model.Data.DataUpayaList)
+                        .ShowBorders(true)
+                        .ShowColumnHeaders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .AllowColumnResizing(true)
+                        .RowAlternationEnabled(true)
+                        .ColumnAutoWidth(true)
+                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(10))
+                        .Pager(p => p
+                        .ShowPageSizeSelector(true)
+                        .AllowedPageSizes(new[] { 10, 20, 50 })
+                        .ShowInfo(true)
+                        )
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir");
+                            columns.Add()
+                            .Caption("Lampiran")
+                            .CellTemplate(new JS("lampiranCellTemplate"));
+                            columns.AddFor(m => m.TglUpaya).Caption("Tanggal Upaya").Format("dd MMM yyyy");
+                            columns.AddFor(m => m.NamaUpaya).Caption("Upaya");
+                            columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+                            columns.AddFor(m => m.Petugas).Caption("Petugas");
+                        })
+
+                        )
+        </div>
+    </div>
+
+</div>

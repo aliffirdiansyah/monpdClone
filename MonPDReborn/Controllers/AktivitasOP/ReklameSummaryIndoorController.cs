@@ -162,7 +162,7 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.GetDetailUpaya(noFormulir, tahun, bulan);
-                return PartialView("../AktivitasOP/ReklameSummary/_DetailUpaya", model);
+                return PartialView("../AktivitasOP/ReklameSummaryIndoor/_DetailUpaya", model);
             }
             catch (ArgumentException e)
             {
