@@ -1,0 +1,235 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM.GetDetailSummary
+
+@{
+    ViewData["Title"] = "Detail Reklame Summary Indoor";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-0">
+                        <span id="jenisSpan"></span>
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 mb-2">
+                        Kategori : <span id="kategoriSpan"></span>
+                    </h4>
+                    <h4 class="card-title fs-16 mb-1">
+                        Jenis : <span id="jenisSpan"></span>
+                    </h4>
+                </div>
+                <div class="table-responsive">
+                    @(
+                                        Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM.DetailSummary>()
+                                        .ID("isidentilReklameKBGrid")
+                                        .DataSource(Model.Data)
+                                        .ShowBorders(true)
+                                        .ShowColumnHeaders(true)
+                                        .ShowColumnLines(true)
+                                        .ShowRowLines(true)
+                                        .AllowColumnResizing(true)
+                                        .RowAlternationEnabled(true)
+                                        .ColumnAutoWidth(true)
+                                        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                                        .FilterRow(f => f.Visible(true))
+                                        .HeaderFilter(h => h.Visible(true))
+                                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                                        .Paging(p => p.PageSize(10))
+                                        .Pager(p => p
+                                        .ShowPageSizeSelector(true)
+                                        .AllowedPageSizes(new[] { 10, 20, 50 })
+                                        .ShowInfo(true)
+                                        )
+                                        .SearchPanel(sp => sp
+                                        .Visible(true)
+                                        .Width(240)
+                                        .Placeholder("Cari...")
+                                        )
+                                        .Columns(columns =>
+                                        {
+                                            columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir").Fixed(true);
+                                            columns.AddFor(m => m.Nama).Caption("Nama (Nama Perusahaan)");
+                                            columns.AddFor(m => m.AlamatOP).Caption("Alamat OP");
+                                            columns.AddFor(m => m.DetailLokasi).Caption("Detail Lokasi");
+                                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
+                                            columns.AddFor(m => m.AkhirBerlaku).Caption("AKR Berlaku (Status)");
+                                            columns.AddFor(m => m.MasaTahunPajak).Caption("Tahun Pajak");
+                                            columns.AddFor(m => m.JumlahNilai).Caption("Jumlah Nilai").Format("#,##0");
+                                            columns.AddFor(m => m.InformasiEmail).Caption("Informasi Email");
+                                            columns.AddFor(m => m.JumlahUpaya).Caption("Jumlah Upaya");
+                                            columns.Add()
+                                            .Type(GridCommandColumnType.Buttons)
+                                            .Buttons(b =>
+                                            {
+                                                b.Add()
+                                            .Text("Detail")
+                                            .Icon("search")
+                                            .OnClick("onDetailClick");
+                                            });
+
+                                        })
+                                        .Summary(s =>
+                                        {
+                                            s.TotalItems(items =>
+                                            {
+                                                items.AddFor(x => x.NoFormulir)
+                                            .DisplayFormat("Total")
+                                            .SummaryType(SummaryType.Sum);
+                                                items.AddFor(x => x.JumlahNilai)
+                                            .ValueFormat("#,##0")
+                                            .DisplayFormat("Rp {0}")
+                                            .SummaryType(SummaryType.Sum);
+
+                                            });
+                                        })
+
+                                        )
+                </div>
+                <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div id="detailModalContent">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#formUpaya').on('submit', function (e) {
+                e.preventDefault();
+                simpanUpaya();
+            });
+        });
+        function fnGetParamsTindakan() {
+            return { idUpaya: function () { return $('#cbUpaya').dxSelectBox("instance").option('value') } }
+        }
+        function fnReloadTindakan() {
+            $("#cbTindakan").dxSelectBox("instance").option("value", null);
+            var selectBoxDataSource = $("#cbTindakan").dxSelectBox("instance").getDataSource();
+            selectBoxDataSource.load();
+
+        }
+        function simpanUpaya() {
+            var formData = new FormData($('#formUpaya')[0]);
+
+            $.ajax({
+                url: '@Url.Action("SimpanUpaya", "ReklameSummaryIndoor")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#formUpaya')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var base64 = cellInfo.data.Lampiran;
+            var mime = 'image/png'; // atau 'image/jpeg' / 'application/pdf'
+
+            if (base64 && base64.length > 100) {
+                var dataUrl = 'data:' + mime + ';base64,' + base64;
+
+                $('<a>')
+                    .attr('href', dataUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', dataUrl)
+                            .addClass('img-thumbnail')
+                            .css({ height: '50px', width: 'auto', cursor: 'zoom-in' })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
+        }
+        function onDetailClick(e) {
+            const noFormulir = (e.row.data.NoFormulir || '').split(' ')[0];
+            const tahun = e.row.data.Tahun || new Date().getFullYear();
+            const bulan = e.row.data.Bulan || new Date().getMonth() + 1;
+
+            $.ajax({
+                url: '/ReklameSummaryIndoor/DetailUpaya',
+                type: 'GET',
+                data: { noFormulir, tahun, bulan },
+                beforeSend: function () {
+                    $("#loader").show();
+
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
+                },
+                success: function (response) {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Detail Upaya – " + noFormulir);
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").html("Error");
+                    $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+    </script>
+}

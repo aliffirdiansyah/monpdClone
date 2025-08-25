@@ -1,8 +1,257 @@
-﻿namespace MonPDReborn.Controllers.AktivitasOP
+﻿using DevExpress.Xpo;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using MonPDLib.EF;
+using MonPDLib.General;
+using MonPDReborn.Lib.General;
+using System.Drawing;
+using System.Globalization;
+using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.AktivitasOP.ReklameSummaryVM;
+
+namespace MonPDReborn.Controllers.Aktivitas
 {
-    public class ReklameSummaryIndoorController
+    public class ReklameSummaryIndoorController : BaseController
     {
+        string URLView = string.Empty;
 
+        private readonly ILogger<ReklameSummaryIndoorController> _logger;
+        private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
+        private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
+        const string TD_KEY = "TD_KEY";
+        const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
+
+        public ReklameSummaryIndoorController(ILogger<ReklameSummaryIndoorController> logger)
+        {
+            URLView = string.Concat("../AktivitasOP/", GetType().Name.Replace("Controller", ""), "/");
+            _logger = logger;
+        }
+        public IActionResult Index()
+        {
+            try
+            {
+                ViewData["Title"] = controllerName;
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.Index();
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult Show(int tahun)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.Show(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult ShowTerbatas(int tahun)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.ShowTerbatas(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult ShowIsidentil(int tahun)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.ShowIsidentil(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        // Detail Reklame Permanen
+        public IActionResult DetailSummary(int tahun, int bulan, int jenis, int kategori)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.GetDetailSummary(tahun, bulan, jenis, kategori);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult DetailBongkar(int tahun, int bulan, int jenis, int kategori)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.BongkarDetail(tahun, bulan, jenis, kategori);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        // Detail Upaya
+        public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.GetDetailUpaya(noFormulir, tahun, bulan);
+                return PartialView("../AktivitasOP/ReklameSummaryIndoor/_DetailUpaya", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        [HttpGet]
+        public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+
+            // EF Core query langsung, tanpa ToListAsync
+            var query = context.MUpayaReklames
+                .Select(item => new UpayaCbView
+                {
+                    Value = (int)item.Id,
+                    Text = item.Upaya ?? string.Empty
+                });
+
+            return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        [HttpGet]
+        public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
+        {
+            var context = DBClass.GetContext();
+
+            var query = context.MTindakanReklames
+                .Where(x => x.IdUpaya == idUpaya)
+                .Select(item => new TindakanCbView
+                {
+                    Value = (int)item.Id,
+                    Text = item.Tindakan ?? string.Empty
+                });
+
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        //Simpan Upaya
+        [HttpPost]
+        public IActionResult SimpanUpaya(Models.AktivitasOP.ReklameSummaryIndoorVM.GetDetailUpaya input)
+        {
+            try
+            {
+                if (input.Lampiran == null && input.Lampiran.Length <= 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+                if (input.Lampiran != null && input.Lampiran.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        input.Lampiran.CopyTo(ms);
+                        input.Data.NewRowUpaya.Lampiran = ms.ToArray();
+                    }
+                }
+                var insert = new Models.AktivitasOP.ReklameSummaryIndoorVM.DetailUpaya.NewRow
+                {
+                    NoFormulir = input.Data.NewRowUpaya.NoFormulir,
+                    IdUpaya = input.SelectedUpaya,
+                    IdTindakan = input.SelectedTindakan,
+                    NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
+                    TglUpaya = input.Data.NewRowUpaya.TglUpaya,
+                    Lampiran = input.Data.NewRowUpaya.Lampiran,
+                };
+                Models.AktivitasOP.ReklameSummaryIndoorVM.Method.SimpanUpaya(insert);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
+        }
     }
 }

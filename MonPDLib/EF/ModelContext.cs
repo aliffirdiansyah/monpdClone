@@ -373,6 +373,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
 
+    public virtual DbSet<TmpObjekPajakSkpdAbt> TmpObjekPajakSkpdAbts { get; set; }
+
     public virtual DbSet<UserApiBapendum> UserApiBapenda { get; set; }
 
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
@@ -658,8 +660,6 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbCtrlByrParkir>(entity =>
         {
             entity.ToView("DB_CTRL_BYR_PARKIR");
-
-            entity.Property(e => e.StatusBayar).IsFixedLength();
         });
 
         modelBuilder.Entity<DbCtrlByrPbb>(entity =>

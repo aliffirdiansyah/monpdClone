@@ -1,0 +1,422 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM.Index
+
+@{
+    ViewData["Title"] = "Reklame Summary Indoor";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i> Reklame Summary
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-dark" title="Segarkan Reklame Summary" onclick="">
+                        <i class="mdi mdi-refresh align-middle"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <select id="tahunFilter" class="form-select rounded-pill mb-3" aria-label="Pilih Tahun" style="max-width: 200px;">
+                        <option selected disabled>Pilih Tahun</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                    <button type="button" class="btn btn-success rounded-pill mb-3">
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div id="cardShow" class="card d-none">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-0">
+                        Permanen
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div id="cardTerbatas" class="card d-none">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-0">
+                        Terbatas
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-ShowTerbatas" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="ShowTerbatas"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div id="cardInsidentil" class="card d-none">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-0">
+                        Insidentil
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-ShowIsidentil" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="ShowIsidentil"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // saat pertama kali: kosongkan hasil
+            $('#Show').html();
+
+            // ketika tombol Terapkan Filter diklik
+            $('.btn-success').on('click', function () {
+                loadData();
+                loadDataTerbatas();
+                loadDataIsidentil();
+                $('#cardShow').removeClass('d-none');
+                $('#cardTerbatas').removeClass('d-none');
+                $('#cardInsidentil').removeClass('d-none');
+            });
+
+            function loadData() {
+                let tahun = $('#tahunFilter').val();
+
+                if (!tahun) {
+                    $('#Show').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("Show", "ReklameSummaryIndoor")',
+                    type: 'GET',
+                    data: {
+                        tahun: tahun
+                    },
+                    beforeSend: function () {
+                        // Tampilkan spinner, sembunyikan konten
+                        $('#loading2-Show').show();
+                        $('#Show').hide();
+                    },
+                    success: function (result) {
+                        // Sembunyikan spinner, tampilkan hasil
+                        $('#loading2-Show').hide();
+                        $('#Show').html(result).show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Gagal memuat data Show:", error);
+                        $('#loading2-Show').hide();
+                        $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    }
+                });
+
+            }
+
+            function loadDataTerbatas() {
+                let tahun = $('#tahunFilter').val();
+
+                if (!tahun) {
+                    $('#ShowTerbatas').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("ShowTerbatas", "ReklameSummaryIndoor")',
+                    type: 'GET',
+                    data: {
+                        tahun: tahun
+                    },
+                    beforeSend: function () {
+                        // Tampilkan spinner, sembunyikan konten
+                        $('#loading2-ShowTerbatas').show();
+                        $('#ShowTerbatas').hide();
+                    },
+                    success: function (result) {
+                        // Sembunyikan spinner, tampilkan hasil
+                        $('#loading2-ShowTerbatas').hide();
+                        $('#ShowTerbatas').html(result).show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Gagal memuat data ShowTerbatas:", error);
+                        $('#loading2-ShowTerbatas').hide();
+                        $('#ShowTerbatas').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    }
+                });
+
+            }
+
+            function loadDataIsidentil() {
+                let tahun = $('#tahunFilter').val();
+
+                if (!tahun) {
+                    $('#ShowIsidentil').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("ShowIsidentil", "ReklameSummaryIndoor")',
+                    type: 'GET',
+                    data: {
+                        tahun: tahun
+                    },
+                    beforeSend: function () {
+                        // Tampilkan spinner, sembunyikan konten
+                        $('#loading2-ShowIsidentil').show();
+                        $('#ShowIsidentil').hide();
+                    },
+                    success: function (result) {
+                        // Sembunyikan spinner, tampilkan hasil
+                        $('#loading2-ShowIsidentil').hide();
+                        $('#ShowIsidentil').html(result).show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Gagal memuat data ShowIsidentil:", error);
+                        $('#loading2-ShowIsidentil').hide();
+                        $('#ShowIsidentil').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                    }
+                });
+
+            }
+
+        });
+        function fnReloadTindakan(e) {
+            const selectedUpayaId = e.value;
+
+            console.log("Upaya dipilih:", selectedUpayaId); // cek value
+
+            const grid = $("#gridTindakan").dxDataGrid("instance");
+
+            if (!grid) {
+                console.error("Grid tidak ditemukan!");
+                return;
+            }
+
+            grid.option("dataSource", new DevExpress.data.CustomStore({
+                load: function () {
+                    return $.getJSON("/ReklameSummaryIndoor/GetTindakan", {
+                        upayaId: selectedUpayaId
+                    }).then(data => {
+                        console.log("Data diterima:", data); // pastikan data ada
+                        return data;
+                    }).catch(err => {
+                        console.error("Gagal load data:", err);
+                    });
+                }
+            }));
+
+            grid.refresh();
+        }
+
+    </script>
+    <script>
+        function getKategoriFromColumn(columnName) {
+            switch (columnName) {
+                case 'SKPDBlmJT': return 1;
+                case 'SKPDBlmPanjang': return 2;
+                case 'SKPDBlmKB': return 3;
+                default: return 0; // fallback
+            }
+        }
+
+        function getKategoriText(kategori) {
+            switch (kategori) {
+                case 1: return "Belum Bayar";
+                case 2: return "Belum Perpanjangan";
+                case 3: return "Belum Bayar";
+                default: return "Kategori Tidak Diketahui";
+            }
+        }
+
+        function getJenisText(jenisId) {
+            switch (jenisId) {
+                case 1: return "Insidentil";
+                case 2: return "Permanen";
+                case 3: return "Terbatas";
+                default: return "Jenis Tidak Diketahui";
+            }
+        }
+
+        function skpdPermanenJTCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+
+            const namaKolom = cellInfo.column.dataField;
+            const kategori = getKategoriFromColumn(namaKolom);
+            const kategoriText = getKategoriText(kategori);
+            const jenisText = getJenisText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    // update span kategori & jenis
+                    $("#kategoriSpan").text(kategoriText);
+                    $("#jenisSpan").text(jenisText);
+
+                    loadDetailJT(tahun, bulan, jenis, kategori);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function skpdPermanenJTCellTemplate2(cellElement, cellInfo) {
+            const jumlah = cellInfo.data.SKPDBlmByr;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+
+            const kategori = 3;
+            const kategoriText = getKategoriText(kategori);
+            const jenisText = getJenisText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah)
+                .on('click', () => {
+                    // update span kategori & jenis
+                    $("#kategoriSpan").text(kategoriText);
+                    $("#jenisSpan").text(jenisText);
+
+                    loadDetailJT(tahun, bulan, jenis, kategori);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+    </script>
+    <script>
+        function loadDetailJT(tahun, bulan, jenis, kategori) {
+            const url = `/ReklameSummaryIndoor/DetailSummary?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+            window.open(url, '_blank');
+        }
+
+        function getNamaKategoriFromColumn(columnName) {
+            switch (columnName) {
+                case 'JmlBongkarJT': return 1;
+                case 'JmlBongkarPanjang': return 2;
+                case 'JmlBongkarKB': return 3;
+                default: return 0; // fallback
+            }
+        }
+
+        function kategoriText(kategori) {
+            switch (kategori) {
+                case 1: return "Belum Bayar";
+                case 2: return "Belum Perpanjangan";
+                case 3: return "Belum Bayar";
+                default: return "Kategori Tidak Diketahui";
+            }
+        }
+
+        function jenisText(jenisId) {
+            switch (jenisId) {
+                case 1: return "Insidentil";
+                case 2: return "Permanen";
+                case 3: return "Terbatas";
+                default: return "Jenis Tidak Diketahui";
+            }
+        }
+
+        function BongkarCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+
+            const namaKolom = cellInfo.column.dataField;
+            const kategori = getNamaKategoriFromColumn(namaKolom);
+            const kategoriLabel = kategoriText(kategori);
+            const jenisLabel = jenisText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                $("#kategoriSpan").text(kategoriLabel);
+                $("#jenisSpan").text(jenisLabel);
+
+                loadDetailBongkar(tahun, bulan, jenis, kategori);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function loadDetailBongkar(tahun, bulan, jenis, kategori) {
+            const url = `/ReklameSummaryIndoor/DetailBongkar?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+            window.open(url, '_blank');
+        }
+
+    </script>
+}

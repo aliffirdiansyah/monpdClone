@@ -1,0 +1,185 @@
+﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM.Show
+
+@{
+    var curentYear = DateTime.Now.Year;
+    var TahunMin1 = (curentYear - 1).ToString();
+    var TahunNow = curentYear.ToString();
+}
+
+<div class="table-responsive">
+    @(
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM.ReklamePermanen>()
+        .ID("permanenReklameGrid")
+        .DataSource(Model.ReklamePermanenList)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+            @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true)) *@
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(20))
+        .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+            .Visible(true)
+            .Width(240)
+            .Placeholder("Cari...")
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.BulanNama).Caption("BULAN").Fixed(true);
+
+            // JATUH TEMPO (semua kolom di bawah ini masuk ke grup ini)
+            columns.Add().Caption(TahunMin1).Alignment(HorizontalAlignment.Center).Columns(jt =>
+            {
+                // SKPD & NILAI di bagian awal
+                jt.AddFor(m => m.SKPDJT).Caption("SKPD").Format("#,##0");
+                jt.AddFor(m => m.NilaiJT).Caption("NILAI").Format("#,##0");
+
+                // PERPANJANGAN
+                jt.Add().Caption("SUDAH BAYAR").Alignment(HorizontalAlignment.Center).Columns(pp =>
+                {
+                    pp.AddFor(m => m.SKPDPanjang).Caption("SKPD").Format("#,##0");
+                    pp.AddFor(m => m.NilaiPanjang).Caption("NILAI").Format("#,##0");
+                });
+
+                // BELUM BAYAR
+                jt.Add().Caption("BELUM BAYAR").Alignment(HorizontalAlignment.Center).Columns(bb =>
+                {
+                    bb.AddFor(m => m.SKPDBlmJT).Caption("SKPD").Format("#,##0").DataField("SKPDBlmJT").CellTemplate(new JS("skpdPermanenJTCellTemplate"));
+                    bb.AddFor(m => m.NilaiBlmJT).Caption("NILAI").Format("#,##0");
+                    bb.AddFor(m => m.JmlSilangJT).Caption("SILANG").Format("#,##0").Visible(false);
+                    bb.AddFor(m => m.JmlBongkarJT).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarJT").CellTemplate(new JS("BongkarCellTemplate"));
+                    bb.AddFor(m => m.JmlBantipJT).Caption("BANTIP").Format("#,##0").Visible(false);
+                });
+
+
+                // BELUM PERPANJANGAN
+                jt.Add().Caption("BELUM PERPANJANGAN").Alignment(HorizontalAlignment.Center).Columns(bpp =>
+                {
+                    bpp.AddFor(m => m.SKPDBlmPanjang).Caption("SKPD").Format("#,##0").DataField("SKPDBlmPanjang").CellTemplate(new JS("skpdPermanenJTCellTemplate"));
+                    bpp.AddFor(m => m.NilaiBlmPanjang).Caption("NILAI").Format("#,##0");
+                    bpp.AddFor(m => m.JmlSilangPanjang).Caption("SILANG").Format("#,##0").Visible(false);
+                    bpp.AddFor(m => m.JmlBongkarPanjang).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarPanjang").CellTemplate(new JS("BongkarCellTemplate"));
+                    bpp.AddFor(m => m.JmlBantipPanjang).Caption("BANTIP").Format("#,##0").Visible(false);
+                });
+            });
+
+            // KETETAPAN BARU
+            columns.Add().Caption(TahunNow).Alignment(HorizontalAlignment.Center).Columns(kb =>
+            {
+                kb.AddFor(m => m.SKPDKB).Caption("SKPD").Format("#,##0");
+                kb.AddFor(m => m.NilaiKB).Caption("NILAI").Format("#,##0");
+
+                kb.Add().Caption("SUDAH BAYAR").Alignment(HorizontalAlignment.Center).Columns(sb =>
+                {
+                    sb.AddFor(m => m.SKPDPanjangKB).Caption("SKPD").Format("#,##0");
+                    sb.AddFor(m => m.NilaiPanjangKB).Caption("NILAI").Format("#,##0");
+                });
+    
+                kb.Add().Caption("BELUM BAYAR").Alignment(HorizontalAlignment.Center).Columns(bk =>
+                {
+                    bk.AddFor(m => m.SKPDBlmKB).Caption("SKPD").Format("#,##0").DataField("SKPDBlmKB").CellTemplate(new JS("skpdPermanenJTCellTemplate"));
+                    bk.AddFor(m => m.NilaiBlmKB).Caption("NILAI").Format("#,##0");
+                    bk.AddFor(m => m.JmlSilangKB).Caption("SILANG").Format("#,##0").Visible(false);
+                    bk.AddFor(m => m.JmlBongkarKB).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarKB").CellTemplate(new JS("BongkarCellTemplate"));
+                    bk.AddFor(m => m.JmlBantipKB).Caption("BANTIP").Format("#,##0").Visible(false);
+                });
+            });
+
+            // TOTAL POTENSI
+            columns.AddFor(m => m.Potensi).Caption("TOTAL POTENSI").Format("#,##0");
+                            
+        })
+        .Summary(summary => {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Bulan)
+                        .SummaryType(SummaryType.Sum)
+                        .DisplayFormat("Total");
+                items.AddFor(m => m.SKPDJT)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.NilaiJT)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.SKPDPanjang)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.NilaiPanjang)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.SKPDBlmJT)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.NilaiBlmJT)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.JmlBongkarJT)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.SKPDBlmPanjang)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.NilaiBlmPanjang)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.JmlBongkarPanjang)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.SKPDKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.NilaiKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.SKPDPanjangKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.NilaiPanjangKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.SKPDBlmKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.NilaiBlmKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.JmlBongkarKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.Potensi)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                                
+            });
+        })
+    )
+</div>
+                
