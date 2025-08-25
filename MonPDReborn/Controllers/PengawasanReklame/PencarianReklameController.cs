@@ -44,11 +44,11 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
-        public IActionResult Show(string namaJalan, string status)
+        public IActionResult Show(string namaJalan, string detailLokasi, string status)
         {
             try
             {
-                var model = new Models.PengawasanReklame.PencarianReklameVM.Show(namaJalan, status);
+                var model = new Models.PengawasanReklame.PencarianReklameVM.Show(namaJalan, detailLokasi, status);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -108,5 +108,56 @@ namespace MonPDReborn.Controllers.PengawasanReklame
             // Jika filter kosong atau tidak valid, tetap kembalikan default kosong
             return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
         }
+        [HttpGet]
+        public async Task<object> GetLokasi(DataSourceLoadOptions loadOptions, string filter)
+        {
+            var context = DBClass.GetContext();
+            var dataList = new List<lokasiReklameView>();
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                try
+                {
+                    filter = filter.Replace("[[", "")
+                                   .Replace("]]", "")
+                                   .Replace("\"", "")
+                                   .ToUpper();
+
+                    string[] s = filter.Split(',');
+
+                    // Pastikan array s memiliki cukup elemen
+                    string keyword = s.Length > 2 ? s[2] : s.FirstOrDefault() ?? string.Empty;
+
+                    if (!string.IsNullOrEmpty(keyword))
+                    {
+                        dataList = context.MvReklameSummaries
+                            .Where(x => !string.IsNullOrEmpty(x.DetailLokasi))
+                            .Select(x => new
+                            {
+                                Original = x.DetailLokasi,
+                                // Ambil substring sebelum koma pertama
+                                FirstPart = x.DetailLokasi.Contains(",")
+                                    ? x.DetailLokasi.Substring(0, x.DetailLokasi.IndexOf(","))
+                                    : x.DetailLokasi
+                            })
+                            .Where(x => x.FirstPart.ToUpper().Contains(keyword))
+                            .GroupBy(x => x.FirstPart)
+                            .Select(g => new lokasiReklameView
+                            {
+                                Value = g.Key,
+                                Text = g.Key
+                            })
+                            .ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error filter: " + ex.Message);
+                }
+            }
+
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
+
     }
 }

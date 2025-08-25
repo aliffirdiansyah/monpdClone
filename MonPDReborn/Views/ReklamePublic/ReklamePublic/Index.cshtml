@@ -28,10 +28,7 @@
 
                         <div class="row gy-2">
 
-                            <div class="col-lg-12">
-                                <label for="namaJalanSearch" class="form-label d-flex align-items-center fs-14">Nama Jalan</label>
-                                @* <input type="text" id="namaJalanSearch" name="namaJalanSearch" placeholder="Cari nama jalan..."
-                               class="form-control"> *@
+                            <div class="col-lg-8">
                                 @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
                                                                 .ID("namaJalanView")
                                                                 .ValueExpr("Value")
@@ -41,7 +38,23 @@
                                                                 .LoadAction("GetNama").Key("filter"))
                                                                 .SearchExpr("Text")
                                                                 .SearchEnabled(true)
+                                                                .Placeholder("Pilih Nama Jalan")
                                                                 .MinSearchLength(3)
+                                                                )
+                            </div>
+
+                            <div class="col-lg-4">
+                                @(Html.DevExtreme().SelectBoxFor(m => m.lokasiUpaya)
+                                                                .ID("lokasiReklameView")
+                                                                .ValueExpr("Value")
+                                                                .DisplayExpr("Text")
+                                                                .DataSource(d => d.Mvc()
+                                                                .Controller("ReklamePublic")
+                                                                .LoadAction("GetLokasi").Key("filter"))
+                                                                .SearchExpr("Text")
+                                                                .SearchEnabled(true)
+                                                                .Placeholder("Pilih Detail Lokasi")
+                                                                .MinSearchLength(2)
                                                                 )
                             </div>
 
@@ -114,10 +127,22 @@
     <script>
         function searchData() {
             const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
+            const detailLokasi = $("#lokasiReklameView").dxSelectBox("instance").option("value");
             const recaptchaToken = grecaptcha.getResponse(widgetId); // Ambil token dari widget
 
             if (!recaptchaToken) {
                 alert("⚠ Silakan verifikasi CAPTCHA terlebih dahulu.");
+                return;
+            }
+
+            // Normalisasi input (kalau kosong → null)
+            const namaJalanVal = (namaJalan && namaJalan.trim() !== "") ? namaJalan : null;
+            const detailLokasiVal = (detailLokasi && detailLokasi.trim() !== "") ? detailLokasi : null;
+
+            // Validasi minimal salah satu terisi
+            if (!namaJalanVal && !detailLokasiVal) {
+                $('#resultsSection').removeClass('d-none');
+                $('#resultsContent').html('<p class="text-danger">⚠ Isi minimal Nama Jalan atau Detail Lokasi!</p>');
                 return;
             }
 
@@ -133,7 +158,8 @@
                 type: 'POST',
                 data: {
                     __RequestVerificationToken: antiForgeryToken,
-                    namaJalan: namaJalan,
+                    namaJalan: namaJalanVal,
+                    detailLokasi: detailLokasiVal,
                     recaptchaToken: recaptchaToken
                 },
                 success: function (result) {
@@ -161,6 +187,7 @@
                 }
             });
         }
+
 
 
 
