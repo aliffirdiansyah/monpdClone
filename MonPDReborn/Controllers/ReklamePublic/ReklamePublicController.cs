@@ -54,7 +54,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Show(string namaJalan, string recaptchaToken)
+        public async Task<IActionResult> Show(string namaJalan, string detailLokasi, string recaptchaToken)
         {
             var response = new ResponseBase();
             try
@@ -74,7 +74,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 }
 
                 // CAPTCHA valid → ambil data model
-                var model = new Models.ReklamePublic.ReklamePublicVM.Show(namaJalan);
+                var model = new Models.ReklamePublic.ReklamePublicVM.Show(namaJalan, detailLokasi);
 
                 // Kembalikan partial view dengan data model
                 return PartialView($"{URLView}_{nameof(Show)}", model);
@@ -188,6 +188,56 @@ namespace MonPDReborn.Controllers.ReklamePublic
             }
 
             // Jika filter kosong atau tidak valid, tetap kembalikan default kosong
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
+        [HttpGet]
+        public async Task<object> GetLokasi(DataSourceLoadOptions loadOptions, string filter)
+        {
+            var context = DBClass.GetContext();
+            var dataList = new List<lokasiReklameView>();
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                try
+                {
+                    filter = filter.Replace("[[", "")
+                                   .Replace("]]", "")
+                                   .Replace("\"", "")
+                                   .ToUpper();
+
+                    string[] s = filter.Split(',');
+
+                    // Pastikan array s memiliki cukup elemen
+                    string keyword = s.Length > 2 ? s[2] : s.FirstOrDefault() ?? string.Empty;
+
+                    if (!string.IsNullOrEmpty(keyword))
+                    {
+                        dataList = context.MvReklameSummaries
+                            .Where(x => !string.IsNullOrEmpty(x.DetailLokasi))
+                            .Select(x => new
+                            {
+                                Original = x.DetailLokasi,
+                                // Ambil substring sebelum koma pertama
+                                FirstPart = x.DetailLokasi.Contains(",")
+                                    ? x.DetailLokasi.Substring(0, x.DetailLokasi.IndexOf(","))
+                                    : x.DetailLokasi
+                            })
+                            .Where(x => x.FirstPart.ToUpper().Contains(keyword))
+                            .GroupBy(x => x.FirstPart)
+                            .Select(g => new lokasiReklameView
+                            {
+                                Value = g.Key,
+                                Text = g.Key
+                            })
+                            .ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error filter: " + ex.Message);
+                }
+            }
+
             return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
         }
 

@@ -29,6 +29,12 @@
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
                     </select>
+                    <select id="lokasiFilter" class="form-select rounded-pill mb-3" aria-label="Pilih Letak Reklame" style="max-width: 200px;">
+                        <option selected disabled>Pilih Letak Reklame</option>
+                        <option value="1">Semua</option>
+                        <option value="2">Dalam Ruangan (Indoor)</option>
+                        <option value="3">Luar Ruangan (Outdoor)</option>
+                    </select>
                     <button type="button" class="btn btn-success rounded-pill mb-3">
                         Terapkan Filter
                     </button>
@@ -121,6 +127,7 @@
 
             function loadData() {
                 let tahun = $('#tahunFilter').val();
+                let lokasi = $('#lokasiFilter').val();
 
                 if (!tahun) {
                     $('#Show').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
@@ -131,7 +138,8 @@
                     url: '@Url.Action("Show", "ReklameSummary")',
                     type: 'GET',
                     data: {
-                        tahun: tahun
+                        tahun: tahun,
+                        lokasi: lokasi
                     },
                     beforeSend: function () {
                         // Tampilkan spinner, sembunyikan konten
@@ -154,6 +162,7 @@
 
             function loadDataTerbatas() {
                 let tahun = $('#tahunFilter').val();
+                let lokasi = $('#lokasiFilter').val();
 
                 if (!tahun) {
                     $('#ShowTerbatas').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
@@ -164,7 +173,8 @@
                     url: '@Url.Action("ShowTerbatas", "ReklameSummary")',
                     type: 'GET',
                     data: {
-                        tahun: tahun
+                        tahun: tahun,
+                        lokasi: lokasi
                     },
                     beforeSend: function () {
                         // Tampilkan spinner, sembunyikan konten
@@ -187,6 +197,7 @@
 
             function loadDataIsidentil() {
                 let tahun = $('#tahunFilter').val();
+                let lokasi = $('#lokasiFilter').val();
 
                 if (!tahun) {
                     $('#ShowIsidentil').html('<div class="text-danger">⚠ Silakan pilih tahun terlebih dahulu.</div>');
@@ -197,7 +208,8 @@
                     url: '@Url.Action("ShowIsidentil", "ReklameSummary")',
                     type: 'GET',
                     data: {
-                        tahun: tahun
+                        tahun: tahun,
+                        lokasi: lokasi
                     },
                     beforeSend: function () {
                         // Tampilkan spinner, sembunyikan konten
@@ -281,6 +293,7 @@
             const tahun = cellInfo.data.Tahun;
             const bulan = cellInfo.data.Bulan;
             const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
 
             const namaKolom = cellInfo.column.dataField;
             const kategori = getKategoriFromColumn(namaKolom); 
@@ -297,7 +310,7 @@
                     $("#kategoriSpan").text(kategoriText);
                     $("#jenisSpan").text(jenisText);
 
-                    loadDetailJT(tahun, bulan, jenis, kategori);
+                    loadDetailJT(tahun, bulan, jenis, kategori, lokasi);
                 });
 
             const $wrapper = $('<div>')
@@ -316,6 +329,7 @@
             const tahun = cellInfo.data.Tahun;
             const bulan = cellInfo.data.Bulan;
             const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
 
             const kategori = 3;
             const kategoriText = getKategoriText(kategori);
@@ -331,7 +345,7 @@
                     $("#kategoriSpan").text(kategoriText);
                     $("#jenisSpan").text(jenisText);
 
-                    loadDetailJT(tahun, bulan, jenis, kategori);
+                    loadDetailJT(tahun, bulan, jenis, kategori, lokasi);
                 });
 
             const $wrapper = $('<div>')
@@ -346,8 +360,8 @@
         }
     </script>
     <script>
-        function loadDetailJT(tahun, bulan, jenis, kategori) {
-            const url = `/ReklameSummary/DetailSummary?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+        function loadDetailJT(tahun, bulan, jenis, kategori, lokasi) {
+            const url = `/ReklameSummary/DetailSummary?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}&lokasi=${encodeURIComponent(lokasi)}`;
             window.open(url, '_blank');
         }
 
@@ -383,6 +397,7 @@
             const tahun = cellInfo.data.Tahun;
             const bulan = cellInfo.data.Bulan;
             const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
 
             const namaKolom = cellInfo.column.dataField;
             const kategori = getNamaKategoriFromColumn(namaKolom);
@@ -399,7 +414,7 @@
                 $("#kategoriSpan").text(kategoriLabel);
                 $("#jenisSpan").text(jenisLabel);
 
-                loadDetailBongkar(tahun, bulan, jenis, kategori);
+                loadDetailBongkar(tahun, bulan, jenis, kategori, lokasi);
             });
 
             const $wrapper = $('<div>')
@@ -413,8 +428,8 @@
             $(cellElement).append($wrapper);
         }
 
-        function loadDetailBongkar(tahun, bulan, jenis, kategori) {
-            const url = `/ReklameSummary/DetailBongkar?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+        function loadDetailBongkar(tahun, bulan, jenis, kategori, lokasi) {
+            const url = `/ReklameSummary/DetailBongkar?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}&lokasi=${encodeURIComponent(lokasi)}`;
             window.open(url, '_blank');
         }
 
