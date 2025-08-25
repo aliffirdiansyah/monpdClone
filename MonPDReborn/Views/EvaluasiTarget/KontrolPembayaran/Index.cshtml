@@ -116,6 +116,24 @@
                     </div>
                 </div>
 
+                <div class="modal fade" id="modalDetailPotensi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex">
+                                <div class="flex-grow-1">
+                                    <h4 class="modal-title fs-16 mb-0">
+                                        Data OP Pembayaran Pajak
+                                    </h4>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center p-3">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal fade" id="modalDetailUpaya" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-xl" role="document">
                         <div class="modal-content">
@@ -236,6 +254,8 @@
         });
 
 
+        //Region Cell Template untuk grab data dan binding untuk di teruskan
+
         function showPajakCellTemplate(cellElement, cellInfo) {
             const jenisPajakMap = {
                 'Restoran': 1,
@@ -250,6 +270,8 @@
             };
             const jenisPajak = jenisPajakMap[currentJenis] || 0;
             const kategoriId = cellInfo.data.kategoriId;
+            
+
             const tahun = currentTahun;
 
             // Ambil angka bulan dari nama field (contoh: Byr1 → 1)
@@ -279,15 +301,6 @@
 
             $(cellElement).append($link);
         }
-    </script>
-
-
-    <script>
-
-
-
-
-
 
         function upayaPajakCellTemplate(cellElement, cellInfo) {
             const jenisPajakMap = {
@@ -303,6 +316,7 @@
             };
             const jenisPajak = jenisPajakMap[currentJenis] || 0;
             const kategoriId = cellInfo.data.kategoriId;
+
             const tahun = currentTahun;
 
             // Ambil angka bulan dari nama field (contoh: Byr1 → 1)
@@ -333,16 +347,78 @@
             $(cellElement).append($link);
         }
 
+        function showPotensiCellTemplate(cellElement, cellInfo) {
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const kategoriId = cellInfo.data.kategoriId;
+            const tahun = currentTahun;
+            
+            // Ambil angka bulan dari nama field, misal Pot1 → 1
+                 // Mapping singkatan field → nomor bulan
+            const bulanMap = {
+                Jan: 1,
+                Feb: 2,
+                Mar: 3,
+                Apr: 4,
+                Mei: 5,
+                Jun: 6,
+                Jul: 7,
+                Agt: 8,
+                Sep: 9,
+                Okt: 10,
+                Nov: 11,
+                Des: 12
+            };
+
+            const fieldName = cellInfo.column.dataField || '';
+            const bulan = bulanMap[fieldName] || 0;
+
+            const value = cellInfo.value ?? 0;
+
+            // bikin link yang bisa diklik
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', `Lihat Detail Potensi`)
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => onPotensiClick(jenisPajak, kategoriId, tahun, bulan));
+
+            $(cellElement).append($link);
+        }
+
+    </script>
 
 
+    <script>
+        
+
+
+        //Region On Click ( function deliver property )
 
         function onPajakClick(jenisPajak, kategoriId, tahun, bulan, status) {
             showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status);
         }
 
+        function onPotensiClick(jenisPajak, kategoriId, tahun, bulan) {
+            showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan);
+        }
+
         function onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status) {
             showDetailUpaya(jenisPajak, kategoriId, tahun, bulan, status);
         }
+
+
+        //Region SHOW ( hit Endpoint di controller)
 
         function showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status) {
             $.ajax({
@@ -364,6 +440,36 @@
                 },
                 error: function () {
                     $('#modalDetailPajak .modal-body').html('<div class="text-danger">⚠ Gagal memuat data</div>');
+                }
+            });
+        }
+
+        function showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan) {
+        // console.log("👉 PARAMS:", {
+        //     jenisPajak,
+        //     kategoriId,
+        //     tahun,
+        //     bulan
+        // });
+
+            $.ajax({
+                url: '/KontrolPembayaran/DetailPotensiPajak',
+                type: 'GET',
+                data: {
+                    jenisPajak: jenisPajak,
+                    kategoriId: kategoriId,
+                    bulan: bulan,
+                    tahun: tahun,
+                },
+                beforeSend: function () {
+                    $('#modalDetailPotensi .modal-body').html('<div class="text-center p-3">Loading…</div>');
+                    $('#modalDetailPotensi').modal('show');
+                },
+                success: function (html) {
+                    $('#modalDetailPotensi .modal-body').html(html);
+                },
+                error: function () {
+                    $('#modalDetailPotensi .modal-body').html('<div class="text-danger">⚠ Gagal memuat data</div>');
                 }
             });
         }

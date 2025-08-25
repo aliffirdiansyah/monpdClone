@@ -1,0 +1,65 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailPotensiPajak
+
+<div class="card-header d-flex">
+    <div class="flex-grow-1">
+        <h4 class="card-title fs-16 mb-0">
+            Detail Kontrol Pembayaran Pajak : @Model.Data?.FirstOrDefault()?.Kategori
+        </h4>
+    </div>
+</div>
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailPotensi>()
+        .ID("detailPotensiPajakGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.Ketetapan).Caption("Ketetapan").Format("#,##0");
+            columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
+            columns.AddFor(m => m.Wilayah).Caption("Wilayah");
+            columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.FormattedNOP)
+            .SummaryType(SummaryType.Sum)
+            .Alignment(HorizontalAlignment.Right)
+            .DisplayFormat("TOTAL");
+
+                items.AddFor(m => m.Ketetapan)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.Realisasi)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+            });
+        })
+
+        )
+</div>
