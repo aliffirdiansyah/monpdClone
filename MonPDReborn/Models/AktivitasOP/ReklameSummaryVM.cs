@@ -124,6 +124,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 1,
                             Jenis = 2, // Jenis 3 untuk Terbatas
 
                             SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
@@ -172,6 +173,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 2,
                             Jenis = 2, // Jenis 3 untuk Terbatas
 
                             SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Count(),
@@ -221,6 +223,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 3,
                             Jenis = 2, // Jenis 3 untuk Terbatas
 
                             SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "LUAR RUANGAN (OUT DOOR)").Count(),
@@ -282,6 +285,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 1,
                             Jenis = 3, // Jenis 3 untuk Terbatas
 
                             SKPDJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
@@ -329,6 +333,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 2,
                             Jenis = 3, // Jenis 3 untuk Terbatas
 
                             SKPDJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Count(),
@@ -376,6 +381,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 3,
                             Jenis = 3, // Jenis 3 untuk Terbatas
 
                             SKPDJT = dataTer.Where(x => x.IdFlagPermohonan == 3 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "LUAR RUANGAN (OUT DOOR)").Count(),
@@ -450,6 +456,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 1,
                             Jenis = 1, // Jenis 1 untuk Insidentil
                             SKPD = skpd,
                             Nilai = nilai,
@@ -489,6 +496,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 2,
                             Jenis = 1, // Jenis 1 untuk Insidentil
                             SKPD = skpd,
                             Nilai = nilai,
@@ -528,6 +536,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             BulanNama = new DateTime(tahun, i, 1).ToString("MMMM", new CultureInfo("id-ID")),
                             Bulan = i,
                             Tahun = tahun,
+                            Lokasi = 3,
                             Jenis = 1, // Jenis 1 untuk Insidentil
                             SKPD = skpd,
                             Nilai = nilai,
@@ -718,6 +727,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Tahun = tahun,
                         NoFormulir = tampilFormulir,
+                        Lokasi = lokasi,
 
                         Nama = (kategori == 3)
                             ? string.Concat(x.NamaA ?? "", " (", x.NamaPerusahaanA ?? "", ")")
@@ -1185,6 +1195,7 @@ namespace MonPDReborn.Models.AktivitasOP
         public class ReklamePermanen
         {
             public string BulanNama { get; set; } = null!;
+            public int Lokasi { get; set; }
             public int Jenis { get; set; }
             public int Bulan { get; set; }
             public int Tahun { get; set; }
@@ -1220,6 +1231,7 @@ namespace MonPDReborn.Models.AktivitasOP
         public class TerbatasReklame
         {
             public string BulanNama { get; set; } = null!;
+            public int Lokasi { get; set; }
             public int Jenis { get; set; }
             public int Bulan { get; set; }
             public int Tahun { get; set; }
@@ -1253,6 +1265,7 @@ namespace MonPDReborn.Models.AktivitasOP
         public class IsidentilReklame
         {
             public string BulanNama { get; set; } = null!;
+            public int Lokasi { get; set; }
             public int Jenis { get; set; }
             public int Bulan { get; set; }
             public int Tahun { get; set; }
@@ -1339,6 +1352,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public string IsiReklame { get; set; } = null!;
             public string AkhirBerlaku { get; set; } = null!;
             public string MasaTahunPajak { get; set; } = null!;
+            public string DetailLokasi { get; set; } = null!;
             public decimal JumlahNilai { get; set; }
             public string? InformasiEmail { get; set; }
             public string JumlahUpaya { get; set; } = null!;

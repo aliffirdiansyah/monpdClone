@@ -97,7 +97,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowIsidentil(tahun);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowIsidentil(tahun, lokasi);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
