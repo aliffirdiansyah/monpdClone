@@ -909,17 +909,17 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                         Target = x.Sum(q => q.Target)
                                     }).ToList();
 
-                            var nopListAbt = context.DbOpAbts.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                            var nopListAbt = context.DbOpAbts.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop).Distinct().ToList();
-                            var nopListResto = context.DbOpRestos.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                            var nopListResto = context.DbOpRestos.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop).Distinct().ToList();
-                            var nopListHotel = context.DbOpHotels.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                            var nopListHotel = context.DbOpHotels.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop).Distinct().ToList();
-                            var nopListListrik = context.DbOpListriks.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                            var nopListListrik = context.DbOpListriks.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop).Distinct().ToList();
-                            var nopListParkir = context.DbOpParkirs.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                            var nopListParkir = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop).Distinct().ToList();
-                            var nopListHiburan = context.DbOpHiburans.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                            var nopListHiburan = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop).Distinct().ToList();
 
                             var totalRealisasiAbt = context.DbMonAbts
@@ -991,7 +991,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             re.Bulan = bulan;
                                             re.Lokasi = $"UPTB {wilayah}";
                                             re.Target = item.Target;
-                                            re.Realisasi = totalRealisasiAbt ?? 0;
+                                            re.Realisasi = totalRealisasiResto ?? 0;
                                             re.Tren = 0;
                                             re.Status = "";
 

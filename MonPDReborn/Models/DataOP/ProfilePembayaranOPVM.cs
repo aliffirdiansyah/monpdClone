@@ -314,21 +314,25 @@ namespace MonPDReborn.Models.DataOP
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        var dataResto = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
+                        var dataResto = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new 
                                 {
-                                    TglBayarPokok = x.TglBayarPokok.Value 
+                                    TglBayarPokok = x.TglBayarPokok.Value,
+                                    TahunPajak = x.TahunPajakKetetapan,
+                                    MasaPajak = x.MasaPajakKetetapan
                                 })
                                 .Select(x => new 
                                 {
                                     x.Key.TglBayarPokok,
+                                    x.Key.TahunPajak,
+                                    x.Key.MasaPajak,
                                     Realisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                             .ToList();
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataResto.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
+                            var rest = dataResto.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -341,21 +345,25 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        var dataListrik = context.DbMonPpjs.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
+                        var dataListrik = context.DbMonPpjs.Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
-                                TglBayarPokok = x.TglBayarPokok.Value
+                                TglBayarPokok = x.TglBayarPokok.Value,
+                                TahunPajak = x.TahunPajakKetetapan,
+                                MasaPajak = x.MasaPajakKetetapan
                             })
                                 .Select(x => new
                                 {
                                     x.Key.TglBayarPokok,
+                                    x.Key.TahunPajak,
+                                    x.Key.MasaPajak,
                                     Realisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                             .ToList();
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataListrik.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
+                            var rest = dataListrik.Where(x => x.MasaPajak== bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -368,21 +376,25 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        var dataHotel = context.DbMonHotels.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
+                        var dataHotel = context.DbMonHotels.Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
-                                TglBayarPokok = x.TglBayarPokok.Value
+                                TglBayarPokok = x.TglBayarPokok.Value,
+                                TahunPajak = x.TahunPajakKetetapan,
+                                MasaPajak = x.MasaPajakKetetapan
                             })
                                 .Select(x => new
                                 {
                                     x.Key.TglBayarPokok,
+                                    x.Key.TahunPajak,
+                                    x.Key.MasaPajak,
                                     Realisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                             .ToList();
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataHotel.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
+                            var rest = dataHotel.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -395,21 +407,25 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        var dataParkir = context.DbMonParkirs.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
+                        var dataParkir = context.DbMonParkirs.Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
-                                TglBayarPokok = x.TglBayarPokok.Value
+                                TglBayarPokok = x.TglBayarPokok.Value,
+                                TahunPajak = x.TahunPajakKetetapan,
+                                MasaPajak = x.MasaPajakKetetapan
                             })
                                 .Select(x => new
                                 {
                                     x.Key.TglBayarPokok,
+                                    x.Key.TahunPajak,
+                                    x.Key.MasaPajak,
                                     Realisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                             .ToList();
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataParkir.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
+                            var rest = dataParkir.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -422,21 +438,25 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var dataHiburan = context.DbMonHiburans.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
+                        var dataHiburan = context.DbMonHiburans.Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
-                                TglBayarPokok = x.TglBayarPokok.Value
+                                TglBayarPokok = x.TglBayarPokok.Value,
+                                TahunPajak = x.TahunPajakKetetapan,
+                                MasaPajak = x.MasaPajakKetetapan
                             })
                                 .Select(x => new
                                 {
                                     x.Key.TglBayarPokok,
+                                    x.Key.TahunPajak,
+                                    x.Key.MasaPajak,
                                     Realisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                             .ToList();
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataHiburan.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
+                            var rest = dataHiburan.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
@@ -449,21 +469,25 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        var dataAbt = context.DbMonAbts.Where(x => x.Nop == nop && x.TahunBuku == tahun && x.TglBayarPokok.HasValue)
+                        var dataAbt = context.DbMonAbts.Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
-                                TglBayarPokok = x.TglBayarPokok.Value
+                                TglBayarPokok = x.TglBayarPokok.Value,
+                                TahunPajak = x.TahunPajakKetetapan,
+                                MasaPajak = x.MasaPajakKetetapan
                             })
                                 .Select(x => new
                                 {
                                     x.Key.TglBayarPokok,
+                                    x.Key.TahunPajak,
+                                    x.Key.MasaPajak,
                                     Realisasi = x.Sum(q => q.NominalPokokBayar)
                                 })
                             .ToList();
                         ret.Tahun = tahun;
                         for (int bln = 1; bln <= 12; bln++)
                         {
-                            var rest = dataAbt.Where(x => x.TglBayarPokok.Month == bln).OrderBy(x => x.TglBayarPokok).ToList();
+                            var rest = dataAbt.Where(x => x.MasaPajak == bln && x.TahunPajak == tahun).OrderBy(x => x.MasaPajak).ToList();
                             decimal realisasi = rest.Sum(q => q.Realisasi) ?? 0;
                             var tanggal = rest.LastOrDefault()?.TglBayarPokok;
 
