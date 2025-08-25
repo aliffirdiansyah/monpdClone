@@ -12,15 +12,15 @@ public partial class DbCtrlByrPpj
     [Column("NOP")]
     [StringLength(30)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
 
     [Column("TAHUN", TypeName = "NUMBER")]
-    public decimal? Tahun { get; set; }
+    public decimal Tahun { get; set; }
 
     [Column("BULAN", TypeName = "NUMBER")]
-    public decimal? Bulan { get; set; }
+    public decimal Bulan { get; set; }
 
-    [Column("KATEGORI_ID", TypeName = "NUMBER(38)")]
+    [Column("KATEGORI_ID", TypeName = "NUMBER")]
     public decimal? KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
@@ -36,12 +36,12 @@ public partial class DbCtrlByrPpj
     [Column("NAMA_OP")]
     [StringLength(150)]
     [Unicode(false)]
-    public string NamaOp { get; set; } = null!;
+    public string? NamaOp { get; set; }
 
     [Column("ALAMAT_OP")]
     [StringLength(250)]
     [Unicode(false)]
-    public string AlamatOp { get; set; } = null!;
+    public string? AlamatOp { get; set; }
 
     [Column("REALISASI", TypeName = "NUMBER")]
     public decimal? Realisasi { get; set; }
