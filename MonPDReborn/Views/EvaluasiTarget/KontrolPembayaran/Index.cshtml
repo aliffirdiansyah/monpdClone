@@ -497,6 +497,44 @@
                 }
             });
         }
+
+        function detailOPCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            // Jika nilainya 0 atau null, tampilkan saja 0
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+
+            const nop = cellInfo.data.NOP;
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const pajak = jenisPajakMap[currentJenis] || 0;
+
+            // Buat link klik
+            const $link = $('<a>')
+                .addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    const url = '@Url.Action("Detail", "ProfileOP")'
+                                + '?nop=' + nop
+                                + '&pajak=' + pajak;
+                    window.open(url, '_blank');
+                });
+
+            $(cellElement).append($link);
+        }
     </script>
 }
 
