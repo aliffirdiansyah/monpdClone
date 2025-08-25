@@ -1,7 +1,7 @@
 ﻿@model MonPDReborn.Models.MonitoringWilayah.MonitoringWilayahVM.Index
 
 @{
-    ViewBag.Title = "Dashboard Penetapan Pajak";
+    ViewBag.Title = "Dashboard Wilayah";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -29,7 +29,7 @@
                                                 .DisplayExpr("Text")
                                                 .ValueExpr("Value")
                                                 .SearchEnabled(true)
-                                                .Value(0.ToString())
+                                                .Value(Model.SelectedUPTB.ToString())
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 .ElementAttr("class", "form-select mb-3")
                                                 )
@@ -42,7 +42,7 @@
                                                 .DataSource(Model.JenisPajakList)
                                                 .DisplayExpr("Text")
                                                 .ValueExpr("Value")
-                                                .Value(0.ToString())
+                                                .Value(Model.SelectedPajak.ToString())
                                                 .SearchEnabled(true)
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 .ElementAttr("class", "form-select mb-3")
@@ -72,7 +72,7 @@
                                                 .DisplayExpr("Text")
                                                 .ValueExpr("Value")
                                                 .SearchEnabled(true)
-                                                .Value(DateTime.Now.Month.ToString())
+                                                .Value(Model.SelectedBulan.ToString())
                                                 .Placeholder("Pilih Bulan")
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 .ElementAttr("class", "form-select mb-3")
@@ -157,16 +157,19 @@
             // Set dropdown bulan
             $('.form-select').eq(3).val(bulan);
 
-            // Panggil pertama kali
-            // fnShow();
-            // fnDetail();
-
+            // Panggil pertama kali kalau Uptb = true
+            var isUptb = @Model.Uptb.ToString().ToLower();
+            if (isUptb) {
+                fnShow();
+                fnDetail();
+            }
             // Saat tombol Terapkan Filter diklik
             $('.btn-success').on('click', function () {
                 fnShow();
                 fnDetail();
             });
         });
+        
 
 
         function getFilters() {
