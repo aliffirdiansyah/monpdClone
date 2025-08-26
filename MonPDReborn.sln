@@ -68,6 +68,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KetetapanHPPWs", "Ketetapan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KetetapanHRWs", "KetetapanHRWs\KetetapanHRWs.csproj", "{54866E56-2EA6-465B-9CDE-F372366243E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReklameInsJumlahWs", "ReklameInsJumlahWs\ReklameInsJumlahWs.csproj", "{ECBAB713-54B1-048E-100B-AC76EBD9F13A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReklamePerpanjanganWs", "ReklamePerpanjanganWs\ReklamePerpanjanganWs.csproj", "{D0F11C00-69FD-C836-4822-8EAE52F8D5F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +198,14 @@ Global
 		{54866E56-2EA6-465B-9CDE-F372366243E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54866E56-2EA6-465B-9CDE-F372366243E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54866E56-2EA6-465B-9CDE-F372366243E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECBAB713-54B1-048E-100B-AC76EBD9F13A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECBAB713-54B1-048E-100B-AC76EBD9F13A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECBAB713-54B1-048E-100B-AC76EBD9F13A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECBAB713-54B1-048E-100B-AC76EBD9F13A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0F11C00-69FD-C836-4822-8EAE52F8D5F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0F11C00-69FD-C836-4822-8EAE52F8D5F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0F11C00-69FD-C836-4822-8EAE52F8D5F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0F11C00-69FD-C836-4822-8EAE52F8D5F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
