@@ -197,57 +197,44 @@
              });
          }
 
-           function kategoriSeriesCellTemplate(cellElement, cellInfo) {
-              const jenisPajak = cellInfo.data.EnumPajak;
-              const kategori = cellInfo.data.KategoriId;
-              const tahunKey = cellInfo.column.dataField;
+        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+            const jenisPajak = cellInfo.data.EnumPajak;
+            const kategori = cellInfo.data.KategoriId;
+            const tahunKey = cellInfo.column.dataField;
 
-              const mapping = {
-                  'Tahun5_Awal': { tahun: 2021, status: 'JmlOpAwal' },
-                  'Tahun5_Baru': { tahun: 2021, status: 'JmlOpBaru' },
-                  'Tahun5_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
-                  'Tahun5_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
+            // ambil tahun sekarang
+            const currentYear = new Date().getFullYear();
+            const mapping = {};
 
-                  'Tahun4_Awal': { tahun: 2022, status: 'JmlOpAwal' },
-                  'Tahun4_Baru': { tahun: 2022, status: 'JmlOpBaru' },
-                  'Tahun4_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
-                  'Tahun4_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
+            // buat mapping Tahun1 (tahun sekarang) sampai Tahun5 (tahun sekarang - 4)
+            for (let i = 1; i <= 5; i++) {
+                const tahun = currentYear - (i - 1);
+                mapping[`Tahun${i}_Awal`]  = { tahun, status: 'JmlOpAwal' };
+                mapping[`Tahun${i}_Baru`]  = { tahun, status: 'JmlOpBaru' };
+                mapping[`Tahun${i}_Tutup`] = { tahun, status: 'JmlOpTutupPermanen' };
+                mapping[`Tahun${i}_Akhir`] = { tahun, status: 'JmlOpAkhir' };
+            }
 
-                  'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
-                  'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
-                  'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
-                  'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
+            const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
 
-                  'Tahun2_Awal': { tahun: 2024, status: 'JmlOpAwal' },
-                  'Tahun2_Baru': { tahun: 2024, status: 'JmlOpBaru' },
-                  'Tahun2_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
-                  'Tahun2_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
 
-                  'Tahun1_Awal': { tahun: 2025, status: 'JmlOpAwal' },
-                  'Tahun1_Baru': { tahun: 2025, status: 'JmlOpBaru' },
-                  'Tahun1_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
-                  'Tahun1_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
-              };
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
 
-              const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
+            $(cellElement).append($wrapper);
+        }
 
-               const $link = $('<a>')
-                  .addClass('value-link text-decoration-none')
-                  .attr('href', 'javascript:void(0);')
-                  .attr('title', 'Lihat Detail')
-                  .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                  .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
-
-              const $wrapper = $('<div>')
-                  .css({
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-end'
-                  })
-                  .append($link);
-
-              $(cellElement).append($wrapper);
-          }
 
          function fnShowSeries()
          {
