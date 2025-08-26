@@ -52,6 +52,8 @@
                                         .Width(240)
                                         .Placeholder("Cari...")
                                         )
+                                        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                                        .OnExporting("exportGrid")
                                         .Columns(columns =>
                                         {
                                             columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir").Fixed(true);

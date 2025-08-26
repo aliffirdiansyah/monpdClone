@@ -76,6 +76,8 @@
                         .Paging(p => p.Enabled(false))
                         .HeaderFilter(h => h.Visible(false))
                         .SearchPanel(sp => sp.Visible(false))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                        .OnExporting("exportGrid")
                         .Columns(columns =>
                         {
                             columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
@@ -167,6 +169,8 @@
                     .Paging(p => p.Enabled(false))
                     .HeaderFilter(h => h.Visible(false))
                     .SearchPanel(sp => sp.Visible(false))
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                    .OnExporting("exportGrid")
                     .Columns(columns =>
                     {
                         columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
@@ -257,6 +261,8 @@
                     .Paging(p => p.Enabled(false))
                     .HeaderFilter(h => h.Visible(false))
                     .SearchPanel(sp => sp.Visible(false))
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                    .OnExporting("exportGrid")
                     .Columns(columns =>
                     {
                         columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
@@ -344,6 +350,8 @@
                     .Paging(p => p.Enabled(false))
                     .HeaderFilter(h => h.Visible(false))
                     .SearchPanel(sp => sp.Visible(false))
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                    .OnExporting("exportGrid")
                     .Columns(columns =>
                     {
                         columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
