@@ -10,6 +10,7 @@ namespace MonPDReborn.Models.PengawasanReklame
         public class Index
         {
             public string selectedUpaya { get; set; }
+            public string lokasiUpaya { get; set; }
             public int Number1 { get; set; }
             public int Number2 { get; set; }
             public int CaptchaAnswer { get; set; }
@@ -29,14 +30,14 @@ namespace MonPDReborn.Models.PengawasanReklame
         public class Show
         {
             public List<ReklameJalan> Data { get; set; } = new List<ReklameJalan>();
-            public Show(string namaJalan, string status, int page = 1, int pageSize = 200)
+            public Show(string namaJalan, string detailLokasi, string status, int page = 1, int pageSize = 200)
             {;
-                Data = Method.GetReklameJalanList(namaJalan, status, page, pageSize);
+                Data = Method.GetReklameJalanList(namaJalan, detailLokasi, status, page, pageSize);
             }
         }
         public class Method
         {
-            public static List<ReklameJalan> GetReklameJalanList(string namaJalan, string status, int page = 1, int pageSize = 200)
+            public static List<ReklameJalan> GetReklameJalanList(string namaJalan, string detailLokasi, string status, int page = 1, int pageSize = 200)
             {
                 using var context = DBClass.GetContext();
                 var hariIni = DateTime.Today;
@@ -65,14 +66,31 @@ namespace MonPDReborn.Models.PengawasanReklame
                     }
                 }
 
-                // Filter nama jalan (wajib isi)
-                if (string.IsNullOrWhiteSpace(namaJalan))
-                    throw new Exception("Nama jalan harus diisi!");
+                // Filter nama jalan / detail lokasi
+                if (string.IsNullOrWhiteSpace(namaJalan) && string.IsNullOrWhiteSpace(detailLokasi))
+                    throw new Exception("Nama jalan atau detail lokasi harus diisi!");
 
-                query = query.Where(x =>
-                    x.NamaJalan != null &&
-                    x.NamaJalan.ToLower().Contains(namaJalan.ToLower())
-                );
+                if (!string.IsNullOrWhiteSpace(namaJalan))
+                {
+                    query = query.Where(x =>
+                        x.NamaJalan != null &&
+                        x.NamaJalan.ToLower().Contains(namaJalan.ToLower())
+                    );
+                }
+
+                if (!string.IsNullOrWhiteSpace(detailLokasi))
+                {
+                    query = query.Where(x =>
+                        x.DetailLokasi != null &&
+                        (
+                            // ambil nama depan sebelum koma, kalau tidak ada koma ambil semua
+                            (x.DetailLokasi.Contains(",")
+                                ? x.DetailLokasi.Substring(0, x.DetailLokasi.IndexOf(","))
+                                : x.DetailLokasi
+                            ).ToLower().Contains(detailLokasi.ToLower())
+                        )
+                    );
+                }
 
                 // Paging (supaya tidak load ribuan data sekaligus)
                 query = query
@@ -89,6 +107,7 @@ namespace MonPDReborn.Models.PengawasanReklame
                         Jumlah = x.Jumlah ?? 0,
                         Jalan = x.NamaJalan ?? "-",
                         Alamat = x.Alamatreklame ?? "-",
+                        DetailLokasi = x.DetailLokasi ?? "-",
                         Letak = x.LetakReklame ?? "-",
                         IsiReklame = x.IsiReklame ?? "-",
                         tglMulai = x.TglMulaiBerlaku ?? DateTime.MinValue,
@@ -103,9 +122,16 @@ namespace MonPDReborn.Models.PengawasanReklame
 
 
 
+
         }
 
         public class namaJalanView
+        {
+            public string Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+
+        public class lokasiReklameView
         {
             public string Value { get; set; }
             public string Text { get; set; } = null!;
@@ -120,6 +146,7 @@ namespace MonPDReborn.Models.PengawasanReklame
             public string IsiReklame { get; set; }
             public string Kategori { get; set; }
             public string Status { get; set; }
+            public string DetailLokasi { get; set; }
             public string Letak { get; set; }
             public DateTime tglMulai { get; set; }
             public DateTime tglAkhir { get; set; }

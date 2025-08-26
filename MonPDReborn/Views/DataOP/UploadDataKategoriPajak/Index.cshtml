@@ -1,0 +1,259 @@
+﻿@model MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.Index
+
+@{
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Upload Update Kategori Objek Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <div class="accordion" id="default-accordion-example">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                DATA MASTER PAJAK
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#default-accordion-example">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p style="font-weight: bold; margin-bottom: 5px;">Per Opd</p>
+                                        @(
+                                        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.ViewModel.PajakViewModel>()
+                                            .ID($"dg-pajakList")
+                                            .DataSource(Model.PajakList)
+                                            .KeyExpr("Id")
+                                            .ShowBorders(true)
+                                            .ShowColumnHeaders(true)
+                                            .ShowColumnLines(true)
+                                            .ShowRowLines(true)
+
+                                            // Enable sorting & filtering
+                                            .AllowColumnResizing(true)
+                                            .AllowColumnReordering(true)
+                                            .ColumnAutoWidth(true)
+
+                                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                                            .FilterRow(f => f
+                                            .Visible(true)
+                                            .ApplyFilter(GridApplyFilterMode.Auto)  // Bisa juga OnClick
+                                            )
+
+                                            .HeaderFilter(hf => hf.Visible(true))
+                                            .Columns(columns => {
+                                                columns.AddFor(m => m.Id).Caption("Id");
+                                                columns.AddFor(m => m.Nama).Caption("Nama");
+                                            })
+                                            .MasterDetail(md => md
+                                            .Enabled(true)
+                                            .Template(new JS("ShowKategoriPajak"))
+                                            )
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+
+                <form id="frm-UploadKategoriOp" asp-action="Show" method="post" enctype="multipart/form-data">
+                    
+                    <div class="row mb-3">
+                        <div class="col-lg-4">
+                            <a href="~/TemplateUpload/KATEGORI_PAJAK_UPLOAD.xlsx" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-download"></i> Download Template
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="FileExcel">Upload Excel</label>
+                                
+                                <div class="input-group">
+                                    <input type="file" class="form-control" asp-for="FileExcel" name="FileExcel" />
+                                    <button type="button" class="btn btn-primary" onclick="fnUploadKategoriOp()">Upload</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body d-flex">
+                <div class="flex-grow-1">
+                    <h4 class="card-title">Hasil Upload</h4>
+                </div>
+                <div class="flex-shrink-0"></div>
+            </div>
+            <div id="loading-Show" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+            <div id="Show"></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/devextreme-exceljs-fork@4.4.2/dist/dx-exceljs-fork.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        function fnUploadKategoriOp() {
+            var formData = new FormData($('#frm-UploadKategoriOp')[0]);
+
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loading-Show").show();
+                },
+                complete: function () {
+                    $("#loading-Show").hide();
+                },
+                success: function (response) {
+                    if (response.Status == undefined) {
+                        $("#loading-Show").hide();
+                        $('#Show').html(response);
+                        
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+        function FixUploadKategoriOp() {
+            var formData = new FormData($('#frm-UploadKategoriOp')[0]);
+
+            $.ajax({
+                url: '@Url.Action("Update")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+    </script>
+    <script>
+        function ShowKategoriPajak(container, options) {
+            var data = options.data.KategoriPajakList;
+            var $wrapper = $("<div>").appendTo(container);
+
+            $("<p>")
+                .text("Kategori Pajak")
+                .css({ "font-weight": "bold", "margin-bottom": "5px" })
+                .appendTo($wrapper);
+            $("<div>")
+                .appendTo($wrapper)
+                .dxDataGrid({
+                    dataSource: data,
+                    showBorders: true,
+                    showColumnHeaders: true,
+                    showColumnLines: true,
+                    showRowLines: true,
+                    allowColumnResizing: true,
+                    allowColumnReordering: true,
+                    columnAutoWidth: true,
+                    sorting: { mode: "multiple" }, 
+                    filterRow: {
+                        visible: true,
+                        applyFilter: "auto"
+                    },
+                    headerFilter: { visible: true },
+                    paging: { pageSize: 99999 },
+                    pager: { visible: false  },
+                    columns: [
+                        { dataField: "Id", caption: "Id" },
+                        { dataField: "Nama", caption: "Nama" }
+                    ],
+                    width: "100%"
+                })
+        }
+
+        function rowPreparedopViewModel(e) {
+            if (e.rowType === "data") {
+                if (e.data.IsValid === true) {
+                    e.rowElement.addClass("bg-soft-success text-dark"); // hijau
+                } else if (e.data.IsValid === false) {
+                    e.rowElement.addClass("bg-soft-danger text-dark"); // merah
+                }
+            }
+        }
+
+         function exporting(e) {
+            var workbook = new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet('DataHasilUpload');
+
+            DevExpress.excelExporter.exportDataGrid({
+                component: e.component,
+                worksheet: worksheet,
+                autoFilterEnabled: true
+            }).then(function () {
+                workbook.xlsx.writeBuffer().then(function (buffer) {
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataHasilUpload.xlsx');
+                });
+            });
+        }
+    </script>
+}

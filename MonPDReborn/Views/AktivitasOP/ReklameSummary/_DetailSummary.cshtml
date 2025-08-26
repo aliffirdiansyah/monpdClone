@@ -12,17 +12,17 @@
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title text-dark fs-16 mb-0">
-                        <span id="jenisSpan"></span>
+                        @Model.Data.FirstOrDefault().Jenis
                     </h4>
                 </div>
             </div>
             <div class="card-body">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-2">
-                        Kategori : <span id="kategoriSpan"></span>
+                        Kategori : @Model.Data.FirstOrDefault().KategoriText
                     </h4>
                     <h4 class="card-title fs-16 mb-1">
-                        Jenis : <span id="jenisSpan"></span>
+                        Jenis : @Model.Data.FirstOrDefault().Jenis
                     </h4>
                 </div>
                 <div class="table-responsive">
@@ -52,11 +52,14 @@
                        .Width(240)
                        .Placeholder("Cari...")
                        )
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                        .OnExporting("exportGrid")
                        .Columns(columns =>
                        {
                            columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir").Fixed(true);
                            columns.AddFor(m => m.Nama).Caption("Nama (Nama Perusahaan)");
                            columns.AddFor(m => m.AlamatOP).Caption("Alamat OP");
+                           columns.AddFor(m => m.DetailReklame).Caption("Detail Lokasi");
                            columns.AddFor(m => m.IsiReklame).Caption("Isi Reklame");
                            columns.AddFor(m => m.AkhirBerlaku).Caption("AKR Berlaku (Status)");
                            columns.AddFor(m => m.MasaTahunPajak).Caption("Tahun Pajak");
@@ -193,11 +196,12 @@
             const noFormulir = (e.row.data.NoFormulir || '').split(' ')[0];
             const tahun = e.row.data.Tahun || new Date().getFullYear();
             const bulan = e.row.data.Bulan || new Date().getMonth() + 1;
+            const lokasi = e.row.data.Lokasi;
 
             $.ajax({
                 url: '/ReklameSummary/DetailUpaya',
                 type: 'GET',
-                data: { noFormulir, tahun, bulan },
+                data: { noFormulir, tahun, bulan, lokasi },
                 beforeSend: function () {
                     $("#loader").show();
 

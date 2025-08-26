@@ -561,6 +561,7 @@
                 var dataDetailOkupansiBintang = dataOkupansiDetail.filter(item => item.KategoriId !== 17);
                 var dataDetailOkupansiNonBintang = dataOkupansiDetail.filter(item => item.KategoriId == 17);
 
+                //OP Hotel Bintang
                  $("<h5>")
                 .text("JUMLAH OP PER KATEGORI")
                 .appendTo($wrapper);
@@ -689,11 +690,43 @@
                                         .appendTo(container);
                                 }
                             },
-
                         ],
+                           summary: {
+                            totalItems: [
+                                {  
+                                    column: "JmlOpAwal",
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                                { 
+                                    column: "JmlOpTutupPermanen", 
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                                { 
+                                    column: "JmlOpBaru", 
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                                { 
+                                    column: "JmlOpAkhir", 
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                }
+                            ]
+                        },
                         width: "100%"
                     })
 
+                    //OP Hotel Non bintang
 
                     $("<div class= 'mt-4'>")
                     .appendTo($wrapper)
@@ -822,6 +855,38 @@
                             },
 
                         ],
+                        summary: {
+                            totalItems: [
+                                {
+                                    column: "JmlOpAwal",
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                                {
+                                    column: "JmlOpTutupPermanen",
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                                {
+                                    column: "JmlOpBaru",
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                                {
+                                    column: "JmlOpAkhir",
+                                    summaryType: "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                }
+                            ]
+                        },
                         width: "100%"
                     })
 
@@ -878,8 +943,27 @@
                             {
                                 dataField: "AvgRate",
                                 caption: "Rate Okupansi",
+                                cellTemplate: function (container, options) {
+                                    let val = options.value;
+                                    if (val != null)  {
+                                        $("<span>")
+                                            .text(val.toFixed(2) + " %")
+                                            .appendTo(container);
+                                    }
+                                }
                             },
                         ],
+                        summary : { 
+                            totalItems: [
+                                {
+                                    column:"TotalKamar",
+                                    summaryType : "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                            ]
+                        },
                         width: "100%",
                     })
 
@@ -933,12 +1017,29 @@
                             {
                                 dataField: "AvgRate",
                                 caption: "Rate Okupansi",
+                                cellTemplate: function (container, options) {
+                                    let val = options.value;
+                                    if (val != null) {
+                                        $("<span>")
+                                            .text(val.toFixed(2) + " %")
+                                            .appendTo(container);
+                                    }
+                                }
                             },
                         ],
+                         summary : {
+                            totalItems: [
+                                {
+                                    column:"TotalKamar",
+                                    summaryType : "sum",
+                                    customizeText: function(e) {
+                                        return "Total: " + new Intl.NumberFormat('id-ID').format(e.value);
+                                    }
+                                },
+                            ]
+                        },
                         width: "100%"
                     })
-
-
             } else {
                 $("<div>")
                 .appendTo($wrapper)

@@ -87,40 +87,12 @@
                 columns.AddFor(m => m.JenisPajak)
             .Caption("Jenis Pajak");
 
-                columns.AddFor(m => m.TargetHarian)
-            .Caption("Target Harian").Format("#,##0").Alignment(HorizontalAlignment.Right);
 
                 columns.AddFor(m => m.Realisasi)
             .Caption("Realisasi").Format("#,##0").Alignment(HorizontalAlignment.Right);
 
-                columns.AddFor(m => m.Pencapaian)
-            .Caption("Pencapaian")
-            // Tambahkan baris di bawah ini
-            .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
-            .Alignment(HorizontalAlignment.Right); // Tambahan agar rata kanan
 
-                columns.AddFor(m => m.Status)
-            .Caption("Status")
-            .Alignment(HorizontalAlignment.Center) // Agar badge di tengah
-            .CellTemplate(
-        @<text>
-        <%
-        var status = data.Status;
-        var colorClass = "badge "; // Awal kelas
-
-        // Logika untuk menentukan warna berdasarkan 3 atau lebih status
-        if (status === "Tercapai") {
-        colorClass += "bg-success"; // Hijau
-        } else if (status === "Belum Tercapai") {
-        colorClass += "bg-warning text-dark"; // Oranye/Kuning
-        } else { // Untuk status "Di Bawah Target" atau lainnya
-        colorClass += "bg-danger"; // Merah
-        }
-        %>
-
-        <span class="<%= colorClass %>"><%= status %></span>
-    </text>
-        );
+               
 
             })
         )

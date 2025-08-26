@@ -1,0 +1,48 @@
+﻿@model MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.Show
+@{
+}
+
+<div class="card-body">
+    @(
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.ViewModel.ObjekPajakViewModel>()
+        .ID($"dg-opViewModel")
+        .DataSource(Model.Data)
+        .KeyExpr("Id")
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .AllowColumnReordering(true)
+        .ColumnAutoWidth(true)
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .OnRowPrepared("rowPreparedopViewModel")
+        .HeaderFilter(hf => hf
+        .Visible(true)
+        .Search(s => s.Enabled(false)))
+        .Columns(columns => {
+            columns.AddFor(m => m.RowNumber).Caption("#");
+            columns.AddFor(m => m.IsValid);
+            columns.AddFor(m => m.IsValidDescription);
+            columns.AddFor(m => m.Nop);
+            columns.AddFor(m => m.NamaOp);
+            columns.AddFor(m => m.IdPajak);
+            columns.AddFor(m => m.NamaPajak);
+            columns.AddFor(m => m.IdKategoriPajak);
+            columns.AddFor(m => m.NamaKategoriPajak);
+        })
+    .Paging(p => p.PageSize(20))  // default 20 per halaman
+    .Pager(pager => {
+        pager.ShowPageSizeSelector(true);   // user bisa pilih jumlah baris per halaman
+        pager.AllowedPageSizes(new[] { 10, 20, 50, 100 });
+        pager.ShowInfo(true);               // tampilkan info jumlah data (contoh: "Page 1 of 10 (200 items)")
+        pager.ShowNavigationButtons(true);  // tampilkan tombol navigasi << < > >>
+    })
+        .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+        .OnExporting("exporting")
+    )
+</div>
+
+<div class="card-body">
+    <button type="button" class="btn btn-primary mt-2" onclick="FixUploadKategoriOp()">Upload</button>
+</div>

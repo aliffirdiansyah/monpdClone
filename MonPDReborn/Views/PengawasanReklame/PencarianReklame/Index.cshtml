@@ -42,15 +42,19 @@
             <div class="card-body">
                 <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
 
+                    <div class="alert alert-warning py-2 mb-3" role="alert">
+                        ⚠️ Silakan pilih Nama Jalan atau Detail Lokasi Reklame.
+                    </div>
+
                     <div class="row gy-2">
 
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             @(Html.DevExtreme().SelectBoxFor(m => m.selectedUpaya)
                                                             .ID("namaJalanView")
                                                             .ValueExpr("Value")
                                                             .DisplayExpr("Text")
                                                             .DataSource(d => d.Mvc()
-                                                            .Controller("ReklamePublic")
+                                                            .Controller("PencarianReklame")
                                                             .LoadAction("GetNama").Key("filter"))
                                                             .SearchExpr("Text")
                                                             .SearchEnabled(true)
@@ -59,7 +63,22 @@
                                                             )
                         </div>
 
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
+                            @(Html.DevExtreme().SelectBoxFor(m => m.lokasiUpaya)
+                                                        .ID("lokasiReklameView")
+                                                        .ValueExpr("Value")
+                                                        .DisplayExpr("Text")
+                                                        .DataSource(d => d.Mvc()
+                                                        .Controller("PencarianReklame")
+                                                        .LoadAction("GetLokasi").Key("filter"))
+                                                        .SearchExpr("Text")
+                                                        .SearchEnabled(true)
+                                                        .Placeholder("Pilih Detail Lokasi")
+                                                        .MinSearchLength(2)
+                                                        )
+                        </div>
+
+                        <div class="col-lg-2">
                             @(Html.DevExtreme().SelectBox()
                                                 .ID("statusReklameView")
                                                 .DataSource(new[] {
@@ -74,7 +93,7 @@
 
                         </div>
 
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <button type="submit" class="btn btn-custom w-100 py-2">
                                 🔍 Cari Data Reklame
                             </button>
@@ -117,9 +136,21 @@
 </div>
 @section Scripts{
     <script>
-                function searchData() {
-            const namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
-            const status = $("#statusReklameView").dxSelectBox("instance").option("value"); // ambil status
+        function searchData() {
+            let namaJalan = $("#namaJalanView").dxSelectBox("instance").option("value");
+            let detailLokasi = $("#lokasiReklameView").dxSelectBox("instance").option("value");
+            const status = $("#statusReklameView").dxSelectBox("instance").option("value");
+
+            // Normalisasi input (kalau kosong → null)
+            namaJalan = (namaJalan && namaJalan.trim() !== "") ? namaJalan : null;
+            detailLokasi = (detailLokasi && detailLokasi.trim() !== "") ? detailLokasi : null;
+
+            // Validasi minimal salah satu terisi
+            if (!namaJalan && !detailLokasi) {
+                $('#resultsSection').removeClass('d-none');
+                $('#resultsContent').html('<p class="text-danger">⚠ Isi minimal Nama Jalan atau Detail Lokasi!</p>');
+                return; // stop sebelum AJAX
+            }
 
             $('#loadingIndicator').removeClass('d-none');
             $('#resultsSection').removeClass('d-none');
@@ -130,7 +161,8 @@
                 type: 'POST',
                 data: {
                     namaJalan: namaJalan,
-                    status: status // kirim ke server
+                    detailLokasi: detailLokasi,
+                    status: status
                 },
                 success: function (result) {
                     console.log(result);
@@ -150,6 +182,7 @@
                 }
             });
         }
+
 
 
     </script>

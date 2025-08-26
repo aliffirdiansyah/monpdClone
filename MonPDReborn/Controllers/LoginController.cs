@@ -64,9 +64,18 @@ namespace MonPDReborn.Controllers
                 var login = LoginVM.DoLogin(input);
 
                 HttpContext.Session.SetString(Utility.SESSION_USER, login.Username);
+                HttpContext.Session.SetString(Utility.SESSION_NAMA, login.Email);
                 HttpContext.Session.SetInt32(Utility.SESSION_ROLE, Convert.ToInt32(login.RoleId));
 
-                return RedirectToAction("Index", "Home");
+                if (login.Email.Contains("UPTB"))
+                {
+                    return RedirectToAction("Index", "DashboardUPTB");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
             }
             catch (ArgumentException ex)
             {
