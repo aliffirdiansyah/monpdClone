@@ -16,12 +16,10 @@
         .AllowColumnReordering(true)
         .ColumnAutoWidth(true)
         .Sorting(s => s.Mode(GridSortingMode.Multiple))
-        .FilterRow(f => f
-            .Visible(true)
-            .ApplyFilter(GridApplyFilterMode.Auto)  // Bisa juga OnClick
-        )
         .OnRowPrepared("rowPreparedopViewModel")
-        .HeaderFilter(hf => hf.Visible(true))
+        .HeaderFilter(hf => hf
+        .Visible(true)
+        .Search(s => s.Enabled(false)))
         .Columns(columns => {
             columns.AddFor(m => m.RowNumber).Caption("#");
             columns.AddFor(m => m.IsValid);
