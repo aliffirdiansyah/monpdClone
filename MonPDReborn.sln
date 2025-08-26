@@ -68,6 +68,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KetetapanHPPWs", "Ketetapan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KetetapanHRWs", "KetetapanHRWs\KetetapanHRWs.csproj", "{54866E56-2EA6-465B-9CDE-F372366243E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KetetapanPBBWs", "KetetapanPBBWs\KetetapanPBBWs.csproj", "{E988CDA9-8CCE-4170-8C05-C8B8E3F55E56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +196,10 @@ Global
 		{54866E56-2EA6-465B-9CDE-F372366243E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54866E56-2EA6-465B-9CDE-F372366243E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54866E56-2EA6-465B-9CDE-F372366243E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E988CDA9-8CCE-4170-8C05-C8B8E3F55E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E988CDA9-8CCE-4170-8C05-C8B8E3F55E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E988CDA9-8CCE-4170-8C05-C8B8E3F55E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E988CDA9-8CCE-4170-8C05-C8B8E3F55E56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
