@@ -538,7 +538,7 @@
                     </div>
 
                     @{
-                        decimal totalPengunjung = Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya) + Math.Ceiling(Model.JumlahPengunjungWeekendLainnya);
+                        decimal totalPengunjung = ((Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya)*22) + (Math.Ceiling(Model.JumlahPengunjungWeekendLainnya)*8));
 
                         var kunjunganWeekdays = (totalPengunjung == 0 ? 0 : (decimal)Math.Ceiling(Model.JumlahPengunjungWeekdaysLainnya) / totalPengunjung * 100)
                         .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
