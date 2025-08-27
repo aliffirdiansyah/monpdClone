@@ -94,6 +94,7 @@
 
                         <div id="ShowSeries"></div>
 
+
                         <div class="modal fade" id="detailModalSeries" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalSeriesLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                                 <div class="modal-content">
@@ -135,6 +136,9 @@
                         <div id="ShowTPK"></div>
 
                     </div>
+
+                    
+
                 </div>
 
             </div>
@@ -198,42 +202,77 @@
          }
 
         function kategoriSeriesCellTemplate(cellElement, cellInfo) {
-            const jenisPajak = cellInfo.data.EnumPajak;
-            const kategori = cellInfo.data.KategoriId;
-            const tahunKey = cellInfo.column.dataField;
+              const jenisPajak = cellInfo.data.EnumPajak;
+              const kategori = cellInfo.data.KategoriId;
+              const tahunKey = cellInfo.column.dataField;
 
-            // ambil tahun sekarang
-            const currentYear = new Date().getFullYear();
-            const mapping = {};
+              const mapping = {
+                  'Tahun5_Awal': { tahun: 2021, status: 'JmlOpAwal' },
+                  'Tahun5_Baru': { tahun: 2021, status: 'JmlOpBaru' },
+                  'Tahun5_Tutup': { tahun: 2021, status: 'JmlOpTutupPermanen' },
+                  'Tahun5_Akhir': { tahun: 2021, status: 'JmlOpAkhir' },
 
-            // buat mapping Tahun1 (tahun sekarang) sampai Tahun5 (tahun sekarang - 4)
-            for (let i = 1; i <= 5; i++) {
-                const tahun = currentYear - (i - 1);
-                mapping[`Tahun${i}_Awal`]  = { tahun, status: 'JmlOpAwal' };
-                mapping[`Tahun${i}_Baru`]  = { tahun, status: 'JmlOpBaru' };
-                mapping[`Tahun${i}_Tutup`] = { tahun, status: 'JmlOpTutupPermanen' };
-                mapping[`Tahun${i}_Akhir`] = { tahun, status: 'JmlOpAkhir' };
+                  'Tahun4_Awal': { tahun: 2022, status: 'JmlOpAwal' },
+                  'Tahun4_Baru': { tahun: 2022, status: 'JmlOpBaru' },
+                  'Tahun4_Tutup': { tahun: 2022, status: 'JmlOpTutupPermanen' },
+                  'Tahun4_Akhir': { tahun: 2022, status: 'JmlOpAkhir' },
+
+                  'Tahun3_Awal': { tahun: 2023, status: 'JmlOpAwal' },
+                  'Tahun3_Baru': { tahun: 2023, status: 'JmlOpBaru' },
+                  'Tahun3_Tutup': { tahun: 2023, status: 'JmlOpTutupPermanen' },
+                  'Tahun3_Akhir': { tahun: 2023, status: 'JmlOpAkhir' },
+
+                  'Tahun2_Awal': { tahun: 2024, status: 'JmlOpAwal' },
+                  'Tahun2_Baru': { tahun: 2024, status: 'JmlOpBaru' },
+                  'Tahun2_Tutup': { tahun: 2024, status: 'JmlOpTutupPermanen' },
+                  'Tahun2_Akhir': { tahun: 2024, status: 'JmlOpAkhir' },
+
+                  'Tahun1_Awal': { tahun: 2025, status: 'JmlOpAwal' },
+                  'Tahun1_Baru': { tahun: 2025, status: 'JmlOpBaru' },
+                  'Tahun1_Tutup': { tahun: 2025, status: 'JmlOpTutupPermanen' },
+                  'Tahun1_Akhir': { tahun: 2025, status: 'JmlOpAkhir' },
+              };
+
+              const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
+
+               const $link = $('<a>')
+                  .addClass('value-link text-decoration-none')
+                  .attr('href', 'javascript:void(0);')
+                  .attr('title', 'Lihat Detail')
+                  .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                  .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
+
+              const $wrapper = $('<div>')
+                  .css({
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end'
+                  })
+                  .append($link);
+
+              $(cellElement).append($wrapper);
+          }
+
+        function detailSeriesCellTemplate(cellElement, cellInfo) {
+            const enumPajak = cellInfo.data.EnumPajak;
+            const tahun = parseInt(cellInfo.column.caption); // caption = "2023"
+            const jumlah = cellInfo.value || 0;
+
+            if (jumlah > 0) {
+                $("<a>")
+                    .text(jumlah.toLocaleString())
+                    .attr("href", "javascript:void(0);")
+                    .on("click", function () {
+                        onSeriesDetailClick(enumPajak, tahun);
+                    })
+                    .appendTo(cellElement);
+            } else {
+                cellElement.textContent = jumlah;
             }
-
-            const { tahun, status } = mapping[tahunKey] ?? { tahun: 0, status: 'JmlOpBaru' };
-
-            const $link = $('<a>')
-                .addClass('value-link text-decoration-none')
-                .attr('href', 'javascript:void(0);')
-                .attr('title', 'Lihat Detail')
-                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                .on('click', () => onSeriesClick(jenisPajak, kategori, tahun, status));
-
-            const $wrapper = $('<div>')
-                .css({
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end'
-                })
-                .append($link);
-
-            $(cellElement).append($wrapper);
         }
+
+
+
 
 
          function fnShowSeries()
@@ -397,7 +436,7 @@
          }
 
          // 📌 Series Master
-                 function onSeriesClick(enumPajak, kategori, tahun, status ) {
+        function onSeriesClick(enumPajak, kategori, tahun, status ) {
              const $modal = $('#detailModalSeries');
              const $loading = $("#detailLoadingSeries");
              const $container = $("#detailContainerSeries");
@@ -441,6 +480,46 @@
                  }
              });
          }
+
+        function onSeriesDetailClick(enumPajak, tahun) {
+            const $modal = $("#staticBackdropLargeScrollable");
+            const $body = $modal.find(".modal-body"); // langsung ambil modal-body
+
+            // tampilkan spinner sementara
+            $body.html(`
+                <div class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Sedang memuat data...</p>
+                </div>
+            `);
+
+            $modal.modal('show');
+
+            $.ajax({
+                url: '/ProfileOP/DetailOPSeries',
+                method: 'GET',
+                data: {
+                    jenisPajak: enumPajak,
+                    tahun: tahun
+                },
+                success: function (data) {
+                    // isi kontainer dengan hasil ajax
+                    $body.hide().html(data).fadeIn(300);
+                },
+                error: function () {
+                    $body.html(`
+                        <div class="alert alert-danger">
+                            ❌ Gagal memuat data Series.
+                        </div>
+                    `);
+                }
+            });
+        }
+
+
+
 
          function hideDetailSeries() {
              $("#detailWrapperSeries").slideUp();

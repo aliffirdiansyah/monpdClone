@@ -91,7 +91,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>(
             .FixedPosition(HorizontalEdge.Left)
             .CssClass("fw-bold");
 
-        columns.AddFor(x => x.Tahun5_Akhir).Caption(tahun5.ToString()).Format("#,##0");
+        columns.AddFor(x => x.Tahun5_Akhir).Caption(tahun5.ToString()).Format("#,##0").CellTemplate(new JS("detailSeriesCellTemplate"));
             @* .Caption(tahun5.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
@@ -101,7 +101,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>(
                 sub.AddFor(x => x.Tahun5_Akhir).Caption("Akhir").Format("#,##0");
             }); *@
 
-        columns.AddFor(x => x.Tahun4_Akhir).Caption(tahun4.ToString()).Format("#,##0");
+        columns.AddFor(x => x.Tahun4_Akhir).Caption(tahun4.ToString()).Format("#,##0").CellTemplate(new JS("detailSeriesCellTemplate"));
             @* .Caption(tahun4.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
@@ -111,7 +111,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>(
                 sub.AddFor(x => x.Tahun4_Akhir).Caption("Akhir").Format("#,##0");
             }); *@
 
-        columns.AddFor(x => x.Tahun3_Akhir).Caption(tahun3.ToString()).Format("#,##0");
+        columns.AddFor(x => x.Tahun3_Akhir).Caption(tahun3.ToString()).Format("#,##0").CellTemplate(new JS("detailSeriesCellTemplate"));
             @* .Caption(tahun3.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
@@ -121,7 +121,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>(
                 sub.AddFor(x => x.Tahun3_Akhir).Caption("Akhir").Format("#,##0");
             }); *@
 
-        columns.AddFor(x => x.Tahun2_Akhir).Caption(tahun2.ToString()).Format("#,##0");
+        columns.AddFor(x => x.Tahun2_Akhir).Caption(tahun2.ToString()).Format("#,##0").CellTemplate(new JS("detailSeriesCellTemplate"));
             @* .Caption(tahun2.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
@@ -131,7 +131,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.JmlObjekPajak>(
                 sub.AddFor(x => x.Tahun2_Akhir).Caption("Akhir").Format("#,##0");
             }); *@
 
-        columns.AddFor(x => x.Tahun1_Akhir).Caption(tahun1.ToString()).Format("#,##0");
+        columns.AddFor(x => x.Tahun1_Akhir).Caption(tahun1.ToString()).Format("#,##0").CellTemplate(new JS("detailSeriesCellTemplate"));
             @* .Caption(tahun1.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
