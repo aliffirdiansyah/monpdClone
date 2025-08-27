@@ -284,6 +284,30 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
+
+        //buat endpoint untuk mengaplikasikan dari method DetailPotensiPajak (jenis pajak, kategori, tahun , bulan )
+        public IActionResult DetailPotensiPajak(int jenisPajak, int kategoriId, int bulan, int tahun)
+        {
+            try
+            {
+                var model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan);
+                return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailPotensiPajak.cshtml", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+
         public IActionResult UpayaDetail(int jenisPajak, int kategoriId, int bulan, int tahun, int status)
         {
             try

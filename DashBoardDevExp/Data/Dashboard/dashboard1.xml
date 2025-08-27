@@ -14,7 +14,129 @@
           <Parameter Name="password" Value="monpd2025" />
         </Parameters>
       </Connection>
+      <Query Type="CustomSqlQuery" Name="TargetSql">
+        <Parameter Name="TahunBuku" Type="System.Int32">2025</Parameter>
+        <Sql>SELECT A.TAHUN_BUKU,C.NAMA,C.ID PAJAK_ID,B.BULAN, B.TARGET
+                    FROM DB_AKUN_TARGET A
+                    JOIN DB_AKUN_TARGET_BULAN B ON   A.TAHUN_BUKU=B.TAHUN_BUKU AND   A.AKUN=B.AKUN AND A.KELOMPOK =B.KELOMPOK AND 
+                                                                            A.JENIS=B.JENIS AND A.OBJEK=B.OBJEK AND A.RINCIAN=B.RINCIAN AND A.SUB_RINCIAN=B.SUB_RINCIAN AND A.PAJAK_ID=B.PAJAK_ID  
+                    JOIN M_PAJAK C ON A.PAJAK_ID=C.ID
+                    WHERE A.TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6
+order by TAHUN_BUKU DESC , C.ID ASC</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="KetetapanSql">
+        <Sql>SELECT NOP,TAHUN_PAJAK,MASA_PAJAK,KETETAPAN_TOTAL,PAJAK_ID,JENIS_KETETAPAN,TAHUN_BUKU
+                    FROM DB_MON_KETETAPAN_HPP
+                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
+                    UNION ALL
+                    SELECT NOP,TAHUN_PAJAK,MASA_PAJAK,KETETAPAN_TOTAL,PAJAK_ID,JENIS_KETETAPAN,TAHUN_BUKU
+                    FROM DB_MON_KETETAPAN_HR
+                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
+                    UNION ALL
+                    SELECT NOP,TAHUN_PAJAK_KETETAPAN TAHUN_PAJAK,MASA_PAJAK_KETETAPAN MASA_PAJAK,POKOK_PAJAK_KETETAPAN KETETAPAN_TOTAL,6 PAJAK_ID,'SKPD' JENIS_KETETAPAN,TAHUN_BUKU
+                    FROM DB_MON_abt
+                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                     
+                    UNION ALL
+                    SELECT SPPT_NOP,TAHUN,MASA,POKOK,12 PAJAK_ID,'SPTPD' JENIS_KETETAPAN,TO_NUMBER(TO_CHAR(TGL_BAYAR,'YYYY'))
+                    FROM DB_MON_BPHTB
+                    WHERE TO_CHAR(TGL_BAYAR,'YYYY') &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
+                    UNION ALL
+                    SELECT NO_FORMULIR,TO_NUMBER(TAHUN_PAJAK),TO_NUMBER(BULAN_PAJAK),PAJAK_POKOK,7 PAJAK_ID,'SKPD',TAHUN_BUKU 
+                    FROM DB_MON_REKLAME
+                    WHERE  TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="TahunPajakListSql">
+        <Sql>SELECT TO_CHAR(SYSDATE,'YYYY') +1  - LEVEL AS tahun
+FROM dual
+CONNECT BY LEVEL &lt;= 6</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="CONTOH1">
+        <Sql>  SELECT TAHUN_BUKU,PAJAK_ID,SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL
+                    FROM DB_MON_KETETAPAN_HPP
+                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6
+                    GROUP BY TAHUN_BUKU,PAJAK_ID                        
+                    UNION ALL
+                    SELECT TAHUN_BUKU,PAJAK_ID,SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL
+                    FROM DB_MON_KETETAPAN_HR
+                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
+                    GROUP BY TAHUN_BUKU,PAJAK_ID</Sql>
+      </Query>
       <ConnectionOptions CloseConnection="true" />
     </SqlDataSource>
   </DataSources>
+  <Parameters>
+    <Parameter Name="TahunBuku" Type="System.Int16" Value="2025">
+      <DynamicListLookUpSettings DataSourceName="sqlDataSource1" DataMember="TahunPajakListSql" ValueMember="TAHUN" DisplayMember="TAHUN" SortByMember="TAHUN" SortOrder="Descending" />
+    </Parameter>
+  </Parameters>
+  <Items>
+    <Grid ComponentName="gridDashboardItem1" Name="Target" DataSource="sqlDataSource1" DataMember="TargetSql" FilterString="[DataItem0] = ?TahunBuku" IsMasterFilterCrossDataSource="true">
+      <InteractivityOptions MasterFilterMode="Multiple" />
+      <DataItems>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem0">
+          <NumericFormat FormatType="General" />
+        </Dimension>
+        <Dimension DataMember="NAMA" DefaultId="DataItem1" />
+        <Measure DataMember="TARGET" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem3" />
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem4" />
+        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem5" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem4" />
+        <Dimension DefaultId="DataItem5" />
+      </HiddenDimensions>
+      <GridColumns>
+        <GridDimensionColumn Name="TAHUN BUKU">
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn Name="PAJAK ID">
+          <Dimension DefaultId="DataItem3" />
+        </GridDimensionColumn>
+        <GridDimensionColumn Name="PAJAK">
+          <Dimension DefaultId="DataItem1" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="TARGET">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem2" Name="Grid 1" DataSource="sqlDataSource1" DataMember="CONTOH1">
+      <InteractivityOptions MasterFilterMode="Multiple" />
+      <DataItems>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem0" />
+        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem1" />
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem2" />
+        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem3" />
+        <Dimension DataMember="KETETAPAN_TOTAL" DefaultId="DataItem4" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem0" />
+        <Dimension DefaultId="DataItem1" />
+      </HiddenDimensions>
+      <GridColumns>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem2" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem3" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem4" />
+        </GridDimensionColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutItem DashboardItem="gridDashboardItem1" />
+      <LayoutItem DashboardItem="gridDashboardItem2" />
+    </LayoutGroup>
+  </LayoutTree>
 </Dashboard>

@@ -2794,7 +2794,7 @@ namespace MonPDReborn.Models.DataOP
 
             // ========== Perhitungan Kategori Fitness/Pusat Kebugaran ==========
             public decimal EstimasiJumlahMemberFitnes =>
-                ((Kapasitas * TurnoverWeekdays * 22) + (Kapasitas * TurnoverWeekend * 8)) / 12;
+                Math.Ceiling(((Math.Ceiling(Kapasitas * TurnoverWeekdays)*22) + (Math.Ceiling(Kapasitas * TurnoverWeekend)*8)) / 12);
             public decimal OmzetPerBulanFitnes => HargaMemberFitness * Math.Ceiling(EstimasiJumlahMemberFitnes);
             public decimal PotensiPajakPerBulanFitnes => OmzetPerBulanFitnes * TarifPajak;
             public decimal PotensiPajakPerTahunFitnes => PotensiPajakPerBulanFitnes * BulanSisa;

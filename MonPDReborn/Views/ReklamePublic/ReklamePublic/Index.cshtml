@@ -18,13 +18,17 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
-                            Pencarian Data
+                            Pencarian Data Reklame Aktif
                         </h2>
                     </div>
                 </div>
                 <div class="card-body">
                     <form id="formPencarian" onsubmit="event.preventDefault(); searchData();">
                         @Html.AntiForgeryToken()
+
+                        <div class="alert alert-warning py-2 mb-3" role="alert">
+                            ⚠️ Silakan pilih Nama Jalan atau Detail Lokasi Reklame.
+                        </div>
 
                         <div class="row gy-2">
 

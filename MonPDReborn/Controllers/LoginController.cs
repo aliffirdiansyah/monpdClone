@@ -71,6 +71,10 @@ namespace MonPDReborn.Controllers
                 {
                     return RedirectToAction("Index", "DashboardUPTB");
                 }
+                else if (login.Email.Contains("MAGANG"))
+                {
+                    return RedirectToAction("Index", "ReklameSummary");
+                }
                 else
                 {
                     return RedirectToAction("Index", "Home");

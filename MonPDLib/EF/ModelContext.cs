@@ -83,6 +83,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonKetetapanHr> DbMonKetetapanHrs { get; set; }
 
+    public virtual DbSet<DbMonKetetapanPbb> DbMonKetetapanPbbs { get; set; }
+
     public virtual DbSet<DbMonOpsenBbnkb> DbMonOpsenBbnkbs { get; set; }
 
     public virtual DbSet<DbMonOpsenPkb> DbMonOpsenPkbs { get; set; }
@@ -369,6 +371,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TempAlatRekam> TempAlatRekams { get; set; }
 
+    public virtual DbSet<TempPendapatanDaerah> TempPendapatanDaerahs { get; set; }
+
     public virtual DbSet<TempPerpanjangan> TempPerpanjangans { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
@@ -381,9 +385,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -732,6 +736,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbMonKetetapanHr>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunPajak, e.MasaPajak, e.SeqPajak, e.JenisKetetapan, e.TahunBuku }).HasName("DB_MON_KETETAPAN_HR_PK");
+        });
+
+        modelBuilder.Entity<DbMonKetetapanPbb>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.TahunPajak, e.MasaPajak, e.SeqPajak, e.JenisKetetapan, e.TahunBuku }).HasName("DB_MON_KETETAPAN_PBB_PK");
         });
 
         modelBuilder.Entity<DbMonOpsenBbnkb>(entity =>
@@ -1904,6 +1913,14 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<TempPendapatanDaerah>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.KodeOpd, e.KodeSubOpd }).HasName("TEMP_PENDAPATAN_DAERAH_PK");
+
+            entity.Property(e => e.Realisasi).HasDefaultValueSql("0 ");
+            entity.Property(e => e.Target).HasDefaultValueSql("0 ");
         });
 
         modelBuilder.Entity<UserApiBapendum>(entity =>
