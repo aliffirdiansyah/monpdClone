@@ -342,7 +342,7 @@
                 .attr('href', 'javascript:void(0);')
                 .attr('title', `Lihat Detail ${status}`)
                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                .on('click', () => onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status));
+                .on('click', () => onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status , false, false));
 
             $(cellElement).append($link);
         }
@@ -382,7 +382,6 @@
 
             const fieldName = cellInfo.column.dataField || '';
             const bulan = bulanMap[fieldName] || 0;
-
             const value = cellInfo.value ?? 0;
 
             // bikin link yang bisa diklik
@@ -391,7 +390,7 @@
                 .attr('href', 'javascript:void(0);')
                 .attr('title', `Lihat Detail Potensi`)
                 .text(value.toLocaleString('id-ID'))
-                .on('click', () => onPotensiClick(jenisPajak, kategoriId, tahun, bulan));
+                .on('click', () => onPotensiClick(jenisPajak, kategoriId, tahun, bulan , false  ));
 
             $(cellElement).append($link);
         }
@@ -405,12 +404,12 @@
 
         //Region On Click ( function deliver property )
 
-        function onPajakClick(jenisPajak, kategoriId, tahun, bulan, status) {
-            showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status);
+        function onPajakClick(jenisPajak, kategoriId, tahun, bulan, status , isTotal = false, isHotelNonBintang = false) {
+            showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status , isTotal, isHotelNonBintang);
         }
 
-        function onPotensiClick(jenisPajak, kategoriId, tahun, bulan) {
-            showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan);
+        function onPotensiClick(jenisPajak, kategoriId, tahun, bulan, isTotal = false, isHotelNonBintang = false) {
+            showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan, isTotal, isHotelNonBintang);
         }
 
         function onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status) {
@@ -420,17 +419,27 @@
 
         //Region SHOW ( hit Endpoint di controller)
 
-        function showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status) {
+        function showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status , isTotal = false, isHotelNonBintang = false) {
+
+            const requestData = {
+                jenisPajak: jenisPajak,
+                bulan: bulan,
+                tahun: tahun,
+                status: status,
+                isTotal: isTotal
+            };
+
+            if (!isTotal) {
+                requestData.kategoriId = kategoriId;
+            } else {
+                // Untuk hotel, kirim info hotel type
+                requestData.isHotelNonBintang = isHotelNonBintang;
+            }
+
             $.ajax({
                 url: '/KontrolPembayaran/DetailPembayaran',
                 type: 'GET',
-                data: {
-                    jenisPajak: jenisPajak,
-                    kategoriId: kategoriId,
-                    bulan: bulan,
-                    tahun: tahun,
-                    status: status
-                },
+                data: requestData,
                 beforeSend: function () {
                     $('#modalDetailPajak .modal-body').html('<div class="text-center p-3">Loading…</div>');
                     $('#modalDetailPajak').modal('show');
@@ -444,23 +453,31 @@
             });
         }
 
-        function showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan) {
+        function showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan , isTotal= false , isHotelNonBintang = false) {
         // console.log("👉 PARAMS:", {
         //     jenisPajak,
         //     kategoriId,
         //     tahun,
         //     bulan
         // });
+            const requestData = {
+                jenisPajak: jenisPajak,
+                bulan: bulan,
+                tahun: tahun,
+                isTotal: isTotal
+            };
+
+            if (!isTotal) {
+                requestData.kategoriId = kategoriId;
+            } else {
+                // Untuk hotel, kirim info hotel type
+                requestData.isHotelNonBintang = isHotelNonBintang;
+            }
 
             $.ajax({
                 url: '/KontrolPembayaran/DetailPotensiPajak',
                 type: 'GET',
-                data: {
-                    jenisPajak: jenisPajak,
-                    kategoriId: kategoriId,
-                    bulan: bulan,
-                    tahun: tahun,
-                },
+                data: requestData,
                 beforeSend: function () {
                     $('#modalDetailPotensi .modal-body').html('<div class="text-center p-3">Loading…</div>');
                     $('#modalDetailPotensi').modal('show');
@@ -498,6 +515,7 @@
             });
         }
 
+        //detail object pajak dari nop
         function detailOPCellTemplate(cellElement, cellInfo) {
             const value = cellInfo.value ?? 0;
 
@@ -536,5 +554,174 @@
             $(cellElement).append($link);
         }
     </script>
+
+    
+    <script>
+        //bagian Total Summary saja
+
+         function onSummaryPajakPrepared(e) {
+            if (e.rowType === "totalFooter") {
+                // Daftar kolom yang boleh diklik (exclude "Kategori" dan "kategoriId")
+                const clickableColumns = [
+                    "OPbuka1", "Byr1", "Blm1", "OPbuka2", "Byr2", "Blm2",
+                    "OPbuka3", "Byr3", "Blm3", "OPbuka4", "Byr4", "Blm4",
+                    "OPbuka5", "Byr5", "Blm5", "OPbuka6", "Byr6", "Blm6",
+                    "OPbuka7", "Byr7", "Blm7", "OPbuka8", "Byr8", "Blm8",
+                    "OPbuka9", "Byr9", "Blm9", "OPbuka10", "Byr10", "Blm10",
+                    "OPbuka11", "Byr11", "Blm11", "OPbuka12", "Byr12", "Blm12"
+                ];
+
+                if (clickableColumns.includes(e.column.dataField)) {
+                    // Styling untuk menunjukkan bahwa cell bisa diklik
+                    e.cellElement.css({
+                        "cursor": "pointer",
+                        "color": "#0d6efd",
+                        "font-weight": "bold"
+                    });
+
+                    // Extract bulan dan status dari field name
+                    const fieldName = e.column.dataField || '';
+                    const matchBulan = fieldName.match(/\d+$/);
+                    const bulan = matchBulan ? parseInt(matchBulan[0]) : 0;
+
+                    // Determine status dari prefix field name
+                    let status = '';
+                    let statusText = '';
+                    if (fieldName.startsWith('OPbuka')) {
+                        status = '3';
+                        statusText = 'OP BUKA';
+                    } else if (fieldName.startsWith('Byr')) {
+                        status = '1';
+                        statusText = 'SUDAH BAYAR';
+                    } else if (fieldName.startsWith('Nts')) {
+                        status = '2';
+                        statusText = 'TIDAK/TIDAK SETOR';
+                    } else if (fieldName.startsWith('Blm')) {
+                        status = '0';
+                        statusText = 'BELUM BAYAR';
+                    }
+
+                    // Mapping bulan untuk tooltip
+                    const bulanNames = ['', 'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
+                                      'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'];
+                    const bulanName = bulanNames[bulan] || '';
+
+                    e.cellElement.attr("title", `Klik untuk lihat detail ${statusText} di bulan ${bulanName}`);
+
+                    // Bind click event
+                    e.cellElement.off("click").on("click", function() {
+                        if (bulan > 0 && status !== '') {
+                            // Detect hotel type dari grid ID
+                            const gridId = e.component.element().attr('id');
+                            const isHotelNonBintang = gridId && gridId.includes('gridPembayaranNon');
+
+                            console.log("Grid ID:", gridId); // Debug
+                            console.log("isHotelNonBintang:", isHotelNonBintang); // Debug
+                            console.log("Bulan:", bulan, "Status:", status); // Debug
+
+                            onSummaryPajakClick(bulan, status, isHotelNonBintang);
+                        }
+                    });
+
+                    // Hover effects
+                    e.cellElement.hover(
+                        function() { $(this).css("text-decoration", "underline"); },
+                        function() { $(this).css("text-decoration", "none"); }
+                    );
+                }
+            }
+        }
+
+
+        function onSummaryPotensiPrepared(e) {
+            if (e.rowType === "totalFooter") {
+                // Daftar kolom bulan yang boleh diklik (exclude "Kategori")
+                const clickableColumns = [
+                    "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+                    "Jul", "Agt", "Sep", "Okt", "Nov", "Des"
+                ];
+
+                if (clickableColumns.includes(e.column.dataField)) {
+                    // Styling untuk menunjukkan bahwa cell bisa diklik
+                    e.cellElement.css({
+                        "cursor": "pointer",
+                        "color": "#0d6efd",
+                        "font-weight": "bold"
+                    });
+
+                    e.cellElement.attr("title", `Klik untuk lihat detail dibulan ${e.column.dataField.toUpperCase()}`);
+
+                    // Bind click event
+                    e.cellElement.off("click").on("click", function() {
+                        // Mapping field name ke nomor bulan
+                        const bulanMap = {
+                            Jan: 1, Feb: 2, Mar: 3, Apr: 4, Mei: 5, Jun: 6,
+                            Jul: 7, Agt: 8, Sep: 9, Okt: 10, Nov: 11, Des: 12
+                        };
+
+                        const bulan = bulanMap[e.column.dataField] || 0;
+                        if (bulan > 0) {
+                            // Detect hotel type dari grid ID
+                            const gridId = e.component.element().attr('id');
+                            const isHotelNonBintang = gridId && gridId.includes('gridPotensiNon');
+                            onSummaryPotensiClick(bulan, isHotelNonBintang);
+                        }
+                    });
+
+
+                    // Hover effects
+                    e.cellElement.hover(
+                        function() { $(this).css("text-decoration", "underline"); },
+                        function() { $(this).css("text-decoration", "none"); }
+                    );
+                }
+            }
+        }
+
+
+        //Bagian onClicknya
+
+        function onSummaryPajakClick(bulan, status, isHotelNonBintang = false) {
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const tahun = currentTahun;
+
+            // Call dengan isTotal = true, kategoriId = 0, dan isHotelNonBintang flag
+            onPajakClick(jenisPajak, 0, tahun, bulan, status, true, isHotelNonBintang);
+        }
+
+        function onSummaryPotensiClick(bulan , isHotelNonBintang = false) {
+                const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3, 
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const tahun = currentTahun;
+
+            // Call with isTotal = true, kategoriId = 0, dan isHotelNonBintang flag
+            onPotensiClick(jenisPajak, 0, tahun, bulan, true, isHotelNonBintang);
+        }
+
+    </script>
+
 }
 

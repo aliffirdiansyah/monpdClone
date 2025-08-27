@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DevExpress.Charts.Native;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
@@ -254,19 +255,21 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
-        public IActionResult DetailPembayaran(int jenisPajak, int kategoriId, int bulan, int tahun, int status)
+        public IActionResult DetailPembayaran(int jenisPajak, int kategoriId, int bulan, int tahun, int status , bool isTotal = false, bool isHotelNonBintang = false)
         {
             try
             {
-                //var model = new Models.EvaluasiTarget.KontrolPembayaranVM.ShowDetailPajak
-                //{
-                //    Tahun = tahun,
-                //    JenisPajak = jenisPajak,
-                //    Kategori = kategori,
-                //    Status = status,
-                //    DataDetailList = Models.EvaluasiTarget.KontrolPembayaranVM.Method.GetDataDetailPajakList(jenisPajak, kategori, tahun, status)
-                //};
-                var model = new DetailPembayaran((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan, status);
+                DetailPembayaran model;
+                if (isTotal)
+                {
+                    // Untuk summary/total - tidak perlu kategoriId, tapi perlu info hotel type
+                    model = new DetailPembayaran((EnumFactory.EPajak)jenisPajak, tahun, bulan, status, true, isHotelNonBintang);
+                }
+                else
+                {
+                    // Untuk detail kategori - existing logic
+                    model = new DetailPembayaran((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan, status);
+                }
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailPajak.cshtml", model);
             }
@@ -286,11 +289,23 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
 
 
         //buat endpoint untuk mengaplikasikan dari method DetailPotensiPajak (jenis pajak, kategori, tahun , bulan )
-        public IActionResult DetailPotensiPajak(int jenisPajak, int kategoriId, int bulan, int tahun)
+        public IActionResult DetailPotensiPajak(int jenisPajak, int kategoriId, int bulan, int tahun , bool isTotal = false , bool isHotelNonBintang = false)
         {
             try
             {
-                var model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan);
+                DetailPotensiPajak model;
+
+                if( isTotal)
+                {
+                    // Untuk summary/total - tidak perlu kategoriId, tapi perlu info hotel type
+                    model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, tahun, bulan, true , isHotelNonBintang);
+                }
+                else
+                {
+                    // Untuk detail kategori - existing logic
+                    model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan);
+                }
+                    //var model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan);
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailPotensiPajak.cshtml", model);
             }
             catch (ArgumentException e)

@@ -42,8 +42,8 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
             .FixedPosition(HorizontalEdge.Left)
             .CssClass("fw-bold");
 
-        columns.Add()
-            .Caption(tahun5.ToString())
+        columns.AddFor(x => x.Tahun5_Akhir).Caption(tahun5.ToString()).Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+            @* .Caption(tahun5.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
                 sub.AddFor(x => x.Tahun5_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
@@ -51,10 +51,10 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
                 sub.AddFor(x => x.Tahun5_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun5_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 
-            });
+            }); *@
 
-        columns.Add()
-            .Caption(tahun4.ToString())
+        columns.AddFor(x => x.Tahun4_Akhir).Caption(tahun4.ToString()).Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+            @* .Caption(tahun4.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
                 sub.AddFor(x => x.Tahun4_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
@@ -62,37 +62,37 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
                 sub.AddFor(x => x.Tahun4_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun4_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 
-            });
+            }); *@
 
-        columns.Add()
-            .Caption(tahun3.ToString())
+        columns.AddFor(x => x.Tahun3_Akhir).Caption(tahun3.ToString()).Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+            @* .Caption(tahun3.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
                 sub.AddFor(x => x.Tahun3_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun3_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun3_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun3_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
-            });
+            }); *@
 
-        columns.Add()
-            .Caption(tahun2.ToString())
+        columns.AddFor(x => x.Tahun2_Akhir).Caption(tahun2.ToString()).Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+            @* .Caption(tahun2.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
                 sub.AddFor(x => x.Tahun2_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun2_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun2_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun2_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
-            });
+            }); *@
 
-        columns.Add()
-            .Caption(tahun1.ToString())
+        columns.AddFor(x => x.Tahun1_Akhir).Caption(tahun1.ToString()).Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
+            @* .Caption(tahun1.ToString())
             .Alignment(HorizontalAlignment.Center)
             .Columns(sub => {
                 sub.AddFor(x => x.Tahun1_Awal).Caption("Awal").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun1_Tutup).Caption("Tutup").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun1_Baru).Caption("Baru").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
                 sub.AddFor(x => x.Tahun1_Akhir).Caption("Akhir").Format("#,##0").CellTemplate(new JS("kategoriSeriesCellTemplate"));
-            });
+            }); *@
     })
     .Summary(s => {
         s.TotalItems(items => {
@@ -100,7 +100,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
                 .SummaryType(SummaryType.Sum)
                 .DisplayFormat("Total");
 
-            items.AddFor(x => x.Tahun5_Awal)
+            @* items.AddFor(x => x.Tahun5_Awal)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -113,14 +113,14 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
             items.AddFor(x => x.Tahun5_Baru)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                .DisplayFormat("{0}"); *@
 
             items.AddFor(x => x.Tahun5_Akhir)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Tahun4_Awal)
+            @* items.AddFor(x => x.Tahun4_Awal)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -133,14 +133,14 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
             items.AddFor(x => x.Tahun4_Baru)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                .DisplayFormat("{0}"); *@
 
             items.AddFor(x => x.Tahun4_Akhir)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Tahun3_Awal)
+            @* items.AddFor(x => x.Tahun3_Awal)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -153,14 +153,14 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
             items.AddFor(x => x.Tahun3_Baru)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                .DisplayFormat("{0}"); *@
 
             items.AddFor(x => x.Tahun3_Akhir)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Tahun2_Awal)
+            @* items.AddFor(x => x.Tahun2_Awal)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -173,14 +173,14 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
             items.AddFor(x => x.Tahun2_Baru)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                .DisplayFormat("{0}"); *@
 
             items.AddFor(x => x.Tahun2_Akhir)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
 
-            items.AddFor(x => x.Tahun1_Awal)
+            @* items.AddFor(x => x.Tahun1_Awal)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
                 .DisplayFormat("{0}");
@@ -193,7 +193,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailJmlOP>()
             items.AddFor(x => x.Tahun1_Baru)
                 .SummaryType(SummaryType.Sum)
                 .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
+                .DisplayFormat("{0}"); *@
 
             items.AddFor(x => x.Tahun1_Akhir)
                 .SummaryType(SummaryType.Sum)

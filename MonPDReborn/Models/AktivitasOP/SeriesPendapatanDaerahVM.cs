@@ -7,15 +7,34 @@ namespace MonPDReborn.Models.AktivitasOP
     {
         public class Index
         {
-            public List<SelectListItem> TahunList { get; set; } = new List<SelectListItem>();
+            public List<SelectListItem> TahunListSekarang { get; set; } = new();
+            public List<SelectListItem> TahunListMinus1 { get; set; } = new();
+
             public Index()
             {
-                TahunList = Method.GetTahun().Select(x => new SelectListItem() { Value = x.Tahun.ToString(), Text = x.Tahun.ToString()}).ToList();
-                if (TahunList.Any()) 
+                var tahunSekarang = DateTime.Now.Year;
+                var listTahun = Method.GetTahun()
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.Tahun.ToString(),
+                        Text = x.Tahun.ToString()
+                    }).ToList();
+
+                // untuk dropdown default tahun sekarang
+                TahunListSekarang = listTahun.Select(x => new SelectListItem
                 {
-                    TahunList.First().Selected = true;
-                }
-                
+                    Value = x.Value,
+                    Text = x.Text,
+                    Selected = (x.Value == tahunSekarang.ToString())
+                }).ToList();
+
+                // untuk dropdown default tahun sekarang - 1
+                TahunListMinus1 = listTahun.Select(x => new SelectListItem
+                {
+                    Value = x.Value,
+                    Text = x.Text,
+                    Selected = (x.Value == (tahunSekarang - 1).ToString())
+                }).ToList();
             }
         }
 

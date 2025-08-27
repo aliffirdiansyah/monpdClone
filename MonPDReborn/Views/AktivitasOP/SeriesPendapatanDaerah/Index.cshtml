@@ -28,12 +28,12 @@
 
 
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-body d-flex">
                 <div class="flex-grow-1"></div>
                 <div class="flex-shrink-0">
-                    <select id="frm-tahun1" asp-items="Model.TahunList" onchange="loadShow1()" class="form-select"></select>
+                    <select id="frm-tahun1" asp-items="Model.TahunListSekarang" onchange="loadShow1()" class="form-select"></select>
                 </div>
             </div>
             <div class="card-body">
@@ -43,12 +43,12 @@
         </div>
         
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-body d-flex">
                 <div class="flex-grow-1"></div>
                 <div class="flex-shrink-0">
-                    <select id="frm-tahun2" asp-items="Model.TahunList" onchange="loadShow2()" class="form-select"></select>
+                    <select id="frm-tahun2" asp-items="Model.TahunListMinus1" onchange="loadShow2()" class="form-select"></select>
                 </div>
             </div>
             <div class="card-body">
@@ -92,7 +92,7 @@
             var seq = 2;
             $.ajax({
                 url: '@Url.Action("Show")',
-                data: {type, tahun, seq},
+                data: { type, tahun, seq },
                 type: 'GET',
                 beforeSend: function () { $('#loading-Show2').show(); },
                 success: function (result) { $('#Show2').html(result); },
@@ -100,6 +100,7 @@
                 complete: function () { $('#loading-Show2').hide(); }
             });
         }
+
 
         function hitungPersentase(e) {
             var dataSource = e.component.getDataSource();
