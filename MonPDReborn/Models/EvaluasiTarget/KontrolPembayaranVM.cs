@@ -5,6 +5,7 @@ using MonPDLib.General;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
 using static MonPDLib.General.EnumFactory;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM;
 using static MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.Method;
 
@@ -106,32 +107,49 @@ namespace MonPDReborn.Models.EvaluasiTarget
         }
         public class DetailPembayaran
         {
+            public bool IsTotal { get; set; }
+            public bool IsHotelNonBintang { get; set; }
+            public int Bulan { get; set; }
             public List<DetailPajak> Data { get; set; }
+            
 
             public DetailPembayaran(EnumFactory.EPajak jenisPajak, int kategoriId, int tahun, int bulan, int status)
             {
+                Bulan = bulan;
                 Data = Method.GetDetailKontrolPembayaranList(jenisPajak, kategoriId, tahun, bulan, status);
             }
             // Constructor untuk summary/total (new) - dengan parameter hotel type
             public DetailPembayaran(EnumFactory.EPajak jenisPajak, int tahun, int bulan, int status, bool isTotal = true, bool isHotelNonBintang = false)
             {
+
+                Bulan = bulan;
+                IsTotal = isTotal;
+                IsHotelNonBintang = isHotelNonBintang;
                 Data = Method.GetDetailKontrolPembayaranList(jenisPajak, 0, tahun, bulan, status, isTotal, isHotelNonBintang);
+                
             }
         }
 
         public class DetailPotensiPajak
         {
+            public bool IsTotal { get; set; }
+            public bool IsHotelNonBintang { get; set; }
+            public int Bulan { get; set; }
             public List<DetailPotensi> Data { get; set; }
 
             // Constructor untuk detail kategori (existing)
             public DetailPotensiPajak(EnumFactory.EPajak jenisPajak, int kategoriId, int tahun, int bulan)
             {
+                Bulan = bulan;
                 Data = Method.GetDetailPotensiPajakList(jenisPajak, kategoriId, tahun, bulan);
             }
 
             // Constructor untuk summary/total (new) - dengan parameter hotel type
             public DetailPotensiPajak(EnumFactory.EPajak jenisPajak, int tahun, int bulan, bool isTotal = true , bool isHotelNonBintang = false)
             {
+                Bulan = bulan;
+                IsTotal = isTotal;
+                IsHotelNonBintang = isHotelNonBintang;
                 Data = Method.GetDetailPotensiPajakList(jenisPajak, 0, tahun, bulan, isTotal , isHotelNonBintang);
             }
         }
@@ -2128,7 +2146,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.MakananMinuman:
                         var queryResto = context.DbCtrlByrRestos
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -2159,7 +2177,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.TenagaListrik:
                         var queryTenagaListrik = context.DbCtrlByrPpjs
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -2190,7 +2208,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var queryHotel = context.DbCtrlByrHotels
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         // Filter berdasarkan status
                         if (status != 3) // Jika bukan "all"
@@ -2236,7 +2254,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.JasaParkir:
                         var queryJasaParkir = context.DbCtrlByrParkirs
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -2267,7 +2285,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.JasaKesenianHiburan:
                         var queryHiburan = context.DbCtrlByrHiburans
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         if (status != 3) 
                         {
@@ -2297,7 +2315,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.AirTanah:
                         var queryAirTanah= context.DbCtrlByrAbts
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -2328,7 +2346,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.Reklame:
                         var queryReklame = context.DbCtrlByrReklames
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         // Filter berdasarkan status
                         if (status != 3)
@@ -2362,7 +2380,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                         // Status 0 = belum bayar All, 1 = sudah bayar Bulan, 2 = NTs All
                         // Jika status 3, maka tampilkan semua
-                        var queryPbb = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun);
+                        var queryPbb = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun && x.KategoriId > 0);
 
                         // PBB logic khusus: status 1 perlu filter bulan, status lain tidak
                         if (status == 1)
@@ -2398,7 +2416,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.BPHTB:
                         var queryBphtb = context.DbCtrlByrBphtbs
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan);
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0);
 
                         // Filter berdasarkan status
                         if (status != 3)
@@ -2457,7 +2475,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.MakananMinuman:
                         var queryResto = context.DbCtrlByrRestos
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0);
 
                         // Jika bukan total, filter berdasarkan kategoriId
                         if (!isTotal)
@@ -2481,7 +2499,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.TenagaListrik:
-                        var queryPajakListrik = context.DbCtrlByrPpjs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        var queryPajakListrik = context.DbCtrlByrPpjs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0);
 
                         // Jika bukan total, filter berdasarkan kategoriId
                         if (!isTotal)
@@ -2545,10 +2563,10 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.JasaParkir:
-                        var queryParkir = context.DbCtrlByrParkirs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        var queryParkir = context.DbCtrlByrParkirs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 );
                         if (!isTotal)
                         {
-                            queryParkir = queryParkir.Where(x => x.KategoriId == kategoriId);
+                            queryParkir = queryParkir.Where(x => x.KategoriId == kategoriId );
                         }
 
                         ret = queryParkir.Select(x => new DetailPotensi
@@ -2568,7 +2586,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var queryKesenian = context.DbCtrlByrHiburans.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        var queryKesenian = context.DbCtrlByrHiburans.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0);
                         if (!isTotal)
                         {
                             queryKesenian = queryKesenian.Where(x => x.KategoriId == kategoriId);
@@ -2591,7 +2609,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.AirTanah:
-                        var queryAirTanah = context.DbCtrlByrAbts.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        var queryAirTanah = context.DbCtrlByrAbts.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0);
                         if (!isTotal)
                         {
                             queryAirTanah = queryAirTanah.Where(x => x.KategoriId == kategoriId);
@@ -2614,7 +2632,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.Reklame:
-                        var queryReklame = context.DbCtrlByrReklames.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        var queryReklame = context.DbCtrlByrReklames.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0);
                         if (!isTotal)
                         {
                             queryReklame = queryReklame.Where(x => x.KategoriId == kategoriId);
@@ -2636,7 +2654,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.PBB:
-                        var queryPBB = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        var queryPBB = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0);
                         if (!isTotal)
                         {
                             queryPBB = queryPBB.Where(x => x.KategoriId == kategoriId);
@@ -2657,7 +2675,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         .ToList();
                         break;
                     case EnumFactory.EPajak.BPHTB:
-                        var queryBPHTB = context.DbCtrlByrBphtbs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0);
+                        var queryBPHTB = context.DbCtrlByrBphtbs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0);
                         if (!isTotal)
                         {
                             queryBPHTB = queryBPHTB.Where(x => x.KategoriId == kategoriId);
