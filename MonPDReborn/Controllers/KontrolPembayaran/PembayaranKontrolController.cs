@@ -43,7 +43,7 @@ namespace MonPDReborn.Controllers.KontrolPembayaran
                 return Json(response);
             }
         }
-        public IActionResult Show(int jenisPajak, int tanggal)
+        public IActionResult Show(int jenisPajak, DateTime? tanggal)
         {
             try
             {

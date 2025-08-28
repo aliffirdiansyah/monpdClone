@@ -21,9 +21,9 @@
 
                     <div class="col-lg-3">
                         @(Html.DevExtreme().DateBox()
-                                                .ID("tanggalAwal")
+                                                .ID("tanggal")
                                                 .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal Awal")
+                                                .Placeholder("Tanggal")
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 .Value(DateTime.Now)
                                                 .Max(DateTime.Now)
@@ -81,27 +81,35 @@
         $(document).ready(function () {
             $("#btnTerapkanFilter").on("click", function () {
                 // Ambil nilai dari DateBox
-                var tanggalAwal = $("#tanggalAwal").dxDateBox("instance").option("value");
+                var tanggalObj = $("#tanggal").dxDateBox("instance").option("value");
+
+                // Ubah ke format yyyy-MM-dd (ASP.NET bisa binding otomatis)
+                let tanggalStr = null;
+                if (tanggalObj) {
+                    const yyyy = tanggalObj.getFullYear();
+                    const mm = String(tanggalObj.getMonth() + 1).padStart(2, '0');
+                    const dd = String(tanggalObj.getDate()).padStart(2, '0');
+                    tanggalStr = `${yyyy}-${mm}-${dd}`;
+                }
 
                 // Ambil nilai dari SelectBox
                 var selectedPajak = $("#SelectedPajak").dxSelectBox("instance").option("value");
 
                 // Cek data
-                console.log("Tanggal Awal:", tanggalAwal);
+                console.log("Tanggal (Date):", tanggalObj);
+                console.log("Tanggal (String):", tanggalStr);
                 console.log("Jenis Pajak:", selectedPajak);
 
-                // Contoh: Kirim ke server dengan AJAX
+                // Kirim ke server dengan AJAX
                 $.ajax({
                     url: '/PembayaranKontrol/Show',
                     type: 'GET',
                     data: {
-                        tanggal: tanggalAwal,
+                        tanggal: tanggalStr,
                         jenisPajak: selectedPajak
                     },
                     beforeSend: function () {
-                        // tampilkan spinner
                         $("#loading2-Show").show();
-                        // kosongkan konten sebelumnya biar ga dobel
                         $("#Show").html("");
                     },
                     success: function (result) {
@@ -111,12 +119,12 @@
                         $("#Show").html("<div class='alert alert-danger'>⚠ Gagal memuat data Show</div>");
                     },
                     complete: function () {
-                        // sembunyikan spinner setelah request selesai
                         $("#loading2-Show").hide();
                     }
                 });
             });
         });
+
     </script>
     <script>
         function onDetail(e) {

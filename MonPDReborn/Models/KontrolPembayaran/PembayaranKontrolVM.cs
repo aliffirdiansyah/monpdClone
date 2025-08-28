@@ -32,9 +32,9 @@ namespace MonPDReborn.Models.KontrolPembayaran
         public class Show
         {
             public List<DataPembayaranOP> Data { get; set; } = new();
-            public Show(EnumFactory.EPajak jenisPajak, int tanggal)
+            public Show(EnumFactory.EPajak jenisPajak, DateTime? tanggal)
             {
-                Data = Method.GetDataPembayaranOP(jenisPajak, tanggal);
+                Data = Method.GetDataPembayaranOP(jenisPajak, tanggal.Value);
             }
         }
 
@@ -49,7 +49,7 @@ namespace MonPDReborn.Models.KontrolPembayaran
 
         public class Method
         {
-            public static List<DataPembayaranOP> GetDataPembayaranOP(EnumFactory.EPajak jenisPajak, int Tanggal)
+            public static List<DataPembayaranOP> GetDataPembayaranOP(EnumFactory.EPajak jenisPajak, DateTime Tanggal)
             {
                 var ret = new List<DataPembayaranOP>();
 

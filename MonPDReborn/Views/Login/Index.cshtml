@@ -32,7 +32,24 @@
         </div>
         <div class="mb-3">
             <label asp-for="Row.Password" class="form-label"></label>
+
+            <div class="input-group">
+                <input asp-for="Row.Password"
+                       id="passwordInput"
+                       type="password"
+                       class="form-control"
+                       placeholder="Masukkan Password" />
+
+                <button type="button" class="btn btn-light" onclick="togglePassword()">
+                    <i id="toggleIcon" class="ri-eye-line"></i>
+                </button>
+            </div>
+            @* <label asp-for="Row.Password" class="form-label"></label>
             <input asp-for="Row.Password" type="password" class="form-control" placeholder="Masukkan Password" />
+            <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+                    onclick="togglePassword()">
+                👁
+            </button> *@
             @* <span class="password-toggle" style="position: absolute; top: 45%; right: 1%; color: #888787; cursor: pointer;" onclick="togglePasswordVisibility()">
                 <i class="ri-eye-line"></i>
             </span> *@
@@ -93,7 +110,7 @@
              }
           }
        </script> *@
-    <script>
+    @* <script>
         function togglePasswordVisibility() {
             var passwordField = document.getElementById("passwordField");
             var passwordToggleIcon = document.querySelector(".password-toggle i");
@@ -108,5 +125,22 @@
                 passwordToggleIcon.classList.add("ri-eye-line");
             }
         }
+    </script> *@
+    <script>
+        function togglePassword() {
+            const input = document.getElementById("passwordInput");
+            const icon  = document.getElementById("toggleIcon");
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("ri-eye-line");
+                icon.classList.add("ri-eye-off-line");
+            } else {
+                input.type = "password";
+                icon.classList.remove("ri-eye-off-line");
+                icon.classList.add("ri-eye-line");
+            }
+        }
     </script>
+
 }
