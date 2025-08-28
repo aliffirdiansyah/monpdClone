@@ -21,9 +21,9 @@
 
                     <div class="col-lg-3">
                         @(Html.DevExtreme().DateBox()
-                                                .ID("tanggal")
+                                                .ID("tanggalAwal")
                                                 .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal")
+                                                .Placeholder("Tanggal Awal")
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 .Value(DateTime.Now)
                                                 .Max(DateTime.Now)
@@ -31,13 +31,22 @@
                     </div>
 
                     <div class="col-lg-3">
+                        @(Html.DevExtreme().DateBox()
+                                                .ID("tanggalAkhir")
+                                                .Type(DateBoxType.Date)
+                                                .Placeholder("Tanggal Akhir")
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                )
+                    </div>
+
+                    <div class="col-lg-3">
                         @(Html.DevExtreme().SelectBox()
-                                                .ID("SelectedPajak")
-                                                .Value(Model.SelectedPajak)
-                                                .DataSource(Model.JenisPajakList)
+                                                .ID("rekeningBank")
+                                                .Value(Model.RekeningBankList)
+                                                .DataSource(Model.RekeningBankList)
                                                 .DisplayExpr("Text")
                                                 .ValueExpr("Value")
-                                                .Value(Model.SelectedPajak.ToString())
+                                                .Value(Model.RekeningBank.ToString())
                                                 .SearchEnabled(true)
                                                 .StylingMode(EditorStylingMode.Outlined)
                                                 .ElementAttr("class", "form-select mb-3")
@@ -78,52 +87,71 @@
 </div>
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            $("#btnTerapkanFilter").on("click", function () {
-                // Ambil nilai dari DateBox
-                var tanggalObj = $("#tanggal").dxDateBox("instance").option("value");
+        $('#btnTerapkanFilter').on('click', function() {
+            const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
+            const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
+            const rekening = $("#rekeningBank").dxSelectBox("instance").option("value");
 
-                // Ubah ke format yyyy-MM-dd (ASP.NET bisa binding otomatis)
-                let tanggalStr = null;
-                if (tanggalObj) {
-                    const yyyy = tanggalObj.getFullYear();
-                    const mm = String(tanggalObj.getMonth() + 1).padStart(2, '0');
-                    const dd = String(tanggalObj.getDate()).padStart(2, '0');
-                    tanggalStr = `${yyyy}-${mm}-${dd}`;
-                }
+            let tglAwalFormatted = null;
+            if (tglAwalDate) {
+                const yyyy = tglAwalDate.getFullYear();
+                const mm = String(tglAwalDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(tglAwalDate.getDate()).padStart(2, '0');
+                tglAwalFormatted = `${yyyy}-${mm}-${dd}`;
+            }
 
-                // Ambil nilai dari SelectBox
-                var selectedPajak = $("#SelectedPajak").dxSelectBox("instance").option("value");
+            let tglAkhirFormatted = null;
+            if (tglAkhirDate) {
+                const yyyy = tglAkhirDate.getFullYear();
+                const mm = String(tglAkhirDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(tglAkhirDate.getDate()).padStart(2, '0');
+                tglAkhirFormatted = `${yyyy}-${mm}-${dd}`;
+            }
 
-                // Cek data
-                console.log("Tanggal (Date):", tanggalObj);
-                console.log("Tanggal (String):", tanggalStr);
-                console.log("Jenis Pajak:", selectedPajak);
-
-                // Kirim ke server dengan AJAX
-                $.ajax({
-                    url: '/PembayaranKontrol/Show',
-                    type: 'GET',
-                    data: {
-                        tanggal: tanggalStr,
-                        jenisPajak: selectedPajak
-                    },
-                    beforeSend: function () {
-                        $("#loading2-Show").show();
-                        $("#Show").html("");
-                    },
-                    success: function (result) {
-                        $("#Show").html(result);
-                    },
-                    error: function () {
-                        $("#Show").html("<div class='alert alert-danger'>⚠ Gagal memuat data Show</div>");
-                    },
-                    complete: function () {
-                        $("#loading2-Show").hide();
-                    }
-                });
-            });
+            fnShow(tglAwalFormatted, tglAkhirFormatted, rekening);
         });
+
+        function fnShow(tanggalAwal, tanggalAkhir, rekening) {
+            $.ajax({
+                url: '@Url.Action("Show", "PembayaranKontrol")',
+                type: 'GET',
+                data: {
+                    tanggalAwal: tanggalAwal,
+                    tanggalAkhir: tanggalAkhir,
+                    rekening: rekening
+                },
+                beforeSend: function () {
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    $('#loading2-Show').hide();
+
+                    if (result.Status === undefined) {
+                        $('#Show').html(result).show();
+
+                        
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: result.Message
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    $('#loading2-Show').hide();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: '⚠ Gagal memuat data dari server.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
 
     </script>
     <script>

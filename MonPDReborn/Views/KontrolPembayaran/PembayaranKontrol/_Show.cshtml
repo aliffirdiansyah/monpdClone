@@ -24,22 +24,12 @@
             ) *@
             .Columns(columns =>
             {
-
-                columns.Add()
-                    .Caption("Data")
-                    .Alignment(HorizontalAlignment.Center)
-                    .Columns(sub =>
-                    {
-                      sub.AddFor(m => m.ObjekPajak).Caption("Objek Pajak");
-                      sub.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
-                      sub.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
-                      sub.AddFor(m => m.Ketetapan).Caption("Ketetapan").Format("#,##0");
-                      sub.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
-                    });
-                columns.AddFor(m => m.PembayaranBendahara).Caption("Pembayaran Bendahara").Format("#,##0");
+                columns.AddFor(m => m.TanggalTransaksi).Caption("Pembayaran Bendahara").Format("#,##0");
                 columns.AddFor(m => m.Reff).Caption("Reff");
-                columns.AddFor(m => m.Status).Caption("Status");
-                columns.AddFor(m => m.NTPD).Caption("NTPD");
+                columns.AddFor(m => m.Amount).Caption("Status");
+                columns.AddFor(m => m.Deskripsi).Caption("NTPD");
+                columns.AddFor(m => m.RekeningBank).Caption("NTPD");
+                columns.AddFor(m => m.NamaRekening).Caption("NTPD");
                 columns.Add()
                     .Type(GridCommandColumnType.Buttons)
                     .Buttons(b =>
@@ -51,14 +41,14 @@
                     });
             })
             .Summary(s => {
-                s.TotalItems(items => {
+                @* s.TotalItems(items => {
                     items.AddFor(m => m.JenisPajak)
                         .SummaryType(SummaryType.Sum)
                         .DisplayFormat("Total:");
 
                     
                    
-                });
+                }); *@
             })
         )
 </div>
