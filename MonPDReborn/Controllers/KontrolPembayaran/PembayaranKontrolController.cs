@@ -2,6 +2,7 @@
 using MonPDLib.General;
 using MonPDReborn.Controllers.DataOP;
 using MonPDReborn.Lib.General;
+using System.Globalization;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.KontrolPembayaran
@@ -43,11 +44,16 @@ namespace MonPDReborn.Controllers.KontrolPembayaran
                 return Json(response);
             }
         }
-        public IActionResult Show(int jenisPajak, DateTime? tanggal)
+        public IActionResult Show(string tanggalAwal, string tanggalAkhir, string rekening)
         {
             try
             {
-                var model = new Models.KontrolPembayaran.PembayaranKontrolVM.Show((EnumFactory.EPajak)jenisPajak, tanggal);
+                var tglAwalDate = DateTime.ParseExact(tanggalAwal, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                var tglAkhirDate = DateTime.ParseExact(tanggalAkhir, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                var enumRekening = (EnumFactory.EBankRekening)Convert.ToInt32(rekening);
+
+                var model = new Models.KontrolPembayaran.PembayaranKontrolVM.Show(enumRekening, tglAwalDate, tglAkhirDate);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
