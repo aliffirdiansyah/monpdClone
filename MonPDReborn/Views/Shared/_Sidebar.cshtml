@@ -399,38 +399,6 @@
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">
                     <li class="menu-title"><span data-key="t-wajibPajak">Wajib Pajak</span></li>
-                    @*  <li class="nav-item">
-                    <a class="nav-link menu-link collapse @AktivitasWPActiveClass" 
-                        href="#sidebarAktivitasWP" 
-                        data-bs-toggle="collapse" 
-                        role="button"
-                       aria-expanded="@AktivitasWPExpanded"
-                       aria-controls="#sidebarAktivitasWP" style="background-color: #5EA8A4">
-                        <i class="bx bx-task"></i><span data-key="t-aktivitasWP">Aktivitas</span>
-                    </a>
-                    <div id="sidebarAktivitasWP" class="menu-dropdown collapse @AktivitasWPShowClass">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link @(currentController == "PENGHIMBAUAN" ? "active" : "")" "
-                                   href="@Url.Action("Index","Penghimbauan")" data-key="t-penghimbauan">
-                                    Penghimbauan
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(currentController == "PENEGURAN" ? "active" : "")"
-                                   href="@Url.Action("Index","Peneguran")" data-key="t-peneguran">
-                                    Peneguran
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(currentController == "PENAGIHAN" ? "active" : "")"
-                                   href="@Url.Action("Index","Penagihan")" data-key="t-penagihan">
-                                    Penagihan
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li> *@
                     <li class="nav-item">
                         <a class="nav-link menu-link collapse @DataWPActiveClass"
                         href="#sidebarDataWP"
@@ -448,36 +416,13 @@
                                         Profile WP
                                     </a>
                                 </li>
-                                @* <li class="nav-item">
-                                <a class="nav-link @(currentController == "PROFILEPEMBAYARANWP" ? "active" : "")" 
-                                    href="@Url.Action("Index","ProfilePembayaranWP")" data-key="t-profilPembayaranWP">
-                                    Profile Pembayaran
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(currentController == "PROFILEPIUTANGWP" ? "active" : "")"
-                                    href="@Url.Action("Index","ProfilePiutangWP")" data-key="t-profilPiutang">
-                                    Profile Piutang
-                                </a>
-                            </li> *@
                             </ul>
                         </div>
                     </li>
-                    @* <li class="nav-item">
-                    <a class="nav-link menu-link collapse" href="#sidebarMonitoringWP" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="#sidebarMonitoringWP">
-                        <i class="bx bx-line-chart"></i><span data-key="t-monitoringWP">Monitoring</span>
-                    </a>
-                    <div id="sidebarMonitoringWP" class="menu-dropdown collapse">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","KontrolUpayaBulanan")" data-key="t-upayaBulanan">
-                                    Kontrol Upaya Bulanan
-                                </a>
-                        </ul>
-                    </div>
-                </li> *@
+                    
                 </ul>
             </div>
+            
         }
         else if (nama.Contains("UPTB"))
         {
@@ -594,7 +539,7 @@
                 </ul>
             </div>
         }
-        else
+        else if (nama.Contains("MAGANG"))
         {
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
@@ -612,6 +557,21 @@
                            href="@Url.Action("Index", "PencarianReklame")"
                            data-key="t-pencarian">
                             <i class="bx bx-search  me-1 align-middle"></i><span data-key="t-reklamesummary">Pencarian Reklame</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="container-fluid">
+                <div id="two-column-menu"></div>
+                <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-MonitoringPembayaran">Monitoring Pembayaran</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PembayaranKontrol" ? "active" : "")"
+                           href="@Url.Action("Index", "PembayaranKontrol")" role="button">
+                            <i class=" bx bx-home  me-1 align-middle"></i><span data-key="t-PembayaranKontrol">Kontrol Pembayaran</span>
                         </a>
                     </li>
                 </ul>

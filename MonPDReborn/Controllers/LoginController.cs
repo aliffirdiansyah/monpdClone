@@ -75,6 +75,10 @@ namespace MonPDReborn.Controllers
                 {
                     return RedirectToAction("Index", "ReklameSummary");
                 }
+                else if (login.Email.Contains("BENDAHARA"))
+                {
+                    return RedirectToAction("Index", "PembayaranKontrol");
+                }
                 else
                 {
                     return RedirectToAction("Index", "Home");

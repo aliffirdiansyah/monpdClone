@@ -1,12 +1,56 @@
 ﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailPotensiPajak
 
+
+@{
+    // Helper function untuk nama bulan
+    string GetNamaBulan(int bulan)
+    {
+        var namaBulan = new Dictionary<int, string>
+        {
+            {1, "Januari"}, {2, "Februari"}, {3, "Maret"}, {4, "April"},
+            {5, "Mei"}, {6, "Juni"}, {7, "Juli"}, {8, "Agustus"},
+            {9, "September"}, {10, "Oktober"}, {11, "November"}, {12, "Desember"}
+        };
+        return namaBulan.ContainsKey(bulan) ? namaBulan[bulan] : "";
+    }
+
+    // Tentukan judul berdasarkan kondisi
+    string headerTitle = "";
+
+    if (Model.IsTotal)
+    {
+        // Untuk summary/total
+        string namaBulan = GetNamaBulan(Model.Bulan);
+        string jenisPajak = Model.Data?.FirstOrDefault()?.JenisPajak ?? "";
+
+        if (jenisPajak.ToLower().Contains("hotel") || jenisPajak.ToLower().Contains("perhotelan"))
+        {
+            // Untuk hotel, tampilkan info hotel type
+            string hotelType = Model.IsHotelNonBintang ? "Hotel Non Bintang" : "Hotel Bintang";
+            headerTitle = $"Total Potensi {hotelType} Bulan {namaBulan}";
+        }
+        else
+        {
+            // Untuk pajak lainnya
+            headerTitle = $"Total Potensi Bulan {namaBulan}";
+        }
+    }
+    else
+    {
+        // Untuk detail per kategori
+        string kategori = Model.Data?.FirstOrDefault()?.Kategori ?? "";
+        headerTitle = $"Detail Kontrol Potensi Pajak : {kategori}";
+    }
+}
+
 <div class="card-header d-flex">
     <div class="flex-grow-1">
         <h4 class="card-title fs-16 mb-0">
-            Detail Kontrol Pembayaran Pajak : @Model.Data?.FirstOrDefault()?.Kategori
+            @headerTitle
         </h4>
     </div>
 </div>
+
 <div class="table-responsive">
     @(
         Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranVM.DetailPotensi>()

@@ -1,0 +1,64 @@
+﻿@model MonPDReborn.Models.KontrolPembayaran.PembayaranKontrolVM.Show
+
+<div class="table-responsive">
+    @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.KontrolPembayaran.PembayaranKontrolVM.DataPembayaranOP>()
+            .ID("KontrolPembayaranGrid")
+            .DataSource(Model.Data)
+            .ShowBorders(true)
+            .ShowColumnHeaders(true)
+            .ShowColumnLines(true)
+            .ShowRowLines(true)
+            .AllowColumnResizing(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+            @* .Paging(p => p.PageSize(10))
+            .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+            ) *@
+            .Columns(columns =>
+            {
+
+                columns.Add()
+                    .Caption("Data")
+                    .Alignment(HorizontalAlignment.Center)
+                    .Columns(sub =>
+                    {
+                      sub.AddFor(m => m.ObjekPajak).Caption("Objek Pajak");
+                      sub.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+                      sub.AddFor(m => m.MasaPajak).Caption("Masa Pajak");
+                      sub.AddFor(m => m.Ketetapan).Caption("Ketetapan").Format("#,##0");
+                      sub.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
+                    });
+                columns.AddFor(m => m.PembayaranBendahara).Caption("Pembayaran Bendahara").Format("#,##0");
+                columns.AddFor(m => m.Reff).Caption("Reff");
+                columns.AddFor(m => m.Status).Caption("Status");
+                columns.AddFor(m => m.NTPD).Caption("NTPD");
+                columns.Add()
+                    .Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add()
+                    .Text("Detail")
+                    .Icon("search")
+                    .OnClick("onDetail");
+                    });
+            })
+            .Summary(s => {
+                s.TotalItems(items => {
+                    items.AddFor(m => m.JenisPajak)
+                        .SummaryType(SummaryType.Sum)
+                        .DisplayFormat("Total:");
+
+                    
+                   
+                });
+            })
+        )
+</div>
