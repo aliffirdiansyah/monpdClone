@@ -127,6 +127,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
 
+    public virtual DbSet<DbMutasiRekening> DbMutasiRekenings { get; set; }
+
     public virtual DbSet<DbOpAbt> DbOpAbts { get; set; }
 
     public virtual DbSet<DbOpAccHotel> DbOpAccHotels { get; set; }
@@ -889,6 +891,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbMonUpayaPad>(entity =>
         {
             entity.HasKey(e => new { e.PajakId, e.Nop, e.Bulan, e.Tahun }).HasName("DB_MON_UPAYA_PAD_PK");
+        });
+
+        modelBuilder.Entity<DbMutasiRekening>(entity =>
+        {
+            entity.HasKey(e => e.TransactionCode).HasName("SYS_C0033949");
         });
 
         modelBuilder.Entity<DbOpAbt>(entity =>

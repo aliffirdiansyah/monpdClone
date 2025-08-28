@@ -4,6 +4,7 @@ namespace MonPDLib.General
 {
     public class EnumFactory
     {
+
         public enum EStatusSurvey
         {
             [Description("Belum Survey")]
@@ -52,6 +53,7 @@ namespace MonPDLib.General
             DBOPREKLAMEPERPANJANGAN,
             DBOPREKLAMEUPAYA,
             DBMONUPAYAPAD,
+            DBMUTASIBANK
         }
         public enum EStatePemeriksaanSkpdKbJabatan
         {
