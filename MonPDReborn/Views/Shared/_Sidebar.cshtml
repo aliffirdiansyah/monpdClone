@@ -422,17 +422,7 @@
                     
                 </ul>
             </div>
-            @* <div class="container-fluid">
-                <ul class="navbar-nav" id="navbar-nav">
-                    <li class="menu-title"><span data-key="t-MonitoringPembayaran">Monitoring Pembayaran</span></li>
-                    <li class="nav-item">
-                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PembayaranKontrol" ? "active" : "")"
-                           href="@Url.Action("Index", "PembayaranKontrol")" role="button">
-                            <i class=" bx bx-home  me-1 align-middle"></i><span data-key="t-PembayaranKontrol">Kontrol Pembayaran</span>
-                        </a>
-                    </li>
-                </ul>
-            </div> *@
+            
         }
         else if (nama.Contains("UPTB"))
         {
@@ -549,7 +539,7 @@
                 </ul>
             </div>
         }
-        else
+        else if (nama.Contains("Magang"))
         {
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
@@ -567,6 +557,20 @@
                            href="@Url.Action("Index", "PencarianReklame")"
                            data-key="t-pencarian">
                             <i class="bx bx-search  me-1 align-middle"></i><span data-key="t-reklamesummary">Pencarian Reklame</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else if (nama.Contains("BENDAHARA"))
+        {
+            <div class="container-fluid">
+                <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-MonitoringPembayaran">Monitoring Pembayaran</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PembayaranKontrol" ? "active" : "")"
+                           href="@Url.Action("Index", "PembayaranKontrol")" role="button">
+                            <i class=" bx bx-home  me-1 align-middle"></i><span data-key="t-PembayaranKontrol">Kontrol Pembayaran</span>
                         </a>
                     </li>
                 </ul>
