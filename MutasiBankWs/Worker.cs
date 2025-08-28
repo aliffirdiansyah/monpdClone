@@ -116,6 +116,7 @@ namespace MutasiBankWs
                     Kode = $"00{(int)x}",
                     Nama = x.GetDescription()
                 })
+                .OrderBy(x => x.Kode)
                 .ToList();
 
             
@@ -126,29 +127,31 @@ namespace MutasiBankWs
                 // jika tahun ambil = tahun sekarang ? sampai bulan berjalan
                 if (tahun == DateTime.Now.Year)
                 {
-                    endMonth = DateTime.Now.Month;
+                    //endMonth = DateTime.Now.Month;
+                    endMonth = 8;
                 }
                 else
                 {
                     endMonth = 12; // kalau tahun sebelumnya ? sampai desember
                 }
 
-                for (int bulan = 8; bulan <= endMonth; bulan++)
+                for (int bulan = 6; bulan <= endMonth; bulan++)
                 {
                     var totalDaysInMonth = DateTime.DaysInMonth(tahun, bulan);
                     var startDate = new DateTime(tahun, bulan, 1);
                     var endDate = new DateTime(tahun, bulan, totalDaysInMonth);
 
                     // looping tanggal per 2 hari
-                    for (var dt = startDate; dt <= endDate; dt = dt.AddDays(2))
+                    for (var dt = startDate; dt <= endDate; dt = dt.AddDays(1))
                     {
                         var sw = new Stopwatch();
                         sw.Start();
                         var newList = new List<MonPDLib.EF.DbMutasiRekening>();
                         var updateList = new List<MonPDLib.EF.DbMutasiRekening>();
+                        var failedList = new List<History>();
 
                         var rangeStart = dt;
-                        var rangeEnd = dt.AddDays(1);
+                        var rangeEnd = dt.AddDays(0);
 
                         if (rangeEnd > endDate)
                         {
@@ -214,7 +217,7 @@ namespace MutasiBankWs
                             if (result == null || result.ResponseCode != "00" || result.ResponseDesc != "Success")
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine($"NoRek : {rekBank.Kode} - {rekBank.Nama} year_month : {tahun}-{bulan} Gagal Terhubung setelah dicoba {attempt}x, karena {result?.ResponseDesc ?? ""}, Mohon Ulangi Beberapa Saat.");
+                                Console.WriteLine($"NoRek : {rekBank.Kode} - {rekBank.Nama} tgl : {tahun}-{bulan} Gagal Terhubung setelah dicoba {attempt}x, karena {result?.ResponseDesc ?? ""}, Mohon Ulangi Beberapa Saat.");
                                 Console.ResetColor();
 
                                 break;
@@ -224,65 +227,84 @@ namespace MutasiBankWs
 
                         if (isSuccessGetData)
                         {
-                            foreach (var item in result.History)
+                            if(result != null)
                             {
-                                try
+                                foreach (var item in result.History)
                                 {
-                                    var tanggalTransaksi = DateTime.ParseExact(item.DateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                                    var transactionCode = Regex.Replace($"{item.Reffno}{item.TransactionCode}{tanggalTransaksi.ToString("ddMMyyyyHHmmss")}", @"\s+", "");
-                                    var description = item.Description;
-                                    var amount = item.Amount;
-                                    var flag = item.Flag;
-                                    var ccy = item.Ccy;
-                                    var reffno = item.Reffno;
-                                    var rekeningBank = rekBank.Kode.ToString();
-                                    var rekeningBankNama = rekBank.Nama;
-
-                                    var sourceRow = _contMonPd.DbMutasiRekenings.Find(transactionCode);
-                                    if (sourceRow != null)
+                                    try
                                     {
-                                        sourceRow.TanggalTransaksi = tanggalTransaksi;
-                                        sourceRow.Description = description;
-                                        sourceRow.Amount = amount;
-                                        sourceRow.Flag = flag;
-                                        sourceRow.Ccy = ccy;
-                                        sourceRow.Reffno = reffno;
-                                        sourceRow.RekeningBank = rekeningBank;
-                                        sourceRow.RekeningBankNama = rekeningBankNama;
+                                        //var tanggalTransaksi = DateTime.ParseExact(item.DateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                        var tanggalTransaksi = MethodSawuangarDateTime(rangeStart, item.DateTime);
 
-                                        updateList.Add(sourceRow);
+                                        var transactionCode = Regex.Replace($"{item.Reffno}.{item.TransactionCode}.{tanggalTransaksi.ToString("ddMMyyyyHHmmss")}.{item.Amount}", @"\s+", "");
+                                        var description = item.Description;
+                                        var amount = item.Amount;
+                                        var flag = item.Flag;
+                                        var ccy = item.Ccy;
+                                        var reffno = item.Reffno;
+                                        var rekeningBank = rekBank.Kode.ToString();
+                                        var rekeningBankNama = rekBank.Nama;
+
+                                        var sourceRow = _contMonPd.DbMutasiRekenings.Find(transactionCode);
+                                        if (sourceRow != null)
+                                        {
+                                            sourceRow.TanggalTransaksi = tanggalTransaksi;
+                                            sourceRow.Description = description;
+                                            sourceRow.Amount = amount;
+                                            sourceRow.Flag = flag;
+                                            sourceRow.Ccy = ccy;
+                                            sourceRow.Reffno = reffno;
+                                            sourceRow.RekeningBank = rekeningBank;
+                                            sourceRow.RekeningBankNama = rekeningBankNama;
+
+                                            updateList.Add(sourceRow);
+                                        }
+                                        else
+                                        {
+                                            var newRow = new MonPDLib.EF.DbMutasiRekening();
+
+                                            newRow.TransactionCode = transactionCode;
+                                            newRow.TanggalTransaksi = tanggalTransaksi;
+                                            newRow.Description = description;
+                                            newRow.Amount = amount;
+                                            newRow.Flag = flag;
+                                            newRow.Ccy = ccy;
+                                            newRow.Reffno = reffno;
+                                            newRow.RekeningBank = rekeningBank;
+                                            newRow.RekeningBankNama = rekeningBankNama;
+
+
+                                            newList.Add(newRow);
+                                        }
                                     }
-                                    else
+                                    catch (Exception ex)
                                     {
-                                        var newRow = new MonPDLib.EF.DbMutasiRekening();
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine($"error : {ex.Message}");
+                                        Console.ResetColor();
 
-                                        newRow.TransactionCode = transactionCode;
-                                        newRow.TanggalTransaksi = tanggalTransaksi;
-                                        newRow.Description = description;
-                                        newRow.Amount = amount;
-                                        newRow.Flag = flag;
-                                        newRow.Ccy = ccy;
-                                        newRow.Reffno = reffno;
-                                        newRow.RekeningBank = rekeningBank;
-                                        newRow.RekeningBankNama = rekeningBankNama;
-
-
-                                        newList.Add(newRow);
+                                        failedList.Add(item);
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine($"error : {ex.Message}");
-                                }
 
-                                index++;
-                                double persen = ((double)index / jmlData) * 100;
-                                Console.Write($"\r[{rangeStart.ToString("yyyy-MM-dd")} s/d {rangeEnd.ToString("yyyy-MM-dd")} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}  [({persen:F2}%)]");
+                                    index++;
+                                    double persen = ((double)index / jmlData) * 100;
+                                    Console.Write($"\r[{rangeStart.ToString("yyyy-MM-dd")} s/d {rangeEnd.ToString("yyyy-MM-dd")} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")} Failed : {failedList.Count.ToString("n0")} [({persen:F2}%)]");
+                                }
                             }
 
                             Console.WriteLine("Updating DB!");
                             if (newList.Any())
                             {
+                                var checkDoble = newList
+                                    .GroupBy(x => new { x.TransactionCode })
+                                    .Select(x => new { x.Key.TransactionCode, Jml = x.Count() })
+                                    .Where(x => x.Jml > 1).ToList();
+
+                                if(checkDoble.Any())
+                                {
+                                    string x = "";
+                                }
+
                                 _contMonPd.DbMutasiRekenings.AddRange(newList);
                                 _contMonPd.SaveChanges();
                             }
@@ -294,11 +316,8 @@ namespace MutasiBankWs
                                 _contMonPd.SaveChanges();
                             }
                             sw.Stop();
-                            Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
-
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"");
-                            Console.WriteLine($"NoRek : {rekBank.Kode} - {rekBank.Nama} year_month : {rangeStart.ToString("yyyy-MM-dd")} s/d {rangeEnd.ToString("yyyy-MM-dd")} Finished");
+                            Console.WriteLine($"NoRek : {rekBank.Kode} - {rekBank.Nama} tgl : {rangeStart.ToString("yyyy-MM-dd")} s/d {rangeEnd.ToString("yyyy-MM-dd")} Finished [{sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik]");
                             Console.WriteLine($"");
                             Console.ResetColor();
                         }
@@ -482,6 +501,28 @@ namespace MutasiBankWs
             _contMonPd.SetLastRuns.Add(newRow);
             _contMonPd.SaveChanges();
             return true;
+        }
+        public static DateTime MethodSawuangarDateTime(DateTime originalDate, string inputDateTimeBJ)
+        {
+            if (string.IsNullOrWhiteSpace(inputDateTimeBJ) || !inputDateTimeBJ.Contains(" "))
+            {
+                throw new ArgumentException("Format string tidak valid", nameof(inputDateTimeBJ));
+            }
+
+            string timePart = inputDateTimeBJ.Substring(inputDateTimeBJ.LastIndexOf(' ') + 1);
+
+            var newTime = TimeOnly.ParseExact(timePart, "HH:mm:ss");
+
+            return new DateTime(
+                originalDate.Year,
+                originalDate.Month,
+                originalDate.Day,
+                newTime.Hour,
+                newTime.Minute,
+                newTime.Second,
+                newTime.Millisecond,
+                originalDate.Kind
+            );
         }
 
         public class TOKEN_CREDENTIAL
