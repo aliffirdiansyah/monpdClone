@@ -176,7 +176,11 @@ END AS WILAYAH_PAJAK,
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
 WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL  AND FK_NOP NOT LIKE '00%' 
 )
-WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN) OR  TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
+WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
+            (   TGL_OP_TUTUP IS  NULL OR
+                 TO_CHAR(TGL_OP_TUTUP,'YYYY') >= :TAHUN OR
+                 TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
+             )
                     ";
 
                 var result = _contMonitoringDB.Set<DbOpHiburan>().FromSqlRaw(sql, new[] {

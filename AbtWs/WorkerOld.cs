@@ -88,7 +88,7 @@ namespace AbtWs
         {
             var tglServer = DateTime.Now;
             var _contMonPd = DBClass.GetContext();
-            int tahunAmbil = 2009;
+            int tahunAmbil = 2023;
 
             for (var i = tahunAmbil; i <= 2024; i++)
             {
@@ -164,7 +164,11 @@ END AS WILAYAH_PAJAK,
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
 WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL
 )
-WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN) OR  TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
+WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
+            (   TGL_OP_TUTUP IS  NULL OR
+                 TO_CHAR(TGL_OP_TUTUP,'YYYY') >= :TAHUN OR
+                 TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
+             )
                     ";
 
                 var result = _contMonitoringDB.Set<DbOpAbt>().FromSqlRaw(sql, new[] {

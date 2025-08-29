@@ -181,7 +181,11 @@ END AS WILAYAH_PAJAK,
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
 WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL
 )
-WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN) OR  TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
+WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
+            (   TGL_OP_TUTUP IS  NULL OR
+                 TO_CHAR(TGL_OP_TUTUP,'YYYY') >= :TAHUN OR
+                 TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
+             )
                     ";
 
                 var result = _contMonitoringDB.Set<DbOpHotel>().FromSqlRaw(sql, new[] {
@@ -192,89 +196,64 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                 int jmlData = result.Count;
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbOpHotel>();
-                var updateList = new List<MonPDLib.EF.DbOpHotel>();
+                //var updateList = new List<MonPDLib.EF.DbOpHotel>();
+                var removeEx = _contMonPd.DbOpHotels.Where(x => x.TahunBuku == tahunBuku).ToList();
                 foreach (var item in result)
                 {
                     // DATA OP
                     try
                     {
-                        var sourceRow = _contMonPd.DbOpHotels.Find(item.Nop, (decimal)tahunBuku);
-                        if (sourceRow != null)
-                        {
-                            sourceRow.TglOpTutup = item.TglOpTutup;
-                            sourceRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
-                            sourceRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
-                            var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
-                            sourceRow.Akun = dbakun.Akun;
-                            sourceRow.NamaAkun = dbakun.NamaAkun;
-                            sourceRow.Kelompok = dbakun.Kelompok;
-                            sourceRow.NamaKelompok = dbakun.NamaKelompok;
-                            sourceRow.Jenis = dbakun.Jenis;
-                            sourceRow.NamaJenis = dbakun.NamaJenis;
-                            sourceRow.Objek = dbakun.Objek;
-                            sourceRow.NamaObjek = dbakun.NamaObjek;
-                            sourceRow.Rincian = dbakun.Rincian;
-                            sourceRow.NamaRincian = dbakun.NamaRincian;
-                            sourceRow.SubRincian = dbakun.SubRincian;
-                            sourceRow.NamaSubRincian = dbakun.NamaSubRincian;
-                            updateList.Add(sourceRow);
-                        }
-                        else
-                        {
-                            var newRow = new MonPDLib.EF.DbOpHotel();
-                            newRow.Nop = item.Nop;
-                            newRow.Npwpd = item.Npwpd;
-                            // set manual
-                            var infoWP = GetInfoWPHPP(newRow.Npwpd);
-                            newRow.NpwpdNama = infoWP[0];
-                            newRow.NpwpdAlamat = infoWP[1];
-                            //
-                            newRow.PajakId = item.PajakId;
-                            newRow.PajakNama = item.PajakNama;
-                            newRow.NamaOp = item.NamaOp;
-                            newRow.AlamatOp = item.AlamatOp;
-                            newRow.AlamatOpNo = item.AlamatOpNo;
-                            newRow.AlamatOpRt = item.AlamatOpRt;
-                            newRow.AlamatOpRw = item.AlamatOpRw;
-                            newRow.Telp = item.Telp;
-                            newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
-                            newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
-                            newRow.TglOpTutup = item.TglOpTutup;
-                            newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
+                        var newRow = new MonPDLib.EF.DbOpHotel();
+                        newRow.Nop = item.Nop;
+                        newRow.Npwpd = item.Npwpd;
+                        // set manual
+                        var infoWP = GetInfoWPHPP(newRow.Npwpd);
+                        newRow.NpwpdNama = infoWP[0];
+                        newRow.NpwpdAlamat = infoWP[1];
+                        //
+                        newRow.PajakId = item.PajakId;
+                        newRow.PajakNama = item.PajakNama;
+                        newRow.NamaOp = item.NamaOp;
+                        newRow.AlamatOp = item.AlamatOp;
+                        newRow.AlamatOpNo = item.AlamatOpNo;
+                        newRow.AlamatOpRt = item.AlamatOpRt;
+                        newRow.AlamatOpRw = item.AlamatOpRw;
+                        newRow.Telp = item.Telp;
+                        newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
+                        newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
+                        newRow.TglOpTutup = item.TglOpTutup;
+                        newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
 
-                            var kategori = GetKategoriOvveride(item.Nop);
-                            item.KategoriId = Convert.ToInt32(kategori[0] ?? "17");
-                            item.KategoriNama = kategori[1] ?? "HOTEL NON BINTANG";
+                        var kategori = GetKategoriOvveride(item.Nop);
+                        item.KategoriId = Convert.ToInt32(kategori[0] ?? "17");
+                        item.KategoriNama = kategori[1] ?? "HOTEL NON BINTANG";
 
-                            newRow.KategoriId = item.KategoriId;
-                            newRow.KategoriNama = item.KategoriNama;
+                        newRow.KategoriId = item.KategoriId;
+                        newRow.KategoriNama = item.KategoriNama;
 
-                            newRow.MetodePenjualan = item.MetodePenjualan;
-                            newRow.MetodePembayaran = item.MetodePembayaran;
-                            newRow.JumlahKaryawan = item.JumlahKaryawan;
-                            newRow.InsDate = item.InsDate;
-                            newRow.InsBy = item.InsBy;
-                            newRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
-                            newRow.WilayahPajak = item.WilayahPajak;
+                        newRow.MetodePenjualan = item.MetodePenjualan;
+                        newRow.MetodePembayaran = item.MetodePembayaran;
+                        newRow.JumlahKaryawan = item.JumlahKaryawan;
+                        newRow.InsDate = item.InsDate;
+                        newRow.InsBy = item.InsBy;
+                        newRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
+                        newRow.WilayahPajak = item.WilayahPajak;
 
-                            newRow.TahunBuku = tahunBuku;
-                            var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
-                            newRow.Akun = dbakun.Akun;
-                            newRow.NamaAkun = dbakun.NamaAkun;
-                            newRow.Kelompok = dbakun.Kelompok;
-                            newRow.NamaKelompok = dbakun.NamaKelompok;
-                            newRow.Jenis = dbakun.Jenis;
-                            newRow.NamaJenis = dbakun.NamaJenis;
-                            newRow.Objek = dbakun.Objek;
-                            newRow.NamaObjek = dbakun.NamaObjek;
-                            newRow.Rincian = dbakun.Rincian;
-                            newRow.NamaRincian = dbakun.NamaRincian;
-                            newRow.SubRincian = dbakun.SubRincian;
-                            newRow.NamaSubRincian = dbakun.NamaSubRincian;
-                            newList.Add(newRow);
-                        }
-
-
+                        newRow.TahunBuku = tahunBuku;
+                        var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
+                        newRow.Akun = dbakun.Akun;
+                        newRow.NamaAkun = dbakun.NamaAkun;
+                        newRow.Kelompok = dbakun.Kelompok;
+                        newRow.NamaKelompok = dbakun.NamaKelompok;
+                        newRow.Jenis = dbakun.Jenis;
+                        newRow.NamaJenis = dbakun.NamaJenis;
+                        newRow.Objek = dbakun.Objek;
+                        newRow.NamaObjek = dbakun.NamaObjek;
+                        newRow.Rincian = dbakun.Rincian;
+                        newRow.NamaRincian = dbakun.NamaRincian;
+                        newRow.SubRincian = dbakun.SubRincian;
+                        newRow.NamaSubRincian = dbakun.NamaSubRincian;
+                        newList.Add(newRow);
                     }
                     catch (Exception ex)
                     {
@@ -283,10 +262,18 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP HOTEL TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    //Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP HOTEL TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP HOTEL TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
+
+                if (removeEx.Any())
+                {
+                    _contMonPd.DbOpHotels.RemoveRange(removeEx);
+                    _contMonPd.SaveChanges();
+                }
+
                 if (newList.Any())
                 {
                     _contMonPd.DbOpHotels.AddRange(newList);
@@ -294,11 +281,11 @@ WHERE  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                 }
 
 
-                if (updateList.Any())
-                {
-                    _contMonPd.DbOpHotels.UpdateRange(updateList);
-                    _contMonPd.SaveChanges();
-                }
+                //if (updateList.Any())
+                //{
+                //    _contMonPd.DbOpHotels.UpdateRange(updateList);
+                //    _contMonPd.SaveChanges();
+                //}
                 sw.Stop();
                 Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
@@ -345,8 +332,9 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 int jmlData = realisasiMonitoringDb.Count;
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbMonHotel>();
-                var updateList = new List<MonPDLib.EF.DbMonHotel>();
-         
+                //var updateList = new List<MonPDLib.EF.DbMonHotel>();
+                var removeEx = _contMonPd.DbMonHotels.Where(x => x.TahunBuku == tahunBuku).ToList();
+
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
                     var realisasi = _contMonPd.DbMonHotels.SingleOrDefault(x => x.Nop == itemRealisasi.NOP &&
@@ -354,233 +342,217 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                                                                            x.MasaPajakKetetapan == itemRealisasi.MASA_PAJAK &&
                                                                            x.SeqPajakKetetapan == itemRealisasi.SEQ &&
                                                                            x.TahunBuku == tahunBuku);
-                    if (realisasi != null)
+
+                    var OP = _contMonPd.DbOpHotels.Find(itemRealisasi.NOP, (decimal)tahunBuku);
+
+                    if (OP != null)
                     {
-                        realisasi.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
-                        realisasi.TglBayarPokok = itemRealisasi.TRANSACTION_DATE;
-                        realisasi.NominalSanksiBayar = itemRealisasi.NOMINAL_SANKSI;
-                        realisasi.TglBayarSanksi = itemRealisasi.TRANSACTION_DATE;
-                        realisasi.NominalSanksiKenaikanBayar = 0;
-                        realisasi.TglBayarSanksiKenaikan = itemRealisasi.TRANSACTION_DATE;
-                        updateList.Add(realisasi);
+                        var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
+                        var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
+
+                        var newRow = new DbMonHotel();
+                        newRow.Nop = OP.Nop;
+                        newRow.Npwpd = OP.Npwpd;
+                        newRow.NpwpdNama = OP.NpwpdNama;
+                        newRow.NpwpdAlamat = OP.NpwpdAlamat;
+                        newRow.PajakId = OP.PajakId;
+                        newRow.PajakNama = OP.PajakNama;
+                        newRow.NamaOp = OP.NamaOp;
+                        newRow.AlamatOp = OP.AlamatOp;
+                        newRow.AlamatOpKdLurah = OP.AlamatOpKdLurah;
+                        newRow.AlamatOpKdCamat = OP.AlamatOpKdCamat;
+                        newRow.TglOpTutup = OP.TglOpTutup;
+                        newRow.TglMulaiBukaOp = OP.TglMulaiBukaOp;
+                        newRow.IsTutup = OP.TglOpTutup == null ? 0 : OP.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
+                        newRow.KategoriId = OP.KategoriId;
+                        newRow.KategoriNama = OP.KategoriNama;
+                        newRow.TahunBuku = tahunBuku;
+                        newRow.Akun = OP.Akun;
+                        newRow.NamaAkun = OP.NamaAkun;
+                        newRow.Jenis = OP.Jenis;
+                        newRow.NamaJenis = OP.NamaJenis;
+                        newRow.Objek = OP.Objek;
+                        newRow.NamaObjek = OP.NamaObjek;
+                        newRow.Rincian = OP.Rincian;
+                        newRow.NamaRincian = OP.NamaRincian;
+                        newRow.SubRincian = OP.SubRincian;
+                        newRow.NamaSubRincian = OP.NamaSubRincian;
+                        newRow.TahunPajakKetetapan = itemRealisasi.TAHUN_PAJAK;
+                        newRow.MasaPajakKetetapan = itemRealisasi.MASA_PAJAK;
+                        newRow.SeqPajakKetetapan = itemRealisasi.SEQ;
+                        newRow.KategoriKetetapan = "4";
+                        newRow.TglKetetapan = itemRealisasi.TRANSACTION_DATE;
+                        newRow.TglJatuhTempoBayar = itemRealisasi.JATUH_TEMPO;
+                        newRow.PokokPajakKetetapan = itemRealisasi.NOMINAL_POKOK;
+                        newRow.PengurangPokokKetetapan = 0;
+                        newRow.AkunKetetapan = AkunPokok.Akun;
+                        newRow.KelompokKetetapan = AkunPokok.Kelompok;
+                        newRow.JenisKetetapan = AkunPokok.Jenis;
+                        newRow.ObjekKetetapan = AkunPokok.Objek;
+                        newRow.RincianKetetapan = AkunPokok.Rincian;
+                        newRow.SubRincianKetetapan = AkunPokok.SubRincian;
+                        newRow.InsDate = DateTime.Now;
+                        newRow.InsBy = "JOB";
+                        newRow.UpdDate = DateTime.Now;
+                        newRow.UpdBy = "JOB";
+                        newRow.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
+                        newRow.AkunPokokBayar = AkunPokok.Akun;
+                        newRow.Kelompok = AkunPokok.Kelompok;
+                        newRow.JenisPokokBayar = AkunPokok.Jenis;
+                        newRow.ObjekPokokBayar = AkunPokok.Objek;
+                        newRow.RincianPokokBayar = AkunPokok.Rincian;
+                        newRow.SubRincianPokokBayar = AkunPokok.SubRincian;
+                        newRow.TglBayarPokok = itemRealisasi.TRANSACTION_DATE;
+                        newRow.TglBayarSanksi = itemRealisasi.TRANSACTION_DATE;
+                        newRow.NominalSanksiBayar = itemRealisasi.NOMINAL_SANKSI;
+                        newRow.AkunSanksiBayar = AkunSanksi.Akun;
+                        newRow.KelompokSanksiBayar = AkunSanksi.Kelompok;
+                        newRow.JenisSanksiBayar = AkunSanksi.Jenis;
+                        newRow.ObjekSanksiBayar = AkunSanksi.Objek;
+                        newRow.RincianSanksiBayar = AkunSanksi.Rincian;
+                        newRow.SubRincianSanksiBayar = AkunSanksi.SubRincian;
+                        newRow.TglBayarSanksiKenaikan = itemRealisasi.TRANSACTION_DATE;
+
+                        newRow.NominalSanksiBayar = 0;
+                        newRow.AkunSanksiBayar = AkunSanksi.Akun;
+                        newRow.KelompokSanksiBayar = AkunSanksi.Kelompok;
+                        newRow.JenisSanksiBayar = AkunSanksi.Jenis;
+                        newRow.ObjekSanksiBayar = AkunSanksi.Objek;
+                        newRow.RincianSanksiBayar = AkunSanksi.Rincian;
+                        newRow.SubRincianSanksiBayar = AkunSanksi.SubRincian;
+                        newList.Add(newRow);
                     }
                     else
                     {
-                        var OP = _contMonPd.DbOpHotels.Find(itemRealisasi.NOP, (decimal)tahunBuku);
+                        var newRowOP = new DbOpHotel();
+                        newRowOP.Nop = itemRealisasi.NOP;
+                        newRowOP.Npwpd = "-";
+                        newRowOP.NpwpdNama = "-";
+                        newRowOP.NpwpdAlamat = "-";
+                        newRowOP.PajakId = KDPajak;
+                        newRowOP.PajakNama = "Pajak Jasa Perhotelan";
+                        newRowOP.NamaOp = "-";
+                        newRowOP.AlamatOp = "-";
+                        newRowOP.AlamatOpNo = "-";
+                        newRowOP.AlamatOpRt = "-";
+                        newRowOP.AlamatOpRw = "-";
+                        newRowOP.Telp = "-";
+                        newRowOP.AlamatOpKdLurah = "-";
+                        newRowOP.AlamatOpKdCamat = "-";
+                        newRowOP.TglOpTutup = new DateTime(tahunBuku, 12, 31);
+                        newRowOP.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
+                        newRowOP.KategoriId = 17;
+                        newRowOP.KategoriNama = "HOTEL NON BINTANG";
+                        newRowOP.MetodePembayaran = "0";
+                        newRowOP.MetodePenjualan = "0";
+                        newRowOP.JumlahKaryawan = 0;
+                        newRowOP.InsDate = DateTime.Now;
+                        newRowOP.InsBy = "JOB";
+                        newRowOP.TahunBuku = tahunBuku;
+                        newRowOP.Akun = "-";
+                        newRowOP.NamaAkun = "-";
+                        newRowOP.Jenis = "-";
+                        newRowOP.NamaJenis = "-";
+                        newRowOP.Objek = "-";
+                        newRowOP.NamaObjek = "-";
+                        newRowOP.Rincian = "-";
+                        newRowOP.NamaRincian = "-";
+                        newRowOP.SubRincian = "-";
+                        newRowOP.NamaSubRincian = "-";
+                        newRowOP.Kelompok = "-";
+                        newRowOP.NamaKelompok = "-";
+                        newRowOP.WilayahPajak = "0";
+                        newRowOP.IsTutup = 1;
+                        _contMonPd.DbOpHotels.Add(newRowOP);
+                        _contMonPd.SaveChanges();
 
-                        if (OP != null)
-                        {                            
-                            var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
-                            var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
+                        var newRow = new DbMonHotel();
+                        newRow.Nop = itemRealisasi.NOP;
+                        newRow.Npwpd = "-";
+                        newRow.NpwpdNama = "-";
+                        newRow.NpwpdAlamat = "-";
+                        newRow.PajakId = KDPajak;
+                        newRow.PajakNama = "Pajak Jasa Perhotelan";
+                        newRow.NamaOp = "-";
+                        newRow.AlamatOp = "-";
+                        newRow.AlamatOpKdLurah = "-";
+                        newRow.AlamatOpKdCamat = "-";
+                        newRow.TglOpTutup = itemRealisasi.TRANSACTION_DATE;
+                        newRow.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
+                        newRow.IsTutup = 1;
+                        newRow.KategoriId = -1;
+                        newRow.KategoriNama = "-";
+                        newRow.TahunBuku = tahunBuku;
+                        newRow.Akun = "-";
+                        newRow.NamaAkun = "-";
+                        newRow.Jenis = "-";
+                        newRow.NamaJenis = "-";
+                        newRow.Objek = "-";
+                        newRow.NamaObjek = "-";
+                        newRow.Rincian = "-";
+                        newRow.NamaRincian = "-";
+                        newRow.SubRincian = "-";
+                        newRow.NamaSubRincian = "-";
+                        newRow.TahunPajakKetetapan = itemRealisasi.TAHUN_PAJAK;
+                        newRow.MasaPajakKetetapan = itemRealisasi.MASA_PAJAK;
+                        newRow.SeqPajakKetetapan = itemRealisasi.SEQ;
+                        newRow.KategoriKetetapan = "4";
+                        newRow.TglKetetapan = itemRealisasi.TRANSACTION_DATE;
+                        newRow.TglJatuhTempoBayar = itemRealisasi.JATUH_TEMPO;
+                        newRow.PokokPajakKetetapan = itemRealisasi.NOMINAL_POKOK;
+                        newRow.PengurangPokokKetetapan = 0;
+                        newRow.AkunKetetapan = "-";
+                        newRow.KelompokKetetapan = "-";
+                        newRow.JenisKetetapan = "-";
+                        newRow.ObjekKetetapan = "-";
+                        newRow.RincianKetetapan = "-";
+                        newRow.SubRincianKetetapan = "-";
+                        newRow.InsDate = DateTime.Now;
+                        newRow.InsBy = "JOB";
+                        newRow.UpdDate = DateTime.Now;
+                        newRow.UpdBy = "JOB";
+                        newRow.TglBayarPokok = itemRealisasi.TRANSACTION_DATE;
+                        newRow.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
+                        newRow.AkunPokokBayar = "-";
+                        newRow.Kelompok = "-";
+                        newRow.JenisPokokBayar = "-";
+                        newRow.ObjekPokokBayar = "-";
+                        newRow.RincianPokokBayar = "-";
+                        newRow.SubRincianPokokBayar = "-";
+                        newRow.TglBayarSanksi = itemRealisasi.TRANSACTION_DATE;
+                        newRow.NominalSanksiBayar = itemRealisasi.NOMINAL_SANKSI;
+                        newRow.AkunSanksiBayar = "-";
+                        newRow.KelompokSanksiBayar = "-";
+                        newRow.JenisSanksiBayar = "-";
+                        newRow.ObjekSanksiBayar = "-";
+                        newRow.RincianSanksiBayar = "-";
+                        newRow.SubRincianSanksiBayar = "-";
+                        newRow.TglBayarSanksiKenaikan = itemRealisasi.TRANSACTION_DATE;
 
-                            var newRow = new DbMonHotel();
-                            newRow.Nop = OP.Nop;
-                            newRow.Npwpd = OP.Npwpd;
-                            newRow.NpwpdNama = OP.NpwpdNama;
-                            newRow.NpwpdAlamat = OP.NpwpdAlamat;
-                            newRow.PajakId = OP.PajakId;
-                            newRow.PajakNama = OP.PajakNama;
-                            newRow.NamaOp = OP.NamaOp;
-                            newRow.AlamatOp = OP.AlamatOp;
-                            newRow.AlamatOpKdLurah = OP.AlamatOpKdLurah;
-                            newRow.AlamatOpKdCamat = OP.AlamatOpKdCamat;
-                            newRow.TglOpTutup = OP.TglOpTutup;
-                            newRow.TglMulaiBukaOp = OP.TglMulaiBukaOp;
-                            newRow.IsTutup = OP.TglOpTutup == null ? 0 : OP.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
-                            newRow.KategoriId = OP.KategoriId;
-                            newRow.KategoriNama = OP.KategoriNama;
-                            newRow.TahunBuku = tahunBuku;
-                            newRow.Akun = OP.Akun;
-                            newRow.NamaAkun = OP.NamaAkun;
-                            newRow.Jenis = OP.Jenis;
-                            newRow.NamaJenis = OP.NamaJenis;
-                            newRow.Objek = OP.Objek;
-                            newRow.NamaObjek = OP.NamaObjek;
-                            newRow.Rincian = OP.Rincian;
-                            newRow.NamaRincian = OP.NamaRincian;
-                            newRow.SubRincian = OP.SubRincian;
-                            newRow.NamaSubRincian = OP.NamaSubRincian;
-                            newRow.TahunPajakKetetapan = itemRealisasi.TAHUN_PAJAK;
-                            newRow.MasaPajakKetetapan = itemRealisasi.MASA_PAJAK;
-                            newRow.SeqPajakKetetapan = itemRealisasi.SEQ;
-                            newRow.KategoriKetetapan = "4";
-                            newRow.TglKetetapan = itemRealisasi.TRANSACTION_DATE;
-                            newRow.TglJatuhTempoBayar = itemRealisasi.JATUH_TEMPO;
-                            newRow.PokokPajakKetetapan = itemRealisasi.NOMINAL_POKOK;
-                            newRow.PengurangPokokKetetapan = 0;
-                            newRow.AkunKetetapan = AkunPokok.Akun;
-                            newRow.KelompokKetetapan = AkunPokok.Kelompok;
-                            newRow.JenisKetetapan = AkunPokok.Jenis;
-                            newRow.ObjekKetetapan = AkunPokok.Objek;
-                            newRow.RincianKetetapan = AkunPokok.Rincian;
-                            newRow.SubRincianKetetapan = AkunPokok.SubRincian;
-                            newRow.InsDate = DateTime.Now;
-                            newRow.InsBy = "JOB";
-                            newRow.UpdDate = DateTime.Now;
-                            newRow.UpdBy = "JOB";
-                            newRow.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
-                            newRow.AkunPokokBayar = AkunPokok.Akun;
-                            newRow.Kelompok = AkunPokok.Kelompok;
-                            newRow.JenisPokokBayar = AkunPokok.Jenis;
-                            newRow.ObjekPokokBayar = AkunPokok.Objek;
-                            newRow.RincianPokokBayar = AkunPokok.Rincian;
-                            newRow.SubRincianPokokBayar = AkunPokok.SubRincian;
-                            newRow.TglBayarPokok = itemRealisasi.TRANSACTION_DATE;
-                            newRow.TglBayarSanksi = itemRealisasi.TRANSACTION_DATE;
-                            newRow.NominalSanksiBayar = itemRealisasi.NOMINAL_SANKSI;
-                            newRow.AkunSanksiBayar = AkunSanksi.Akun;
-                            newRow.KelompokSanksiBayar = AkunSanksi.Kelompok;
-                            newRow.JenisSanksiBayar = AkunSanksi.Jenis;
-                            newRow.ObjekSanksiBayar = AkunSanksi.Objek;
-                            newRow.RincianSanksiBayar = AkunSanksi.Rincian;
-                            newRow.SubRincianSanksiBayar = AkunSanksi.SubRincian;
-                            newRow.TglBayarSanksiKenaikan = itemRealisasi.TRANSACTION_DATE;
-
-                            newRow.NominalSanksiBayar = 0;
-                            newRow.AkunSanksiBayar = AkunSanksi.Akun;
-                            newRow.KelompokSanksiBayar = AkunSanksi.Kelompok;
-                            newRow.JenisSanksiBayar = AkunSanksi.Jenis;
-                            newRow.ObjekSanksiBayar = AkunSanksi.Objek;
-                            newRow.RincianSanksiBayar = AkunSanksi.Rincian;
-                            newRow.SubRincianSanksiBayar = AkunSanksi.SubRincian;
-                            newList.Add(newRow);
-                        }
-                        else
-                        {
-                            var newRowOP = new DbOpHotel();
-                            newRowOP.Nop = itemRealisasi.NOP;
-                            newRowOP.Npwpd = "-";
-                            newRowOP.NpwpdNama = "-";
-                            newRowOP.NpwpdAlamat = "-";
-                            newRowOP.PajakId = KDPajak;
-                            newRowOP.PajakNama = "Pajak Jasa Resto";
-                            newRowOP.NamaOp = "-";
-                            newRowOP.AlamatOp = "-";
-                            newRowOP.AlamatOpNo = "-";
-                            newRowOP.AlamatOpRt = "-";
-                            newRowOP.AlamatOpRw = "-";
-                            newRowOP.Telp = "-";
-                            newRowOP.AlamatOpKdLurah = "-";
-                            newRowOP.AlamatOpKdCamat = "-";
-                            newRowOP.TglOpTutup = new DateTime(tahunBuku, 12, 31);
-                            newRowOP.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
-                            newRowOP.KategoriId = 17;
-                            newRowOP.KategoriNama = "HOTEL NON BINTANG";
-                            newRowOP.MetodePembayaran = "0";
-                            newRowOP.MetodePenjualan = "0";
-                            newRowOP.JumlahKaryawan = 0;                            
-                            newRowOP.InsDate = DateTime.Now;
-                            newRowOP.InsBy = "JOB";
-                            newRowOP.TahunBuku = tahunBuku;
-                            newRowOP.Akun = "-";
-                            newRowOP.NamaAkun = "-";
-                            newRowOP.Jenis = "-";
-                            newRowOP.NamaJenis = "-";
-                            newRowOP.Objek = "-";
-                            newRowOP.NamaObjek = "-";
-                            newRowOP.Rincian = "-";
-                            newRowOP.NamaRincian = "-";
-                            newRowOP.SubRincian = "-";
-                            newRowOP.NamaSubRincian = "-";
-                            newRowOP.Kelompok = "-";
-                            newRowOP.NamaKelompok = "-";
-                            newRowOP.WilayahPajak = "0";
-                            newRowOP.IsTutup = 1;
-                            _contMonPd.DbOpHotels.Add(newRowOP);
-                            _contMonPd.SaveChanges();
-
-                            var newRow = new DbMonHotel();
-                            newRow.Nop = itemRealisasi.NOP;
-                            newRow.Npwpd = "-";
-                            newRow.NpwpdNama = "-";
-                            newRow.NpwpdAlamat = "-";
-                            newRow.PajakId = KDPajak;
-                            newRow.PajakNama = "Pajak Jasa Perhotelan";
-                            newRow.NamaOp = "-";
-                            newRow.AlamatOp = "-";
-                            newRow.AlamatOpKdLurah = "-";
-                            newRow.AlamatOpKdCamat = "-";
-                            newRow.TglOpTutup = itemRealisasi.TRANSACTION_DATE;
-                            newRow.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
-                            newRow.IsTutup = 1;
-                            newRow.KategoriId = -1;
-                            newRow.KategoriNama = "-";
-                            newRow.TahunBuku = tahunBuku;
-                            newRow.Akun = "-";
-                            newRow.NamaAkun = "-";
-                            newRow.Jenis = "-";
-                            newRow.NamaJenis = "-";
-                            newRow.Objek = "-";
-                            newRow.NamaObjek = "-";
-                            newRow.Rincian = "-";
-                            newRow.NamaRincian = "-";
-                            newRow.SubRincian = "-";
-                            newRow.NamaSubRincian = "-";
-                            newRow.TahunPajakKetetapan = itemRealisasi.TAHUN_PAJAK;
-                            newRow.MasaPajakKetetapan = itemRealisasi.MASA_PAJAK;
-                            newRow.SeqPajakKetetapan = itemRealisasi.SEQ;
-                            newRow.KategoriKetetapan = "4";
-                            newRow.TglKetetapan = itemRealisasi.TRANSACTION_DATE;
-                            newRow.TglJatuhTempoBayar = itemRealisasi.JATUH_TEMPO;
-                            newRow.PokokPajakKetetapan = itemRealisasi.NOMINAL_POKOK;
-                            newRow.PengurangPokokKetetapan = 0;
-                            newRow.AkunKetetapan = "-";
-                            newRow.KelompokKetetapan = "-";
-                            newRow.JenisKetetapan = "-";
-                            newRow.ObjekKetetapan = "-";
-                            newRow.RincianKetetapan = "-";
-                            newRow.SubRincianKetetapan = "-";
-                            newRow.InsDate = DateTime.Now;
-                            newRow.InsBy = "JOB";
-                            newRow.UpdDate = DateTime.Now;
-                            newRow.UpdBy = "JOB";
-                            newRow.TglBayarPokok = itemRealisasi.TRANSACTION_DATE;
-                            newRow.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
-                            newRow.AkunPokokBayar = "-";
-                            newRow.Kelompok = "-";
-                            newRow.JenisPokokBayar = "-";
-                            newRow.ObjekPokokBayar = "-";
-                            newRow.RincianPokokBayar = "-";
-                            newRow.SubRincianPokokBayar = "-";
-                            newRow.TglBayarSanksi = itemRealisasi.TRANSACTION_DATE;
-                            newRow.NominalSanksiBayar = itemRealisasi.NOMINAL_SANKSI;
-                            newRow.AkunSanksiBayar = "-";
-                            newRow.KelompokSanksiBayar = "-";
-                            newRow.JenisSanksiBayar = "-";
-                            newRow.ObjekSanksiBayar = "-";
-                            newRow.RincianSanksiBayar = "-";
-                            newRow.SubRincianSanksiBayar = "-";
-                            newRow.TglBayarSanksiKenaikan = itemRealisasi.TRANSACTION_DATE;
-
-                            newRow.NominalSanksiBayar = 0;
-                            newRow.AkunSanksiBayar = "-";
-                            newRow.KelompokSanksiBayar = "-";
-                            newRow.JenisSanksiBayar = "-";
-                            newRow.ObjekSanksiBayar = "-";
-                            newRow.RincianSanksiBayar = "-";
-                            newRow.SubRincianSanksiBayar = "-";
-                            newList.Add(newRow);
-                        }
-
-
-
-
+                        newRow.NominalSanksiBayar = 0;
+                        newRow.AkunSanksiBayar = "-";
+                        newRow.KelompokSanksiBayar = "-";
+                        newRow.JenisSanksiBayar = "-";
+                        newRow.ObjekSanksiBayar = "-";
+                        newRow.RincianSanksiBayar = "-";
+                        newRow.SubRincianSanksiBayar = "-";
+                        newList.Add(newRow);
                     }
+
+
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI HOTEL TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI HOTEL TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")}     [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
+                if (removeEx.Any())
+                {
+                    _contMonPd.DbMonHotels.UpdateRange(removeEx);
+                    _contMonPd.SaveChanges();
+                }
                 if (newList.Any())
                 {
                     _contMonPd.DbMonHotels.AddRange(newList);
-                    _contMonPd.SaveChanges();
-                }
-
-
-                if (updateList.Any())
-                {
-                    _contMonPd.DbMonHotels.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
                 sw.Stop();

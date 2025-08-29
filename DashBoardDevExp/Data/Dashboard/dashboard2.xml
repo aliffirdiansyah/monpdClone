@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Series Target dan Pendapatan" />
+  <DataSources>
+    <SqlDataSource Name="Oracle Data Source" ComponentName="sqlDataSource1">
+      <Connection Name="connection" ProviderKey="Oracle">
+        <Parameters>
+          <Parameter Name="server" Value="10.21.39.80:1521/devdb" />
+          <Parameter Name="database" Value="" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="OracleProviderType" Value="ODPManaged" />
+          <Parameter Name="userid" Value="monpd" />
+          <Parameter Name="password" Value="monpd2025" />
+        </Parameters>
+      </Connection>
+      <Query Type="CustomSqlQuery" Name="TdanR">
+        <Sql>SELECT A.TAHUN_BUKU, A.PAJAK_ID,NAMA,TARGET,REALISASI,(realisasi / NULLIF(target, 0)) AS PENCAPAIAN
+FROM (
+SELECT TAHUN_BUKU,B.ID PAJAK_ID,B.KET NAMA , SUM(TARGET) TARGET
+FROM DB_AKUN_TARGET A
+JOIN M_PAJAK B ON A.PAJAK_ID=B.ID
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,B.ID ,B.KET
+) A
+LEFT JOIN (
+SELECT TAHUN_BUKU,3 PAJAK_ID,SUM(NOMINAL_POKOK_BAYAR) REALISASI 
+FROM DB_MON_HOTEL
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,3
+UNION ALL
+SELECT TAHUN_BUKU,1 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_RESTO
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,1
+UNION ALL
+SELECT TAHUN_BUKU,5 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_HIBURAN
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,5
+UNION ALL
+SELECT TAHUN_BUKU,4 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_PARKIR
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,4
+UNION ALL
+SELECT TAHUN_BUKU,2 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_PPJ
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,2
+UNION ALL
+SELECT TAHUN_BUKU, 7 PAJAK_ID,
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_REKLAME
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,7
+UNION ALL
+SELECT TAHUN_BUKU, 6 PAJAK_ID,
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_ABT
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,6
+UNION ALL
+SELECT TAHUN_BUKU, 9 PAJAK_ID,
+            SUM(JUMLAH_BAYAR_POKOK) REALISASI
+FROM DB_MON_PBB
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,9
+UNION ALL
+SELECT EXTRACT(YEAR FROM TGL_BAYAR), 12 PAJAK_ID,
+            SUM(POKOK) REALISASI
+FROM DB_MON_BPHTB
+WHERE EXTRACT(YEAR FROM TGL_BAYAR) &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY EXTRACT(YEAR FROM TGL_BAYAR), 12
+UNION ALL
+SELECT EXTRACT(YEAR FROM TGL_SSPD), 20 PAJAK_ID,
+                SUM(JML_POKOK)            
+FROM DB_MON_OPSEN_PKB
+WHERE EXTRACT(YEAR FROM TGL_SSPD) &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY EXTRACT(YEAR FROM TGL_SSPD), 20
+UNION ALL
+SELECT EXTRACT(YEAR FROM TGL_SSPD), 21 PAJAK_ID,
+            SUM(JML_POKOK)            
+FROM DB_MON_OPSEN_BBNKB
+WHERE EXTRACT(YEAR FROM TGL_SSPD) &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY EXTRACT(YEAR FROM TGL_SSPD), 21
+)  B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.PAJAK_ID=B.PAJAK_ID            
+ORDER BY TAHUN_BUKU DESC, PAJAK_ID ASC</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="FilterPajak">
+        <Sql>SELECT ID,NAMA,KET
+    FROM M_PAJAK
+    WHERE ID&gt;=1 AND ID&lt;=21</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="TandRBulan">
+        <Sql>SELECT A.TAHUN_BUKU,A.BULAN, A.PAJAK_ID,NAMA,TARGET,REALISASI,(realisasi / NULLIF(target, 0)) AS PENCAPAIAN
+FROM (
+                SELECT TAHUN_BUKU,BULAN,B.ID PAJAK_ID,B.NAMA , SUM(TARGET) TARGET
+                FROM DB_AKUN_TARGET_BULAN A
+                JOIN M_PAJAK B ON A.PAJAK_ID=B.ID
+                WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+                GROUP BY TAHUN_BUKU,BULAN,B.ID ,B.NAMA
+) A
+LEFT JOIN (
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN,3 PAJAK_ID,SUM(NOMINAL_POKOK_BAYAR) REALISASI 
+FROM DB_MON_HOTEL
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
+UNION ALL
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),1 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_RESTO
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
+UNION ALL
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),5 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_HIBURAN
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
+UNION ALL
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),4 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_PARKIR
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
+UNION ALL
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),2 PAJAK_ID, 
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_PPJ
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
+UNION ALL
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK), 7 PAJAK_ID,
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_REKLAME
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
+UNION ALL
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK), 6 PAJAK_ID,
+            SUM(NOMINAL_POKOK_BAYAR) REALISASI
+FROM DB_MON_ABT
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
+UNION ALL
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR), 9 PAJAK_ID,
+            SUM(JUMLAH_BAYAR_POKOK) REALISASI
+FROM DB_MON_PBB
+WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR)
+UNION ALL
+SELECT EXTRACT(YEAR FROM TGL_BAYAR),EXTRACT(MONTH FROM TGL_BAYAR), 12 PAJAK_ID,
+            SUM(POKOK) REALISASI
+FROM DB_MON_BPHTB
+WHERE EXTRACT(YEAR FROM TGL_BAYAR) &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY EXTRACT(YEAR FROM TGL_BAYAR),EXTRACT(MONTH FROM TGL_BAYAR)
+UNION ALL
+SELECT EXTRACT(YEAR FROM TGL_SSPD),EXTRACT(MONTH FROM TGL_SSPD), 20 PAJAK_ID,
+                SUM(JML_POKOK)            
+FROM DB_MON_OPSEN_PKB
+WHERE EXTRACT(YEAR FROM TGL_SSPD) &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY EXTRACT(YEAR FROM TGL_SSPD),EXTRACT(MONTH FROM TGL_SSPD)
+UNION ALL
+SELECT EXTRACT(YEAR FROM TGL_SSPD),EXTRACT(MONTH FROM TGL_SSPD), 21 PAJAK_ID,
+            SUM(JML_POKOK)            
+FROM DB_MON_OPSEN_BBNKB
+WHERE EXTRACT(YEAR FROM TGL_SSPD) &gt;= EXTRACT(YEAR FROM SYSDATE) -5
+GROUP BY EXTRACT(YEAR FROM TGL_SSPD),EXTRACT(MONTH FROM TGL_SSPD)
+)  B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.PAJAK_ID=B.PAJAK_ID AND A.BULAN=B.BULAN            
+ORDER BY A.TAHUN_BUKU DESC,A.BULAN ASC, PAJAK_ID ASC</Sql>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Pivot ComponentName="pivotDashboardItem1" Name="Target dan Realisasi" DataSource="sqlDataSource1" DataMember="TdanR">
+      <InteractivityOptions IgnoreMasterFilters="true" />
+      <DataItems>
+        <Dimension DataMember="TAHUN_BUKU" Name="Tahun Buku" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Measure DataMember="TARGET" Name="Target" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI" Name="Realisasi" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Dimension DataMember="NAMA" DefaultId="DataItem3" />
+        <Measure DataMember="PENCAPAIAN" ShowTotals="false" ShowGrandTotals="false" Name="Pencapaian" DefaultId="DataItem4">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Dimension DataMember="NAMA" DefaultId="DataItem5" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem5" />
+      </HiddenDimensions>
+      <FormatRules>
+        <PivotItemFormatRule Name="Format Rule 1" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorRedFlag" />
+            <Value1 Type="System.Decimal" Value="0" />
+            <Value2 Type="System.Decimal" Value="0.5" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+        <PivotItemFormatRule Name="Format Rule 2" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorCircledYellowExclamation" />
+            <Value1 Type="System.Decimal" Value="0.511" />
+            <Value2 Type="System.Decimal" Value="0.9" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+        <PivotItemFormatRule Name="Format Rule 3" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="ShapeLightRedCircle" />
+            <Value1 Type="System.Decimal" Value="0.901" />
+            <Value2 Type="System.Decimal" Value="0.999" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+        <PivotItemFormatRule Name="Format Rule 4" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="GreaterOrEqual">
+            <IconSettings IconType="IndicatorCircledGreenCheck" />
+            <Value1 Type="System.Decimal" Value="1" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+      </FormatRules>
+      <Columns>
+        <Column DefaultId="DataItem0" />
+      </Columns>
+      <Rows>
+        <Row DefaultId="DataItem3" />
+      </Rows>
+      <Values>
+        <Value DefaultId="DataItem1" />
+        <Value DefaultId="DataItem2" />
+        <Value DefaultId="DataItem4" />
+      </Values>
+      <ShowColumnGrandTotals>false</ShowColumnGrandTotals>
+      <ShowColumnTotals>false</ShowColumnTotals>
+      <ShowRowTotals>false</ShowRowTotals>
+    </Pivot>
+    <ComboBox ComponentName="comboBoxDashboardItem1" Name="Pajak" DataSource="sqlDataSource1" DataMember="TandRBulan" IsMasterFilterCrossDataSource="true">
+      <DataItems>
+        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem0" />
+        <Dimension DataMember="NAMA" DefaultId="DataItem1" />
+      </DataItems>
+      <FilterDimensions>
+        <Dimension DefaultId="DataItem0" />
+        <Dimension DefaultId="DataItem1" />
+      </FilterDimensions>
+    </ComboBox>
+    <Chart ComponentName="chartDashboardItem1" Name="Tren" DataSource="sqlDataSource1" DataMember="TandRBulan">
+      <ColoringOptions MeasuresColoringMode="Hue" />
+      <DataItems>
+        <Measure DataMember="TARGET" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Dimension DataMember="TAHUN_BUKU" IsDiscreteScale="true" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="NAMA" DefaultId="DataItem3" />
+        <Dimension DataMember="NAMA" DefaultId="DataItem1" />
+        <Measure DataMember="REALISASI" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem1" />
+      </HiddenDimensions>
+      <FormatRules>
+        <ChartItemFormatRule Name="Format Rule 1" DataItem="DataItem0" SeriesId="DataItem0" ApplyToChartElement="LineOrArea">
+          <FormatConditionValue Condition="Greater">
+            <ColorStyleSettings Color="-715756" PredefinedColor="Custom" />
+            <Value1 Type="System.Decimal" Value="0" />
+          </FormatConditionValue>
+        </ChartItemFormatRule>
+        <ChartItemFormatRule Name="Format Rule 2" DataItem="DataItem4" SeriesId="DataItem4" ApplyToChartElement="LineOrArea">
+          <FormatConditionValue Condition="Greater">
+            <ColorStyleSettings PredefinedColor="Blue" />
+            <Value1 Type="System.Decimal" Value="0" />
+          </FormatConditionValue>
+        </ChartItemFormatRule>
+      </FormatRules>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem3" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem2" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Pane 1">
+          <Series>
+            <Simple Name="TARGET" SeriesType="Line">
+              <Value DefaultId="DataItem0" />
+              <PointLabelOptions ContentType="Value" />
+            </Simple>
+            <Simple Name="REALISASI" SeriesType="Line">
+              <Value DefaultId="DataItem4" />
+              <PointLabelOptions ContentType="Value" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+    <Pivot ComponentName="pivotDashboardItem2" Name="TREN BULAN" DataSource="sqlDataSource1" DataMember="TandRBulan">
+      <DataItems>
+        <Measure DataMember="TARGET" Name="Target" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI" Name="Realisasi" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="PENCAPAIAN" Name="Pencapaian" DefaultId="DataItem2">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="BULAN" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+      </DataItems>
+      <FormatRules>
+        <PivotItemFormatRule Name="Format Rule 1" DataItem="DataItem2" DataItemApplyTo="DataItem2">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorRedFlag" />
+            <Value1 Type="System.Decimal" Value="0" />
+            <Value2 Type="System.Decimal" Value="0.5" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+        <PivotItemFormatRule Name="Format Rule 2" DataItem="DataItem2" DataItemApplyTo="DataItem2">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorYellowFlag" />
+            <Value1 Type="System.Decimal" Value="0.501" />
+            <Value2 Type="System.Decimal" Value="0.9" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+        <PivotItemFormatRule Name="Format Rule 3" DataItem="DataItem2" DataItemApplyTo="DataItem2">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="ShapeLightRedCircle" />
+            <Value1 Type="System.Decimal" Value="0.901" />
+            <Value2 Type="System.Decimal" Value="0.999" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+        <PivotItemFormatRule Name="Format Rule 4" DataItem="DataItem2" DataItemApplyTo="DataItem2">
+          <FormatConditionValue Condition="GreaterOrEqual">
+            <IconSettings IconType="IndicatorCircledGreenCheck" />
+            <Value1 Type="System.Decimal" Value="1" />
+          </FormatConditionValue>
+          <PivotItemFormatRuleLevel />
+        </PivotItemFormatRule>
+      </FormatRules>
+      <Columns>
+        <Column DefaultId="DataItem3" />
+      </Columns>
+      <Rows>
+        <Row DefaultId="DataItem4" />
+      </Rows>
+      <Values>
+        <Value DefaultId="DataItem0" />
+        <Value DefaultId="DataItem1" />
+        <Value DefaultId="DataItem2" />
+      </Values>
+      <ShowColumnGrandTotals>false</ShowColumnGrandTotals>
+      <ShowColumnTotals>false</ShowColumnTotals>
+    </Pivot>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutGroup Weight="0.9980368699383139">
+          <LayoutItem DashboardItem="comboBoxDashboardItem1" Weight="0.13522222653852187" />
+          <LayoutItem DashboardItem="pivotDashboardItem1" Weight="1.3584480920026578" />
+        </LayoutGroup>
+        <LayoutGroup Weight="1.0019631300616862">
+          <LayoutItem DashboardItem="chartDashboardItem1" Weight="0.47836174997517494" />
+          <LayoutItem DashboardItem="pivotDashboardItem2" Weight="0.9601830523827806" />
+        </LayoutGroup>
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>
