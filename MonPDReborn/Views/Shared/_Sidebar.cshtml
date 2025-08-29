@@ -539,7 +539,7 @@
                 </ul>
             </div>
         }
-        else if (nama.Contains("MAGANG"))
+        else if (nama.Contains("MAGANG PENAGIHAN"))
         {
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
@@ -562,7 +562,23 @@
                 </ul>
             </div>
         }
-        else
+        else if (nama.Contains("MAGANG PENDATAAN"))
+        {
+            <div class="container-fluid">
+                <div id="two-column-menu"></div>
+                <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-menu">DATA</span></li>
+
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "KONTROLPEMBAYARAN" ? "active" : "")"
+                           href="@Url.Action("Index", "KONTROLPEMBAYARAN")" role="button">
+                            <i class="bx bx-target-lock  me-1 align-middle"></i><span data-key="t-reklamesummary">Monitoring Pembayaran</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else if (nama.Contains("BENDAHARA"))
         {
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
