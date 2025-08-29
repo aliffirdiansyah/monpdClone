@@ -38,7 +38,7 @@
                         .Columns(columns =>
                         {
                             columns.AddFor(m => m.BulanNama).Caption("Bulan");
-                            columns.Add().Caption(TahunNow).Alignment(HorizontalAlignment.Center).Columns(kb =>
+                            columns.Add().Caption(Model.TahunNow.ToString()).Alignment(HorizontalAlignment.Center).Columns(kb =>
                             {
                                 kb.AddFor(m => m.SKPD).Caption("SKPD").Format("#,##0");
                                 kb.AddFor(m => m.Nilai).Caption("NILAI").Format("#,##0");

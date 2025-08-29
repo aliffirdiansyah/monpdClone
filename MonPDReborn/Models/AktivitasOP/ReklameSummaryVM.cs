@@ -27,6 +27,8 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public List<ReklamePermanen> ReklamePermanenList { get; set; } = new();
             public int Tahun { get; set; }
+            public int TahunNow { get; set; }
+            public int TahunMin1 { get; set; } 
             public int Lokasi {get;set; }
             public Show() { }
 
@@ -42,6 +44,8 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public List<TerbatasReklame> TerbatasReklameList { get; set; } = new();
             public int Tahun { get; set; }
+            public int TahunNow { get; set; }
+            public int TahunMin1 { get; set; }
             public int Lokasi { get; set; }
             public ShowTerbatas(int tahun , int lokasi)
             {
@@ -55,6 +59,8 @@ namespace MonPDReborn.Models.AktivitasOP
         {
             public List<IsidentilReklame> IsidentilReklameList { get; set; } = new();
             public int Tahun { get; set; }
+            public int TahunNow { get; set; }
+            public int TahunMin1 { get; set; }
             public int Lokasi { get; set; }
 
             public ShowIsidentil(int tahun, int lokasi)
@@ -819,41 +825,65 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 Expression<Func<MvReklameSummary, bool>> predicate;
 
+                // cari reklame sesuai lokasi (sama seperti sebelumnya)
+                MvReklameSummary reklame = null;
                 if (lokasi == 1)
                 {
-                    predicate = x =>
+                    reklame = context.MvReklameSummaries.FirstOrDefault(x =>
                         (x.NoFormulir == noFormulir && x.Tahun == tahun && x.Bulan == bulan) ||
-                        (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan);
+                        (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan));
                 }
                 else if (lokasi == 2)
                 {
-                    predicate = x =>
+                    reklame = context.MvReklameSummaries.FirstOrDefault(x =>
                         (x.NoFormulir == noFormulir && x.Tahun == tahun && x.Bulan == bulan && x.LetakReklame == "DALAM RUANGAN (IN DOOR)") ||
-                        (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)");
+                        (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)"));
                 }
                 else if (lokasi == 3)
                 {
-                    predicate = x =>
+                    reklame = context.MvReklameSummaries.FirstOrDefault(x =>
                         (x.NoFormulir == noFormulir && x.Tahun == tahun && x.Bulan == bulan && x.LetakReklame == "LUAR RUANGAN (OUT DOOR)") ||
-                        (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan && x.LetakReklameA == "LUAR RUANGAN (OUT DOOR)");
+                        (x.NoFormulirA == noFormulir && x.TahunA == tahun && x.BulanA == bulan && x.LetakReklameA == "LUAR RUANGAN (OUT DOOR)"));
                 }
                 else
                 {
                     return null;
                 }
 
-                var reklame = context.MvReklameSummaries.FirstOrDefault(predicate);
-
                 if (reklame == null)
                     return null;
-                bool isFormulirA = reklame.NoFormulirA == noFormulir;
 
-                // Ambil data upaya (pencocokan ke dua kemungkinan NoFormulir juga)
+                // tentukan field mana yang match dengan parameter
+                string matchedFormulir;
+                bool isFormulirA = false;
+
+                if (!string.IsNullOrEmpty(reklame.NoFormulir) &&
+                    reklame.NoFormulir == noFormulir &&
+                    reklame.Tahun == tahun &&
+                    reklame.Bulan == bulan)
+                {
+                    matchedFormulir = reklame.NoFormulir;
+                }
+                else if (!string.IsNullOrEmpty(reklame.NoFormulirA) &&
+                    reklame.NoFormulirA == noFormulir &&
+                    reklame.TahunA == tahun &&
+                    reklame.BulanA == bulan)
+                {
+                    matchedFormulir = reklame.NoFormulirA;
+                    isFormulirA = true;
+                }
+                else
+                {
+                    // fallback: gunakan parameter langsung (safety)
+                    matchedFormulir = noFormulir;
+                    isFormulirA = false;
+                }
+
+                // sekarang ambil upaya hanya untuk formulir yang benar-benar match
                 var dataUpayaList = context.DbMonReklameUpayas
                     .Include(x => x.DbMonReklameUpayaDok)
-                    .Where(x => x.NoFormulir == reklame.NoFormulir || x.NoFormulir == reklame.NoFormulirA)
+                    .Where(x => x.NoFormulir == matchedFormulir)
                     .OrderByDescending(x => x.TglUpaya)
-                    .Take(1)
                     .Select(x => new DetailUpaya.DataUpaya
                     {
                         NoFormulir = x.NoFormulir,
@@ -866,6 +896,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             : null
                     })
                     .ToList();
+
 
 
                 var model = new DetailUpaya

@@ -39,7 +39,7 @@
             columns.AddFor(m => m.BulanNama).Caption("BULAN").Fixed(true);
 
             // JATUH TEMPO (semua kolom di bawah ini masuk ke grup ini)
-            columns.Add().Caption(TahunMin1).Alignment(HorizontalAlignment.Center).Columns(jt =>
+            columns.Add().Caption(Model.TahunMin1.ToString()).Alignment(HorizontalAlignment.Center).Columns(jt =>
             {
                 // SKPD & NILAI di bagian awal
                 jt.AddFor(m => m.SKPDJT).Caption("SKPD").Format("#,##0");
@@ -74,7 +74,7 @@
             });
 
             // KETETAPAN BARU
-            columns.Add().Caption(TahunNow).Alignment(HorizontalAlignment.Center).Columns(kb =>
+            columns.Add().Caption(Model.TahunNow.ToString()).Alignment(HorizontalAlignment.Center).Columns(kb =>
             {
                 kb.AddFor(m => m.SKPDKB).Caption("SKPD").Format("#,##0");
                 kb.AddFor(m => m.NilaiKB).Caption("NILAI").Format("#,##0");
