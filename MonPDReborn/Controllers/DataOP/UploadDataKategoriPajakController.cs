@@ -23,6 +23,7 @@ namespace MonPDReborn.Controllers.DataOP
         }
         public IActionResult Index()
         {
+            ViewData["Title"] = "Upload Kategori OP";
             try
             {
                 var model = new Models.DataOP.UploadDataKategoriPajakVM.Index();

@@ -94,6 +94,7 @@
 
                         <div id="ShowSeries"></div>
 
+
                         <div class="modal fade" id="detailModalSeries" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalSeriesLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                                 <div class="modal-content">
@@ -135,6 +136,9 @@
                         <div id="ShowTPK"></div>
 
                     </div>
+
+                    
+
                 </div>
 
             </div>
@@ -197,7 +201,7 @@
              });
          }
 
-           function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
               const jenisPajak = cellInfo.data.EnumPajak;
               const kategori = cellInfo.data.KategoriId;
               const tahunKey = cellInfo.column.dataField;
@@ -248,6 +252,28 @@
 
               $(cellElement).append($wrapper);
           }
+
+        function detailSeriesCellTemplate(cellElement, cellInfo) {
+            const enumPajak = cellInfo.data.EnumPajak;
+            const tahun = parseInt(cellInfo.column.caption); // caption = "2023"
+            const jumlah = cellInfo.value || 0;
+
+            if (jumlah > 0) {
+                $("<a>")
+                    .text(jumlah.toLocaleString())
+                    .attr("href", "javascript:void(0);")
+                    .on("click", function () {
+                        onSeriesDetailClick(enumPajak, tahun);
+                    })
+                    .appendTo(cellElement);
+            } else {
+                cellElement.textContent = jumlah;
+            }
+        }
+
+
+
+
 
          function fnShowSeries()
          {
@@ -410,7 +436,7 @@
          }
 
          // 📌 Series Master
-                 function onSeriesClick(enumPajak, kategori, tahun, status ) {
+        function onSeriesClick(enumPajak, kategori, tahun, status ) {
              const $modal = $('#detailModalSeries');
              const $loading = $("#detailLoadingSeries");
              const $container = $("#detailContainerSeries");
@@ -454,6 +480,46 @@
                  }
              });
          }
+
+        function onSeriesDetailClick(enumPajak, tahun) {
+            const $modal = $("#staticBackdropLargeScrollable");
+            const $body = $modal.find(".modal-body"); // langsung ambil modal-body
+
+            // tampilkan spinner sementara
+            $body.html(`
+                <div class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Sedang memuat data...</p>
+                </div>
+            `);
+
+            $modal.modal('show');
+
+            $.ajax({
+                url: '/ProfileOP/DetailOPSeries',
+                method: 'GET',
+                data: {
+                    jenisPajak: enumPajak,
+                    tahun: tahun
+                },
+                success: function (data) {
+                    // isi kontainer dengan hasil ajax
+                    $body.hide().html(data).fadeIn(300);
+                },
+                error: function () {
+                    $body.html(`
+                        <div class="alert alert-danger">
+                            ❌ Gagal memuat data Series.
+                        </div>
+                    `);
+                }
+            });
+        }
+
+
+
 
          function hideDetailSeries() {
              $("#detailWrapperSeries").slideUp();

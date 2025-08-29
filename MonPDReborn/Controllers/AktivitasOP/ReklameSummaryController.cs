@@ -51,20 +51,28 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult Show(int tahun , int lokasi)
+        public IActionResult Show(int tahun, int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.Show(tahun ,lokasi);
+                if (tahun == 0)
+                    tahun = DateTime.Now.Year;
+
+                var model = new Models.AktivitasOP.ReklameSummaryVM.Show(tahun, lokasi)
+                {
+                    TahunNow = tahun,
+                    TahunMin1 = tahun - 1
+                };
+
                 return PartialView($"{URLView}_{actionName}", model);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                response.Message = ex.InnerException?.Message ?? ex.Message;
                 return Json(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
@@ -72,11 +80,19 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
 
+
         public IActionResult ShowTerbatas(int tahun, int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowTerbatas(tahun , lokasi);
+                if (tahun == 0)
+                    tahun = DateTime.Now.Year;
+
+                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowTerbatas(tahun, lokasi)
+                {
+                    TahunNow = tahun,
+                    TahunMin1 = tahun - 1
+                };
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -97,7 +113,14 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowIsidentil(tahun, lokasi);
+                if (tahun == 0)
+                    tahun = DateTime.Now.Year;
+
+                var model = new Models.AktivitasOP.ReklameSummaryVM.ShowIsidentil(tahun, lokasi)
+                {
+                    TahunNow = tahun,
+                    TahunMin1 = tahun - 1
+                };
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

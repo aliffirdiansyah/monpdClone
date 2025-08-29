@@ -1,0 +1,58 @@
+﻿@model MonPDReborn.Models.KontrolPembayaran.PembayaranKontrolVM.Show
+
+<div class="table-responsive">
+    @(
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.KontrolPembayaran.PembayaranKontrolVM.DataPembayaranOP>()
+            .ID("KontrolPembayaranGrid")
+            .DataSource(Model.Data)
+            .ShowBorders(true)
+            .ShowColumnHeaders(true)
+            .ShowColumnLines(true)
+            .ShowRowLines(true)
+            .AllowColumnResizing(true)
+            .RowAlternationEnabled(true)
+            .ColumnAutoWidth(true)
+            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+            .Paging(p => p.PageSize(10))
+            .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+            )
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.TanggalTransaksi).Caption("Tanggal Transaksi");
+                columns.AddFor(m => m.Reff).Caption("Reff");
+                columns.AddFor(m => m.Amount).Caption("Uang Masuk").Format("#,##0");
+                columns.AddFor(m => m.Deskripsi).Caption("Deskripsi");
+                columns.AddFor(m => m.RekeningBank).Caption("Rekening Bank");
+                columns.AddFor(m => m.NamaRekening).Caption("Nama Rekening");
+                columns.Add()
+                    .Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add()
+                    .Text("Detail")
+                    .Icon("search")
+                    .OnClick("onDetail");
+                    });
+            })
+            .Summary(s => {
+                s.TotalItems(items => {
+                    items.AddFor(m => m.TanggalTransaksi)
+                        .SummaryType(SummaryType.Sum)
+                        .DisplayFormat("Total:");
+
+                    items.AddFor(m => m.Amount)
+                        .SummaryType(SummaryType.Sum)
+                        .DisplayFormat("Rp {0}");
+
+                    
+                   
+                });
+            })
+        )
+</div>

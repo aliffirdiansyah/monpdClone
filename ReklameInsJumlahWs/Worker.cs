@@ -98,7 +98,6 @@ namespace ReklameInsJumlahWs
                     Console.WriteLine($"{DateTime.Now} >>> Menghapus data lama dari DB_MON_REKLAME_INS_JUMLAH...");
                     var source = _contMonPd.DbMonReklameInsJumlahs.ToList();
                     _contMonPd.DbMonReklameInsJumlahs.RemoveRange(source);
-                    _contMonPd.SaveChanges();
 
                     Console.WriteLine($"{DateTime.Now} >>> Menyimpan data baru...");
 

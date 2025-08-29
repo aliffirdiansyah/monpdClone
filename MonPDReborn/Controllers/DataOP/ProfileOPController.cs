@@ -237,6 +237,27 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
+        public IActionResult DetailOPSeries(EnumFactory.EPajak jenisPajak, int tahun)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfileOPVM.DetailOPSeries(jenisPajak, tahun);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
 
     }
 }

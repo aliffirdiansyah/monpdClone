@@ -21,6 +21,7 @@
             )
             .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
             .OnExporting("exportGrid")
+            .OnCellPrepared("onSummaryPotensiPrepared")
             .Columns(columns =>
             {
 
@@ -141,6 +142,7 @@
             )
             .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
             .OnExporting("exportGrid")
+            .OnCellPrepared("onSummaryPotensiPrepared")
             .Columns(columns =>
             {
 
@@ -264,6 +266,7 @@ else
             )
             .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
             .OnExporting("exportGrid")
+            .OnCellPrepared("onSummaryPotensiPrepared")
             .Columns(columns =>
             {
 

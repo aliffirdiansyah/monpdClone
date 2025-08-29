@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
@@ -7,6 +8,7 @@ using MonPDLib.General;
 using System.Collections;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
+using System.Text.RegularExpressions;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.DataOP
@@ -189,6 +191,15 @@ namespace MonPDReborn.Models.DataOP
             {
                 Pajak = pajak;
                 DataDetail = Method.GetDetailObjekPajak(nop, pajak);
+            }
+        }
+
+        public class DetailOPSeries
+        {
+            public List<DetailSeries> Data { get; set; } = new();
+            public DetailOPSeries(EnumFactory.EPajak jenisPajak, int tahun)
+            {
+                Data = Method.GetDetailObjekPajak(jenisPajak, tahun);
             }
         }
 
@@ -3529,6 +3540,185 @@ namespace MonPDReborn.Models.DataOP
             }
 
             #endregion
+            public static List<DetailSeries> GetDetailObjekPajak(EnumFactory.EPajak jenisPajak, int tahun)
+            {
+                var context = DBClass.GetContext();
+                var result = new List<DetailSeries>();
+
+                switch (jenisPajak)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        return context.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama ?? "-",
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp ?? "-",
+                                Alamat = x.AlamatOp ?? "-",
+                                Wilayah = "SURABAYA " + x.WilayahPajak
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        return context.DbOpHotels
+                            .Where(x => x.TahunBuku == tahun && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama ?? "-",
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp ?? "-",
+                                Alamat = x.AlamatOp ?? "-",
+                                Wilayah = "SURABAYA " + x.WilayahPajak
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        return context.DbOpHiburans
+                            .Where(x => x.TahunBuku == tahun && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama ?? "-",
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                Wilayah = "SURABAYA " + x.WilayahPajak
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.JasaParkir:
+                        return context.DbOpParkirs
+                            .Where(x => x.TahunBuku == tahun && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama ?? "-",
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                JenisOP = "Parkir",
+                                Wilayah = x.WilayahPajak
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.TenagaListrik:
+                        return context.DbOpListriks
+                            .Where(x => x.TahunBuku == tahun && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama ?? "-",
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp ?? "-",
+                                Alamat = x.AlamatOp ?? "-",
+                                Wilayah = "SURABAYA " + x.WilayahPajak
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.PBB:
+                        return context.DbMonPbbs
+                            .Where(x => x.TahunBuku == tahun)
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.WpNama ?? "-",
+                                Alamat = x.AlamatWp ?? "-",
+                                Wilayah = x.Uptb.ToString() ?? "-"
+                            })
+                            .Distinct()
+                            .ToList();
+
+                    case EnumFactory.EPajak.AirTanah:
+                        return context.DbOpAbts
+                            .Where(x => x.TahunBuku == tahun && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama,
+                                NOP = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                Wilayah = "SURABAYA " + x.WilayahPajak
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.BPHTB:
+                        return context.DbMonBphtbs
+                            .Where(x => x.Tahun == tahun)
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)Convert.ToInt32("10" + Convert.ToInt32((string.IsNullOrEmpty(x.KdPerolehan) || x.KdPerolehan == "-") ? "0" : x.KdPerolehan).ToString()),
+                                Kategori_Nama = x.Perolehan,
+                                NOP =x.SpptNop,
+                                NamaOP = x.NamaWp ?? "-",
+                                Alamat = x.Alamat ?? "-",
+                                Wilayah = "-"
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.Reklame:
+                        return context.DbOpReklames
+                            .Where(x => x.TahunBuku == tahun && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Nama = x.KategoriNama ?? "-",
+                                NOP = x.Nop,
+                                NamaOP = x.Nama ?? "-",
+                                Alamat = x.Alamatwp ?? "-",
+                                Wilayah = "-"
+                            })
+                            .ToList();
+
+                    /*case EnumFactory.EPajak.OpsenPkb:
+                        return context.DbMonOpsenPkbs
+                            .Where(x => x.TahunPajakSspd == tahun)
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = 0,
+                                Kategori_Nama = "-",
+                                NOP = x.NoSspd,
+                                NamaOP = x.NamaWp,
+                                Alamat = "-",
+                                JenisOP = "Opsen PKB",
+                                Wilayah = "-"
+                            })
+                            .ToList();
+
+                    case EnumFactory.EPajak.OpsenBbnkb:
+                        return context.DbMonOpsenBbnkbs
+                            .Where(x => x.TahunPajakSspd == tahun)
+                            .Select(x => new DetailSeries
+                            {
+                                EnumPajak = (int)jenisPajak,
+                                Kategori_Id = 0,
+                                Kategori_Nama = "-",
+                                NOP = x.NoSspd,
+                                NamaOP = x.NamaWp,
+                                Alamat = "-",
+                                JenisOP = "Opsen BBNKB",
+                                Wilayah = "-"
+                            })
+                            .ToList();*/
+                }
+
+                return result;
+            }
 
             public static DataDetailOP GetDetailObjekPajak(string nop, EnumFactory.EPajak pajak)
             {
@@ -4157,6 +4347,19 @@ namespace MonPDReborn.Models.DataOP
             public string JenisOP { get; set; } = null!;
             public string Wilayah { get; set; } = null!;
 
+        }
+
+        public class DetailSeries
+        {
+            public int EnumPajak { get; set; }
+            public int Kategori_Id { get; set; }
+            public string Kategori_Nama { get; set; } = null!;
+            public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string NamaOP { get; set; } = null!;
+            public string Alamat { get; set; } = null!;
+            public string JenisOP { get; set; } = null!;
+            public string Wilayah { get; set; } = null!;
         }
 
         public class IdentitasObjekPajak
