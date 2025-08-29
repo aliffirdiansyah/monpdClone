@@ -51,7 +51,7 @@ FROM dual
 CONNECT BY LEVEL &lt;= 6</Sql>
       </Query>
       <Query Type="CustomSqlQuery" Name="CONTOH1">
-        <Sql>  SELECT TAHUN_BUKU,PAJAK_ID,SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL
+        <Sql>SELECT TAHUN_BUKU,PAJAK_ID,SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL
                     FROM DB_MON_KETETAPAN_HPP
                     WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6
                     GROUP BY TAHUN_BUKU,PAJAK_ID                        
@@ -105,38 +105,10 @@ CONNECT BY LEVEL &lt;= 6</Sql>
       <GridOptions />
       <ColumnFilterOptions />
     </Grid>
-    <Grid ComponentName="gridDashboardItem2" Name="Grid 1" DataSource="sqlDataSource1" DataMember="CONTOH1">
-      <InteractivityOptions MasterFilterMode="Multiple" />
-      <DataItems>
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem0" />
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem1" />
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem2" />
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem3" />
-        <Dimension DataMember="KETETAPAN_TOTAL" DefaultId="DataItem4" />
-      </DataItems>
-      <HiddenDimensions>
-        <Dimension DefaultId="DataItem0" />
-        <Dimension DefaultId="DataItem1" />
-      </HiddenDimensions>
-      <GridColumns>
-        <GridDimensionColumn>
-          <Dimension DefaultId="DataItem2" />
-        </GridDimensionColumn>
-        <GridDimensionColumn>
-          <Dimension DefaultId="DataItem3" />
-        </GridDimensionColumn>
-        <GridDimensionColumn>
-          <Dimension DefaultId="DataItem4" />
-        </GridDimensionColumn>
-      </GridColumns>
-      <GridOptions />
-      <ColumnFilterOptions />
-    </Grid>
   </Items>
   <LayoutTree>
     <LayoutGroup>
       <LayoutItem DashboardItem="gridDashboardItem1" />
-      <LayoutItem DashboardItem="gridDashboardItem2" />
     </LayoutGroup>
   </LayoutTree>
 </Dashboard>
