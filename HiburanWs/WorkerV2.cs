@@ -191,89 +191,64 @@ WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                 int jmlData = result.Count;
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbOpHiburan>();
-                var updateList = new List<MonPDLib.EF.DbOpHiburan>();
+                //var updateList = new List<MonPDLib.EF.DbOpHiburan>();
+                var removeEx = _contMonPd.DbOpHiburans.Where(x => x.TahunBuku == tahunBuku).ToList();
                 foreach (var item in result)
                 {
                     // DATA OP
                     try
                     {
-                        var sourceRow = _contMonPd.DbOpHiburans.Find(item.Nop, (decimal)tahunBuku);
-                        if (sourceRow != null)
-                        {
-                            sourceRow.TglOpTutup = item.TglOpTutup;
-                            sourceRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
-                            sourceRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
-                            var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
-                            sourceRow.Akun = dbakun.Akun;
-                            sourceRow.NamaAkun = dbakun.NamaAkun;
-                            sourceRow.Kelompok = dbakun.Kelompok;
-                            sourceRow.NamaKelompok = dbakun.NamaKelompok;
-                            sourceRow.Jenis = dbakun.Jenis;
-                            sourceRow.NamaJenis = dbakun.NamaJenis;
-                            sourceRow.Objek = dbakun.Objek;
-                            sourceRow.NamaObjek = dbakun.NamaObjek;
-                            sourceRow.Rincian = dbakun.Rincian;
-                            sourceRow.NamaRincian = dbakun.NamaRincian;
-                            sourceRow.SubRincian = dbakun.SubRincian;
-                            sourceRow.NamaSubRincian = dbakun.NamaSubRincian;
-                            updateList.Add(sourceRow);
-                        }
-                        else
-                        {
-                            var newRow = new MonPDLib.EF.DbOpHiburan();
-                            newRow.Nop = item.Nop;
-                            newRow.Npwpd = item.Npwpd;
-                            // set manual
-                            var infoWP = GetInfoWPHPP(newRow.Npwpd);
-                            newRow.NpwpdNama = infoWP[0];
-                            newRow.NpwpdAlamat = infoWP[1];
-                            //
-                            newRow.PajakId = item.PajakId;
-                            newRow.PajakNama = item.PajakNama;
-                            newRow.NamaOp = item.NamaOp;
-                            newRow.AlamatOp = item.AlamatOp;
-                            newRow.AlamatOpNo = item.AlamatOpNo;
-                            newRow.AlamatOpRt = item.AlamatOpRt;
-                            newRow.AlamatOpRw = item.AlamatOpRw;
-                            newRow.Telp = item.Telp;
-                            newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
-                            newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
-                            newRow.TglOpTutup = item.TglOpTutup;
-                            newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
+                        var newRow = new MonPDLib.EF.DbOpHiburan();
+                        newRow.Nop = item.Nop;
+                        newRow.Npwpd = item.Npwpd;
+                        // set manual
+                        var infoWP = GetInfoWPHPP(newRow.Npwpd);
+                        newRow.NpwpdNama = infoWP[0];
+                        newRow.NpwpdAlamat = infoWP[1];
+                        //
+                        newRow.PajakId = item.PajakId;
+                        newRow.PajakNama = item.PajakNama;
+                        newRow.NamaOp = item.NamaOp;
+                        newRow.AlamatOp = item.AlamatOp;
+                        newRow.AlamatOpNo = item.AlamatOpNo;
+                        newRow.AlamatOpRt = item.AlamatOpRt;
+                        newRow.AlamatOpRw = item.AlamatOpRw;
+                        newRow.Telp = item.Telp;
+                        newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
+                        newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
+                        newRow.TglOpTutup = item.TglOpTutup;
+                        newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
 
-                            var kategori = GetKategoriOvveride(item.Nop, item.KategoriNama);
-                            item.KategoriId = Convert.ToInt32(kategori[0] ?? "54");
-                            item.KategoriNama = kategori[1] ?? "HIBURAN";
+                        var kategori = GetKategoriOvveride(item.Nop, item.KategoriNama);
+                        item.KategoriId = Convert.ToInt32(kategori[0] ?? "54");
+                        item.KategoriNama = kategori[1] ?? "HIBURAN";
 
-                            newRow.KategoriId = item.KategoriId;
-                            newRow.KategoriNama = item.KategoriNama;
+                        newRow.KategoriId = item.KategoriId;
+                        newRow.KategoriNama = item.KategoriNama;
 
-                            newRow.MetodePenjualan = item.MetodePenjualan;
-                            newRow.MetodePembayaran = item.MetodePembayaran;
-                            newRow.JumlahKaryawan = item.JumlahKaryawan;
-                            newRow.InsDate = item.InsDate;
-                            newRow.InsBy = item.InsBy;
-                            newRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
-                            newRow.WilayahPajak = item.WilayahPajak;
+                        newRow.MetodePenjualan = item.MetodePenjualan;
+                        newRow.MetodePembayaran = item.MetodePembayaran;
+                        newRow.JumlahKaryawan = item.JumlahKaryawan;
+                        newRow.InsDate = item.InsDate;
+                        newRow.InsBy = item.InsBy;
+                        newRow.IsTutup = item.TglOpTutup == null ? 0 : item.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
+                        newRow.WilayahPajak = item.WilayahPajak;
 
-                            newRow.TahunBuku = tahunBuku;
-                            var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
-                            newRow.Akun = dbakun.Akun;
-                            newRow.NamaAkun = dbakun.NamaAkun;
-                            newRow.Kelompok = dbakun.Kelompok;
-                            newRow.NamaKelompok = dbakun.NamaKelompok;
-                            newRow.Jenis = dbakun.Jenis;
-                            newRow.NamaJenis = dbakun.NamaJenis;
-                            newRow.Objek = dbakun.Objek;
-                            newRow.NamaObjek = dbakun.NamaObjek;
-                            newRow.Rincian = dbakun.Rincian;
-                            newRow.NamaRincian = dbakun.NamaRincian;
-                            newRow.SubRincian = dbakun.SubRincian;
-                            newRow.NamaSubRincian = dbakun.NamaSubRincian;
-                            newList.Add(newRow);
-                        }
-
-
+                        newRow.TahunBuku = tahunBuku;
+                        var dbakun = GetDbAkun(tahunBuku, KDPajak, (int)item.KategoriId);
+                        newRow.Akun = dbakun.Akun;
+                        newRow.NamaAkun = dbakun.NamaAkun;
+                        newRow.Kelompok = dbakun.Kelompok;
+                        newRow.NamaKelompok = dbakun.NamaKelompok;
+                        newRow.Jenis = dbakun.Jenis;
+                        newRow.NamaJenis = dbakun.NamaJenis;
+                        newRow.Objek = dbakun.Objek;
+                        newRow.NamaObjek = dbakun.NamaObjek;
+                        newRow.Rincian = dbakun.Rincian;
+                        newRow.NamaRincian = dbakun.NamaRincian;
+                        newRow.SubRincian = dbakun.SubRincian;
+                        newRow.NamaSubRincian = dbakun.NamaSubRincian;
+                        newList.Add(newRow);
                     }
                     catch (Exception ex)
                     {
@@ -282,10 +257,15 @@ WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                     }
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP HIBURAN TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] OP HIBURAN TAHUN {tahunBuku} JML OP {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")},    [({persen:F2}%)]");
                 }
 
                 Console.WriteLine("Updating DB!");
+                if (removeEx.Any())
+                {
+                    _contMonPd.DbOpHiburans.RemoveRange(removeEx);
+                    _contMonPd.SaveChanges();
+                }
                 if (newList.Any())
                 {
                     _contMonPd.DbOpHiburans.AddRange(newList);
@@ -293,11 +273,11 @@ WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                 }
 
 
-                if (updateList.Any())
-                {
-                    _contMonPd.DbOpHiburans.UpdateRange(updateList);
-                    _contMonPd.SaveChanges();
-                }
+                //if (updateList.Any())
+                //{
+                //    _contMonPd.DbOpHiburans.UpdateRange(updateList);
+                //    _contMonPd.SaveChanges();
+                //}
                 sw.Stop();
                 Console.Write($"Done {sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik");
                 Console.WriteLine($"");
