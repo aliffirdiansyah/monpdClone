@@ -12,13 +12,13 @@ public partial class DbCtrlByrParkir
     [Column("NOP")]
     [StringLength(30)]
     [Unicode(false)]
-    public string? Nop { get; set; }
+    public string Nop { get; set; } = null!;
 
     [Column("TAHUN", TypeName = "NUMBER")]
-    public decimal Tahun { get; set; }
+    public decimal? Tahun { get; set; }
 
     [Column("BULAN", TypeName = "NUMBER")]
-    public decimal Bulan { get; set; }
+    public decimal? Bulan { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
     public decimal? KategoriId { get; set; }
@@ -50,7 +50,7 @@ public partial class DbCtrlByrParkir
     public decimal? Ketetapan { get; set; }
 
     [Column("KETERANGAN")]
-    [StringLength(21)]
+    [StringLength(11)]
     [Unicode(false)]
     public string? Keterangan { get; set; }
 

@@ -19,7 +19,7 @@ namespace MonPDReborn.Controllers.Setting
         private IConfiguration configuration;
         public CekDataController(ILogger<CekDataController> logger, IConfiguration configuration)
         {
-            URLView = string.Concat("../ReklamePublic/", GetType().Name.Replace("Controller", ""), "/");
+            URLView = string.Concat("../Setting/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
             this.configuration = configuration;
         }
@@ -28,9 +28,29 @@ namespace MonPDReborn.Controllers.Setting
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.ReklamePublic.ReklamePublicVM.Index();
+                var model = new Models.Setting.CekDataVM.Index();
 
                 return View($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult Show(int tahun)
+        {
+            try
+            {
+                var model = new Models.Setting.CekDataVM.Show(tahun);
+                return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
             {

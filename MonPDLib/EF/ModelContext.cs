@@ -151,6 +151,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
 
+    public virtual DbSet<DbPajakMapping> DbPajakMappings { get; set; }
+
     public virtual DbSet<DbPendapatanDaerah> DbPendapatanDaerahs { get; set; }
 
     public virtual DbSet<DbPotensiAbt> DbPotensiAbts { get; set; }
@@ -204,6 +206,12 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MUserLogin> MUserLogins { get; set; }
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
+
+    public virtual DbSet<MvDbePbjt> MvDbePbjts { get; set; }
+
+    public virtual DbSet<MvDbePbjtRekap> MvDbePbjtRekaps { get; set; }
+
+    public virtual DbSet<MvDbePbjtRekapDetail> MvDbePbjtRekapDetails { get; set; }
 
     public virtual DbSet<MvReklameRekapJalan> MvReklameRekapJalans { get; set; }
 
@@ -383,13 +391,37 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<UserApiBapendum> UserApiBapenda { get; set; }
 
+    public virtual DbSet<VwDataOpAbt> VwDataOpAbts { get; set; }
+
+    public virtual DbSet<VwDataOpHiburan> VwDataOpHiburans { get; set; }
+
+    public virtual DbSet<VwDataOpHotel> VwDataOpHotels { get; set; }
+
+    public virtual DbSet<VwDataOpListrik> VwDataOpListriks { get; set; }
+
+    public virtual DbSet<VwDataOpParkir> VwDataOpParkirs { get; set; }
+
+    public virtual DbSet<VwDataOpResto> VwDataOpRestos { get; set; }
+
+    public virtual DbSet<VwMonAbt> VwMonAbts { get; set; }
+
+    public virtual DbSet<VwMonHiburan> VwMonHiburans { get; set; }
+
+    public virtual DbSet<VwMonHotel> VwMonHotels { get; set; }
+
+    public virtual DbSet<VwMonParkir> VwMonParkirs { get; set; }
+
+    public virtual DbSet<VwMonPpj> VwMonPpjs { get; set; }
+
+    public virtual DbSet<VwMonResto> VwMonRestos { get; set; }
+
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
 
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -992,6 +1024,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.RataTerjualPorsiHari).HasDefaultValueSql("0                     ");
         });
 
+        modelBuilder.Entity<DbPajakMapping>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.PajakId }).HasName("DB_PAJAK_MAPPING_PK");
+        });
+
         modelBuilder.Entity<DbPendapatanDaerah>(entity =>
         {
             entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.KodeOpd, e.KodeSubOpd, e.Bulan }).HasName("DB_PENDAPATAN_DAERAH_PK");
@@ -1175,6 +1212,21 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvDbePbjt>(entity =>
+        {
+            entity.ToView("MV_DBE_PBJT");
+        });
+
+        modelBuilder.Entity<MvDbePbjtRekap>(entity =>
+        {
+            entity.ToView("MV_DBE_PBJT_REKAP");
+        });
+
+        modelBuilder.Entity<MvDbePbjtRekapDetail>(entity =>
+        {
+            entity.ToView("MV_DBE_PBJT_REKAP_DETAIL");
         });
 
         modelBuilder.Entity<MvReklameRekapJalan>(entity =>
@@ -1933,6 +1985,66 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<UserApiBapendum>(entity =>
         {
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<VwDataOpAbt>(entity =>
+        {
+            entity.ToView("VW_DATA_OP_ABT");
+        });
+
+        modelBuilder.Entity<VwDataOpHiburan>(entity =>
+        {
+            entity.ToView("VW_DATA_OP_HIBURAN");
+        });
+
+        modelBuilder.Entity<VwDataOpHotel>(entity =>
+        {
+            entity.ToView("VW_DATA_OP_HOTEL");
+        });
+
+        modelBuilder.Entity<VwDataOpListrik>(entity =>
+        {
+            entity.ToView("VW_DATA_OP_LISTRIK");
+        });
+
+        modelBuilder.Entity<VwDataOpParkir>(entity =>
+        {
+            entity.ToView("VW_DATA_OP_PARKIR");
+        });
+
+        modelBuilder.Entity<VwDataOpResto>(entity =>
+        {
+            entity.ToView("VW_DATA_OP_RESTO");
+        });
+
+        modelBuilder.Entity<VwMonAbt>(entity =>
+        {
+            entity.ToView("VW_MON_ABT");
+        });
+
+        modelBuilder.Entity<VwMonHiburan>(entity =>
+        {
+            entity.ToView("VW_MON_HIBURAN");
+        });
+
+        modelBuilder.Entity<VwMonHotel>(entity =>
+        {
+            entity.ToView("VW_MON_HOTEL");
+        });
+
+        modelBuilder.Entity<VwMonParkir>(entity =>
+        {
+            entity.ToView("VW_MON_PARKIR");
+        });
+
+        modelBuilder.Entity<VwMonPpj>(entity =>
+        {
+            entity.ToView("VW_MON_PPJ");
+        });
+
+        modelBuilder.Entity<VwMonResto>(entity =>
+        {
+            entity.ToView("VW_MON_RESTO");
         });
 
         modelBuilder.Entity<VwReklameStatusPerpanjangan>(entity =>

@@ -11,7 +11,7 @@ public partial class DbMutasiRekening
 {
     [Key]
     [Column("TRANSACTION_CODE")]
-    [StringLength(50)]
+    [StringLength(250)]
     [Unicode(false)]
     public string TransactionCode { get; set; } = null!;
 

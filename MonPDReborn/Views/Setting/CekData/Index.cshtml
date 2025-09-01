@@ -1,5 +1,99 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MonPDReborn.Models.Setting.CekDataVM.Index
+
 @{
+    ViewData["Title"] = "Cek Data";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="card-title fs-16 mb-0">Rekap Jumlah Objek Pajak</h4>
+                    <div class="dropdown">
+                        <select id="ddlTahun" class="form-select form-select mb-3 w-auto"
+                                style="background-color: #f0f8ff; color: #333; border-color: #0d6efd;">
+                            <!-- Tahun akan diisi dengan JavaScript -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="Show"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Inisialisasi dropdown tahun
+            var currentYear = new Date().getFullYear();
+            for (var year = currentYear; year >= 2000; year--) {
+                $('#ddlTahun').append($('<option>', {
+                    value: year,
+                    text: year
+                }));
+            }
+            // Set tahun awal ke tahun saat ini
+            $('#ddlTahun').val(currentYear);
+            // Load data saat halaman pertama kali dimuat
+            loadRekapData(currentYear);
+            // Event handler untuk perubahan tahun
+            $('#ddlTahun').change(function () {
+                var selectedYear = $(this).val();
+                loadRekapData(selectedYear);
+            });
+        });
+        function loadRekapData(tahun) {
+            $('#loading2-Show').show();
+            $('#Show').hide();
+            $.ajax({
+                url: '@Url.Action("Show", "CekData")',
+                type: 'GET',
+                data: { tahun: tahun },
+                success: function (result) {
+                    $('#Show').html(result);
+                    $('#loading2-Show').hide();
+                    $('#Show').show();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading data:', error);
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">Error loading data.</div>');
+                    $('#Show').show();
+                }
+            });
+        }
+    </script>
+    <script>
+        function onRealisasiCellPrepared(e) {
+            if (e.rowType === "data" && e.column.dataField === "realisasi") {
+                let scontroGrid = $("#dataScontroGrid").dxDataGrid("instance");
+
+                if (!scontroGrid) return;
+
+                let scontroData = scontroGrid.getVisibleRows().map(r => r.data);
+                let match = scontroData.find(x => x.jenisPajak === e.data.jenisPajak);
+
+                if (match && Number(match.scontro) !== Number(e.data.realisasi)) {
+                    e.cellElement.css({
+                        "background-color": "#ffcccc",
+                        "color": "red",
+                        "font-weight": "bold"
+                    });
+                }
+            }
+        }
+    </script>
+
+
 }

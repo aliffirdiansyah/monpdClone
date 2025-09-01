@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian")]
-[Table("DB_AKUN")]
-public partial class DbAkun
+[PrimaryKey("TahunBuku", "Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian", "PajakId")]
+[Table("DB_PAJAK_MAPPING")]
+public partial class DbPajakMapping
 {
     [Key]
     [Column("TAHUN_BUKU", TypeName = "NUMBER")]
@@ -21,7 +21,7 @@ public partial class DbAkun
     public string Akun { get; set; } = null!;
 
     [Column("NAMA_AKUN")]
-    [StringLength(500)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaAkun { get; set; } = null!;
 
@@ -32,7 +32,7 @@ public partial class DbAkun
     public string Kelompok { get; set; } = null!;
 
     [Column("NAMA_KELOMPOK")]
-    [StringLength(500)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaKelompok { get; set; } = null!;
 
@@ -43,7 +43,7 @@ public partial class DbAkun
     public string Jenis { get; set; } = null!;
 
     [Column("NAMA_JENIS")]
-    [StringLength(500)]
+    [StringLength(100)]
     [Unicode(false)]
     public string NamaJenis { get; set; } = null!;
 
@@ -54,7 +54,7 @@ public partial class DbAkun
     public string Objek { get; set; } = null!;
 
     [Column("NAMA_OBJEK")]
-    [StringLength(500)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaObjek { get; set; } = null!;
 
@@ -65,7 +65,7 @@ public partial class DbAkun
     public string Rincian { get; set; } = null!;
 
     [Column("NAMA_RINCIAN")]
-    [StringLength(500)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaRincian { get; set; } = null!;
 
@@ -76,22 +76,11 @@ public partial class DbAkun
     public string SubRincian { get; set; } = null!;
 
     [Column("NAMA_SUB_RINCIAN")]
-    [StringLength(500)]
+    [StringLength(200)]
     [Unicode(false)]
     public string NamaSubRincian { get; set; } = null!;
 
-    [Column("PAJAK_ID", TypeName = "NUMBER(38)")]
-    public decimal? PajakId { get; set; }
-
-    [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
-    [InverseProperty("DbAkunsNavigation")]
-    public virtual ICollection<MKategoriPajak> KategoriKenaikans { get; set; } = new List<MKategoriPajak>();
-
-    [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
-    [InverseProperty("DbAkuns1")]
-    public virtual ICollection<MKategoriPajak> KategoriSanksis { get; set; } = new List<MKategoriPajak>();
-
-    [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
-    [InverseProperty("DbAkuns")]
-    public virtual ICollection<MKategoriPajak> Kategoris { get; set; } = new List<MKategoriPajak>();
+    [Key]
+    [Column("PAJAK_ID", TypeName = "NUMBER")]
+    public decimal PajakId { get; set; }
 }
