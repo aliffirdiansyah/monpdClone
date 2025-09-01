@@ -6,9 +6,11 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using System.Collections;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
 using System.Text.RegularExpressions;
+using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.DataOP
@@ -253,7 +255,11 @@ namespace MonPDReborn.Models.DataOP
                 var result = new List<RekapOP>();
                 var context = DBClass.GetContext();
 
-                var pajakList = context.MPajaks.Include(x => x.MKategoriPajaks.OrderBy(x => x.Urutan)).Where(x => x.Id > 0).ToList();
+                var pajakList = context.MPajaks
+                    .Include(x => x.MKategoriPajaks.OrderBy(x => x.Urutan))
+                    .Where(x => x.Id > 0)
+                    .ToList();
+
                 var dbOpResto = context.DbOpRestos
                         .Where(x => x.TahunBuku >= tahun - 1)
                         .Select(x => new
@@ -325,19 +331,26 @@ namespace MonPDReborn.Models.DataOP
                         x.KategoriId
                     }).AsQueryable();
 
+                //var dbOpPbb = context.DbMonPbbs
+                //    .Where(x => x.TahunBuku >= tahun - 1)
+                //    .Select(x => new
+                //    {
+                //        x.TahunBuku,
+                //        x.Nop,
+                //        x.KategoriId
+                //    }).Distinct().AsQueryable();
 
                 var dbOpPbb = context.DbMonPbbs
                     .Where(x => x.TahunBuku >= tahun - 1)
-                    .Select(x => new
-                    {
-                        x.TahunBuku,
-                        x.Nop,
-                        x.KategoriId
-                    }).Distinct().AsQueryable();
+                    .GroupBy(x => new { x.TahunBuku, x.KategoriId })
+                    .Select(x => new { x.Key.TahunBuku, x.Key.KategoriId, Jml = x.Count() })
+                    .Distinct()
+                    .ToList();
 
                 var dbOpBphtb = context.DbMonBphtbs
                     .Where(x => x.Tahun >= tahun - 1)
-                    .AsQueryable();
+                    .Select(x => new { x.Tahun, x.Seq })
+                    .ToList();
 
                 var dbOpOpsenPkb = context.DbMonOpsenPkbs
                     .Where(x => x.TahunPajakSspd >= tahun - 1)
@@ -346,8 +359,18 @@ namespace MonPDReborn.Models.DataOP
                 var dbOpOpsenBbnkb = context.DbMonOpsenBbnkbs
                     .Where(x => x.TahunPajakSspd >= tahun - 1)
                     .AsQueryable();
+
+                var totalSw = new Stopwatch();
+                totalSw.Start();
+
                 foreach (var pajak in pajakList)
                 {
+                    var sw = new Stopwatch();
+                    sw.Start();
+
+                    int totalData = pajak.MKategoriPajaks.Count();
+                    int index = 0;
+
                     var res = new RekapOP();
 
                     int pajakId = (int)pajak.Id;
@@ -427,9 +450,9 @@ namespace MonPDReborn.Models.DataOP
                         case EnumFactory.EPajak.PBB:
 
                             tutup = 0;
-                            awal = dbOpPbb.Where(x => x.TahunBuku == tahun - 1).Select(x => x.Nop).Distinct().Count();
+                            awal = dbOpPbb.Where(x => x.TahunBuku == tahun - 1).Sum(q => q.Jml);
                             baru = 0;
-                            akhir = dbOpPbb.Where(x => x.TahunBuku == tahun).Select(x => x.Nop).Distinct().Count();
+                            akhir = dbOpPbb.Where(x => x.TahunBuku == tahun).Sum(q => q.Jml);
 
                             break;
 
@@ -541,15 +564,15 @@ namespace MonPDReborn.Models.DataOP
                             case EnumFactory.EPajak.PBB:
 
                                 tutupKategori = 0;
-                                awalKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1).Select(x => x.Nop).Distinct().Count();
+                                awalKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1).Sum(q => q.Jml);
                                 baruKategori = 0;
-                                akhirKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun).Select(x => x.Nop).Distinct().Count();
+                                akhirKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun).Sum(q => q.Jml);
 
                                 break;
 
                             case EnumFactory.EPajak.BPHTB:
-                                akhirKategori = dbOpBphtb.Count(x => x.Tahun == tahun);
-                                awalKategori = dbOpBphtb.Count(x => x.Tahun == tahun - 1);
+                                akhirKategori = akhir;
+                                awalKategori = awal;
                                 break;
 
                             case EnumFactory.EPajak.OpsenPkb:
@@ -580,10 +603,25 @@ namespace MonPDReborn.Models.DataOP
                         re.JmlOpBaru = baruKategori;
                         re.JmlOpAkhir = akhirKategori;
                         res.RekapDetail.Add(re);
+
+                        double persen = ((double)(index + 1) / totalData) * 100;
+                        Console.Write($"\r[ DATA PAJAK {pajak.Nama} [({persen:F2}%)]");
+                        index++;
                     }
 
+                    sw.Stop();
+                    Console.WriteLine($"");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($" DATA PAJAK {pajak.Nama} Finished [{sw.Elapsed.Minutes} Menit {sw.Elapsed.Seconds} Detik]");
+                    Console.ResetColor();
+                    Console.WriteLine($"");
                     result.Add(res);
                 }
+
+                totalSw.Stop();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($" SEMUA PAJAK Finished [{totalSw.Elapsed.Hours} Jam {totalSw.Elapsed.Minutes} Menit {totalSw.Elapsed.Seconds} Detik]");
+                Console.ResetColor();
 
                 return result;
                 //return new List<RekapOP>

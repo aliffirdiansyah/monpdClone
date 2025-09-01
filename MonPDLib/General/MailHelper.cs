@@ -12,6 +12,8 @@ namespace MonPDLib.General
     {
         public static void SendMail(bool html, string judulemail, string pesan, byte[]? file)
         {
+            Console.WriteLine($"{pesan}");
+
             //string emailtujuan = "iwe.zakaria22@gmail.com";
             //string SystemMail = "infobapenda@surabaya.go.id";
             //string MailHost = "mail.surabaya.go.id";
