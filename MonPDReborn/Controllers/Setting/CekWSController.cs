@@ -28,7 +28,7 @@ namespace MonPDReborn.Controllers.Setting
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.ReklamePublic.ReklamePublicVM.Index();
+                var model = new Models.Setting.CekWSVM.Index();
 
                 return View($"{URLView}{actionName}", model);
             }
