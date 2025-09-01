@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="PBJT Target &amp; Realisasi" />
+  <DataSources>
+    <SqlDataSource Name="Oracle Data Source" ComponentName="sqlDataSource1">
+      <Connection Name="connection" ProviderKey="Oracle">
+        <Parameters>
+          <Parameter Name="server" Value="10.21.39.80:1521/devdb" />
+          <Parameter Name="database" Value="" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="OracleProviderType" Value="ODPManaged" />
+          <Parameter Name="userid" Value="monpd" />
+          <Parameter Name="password" Value="monpd2025" />
+        </Parameters>
+      </Connection>
+      <Query Type="CustomSqlQuery" Name="TahunFilterList">
+        <Sql>SELECT  EXTRACT (YEAR FROM SYSDATE) +1  - LEVEL AS tahun
+FROM dual
+CONNECT BY LEVEL &lt;= 6</Sql>
+      </Query>
+      <Query Type="SelectQuery" Name="RekapPajakPBJT">
+        <Tables>
+          <Table Name="MV_DBE_PBJT_REKAP" />
+        </Tables>
+        <Columns>
+          <Column Table="MV_DBE_PBJT_REKAP" Name="TAHUN_BUKU" />
+          <Column Table="MV_DBE_PBJT_REKAP" Name="PAJAK_ID" />
+          <Column Table="MV_DBE_PBJT_REKAP" Name="NAMA" />
+          <Column Table="MV_DBE_PBJT_REKAP" Name="TARGET" />
+          <Column Table="MV_DBE_PBJT_REKAP" Name="JML_OP" />
+          <Column Table="MV_DBE_PBJT_REKAP" Name="REALISASI" />
+          <Column Table="MV_DBE_PBJT_REKAP" Name="PENCAPAIAN" />
+        </Columns>
+      </Query>
+      <Query Type="SelectQuery" Name="BulanPajakPBJT">
+        <Tables>
+          <Table Name="MV_DBE_PBJT_REKAP_DETAIL" />
+        </Tables>
+        <Columns>
+          <Column Table="MV_DBE_PBJT_REKAP_DETAIL" Name="PAJAK_ID" />
+          <Column Table="MV_DBE_PBJT_REKAP_DETAIL" Name="TAHUN_BUKU" />
+          <Column Table="MV_DBE_PBJT_REKAP_DETAIL" Name="BULAN" />
+          <Column Table="MV_DBE_PBJT_REKAP_DETAIL" Name="TARGET" />
+          <Column Table="MV_DBE_PBJT_REKAP_DETAIL" Name="JML_OP" />
+          <Column Table="MV_DBE_PBJT_REKAP_DETAIL" Name="REALISASI" />
+          <Column Table="MV_DBE_PBJT_REKAP_DETAIL" Name="PENCAPAIAN" />
+        </Columns>
+      </Query>
+      <Query Type="SelectQuery" Name="MV_DBE_PBJT">
+        <Tables>
+          <Table Name="MV_DBE_PBJT" />
+        </Tables>
+        <Columns>
+          <Column Table="MV_DBE_PBJT" Name="TAHUN_BUKU" />
+          <Column Table="MV_DBE_PBJT" Name="BULAN" />
+          <Column Table="MV_DBE_PBJT" Name="PAJAK_ID" />
+          <Column Table="MV_DBE_PBJT" Name="NAMA" />
+          <Column Table="MV_DBE_PBJT" Name="TARGET" />
+          <Column Table="MV_DBE_PBJT" Name="NOP" />
+          <Column Table="MV_DBE_PBJT" Name="NAMA_OP" />
+          <Column Table="MV_DBE_PBJT" Name="ALAMAT_OP" />
+          <Column Table="MV_DBE_PBJT" Name="KATEGORI_NAMA" />
+          <Column Table="MV_DBE_PBJT" Name="TGL_MULAI_BUKA_OP" />
+          <Column Table="MV_DBE_PBJT" Name="TGL_OP_TUTUP" />
+          <Column Table="MV_DBE_PBJT" Name="TAHUN_PAJAK_KETETAPAN" />
+          <Column Table="MV_DBE_PBJT" Name="MASA_PAJAK_KETETAPAN" />
+          <Column Table="MV_DBE_PBJT" Name="BULAN_BAYAR" />
+          <Column Table="MV_DBE_PBJT" Name="TAHUN_BAYAR" />
+          <Column Table="MV_DBE_PBJT" Name="NOMINAL_POKOK_BAYAR" />
+          <Column Table="MV_DBE_PBJT" Name="TGL_REALISASI" />
+        </Columns>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="BulanPajakPBJTV1">
+        <Sql>SELECT A.*,JML_BAYAR,JML_TDK_BAYAR
+FROM MV_DBE_PBJT_REKAP_DETAIL A
+LEFT JOIN (
+                SELECT TAHUN_BUKU, BULAN , PAJAK_ID,COUNT(1) JML_OP,
+            SUM(DECODE(STATUS_BAYAR,1,1,0)) JML_BAYAR,
+            SUM(DECODE(STATUS_BAYAR,1,0,1)) JML_TDK_BAYAR      
+FROM (
+SELECT TAHUN_BUKU, BULAN , PAJAK_ID,TGL_MULAI_BUKA_OP , TGL_OP_TUTUP,TGL_REALISASI,                        
+            CASE 
+                        WHEN TGL_REALISASI IS NOT NULL THEN 1                        
+                        WHEN TGL_MULAI_BUKA_OP &lt;=LAST_DAY(TO_DATE(BULAN || '-' || TAHUN_BUKU, 'MM-YYYY') ) AND TGL_OP_TUTUP IS NULL  THEN 0 
+                        WHEN TGL_MULAI_BUKA_OP &lt;=LAST_DAY(TO_DATE(BULAN || '-' || TAHUN_BUKU, 'MM-YYYY') ) AND TGL_OP_TUTUP  &gt;=LAST_DAY(TO_DATE(BULAN || '-' || TAHUN_BUKU, 'MM-YYYY'))   THEN 0                        
+                        ELSE 
+                        -1
+           END STATUS_BAYAR
+FROM MV_DBE_PBJT
+)
+GROUP BY TAHUN_BUKU, BULAN , PAJAK_ID
+               ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.BULAN=B.BULAN AND A.PAJAK_ID=B.PAJAK_ID</Sql>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Parameters>
+    <Parameter Name="TahunBuku" Type="System.Int16" Value="2025">
+      <DynamicListLookUpSettings DataSourceName="sqlDataSource1" DataMember="TahunFilterList" ValueMember="TAHUN" DisplayMember="TAHUN" SortByMember="TAHUN" SortOrder="Descending" />
+    </Parameter>
+  </Parameters>
+  <Items>
+    <Grid ComponentName="gridDashboardItem1" Name="REKAP TARGET REALISASI" DataSource="sqlDataSource1" DataMember="RekapPajakPBJT" FilterString="[DataItem1] = ?TahunBuku" IsMasterFilterCrossDataSource="true">
+      <InteractivityOptions MasterFilterMode="Single" />
+      <DataItems>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem2" />
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem3" />
+        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="NAMA" DefaultId="DataItem4" />
+        <Measure DataMember="JML_OP" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="TARGET" DefaultId="DataItem6">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI" DefaultId="DataItem7">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="PENCAPAIAN" DefaultId="DataItem8">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem2" />
+        <Dimension DefaultId="DataItem3" />
+      </HiddenDimensions>
+      <GridColumns>
+        <GridDimensionColumn Name="TAHUN">
+          <Dimension DefaultId="DataItem1" />
+        </GridDimensionColumn>
+        <GridDimensionColumn Name="ID">
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem4" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="JML OP">
+          <Measure DefaultId="DataItem5" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TARGET">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REALISASI">
+          <Measure DefaultId="DataItem7" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="%">
+          <Measure DefaultId="DataItem8" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem2" Name="DETAIL / BULAN" DataSource="sqlDataSource1" DataMember="BulanPajakPBJTV1">
+      <InteractivityOptions MasterFilterMode="Single" />
+      <DataItems>
+        <Dimension DataMember="BULAN" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Measure DataMember="REALISASI" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="JML_OP" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="TARGET" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="PENCAPAIAN" DefaultId="DataItem4">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Measure DataMember="JML_BAYAR" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="JML_TDK_BAYAR" DefaultId="DataItem6">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="JML OP">
+          <Measure DefaultId="DataItem1" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="OP BAYAR">
+          <Measure DefaultId="DataItem5" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="OP TDK BAYAR">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TARGET">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REALISASI">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="%">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem3" Name="Grid 1" DataSource="sqlDataSource1" DataMember="TahunFilterList">
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem4" Name="Grid 2" DataSource="sqlDataSource1" DataMember="TahunFilterList">
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical" Weight="1.3165719282903365">
+        <LayoutGroup>
+          <LayoutItem DashboardItem="gridDashboardItem1" Weight="0.9712804738771312" />
+          <LayoutItem DashboardItem="gridDashboardItem2" Weight="1.028719526122869" />
+        </LayoutGroup>
+        <LayoutItem DashboardItem="gridDashboardItem4" />
+      </LayoutGroup>
+      <LayoutItem DashboardItem="gridDashboardItem3" Weight="0.6834280717096635" />
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>
