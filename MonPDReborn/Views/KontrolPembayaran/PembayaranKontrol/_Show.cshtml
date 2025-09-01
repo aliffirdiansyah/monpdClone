@@ -24,9 +24,9 @@
             )
             .Columns(columns =>
             {
-                columns.AddFor(m => m.TanggalTransaksi).Caption("Tanggal Transaksi");
+                columns.AddFor(m => m.TanggalTransaksi).Caption("Tanggal Transaksi").Format("dd MMMM yyyy"); // format tanggal
                 columns.AddFor(m => m.Reff).Caption("Reff");
-                columns.AddFor(m => m.Amount).Caption("Uang Masuk").Format("#,##0");
+                columns.AddFor(m => m.Amount).Caption("Nominal").Format("#,##0");
                 columns.AddFor(m => m.Deskripsi).Caption("Deskripsi");
                 columns.AddFor(m => m.RekeningBank).Caption("Rekening Bank");
                 columns.AddFor(m => m.NamaRekening).Caption("Nama Rekening");
@@ -48,7 +48,8 @@
 
                     items.AddFor(m => m.Amount)
                         .SummaryType(SummaryType.Sum)
-                        .DisplayFormat("Rp {0}");
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
 
                     
                    

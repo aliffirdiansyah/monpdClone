@@ -92,13 +92,13 @@ namespace HotelWs
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
             tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
-            if (IsGetDBOp())
-            {
-                for (var i = tahunAmbil; i <= tglServer.Year; i++)
-                {
-                    GetOPProcess(i);
-                }
-            }
+            //if (IsGetDBOp())
+            //{
+            //    for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            //    {
+            //        GetOPProcess(i);
+            //    }
+            //}
 
             for (var i = tahunAmbil; i <= tglServer.Year; i++)
             {
@@ -332,8 +332,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 int jmlData = realisasiMonitoringDb.Count;
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbMonHotel>();
-                //var updateList = new List<MonPDLib.EF.DbMonHotel>();
-                var removeEx = _contMonPd.DbMonHotels.Where(x => x.TahunBuku == tahunBuku).ToList();
+                var updateList = new List<MonPDLib.EF.DbMonHotel>();
 
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
@@ -545,9 +544,9 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     Console.Write($"\r[{tglMulai.ToString("dd MMM yyyy HH:mm:ss")}] REALISASI HOTEL TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")}     [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
-                if (removeEx.Any())
+                if (updateList.Any())
                 {
-                    _contMonPd.DbMonHotels.UpdateRange(removeEx);
+                    _contMonPd.DbMonHotels.UpdateRange(updateList);
                     _contMonPd.SaveChanges();
                 }
                 if (newList.Any())

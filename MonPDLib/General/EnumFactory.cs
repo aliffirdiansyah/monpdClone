@@ -421,7 +421,13 @@ namespace MonPDLib.General
             UPTB4 = 0011248446,
 
             [Description("UPTB 5")]
-            UPTB5 = 0011248454
+            UPTB5 = 0011248454,
+
+            [Description("OPSEN PKB")]
+            OPSENPKB = 0011307256,
+
+            [Description("OPSEN BBNKB")]
+            OPSENBBNKB = 0011307264
         }
 
         //EModeCreateSTPDSanksiTelatBayar
