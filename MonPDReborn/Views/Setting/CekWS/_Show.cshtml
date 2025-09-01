@@ -1,0 +1,58 @@
+﻿@model MonPDReborn.Models.Setting.CekWSVM.Show
+
+<div class="table-responsive">
+    
+
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekWSVM.DataWs>()
+    .ID("dataWsGrid")
+    .DataSource(Model.DataWsList)
+    .KeyExpr("NamaWs")
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .AllowColumnResizing(true)
+    .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
+    )
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
+    .NoDataText("Objek Pajak Tidak Ditemukan")
+    .Columns(columns =>
+    {
+        // Kolom Nama WS
+        columns.AddFor(m => m.NamaWs)
+    .Caption("Nama WS");
+
+        // Kolom Last Run
+        columns.AddFor(m => m.LastRunUpdate)
+    .Caption("Last Run")
+    .DataType(GridColumnDataType.DateTime)
+    .Format("dd/MM/yyyy HH:mm");
+
+        // Kolom Status WS dengan Badge
+        columns.AddFor(m => m.StatusWs)
+    .Caption("Status")
+    .CellTemplate(
+        @<text>
+        <% if (data.StatusWs == "WS Not Running") { %>
+        <span class="badge badge-label bg-danger">
+            <i class="mdi mdi-circle-medium"></i> <%= data.StatusWs %>
+        </span>
+        <% } else { %>
+        <span class="badge badge-label bg-success">
+            <i class="mdi mdi-circle-medium"></i> <%= data.StatusWs %>
+        </span>
+        <% } %>
+    </text>);
+    })
+)
+</div>
