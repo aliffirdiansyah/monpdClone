@@ -145,33 +145,26 @@ namespace MonPDReborn.Models.Setting
                                               p.Rincian,
                                               p.SubRincian
                                           }
-                                        equals new
-                                        {
-                                            a.Akun,
-                                            a.Kelompok,
-                                            a.Jenis,
-                                            a.Objek,
-                                            a.Rincian,
-                                            a.SubRincian
-                                        }
-                                      where p.TahunBuku == year && p.Objek.StartsWith("4.1.01")
+                                          equals new
+                                          {
+                                              a.Akun,
+                                              a.Kelompok,
+                                              a.Jenis,
+                                              a.Objek,
+                                              a.Rincian,
+                                              a.SubRincian
+                                          }
+                                      where p.TahunBuku == tahun
+                                            && p.Objek.StartsWith("4.1.01")
                                             && a.PajakId != null
-                                      group new { p, a } by new { p.TahunBuku, a.PajakId } into g
+                                      group p by new { p.TahunBuku, a.PajakId } into g
                                       select new DataScontro
                                       {
                                           tahun = (int)g.Key.TahunBuku,
                                           PajakId = (int)g.Key.PajakId,
-                                          scontro = g.Sum(x => x.p.Realisasi)
+                                          scontro = g.Sum(x => x.Realisasi)
                                       })
-                                      // group ulang supaya PajakId sama di tahun yang sama dijumlahkan
-                                      .GroupBy(x => new { x.tahun, x.PajakId })
-                                      .Select(g => new DataScontro
-                                      {
-                                          tahun = g.Key.tahun,
-                                          PajakId = g.Key.PajakId,
-                                          scontro = g.Sum(x => x.scontro)
-                                      })
-                                      .OrderBy(X => X.PajakId)
+                                      .OrderBy(x => x.PajakId)
                                       .ToList();
 
                 ret.AddRange(dataPendapatan);
