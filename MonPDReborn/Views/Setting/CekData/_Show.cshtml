@@ -127,34 +127,3 @@
     </div>
 </div>
 
-<script>
-function parseNumber(val) {
-    if (val == null) return 0;
-    return Number(String(val).replace(/\./g, "").replace(/,/g, ""));
-}
-
-function onRealisasiCellPrepared(e) {
-    if (e.rowType === "data" && e.column.dataField === "realisasi") {
-        let scontroGrid = $("#dataScontroGrid").dxDataGrid("instance");
-        if (!scontroGrid) return;
-
-        let scontroData = scontroGrid.getDataSource().items();
-        let match = scontroData.find(x => x.jenisPajak === e.data.jenisPajak);
-
-        if (match) {
-            let valRealisasi = parseNumber(e.data.realisasi);
-            let valScontro = parseNumber(match.scontro);
-
-            if (valRealisasi !== valScontro) {
-                e.cellElement.css({
-                    "background-color": "#ffcccc",
-                    "color": "red",
-                    "font-weight": "bold"
-                });
-            }
-        }
-    }
-}
-
-</script>
-
