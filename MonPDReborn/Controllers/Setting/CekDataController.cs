@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MonPDReborn.Controllers.ReklamePublic;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.Setting
 {
-    public class CekDataController : Controller
+    public class CekDataController : BaseController
     {
         string URLView = string.Empty;
 

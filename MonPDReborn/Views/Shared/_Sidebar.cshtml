@@ -102,7 +102,7 @@
 
     //controller setting
     var SettingController = new[] {
-        "WS", "DATA"
+        "CEKWS", "CEKDATA"
     };
     var isSettingActive = SettingController.Contains(currentController);
 
@@ -449,15 +449,15 @@
                         <div id="sidebarset" class="menu-dropdown collapse @SettingShowClass">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
-                                    <a class="nav-link @(currentController == "WS" ? "active" : "")"
+                                    <a class="nav-link @(currentController == "CEKWS" ? "active" : "")"
                                        href="@Url.Action("Index", "CekWS")"
                                        data-key="t-ws">
                                         Monitoring WS
                                     </a>
                                 </li>
                                  <li class="nav-item">
-                                <a class="nav-link @(currentController == "DATA" ? "active" : "")"
-                                   href="@Url.Action("Index", "CekData")"
+                                <a class="nav-link @(currentController == "CEKDATA" ? "active" : "")"
+                                       href="@Url.Action("Index", "CekData")"
                                    data-key="t-setdata">
                                     Monitoring Data
                                 </a>
