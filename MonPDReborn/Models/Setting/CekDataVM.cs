@@ -15,12 +15,14 @@ namespace MonPDReborn.Models.Setting
         // Untuk Partial View _Show.cshtml
         public class Show
         {
-           public List<DataRealisasi> DataRealisasiList { get; set; } = new List<DataRealisasi>();
+            public List<DataRealisasi> DataRealisasiList { get; set; } = new List<DataRealisasi>();
             public List<DataScontro> DataScontroList { get; set; } = new List<DataScontro>();
+            public List<DataSelisih> DataSelisihList { get; set; } = new List<DataSelisih>();
             public Show(int tahun)
             {
                 DataRealisasiList = Method.GetDataRealisasi(tahun);
                 DataScontroList = Method.GetDataScontro(tahun);
+                DataSelisihList = Method.GetDataSelisih(tahun);
             }
         }
 
@@ -174,6 +176,43 @@ namespace MonPDReborn.Models.Setting
                 return ret;
             }
 
+            public static List<DataSelisih> GetDataSelisih(int tahun)
+            {
+                // Ambil data realisasi dan scontro
+                var dataRealisasi = GetDataRealisasi(tahun);
+                var dataScontro = GetDataScontro(tahun);
+
+                // Gabungkan keduanya berdasarkan Tahun + PajakId
+                var dataGabungan = (from r in dataRealisasi
+                                    join s in dataScontro
+                                        on new { r.tahun, r.PajakId }
+                                        equals new { s.tahun, s.PajakId }
+                                        into gj
+                                    from s in gj.DefaultIfEmpty() // left join, biar tidak hilang kalau data kosong
+                                    select new DataSelisih
+                                    {
+                                        tahun = r.tahun,
+                                        PajakId = r.PajakId,
+                                        realisasi = r.realisasi,
+                                        scontro = s?.scontro ?? 0
+                                    })
+                                    .Union( // Tambahkan yang hanya ada di scontro tapi tidak ada di realisasi
+                                        from s in dataScontro
+                                        where !dataRealisasi.Any(r => r.tahun == s.tahun && r.PajakId == s.PajakId)
+                                        select new DataSelisih
+                                        {
+                                            tahun = s.tahun,
+                                            PajakId = s.PajakId,
+                                            realisasi = 0,
+                                            scontro = s.scontro
+                                        }
+                                    )
+                                    .OrderBy(x => x.PajakId)
+                                    .ToList();
+
+                return dataGabungan;
+            }
+
 
         }
 
@@ -193,5 +232,16 @@ namespace MonPDReborn.Models.Setting
             public decimal scontro { get; set; }
 
         }
+
+        public class DataSelisih
+        {
+            public int tahun { get; set; }
+            public int PajakId { get; set; }
+            public string jenisPajak => ((EnumFactory.EPajak)PajakId).GetDescription().Replace("_", " ");
+            public decimal realisasi { get; set; }
+            public decimal scontro { get; set; }
+            public decimal selisih => realisasi - scontro;
+        }
     }
+    
 }

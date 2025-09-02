@@ -125,6 +125,65 @@
         </div>
         
     </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Selisih Data
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekDataVM.DataSelisih>()
+                .ID("dataSelisihGrid")
+                .DataSource(Model.DataSelisihList)
+                .KeyExpr("jenisPajak")
+                .ShowBorders(true)
+                .ShowColumnHeaders(true)
+                .ShowColumnLines(true)
+                .ShowRowLines(true)
+                .AllowColumnResizing(true)
+                .ColumnAutoWidth(true)
+                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                .FilterRow(f => f.Visible(true))
+                .HeaderFilter(h => h.Visible(true))
+                .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                .Paging(p => p.PageSize(25))
+                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                .OnExporting("exportGrid")
+                .NoDataText("Objek Pajak Tidak Ditemukan")
+                .Columns(columns =>
+                {
+                  // Kolom Nama WS
+                    columns.AddFor(m => m.jenisPajak)
+                    .Caption("Jenis Pajak");
+
+                    // Kolom Last Run
+                    columns.AddFor(m => m.selisih)
+                    .Caption("Realisasi").Format("#,##0");
+
+                })
+                .Summary(s => {
+                    s.TotalItems(items => {
+                        items.AddFor(x => x.jenisPajak)
+                            .SummaryType(SummaryType.Sum)
+                            .DisplayFormat("Total");
+
+                        items.AddFor(x => x.selisih)
+                            .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                            .DisplayFormat("{0}");
+                    });
+                })
+
+                )
+                </div>
+            </div>
+        </div>
+        
+    </div>
 </div>
 
 <script>
