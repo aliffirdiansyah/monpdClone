@@ -2,51 +2,76 @@
 
 <div class="row">
     <div class="col-lg-6">
-        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekDataVM.DataRealisasi>()
-    .ID("dataRealisasiGrid")
-    .DataSource(Model.DataRealisasiList)
-    .KeyExpr("jenisPajak")
-    .ShowBorders(true)
-    .ShowColumnHeaders(true)
-    .ShowColumnLines(true)
-    .ShowRowLines(true)
-    .AllowColumnResizing(true)
-    .ColumnAutoWidth(true)
-    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(h => h.Visible(true))
-    .Sorting(s => s.Mode(GridSortingMode.Multiple))
-    .Paging(p => p.PageSize(25))
-    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
-    .OnExporting("exportGrid")
-    .NoDataText("Objek Pajak Tidak Ditemukan")
-    .Columns(columns =>
-    {
-        columns.AddFor(m => m.jenisPajak)
-            .Caption("Jenis Pajak");
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Data Realisasi
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekDataVM.DataRealisasi>()
+                        .ID("dataRealisasiGrid")
+                        .DataSource(Model.DataRealisasiList)
+                        .KeyExpr("jenisPajak")
+                        .ShowBorders(true)
+                        .ShowColumnHeaders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(h => h.Visible(true))
+                        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(25))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                        .OnExporting("exportGrid")
+                        .NoDataText("Objek Pajak Tidak Ditemukan")
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.jenisPajak)
+                                .Caption("Jenis Pajak");
 
-        columns.AddFor(m => m.realisasi)
-            .Caption("Realisasi")
-            .Format("#,##0");
-    })
-    .Summary(s => {
-        s.TotalItems(items => {
-            items.AddFor(x => x.jenisPajak)
-                .SummaryType(SummaryType.Sum)
-                .DisplayFormat("Total");
+                            columns.AddFor(m => m.realisasi)
+                                .Caption("Realisasi")
+                                .Format("#,##0");
+                        })
+                        .Summary(s => {
+                            s.TotalItems(items => {
+                                items.AddFor(x => x.jenisPajak)
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
 
-            items.AddFor(x => x.realisasi)
-                .SummaryType(SummaryType.Sum)
-                .ValueFormat("#,##0")
-                .DisplayFormat("{0}");
-        });
-    })
-    .OnCellPrepared("onRealisasiCellPrepared")  // tambahkan handler
-)
+                                items.AddFor(x => x.realisasi)
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0}");
+                            });
+                        })
+                        .OnCellPrepared("onRealisasiCellPrepared")  // tambahkan handler
+                    )
+                </div>
+            </div>
+        </div>
+        
+        
 
     </div>
     <div class="col-lg-6">
-        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekDataVM.DataScontro>()
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Data Scontro
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekDataVM.DataScontro>()
                 .ID("dataScontroGrid")
                 .DataSource(Model.DataScontroList)
                 .KeyExpr("jenisPajak")
@@ -92,28 +117,44 @@
                             .DisplayFormat("{0}");
                     });
                 })
+                .OnContentReady("onScontroReady")
+
                 )
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 
 <script>
+function parseNumber(val) {
+    if (val == null) return 0;
+    return Number(String(val).replace(/\./g, "").replace(/,/g, ""));
+}
+
 function onRealisasiCellPrepared(e) {
     if (e.rowType === "data" && e.column.dataField === "realisasi") {
         let scontroGrid = $("#dataScontroGrid").dxDataGrid("instance");
-
         if (!scontroGrid) return;
 
-        let scontroData = scontroGrid.getVisibleRows().map(r => r.data);
+        let scontroData = scontroGrid.getDataSource().items();
         let match = scontroData.find(x => x.jenisPajak === e.data.jenisPajak);
 
-        if (match && Number(match.scontro) !== Number(e.data.realisasi)) {
-            e.cellElement.css({
-                "background-color": "#ffcccc",
-                "color": "red",
-                "font-weight": "bold"
-            });
+        if (match) {
+            let valRealisasi = parseNumber(e.data.realisasi);
+            let valScontro = parseNumber(match.scontro);
+
+            if (valRealisasi !== valScontro) {
+                e.cellElement.css({
+                    "background-color": "#ffcccc",
+                    "color": "red",
+                    "font-weight": "bold"
+                });
+            }
         }
     }
 }
+
 </script>
 

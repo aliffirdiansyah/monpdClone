@@ -100,6 +100,16 @@
     var AnalisisTrenExpanded = isAnalisisTrenActive ? "true" : "false";
     var AnalisisTrenShowClass = isAnalisisTrenActive ? "show" : "";
 
+    //controller setting
+    var SettingController = new[] {
+        "WS", "DATA"
+    };
+    var isSettingActive = SettingController.Contains(currentController);
+
+    var SettingActiveClass = isSettingActive ? "active" : "";
+    var SettingExpanded = isSettingActive ? "true" : "false";
+    var SettingShowClass = isSettingActive ? "show" : "";
+
 }
 
 <!-- ========== App Menu ========== -->
@@ -425,31 +435,31 @@
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">
-                    <li class="menu-title"><span data-key="t-wajibPajak">Setting</span></li>
+                    <li class="menu-title"><span data-key="t-set">Setting</span></li>
                     <li class="nav-item">
-                        <a class="nav-link menu-link collapse @dataOPActiveClass"
-                           href="#sidebarData"
+                        <a class="nav-link menu-link collapse @SettingActiveClass"
+                           href="#sidebarset"
                            data-bs-toggle="collapse"
                            role="button"
-                           aria-expanded="@dataOPExpanded"
-                           aria-controls="sidebarData" style="background-color: #5EA8A4">
-                            <i class="bx bx-data"></i>
-                            <span data-key="t-data">Setting</span>
+                           aria-expanded="@SettingExpanded"
+                           aria-controls="sidebarset" style="background-color: #5EA8A4">
+                            <i class="bx bx-cog"></i>
+                            <span data-key="t-set">Setting</span>
                         </a>
-                        <div id="sidebarData" class="menu-dropdown collapse @dataOPShowClass">
+                        <div id="sidebarset" class="menu-dropdown collapse @SettingShowClass">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
-                                    <a class="nav-link @(currentController == "SETTING" ? "active" : "")"
+                                    <a class="nav-link @(currentController == "WS" ? "active" : "")"
                                        href="@Url.Action("Index", "CekWS")"
-                                       data-key="t-profilOp">
-                                        Cek WS
+                                       data-key="t-ws">
+                                        Monitoring WS
                                     </a>
                                 </li>
                                  <li class="nav-item">
-                                <a class="nav-link @(currentController == "SETTING" ? "active" : "")"
+                                <a class="nav-link @(currentController == "DATA" ? "active" : "")"
                                    href="@Url.Action("Index", "CekData")"
-                                   data-key="t-profilPembayaran">
-                                    Cek Data
+                                   data-key="t-setdata">
+                                    Monitoring Data
                                 </a>
                             </li>
                                 

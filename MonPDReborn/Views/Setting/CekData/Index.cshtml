@@ -8,9 +8,15 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Data Realisasi VS Scontro
+                    </h4>
+                </div>
+            </div>
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="card-title fs-16 mb-0">Rekap Jumlah Objek Pajak</h4>
                     <div class="dropdown">
                         <select id="ddlTahun" class="form-select form-select mb-3 w-auto"
                                 style="background-color: #f0f8ff; color: #333; border-color: #0d6efd;">
@@ -37,7 +43,7 @@
         $(document).ready(function () {
             // Inisialisasi dropdown tahun
             var currentYear = new Date().getFullYear();
-            for (var year = currentYear; year >= 2000; year--) {
+            for (var year = currentYear; year >= 2021; year--) {
                 $('#ddlTahun').append($('<option>', {
                     value: year,
                     text: year
@@ -75,24 +81,59 @@
         }
     </script>
     <script>
+                // Fungsi bantu untuk parse angka (hilangkan titik/koma pemisah ribuan)
+        function parseNumber(val) {
+            if (val == null) return 0;
+            return Number(String(val).replace(/\./g, "").replace(/,/g, ""));
+        }
+
+        // Dipanggil saat cell di grid kiri (dataRealisasiGrid) di-render
         function onRealisasiCellPrepared(e) {
             if (e.rowType === "data" && e.column.dataField === "realisasi") {
                 let scontroGrid = $("#dataScontroGrid").dxDataGrid("instance");
-
                 if (!scontroGrid) return;
 
-                let scontroData = scontroGrid.getVisibleRows().map(r => r.data);
-                let match = scontroData.find(x => x.jenisPajak === e.data.jenisPajak);
+                let scontroData = scontroGrid.getDataSource().items();
 
-                if (match && Number(match.scontro) !== Number(e.data.realisasi)) {
-                    e.cellElement.css({
-                        "background-color": "#ffcccc",
-                        "color": "red",
-                        "font-weight": "bold"
-                    });
+                // cari data yang cocok berdasarkan jenisPajak
+                let match = scontroData.find(x =>
+                    String(x.jenisPajak).trim().toLowerCase() === String(e.data.jenisPajak).trim().toLowerCase()
+                );
+
+                let valRealisasi = parseNumber(e.data.realisasi);
+                let valScontro = match ? parseNumber(match.scontro) : null;
+
+                // debug di console
+                console.log("COMPARE =>", e.data.jenisPajak, valRealisasi, valScontro);
+
+                if (valScontro !== null) {
+                    if (valRealisasi === valScontro) {
+                        // sama → hijau
+                        e.cellElement.css({
+                            "background-color": "#ccffcc",
+                            "color": "green",
+                            "font-weight": "bold"
+                        });
+                    } else if (valRealisasi < valScontro) {
+                        // lebih kecil → merah
+                        e.cellElement.css({
+                            "background-color": "#ffcccc",
+                            "color": "red",
+                            "font-weight": "bold"
+                        });
+                    }
+                    // lebih besar → tidak diberi warna (default)
                 }
             }
         }
+
+        // Dipanggil ketika grid kanan (dataScontroGrid) selesai load
+        function onScontroReady(e) {
+            console.log("Data Scontro Loaded:", e.component.getDataSource().items());
+            // refresh grid kiri supaya event onCellPrepared jalan lagi dengan data baru
+            $("#dataRealisasiGrid").dxDataGrid("instance").refresh();
+        }
+
     </script>
 
 
