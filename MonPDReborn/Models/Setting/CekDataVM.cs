@@ -138,6 +138,7 @@ namespace MonPDReborn.Models.Setting
                                       join a in context.DbPajakMappings
                                           on new
                                           {
+                                              p.TahunBuku,
                                               p.Akun,
                                               p.Kelompok,
                                               p.Jenis,
@@ -147,6 +148,7 @@ namespace MonPDReborn.Models.Setting
                                           }
                                           equals new
                                           {
+                                              a.TahunBuku,
                                               a.Akun,
                                               a.Kelompok,
                                               a.Jenis,
