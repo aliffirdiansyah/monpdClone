@@ -1,3 +1,4 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
@@ -20,6 +21,7 @@ namespace RestoWs
         private readonly ILogger<WorkerV2> _logger;
         private static int KDPajak = 1;
         private static string NAMA_PAJAK = "RESTORAN";
+        private static EnumFactory.EPajak PAJAK_ENUM = EnumFactory.EPajak.MakananMinuman;
 
         public WorkerV2(ILogger<WorkerV2> logger)
         {
@@ -103,6 +105,11 @@ namespace RestoWs
             for (var i = tahunAmbil; i <= tglServer.Year; i++)
             {
                 GetRealisasi(i);
+            }
+
+            for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            {
+                UpdateKoreksi(i);
             }
 
             MailHelper.SendMail(
@@ -288,8 +295,6 @@ WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                 Console.WriteLine($"");
             }
         }
-
-
         private void GetRealisasi(int tahunBuku)
         {
             var tglMulai = DateTime.Now;
@@ -323,20 +328,20 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                                 new OracleParameter("PAJAK", NAMA_PAJAK),
                                 new OracleParameter("TAHUN", tahunBuku.ToString())
                     }).ToList();
-                
+
                 int jmlData = realisasiMonitoringDb.Count;
                 decimal jml_pokok = realisasiMonitoringDb.Sum(x => x.NOMINAL_POKOK);
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbMonResto>();
                 var updateList = new List<MonPDLib.EF.DbMonResto>();
-         
+
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
-                    var realisasi = _contMonPd.DbMonRestos.SingleOrDefault(x=>x.Nop==itemRealisasi.NOP &&
-                                                                           x.TahunPajakKetetapan==itemRealisasi.TAHUN_PAJAK &&
-                                                                           x.MasaPajakKetetapan== itemRealisasi.MASA_PAJAK &&
-                                                                           x.SeqPajakKetetapan== itemRealisasi.SEQ &&
-                                                                           x.TahunBuku ==tahunBuku);
+                    var realisasi = _contMonPd.DbMonRestos.SingleOrDefault(x => x.Nop == itemRealisasi.NOP &&
+                                                                           x.TahunPajakKetetapan == itemRealisasi.TAHUN_PAJAK &&
+                                                                           x.MasaPajakKetetapan == itemRealisasi.MASA_PAJAK &&
+                                                                           x.SeqPajakKetetapan == itemRealisasi.SEQ &&
+                                                                           x.TahunBuku == tahunBuku);
                     if (realisasi != null)
                     {
                         realisasi.NominalPokokBayar = itemRealisasi.NOMINAL_POKOK;
@@ -349,10 +354,10 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                     }
                     else
                     {
-                        var OP = _contMonPd.DbOpRestos.Find(itemRealisasi.NOP ,(decimal)tahunBuku);
+                        var OP = _contMonPd.DbOpRestos.Find(itemRealisasi.NOP, (decimal)tahunBuku);
 
                         if (OP != null)
-                        {                            
+                        {
                             var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
                             var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
 
@@ -445,7 +450,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRowOP.Telp = "-";
                             newRowOP.AlamatOpKdLurah = "-";
                             newRowOP.AlamatOpKdCamat = "-";
-                            newRowOP.TglOpTutup = new DateTime(tahunBuku,12,31);
+                            newRowOP.TglOpTutup = new DateTime(tahunBuku, 12, 31);
                             newRowOP.TglMulaiBukaOp = itemRealisasi.TRANSACTION_DATE;
                             newRowOP.KategoriId = 7;
                             newRowOP.KategoriNama = "RESTORAN";
@@ -577,7 +582,6 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 Console.WriteLine($"Error processing REALISASI {ex.Message}");
             }
         }
-
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
@@ -613,7 +617,304 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
             _contMonPd.SaveChanges();
             return true;
         }
+        private void UpdateKoreksi(int tahunBuku)
+        {
+            Console.WriteLine($"[START] UpdateKoreksi {tahunBuku}");
 
+            var context = DBClass.GetContext();
+            var query = @"SELECT 	TAHUN, 
+		                A.PAJAK_ID, 
+		                A.SCONTRO, 
+		                B.REALISASI, 
+		                (A.SCONTRO-B.REALISASI) SELISIH
+                FROM 
+                (
+	                SELECT 
+	                       P.TAHUN_BUKU AS TAHUN,
+	                       A.PAJAK_ID,
+	                       SUM(P.REALISASI) AS SCONTRO
+	                FROM DB_PENDAPATAN_DAERAH P
+	                LEFT JOIN DB_PAJAK_MAPPING A 
+	                     ON P.AKUN = A.AKUN
+	                     AND P.KELOMPOK = A.KELOMPOK 
+	                     AND P.JENIS = A.JENIS 
+	                     AND P.OBJEK = A.OBJEK 
+	                     AND P.RINCIAN = A.RINCIAN 
+	                     AND P.SUB_RINCIAN = A.SUB_RINCIAN 
+	                     AND P.TAHUN_BUKU = A.TAHUN_BUKU
+	                WHERE P.TAHUN_BUKU = :YEAR
+	                  AND P.OBJEK LIKE '4.1.01%'
+	                  AND A.PAJAK_ID IS NOT NULL
+	                GROUP BY P.TAHUN_BUKU, A.PAJAK_ID
+                ) A 
+                JOIN 
+                (
+	                SELECT EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+	                    1 AS PAJAK_ID, 
+	                    SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+	                FROM DB_MON_RESTO
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+	                    2 AS PAJAK_ID, 
+	                    SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+	                FROM DB_MON_PPJ
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+	                    3 AS PAJAK_ID, 
+	                    SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+	                FROM DB_MON_HOTEL
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+	                    4 AS PAJAK_ID, 
+	                    SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+	                FROM DB_MON_PARKIR
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+	                    5 AS PAJAK_ID, 
+	                    SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+	                FROM DB_MON_HIBURAN
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+	                    6 AS PAJAK_ID, 
+	                    SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+	                FROM DB_MON_ABT
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+	                    7 AS PAJAK_ID, 
+	                    SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+	                FROM DB_MON_REKLAME
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR) AS TAHUN_BUKU,
+	                    9 AS PAJAK_ID, 
+	                    SUM(NVL(POKOK_PAJAK, 0)) AS REALISASI
+	                FROM DB_MON_PBB
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_BAYAR) AS TAHUN_BUKU,
+	                    12 AS PAJAK_ID, 
+	                    SUM(NVL(POKOK, 0)) AS REALISASI
+	                FROM DB_MON_BPHTB
+	                WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_BAYAR)
+	                UNION ALL
+	                SELECT 
+	                    EXTRACT(YEAR FROM TGL_SSPD) AS TAHUN_BUKU,
+	                    20 AS PAJAK_ID, 
+	                    SUM(NVL(JML_POKOK, 0)) AS REALISASI
+	                FROM DB_MON_OPSEN_PKB
+	                WHERE EXTRACT(YEAR FROM TGL_SSPD) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
+	                UNION ALL
+	                SELECT  EXTRACT(YEAR FROM TGL_SSPD) AS TAHUN_BUKU,
+		                    21 AS PAJAK_ID, 
+		                    SUM(NVL(JML_POKOK, 0)) AS REALISASI
+	                FROM DB_MON_OPSEN_BBNKB
+	                WHERE EXTRACT(YEAR FROM TGL_SSPD) = :YEAR
+	                GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
+                ) B ON A.TAHUN = B.TAHUN_BUKU 
+	                AND A.PAJAK_ID = B.PAJAK_ID
+                WHERE A.PAJAK_ID = :PAJAK";
+
+            var db = getOracleConnection();
+            var result = db.Query<MonPDLib.Helper.SCONTROSELISIH>(query, new { YEAR = tahunBuku, PAJAK = (int)PAJAK_ENUM }).ToList();
+
+            decimal selisih = result.FirstOrDefault()?.SELISIH ?? 0;
+
+            int pajakId = (int)PAJAK_ENUM;
+            string pajakNama = PAJAK_ENUM.GetDescription();
+            var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
+            var nop = $"0000000000000000{kdPajakString}";
+            var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
+            var kategori = GetKategoriOvveride(nop);
+            int kategoriId = Convert.ToInt32(kategori[0]);
+            string kategoriNama = kategori[1];
+
+            var source = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            if (source != null)
+            {
+                source.NamaOp = namaop;
+                source.TahunBuku = tahunBuku;
+
+                context.DbOpRestos.Update(source);
+                context.SaveChanges();
+            }
+            else
+            {
+                var newRow = new DbOpResto();
+
+                newRow.Nop = nop;
+                newRow.NamaOp = namaop;
+                newRow.TahunBuku = tahunBuku;
+                newRow.Npwpd = "KOREKSI";
+                newRow.NpwpdNama = "KOREKSI";
+                newRow.NpwpdAlamat = "-";
+                newRow.PajakId = pajakId;
+                newRow.PajakNama = pajakNama;
+                newRow.AlamatOp = "-";
+                newRow.AlamatOpNo = "-";
+                newRow.AlamatOpRt = "-";
+                newRow.AlamatOpRw = "-";
+                newRow.Telp = "-";
+                newRow.AlamatOpKdLurah = "-";
+                newRow.AlamatOpKdCamat = "-";
+                newRow.TglOpTutup = null;
+                newRow.TglMulaiBukaOp = DateTime.Now;
+                newRow.KategoriId = kategoriId;
+                newRow.KategoriNama = kategoriNama;
+                newRow.MetodePembayaran = "-";
+                newRow.MetodePenjualan = "-";
+                newRow.JumlahKaryawan = 0;
+                newRow.JumlahMeja = 0;
+                newRow.JumlahKursi = 0;
+                newRow.KapasitasRuanganOrang = 0;
+                newRow.MaksimalProduksiPorsiHari = 0;
+                newRow.RataTerjualPorsiHari = 0;
+                newRow.InsDate = DateTime.Now;
+                newRow.InsBy = "-";
+                newRow.Akun = "-";
+                newRow.NamaAkun = "-";
+                newRow.Jenis = "-";
+                newRow.NamaJenis = "-";
+                newRow.Objek = "-";
+                newRow.NamaObjek = "-";
+                newRow.Rincian = "-";
+                newRow.NamaRincian = "-";
+                newRow.SubRincian = "-";
+                newRow.NamaSubRincian = "-";
+                newRow.Kelompok = "-";
+                newRow.NamaKelompok = "-";
+                newRow.WilayahPajak = "-";
+                newRow.IsTutup = 0;
+
+
+                context.DbOpRestos.Add(newRow);
+                context.SaveChanges();
+            }
+
+            var sourceMon = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
+            if (sourceMon != null)
+            {
+                sourceMon.NominalPokokBayar = selisih;
+                context.DbMonRestos.Update(sourceMon);
+                context.SaveChanges();
+            }
+            else
+            {
+                var newRow = new DbMonResto();
+
+                newRow.Nop = source.Nop;
+                newRow.Npwpd = source.Npwpd;
+                newRow.NpwpdNama = source.NpwpdNama;
+                newRow.NpwpdAlamat = source.NpwpdAlamat;
+                newRow.PajakId = source.PajakId;
+                newRow.PajakNama = source.PajakNama;
+                newRow.NamaOp = source.NamaOp;
+                newRow.AlamatOp = source.AlamatOp;
+                newRow.AlamatOpKdLurah = source.AlamatOpKdLurah;
+                newRow.AlamatOpKdCamat = source.AlamatOpKdCamat;
+                newRow.TglOpTutup = source.TglOpTutup;
+                newRow.TglMulaiBukaOp = source.TglMulaiBukaOp;
+                newRow.IsTutup = source.TglOpTutup == null ? 0 : source.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
+                newRow.KategoriId = source.KategoriId;
+                newRow.KategoriNama = source.KategoriNama;
+                newRow.TahunBuku = tahunBuku;
+                newRow.Akun = source.Akun;
+                newRow.NamaAkun = source.NamaAkun;
+                newRow.Jenis = source.Jenis;
+                newRow.NamaJenis = source.NamaJenis;
+                newRow.Objek = source.Objek;
+                newRow.NamaObjek = source.NamaObjek;
+                newRow.Rincian = source.Rincian;
+                newRow.NamaRincian = source.NamaRincian;
+                newRow.SubRincian = source.SubRincian;
+                newRow.NamaSubRincian = source.NamaSubRincian;
+                newRow.TahunPajakKetetapan = DateTime.Now.Year;
+                newRow.MasaPajakKetetapan = DateTime.Now.Month;
+                newRow.SeqPajakKetetapan = 1;
+                newRow.KategoriKetetapan = "4";
+                newRow.TglKetetapan = DateTime.Now;
+                newRow.TglJatuhTempoBayar = DateTime.Now;
+                newRow.PokokPajakKetetapan = selisih;
+                newRow.PengurangPokokKetetapan = 0;
+                newRow.AkunKetetapan = "-";
+                newRow.KelompokKetetapan = "-";
+                newRow.JenisKetetapan = "-";
+                newRow.ObjekKetetapan = "-";
+                newRow.RincianKetetapan = "-";
+                newRow.SubRincianKetetapan = "-";
+                newRow.InsDate = DateTime.Now;
+                newRow.InsBy = "JOB";
+                newRow.UpdDate = DateTime.Now;
+                newRow.UpdBy = "JOB";
+                newRow.TglBayarPokok = DateTime.Now;
+                newRow.NominalPokokBayar = selisih;
+                newRow.AkunPokokBayar = "-";
+                newRow.Kelompok = "-";
+                newRow.JenisPokokBayar = "-";
+                newRow.ObjekPokokBayar = "-";
+                newRow.RincianPokokBayar = "-";
+                newRow.SubRincianPokokBayar = "-";
+                newRow.TglBayarSanksi = null;
+                newRow.NominalSanksiBayar = null;
+                newRow.AkunSanksiBayar = "-";
+                newRow.KelompokSanksiBayar = "-";
+                newRow.JenisSanksiBayar = "-";
+                newRow.ObjekSanksiBayar = "-";
+                newRow.RincianSanksiBayar = "-";
+                newRow.SubRincianSanksiBayar = "-";
+                newRow.TglBayarSanksiKenaikan = null;
+
+                newRow.NominalSanksiBayar = 0;
+                newRow.AkunSanksiBayar = "-";
+                newRow.KelompokSanksiBayar = "-";
+                newRow.JenisSanksiBayar = "-";
+                newRow.ObjekSanksiBayar = "-";
+                newRow.RincianSanksiBayar = "-";
+                newRow.SubRincianSanksiBayar = "-";
+
+                context.DbMonRestos.Add(newRow);
+                context.SaveChanges();
+            }
+
+            Console.WriteLine($"[FINISHED] UpdateKoreksi {tahunBuku}");
+        }
+        public static OracleConnection getOracleConnection()
+        {
+            try
+            {
+                OracleConnection ret = new OracleConnection(MonPDLib.DBClass.Monpd);
+                ret.Open();
+                ret.Close();
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                return new OracleConnection();
+            }
+        }
         private List<string> GetKategoriOvveride(string nop)
         {
             var ret = new List<string>();
@@ -876,5 +1177,6 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
             }
 
         }
+
     }
 }

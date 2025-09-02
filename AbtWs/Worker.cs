@@ -19,6 +19,7 @@ namespace AbtWs
         private bool isFirst = true;
         private readonly ILogger<Worker> _logger;
         private static int KDPajak = 6;
+        private static EnumFactory.EPajak PAJAK_ENUM = EnumFactory.EPajak.AirTanah;
 
         public Worker(ILogger<Worker> logger)
         {

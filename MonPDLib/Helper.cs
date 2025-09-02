@@ -13,6 +13,15 @@ namespace MonPDLib
 {
     public class Helper
     {
+        public class SCONTROSELISIH
+        {
+            public int TAHUN { get; set; }
+            public int PAJAK_ID { get; set; }
+            public decimal SCONTRO { get; set; }
+            public decimal REALISASI { get; set; }
+            public decimal SELISIH { get; set; }
+
+        }
         public class NpwpdPhr
         {
             public string NPWPD_NO { get; set; }

@@ -69,6 +69,9 @@ namespace OpsenWs
             var _contMonPd = DBClass.GetContext();
             int tahunAmbil = tglServer.Year;
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == idPajak);
+
+            var doGetDbOp = IsGetDBOp();
+
             if (thnSetting != null)
             {
                 var temp = tglServer.Year - (int)thnSetting.YearBefore;
