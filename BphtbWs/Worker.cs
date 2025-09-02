@@ -1,3 +1,4 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
@@ -14,6 +15,7 @@ namespace BphtbWs
         private bool isFirst = true;
         private readonly ILogger<Worker> _logger;
         private static int KDPajak = 12;
+        private static EnumFactory.EPajak PAJAK_ENUM = EnumFactory.EPajak.BPHTB;
 
         public Worker(ILogger<Worker> logger)
         {
@@ -292,6 +294,206 @@ namespace BphtbWs
             $@"BPHTB WS FINISHED",
             null
             );
+        }
+
+        private void UpdateKoreksi(int tahunBuku)
+        {
+            Console.WriteLine($"[START] UpdateKoreksi {tahunBuku}");
+
+            var context = DBClass.GetContext();
+            var query = @"SELECT 	TAHUN, 
+                A.PAJAK_ID, 
+                A.SCONTRO, 
+                B.REALISASI, 
+                (A.SCONTRO-B.REALISASI) SELISIH
+        FROM 
+        (
+            SELECT 
+                   P.TAHUN_BUKU AS TAHUN,
+                   A.PAJAK_ID,
+                   SUM(P.REALISASI) AS SCONTRO
+            FROM DB_PENDAPATAN_DAERAH P
+            LEFT JOIN DB_PAJAK_MAPPING A 
+                 ON P.AKUN = A.AKUN
+                 AND P.KELOMPOK = A.KELOMPOK 
+                 AND P.JENIS = A.JENIS 
+                 AND P.OBJEK = A.OBJEK 
+                 AND P.RINCIAN = A.RINCIAN 
+                 AND P.SUB_RINCIAN = A.SUB_RINCIAN 
+                 AND P.TAHUN_BUKU = A.TAHUN_BUKU
+            WHERE P.TAHUN_BUKU = :YEAR
+              AND P.OBJEK LIKE '4.1.01%'
+              AND A.PAJAK_ID IS NOT NULL
+            GROUP BY P.TAHUN_BUKU, A.PAJAK_ID
+        ) A 
+        JOIN 
+        (
+            SELECT EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                1 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_RESTO
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                2 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_PPJ
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                3 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_HOTEL
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                4 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_PARKIR
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                5 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_HIBURAN
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                6 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_ABT
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                7 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_REKLAME
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR) AS TAHUN_BUKU,
+                9 AS PAJAK_ID, 
+                SUM(NVL(POKOK_PAJAK, 0)) AS REALISASI
+            FROM DB_MON_PBB
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR) AS TAHUN_BUKU,
+                12 AS PAJAK_ID, 
+                SUM(NVL(POKOK, 0)) AS REALISASI
+            FROM DB_MON_BPHTB
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_SSPD) AS TAHUN_BUKU,
+                20 AS PAJAK_ID, 
+                SUM(NVL(JML_POKOK, 0)) AS REALISASI
+            FROM DB_MON_OPSEN_PKB
+            WHERE EXTRACT(YEAR FROM TGL_SSPD) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
+            UNION ALL
+            SELECT  EXTRACT(YEAR FROM TGL_SSPD) AS TAHUN_BUKU,
+                    21 AS PAJAK_ID, 
+                    SUM(NVL(JML_POKOK, 0)) AS REALISASI
+            FROM DB_MON_OPSEN_BBNKB
+            WHERE EXTRACT(YEAR FROM TGL_SSPD) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
+        ) B ON A.TAHUN = B.TAHUN_BUKU 
+            AND A.PAJAK_ID = B.PAJAK_ID
+        WHERE A.PAJAK_ID = :PAJAK";
+
+            var db = getOracleConnection();
+            var result = db.Query<MonPDLib.Helper.SCONTROSELISIH>(query, new { YEAR = tahunBuku, PAJAK = (int)PAJAK_ENUM }).ToList();
+
+            decimal selisih = result.FirstOrDefault()?.SELISIH ?? 0;
+
+            int pajakId = (int)PAJAK_ENUM;
+            string pajakNama = PAJAK_ENUM.GetDescription();
+            var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
+            var nop = $"0000000000000000{kdPajakString}";
+            var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
+
+            var sourceMon = context.DbMonBphtbs.Where(x => x.SpptNop == nop && x.Tahun == tahunBuku).FirstOrDefault();
+            if (sourceMon != null)
+            {
+                sourceMon.Pokok = selisih;
+                context.DbMonBphtbs.Update(sourceMon);
+                context.SaveChanges();
+            }
+            else
+            {
+                var newRow = new DbMonBphtb();
+
+                newRow.Idsspd = "";
+                newRow.TglBayar = DateTime.Now;
+                newRow.TglData = null;
+                newRow.Akun = "";
+                newRow.NamaAkun = "";
+                newRow.Jenis = "";
+                newRow.NamaJenis = "";
+                newRow.Objek = "";
+                newRow.NamaObjek = "";
+                newRow.Rincian = "";
+                newRow.NamaRincian = "";
+                newRow.SubRincian = "";
+                newRow.NamaSubRincian = "";
+                newRow.SpptNop = "";
+                newRow.NamaWp = "";
+                newRow.Alamat = "";
+                newRow.Masa = 0;
+                newRow.Tahun = 0;
+                newRow.Pokok = selisih;
+                newRow.Sanksi = 0;
+                newRow.Nomordasarsetor = nop;
+                newRow.Tempatbayar = namaop;
+                newRow.Refsetoran = "";
+                newRow.RekonDate = null;
+                newRow.RekonBy = "";
+                newRow.KdPerolehan = "";
+                newRow.KdByr = 0;
+                newRow.KodeNotaris = "";
+                newRow.KdPelayanan = "";
+                newRow.Perolehan = "";
+                newRow.KdCamat = "";
+                newRow.KdLurah = "";
+                newRow.Kelompok = "";
+                newRow.NamaKelompok = "";
+                newRow.Seq = -1;
+
+                context.DbMonBphtbs.Add(newRow);
+                context.SaveChanges();
+            }
+
+            Console.WriteLine($"[FINISHED] UpdateKoreksi {tahunBuku}");
+        }
+        public static OracleConnection getOracleConnection()
+        {
+            try
+            {
+                OracleConnection ret = new OracleConnection(MonPDLib.DBClass.Monpd);
+                ret.Open();
+                ret.Close();
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                return new OracleConnection();
+            }
         }
 
         private bool IsGetDBOp()

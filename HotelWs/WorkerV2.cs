@@ -730,18 +730,18 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
             int kategoriId = Convert.ToInt32(kategori[0]);
             string kategoriNama = kategori[1];
 
-            var source = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            var source = context.DbOpHotels.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
             if (source != null)
             {
                 source.NamaOp = namaop;
                 source.TahunBuku = tahunBuku;
 
-                context.DbOpRestos.Update(source);
+                context.DbOpHotels.Update(source);
                 context.SaveChanges();
             }
             else
             {
-                var newRow = new DbOpResto();
+                var newRow = new DbOpHotel();
 
                 newRow.Nop = nop;
                 newRow.NamaOp = namaop;
@@ -765,11 +765,6 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 newRow.MetodePembayaran = "-";
                 newRow.MetodePenjualan = "-";
                 newRow.JumlahKaryawan = 0;
-                newRow.JumlahMeja = 0;
-                newRow.JumlahKursi = 0;
-                newRow.KapasitasRuanganOrang = 0;
-                newRow.MaksimalProduksiPorsiHari = 0;
-                newRow.RataTerjualPorsiHari = 0;
                 newRow.InsDate = DateTime.Now;
                 newRow.InsBy = "-";
                 newRow.Akun = "-";
@@ -788,20 +783,20 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 newRow.IsTutup = 0;
 
 
-                context.DbOpRestos.Add(newRow);
+                context.DbOpHotels.Add(newRow);
                 context.SaveChanges();
             }
 
-            var sourceMon = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
+            var sourceMon = context.DbMonHotels.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
             if (sourceMon != null)
             {
                 sourceMon.NominalPokokBayar = selisih;
-                context.DbMonRestos.Update(sourceMon);
+                context.DbMonHotels.Update(sourceMon);
                 context.SaveChanges();
             }
             else
             {
-                var newRow = new DbMonResto();
+                var newRow = new DbMonHotel();
 
                 newRow.Nop = source.Nop;
                 newRow.Npwpd = source.Npwpd;
@@ -873,7 +868,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 newRow.RincianSanksiBayar = "-";
                 newRow.SubRincianSanksiBayar = "-";
 
-                context.DbMonRestos.Add(newRow);
+                context.DbMonHotels.Add(newRow);
                 context.SaveChanges();
             }
 

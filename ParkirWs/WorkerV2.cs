@@ -257,18 +257,19 @@ namespace ParkirWs
             int kategoriId = Convert.ToInt32(kategori[0]);
             string kategoriNama = kategori[1];
 
-            var source = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            var source = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
             if (source != null)
             {
                 source.NamaOp = namaop;
                 source.TahunBuku = tahunBuku;
 
-                context.DbOpRestos.Update(source);
+                context.DbOpParkirs.Update(source);
                 context.SaveChanges();
             }
             else
             {
-                var newRow = new DbOpResto();
+                var newRow = new DbOpParkir();
+
 
                 newRow.Nop = nop;
                 newRow.NamaOp = namaop;
@@ -290,13 +291,9 @@ namespace ParkirWs
                 newRow.KategoriId = kategoriId;
                 newRow.KategoriNama = kategoriNama;
                 newRow.MetodePembayaran = "-";
-                newRow.MetodePenjualan = "-";
+                newRow.Dikelola = "-";
+                newRow.PungutTarif = "-";
                 newRow.JumlahKaryawan = 0;
-                newRow.JumlahMeja = 0;
-                newRow.JumlahKursi = 0;
-                newRow.KapasitasRuanganOrang = 0;
-                newRow.MaksimalProduksiPorsiHari = 0;
-                newRow.RataTerjualPorsiHari = 0;
                 newRow.InsDate = DateTime.Now;
                 newRow.InsBy = "-";
                 newRow.Akun = "-";
@@ -315,20 +312,20 @@ namespace ParkirWs
                 newRow.IsTutup = 0;
 
 
-                context.DbOpRestos.Add(newRow);
+                context.DbOpParkirs.Add(newRow);
                 context.SaveChanges();
             }
 
-            var sourceMon = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
+            var sourceMon = context.DbMonParkirs.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
             if (sourceMon != null)
             {
                 sourceMon.NominalPokokBayar = selisih;
-                context.DbMonRestos.Update(sourceMon);
+                context.DbMonParkirs.Update(sourceMon);
                 context.SaveChanges();
             }
             else
             {
-                var newRow = new DbMonResto();
+                var newRow = new DbMonParkir();
 
                 newRow.Nop = source.Nop;
                 newRow.Npwpd = source.Npwpd;
@@ -400,7 +397,7 @@ namespace ParkirWs
                 newRow.RincianSanksiBayar = "-";
                 newRow.SubRincianSanksiBayar = "-";
 
-                context.DbMonRestos.Add(newRow);
+                context.DbMonParkirs.Add(newRow);
                 context.SaveChanges();
             }
 

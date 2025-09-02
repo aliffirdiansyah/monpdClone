@@ -259,18 +259,18 @@ namespace HiburanWs
             int kategoriId = 54;
             string kategoriNama = "HIBURAN";
 
-            var source = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            var source = context.DbOpHiburans.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
             if (source != null)
             {
                 source.NamaOp = namaop;
                 source.TahunBuku = tahunBuku;
 
-                context.DbOpRestos.Update(source);
+                context.DbOpHiburans.Update(source);
                 context.SaveChanges();
             }
             else
             {
-                var newRow = new DbOpResto();
+                var newRow = new DbOpHiburan();
 
                 newRow.Nop = nop;
                 newRow.NamaOp = namaop;
@@ -294,11 +294,7 @@ namespace HiburanWs
                 newRow.MetodePembayaran = "-";
                 newRow.MetodePenjualan = "-";
                 newRow.JumlahKaryawan = 0;
-                newRow.JumlahMeja = 0;
-                newRow.JumlahKursi = 0;
-                newRow.KapasitasRuanganOrang = 0;
-                newRow.MaksimalProduksiPorsiHari = 0;
-                newRow.RataTerjualPorsiHari = 0;
+
                 newRow.InsDate = DateTime.Now;
                 newRow.InsBy = "-";
                 newRow.Akun = "-";
@@ -317,20 +313,20 @@ namespace HiburanWs
                 newRow.IsTutup = 0;
 
 
-                context.DbOpRestos.Add(newRow);
+                context.DbOpHiburans.Add(newRow);
                 context.SaveChanges();
             }
 
-            var sourceMon = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
+            var sourceMon = context.DbMonHiburans.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
             if (sourceMon != null)
             {
                 sourceMon.NominalPokokBayar = selisih;
-                context.DbMonRestos.Update(sourceMon);
+                context.DbMonHiburans.Update(sourceMon);
                 context.SaveChanges();
             }
             else
             {
-                var newRow = new DbMonResto();
+                var newRow = new DbMonHiburan();
 
                 newRow.Nop = source.Nop;
                 newRow.Npwpd = source.Npwpd;
@@ -402,7 +398,7 @@ namespace HiburanWs
                 newRow.RincianSanksiBayar = "-";
                 newRow.SubRincianSanksiBayar = "-";
 
-                context.DbMonRestos.Add(newRow);
+                context.DbMonHiburans.Add(newRow);
                 context.SaveChanges();
             }
 
