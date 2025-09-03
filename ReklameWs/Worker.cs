@@ -1,3 +1,4 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
@@ -13,6 +14,7 @@ namespace ReklameWs
         private bool isFirst = true;
         private readonly ILogger<Worker> _logger;
         private static int KDPajak = 7;
+        private static EnumFactory.EPajak PAJAK_ENUM = EnumFactory.EPajak.Reklame;
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -843,6 +845,11 @@ WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
                 Console.ResetColor();
             }
 
+            for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            {
+                UpdateKoreksi(i);
+            }
+
             MailHelper.SendMail(
             false,
             "DONE REKLAME WS",
@@ -851,6 +858,419 @@ WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
             );
         }
 
+        private void UpdateKoreksi(int tahunBuku)
+        {
+            Console.WriteLine($"[START] UpdateKoreksi {tahunBuku}");
+
+            var context = DBClass.GetContext();
+            var query = @"SELECT 	TAHUN, 
+                A.PAJAK_ID, 
+                A.SCONTRO, 
+                B.REALISASI, 
+                (A.SCONTRO-B.REALISASI) SELISIH
+        FROM 
+        (
+            SELECT 
+                   P.TAHUN_BUKU AS TAHUN,
+                   A.PAJAK_ID,
+                   SUM(P.REALISASI) AS SCONTRO
+            FROM DB_PENDAPATAN_DAERAH P
+            LEFT JOIN DB_PAJAK_MAPPING A 
+                 ON P.AKUN = A.AKUN
+                 AND P.KELOMPOK = A.KELOMPOK 
+                 AND P.JENIS = A.JENIS 
+                 AND P.OBJEK = A.OBJEK 
+                 AND P.RINCIAN = A.RINCIAN 
+                 AND P.SUB_RINCIAN = A.SUB_RINCIAN 
+                 AND P.TAHUN_BUKU = A.TAHUN_BUKU
+            WHERE P.TAHUN_BUKU = :YEAR
+              AND P.OBJEK LIKE '4.1.01%'
+              AND A.PAJAK_ID IS NOT NULL
+            GROUP BY P.TAHUN_BUKU, A.PAJAK_ID
+        ) A 
+        JOIN 
+        (
+            SELECT EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                1 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_RESTO
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                2 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_PPJ
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                3 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_HOTEL
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                4 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_PARKIR
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                5 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_HIBURAN
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                6 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_ABT
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR_POKOK) AS TAHUN_BUKU,
+                7 AS PAJAK_ID, 
+                SUM(NVL(NOMINAL_POKOK_BAYAR, 0)) AS REALISASI
+            FROM DB_MON_REKLAME
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR_POKOK) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR_POKOK)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR) AS TAHUN_BUKU,
+                9 AS PAJAK_ID, 
+                SUM(NVL(POKOK_PAJAK, 0)) AS REALISASI
+            FROM DB_MON_PBB
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_BAYAR) AS TAHUN_BUKU,
+                12 AS PAJAK_ID, 
+                SUM(NVL(POKOK, 0)) AS REALISASI
+            FROM DB_MON_BPHTB
+            WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_BAYAR)
+            UNION ALL
+            SELECT 
+                EXTRACT(YEAR FROM TGL_SSPD) AS TAHUN_BUKU,
+                20 AS PAJAK_ID, 
+                SUM(NVL(JML_POKOK, 0)) AS REALISASI
+            FROM DB_MON_OPSEN_PKB
+            WHERE EXTRACT(YEAR FROM TGL_SSPD) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
+            UNION ALL
+            SELECT  EXTRACT(YEAR FROM TGL_SSPD) AS TAHUN_BUKU,
+                    21 AS PAJAK_ID, 
+                    SUM(NVL(JML_POKOK, 0)) AS REALISASI
+            FROM DB_MON_OPSEN_BBNKB
+            WHERE EXTRACT(YEAR FROM TGL_SSPD) = :YEAR
+            GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
+        ) B ON A.TAHUN = B.TAHUN_BUKU 
+            AND A.PAJAK_ID = B.PAJAK_ID
+        WHERE A.PAJAK_ID = :PAJAK";
+
+            var db = getOracleConnection();
+            var result = db.Query<MonPDLib.Helper.SCONTROSELISIH>(query, new { YEAR = tahunBuku, PAJAK = (int)PAJAK_ENUM }).ToList();
+
+            decimal selisih = result.FirstOrDefault()?.SELISIH ?? 0;
+
+            int pajakId = (int)PAJAK_ENUM;
+            string pajakNama = PAJAK_ENUM.GetDescription();
+            var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
+            var nop = $"0000000000000000{kdPajakString}";
+            var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
+
+            var source = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            if (source != null)
+            {
+                source.Nama = namaop;
+                source.TahunBuku = tahunBuku;
+
+                context.DbOpReklames.Update(source);
+                context.SaveChanges();
+            }
+            else
+            {
+                var newRow = new DbOpReklame();
+
+                newRow.NoFormulir = nop;
+                newRow.NoPerusahaan = 0;
+                newRow.NamaPerusahaan = "-";
+                newRow.AlamatPerusahaan = "-";
+                newRow.NoAlamatPerusahaan = "-";
+                newRow.BlokAlamatPerusahaan = "-";
+                newRow.Alamatper = "-";
+                newRow.TelpPerusahaan = "-";
+                newRow.Clientnama = "-";
+                newRow.Clientalamat = "-";
+                newRow.Jabatan = "-";
+                newRow.KodeJenis = "-";
+                newRow.NamaJenis = "-";
+                newRow.NoWp = nop;
+                newRow.Nama = namaop;
+                newRow.Alamat = "-";
+                newRow.NoAlamat = "-";
+                newRow.BlokAlamat = "-";
+                newRow.Alamatwp = "-";
+                newRow.JenisPermohonan = "-";
+                newRow.TglPermohonan = null;
+                newRow.TglMulaiBerlaku = null;
+                newRow.TglAkhirBerlaku = null;
+                newRow.NamaJalan = "-";
+                newRow.NoJalan = "-";
+                newRow.BlokJalan = "-";
+                newRow.Alamatreklame = "-";
+                newRow.DetilLokasi = "-";
+                newRow.Kecamatan = "-";
+                newRow.JenisProduk = "-";
+                newRow.LetakReklame = "-";
+                newRow.StatusTanah = "-";
+                newRow.FlagPermohonan = "-";
+                newRow.Statusproses = "-";
+                newRow.FlagSimpatik = "-";
+                newRow.KodeObyek = "-";
+                newRow.Panjang = 0;
+                newRow.Lebar = 0;
+                newRow.Luas = 0;
+                newRow.Luasdiskon = 0;
+                newRow.Sisi = 0;
+                newRow.Ketinggian = 0;
+                newRow.IsiReklame = "-";
+                newRow.PermohonanBaru = "-";
+                newRow.NoFormulirLama = "-";
+                newRow.SudutPandang = 0;
+                newRow.Nilaipajak = 0;
+                newRow.Nilaijambong = 0;
+                newRow.KelasJalan = "-";
+                newRow.NoTelp = "-";
+                newRow.Timetrans = null;
+                newRow.Npwpd = "-";
+                newRow.Flagtung = "-";
+                newRow.Statuscabut = "-";
+                newRow.Nor = "-";
+                newRow.KodeLokasi = "-";
+                newRow.NamaPenempatan = "-";
+                newRow.NoFormulirAwal = "-";
+                newRow.Ketpersil = "-";
+                newRow.PerPenanggungjawab = "-";
+                newRow.AlamatperPenanggungjawab = "-";
+                newRow.NpwpdPenanggungjawab = "-";
+                newRow.Potensi = "-";
+                newRow.Flagmall = "-";
+                newRow.Flagjeda = "-";
+                newRow.Flagbranded = "-";
+                newRow.Nlpr = "-";
+                newRow.Username = "-";
+                newRow.JenisWp = "-";
+                newRow.TglCetakPer = null;
+                newRow.StatusAWp = 0;
+                newRow.StatusAPer = 0;
+                newRow.Nmkelurahan = "-";
+                newRow.Nop = "-";
+                newRow.UnitKerja = "-";
+                newRow.UnitBerkas = "-";
+                newRow.StatusVer = 0;
+                newRow.TglVer = null;
+                newRow.UserVer = "-";
+                newRow.TahunBuku = 0;
+                newRow.Seq = 0;
+                newRow.TglOpTutup = null;
+                newRow.KategoriId = 0;
+                newRow.TglMulaiBukaOp = null;
+                newRow.KategoriNama = "-";
+
+
+                context.DbOpReklames.Add(newRow);
+                context.SaveChanges();
+            }
+
+            var sourceMon = context.DbMonReklames.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
+            if (sourceMon != null)
+            {
+                sourceMon.NominalPokokBayar = selisih;
+                context.DbMonReklames.Update(sourceMon);
+                context.SaveChanges();
+            }
+            else
+            {
+                var newRow = new DbMonReklame();
+
+                newRow.NoFormulir = nop;
+                newRow.NoPerusahaan = 0;
+                newRow.NamaPerusahaan = "";
+                newRow.AlamatPerusahaan = "";
+                newRow.NoAlamatPerusahaan = "";
+                newRow.BlokAlamatPerusahaan = "";
+                newRow.Alamatper = "";
+                newRow.TelpPerusahaan = "";
+                newRow.Clientnama = "";
+                newRow.Clientalamat = "";
+                newRow.Jabatan = "";
+                newRow.KodeJenis = "";
+                newRow.NmJenis = "";
+                newRow.NoWp = nop;
+                newRow.Nama = namaop;
+                newRow.Alamat = "";
+                newRow.NoAlamat = "";
+                newRow.BlokAlamat = "";
+                newRow.Alamatwp = "";
+                newRow.JenisPermohonan = "";
+                newRow.TglPermohonan = null;
+                newRow.TglMulaiBerlaku = null;
+                newRow.TglAkhirBerlaku = null;
+                newRow.NamaJalan = "";
+                newRow.NoJalan = "";
+                newRow.BlokJalan = "";
+                newRow.Alamatreklame = "";
+                newRow.DetilLokasi = "";
+                newRow.Kecamatan = "";
+                newRow.JenisProduk = "";
+                newRow.LetakReklame = "";
+                newRow.StatusTanah = "";
+                newRow.FlagPermohonan = "";
+                newRow.Statusproses = "";
+                newRow.FlagSimpatik = "";
+                newRow.KodeObyek = "";
+                newRow.Panjang = 0;
+                newRow.Lebar = 0;
+                newRow.Luas = 0;
+                newRow.Luasdiskon = 0;
+                newRow.Sisi = 0;
+                newRow.Ketinggian = 0;
+                newRow.IsiReklame = "";
+                newRow.PermohonanBaru = "";
+                newRow.NoFormulirLama = "";
+                newRow.SudutPandang = 0;
+                newRow.Nilaipajak = 0;
+                newRow.Nilaijambong = 0;
+                newRow.KelasJalan = "";
+                newRow.NoTelp = "";
+                newRow.Timetrans = null;
+                newRow.Npwpd = "";
+                newRow.Flagtung = "";
+                newRow.Statuscabut = "";
+                newRow.Nor = "";
+                newRow.KodeLokasi = "";
+                newRow.NamaPenempatan = "";
+                newRow.NoFormulirAwal = "";
+                newRow.Ketpersil = "";
+                newRow.PerPenanggungjawab = "";
+                newRow.AlamatperPenanggungjawab = "";
+                newRow.NpwpdPenanggungjawab = "";
+                newRow.Potensi = "";
+                newRow.Flagmall = "";
+                newRow.Flagjeda = "";
+                newRow.Flagbranded = "";
+                newRow.Nlpr = "";
+                newRow.Username = "";
+                newRow.JenisWp = "";
+                newRow.TglCetakPer = null;
+                newRow.StatusAWp = 0;
+                newRow.StatusAPer = 0;
+                newRow.Nmkelurahan = "";
+                newRow.Nop = "";
+                newRow.UnitKerja = "";
+                newRow.UnitBerkas = "";
+                newRow.StatusVer = 0;
+                newRow.TglVer = null;
+                newRow.UserVer = "";
+                newRow.TahunBuku = 0;
+                newRow.IdKetetapan = "";
+                newRow.Tglpenetapan = null;
+                newRow.TahunPajak = "";
+                newRow.BulanPajak = "";
+                newRow.PajakPokok = 0;
+                newRow.JnsKetetapan = "";
+                newRow.TglJtempoSkpd = null;
+                newRow.Akun = "";
+                newRow.NamaAkun = "";
+                newRow.Kelompok = "";
+                newRow.NamaKelompok = "";
+                newRow.Jenis = "";
+                newRow.NamaJenis = "";
+                newRow.Objek = "";
+                newRow.NamaObjek = "";
+                newRow.Rincian = "";
+                newRow.NamaRincian = "";
+                newRow.SubRincian = "";
+                newRow.NamaSubRincian = "";
+                newRow.TahunPajakKetetapan = 0;
+                newRow.MasaPajakKetetapan = 0;
+                newRow.SeqPajakKetetapan = 0;
+                newRow.KategoriKetetapan = "";
+                newRow.TglKetetapan = null;
+                newRow.TglJatuhTempoBayar = null;
+                newRow.IsLunasKetetapan = 0;
+                newRow.TglLunasKetetapan = null;
+                newRow.PokokPajakKetetapan = 0;
+                newRow.PengurangPokokKetetapan = 0;
+                newRow.AkunKetetapan = "";
+                newRow.KelompokKetetapan = "";
+                newRow.JenisKetetapan = "";
+                newRow.ObjekKetetapan = "";
+                newRow.RincianKetetapan = "";
+                newRow.SubRincianKetetapan = "";
+                newRow.TglBayarPokok = DateTime.Now;
+                newRow.NominalPokokBayar = selisih;
+                newRow.AkunPokokBayar = "";
+                newRow.KelompokPokokBayar = "";
+                newRow.JenisPokokBayar = "";
+                newRow.ObjekPokokBayar = "";
+                newRow.RincianPokokBayar = "";
+                newRow.SubRincianPokokBayar = "";
+                newRow.TglBayarSanksi = null;
+                newRow.NominalSanksiBayar = 0;
+                newRow.AkunSanksiBayar = "";
+                newRow.KelompokSanksiBayar = "";
+                newRow.JenisSanksiBayar = "";
+                newRow.ObjekSanksiBayar = "";
+                newRow.RincianSanksiBayar = "";
+                newRow.SubRincianSanksiBayar = "";
+                newRow.TglBayarSanksiKenaikan = null;
+                newRow.NominalJambongBayar = 0;
+                newRow.AkunJambongBayar = "";
+                newRow.KelompokJambongBayar = "";
+                newRow.JenisJambongBayar = "";
+                newRow.ObjekJambongBayar = "";
+                newRow.RincianJambongBayar = "";
+                newRow.SubRincianJambongBayar = "";
+                newRow.InsDate = DateTime.MinValue;
+                newRow.InsBy = "";
+                newRow.UpdDate = DateTime.MinValue;
+                newRow.UpdBy = "";
+                newRow.NoKetetapan = "";
+                newRow.Seq = 0;
+
+                context.DbMonReklames.Add(newRow);
+                context.SaveChanges();
+            }
+
+            Console.WriteLine($"[FINISHED] UpdateKoreksi {tahunBuku}");
+        }
+        public static OracleConnection getOracleConnection()
+        {
+            try
+            {
+                OracleConnection ret = new OracleConnection(MonPDLib.DBClass.Monpd);
+                ret.Open();
+                ret.Close();
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                return new OracleConnection();
+            }
+        }
         private bool IsGetDBOp()
         {
             var _contMonPd = DBClass.GetContext();
