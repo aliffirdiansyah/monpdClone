@@ -106,11 +106,6 @@ namespace ParkirWs
             for (var i = tahunAmbil; i <= tglServer.Year; i++)
             {
                 GetRealisasi(i);
-            }
-
-
-            for (var i = tahunAmbil; i <= tglServer.Year; i++)
-            {
                 UpdateKoreksi(i);
             }
 
@@ -124,10 +119,13 @@ namespace ParkirWs
 
         private void UpdateKoreksi(int tahunBuku)
         {
-            Console.WriteLine($"[START] UpdateKoreksi {tahunBuku}");
+            bool isTahunSekarang = tahunBuku == DateTime.Now.Year;
+            if (!isTahunSekarang)
+            {
+                Console.WriteLine($"[START] UpdateKoreksi {tahunBuku}");
 
-            var context = DBClass.GetContext();
-            var query = @"SELECT 	TAHUN, 
+                var context = DBClass.GetContext();
+                var query = @"SELECT 	TAHUN, 
 		                A.PAJAK_ID, 
 		                A.SCONTRO, 
 		                B.REALISASI, 
@@ -241,180 +239,183 @@ namespace ParkirWs
 	                GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
                 ) B ON A.TAHUN = B.TAHUN_BUKU 
 	                AND A.PAJAK_ID = B.PAJAK_ID
-                WHERE A.PAJAK_ID = :PAJAK";
+                WHERE A.PAJAK_ID = :PAJAK AND (A.SCONTRO-B.REALISASI) <> 0";
 
-            var db = getOracleConnection();
-            var result = db.Query<MonPDLib.Helper.SCONTROSELISIH>(query, new { YEAR = tahunBuku, PAJAK = (int)PAJAK_ENUM }).ToList();
+                var db = getOracleConnection();
+                var result = db.Query<MonPDLib.Helper.SCONTROSELISIH>(query, new { YEAR = tahunBuku, PAJAK = (int)PAJAK_ENUM }).ToList();
 
-            decimal selisih = result.FirstOrDefault()?.SELISIH ?? 0;
+                if (result.Count > 0)
+                {
+                    decimal selisih = result.FirstOrDefault()?.SELISIH ?? 0;
 
-            int pajakId = (int)PAJAK_ENUM;
-            string pajakNama = PAJAK_ENUM.GetDescription();
-            var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
-            var nop = $"0000000000000000{kdPajakString}";
-            var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
-            var kategori = GetKategoriOvveride(nop);
-            int kategoriId = Convert.ToInt32(kategori[0]);
-            string kategoriNama = kategori[1];
-            var tanggal = DateTime.Now.Date;
-            if (tahunBuku < DateTime.Now.Year)
-            {
-                tanggal = new DateTime(tahunBuku, 12, 31);
+                    int pajakId = (int)PAJAK_ENUM;
+                    string pajakNama = PAJAK_ENUM.GetDescription();
+                    var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
+                    var nop = $"0000000000000000{kdPajakString}";
+                    var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
+                    var kategori = GetKategoriOvveride(nop);
+                    int kategoriId = Convert.ToInt32(kategori[0]);
+                    string kategoriNama = kategori[1];
+                    var tanggal = DateTime.Now.Date;
+                    if (tahunBuku < DateTime.Now.Year)
+                    {
+                        tanggal = new DateTime(tahunBuku, 12, 31);
+                    }
+
+                    var source = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+                    if (source != null)
+                    {
+                        source.NamaOp = namaop;
+                        source.TahunBuku = tahunBuku;
+
+                        context.DbOpParkirs.Update(source);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        var newRow = new DbOpParkir();
+
+
+                        newRow.Nop = nop;
+                        newRow.NamaOp = namaop;
+                        newRow.TahunBuku = tahunBuku;
+                        newRow.Npwpd = "KOREKSI";
+                        newRow.NpwpdNama = "KOREKSI";
+                        newRow.NpwpdAlamat = "-";
+                        newRow.PajakId = pajakId;
+                        newRow.PajakNama = pajakNama;
+                        newRow.AlamatOp = "-";
+                        newRow.AlamatOpNo = "-";
+                        newRow.AlamatOpRt = "-";
+                        newRow.AlamatOpRw = "-";
+                        newRow.Telp = "-";
+                        newRow.AlamatOpKdLurah = "-";
+                        newRow.AlamatOpKdCamat = "-";
+                        newRow.TglOpTutup = null;
+                        newRow.TglMulaiBukaOp = tanggal;
+                        newRow.KategoriId = kategoriId;
+                        newRow.KategoriNama = kategoriNama;
+                        newRow.MetodePembayaran = "-";
+                        newRow.Dikelola = "-";
+                        newRow.PungutTarif = "-";
+                        newRow.JumlahKaryawan = 0;
+                        newRow.InsDate = tanggal;
+                        newRow.InsBy = "-";
+                        newRow.Akun = "-";
+                        newRow.NamaAkun = "-";
+                        newRow.Jenis = "-";
+                        newRow.NamaJenis = "-";
+                        newRow.Objek = "-";
+                        newRow.NamaObjek = "-";
+                        newRow.Rincian = "-";
+                        newRow.NamaRincian = "-";
+                        newRow.SubRincian = "-";
+                        newRow.NamaSubRincian = "-";
+                        newRow.Kelompok = "-";
+                        newRow.NamaKelompok = "-";
+                        newRow.WilayahPajak = "-";
+                        newRow.IsTutup = 0;
+
+
+                        context.DbOpParkirs.Add(newRow);
+                        context.SaveChanges();
+                    }
+
+                    source = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+                    if (source == null)
+                    {
+                        throw new Exception("Gagal membuat data OP untuk koreksi scontro");
+                    }
+                    var sourceMon = context.DbMonParkirs.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
+                    if (sourceMon != null)
+                    {
+                        sourceMon.TglBayarPokok = tanggal;
+                        sourceMon.NominalPokokBayar = selisih;
+                        context.DbMonParkirs.Update(sourceMon);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        var newRow = new DbMonParkir();
+
+                        newRow.Nop = source.Nop;
+                        newRow.Npwpd = source.Npwpd;
+                        newRow.NpwpdNama = source.NpwpdNama;
+                        newRow.NpwpdAlamat = source.NpwpdAlamat;
+                        newRow.PajakId = source.PajakId;
+                        newRow.PajakNama = source.PajakNama;
+                        newRow.NamaOp = source.NamaOp;
+                        newRow.AlamatOp = source.AlamatOp;
+                        newRow.AlamatOpKdLurah = source.AlamatOpKdLurah;
+                        newRow.AlamatOpKdCamat = source.AlamatOpKdCamat;
+                        newRow.Dikelola = source.Dikelola;
+                        newRow.PungutTarif = source.PungutTarif;
+                        newRow.TglOpTutup = source.TglOpTutup;
+                        newRow.TglMulaiBukaOp = source.TglMulaiBukaOp;
+                        newRow.IsTutup = source.TglOpTutup == null ? 0 : source.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
+                        newRow.KategoriId = source.KategoriId;
+                        newRow.KategoriNama = source.KategoriNama;
+                        newRow.TahunBuku = tahunBuku;
+                        newRow.Akun = source.Akun;
+                        newRow.NamaAkun = source.NamaAkun;
+                        newRow.Jenis = source.Jenis;
+                        newRow.NamaJenis = source.NamaJenis;
+                        newRow.Objek = source.Objek;
+                        newRow.NamaObjek = source.NamaObjek;
+                        newRow.Rincian = source.Rincian;
+                        newRow.NamaRincian = source.NamaRincian;
+                        newRow.SubRincian = source.SubRincian;
+                        newRow.NamaSubRincian = source.NamaSubRincian;
+                        newRow.TahunPajakKetetapan = tanggal.Year;
+                        newRow.MasaPajakKetetapan = tanggal.Month;
+                        newRow.SeqPajakKetetapan = 1;
+                        newRow.KategoriKetetapan = "4";
+                        newRow.TglKetetapan = tanggal;
+                        newRow.TglJatuhTempoBayar = tanggal;
+                        newRow.PokokPajakKetetapan = selisih;
+                        newRow.PengurangPokokKetetapan = 0;
+                        newRow.AkunKetetapan = "-";
+                        newRow.KelompokKetetapan = "-";
+                        newRow.JenisKetetapan = "-";
+                        newRow.ObjekKetetapan = "-";
+                        newRow.RincianKetetapan = "-";
+                        newRow.SubRincianKetetapan = "-";
+                        newRow.InsDate = tanggal;
+                        newRow.InsBy = "JOB";
+                        newRow.UpdDate = tanggal;
+                        newRow.UpdBy = "JOB";
+                        newRow.TglBayarPokok = tanggal;
+                        newRow.NominalPokokBayar = selisih;
+                        newRow.AkunPokokBayar = "-";
+                        newRow.Kelompok = "-";
+                        newRow.JenisPokokBayar = "-";
+                        newRow.ObjekPokokBayar = "-";
+                        newRow.RincianPokokBayar = "-";
+                        newRow.SubRincianPokokBayar = "-";
+                        newRow.TglBayarSanksi = null;
+                        newRow.NominalSanksiBayar = null;
+                        newRow.AkunSanksiBayar = "-";
+                        newRow.KelompokSanksiBayar = "-";
+                        newRow.JenisSanksiBayar = "-";
+                        newRow.ObjekSanksiBayar = "-";
+                        newRow.RincianSanksiBayar = "-";
+                        newRow.SubRincianSanksiBayar = "-";
+                        newRow.TglBayarSanksiKenaikan = null;
+
+                        newRow.NominalSanksiBayar = 0;
+                        newRow.AkunSanksiBayar = "-";
+                        newRow.KelompokSanksiBayar = "-";
+                        newRow.JenisSanksiBayar = "-";
+                        newRow.ObjekSanksiBayar = "-";
+                        newRow.RincianSanksiBayar = "-";
+                        newRow.SubRincianSanksiBayar = "-";
+
+                        context.DbMonParkirs.Add(newRow);
+                        context.SaveChanges();
+                    }
+                }
+                Console.WriteLine($"[FINISHED] UpdateKoreksi {tahunBuku}");
             }
-
-            var source = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
-            if (source != null)
-            {
-                source.NamaOp = namaop;
-                source.TahunBuku = tahunBuku;
-
-                context.DbOpParkirs.Update(source);
-                context.SaveChanges();
-            }
-            else
-            {
-                var newRow = new DbOpParkir();
-
-
-                newRow.Nop = nop;
-                newRow.NamaOp = namaop;
-                newRow.TahunBuku = tahunBuku;
-                newRow.Npwpd = "KOREKSI";
-                newRow.NpwpdNama = "KOREKSI";
-                newRow.NpwpdAlamat = "-";
-                newRow.PajakId = pajakId;
-                newRow.PajakNama = pajakNama;
-                newRow.AlamatOp = "-";
-                newRow.AlamatOpNo = "-";
-                newRow.AlamatOpRt = "-";
-                newRow.AlamatOpRw = "-";
-                newRow.Telp = "-";
-                newRow.AlamatOpKdLurah = "-";
-                newRow.AlamatOpKdCamat = "-";
-                newRow.TglOpTutup = null;
-                newRow.TglMulaiBukaOp = tanggal;
-                newRow.KategoriId = kategoriId;
-                newRow.KategoriNama = kategoriNama;
-                newRow.MetodePembayaran = "-";
-                newRow.Dikelola = "-";
-                newRow.PungutTarif = "-";
-                newRow.JumlahKaryawan = 0;
-                newRow.InsDate = tanggal;
-                newRow.InsBy = "-";
-                newRow.Akun = "-";
-                newRow.NamaAkun = "-";
-                newRow.Jenis = "-";
-                newRow.NamaJenis = "-";
-                newRow.Objek = "-";
-                newRow.NamaObjek = "-";
-                newRow.Rincian = "-";
-                newRow.NamaRincian = "-";
-                newRow.SubRincian = "-";
-                newRow.NamaSubRincian = "-";
-                newRow.Kelompok = "-";
-                newRow.NamaKelompok = "-";
-                newRow.WilayahPajak = "-";
-                newRow.IsTutup = 0;
-
-
-                context.DbOpParkirs.Add(newRow);
-                context.SaveChanges();
-            }
-
-            source = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
-            if (source == null)
-            {
-                throw new Exception("Gagal membuat data OP untuk koreksi scontro");
-            }
-            var sourceMon = context.DbMonParkirs.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
-            if (sourceMon != null)
-            {
-                sourceMon.TglBayarPokok = tanggal;
-                sourceMon.NominalPokokBayar = selisih;
-                context.DbMonParkirs.Update(sourceMon);
-                context.SaveChanges();
-            }
-            else
-            {
-                var newRow = new DbMonParkir();
-
-                newRow.Nop = source.Nop;
-                newRow.Npwpd = source.Npwpd;
-                newRow.NpwpdNama = source.NpwpdNama;
-                newRow.NpwpdAlamat = source.NpwpdAlamat;
-                newRow.PajakId = source.PajakId;
-                newRow.PajakNama = source.PajakNama;
-                newRow.NamaOp = source.NamaOp;
-                newRow.AlamatOp = source.AlamatOp;
-                newRow.AlamatOpKdLurah = source.AlamatOpKdLurah;
-                newRow.AlamatOpKdCamat = source.AlamatOpKdCamat;
-                newRow.Dikelola = source.Dikelola;
-                newRow.PungutTarif = source.PungutTarif;
-                newRow.TglOpTutup = source.TglOpTutup;
-                newRow.TglMulaiBukaOp = source.TglMulaiBukaOp;
-                newRow.IsTutup = source.TglOpTutup == null ? 0 : source.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
-                newRow.KategoriId = source.KategoriId;
-                newRow.KategoriNama = source.KategoriNama;
-                newRow.TahunBuku = tahunBuku;
-                newRow.Akun = source.Akun;
-                newRow.NamaAkun = source.NamaAkun;
-                newRow.Jenis = source.Jenis;
-                newRow.NamaJenis = source.NamaJenis;
-                newRow.Objek = source.Objek;
-                newRow.NamaObjek = source.NamaObjek;
-                newRow.Rincian = source.Rincian;
-                newRow.NamaRincian = source.NamaRincian;
-                newRow.SubRincian = source.SubRincian;
-                newRow.NamaSubRincian = source.NamaSubRincian;
-                newRow.TahunPajakKetetapan = tanggal.Year;
-                newRow.MasaPajakKetetapan = tanggal.Month;
-                newRow.SeqPajakKetetapan = 1;
-                newRow.KategoriKetetapan = "4";
-                newRow.TglKetetapan = tanggal;
-                newRow.TglJatuhTempoBayar = tanggal;
-                newRow.PokokPajakKetetapan = selisih;
-                newRow.PengurangPokokKetetapan = 0;
-                newRow.AkunKetetapan = "-";
-                newRow.KelompokKetetapan = "-";
-                newRow.JenisKetetapan = "-";
-                newRow.ObjekKetetapan = "-";
-                newRow.RincianKetetapan = "-";
-                newRow.SubRincianKetetapan = "-";
-                newRow.InsDate = tanggal;
-                newRow.InsBy = "JOB";
-                newRow.UpdDate = tanggal;
-                newRow.UpdBy = "JOB";
-                newRow.TglBayarPokok = tanggal;
-                newRow.NominalPokokBayar = selisih;
-                newRow.AkunPokokBayar = "-";
-                newRow.Kelompok = "-";
-                newRow.JenisPokokBayar = "-";
-                newRow.ObjekPokokBayar = "-";
-                newRow.RincianPokokBayar = "-";
-                newRow.SubRincianPokokBayar = "-";
-                newRow.TglBayarSanksi = null;
-                newRow.NominalSanksiBayar = null;
-                newRow.AkunSanksiBayar = "-";
-                newRow.KelompokSanksiBayar = "-";
-                newRow.JenisSanksiBayar = "-";
-                newRow.ObjekSanksiBayar = "-";
-                newRow.RincianSanksiBayar = "-";
-                newRow.SubRincianSanksiBayar = "-";
-                newRow.TglBayarSanksiKenaikan = null;
-
-                newRow.NominalSanksiBayar = 0;
-                newRow.AkunSanksiBayar = "-";
-                newRow.KelompokSanksiBayar = "-";
-                newRow.JenisSanksiBayar = "-";
-                newRow.ObjekSanksiBayar = "-";
-                newRow.RincianSanksiBayar = "-";
-                newRow.SubRincianSanksiBayar = "-";
-
-                context.DbMonParkirs.Add(newRow);
-                context.SaveChanges();
-            }
-
-            Console.WriteLine($"[FINISHED] UpdateKoreksi {tahunBuku}");
         }
         public static OracleConnection getOracleConnection()
         {

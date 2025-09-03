@@ -4,6 +4,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using Oracle.ManagedDataAccess.Client;
+using System.Formats.Tar;
 using static MonPDLib.General.EnumFactory;
 using static MonPDLib.Helper;
 
@@ -111,10 +112,13 @@ namespace ReklameWs
 
         private void UpdateKoreksi(int tahunBuku)
         {
-            Console.WriteLine($"[START] UpdateKoreksi {tahunBuku}");
+            bool isTahunSekarang = tahunBuku == DateTime.Now.Year;
+            if (!isTahunSekarang)
+            {
+                Console.WriteLine($"[START] UpdateKoreksi {tahunBuku}");
 
-            var context = DBClass.GetContext();
-            var query = @"SELECT 	TAHUN, 
+                var context = DBClass.GetContext();
+                var query = @"SELECT 	TAHUN, 
                 A.PAJAK_ID, 
                 A.SCONTRO, 
                 B.REALISASI, 
@@ -228,296 +232,297 @@ namespace ReklameWs
             GROUP BY EXTRACT(YEAR FROM TGL_SSPD)
         ) B ON A.TAHUN = B.TAHUN_BUKU 
             AND A.PAJAK_ID = B.PAJAK_ID
-        WHERE A.PAJAK_ID = :PAJAK";
+        WHERE A.PAJAK_ID = :PAJAK AND (A.SCONTRO-B.REALISASI) <> 0";
 
-            var db = getOracleConnection();
-            var result = db.Query<MonPDLib.Helper.SCONTROSELISIH>(query, new { YEAR = tahunBuku, PAJAK = (int)PAJAK_ENUM }).ToList();
+                var db = getOracleConnection();
+                var result = db.Query<MonPDLib.Helper.SCONTROSELISIH>(query, new { YEAR = tahunBuku, PAJAK = (int)PAJAK_ENUM }).ToList();
 
-            decimal selisih = result.FirstOrDefault()?.SELISIH ?? 0;
+                decimal selisih = result.FirstOrDefault()?.SELISIH ?? 0;
 
-            int pajakId = (int)PAJAK_ENUM;
-            string pajakNama = PAJAK_ENUM.GetDescription();
-            var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
-            var nop = $"0000000000000000{kdPajakString}";
-            var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
-            var tanggal = DateTime.Now.Date;
-            if (tahunBuku < DateTime.Now.Year)
-            {
-                tanggal = new DateTime(tahunBuku, 12, 31);
+                int pajakId = (int)PAJAK_ENUM;
+                string pajakNama = PAJAK_ENUM.GetDescription();
+                var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
+                var nop = $"0000000000000000{kdPajakString}";
+                var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
+                var tanggal = DateTime.Now.Date;
+                if (tahunBuku < DateTime.Now.Year)
+                {
+                    tanggal = new DateTime(tahunBuku, 12, 31);
+                }
+
+                var source = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+                if (source != null)
+                {
+                    source.Nama = namaop;
+                    source.TahunBuku = tahunBuku;
+
+                    context.DbOpReklames.Update(source);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    var newRow = new DbOpReklame();
+
+                    newRow.NoFormulir = nop;
+                    newRow.NoPerusahaan = 0;
+                    newRow.NamaPerusahaan = "-";
+                    newRow.AlamatPerusahaan = "-";
+                    newRow.NoAlamatPerusahaan = "-";
+                    newRow.BlokAlamatPerusahaan = "-";
+                    newRow.Alamatper = "-";
+                    newRow.TelpPerusahaan = "-";
+                    newRow.Clientnama = "-";
+                    newRow.Clientalamat = "-";
+                    newRow.Jabatan = "-";
+                    newRow.KodeJenis = "-";
+                    newRow.NamaJenis = "-";
+                    newRow.NoWp = nop;
+                    newRow.Nama = namaop;
+                    newRow.Alamat = "-";
+                    newRow.NoAlamat = "-";
+                    newRow.BlokAlamat = "-";
+                    newRow.Alamatwp = "-";
+                    newRow.JenisPermohonan = "-";
+                    newRow.TglPermohonan = tanggal;
+                    newRow.TglMulaiBerlaku = tanggal;
+                    newRow.TglAkhirBerlaku = tanggal;
+                    newRow.NamaJalan = "-";
+                    newRow.NoJalan = "-";
+                    newRow.BlokJalan = "-";
+                    newRow.Alamatreklame = "-";
+                    newRow.DetilLokasi = "-";
+                    newRow.Kecamatan = "-";
+                    newRow.JenisProduk = "-";
+                    newRow.LetakReklame = "-";
+                    newRow.StatusTanah = "-";
+                    newRow.FlagPermohonan = "-";
+                    newRow.Statusproses = "-";
+                    newRow.FlagSimpatik = "-";
+                    newRow.KodeObyek = "-";
+                    newRow.Panjang = 0;
+                    newRow.Lebar = 0;
+                    newRow.Luas = 0;
+                    newRow.Luasdiskon = 0;
+                    newRow.Sisi = 0;
+                    newRow.Ketinggian = 0;
+                    newRow.IsiReklame = "-";
+                    newRow.PermohonanBaru = "-";
+                    newRow.NoFormulirLama = "-";
+                    newRow.SudutPandang = 0;
+                    newRow.Nilaipajak = 0;
+                    newRow.Nilaijambong = 0;
+                    newRow.KelasJalan = "-";
+                    newRow.NoTelp = "-";
+                    newRow.Timetrans = null;
+                    newRow.Npwpd = "-";
+                    newRow.Flagtung = "-";
+                    newRow.Statuscabut = "-";
+                    newRow.Nor = "-";
+                    newRow.KodeLokasi = "-";
+                    newRow.NamaPenempatan = "-";
+                    newRow.NoFormulirAwal = "-";
+                    newRow.Ketpersil = "-";
+                    newRow.PerPenanggungjawab = "-";
+                    newRow.AlamatperPenanggungjawab = "-";
+                    newRow.NpwpdPenanggungjawab = "-";
+                    newRow.Potensi = "-";
+                    newRow.Flagmall = "-";
+                    newRow.Flagjeda = "-";
+                    newRow.Flagbranded = "-";
+                    newRow.Nlpr = "-";
+                    newRow.Username = "-";
+                    newRow.JenisWp = "-";
+                    newRow.TglCetakPer = null;
+                    newRow.StatusAWp = 0;
+                    newRow.StatusAPer = 0;
+                    newRow.Nmkelurahan = "-";
+                    newRow.Nop = nop;
+                    newRow.UnitKerja = "-";
+                    newRow.UnitBerkas = "-";
+                    newRow.StatusVer = 0;
+                    newRow.TglVer = null;
+                    newRow.UserVer = "-";
+                    newRow.TahunBuku = tahunBuku;
+                    newRow.Seq = 0;
+                    newRow.TglOpTutup = null;
+                    newRow.KategoriId = 0;
+                    newRow.TglMulaiBukaOp = null;
+                    newRow.KategoriNama = "-";
+
+
+                    context.DbOpReklames.Add(newRow);
+                    context.SaveChanges();
+                }
+
+
+                source = context.DbOpReklames.FirstOrDefault(x => x.NoFormulir == nop && x.TahunBuku == tahunBuku);
+                if (source == null)
+                {
+                    throw new Exception("Gagal membuat data OP untuk koreksi scontro");
+                }
+                var sourceMon = context.DbMonReklames.Where(x => x.NoFormulir == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
+                if (sourceMon != null)
+                {
+                    sourceMon.NominalPokokBayar = selisih;
+                    context.DbMonReklames.Update(sourceMon);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    var newRow = new DbMonReklame();
+
+                    newRow.NoFormulir = nop;
+                    newRow.NoPerusahaan = 0;
+                    newRow.NamaPerusahaan = "-";
+                    newRow.AlamatPerusahaan = "-";
+                    newRow.NoAlamatPerusahaan = "-";
+                    newRow.BlokAlamatPerusahaan = "-";
+                    newRow.Alamatper = "-";
+                    newRow.TelpPerusahaan = "-";
+                    newRow.Clientnama = "-";
+                    newRow.Clientalamat = "-";
+                    newRow.Jabatan = "-";
+                    newRow.KodeJenis = "-";
+                    newRow.NmJenis = "-";
+                    newRow.NoWp = nop;
+                    newRow.Nama = namaop;
+                    newRow.Alamat = "-";
+                    newRow.NoAlamat = "-";
+                    newRow.BlokAlamat = "-";
+                    newRow.Alamatwp = "-";
+                    newRow.JenisPermohonan = "-";
+                    newRow.TglPermohonan = tanggal;
+                    newRow.TglMulaiBerlaku = tanggal;
+                    newRow.TglAkhirBerlaku = tanggal;
+                    newRow.NamaJalan = "-";
+                    newRow.NoJalan = "-";
+                    newRow.BlokJalan = "-";
+                    newRow.Alamatreklame = "-";
+                    newRow.DetilLokasi = "-";
+                    newRow.Kecamatan = "-";
+                    newRow.JenisProduk = "-";
+                    newRow.LetakReklame = "-";
+                    newRow.StatusTanah = "-";
+                    newRow.FlagPermohonan = "-";
+                    newRow.Statusproses = "-";
+                    newRow.FlagSimpatik = "-";
+                    newRow.KodeObyek = "-";
+                    newRow.Panjang = 0;
+                    newRow.Lebar = 0;
+                    newRow.Luas = 0;
+                    newRow.Luasdiskon = 0;
+                    newRow.Sisi = 0;
+                    newRow.Ketinggian = 0;
+                    newRow.IsiReklame = "-";
+                    newRow.PermohonanBaru = "-";
+                    newRow.NoFormulirLama = "-";
+                    newRow.SudutPandang = 0;
+                    newRow.Nilaipajak = 0;
+                    newRow.Nilaijambong = 0;
+                    newRow.KelasJalan = "-";
+                    newRow.NoTelp = "-";
+                    newRow.Timetrans = null;
+                    newRow.Npwpd = "-";
+                    newRow.Flagtung = "-";
+                    newRow.Statuscabut = "-";
+                    newRow.Nor = "-";
+                    newRow.KodeLokasi = "-";
+                    newRow.NamaPenempatan = "-";
+                    newRow.NoFormulirAwal = "-";
+                    newRow.Ketpersil = "-";
+                    newRow.PerPenanggungjawab = "-";
+                    newRow.AlamatperPenanggungjawab = "-";
+                    newRow.NpwpdPenanggungjawab = "-";
+                    newRow.Potensi = "-";
+                    newRow.Flagmall = "-";
+                    newRow.Flagjeda = "-";
+                    newRow.Flagbranded = "-";
+                    newRow.Nlpr = "-";
+                    newRow.Username = "-";
+                    newRow.JenisWp = "-";
+                    newRow.TglCetakPer = null;
+                    newRow.StatusAWp = 0;
+                    newRow.StatusAPer = 0;
+                    newRow.Nmkelurahan = "-";
+                    newRow.Nop = nop;
+                    newRow.UnitKerja = "-";
+                    newRow.UnitBerkas = "-";
+                    newRow.StatusVer = 0;
+                    newRow.TglVer = null;
+                    newRow.UserVer = "-";
+                    newRow.TahunBuku = tahunBuku;
+                    newRow.IdKetetapan = "-";
+                    newRow.Tglpenetapan = null;
+                    newRow.TahunPajak = "-";
+                    newRow.BulanPajak = "-";
+                    newRow.PajakPokok = 0;
+                    newRow.JnsKetetapan = "-";
+                    newRow.TglJtempoSkpd = null;
+                    newRow.Akun = "-";
+                    newRow.NamaAkun = "-";
+                    newRow.Kelompok = "-";
+                    newRow.NamaKelompok = "-";
+                    newRow.Jenis = "-";
+                    newRow.NamaJenis = "-";
+                    newRow.Objek = "-";
+                    newRow.NamaObjek = "-";
+                    newRow.Rincian = "-";
+                    newRow.NamaRincian = "-";
+                    newRow.SubRincian = "-";
+                    newRow.NamaSubRincian = "-";
+                    newRow.TahunPajakKetetapan = 0;
+                    newRow.MasaPajakKetetapan = 0;
+                    newRow.SeqPajakKetetapan = 0;
+                    newRow.KategoriKetetapan = "-";
+                    newRow.TglKetetapan = null;
+                    newRow.TglJatuhTempoBayar = null;
+                    newRow.IsLunasKetetapan = 0;
+                    newRow.TglLunasKetetapan = null;
+                    newRow.PokokPajakKetetapan = 0;
+                    newRow.PengurangPokokKetetapan = 0;
+                    newRow.AkunKetetapan = "-";
+                    newRow.KelompokKetetapan = "-";
+                    newRow.JenisKetetapan = "-";
+                    newRow.ObjekKetetapan = "-";
+                    newRow.RincianKetetapan = "-";
+                    newRow.SubRincianKetetapan = "-";
+                    newRow.TglBayarPokok = tanggal;
+                    newRow.NominalPokokBayar = selisih;
+                    newRow.AkunPokokBayar = "-";
+                    newRow.KelompokPokokBayar = "-";
+                    newRow.JenisPokokBayar = "-";
+                    newRow.ObjekPokokBayar = "-";
+                    newRow.RincianPokokBayar = "-";
+                    newRow.SubRincianPokokBayar = "-";
+                    newRow.TglBayarSanksi = null;
+                    newRow.NominalSanksiBayar = 0;
+                    newRow.AkunSanksiBayar = "-";
+                    newRow.KelompokSanksiBayar = "-";
+                    newRow.JenisSanksiBayar = "-";
+                    newRow.ObjekSanksiBayar = "-";
+                    newRow.RincianSanksiBayar = "-";
+                    newRow.SubRincianSanksiBayar = "-";
+                    newRow.TglBayarSanksiKenaikan = null;
+                    newRow.NominalJambongBayar = 0;
+                    newRow.AkunJambongBayar = "-";
+                    newRow.KelompokJambongBayar = "-";
+                    newRow.JenisJambongBayar = "-";
+                    newRow.ObjekJambongBayar = "-";
+                    newRow.RincianJambongBayar = "-";
+                    newRow.SubRincianJambongBayar = "-";
+                    newRow.InsDate = DateTime.MinValue;
+                    newRow.InsBy = "-";
+                    newRow.UpdDate = DateTime.MinValue;
+                    newRow.UpdBy = "-";
+                    newRow.NoKetetapan = "-";
+                    newRow.Seq = -1;
+
+                    context.DbMonReklames.Add(newRow);
+                    context.SaveChanges();
+                }
+
+                Console.WriteLine($"[FINISHED] UpdateKoreksi {tahunBuku}");
             }
-
-            var source = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
-            if (source != null)
-            {
-                source.Nama = namaop;
-                source.TahunBuku = tahunBuku;
-
-                context.DbOpReklames.Update(source);
-                context.SaveChanges();
-            }
-            else
-            {
-                var newRow = new DbOpReklame();
-
-                newRow.NoFormulir = nop;
-                newRow.NoPerusahaan = 0;
-                newRow.NamaPerusahaan = "-";
-                newRow.AlamatPerusahaan = "-";
-                newRow.NoAlamatPerusahaan = "-";
-                newRow.BlokAlamatPerusahaan = "-";
-                newRow.Alamatper = "-";
-                newRow.TelpPerusahaan = "-";
-                newRow.Clientnama = "-";
-                newRow.Clientalamat = "-";
-                newRow.Jabatan = "-";
-                newRow.KodeJenis = "-";
-                newRow.NamaJenis = "-";
-                newRow.NoWp = nop;
-                newRow.Nama = namaop;
-                newRow.Alamat = "-";
-                newRow.NoAlamat = "-";
-                newRow.BlokAlamat = "-";
-                newRow.Alamatwp = "-";
-                newRow.JenisPermohonan = "-";
-                newRow.TglPermohonan = tanggal;
-                newRow.TglMulaiBerlaku = tanggal;
-                newRow.TglAkhirBerlaku = tanggal;
-                newRow.NamaJalan = "-";
-                newRow.NoJalan = "-";
-                newRow.BlokJalan = "-";
-                newRow.Alamatreklame = "-";
-                newRow.DetilLokasi = "-";
-                newRow.Kecamatan = "-";
-                newRow.JenisProduk = "-";
-                newRow.LetakReklame = "-";
-                newRow.StatusTanah = "-";
-                newRow.FlagPermohonan = "-";
-                newRow.Statusproses = "-";
-                newRow.FlagSimpatik = "-";
-                newRow.KodeObyek = "-";
-                newRow.Panjang = 0;
-                newRow.Lebar = 0;
-                newRow.Luas = 0;
-                newRow.Luasdiskon = 0;
-                newRow.Sisi = 0;
-                newRow.Ketinggian = 0;
-                newRow.IsiReklame = "-";
-                newRow.PermohonanBaru = "-";
-                newRow.NoFormulirLama = "-";
-                newRow.SudutPandang = 0;
-                newRow.Nilaipajak = 0;
-                newRow.Nilaijambong = 0;
-                newRow.KelasJalan = "-";
-                newRow.NoTelp = "-";
-                newRow.Timetrans = null;
-                newRow.Npwpd = "-";
-                newRow.Flagtung = "-";
-                newRow.Statuscabut = "-";
-                newRow.Nor = "-";
-                newRow.KodeLokasi = "-";
-                newRow.NamaPenempatan = "-";
-                newRow.NoFormulirAwal = "-";
-                newRow.Ketpersil = "-";
-                newRow.PerPenanggungjawab = "-";
-                newRow.AlamatperPenanggungjawab = "-";
-                newRow.NpwpdPenanggungjawab = "-";
-                newRow.Potensi = "-";
-                newRow.Flagmall = "-";
-                newRow.Flagjeda = "-";
-                newRow.Flagbranded = "-";
-                newRow.Nlpr = "-";
-                newRow.Username = "-";
-                newRow.JenisWp = "-";
-                newRow.TglCetakPer = null;
-                newRow.StatusAWp = 0;
-                newRow.StatusAPer = 0;
-                newRow.Nmkelurahan = "-";
-                newRow.Nop = nop;
-                newRow.UnitKerja = "-";
-                newRow.UnitBerkas = "-";
-                newRow.StatusVer = 0;
-                newRow.TglVer = null;
-                newRow.UserVer = "-";
-                newRow.TahunBuku = tahunBuku;
-                newRow.Seq = 0;
-                newRow.TglOpTutup = null;
-                newRow.KategoriId = 0;
-                newRow.TglMulaiBukaOp = null;
-                newRow.KategoriNama = "-";
-
-
-                context.DbOpReklames.Add(newRow);
-                context.SaveChanges();
-            }
-
-
-            source = context.DbOpReklames.FirstOrDefault(x => x.NoFormulir == nop && x.TahunBuku == tahunBuku);
-            if (source == null)
-            {
-                throw new Exception("Gagal membuat data OP untuk koreksi scontro");
-            }
-            var sourceMon = context.DbMonReklames.Where(x => x.NoFormulir == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
-            if (sourceMon != null)
-            {
-                sourceMon.NominalPokokBayar = selisih;
-                context.DbMonReklames.Update(sourceMon);
-                context.SaveChanges();
-            }
-            else
-            {
-                var newRow = new DbMonReklame();
-
-                newRow.NoFormulir = nop;
-                newRow.NoPerusahaan = 0;
-                newRow.NamaPerusahaan = "-";
-                newRow.AlamatPerusahaan = "-";
-                newRow.NoAlamatPerusahaan = "-";
-                newRow.BlokAlamatPerusahaan = "-";
-                newRow.Alamatper = "-";
-                newRow.TelpPerusahaan = "-";
-                newRow.Clientnama = "-";
-                newRow.Clientalamat = "-";
-                newRow.Jabatan = "-";
-                newRow.KodeJenis = "-";
-                newRow.NmJenis = "-";
-                newRow.NoWp = nop;
-                newRow.Nama = namaop;
-                newRow.Alamat = "-";
-                newRow.NoAlamat = "-";
-                newRow.BlokAlamat = "-";
-                newRow.Alamatwp = "-";
-                newRow.JenisPermohonan = "-";
-                newRow.TglPermohonan = tanggal;
-                newRow.TglMulaiBerlaku = tanggal;
-                newRow.TglAkhirBerlaku = tanggal;
-                newRow.NamaJalan = "-";
-                newRow.NoJalan = "-";
-                newRow.BlokJalan = "-";
-                newRow.Alamatreklame = "-";
-                newRow.DetilLokasi = "-";
-                newRow.Kecamatan = "-";
-                newRow.JenisProduk = "-";
-                newRow.LetakReklame = "-";
-                newRow.StatusTanah = "-";
-                newRow.FlagPermohonan = "-";
-                newRow.Statusproses = "-";
-                newRow.FlagSimpatik = "-";
-                newRow.KodeObyek = "-";
-                newRow.Panjang = 0;
-                newRow.Lebar = 0;
-                newRow.Luas = 0;
-                newRow.Luasdiskon = 0;
-                newRow.Sisi = 0;
-                newRow.Ketinggian = 0;
-                newRow.IsiReklame = "-";
-                newRow.PermohonanBaru = "-";
-                newRow.NoFormulirLama = "-";
-                newRow.SudutPandang = 0;
-                newRow.Nilaipajak = 0;
-                newRow.Nilaijambong = 0;
-                newRow.KelasJalan = "-";
-                newRow.NoTelp = "-";
-                newRow.Timetrans = null;
-                newRow.Npwpd = "-";
-                newRow.Flagtung = "-";
-                newRow.Statuscabut = "-";
-                newRow.Nor = "-";
-                newRow.KodeLokasi = "-";
-                newRow.NamaPenempatan = "-";
-                newRow.NoFormulirAwal = "-";
-                newRow.Ketpersil = "-";
-                newRow.PerPenanggungjawab = "-";
-                newRow.AlamatperPenanggungjawab = "-";
-                newRow.NpwpdPenanggungjawab = "-";
-                newRow.Potensi = "-";
-                newRow.Flagmall = "-";
-                newRow.Flagjeda = "-";
-                newRow.Flagbranded = "-";
-                newRow.Nlpr = "-";
-                newRow.Username = "-";
-                newRow.JenisWp = "-";
-                newRow.TglCetakPer = null;
-                newRow.StatusAWp = 0;
-                newRow.StatusAPer = 0;
-                newRow.Nmkelurahan = "-";
-                newRow.Nop = nop;
-                newRow.UnitKerja = "-";
-                newRow.UnitBerkas = "-";
-                newRow.StatusVer = 0;
-                newRow.TglVer = null;
-                newRow.UserVer = "-";
-                newRow.TahunBuku = tahunBuku;
-                newRow.IdKetetapan = "-";
-                newRow.Tglpenetapan = null;
-                newRow.TahunPajak = "-";
-                newRow.BulanPajak = "-";
-                newRow.PajakPokok = 0;
-                newRow.JnsKetetapan = "-";
-                newRow.TglJtempoSkpd = null;
-                newRow.Akun = "-";
-                newRow.NamaAkun = "-";
-                newRow.Kelompok = "-";
-                newRow.NamaKelompok = "-";
-                newRow.Jenis = "-";
-                newRow.NamaJenis = "-";
-                newRow.Objek = "-";
-                newRow.NamaObjek = "-";
-                newRow.Rincian = "-";
-                newRow.NamaRincian = "-";
-                newRow.SubRincian = "-";
-                newRow.NamaSubRincian = "-";
-                newRow.TahunPajakKetetapan = 0;
-                newRow.MasaPajakKetetapan = 0;
-                newRow.SeqPajakKetetapan = 0;
-                newRow.KategoriKetetapan = "-";
-                newRow.TglKetetapan = null;
-                newRow.TglJatuhTempoBayar = null;
-                newRow.IsLunasKetetapan = 0;
-                newRow.TglLunasKetetapan = null;
-                newRow.PokokPajakKetetapan = 0;
-                newRow.PengurangPokokKetetapan = 0;
-                newRow.AkunKetetapan = "-";
-                newRow.KelompokKetetapan = "-";
-                newRow.JenisKetetapan = "-";
-                newRow.ObjekKetetapan = "-";
-                newRow.RincianKetetapan = "-";
-                newRow.SubRincianKetetapan = "-";
-                newRow.TglBayarPokok = tanggal;
-                newRow.NominalPokokBayar = selisih;
-                newRow.AkunPokokBayar = "-";
-                newRow.KelompokPokokBayar = "-";
-                newRow.JenisPokokBayar = "-";
-                newRow.ObjekPokokBayar = "-";
-                newRow.RincianPokokBayar = "-";
-                newRow.SubRincianPokokBayar = "-";
-                newRow.TglBayarSanksi = null;
-                newRow.NominalSanksiBayar = 0;
-                newRow.AkunSanksiBayar = "-";
-                newRow.KelompokSanksiBayar = "-";
-                newRow.JenisSanksiBayar = "-";
-                newRow.ObjekSanksiBayar = "-";
-                newRow.RincianSanksiBayar = "-";
-                newRow.SubRincianSanksiBayar = "-";
-                newRow.TglBayarSanksiKenaikan = null;
-                newRow.NominalJambongBayar = 0;
-                newRow.AkunJambongBayar = "-";
-                newRow.KelompokJambongBayar = "-";
-                newRow.JenisJambongBayar = "-";
-                newRow.ObjekJambongBayar = "-";
-                newRow.RincianJambongBayar = "-";
-                newRow.SubRincianJambongBayar = "-";
-                newRow.InsDate = DateTime.MinValue;
-                newRow.InsBy = "-";
-                newRow.UpdDate = DateTime.MinValue;
-                newRow.UpdBy = "-";
-                newRow.NoKetetapan = "-";
-                newRow.Seq = -1;
-
-                context.DbMonReklames.Add(newRow);
-                context.SaveChanges();
-            }
-
-            Console.WriteLine($"[FINISHED] UpdateKoreksi {tahunBuku}");
         }
 
         private void OpProcess()
@@ -1258,11 +1263,160 @@ WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
                         newRow.Seq = item.SEQ;
 
                         newRows.Add(newRow);
-                        processed++;
-                        double percent = (processed / (double)totalData) * 100;
-                        Console.Write($"\rProgress Reklame MON_SSPD: {percent:F2}% ({processed}/{totalData})");
-
                     }
+                    else
+                    {
+                        newRow.NoFormulir = item.NO_FORMULIR;
+                        newRow.NoPerusahaan = 0;
+                        newRow.NamaPerusahaan = "-";
+                        newRow.AlamatPerusahaan = "-";
+                        newRow.NoAlamatPerusahaan = "-";
+                        newRow.BlokAlamatPerusahaan = "-";
+                        newRow.Alamatper = "-";
+                        newRow.TelpPerusahaan = "-";
+                        newRow.Clientnama = "-";
+                        newRow.Clientalamat = "-";
+                        newRow.Jabatan = "-";
+                        newRow.KodeJenis = "-";
+                        newRow.NmJenis = "-";
+                        newRow.NoWp = "-";
+                        newRow.Nama = "-";
+                        newRow.Alamat = "-";
+                        newRow.NoAlamat = "-";
+                        newRow.BlokAlamat = "-";
+                        newRow.Alamatwp = "-";
+                        newRow.JenisPermohonan = "-";
+                        newRow.TglPermohonan = null;
+                        newRow.TglMulaiBerlaku = null;
+                        newRow.TglAkhirBerlaku = null;
+                        newRow.NamaJalan = "-";
+                        newRow.NoJalan = "-";
+                        newRow.BlokJalan = "-";
+                        newRow.Alamatreklame = "-";
+                        newRow.DetilLokasi = "-";
+                        newRow.Kecamatan = "-";
+                        newRow.JenisProduk = "-";
+                        newRow.LetakReklame = "-";
+                        newRow.StatusTanah = "-";
+                        newRow.FlagPermohonan = "-";
+                        newRow.Statusproses = "-";
+                        newRow.FlagSimpatik = "-";
+                        newRow.KodeObyek = "-";
+                        newRow.Panjang = 0;
+                        newRow.Lebar = 0;
+                        newRow.Luas = 0;
+                        newRow.Luasdiskon = 0;
+                        newRow.Sisi = 0;
+                        newRow.Ketinggian = 0;
+                        newRow.IsiReklame = "-";
+                        newRow.PermohonanBaru = "-";
+                        newRow.NoFormulirLama = "-";
+                        newRow.SudutPandang = 0;
+                        newRow.Nilaipajak = 0;
+                        newRow.Nilaijambong = 0;
+                        newRow.KelasJalan = "-";
+                        newRow.NoTelp = "-";
+                        newRow.Timetrans = null;
+                        newRow.Npwpd = "-";
+                        newRow.Flagtung = "-";
+                        newRow.Statuscabut = "-";
+                        newRow.Nor = "-";
+                        newRow.KodeLokasi = "-";
+                        newRow.NamaPenempatan = "-";
+                        newRow.NoFormulirAwal = "-";
+                        newRow.Ketpersil = "-";
+                        newRow.PerPenanggungjawab = "-";
+                        newRow.AlamatperPenanggungjawab = "-";
+                        newRow.NpwpdPenanggungjawab = "-";
+                        newRow.Potensi = "-";
+                        newRow.Flagmall = "-";
+                        newRow.Flagjeda = "-";
+                        newRow.Flagbranded = "-";
+                        newRow.Nlpr = "-";
+                        newRow.Username = "-";
+                        newRow.JenisWp = "-";
+                        newRow.TglCetakPer = null;
+                        newRow.StatusAWp = 0;
+                        newRow.StatusAPer = 0;
+                        newRow.Nmkelurahan = "-";
+                        newRow.Nop = "-";
+                        newRow.UnitKerja = "-";
+                        newRow.UnitBerkas = "-";
+                        newRow.StatusVer = 0;
+                        newRow.TglVer = null;
+                        newRow.UserVer = "-";
+                        newRow.TahunBuku = item.TAHUN_PAJAK ?? DateTime.Now.Year;
+                        newRow.IdKetetapan = item.ID_KETETAPAN;
+                        newRow.Tglpenetapan = item.TGLPENETAPAN;
+                        newRow.TahunPajak = item.TAHUN_PAJAK.ToString();
+                        newRow.BulanPajak = item.BULAN_PAJAK.ToString();
+                        newRow.PajakPokok = item.PAJAK_POKOK;
+                        newRow.JnsKetetapan = item.JENIS_KETETAPAN;
+                        newRow.TglJtempoSkpd = item.TGL_JTEMPO_SKPD;
+                        newRow.Akun = item.AKUN ?? "-";
+                        newRow.NamaAkun = item.NAMA_AKUN ?? "-";
+                        newRow.Kelompok = item.KELOMPOK ?? "-";
+                        newRow.NamaKelompok = item.NAMA_KELOMPOK ?? "-";
+                        newRow.Jenis = item.JENIS ?? "-";
+                        newRow.NamaJenis = item.NAMA_JENIS ?? "-";
+                        newRow.Objek = item.OBJEK ?? "-";
+                        newRow.NamaObjek = item.NAMA_OBJEK ?? "-";
+                        newRow.Rincian = item.RINCIAN ?? "-";
+                        newRow.NamaRincian = item.NAMA_RINCIAN ?? "-";
+                        newRow.SubRincian = item.SUB_RINCIAN ?? "-";
+                        newRow.NamaSubRincian = item.NAMA_SUB_RINCIAN ?? "-";
+                        newRow.TahunPajakKetetapan = item.TAHUN_PAJAK_KETETAPAN ?? 0;
+                        newRow.MasaPajakKetetapan = item.MASA_PAJAK_KETETAPAN ?? 0;
+                        newRow.SeqPajakKetetapan = item.SEQ_PAJAK_KETETAPAN ?? 0;
+                        newRow.KategoriKetetapan = item.KATEGORI_KETETAPAN;
+                        newRow.TglKetetapan = item.TGL_KETETAPAN;
+                        newRow.TglJatuhTempoBayar = item.TGL_JATUH_TEMPO_BAYAR;
+                        newRow.IsLunasKetetapan = item.IS_LUNAS_KETETAPAN;
+                        newRow.TglLunasKetetapan = item.TGL_LUNAS_KETETAPAN;
+                        newRow.PokokPajakKetetapan = item.POKOK_PAJAK_KETETAPAN;
+                        newRow.PengurangPokokKetetapan = item.PENGURANG_POKOK_KETETAPAN;
+                        newRow.AkunKetetapan = item.AKUN_KETETAPAN;
+                        newRow.KelompokKetetapan = item.KELOMPOK_KETETAPAN;
+                        newRow.JenisKetetapan = item.JENIS_KETETAPAN;
+                        newRow.ObjekKetetapan = item.OBJEK_KETETAPAN;
+                        newRow.RincianKetetapan = item.RINCIAN_KETETAPAN;
+                        newRow.SubRincianKetetapan = item.SUB_RINCIAN_KETETAPAN;
+                        newRow.TglBayarPokok = item.TGL_BAYAR_POKOK;
+                        newRow.NominalPokokBayar = item.NOMINAL_POKOK_BAYAR;
+                        newRow.AkunPokokBayar = item.AKUN;
+                        newRow.KelompokPokokBayar = item.KELOMPOK;
+                        newRow.JenisPokokBayar = item.JENIS;
+                        newRow.ObjekPokokBayar = item.OBJEK;
+                        newRow.RincianPokokBayar = item.RINCIAN;
+                        newRow.SubRincianPokokBayar = item.SUB_RINCIAN;
+                        newRow.TglBayarSanksi = item.TGL_BAYAR_SANKSI;
+                        newRow.NominalSanksiBayar = item.NOMINAL_SANKSI_BAYAR;
+                        newRow.AkunSanksiBayar = item.AKUN_SANKSI_BAYAR;
+                        newRow.KelompokSanksiBayar = item.KELOMPOK_SANKSI_BAYAR;
+                        newRow.JenisSanksiBayar = item.JENIS_SANKSI_BAYAR;
+                        newRow.ObjekSanksiBayar = item.OBJEK_SANKSI_BAYAR;
+                        newRow.RincianSanksiBayar = item.RINCIAN_SANKSI_BAYAR;
+                        newRow.SubRincianSanksiBayar = item.SUB_RINCIAN_SANKSI_BAYAR;
+                        newRow.TglBayarSanksiKenaikan = item.TGL_BAYAR_SANKSI_KENAIKAN;
+                        newRow.NominalJambongBayar = item.NOMINAL_JAMBONG_BAYAR;
+                        newRow.AkunJambongBayar = item.AKUN_JAMBONG_BAYAR;
+                        newRow.KelompokJambongBayar = item.KELOMPOK_JAMBONG_BAYAR;
+                        newRow.JenisJambongBayar = item.JENIS_JAMBONG_BAYAR;
+                        newRow.ObjekJambongBayar = item.OBJEK_JAMBONG_BAYAR;
+                        newRow.RincianJambongBayar = item.RINCIAN_JAMBONG_BAYAR;
+                        newRow.SubRincianJambongBayar = item.SUB_RINCIAN_JAMBONG_BAYAR;
+                        newRow.InsDate = DateTime.Now;
+                        newRow.InsBy = item.INS_BY ?? "JOB";
+                        newRow.UpdDate = DateTime.Now;
+                        newRow.UpdBy = item.UPD_BY ?? "JOB";
+                        newRow.NoKetetapan = item.NO_KETETAPAN ?? "-";
+                        newRow.Seq = item.SEQ;
+
+                        newRows.Add(newRow);
+                    }
+                    processed++;
+                    double percent = (processed / (double)totalData) * 100;
+                    Console.Write($"\rProgress Reklame MON_SSPD: {percent:F2}% ({processed}/{totalData})");
                 }
 
                 // Masukkan semua data sekaligus
