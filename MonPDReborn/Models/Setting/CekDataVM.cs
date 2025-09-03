@@ -240,7 +240,7 @@ namespace MonPDReborn.Models.Setting
             public string jenisPajak => ((EnumFactory.EPajak)PajakId).GetDescription().Replace("_", " ");
             public decimal realisasi { get; set; }
             public decimal scontro { get; set; }
-            public decimal selisih => realisasi - scontro;
+            public decimal selisih => scontro - realisasi;
         }
     }
     
