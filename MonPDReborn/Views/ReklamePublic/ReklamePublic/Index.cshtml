@@ -135,7 +135,12 @@
             const recaptchaToken = grecaptcha.getResponse(widgetId); // Ambil token dari widget
 
             if (!recaptchaToken) {
-                alert("⚠ Silakan verifikasi CAPTCHA terlebih dahulu.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi CAPTCHA',
+                    text: '⚠ Silakan verifikasi CAPTCHA terlebih dahulu.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
