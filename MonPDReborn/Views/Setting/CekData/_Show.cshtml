@@ -14,6 +14,7 @@
                 <div class="table-responsive">
                     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekDataVM.DataRealisasi>()
                         .ID("dataRealisasiGrid")
+                        .OnCellPrepared("onRealisasiCellPrepared")
                         .DataSource(Model.DataRealisasiList)
                         .KeyExpr("jenisPajak")
                         .ShowBorders(true)
@@ -22,11 +23,12 @@
                         .ShowRowLines(true)
                         .AllowColumnResizing(true)
                         .ColumnAutoWidth(true)
-                        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                        .Sorting(s => s.Mode(GridSortingMode.None))
+                        @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
                         .FilterRow(f => f.Visible(true))
                         .HeaderFilter(h => h.Visible(true))
                         .Sorting(s => s.Mode(GridSortingMode.Multiple))
-                        .Paging(p => p.PageSize(25))
+                        .Paging(p => p.PageSize(25)) *@
                         .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
                         .OnExporting("exportGrid")
                         .NoDataText("Objek Pajak Tidak Ditemukan")
@@ -51,7 +53,7 @@
                                     .DisplayFormat("{0}");
                             });
                         })
-                        .OnCellPrepared("onRealisasiCellPrepared")  // tambahkan handler
+                          // tambahkan handler
                     )
                 </div>
             </div>
@@ -73,6 +75,7 @@
                 <div class="table-responsive">
                     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Setting.CekDataVM.DataScontro>()
                 .ID("dataScontroGrid")
+                .OnContentReady("onScontroReady")
                 .DataSource(Model.DataScontroList)
                 .KeyExpr("jenisPajak")
                 .ShowBorders(true)
@@ -81,12 +84,13 @@
                 .ShowRowLines(true)
                 .AllowColumnResizing(true)
                 .ColumnAutoWidth(true)
-                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                .Sorting(s => s.Mode(GridSortingMode.None))
+                @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
                 .FilterRow(f => f.Visible(true))
                 .HeaderFilter(h => h.Visible(true))
                 .Sorting(s => s.Mode(GridSortingMode.Multiple))
                 .Paging(p => p.PageSize(25))
-                @* .Pager(p => p
+                .Pager(p => p
                 .ShowPageSizeSelector(true)
                 .AllowedPageSizes(new[] { 10, 20, 50 })
                 .ShowInfo(true)
@@ -117,7 +121,7 @@
                             .DisplayFormat("{0}");
                     });
                 })
-                .OnContentReady("onScontroReady")
+                
 
                 )
                 </div>
@@ -150,8 +154,7 @@
                 .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
                 .FilterRow(f => f.Visible(true))
                 .HeaderFilter(h => h.Visible(true))
-                .Sorting(s => s.Mode(GridSortingMode.Multiple))
-                .Paging(p => p.PageSize(25))
+                .Sorting(s => s.Mode(GridSortingMode.None))
                 .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
                 .OnExporting("exportGrid")
                 .NoDataText("Objek Pajak Tidak Ditemukan")
@@ -189,34 +192,49 @@
     
 </div>
 
-<script>
+@* <script>
     function parseNumber(val) {
-        if (val == null)
-            return 0;
-        return Number(String(val).replace(/\./g, "").replace(/,/g, ""));
-    }
+            if (val == null) return 0;
+            return Number(String(val).replace(/\./g, "").replace(/,/g, ""));
+        }
 
-    function onRealisasiCellPrepared(e) {
-        if (e.rowType === "data" && e.column.dataField === "realisasi") {
-            let scontroGrid = $("#dataScontroGrid").dxDataGrid("instance");
-            if (!scontroGrid)
-                return;
+        // Dipanggil saat cell di grid kiri (dataRealisasiGrid) di-render
+        function onRealisasiCellPrepared(e) {
+            if (e.rowType === "data" && e.column.dataField === "realisasi") {
+                // reset style dulu
+                e.cellElement.css({
+                    "background-color": "",
+                    "color": "",
+                    "font-weight": ""
+                });
 
-            let scontroData = scontroGrid.getDataSource().items();
-            let match = scontroData.find(x => x.jenisPajak === e.data.jenisPajak);
+                let scontroGrid = $("#dataScontroGrid").dxDataGrid("instance");
+                if (!scontroGrid) return;
 
-            if (match) {
+                let scontroData = scontroGrid.getDataSource().items();
+
+                let match = scontroData.find(x =>
+                    String(x.jenisPajak).trim().toLowerCase() === String(e.data.jenisPajak).trim().toLowerCase()
+                );
+
                 let valRealisasi = parseNumber(e.data.realisasi);
-                let valScontro = parseNumber(match.scontro);
+                let valScontro = match ? parseNumber(match.scontro) : null;
 
-                if (valRealisasi !== valScontro) {
-                    e.cellElement.css({
-                        "background-color": "#ffcccc",
-                        "color": "red",
-                        "font-weight": "bold"
-                    });
+                if (valScontro !== null) {
+                    if (valRealisasi === valScontro) {
+                        e.cellElement.css({
+                            "background-color": "#ccffcc",
+                            "color": "green",
+                            "font-weight": "bold"
+                        });
+                    } else if (valRealisasi < valScontro) {
+                        e.cellElement.css({
+                            "background-color": "#ffcccc",
+                            "color": "red",
+                            "font-weight": "bold"
+                        });
+                    }
                 }
             }
         }
-    }
-</script>
+</script> *@
