@@ -259,6 +259,12 @@ namespace HiburanWs
             int kategoriId = 54;
             string kategoriNama = "HIBURAN";
 
+            var tanggal = DateTime.Now.Date;
+            if (tahunBuku < DateTime.Now.Year)
+            {
+                tanggal = new DateTime(tahunBuku, 12, 31);
+            }
+
             var source = context.DbOpHiburans.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
             if (source != null)
             {
@@ -288,14 +294,14 @@ namespace HiburanWs
                 newRow.AlamatOpKdLurah = "-";
                 newRow.AlamatOpKdCamat = "-";
                 newRow.TglOpTutup = null;
-                newRow.TglMulaiBukaOp = DateTime.Now;
+                newRow.TglMulaiBukaOp = tanggal;
                 newRow.KategoriId = kategoriId;
                 newRow.KategoriNama = kategoriNama;
                 newRow.MetodePembayaran = "-";
                 newRow.MetodePenjualan = "-";
                 newRow.JumlahKaryawan = 0;
 
-                newRow.InsDate = DateTime.Now;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "-";
                 newRow.Akun = "-";
                 newRow.NamaAkun = "-";
@@ -317,6 +323,11 @@ namespace HiburanWs
                 context.SaveChanges();
             }
 
+            source = context.DbOpHiburans.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            if (source == null)
+            {
+                throw new Exception("Gagal membuat data OP untuk koreksi scontro");
+            }
             var sourceMon = context.DbMonHiburans.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
             if (sourceMon != null)
             {
@@ -354,12 +365,12 @@ namespace HiburanWs
                 newRow.NamaRincian = source.NamaRincian;
                 newRow.SubRincian = source.SubRincian;
                 newRow.NamaSubRincian = source.NamaSubRincian;
-                newRow.TahunPajakKetetapan = DateTime.Now.Year;
-                newRow.MasaPajakKetetapan = DateTime.Now.Month;
+                newRow.TahunPajakKetetapan = tanggal.Year;
+                newRow.MasaPajakKetetapan = tanggal.Month;
                 newRow.SeqPajakKetetapan = 1;
                 newRow.KategoriKetetapan = "4";
-                newRow.TglKetetapan = DateTime.Now;
-                newRow.TglJatuhTempoBayar = DateTime.Now;
+                newRow.TglKetetapan = tanggal;
+                newRow.TglJatuhTempoBayar = tanggal;
                 newRow.PokokPajakKetetapan = selisih;
                 newRow.PengurangPokokKetetapan = 0;
                 newRow.AkunKetetapan = "-";
@@ -368,11 +379,11 @@ namespace HiburanWs
                 newRow.ObjekKetetapan = "-";
                 newRow.RincianKetetapan = "-";
                 newRow.SubRincianKetetapan = "-";
-                newRow.InsDate = DateTime.Now;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "JOB";
-                newRow.UpdDate = DateTime.Now;
+                newRow.UpdDate = tanggal;
                 newRow.UpdBy = "JOB";
-                newRow.TglBayarPokok = DateTime.Now;
+                newRow.TglBayarPokok = tanggal;
                 newRow.NominalPokokBayar = selisih;
                 newRow.AkunPokokBayar = "-";
                 newRow.Kelompok = "-";

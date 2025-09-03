@@ -749,6 +749,11 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
             var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
             int kategoriId = 56;
             string kategoriNama = "AIR TANAH";
+            var tanggal = DateTime.Now.Date;
+            if (tahunBuku < DateTime.Now.Year)
+            {
+                tanggal = new DateTime(tahunBuku, 12, 31);
+            }
 
             var source = context.DbOpAbts.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
             if (source != null)
@@ -779,11 +784,13 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
                 newRow.AlamatOpKdLurah = "-";
                 newRow.AlamatOpKdCamat = "-";
                 newRow.TglOpTutup = null;
-                newRow.TglMulaiBukaOp = DateTime.Now;
+                newRow.TglMulaiBukaOp = tanggal;
                 newRow.KategoriId = kategoriId;
                 newRow.KategoriNama = kategoriNama;
                 newRow.JumlahKaryawan = 0;
-                newRow.InsDate = DateTime.Now;
+                newRow.PeruntukanId = kategoriId;
+                newRow.PeruntukanNama = kategoriNama;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "-";
                 newRow.Akun = "-";
                 newRow.NamaAkun = "-";
@@ -803,6 +810,12 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
 
                 context.DbOpAbts.Add(newRow);
                 context.SaveChanges();
+            }
+
+            source = context.DbOpAbts.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            if (source == null)
+            {
+                throw new Exception("Gagal membuat data OP untuk koreksi scontro");
             }
 
             var sourceMon = context.DbMonAbts.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
@@ -842,12 +855,14 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
                 newRow.NamaRincian = source.NamaRincian;
                 newRow.SubRincian = source.SubRincian;
                 newRow.NamaSubRincian = source.NamaSubRincian;
-                newRow.TahunPajakKetetapan = DateTime.Now.Year;
-                newRow.MasaPajakKetetapan = DateTime.Now.Month;
+                newRow.PeruntukanId = source.PeruntukanId;
+                newRow.PeruntukanNama = source.PeruntukanNama;
+                newRow.TahunPajakKetetapan = tanggal.Year;
+                newRow.MasaPajakKetetapan = tanggal.Month;
                 newRow.SeqPajakKetetapan = 1;
                 newRow.KategoriKetetapan = "4";
-                newRow.TglKetetapan = DateTime.Now;
-                newRow.TglJatuhTempoBayar = DateTime.Now;
+                newRow.TglKetetapan = tanggal;
+                newRow.TglJatuhTempoBayar = tanggal;
                 newRow.PokokPajakKetetapan = selisih;
                 newRow.PengurangPokokKetetapan = 0;
                 newRow.AkunKetetapan = "-";
@@ -856,11 +871,11 @@ WHERE a.NOP=:NOP AND a.STATUS_BATAL=0 AND TO_CHAR(TGL_KETETAPAN,'YYYY')=:TAHUN";
                 newRow.ObjekKetetapan = "-";
                 newRow.RincianKetetapan = "-";
                 newRow.SubRincianKetetapan = "-";
-                newRow.InsDate = DateTime.Now;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "JOB";
-                newRow.UpdDate = DateTime.Now;
+                newRow.UpdDate = tanggal;
                 newRow.UpdBy = "JOB";
-                newRow.TglBayarPokok = DateTime.Now;
+                newRow.TglBayarPokok = tanggal;
                 newRow.NominalPokokBayar = selisih;
                 newRow.AkunPokokBayar = "-";
                 newRow.Kelompok = "-";

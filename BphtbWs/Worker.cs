@@ -88,7 +88,24 @@ namespace BphtbWs
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
             tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
+            //await RealisasiProcess();
 
+            for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            {
+                UpdateKoreksi(i);
+            }
+
+            MailHelper.SendMail(
+            false,
+            "DONE BPHTB WS",
+            $@"BPHTB WS FINISHED",
+            null
+            );
+        }
+
+        private async Task RealisasiProcess()
+        {
+            var _contMonPd = DBClass.GetContext();
             using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
             {
                 var sql = @"
@@ -287,13 +304,6 @@ namespace BphtbWs
                 Console.WriteLine($"{DateTime.Now} [SUCCESS] DB_MON_BPHTB_MONITORINGDB");
                 Console.ResetColor();
             }
-
-            MailHelper.SendMail(
-            false,
-            "DONE BPHTB WS",
-            $@"BPHTB WS FINISHED",
-            null
-            );
         }
 
         private void UpdateKoreksi(int tahunBuku)
@@ -427,6 +437,11 @@ namespace BphtbWs
             var kdPajakString = ((int)PAJAK_ENUM).ToString().PadLeft(2, '0');
             var nop = $"0000000000000000{kdPajakString}";
             var namaop = $"KOREKSI SCONTRO {PAJAK_ENUM.GetDescription()}";
+            var tanggal = DateTime.Now.Date;
+            if (tahunBuku < DateTime.Now.Year)
+            {
+                tanggal = new DateTime(tahunBuku, 12, 31);
+            }
 
             var sourceMon = context.DbMonBphtbs.Where(x => x.SpptNop == nop && x.Tahun == tahunBuku).FirstOrDefault();
             if (sourceMon != null)
@@ -439,40 +454,40 @@ namespace BphtbWs
             {
                 var newRow = new DbMonBphtb();
 
-                newRow.Idsspd = "";
-                newRow.TglBayar = DateTime.Now;
+                newRow.Idsspd = nop;
+                newRow.TglBayar = tanggal;
                 newRow.TglData = null;
-                newRow.Akun = "";
-                newRow.NamaAkun = "";
-                newRow.Jenis = "";
-                newRow.NamaJenis = "";
-                newRow.Objek = "";
-                newRow.NamaObjek = "";
-                newRow.Rincian = "";
-                newRow.NamaRincian = "";
-                newRow.SubRincian = "";
-                newRow.NamaSubRincian = "";
-                newRow.SpptNop = "";
-                newRow.NamaWp = "";
-                newRow.Alamat = "";
+                newRow.Akun = "-";
+                newRow.NamaAkun = "-";
+                newRow.Jenis = "-";
+                newRow.NamaJenis = "-";
+                newRow.Objek = "-";
+                newRow.NamaObjek = "-";
+                newRow.Rincian = "-";
+                newRow.NamaRincian = "-";
+                newRow.SubRincian = "-";
+                newRow.NamaSubRincian = "-";
+                newRow.SpptNop = nop;
+                newRow.NamaWp = namaop;
+                newRow.Alamat = "-";
                 newRow.Masa = 0;
-                newRow.Tahun = 0;
+                newRow.Tahun = tahunBuku;
                 newRow.Pokok = selisih;
                 newRow.Sanksi = 0;
                 newRow.Nomordasarsetor = nop;
-                newRow.Tempatbayar = namaop;
-                newRow.Refsetoran = "";
-                newRow.RekonDate = null;
-                newRow.RekonBy = "";
-                newRow.KdPerolehan = "";
+                newRow.Tempatbayar = "-";
+                newRow.Refsetoran = "-";
+                newRow.RekonDate = tanggal;
+                newRow.RekonBy = "-";
+                newRow.KdPerolehan = "-";
                 newRow.KdByr = 0;
-                newRow.KodeNotaris = "";
-                newRow.KdPelayanan = "";
-                newRow.Perolehan = "";
-                newRow.KdCamat = "";
-                newRow.KdLurah = "";
-                newRow.Kelompok = "";
-                newRow.NamaKelompok = "";
+                newRow.KodeNotaris = "-";
+                newRow.KdPelayanan = "-";
+                newRow.Perolehan = "-";
+                newRow.KdCamat = "-";
+                newRow.KdLurah = "-";
+                newRow.Kelompok = "-";
+                newRow.NamaKelompok = "-";
                 newRow.Seq = -1;
 
                 context.DbMonBphtbs.Add(newRow);

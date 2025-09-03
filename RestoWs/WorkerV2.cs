@@ -751,6 +751,11 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
             var kategori = GetKategoriOvveride(nop);
             int kategoriId = Convert.ToInt32(kategori[0]);
             string kategoriNama = kategori[1];
+            var tanggal = DateTime.Now.Date;
+            if(tahunBuku < DateTime.Now.Year)
+            {
+                tanggal = new DateTime(tahunBuku, 12, 31);
+            }
 
             var source = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
             if (source != null)
@@ -781,7 +786,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 newRow.AlamatOpKdLurah = "-";
                 newRow.AlamatOpKdCamat = "-";
                 newRow.TglOpTutup = null;
-                newRow.TglMulaiBukaOp = DateTime.Now;
+                newRow.TglMulaiBukaOp = tanggal;
                 newRow.KategoriId = kategoriId;
                 newRow.KategoriNama = kategoriNama;
                 newRow.MetodePembayaran = "-";
@@ -792,7 +797,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 newRow.KapasitasRuanganOrang = 0;
                 newRow.MaksimalProduksiPorsiHari = 0;
                 newRow.RataTerjualPorsiHari = 0;
-                newRow.InsDate = DateTime.Now;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "-";
                 newRow.Akun = "-";
                 newRow.NamaAkun = "-";
@@ -814,9 +819,15 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 context.SaveChanges();
             }
 
+            source = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            if(source == null)
+            {
+                throw new Exception("Gagal membuat data OP untuk koreksi scontro");
+            }
             var sourceMon = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
             if (sourceMon != null)
             {
+                sourceMon.TglBayarPokok = tanggal;
                 sourceMon.NominalPokokBayar = selisih;
                 context.DbMonRestos.Update(sourceMon);
                 context.SaveChanges();
@@ -851,12 +862,12 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 newRow.NamaRincian = source.NamaRincian;
                 newRow.SubRincian = source.SubRincian;
                 newRow.NamaSubRincian = source.NamaSubRincian;
-                newRow.TahunPajakKetetapan = DateTime.Now.Year;
-                newRow.MasaPajakKetetapan = DateTime.Now.Month;
+                newRow.TahunPajakKetetapan = tanggal.Year;
+                newRow.MasaPajakKetetapan = tanggal.Month;
                 newRow.SeqPajakKetetapan = 1;
                 newRow.KategoriKetetapan = "4";
-                newRow.TglKetetapan = DateTime.Now;
-                newRow.TglJatuhTempoBayar = DateTime.Now;
+                newRow.TglKetetapan = tanggal;
+                newRow.TglJatuhTempoBayar = tanggal;
                 newRow.PokokPajakKetetapan = selisih;
                 newRow.PengurangPokokKetetapan = 0;
                 newRow.AkunKetetapan = "-";
@@ -865,11 +876,11 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                 newRow.ObjekKetetapan = "-";
                 newRow.RincianKetetapan = "-";
                 newRow.SubRincianKetetapan = "-";
-                newRow.InsDate = DateTime.Now;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "JOB";
-                newRow.UpdDate = DateTime.Now;
+                newRow.UpdDate = tanggal;
                 newRow.UpdBy = "JOB";
-                newRow.TglBayarPokok = DateTime.Now;
+                newRow.TglBayarPokok = tanggal;
                 newRow.NominalPokokBayar = selisih;
                 newRow.AkunPokokBayar = "-";
                 newRow.Kelompok = "-";

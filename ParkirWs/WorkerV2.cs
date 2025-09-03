@@ -256,6 +256,11 @@ namespace ParkirWs
             var kategori = GetKategoriOvveride(nop);
             int kategoriId = Convert.ToInt32(kategori[0]);
             string kategoriNama = kategori[1];
+            var tanggal = DateTime.Now.Date;
+            if (tahunBuku < DateTime.Now.Year)
+            {
+                tanggal = new DateTime(tahunBuku, 12, 31);
+            }
 
             var source = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
             if (source != null)
@@ -287,14 +292,14 @@ namespace ParkirWs
                 newRow.AlamatOpKdLurah = "-";
                 newRow.AlamatOpKdCamat = "-";
                 newRow.TglOpTutup = null;
-                newRow.TglMulaiBukaOp = DateTime.Now;
+                newRow.TglMulaiBukaOp = tanggal;
                 newRow.KategoriId = kategoriId;
                 newRow.KategoriNama = kategoriNama;
                 newRow.MetodePembayaran = "-";
                 newRow.Dikelola = "-";
                 newRow.PungutTarif = "-";
                 newRow.JumlahKaryawan = 0;
-                newRow.InsDate = DateTime.Now;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "-";
                 newRow.Akun = "-";
                 newRow.NamaAkun = "-";
@@ -316,9 +321,15 @@ namespace ParkirWs
                 context.SaveChanges();
             }
 
+            source = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop && x.TahunBuku == tahunBuku);
+            if (source == null)
+            {
+                throw new Exception("Gagal membuat data OP untuk koreksi scontro");
+            }
             var sourceMon = context.DbMonParkirs.Where(x => x.Nop == nop && x.TahunBuku == tahunBuku).FirstOrDefault();
             if (sourceMon != null)
             {
+                sourceMon.TglBayarPokok = tanggal;
                 sourceMon.NominalPokokBayar = selisih;
                 context.DbMonParkirs.Update(sourceMon);
                 context.SaveChanges();
@@ -337,6 +348,8 @@ namespace ParkirWs
                 newRow.AlamatOp = source.AlamatOp;
                 newRow.AlamatOpKdLurah = source.AlamatOpKdLurah;
                 newRow.AlamatOpKdCamat = source.AlamatOpKdCamat;
+                newRow.Dikelola = source.Dikelola;
+                newRow.PungutTarif = source.PungutTarif;
                 newRow.TglOpTutup = source.TglOpTutup;
                 newRow.TglMulaiBukaOp = source.TglMulaiBukaOp;
                 newRow.IsTutup = source.TglOpTutup == null ? 0 : source.TglOpTutup.Value.Year <= tahunBuku ? 1 : 0;
@@ -353,12 +366,12 @@ namespace ParkirWs
                 newRow.NamaRincian = source.NamaRincian;
                 newRow.SubRincian = source.SubRincian;
                 newRow.NamaSubRincian = source.NamaSubRincian;
-                newRow.TahunPajakKetetapan = DateTime.Now.Year;
-                newRow.MasaPajakKetetapan = DateTime.Now.Month;
+                newRow.TahunPajakKetetapan = tanggal.Year;
+                newRow.MasaPajakKetetapan = tanggal.Month;
                 newRow.SeqPajakKetetapan = 1;
                 newRow.KategoriKetetapan = "4";
-                newRow.TglKetetapan = DateTime.Now;
-                newRow.TglJatuhTempoBayar = DateTime.Now;
+                newRow.TglKetetapan = tanggal;
+                newRow.TglJatuhTempoBayar = tanggal;
                 newRow.PokokPajakKetetapan = selisih;
                 newRow.PengurangPokokKetetapan = 0;
                 newRow.AkunKetetapan = "-";
@@ -367,11 +380,11 @@ namespace ParkirWs
                 newRow.ObjekKetetapan = "-";
                 newRow.RincianKetetapan = "-";
                 newRow.SubRincianKetetapan = "-";
-                newRow.InsDate = DateTime.Now;
+                newRow.InsDate = tanggal;
                 newRow.InsBy = "JOB";
-                newRow.UpdDate = DateTime.Now;
+                newRow.UpdDate = tanggal;
                 newRow.UpdBy = "JOB";
-                newRow.TglBayarPokok = DateTime.Now;
+                newRow.TglBayarPokok = tanggal;
                 newRow.NominalPokokBayar = selisih;
                 newRow.AkunPokokBayar = "-";
                 newRow.Kelompok = "-";
