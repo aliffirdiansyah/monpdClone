@@ -17,12 +17,29 @@
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="dropdown">
-                        <select id="ddlTahun" class="form-select form-select mb-3 w-auto"
+                    <div class="d-flex align-items-center gap-2">
+                        <select id="ddlTahun" class="form-select mb-3 w-auto"
                                 style="background-color: #f0f8ff; color: #333; border-color: #0d6efd;">
                             <!-- Tahun akan diisi dengan JavaScript -->
                         </select>
+
+                        @* <button id="btnRefresh" class="btn btn-primary mb-3">
+                            🔄 Refresh
+                        </button> *@
+
+                        <button id="btnRefresh" type="button" class="btn btn-info btn-icon waves-effect waves-light mb-3">
+                            <i class="bx bx-refresh text-white"></i>
+                        </button>
+
+                        <div class="mb-3">
+                            <span class="badge" style="background-color:#ffcccc; color:red;">Data belum sesuai</span>
+                            <span class="badge" style="background-color:#ccffcc; color:green;">Data sesuai</span>
+                            <span class="badge" style="background-color:#ffffcc; color:orange;">Data lebih dari Scontro</span>
+                        </div>
                     </div>
+
+                    
+                    
                 </div>
 
                 <div class="text-center">
@@ -39,7 +56,7 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             // Inisialisasi dropdown tahun
             var currentYear = new Date().getFullYear();
@@ -49,19 +66,32 @@
                     text: year
                 }));
             }
+
             // Set tahun awal ke tahun saat ini
             $('#ddlTahun').val(currentYear);
+
             // Load data saat halaman pertama kali dimuat
             loadRekapData(currentYear);
-            // Event handler untuk perubahan tahun
+
+            // Event handler untuk perubahan tahun (auto load)
             $('#ddlTahun').change(function () {
                 var selectedYear = $(this).val();
                 loadRekapData(selectedYear);
             });
+
+            // ✅ Event handler tombol refresh
+            $('#btnRefresh').click(function () {
+                var selectedYear = $('#ddlTahun').val();
+                console.log("Refresh data untuk tahun:", selectedYear);
+                loadRekapData(selectedYear);
+            });
         });
+
+        // Fungsi untuk load data berdasarkan tahun
         function loadRekapData(tahun) {
             $('#loading2-Show').show();
             $('#Show').hide();
+
             $.ajax({
                 url: '@Url.Action("Show", "CekData")',
                 type: 'GET',
@@ -80,6 +110,7 @@
             });
         }
     </script>
+
     <script>
                    // Fungsi bantu untuk parse angka (hilangkan titik/koma pemisah ribuan)
         function parseNumber(val) {
@@ -87,15 +118,22 @@
             return Number(String(val).replace(/\./g, "").replace(/,/g, ""));
         }
 
+
         // Dipanggil saat cell di grid kiri (dataRealisasiGrid) di-render
         function onRealisasiCellPrepared(e) {
             if (e.rowType === "data" && e.column.dataField === "realisasi") {
+                // reset style dulu
+                e.cellElement.css({
+                    "background-color": "",
+                    "color": "",
+                    "font-weight": ""
+                });
+
                 let scontroGrid = $("#dataScontroGrid").dxDataGrid("instance");
                 if (!scontroGrid) return;
 
                 let scontroData = scontroGrid.getDataSource().items();
 
-                // cari data yang cocok berdasarkan jenisPajak
                 let match = scontroData.find(x =>
                     String(x.jenisPajak).trim().toLowerCase() === String(e.data.jenisPajak).trim().toLowerCase()
                 );
@@ -103,29 +141,35 @@
                 let valRealisasi = parseNumber(e.data.realisasi);
                 let valScontro = match ? parseNumber(match.scontro) : null;
 
-                // debug di console
-                console.log("COMPARE =>", e.data.jenisPajak, valRealisasi, valScontro);
-
+                console.log("MATCH?", e.data.jenisPajak, "->", match);
                 if (valScontro !== null) {
                     if (valRealisasi === valScontro) {
-                        // sama → hijau
+                        // Hijau kalau sama
                         e.cellElement.css({
                             "background-color": "#ccffcc",
                             "color": "green",
                             "font-weight": "bold"
                         });
                     } else if (valRealisasi < valScontro) {
-                        // lebih kecil → merah
+                        // Merah kalau lebih kecil
                         e.cellElement.css({
                             "background-color": "#ffcccc",
                             "color": "red",
                             "font-weight": "bold"
                         });
+                    } else if (valRealisasi > valScontro) {
+                        // Kuning kalau lebih besar
+                        e.cellElement.css({
+                            "background-color": "#ffffcc",
+                            "color": "orange",
+                            "font-weight": "bold"
+                        });
+
                     }
-                    // lebih besar → tidak diberi warna (default)
                 }
             }
         }
+
 
         // Dipanggil ketika grid kanan (dataScontroGrid) selesai load
         function onScontroReady(e) {
