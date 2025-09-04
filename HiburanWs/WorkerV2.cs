@@ -491,13 +491,8 @@ END AS WILAYAH_PAJAK,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
-WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL  AND FK_NOP NOT LIKE '00%' 
+where fk_pajak_daerah = '03' and status_op != 0 and kategori_pajak <> 'INSIDENTIL';
 )
-WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
-            (   TGL_OP_TUTUP IS  NULL OR
-                 TO_CHAR(TGL_OP_TUTUP,'YYYY') >= :TAHUN OR
-                 TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
-             )
                     ";
 
                 var result = _contMonitoringDB.Set<DbOpHiburan>().FromSqlRaw(sql, new[] {
