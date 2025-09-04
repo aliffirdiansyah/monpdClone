@@ -120,12 +120,12 @@ namespace MonPDReborn.Controllers.DataOP
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        public IActionResult RekapDetailHotel(int enumPajak , int kategori , int tahun)
+        public IActionResult RekapDetailHotel(int enumPajak, int kategori, int tahun)
         {
             try
             {
                 var model = new Models.DataOP.ProfileOPVM.RekapDetailHotel(enumPajak, kategori, tahun);
-                return PartialView($"{URLView}_{actionName}",model);
+                return PartialView($"{URLView}_{actionName}", model);
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@ namespace MonPDReborn.Controllers.DataOP
                 var jenisPajak = (EnumFactory.EPajak)enumPajak;
                 var filtered = Models.DataOP.ProfileOPVM.Method.GetSeriesMasterData(jenisPajak, kategori, tahun);
 
-                
+
 
                 return Json(filtered);
             }
@@ -305,7 +305,7 @@ namespace MonPDReborn.Controllers.DataOP
                 .Select(g => new uptbView
                 {
                     Value = g.Key,
-                    Text = g.Key
+                    Text = "UPTB " + g.Key
                 })
                 .ToList();
 
@@ -323,11 +323,11 @@ namespace MonPDReborn.Controllers.DataOP
             {
                 dataList = context.MWilayahs
                     .Where(x => x.Uptd == uptb && !string.IsNullOrEmpty(x.KdKecamatan))
-                    .GroupBy(x => x.KdKecamatan)
+                    .GroupBy(x => new { x.KdKecamatan, x.NmKecamatan })
                     .Select(g => new kecamatanView
                     {
-                        Value = g.Key,
-                        Text = g.Key
+                        Value = g.Key.KdKecamatan,
+                        Text = g.Key.NmKecamatan
                     })
                     .ToList();
             }
@@ -346,11 +346,11 @@ namespace MonPDReborn.Controllers.DataOP
             {
                 dataList = context.MWilayahs
                     .Where(x => x.KdKecamatan == kecamatan && !string.IsNullOrEmpty(x.KdKelurahan))
-                    .GroupBy(x => x.KdKelurahan)
+                    .GroupBy(x => new { x.KdKelurahan, x.NmKelurahan })
                     .Select(g => new kelurahanView
                     {
-                        Value = g.Key,
-                        Text = g.Key
+                        Value = g.Key.KdKelurahan,
+                        Text = g.Key.NmKelurahan
                     })
                     .ToList();
             }
