@@ -4466,6 +4466,32 @@ namespace MonPDReborn.Models.DataOP
 
                     case EnumFactory.EPajak.Reklame:
                         var opReklame = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop);
+                        if (opReklame != null)
+                            {
+                            ret.IdentitasPajak.WilayahPajak = "-";
+                            ret.IdentitasPajak.NpwpdNo = opReklame.NoWp;
+                            ret.IdentitasPajak.NamaNpwpd = opReklame.Nama;
+                            ret.IdentitasPajak.NOP = opReklame.Nor;
+                            ret.IdentitasPajak.NamaObjekPajak = opReklame.NamaPerusahaan;
+                            ret.IdentitasPajak.AlamatLengkap = opReklame.AlamatPerusahaan;
+                            ret.IdentitasPajak.Telepon = opReklame.TelpPerusahaan;
+                            ret.IdentitasPajak.TglBerlaku = opReklame.TglMulaiBerlaku;
+                            ret.IdentitasPajak.TglBerakhir = opReklame.TglAkhirBerlaku;
+                            ret.IdentitasPajak.EnumPajak = pajak;
+                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                            ret.IdentitasPajak.KategoriPajak = opReklame.KategoriNama;
+                            //isi data reklame
+                            /*ret.ReklameRow.PendapatanRow = new DetailReklame.Pendapatan
+                            {
+                                //isi data pendapatan jika ada
+                            };
+                            ret.ReklameRow.SaranaReklamePendukungRow = new DetailReklame.SaranaPendukung
+                            {
+                                JumlahKaryawan = (int)opReklame.JumlahKaryawan,
+                                MetodePembayaran = opReklame.MetodePembayaran,
+                                MetodePenjualan = opReklame.MetodePenjualan
+                            };*/
+                        }
                         break;
 
                     case EnumFactory.EPajak.PBB:
@@ -4962,6 +4988,10 @@ namespace MonPDReborn.Models.DataOP
             public EnumFactory.EPajak EnumPajak { get; set; }
             public string JenisPajak { get; set; }
             public string KategoriPajak { get; set; }
+            public DateTime? TglBerlaku { get; set; }
+            public DateTime? TglBerakhir { get; set; }
+            public string NoPerusahaan { get; set; }
+
         }
         public class DataPerizinan
         {

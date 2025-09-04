@@ -227,61 +227,128 @@
     <!-- Profil Tab -->
     <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
         <!-- Identitas Objek Pajak Card -->
-        <div class="card mb-4">
-            <div class="card-header d-flex bg-header-color align-items-center">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 text-dark mb-0">
-                        Identitas Objek Pajak
-                    </h4>
+        @switch (Model.Pajak)
+        {
+            case EnumFactory.EPajak.Reklame:
+                <div class="card mb-4">
+                    <div class="card-header d-flex bg-header-color align-items-center">
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fs-16 text-dark mb-0">
+                                Identitas Objek Pajak
+                            </h4>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NPWPD</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NpwpdNo</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Wajib Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaNpwpd</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Alamat Lengkap</span>
+                            <span>@Model.DataDetail.IdentitasPajak.AlamatLengkap</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Wilayah Pajak</span>
+                            <span>SURABAYA @Model.DataDetail.IdentitasPajak.WilayahPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NOR</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NOP</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama OP</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Telp</span>
+                            <span>@Model.DataDetail.IdentitasPajak.Telepon</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Tanggal Mulai Berlaku</span>
+                            <span>@Model.DataDetail.IdentitasPajak.TglBerlaku.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Tanggal Mulai Berlaku</span>
+                            <span>@Model.DataDetail.IdentitasPajak.TglBerakhir.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.JenisPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.KategoriPajak</span>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">NPWPD</span>
-                    <span>@Model.DataDetail.IdentitasPajak.NpwpdNo</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Nama Wajib Pajak</span>
-                    <span>@Model.DataDetail.IdentitasPajak.NamaNpwpd</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Nama Objek Pajak</span>
-                    <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Alamat Lengkap</span>
-                    <span>@Model.DataDetail.IdentitasPajak.AlamatLengkap</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Wilayah Pajak</span>
-                    <span>SURABAYA @Model.DataDetail.IdentitasPajak.WilayahPajak</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">NOP</span>
-                    <span>@Model.DataDetail.IdentitasPajak.FormattedNOP</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Nama OP</span>
-                    <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Telp</span>
-                    <span>@Model.DataDetail.IdentitasPajak.Telepon</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Tanggal Buka</span>
-                    <span>@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Jenis Objek Pajak</span>
-                    <span>@Model.DataDetail.IdentitasPajak.JenisPajak</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span class="fw-semibold">Jenis Objek Pajak</span>
-                    <span>@Model.DataDetail.IdentitasPajak.KategoriPajak</span>
-                </li>
-            </ul>
-        </div>
+                    break;
+            default:
+                <div class="card mb-4">
+                    <div class="card-header d-flex bg-header-color align-items-center">
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fs-16 text-dark mb-0">
+                                Identitas Objek Pajak
+                            </h4>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NPWPD</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NpwpdNo</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Wajib Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaNpwpd</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Alamat Lengkap</span>
+                            <span>@Model.DataDetail.IdentitasPajak.AlamatLengkap</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Wilayah Pajak</span>
+                            <span>SURABAYA @Model.DataDetail.IdentitasPajak.WilayahPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NOP</span>
+                            <span>@Model.DataDetail.IdentitasPajak.FormattedNOP</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama OP</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Telp</span>
+                            <span>@Model.DataDetail.IdentitasPajak.Telepon</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Tanggal Buka</span>
+                            <span>@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.JenisPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.KategoriPajak</span>
+                        </li>
+                    </ul>
+                </div>
+                break;
+        }
+        
 
         <!-- Card Row -->
         <div class="row g-3">
