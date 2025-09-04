@@ -1,8 +1,7 @@
-﻿
-<div class="table-responsive">
+﻿<div class="table-responsive">
 
     @(Html.DevExtreme().DataGrid<object>()
-        .ID("detailOPGrid")
+        .ID("detailWilayahOPGrid")
         .DataSource(new JS("[]")) // Awalnya kosong
         .ShowColumnLines(true)
         .ShowRowLines(true)
@@ -27,23 +26,22 @@
         )
         .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
         .OnExporting("exportGrid")
-        )
         .Columns(columns =>
         {
-            @* columns.Add().DataField("NOP").Caption("NOP"); *@
-            columns.Add().DataField("FormattedNOP").Caption("NOP");
-            columns.Add().DataField("NamaOP").Caption("Nama OP");
-            columns.Add().DataField("Alamat").Caption("Alamat");
-            columns.Add().DataField("Wilayah").Caption("Wilayah");
-            columns.Add()
-            .Type(GridCommandColumnType.Buttons)
-            .Buttons(b =>
-            {
-                b.Add()
-            .Text("Detail")
-            .Icon("search")
-            .OnClick("onDetail");
-            });
+                @* columns.Add().DataField("NOP").Caption("NOP"); *@
+                columns.Add().DataField("FormattedNOP").Caption("NOP");
+                columns.Add().DataField("NamaOP").Caption("Nama OP");
+                columns.Add().DataField("Alamat").Caption("Alamat");
+                columns.Add().DataField("Wilayah").Caption("Wilayah");
+                columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Buttons(b =>
+                {
+                        b.Add()
+                .Text("Detail")
+                .Icon("search")
+                .OnClick("onDetail");
+                });
         })
         )
 </div>

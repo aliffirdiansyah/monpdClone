@@ -28,6 +28,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-wilayah" role="tab">
+                            OP per Wilayah
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#tpk-hotel" role="tab" onclick="fnShowTPK()">
                             TPK Hotel
                         </a>
@@ -112,6 +117,95 @@
                                         </div>
 
                                         <div id="detailLoadingSeries" class="text-center my-4">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane" id="op-wilayah" role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        @(Html.DevExtreme().SelectBox()
+                                                .ID("uptbSelect")
+                                                .DataSource(d => d.Mvc().Controller("ProfileOP").LoadAction("GetUptb"))
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih UPTB")
+                                                .OnValueChanged("onUptbChanged")
+                                                )
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        @(Html.DevExtreme().SelectBox()
+                                                .ID("kecSelect")
+                                                .DataSource(d => d.Mvc().Controller("ProfileOP").LoadAction("GetKec").LoadParams(new { uptb = "" }))
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih Kecamatan")
+                                                .OnValueChanged("onKecChanged")
+                                                )
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        @(Html.DevExtreme().SelectBox()
+                                                .ID("kelSelect")
+                                                .DataSource(d => d.Mvc().Controller("ProfileOP").LoadAction("GetKel").LoadParams(new { kecamatan = "" }))
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih Kelurahan")
+                                                )
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        @(Html.DevExtreme().Button()
+                                                .ID("btnTerapkan")
+                                                .Text("Terapkan")
+                                                .Type(ButtonType.Success)
+                                                .Icon("check")
+                                                .OnClick("onTerapkanClick")
+                                                )
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div id="loading2-ShowWilayah" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <div id="ShowWilayah"></div>
+
+
+                        <div class="modal fade" id="detailModalWilayah" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalWilayahLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="detailModalWilayahLabel">
+                                            Detail Wilayah
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <div id="detailContainerWilayah" class="mt-4" style="display: none;">
+                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailWilayahOP.cshtml")
+                                        </div>
+
+                                        <div id="detailLoadingWilayah" class="text-center my-4">
                                             <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden">Loading...</span>
                                             </div>
@@ -1236,5 +1330,172 @@
             }
             //selain Hotel
         }
+    </script>
+    <script>
+        function fnShowWilayah()
+         {
+             $.ajax({
+               url: '@(Url.Action("RekapPerWilayah"))',
+               type: 'GET',
+               beforeSend: function () {
+                  $('#loading2-ShowWilayah').show();
+                  $('#ShowWilayah').hide();
+               },
+               success: function (response) {
+                     if (response.Status === undefined) {
+                         $('#loading2-ShowWilayah').hide();
+                         $('#ShowWilayah').show();
+                         $('#ShowWilayah').html(response);
+                     }
+                     else {
+                         swal.fire({
+                             icon: 'warning',
+                             title: '<b style="color:orange">Peringatan</b>',
+                             text: response.Message
+                         })
+                     }
+               },
+               error: function (xhr, status, error) {
+                  $('#loading2-ShowWilayah').hide();
+                  $('#ShowWilayah').hide();
+                  $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+               }
+            });
+         }
+
+        function onUptbChanged(e) {
+            let kecSelect = $("#kecSelect").dxSelectBox("instance");
+            kecSelect.option("dataSource", DevExpress.data.AspNet.createStore({
+                key: "Value",
+                loadUrl: "/ProfileOP/GetKec",
+                loadParams: { uptb: e.value }
+            }));
+            kecSelect.reset();
+
+            let kelSelect = $("#kelSelect").dxSelectBox("instance");
+            kelSelect.reset();
+        }
+
+        function onKecChanged(e) {
+            let kelSelect = $("#kelSelect").dxSelectBox("instance");
+            kelSelect.option("dataSource", DevExpress.data.AspNet.createStore({
+                key: "Value",
+                loadUrl: "/ProfileOP/GetKel",
+                loadParams: { kecamatan: e.value }
+            }));
+            kelSelect.reset();
+        }
+
+        function onTerapkanClick(e) {
+            let uptb = $("#uptbSelect").dxSelectBox("instance").option("value");
+            let kec = $("#kecSelect").dxSelectBox("instance").option("value");
+            let kel = $("#kelSelect").dxSelectBox("instance").option("value");
+
+            if (!uptb || !kec || !kel) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi Data',
+                    text: '⚠ Harap pilih semua data sebelum menerapkan.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            $.ajax({
+                 url: '/ProfileOP/RekapPerWilayah',
+                 method: 'GET',
+                 data: {
+                     uptb: uptb, kec: kec, kel: kel
+                 },
+                 beforeSend: function () {
+                  $('#loading2-ShowWilayah').show();
+                  $('#ShowWilayah').hide();
+                   },
+                   success: function (response) {
+                         if (response.Status === undefined) {
+                             $('#loading2-ShowWilayah').hide();
+                             $('#ShowWilayah').show();
+                             $('#ShowWilayah').html(response);
+                         }
+                         else {
+                             swal.fire({
+                                 icon: 'warning',
+                                 title: '<b style="color:orange">Peringatan</b>',
+                                 text: response.Message
+                             })
+                         }
+                   },
+                   error: function (xhr, status, error) {
+                      $('#loading2-ShowWilayah').hide();
+                      $('#ShowWilayah').hide();
+                      $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                   }
+             });
+        }
+
+        function detailWilayahCellTemplate(cellElement, cellInfo) {
+            const jenisPajak  = cellInfo.data.EnumPajak;
+            const kategoriId  = cellInfo.data.KategoriId;
+            const uptb        = cellInfo.data.Uptb;
+            const kec         = cellInfo.data.KdKecamatan;
+            const kel         = cellInfo.data.KdKelurahan;
+
+            const $link = $('<a>')
+                    .addClass('value-link text-decoration-none')
+                    .attr('href', 'javascript:void(0);')
+                    .attr('title', 'Lihat Detail Wilayah')
+                    .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                    .on('click', () => onWilayahDetailClick(jenisPajak, kategoriId, uptb, kec, kel));
+
+                $(cellElement).append($link);
+        }
+
+
+         function onWilayahDetailClick(jenisPajak, kategori, uptb, kec, kel) {
+             const $modal = $('#detailModalWilayah');
+             const $loading = $("#detailLoadingWilayah");
+             const $container = $("#detailContainerWilayah");
+             const $wrapper = $("#detailWrapper");
+
+             $modal.modal('show');
+             $container.hide();
+             $loading.show();
+
+             $.ajax({
+                 url: '/ProfileOP/DetailWilayahOP',
+                 method: 'GET',
+                 data: {
+                     jenisPajak,
+                     kategori,
+                     uptb,
+                     kec,
+                     kel
+                 },
+                 success: function (data) {
+                     const grid = $("#detailWilayahOPGrid").dxDataGrid("instance");
+                     if (grid) {
+                         grid.option("dataSource", data);
+                     }
+
+                     setTimeout(() => {
+                         $loading.fadeOut(300, () => {
+                             $container.fadeIn(300);
+                         });
+                     }, 500);
+
+                     // Sembunyikan panel Rekap
+                     $wrapper.hide();
+                 },
+                 error: function () {
+                     Swal.fire({
+                         icon: 'error',
+                         title: '<b style="color:orange">Peringatan</b>',
+                         html: "❌ Gagal memuat data Series."
+                     });
+                     hideDetailSeries?.();
+                 }
+             });
+         }
+
     </script>
 }
