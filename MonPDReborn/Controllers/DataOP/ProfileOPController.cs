@@ -260,16 +260,16 @@ namespace MonPDReborn.Controllers.DataOP
         }
 
         [HttpGet]
-        public object GetDetailPerWilayah(DataSourceLoadOptions load_options, int JenisPajak)
+        public object GetDetailPerWilayah(DataSourceLoadOptions load_options, int JenisPajak, string uptb, string kec, string kel)
         {
-            var data = Models.DataOP.ProfileOPVM.Method.GetDetailJmlOPData((EnumFactory.EPajak)JenisPajak);
+            var data = Models.DataOP.ProfileOPVM.Method.GetDataRekapPerWilayahDetailList((EnumFactory.EPajak)JenisPajak, uptb, kec, kel);
             return DataSourceLoader.Load(data, load_options);
         }
 
         [HttpGet]
-        public object GetDetailPerWilayahHotel(DataSourceLoadOptions load_options, int JenisPajak)
+        public object GetDetailPerWilayahHotel(DataSourceLoadOptions load_options, int JenisPajak, string uptb, string kec, string kel)
         {
-            var data = Models.DataOP.ProfileOPVM.Method.GetDetailJmlOPData((EnumFactory.EPajak)JenisPajak);
+            var data = Models.DataOP.ProfileOPVM.Method.GetDataRekapPerWilayahDetailList((EnumFactory.EPajak)JenisPajak, uptb, kec, kel, true);
             return DataSourceLoader.Load(data, load_options);
         }
 
@@ -307,6 +307,7 @@ namespace MonPDReborn.Controllers.DataOP
                     Value = g.Key,
                     Text = "UPTB " + g.Key
                 })
+                .OrderBy(x => x.Text)
                 .ToList();
 
             return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
@@ -356,6 +357,22 @@ namespace MonPDReborn.Controllers.DataOP
             }
 
             return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
+
+        public IActionResult DetailWilayahOP(int JenisPajak, int kategori, string uptb, string kec, string kel)
+        {
+            try
+            {
+                var jenisPajak = (EnumFactory.EPajak)JenisPajak;
+                var filtered = Models.DataOP.ProfileOPVM.Method.GetDataRekapPerWilayahDetailOPList(jenisPajak, kategori, uptb, kec, kel);
+
+                return Json(filtered);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ ERROR: " + ex.Message);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
     }

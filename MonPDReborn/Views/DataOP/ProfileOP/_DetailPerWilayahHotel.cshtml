@@ -1,9 +1,7 @@
-﻿
-
-@(
+﻿@(
 Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetailOP>()
     .DataSource(m => m.Mvc()
-        .LoadAction("GetDetailPerWilayah")
+        .LoadAction("GetDetailPerWilayahHotel")
         .LoadParams(new
         {
             JenisPajak = ViewData["JenisPajak"],

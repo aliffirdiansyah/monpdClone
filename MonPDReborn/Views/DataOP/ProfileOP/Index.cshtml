@@ -135,7 +135,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         @(Html.DevExtreme().SelectBox()
                                                 .ID("uptbSelect")
                                                 .DataSource(d => d.Mvc().Controller("ProfileOP").LoadAction("GetUptb"))
@@ -146,7 +146,7 @@
                                                 )
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         @(Html.DevExtreme().SelectBox()
                                                 .ID("kecSelect")
                                                 .DataSource(d => d.Mvc().Controller("ProfileOP").LoadAction("GetKec").LoadParams(new { uptb = "" }))
@@ -157,7 +157,7 @@
                                                 )
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         @(Html.DevExtreme().SelectBox()
                                                 .ID("kelSelect")
                                                 .DataSource(d => d.Mvc().Controller("ProfileOP").LoadAction("GetKel").LoadParams(new { kecamatan = "" }))
@@ -166,19 +166,18 @@
                                                 .Placeholder("Pilih Kelurahan")
                                                 )
                                     </div>
-                                </div>
 
-                                <div class="row mt-3">
-                                    <div class="col-md-12 text-right">
+                                    <div class="col-md-3">
                                         @(Html.DevExtreme().Button()
-                                            .ID("btnTerapkan")
-                                            .Text("Terapkan")
-                                            .Type(ButtonType.Success)
-                                            .Icon("check")
-                                            .OnClick("onTerapkanClick")
-                                            )
+                                                .ID("btnTerapkan")
+                                                .Text("Terapkan")
+                                                .Type(ButtonType.Success)
+                                                .Icon("check")
+                                                .OnClick("onTerapkanClick")
+                                                )
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         <div class="text-center">
@@ -190,23 +189,23 @@
                         <div id="ShowWilayah"></div>
 
 
-                        @* <div class="modal fade" id="detailModalSeries" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalSeriesLabel" aria-hidden="true">
+                        <div class="modal fade" id="detailModalWilayah" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalWilayahLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="detailModalSeriesLabel">
-                                            Detail Series
+                                        <h5 class="modal-title" id="detailModalWilayahLabel">
+                                            Detail Wilayah
                                         </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                                     </div>
 
                                     <div class="modal-body">
 
-                                        <div id="detailContainerSeries" class="mt-4" style="display: none;">
-                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailOP.cshtml")
+                                        <div id="detailContainerWilayah" class="mt-4" style="display: none;">
+                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailWilayahOP.cshtml")
                                         </div>
 
-                                        <div id="detailLoadingSeries" class="text-center my-4">
+                                        <div id="detailLoadingWilayah" class="text-center my-4">
                                             <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden">Loading...</span>
                                             </div>
@@ -217,7 +216,7 @@
 
                                 </div>
                             </div>
-                        </div> *@
+                        </div>
 
                     </div>
 
@@ -1393,23 +1392,87 @@
             let kel = $("#kelSelect").dxSelectBox("instance").option("value");
 
             if (!uptb || !kec || !kel) {
-                DevExpress.ui.notify("⚠ Harap pilih semua data sebelum menerapkan.", "warning", 2000);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi Data',
+                    text: '⚠ Harap pilih semua data sebelum menerapkan.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
-
-            // Contoh: tampilkan di console atau kirim AJAX
-            console.log("UPTB:", uptb, "Kecamatan:", kec, "Kelurahan:", kel);
-
-            DevExpress.ui.notify("✅ Filter diterapkan: " + uptb + " - " + kec + " - " + kel, "success", 2000);
 
             $.ajax({
                  url: '/ProfileOP/RekapPerWilayah',
                  method: 'GET',
                  data: {
-                     uptb: uptb, kecamatan: kec, kelurahan: kel
+                     uptb: uptb, kec: kec, kel: kel
+                 },
+                 beforeSend: function () {
+                  $('#loading2-ShowWilayah').show();
+                  $('#ShowWilayah').hide();
+                   },
+                   success: function (response) {
+                         if (response.Status === undefined) {
+                             $('#loading2-ShowWilayah').hide();
+                             $('#ShowWilayah').show();
+                             $('#ShowWilayah').html(response);
+                         }
+                         else {
+                             swal.fire({
+                                 icon: 'warning',
+                                 title: '<b style="color:orange">Peringatan</b>',
+                                 text: response.Message
+                             })
+                         }
+                   },
+                   error: function (xhr, status, error) {
+                      $('#loading2-ShowWilayah').hide();
+                      $('#ShowWilayah').hide();
+                      $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                   }
+             });
+        }
+
+        function detailWilayahCellTemplate(cellElement, cellInfo) {
+            const jenisPajak  = cellInfo.data.EnumPajak;
+            const kategoriId  = cellInfo.data.KategoriId;
+            const uptb        = cellInfo.data.Uptb;
+            const kec         = cellInfo.data.KdKecamatan;
+            const kel         = cellInfo.data.KdKelurahan;
+
+            const $link = $('<a>')
+                    .addClass('value-link text-decoration-none')
+                    .attr('href', 'javascript:void(0);')
+                    .attr('title', 'Lihat Detail Wilayah')
+                    .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                    .on('click', () => onWilayahDetailClick(jenisPajak, kategoriId, uptb, kec, kel));
+
+                $(cellElement).append($link);
+        }
+
+
+         function onWilayahDetailClick(jenisPajak, kategori, uptb, kec, kel) {
+             const $modal = $('#detailModalWilayah');
+             const $loading = $("#detailLoadingWilayah");
+             const $container = $("#detailContainerWilayah");
+             const $wrapper = $("#detailWrapper");
+
+             $modal.modal('show');
+             $container.hide();
+             $loading.show();
+
+             $.ajax({
+                 url: '/ProfileOP/DetailWilayahOP',
+                 method: 'GET',
+                 data: {
+                     jenisPajak,
+                     kategori,
+                     uptb,
+                     kec,
+                     kel
                  },
                  success: function (data) {
-                     const grid = $("#detailOPGrid").dxDataGrid("instance");
+                     const grid = $("#detailWilayahOPGrid").dxDataGrid("instance");
                      if (grid) {
                          grid.option("dataSource", data);
                      }
@@ -1432,7 +1495,7 @@
                      hideDetailSeries?.();
                  }
              });
-        }
+         }
 
     </script>
 }
