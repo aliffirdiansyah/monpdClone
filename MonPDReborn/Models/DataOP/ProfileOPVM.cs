@@ -183,9 +183,9 @@ namespace MonPDReborn.Models.DataOP
         public class RekapPerWilayah
         {
             public List<RekapOP> RekapOpWilayahList { get; set; } = new();
-            public RekapPerWilayah(string uptb, int kec, int kel)
+            public RekapPerWilayah(string uptb, string kec, string kel)
             {
-
+                RekapOpWilayahList = Method.GetDataRekapPerWilayahList(uptb, kec, kel);
             }
         }
 
@@ -5069,6 +5069,21 @@ namespace MonPDReborn.Models.DataOP
         {
             public decimal rataBintang { get; set; }
             public decimal rataNonBintang { get; set; }
+        }
+        public class uptbView
+        {
+            public string Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+        public class kecamatanView
+        {
+            public string Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+        public class kelurahanView
+        {
+            public string Value { get; set; }
+            public string Text { get; set; } = null!;
         }
     }
 }

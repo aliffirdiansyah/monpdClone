@@ -1,10 +1,11 @@
 ﻿using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models.AktivitasOP;
-using MonPDReborn.Models.DataOP;
+using static MonPDReborn.Models.DataOP.ProfileOPVM;
 using MonPDReborn.Models.MonitoringGlobal;
 using static MonPDReborn.Lib.General.ResponseBase;
 
@@ -123,7 +124,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var model = new ProfileOPVM.RekapDetailHotel(enumPajak, kategori, tahun);
+                var model = new Models.DataOP.ProfileOPVM.RekapDetailHotel(enumPajak, kategori, tahun);
                 return PartialView($"{URLView}_{actionName}",model);
             }
             catch (Exception ex)
@@ -258,6 +259,104 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
 
+        [HttpGet]
+        public object GetDetailPerWilayah(DataSourceLoadOptions load_options, int JenisPajak)
+        {
+            var data = Models.DataOP.ProfileOPVM.Method.GetDetailJmlOPData((EnumFactory.EPajak)JenisPajak);
+            return DataSourceLoader.Load(data, load_options);
+        }
+
+        [HttpGet]
+        public object GetDetailPerWilayahHotel(DataSourceLoadOptions load_options, int JenisPajak)
+        {
+            var data = Models.DataOP.ProfileOPVM.Method.GetDetailJmlOPData((EnumFactory.EPajak)JenisPajak);
+            return DataSourceLoader.Load(data, load_options);
+        }
+
+        public IActionResult RekapPerWilayah(string uptb, string kec, string kel)
+        {
+            try
+            {
+                var model = new Models.DataOP.ProfileOPVM.RekapPerWilayah(uptb, kec, kel);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        [HttpGet]
+        public async Task<object> GetUptb(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+
+            var dataList = context.MWilayahs
+                .Where(x => !string.IsNullOrEmpty(x.Uptd))
+                .GroupBy(x => x.Uptd)
+                .Select(g => new uptbView
+                {
+                    Value = g.Key,
+                    Text = g.Key
+                })
+                .ToList();
+
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
+
+        [HttpGet]
+        public async Task<object> GetKec(DataSourceLoadOptions loadOptions, string uptb)
+        {
+            var context = DBClass.GetContext();
+
+            var dataList = new List<kecamatanView>();
+
+            if (!string.IsNullOrEmpty(uptb))
+            {
+                dataList = context.MWilayahs
+                    .Where(x => x.Uptd == uptb && !string.IsNullOrEmpty(x.KdKecamatan))
+                    .GroupBy(x => x.KdKecamatan)
+                    .Select(g => new kecamatanView
+                    {
+                        Value = g.Key,
+                        Text = g.Key
+                    })
+                    .ToList();
+            }
+
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
+
+        [HttpGet]
+        public async Task<object> GetKel(DataSourceLoadOptions loadOptions, string kecamatan)
+        {
+            var context = DBClass.GetContext();
+
+            var dataList = new List<kelurahanView>();
+
+            if (!string.IsNullOrEmpty(kecamatan))
+            {
+                dataList = context.MWilayahs
+                    .Where(x => x.KdKecamatan == kecamatan && !string.IsNullOrEmpty(x.KdKelurahan))
+                    .GroupBy(x => x.KdKelurahan)
+                    .Select(g => new kelurahanView
+                    {
+                        Value = g.Key,
+                        Text = g.Key
+                    })
+                    .ToList();
+            }
+
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
 
     }
 }
