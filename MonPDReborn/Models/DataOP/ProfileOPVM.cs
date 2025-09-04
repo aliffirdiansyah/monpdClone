@@ -4470,6 +4470,31 @@ namespace MonPDReborn.Models.DataOP
 
                     case EnumFactory.EPajak.PBB:
                         var opPbb = context.DbOpPbbs.FirstOrDefault(x => x.Nop == nop);
+                        if (opPbb != null)
+                        {
+                            ret.IdentitasPajak.WilayahPajak =
+                                (opPbb.Uptb != null ? "UPTB " + opPbb.Uptb.ToString() : ""); 
+                            ret.IdentitasPajak.NpwpdNo = opPbb.WpNpwp ?? "-";
+                            ret.IdentitasPajak.NamaNpwpd = opPbb.WpNama ?? "-";
+                            ret.IdentitasPajak.NOP = opPbb.Nop;
+                            ret.IdentitasPajak.NamaObjekPajak = "-";
+                            ret.IdentitasPajak.AlamatLengkap = opPbb.AlamatOp;
+                            ret.IdentitasPajak.Telepon = "-";
+                            ret.IdentitasPajak.EnumPajak = pajak;
+                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                            ret.IdentitasPajak.KategoriPajak = opPbb.KategoriNama;
+
+                            /*ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
+                            {
+                                //isi data pendapatan jika ada
+                            };
+
+                            ret.AbtRow.SaranaAbtPendukungRow = new DetailAbt.SaranaPendukung
+                            {
+                                KelompokNama = opPbb.NamaKelompok,
+                            };*/
+
+                        }
                         break;
 
                     case EnumFactory.EPajak.BPHTB:
@@ -4768,6 +4793,7 @@ namespace MonPDReborn.Models.DataOP
             public DetailHotel HotelRow { get; set; } = new();
             public DetailResto RestoRow { get; set; } = new();
             public DetailAbt AbtRow { get; set; } = new();
+            public DetailPbb PbbRow { get; set; } = new();
 
         }
 
@@ -5047,6 +5073,15 @@ namespace MonPDReborn.Models.DataOP
             {
 
             }
+            public class SaranaPendukung
+            {
+                public string KelompokNama { get; set; }
+            }
+        }
+
+        public class DetailPbb
+        {
+            public SaranaPendukung SaranaPbbPendukungRow { get; set; } = new();
             public class SaranaPendukung
             {
                 public string KelompokNama { get; set; }
