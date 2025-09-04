@@ -749,7 +749,7 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.WpNama,
-                                Alamat = x.AlamatWp,
+                                Alamat = x.AlamatOp,
                                 Wilayah = "SURABAYA " + x.Uptb ?? "-",
                                 Kecamatan = x.AlamatKdCamat,
                                 Kelurahan = x.AlamatKdLurah
