@@ -866,6 +866,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
         {
             public DateTime Tanggal { get; set; }
             public string JenisPajak { get; set; } = null!;
+            public string namaHari => Tanggal.ToString("dddd", new CultureInfo("id-ID"));
             public decimal TargetHarian { get; set; }
             public decimal Realisasi { get; set; }
             public double Pencapaian => TargetHarian > 0 ? Math.Round((double)(Realisasi / TargetHarian) * 100, 2) : 0.0;
