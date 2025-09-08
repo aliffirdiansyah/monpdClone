@@ -4380,8 +4380,11 @@ namespace MonPDReborn.Models.DataOP
                                                                    TahunMines1 = sub?.TahunMines1 ?? 0,
                                                                    TahunNow = (b.Bulan <= bulanSekarang) ? (sub?.TahunNow ?? 0) : 0
                                                                })
+                                                              .GroupBy(x => x.Bulan)
+                                                              .Select(g => g.First())
                                                               .OrderBy(x => x.Bulan)
                                                               .ToList();
+
 
 
                             //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets

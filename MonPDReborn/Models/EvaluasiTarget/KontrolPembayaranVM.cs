@@ -4,6 +4,8 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
 using System.Linq.Dynamic.Core;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.AktivitasOP.PemasanganAlatVM;
@@ -18,9 +20,18 @@ namespace MonPDReborn.Models.EvaluasiTarget
         public class Index
         {
             public string Keyword { get; set; } = null!;
+            public List<SelectListItem> JenisUptbList { get; set; } = new();
+            public int SelectedUPTB { get; set; }
+
             public Index()
             {
-
+                JenisUptbList = Enum.GetValues(typeof(EnumFactory.EUPTB))
+                    .Cast<EnumFactory.EUPTB>()
+                    .Select(x => new SelectListItem
+                    {
+                        Value = ((int)x).ToString(),
+                        Text = x.GetDescription()
+                    }).ToList();
             }
         }
 
@@ -3572,7 +3583,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.MakananMinuman:
                         var queryResto = context.DbCtrlByrRestos
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryResto = queryResto.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -3603,7 +3619,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.TenagaListrik:
                         var queryTenagaListrik = context.DbCtrlByrPpjs
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryTenagaListrik = queryTenagaListrik.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -3634,7 +3655,14 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var queryHotel = context.DbCtrlByrHotels
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0)
+                            .AsQueryable();
+
+                        // Filter berdasarkan UPTB (skip jika SEMUA)
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryHotel = queryHotel.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         // Filter berdasarkan status
                         if (status != 3) // Jika bukan "all"
@@ -3642,18 +3670,18 @@ namespace MonPDReborn.Models.EvaluasiTarget
                             queryHotel = queryHotel.Where(x => x.StatusBayar == status);
                         }
 
+                        // Filter berdasarkan total / kategori
                         if (isTotal)
                         {
-                            // Jika isTotal true, maka ada dua kemungkinan
                             if (isHotelNonBintang)
                             {
                                 // Jika isHotelNonBintang true, filter KategoriId = 17
-                                queryHotel = queryHotel.Where(x => x.KategoriId == 17 && x.KategoriId > 0);
+                                queryHotel = queryHotel.Where(x => x.KategoriId == 17);
                             }
                             else
                             {
                                 // Jika isHotelNonBintang false, filter KategoriId yang bukan 17
-                                queryHotel = queryHotel.Where(x => x.KategoriId != 17 && x.KategoriId > 0);
+                                queryHotel = queryHotel.Where(x => x.KategoriId != 17);
                             }
                         }
                         else
@@ -3662,6 +3690,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                             queryHotel = queryHotel.Where(x => x.KategoriId == kategoriId);
                         }
 
+                        // Select hasil
                         ret = queryHotel.Select(x => new DetailPajak
                         {
                             Kategori = x.NamaKategori,
@@ -3675,12 +3704,18 @@ namespace MonPDReborn.Models.EvaluasiTarget
                             Wilayah = "SURABAYA " + (x.WilayahPajak ?? "-"),
                             Keterangan = x.Keterangan ?? "-",
                         })
-                            .ToList();
+                        .ToList();
+
                         break;
 
                     case EnumFactory.EPajak.JasaParkir:
                         var queryJasaParkir = context.DbCtrlByrParkirs
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryJasaParkir = queryJasaParkir.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -3711,7 +3746,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.JasaKesenianHiburan:
                         var queryHiburan = context.DbCtrlByrHiburans
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryHiburan = queryHiburan.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         if (status != 3)
                         {
@@ -3741,7 +3781,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.AirTanah:
                         var queryAirTanah = context.DbCtrlByrAbts
-                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                            .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryAirTanah = queryAirTanah.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         if (status != 3) // Jika bukan "all"
                         {
@@ -3806,7 +3851,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                         // Status 0 = belum bayar All, 1 = sudah bayar Bulan, 2 = NTs All
                         // Jika status 3, maka tampilkan semua
-                        var queryPbb = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun && x.KategoriId > 0 && x.WilayahPajak == ((decimal)uptb)).AsQueryable();
+                        var queryPbb = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryPbb = queryPbb.Where(x => x.WilayahPajak == (decimal)uptb);
+                        }
 
                         // PBB logic khusus: status 1 perlu filter bulan, status lain tidak
                         if (status == 1)
@@ -8310,7 +8360,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
 
                     case EnumFactory.EPajak.MakananMinuman:
                         var queryResto = context.DbCtrlByrRestos
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryResto = queryResto.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         // Jika bukan total, filter berdasarkan kategoriId
                         if (!isTotal)
@@ -8334,8 +8389,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.TenagaListrik:
-                        var queryPajakListrik = context.DbCtrlByrPpjs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                        var queryPajakListrik = context.DbCtrlByrPpjs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0).AsQueryable();
 
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryPajakListrik = queryPajakListrik.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
                         // Jika bukan total, filter berdasarkan kategoriId
                         if (!isTotal)
                         {
@@ -8358,8 +8417,12 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        var queryHotel = context.DbCtrlByrHotels.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                        var queryHotel = context.DbCtrlByrHotels.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0).AsQueryable();
 
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryHotel = queryHotel.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
 
                         if (isTotal)
                         {
@@ -8398,7 +8461,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.JasaParkir:
-                        var queryParkir = context.DbCtrlByrParkirs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                        var queryParkir = context.DbCtrlByrParkirs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryParkir = queryParkir.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
+
                         if (!isTotal)
                         {
                             queryParkir = queryParkir.Where(x => x.KategoriId == kategoriId);
@@ -8421,7 +8490,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var queryKesenian = context.DbCtrlByrHiburans.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                        var queryKesenian = context.DbCtrlByrHiburans.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryKesenian = queryKesenian.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
+
                         if (!isTotal)
                         {
                             queryKesenian = queryKesenian.Where(x => x.KategoriId == kategoriId);
@@ -8444,7 +8519,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.AirTanah:
-                        var queryAirTanah = context.DbCtrlByrAbts.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 && x.WilayahPajak == ((int)uptb).ToString()).AsQueryable();
+                        var queryAirTanah = context.DbCtrlByrAbts.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryAirTanah = queryAirTanah.Where(x => x.WilayahPajak == ((int)uptb).ToString());
+                        }
+
                         if (!isTotal)
                         {
                             queryAirTanah = queryAirTanah.Where(x => x.KategoriId == kategoriId);
@@ -8489,7 +8570,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.PBB:
-                        var queryPBB = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 && x.WilayahPajak == ((decimal)uptb)).AsQueryable();
+                        var queryPBB = context.DbCtrlByrPbbs.Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0).AsQueryable();
+
+                        if (uptb != EnumFactory.EUPTB.SEMUA)
+                        {
+                            queryPBB = queryPBB.Where(x => x.WilayahPajak == ((decimal)uptb));
+                        }
+
                         if (!isTotal)
                         {
                             queryPBB = queryPBB.Where(x => x.KategoriId == kategoriId);
