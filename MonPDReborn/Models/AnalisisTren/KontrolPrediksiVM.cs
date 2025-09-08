@@ -140,7 +140,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== PBB ====
             var pbbData = context.DbMonPbbs
-                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2)
+                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2 && x.TahunBuku == currentYear)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayar.Value,
