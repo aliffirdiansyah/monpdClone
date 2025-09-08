@@ -88,11 +88,11 @@ namespace ReklameWs
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
             tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
-            // do fill db op abt
-            if (IsGetDBOp())
-            {
-                OpProcess();
-            }
+            //// do fill db op abt
+            //if (IsGetDBOp())
+            //{
+            //    OpProcess();
+            //}
 
             // do fill realisasi
             RealisasiProcess();
@@ -1090,6 +1090,7 @@ SELECT
 	'-' OBJEK_KETETAPAN,
 	'-' RINCIAN_KETETAPAN,
 	'-' SUB_RINCIAN_KETETAPAN,
+    K.TGL_JTEMPO_SKPD TGL_JATUH_TEMPO_BAYAR,
     R.TGL_REALISASI AS TGL_BAYAR_POKOK,
     R.PAJAK_LB AS NOMINAL_POKOK_BAYAR,
     R.TGL_REALISASI TGL_BAYAR_SANKSI,
