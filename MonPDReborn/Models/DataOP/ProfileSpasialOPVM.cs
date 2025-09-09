@@ -187,7 +187,7 @@ namespace MonPDReborn.Models.DataOP
                     res.UPTB = op?.WilayahPajak ?? "-";
                     res.LATITUDE = item?.Latitude ?? string.Empty;
                     res.LONGITUDE = item?.Longitude ?? string.Empty;
-                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.JasaKesenianHiburan).ToString();
+                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.TenagaListrik).ToString();
                     res.COLOR_MARKER = "purple";
 
                     result.Add(res);
@@ -206,7 +206,7 @@ namespace MonPDReborn.Models.DataOP
                     res.UPTB = op?.WilayahPajak ?? "-";
                     res.LATITUDE = item?.Latitude ?? string.Empty;
                     res.LONGITUDE = item?.Longitude ?? string.Empty;
-                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.JasaKesenianHiburan).ToString();
+                    res.FK_PAJAK_DAERAH = ((int)EnumFactory.EPajak.JasaParkir).ToString();
                     res.COLOR_MARKER = "brown";
 
                     result.Add(res);
