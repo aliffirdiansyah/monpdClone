@@ -119,7 +119,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataRealisasiSdBulaiIniParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiSdBulaiIniListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiSdBulaiIniReklame = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiSdBulaiIniPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value <= TanggalCutOff).Sum(x => x.JumlahBayarPokok) ?? 0;
+                var dataRealisasiSdBulaiIniPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value <= TanggalCutOff && x.TahunBuku == TanggalCutOff.Year && x.JumlahBayarPokok > 0).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiSdBulaiIniBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value <= TanggalCutOff).Sum(x => x.Pokok) ?? 0;
                 var dataRealisasiSdBulaiIniAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiSdBulaiIniOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd <= TanggalCutOff).Sum(x => x.JmlPokok);
@@ -147,7 +147,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataRealisasiParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiReklame = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value.Month == TanggalCutOff.Month).Sum(x => x.JumlahBayarPokok) ?? 0;
+                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value.Month == TanggalCutOff.Month && x.TahunBuku == TanggalCutOff.Year && x.JumlahBayarPokok > 0).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value.Month >= TanggalCutOff.Month).Sum(x => x.Pokok) ?? 0;
                 var dataRealisasiAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd.Month == TanggalCutOff.Month).Sum(x => x.JmlPokok);
@@ -247,7 +247,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataRealisasiSdBulaiIniParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiSdBulaiIniListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiSdBulaiIniReklame = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiSdBulaiIniPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value <= TanggalCutOff).Sum(x => x.JumlahBayarPokok) ?? 0;
+                var dataRealisasiSdBulaiIniPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value <= TanggalCutOff && x.TahunBuku == TanggalCutOff.Year && x.JumlahBayarPokok > 0).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiSdBulaiIniBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value <= TanggalCutOff).Sum(x => x.Pokok) ?? 0;
                 var dataRealisasiSdBulaiIniAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiSdBulaiIniOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd <= TanggalCutOff).Sum(x => x.JmlPokok);
@@ -275,7 +275,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var dataRealisasiParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiReklame = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value.Month == TanggalCutOff.Month).Sum(x => x.JumlahBayarPokok) ?? 0;
+                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value.Month == TanggalCutOff.Month && x.TahunBuku == TanggalCutOff.Year && x.JumlahBayarPokok > 0).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value.Month == TanggalCutOff.Month).Sum(x => x.Pokok) ?? 0;
                 var dataRealisasiAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value.Month == TanggalCutOff.Month).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd.Month == TanggalCutOff.Month).Sum(x => x.JmlPokok);
@@ -571,7 +571,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 dataRealisasiGabungan.AddRange(
                     context.DbMonPbbs
-                        .Where(x => x.TahunBuku == currentYear && x.TglBayar.HasValue && x.TglBayar.Value.Month <= currentMonth)
+                        .Where(x => x.TahunBuku == currentYear && x.TglBayar.HasValue && x.TglBayar.Value.Month <= currentMonth && x.JumlahBayarPokok > 0)
                         .Select(x => new
                         {
                             x.Nop,
@@ -817,7 +817,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 dataRealisasi.AddRange(dataRealisasiSdBulaiIniListrik.Select(x => (x.PajakId, x.Nop, x.NominalPokokBayar)));
                 dataRealisasi.AddRange(dataRealisasiSdBulaiIniAbt.Select(x => (x.PajakId, x.Nop, x.NominalPokokBayar)));
 
-                var dataRealisasiSdBulaiIniPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear && x.TglBayar.Value <= currentDate)
+                var dataRealisasiSdBulaiIniPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear && x.TglBayar.Value <= currentDate && x.TahunBuku == currentYear && x.JumlahBayarPokok > 0)
                     .GroupBy(x => new
                     {
                         x.Uptb

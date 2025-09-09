@@ -469,6 +469,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TahunBuku == tahun &&
                                 x.TglBayar.Value.Year == tahun &&
                                 x.TglBayar.Value.Month == bulan
+                                && x.JumlahBayarPokok > 0
                             )
                             .GroupBy(x => new { x.Nop, TglBayar = x.TglBayar, PajakId = 9 })
                             .Select(x => new
@@ -770,6 +771,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TahunBuku == tahun &&
                                 x.TglBayar.Value.Year == tahun &&
                                 x.TglBayar.Value.Month == bulan
+                                && x.JumlahBayarPokok > 0
                             )
                             .GroupBy(x => new { x.Nop, TglBayar = x.TglBayar })
                             .Select(x => new ValueTuple<string, DateTime, decimal, int>(

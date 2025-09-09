@@ -395,7 +395,8 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         var realisasiPbbPerBulan = context.DbMonPbbs
                             .Where(x => x.TglBayar.HasValue
                                         && x.TglBayar.Value.Year == tahun
-                                        && x.TahunBuku == tahun)
+                                        && x.TahunBuku == tahun
+                                        && x.JumlahBayarPokok > 0)
                             .GroupBy(x => new { TglBayar = (int)x.TglBayar.Value.Month })
                             .Select(g => new
                             {
@@ -650,7 +651,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         );
                         realisasiPerBulan.AddRange(
                             context.DbMonPbbs
-                                .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun && x.TahunBuku == tahun)
+                                .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun && x.TahunBuku == tahun && x.JumlahBayarPokok > 0)
                                 .GroupBy(x => x.TglBayar.Value.Month)
                                 .Select(g => new ValueTuple<int, decimal>(
                                     g.Key,
@@ -1053,7 +1054,8 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         var realisasiPbbPerBulan = context.DbMonPbbs
                             .Where(x => x.TglBayar.HasValue
                                         && x.TglBayar.Value.Year == tahun
-                                        && x.TahunBuku == tahun)
+                                        && x.TahunBuku == tahun
+                                        && x.JumlahBayarPokok > 0)
                             .GroupBy(x => new { TglBayar = (int)x.TglBayar.Value.Month })
                             .Select(g => new
                             {
@@ -1319,7 +1321,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         );
                         realisasiPerBulan.AddRange(
                             context.DbMonPbbs
-                                .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun && x.TahunBuku == tahun)
+                                .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun && x.TahunBuku == tahun && x.JumlahBayarPokok > 0)
                                 .GroupBy(x => x.TglBayar.Value.Month)
                                 .Select(g => new ValueTuple<int, decimal>(
                                     g.Key,
