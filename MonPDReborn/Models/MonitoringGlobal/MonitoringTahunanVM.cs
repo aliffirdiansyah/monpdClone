@@ -67,7 +67,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                 var dataRealisasiParkirHari = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiListrikHari = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiReklameHari = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiPbbHari = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value == TanggalCutOff && x.TahunBuku == TanggalCutOff.Year).Sum(x => x.JumlahBayarPokok) ?? 0;
+                var dataRealisasiPbbHari = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value == TanggalCutOff && x.TahunBuku == TanggalCutOff.Year && x.JumlahBayarPokok > 0).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiBphtbHari = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value == TanggalCutOff).Sum(x => x.Pokok) ?? 0;
                 var dataRealisasiAbtHari = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiOpsenPkbHari = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd == TanggalCutOff).Sum(x => x.JmlPokok);

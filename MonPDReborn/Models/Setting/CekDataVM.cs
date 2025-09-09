@@ -77,7 +77,7 @@ namespace MonPDReborn.Models.Setting
                     .AsEnumerable();
 
                 var dataRealisasiPbb = context.DbMonPbbs
-                    .Where(x => x.TglBayar.Value.Year == year)
+                    .Where(x => x.TglBayar.Value.Year == year && x.TahunBuku == tahun && x.JumlahBayarPokok > 0)
                     .GroupBy(x => new { x.TglBayar.Value.Year, PajakId = (int)(EnumFactory.EPajak.PBB) })
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.JumlahBayarPokok ?? 0) })
                     .AsEnumerable();

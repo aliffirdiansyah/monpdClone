@@ -598,6 +598,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TahunBuku == tahun
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
+                                            && x.JumlahBayarPokok > 0
                                             && x.Uptb == Convert.ToInt32(uptb)
                                         ).Sum(q => q.JumlahBayarPokok);
 
@@ -645,7 +646,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     x.TglBayar.HasValue &&
                                     x.TahunBuku == tahun &&
                                     x.TglBayar.Value.Year == tahun &&
-                                    x.TglBayar.Value.Month <= bulan &&
+                                    x.TglBayar.Value.Month <= bulan
+                                    && x.JumlahBayarPokok > 0 &&
                                     uptb.Contains(x.Nop)
                                 )
                                 .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayar })
@@ -773,6 +775,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TahunBuku == tahun
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
+                                            && x.JumlahBayarPokok > 0
                                             && x.Uptb == Convert.ToInt32(uptb)
                                         ).Sum(q => q.JumlahBayarPokok);
 
@@ -979,6 +982,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                         && x.TahunBuku == tahun
                                         && x.TglBayar.Value.Year == tahun
                                         && x.TglBayar.Value.Month <= bulan
+                                        && x.JumlahBayarPokok > 0
                                         && x.Uptb == Convert.ToInt32(wilayah)
                                     ).Sum(q => q.JumlahBayarPokok);
 
@@ -1208,6 +1212,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 && x.TahunBuku == tahun
                                 && x.TglBayar.Value.Year == tahun
                                 && x.TglBayar.Value.Month <= bulan
+                                && x.JumlahBayarPokok > 0
                             ).Sum(q => q.JumlahBayarPokok) ?? 0;
 
                     foreach (var item in targetPajak)
@@ -1436,6 +1441,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 && x.TglBayar.Value.Year == tahun
                                 && x.TglBayar.Value.Month <= bulan
                                 && x.Uptb == uptb
+                                && x.JumlahBayarPokok > 0
                             ).Sum(q => q.JumlahBayarPokok) ?? 0;
 
                     foreach (var item in targetPajak)
@@ -2548,6 +2554,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                             && x.TahunBuku == tahun
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
+                                            && x.JumlahBayarPokok > 0
                                             && x.Uptb == Convert.ToInt32(uptb)
                                         ).GroupBy(x => new { TglBayarPokok = x.TglBayar.Value.Date, PajakId = 9 })
             .Select(x => new
@@ -2797,6 +2804,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                         && x.TahunBuku == tahun
                                         && x.TglBayar.Value.Year == tahun
                                         && x.TglBayar.Value.Month <= bulan
+                                        && x.JumlahBayarPokok > 0
                                         && x.Uptb == Convert.ToInt32(wilayah)
                                     ).GroupBy(x => new { TglBayarPokok = x.TglBayar.Value.Date, PajakId = 9 })
         .Select(x => new

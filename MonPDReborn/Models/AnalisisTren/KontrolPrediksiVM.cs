@@ -140,7 +140,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== PBB ====
             var pbbData = context.DbMonPbbs
-                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2 && x.TahunBuku == currentYear)
+                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2 && x.TahunBuku == currentYear && x.JumlahBayarPokok > 0)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayar.Value,
@@ -263,12 +263,50 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                         g.Key.Year,
                         g.Key.Month,
                         g.Key.Day,
-                        TotalNominal = g.Sum(x => x.Nominal)  // ← jumlahkan nominal tiap grup
+                        TotalNominal = g.Sum(x => x.Nominal)  // jumlahkan nominal tiap grup
                     })
                     .ToList();
 
-
+                // hitung realisasi hari ini (tahun berjalan)
                 var realisasiHariIni = check.Sum(d => d.TotalNominal);
+
+                // ambil historis 3 tahun terakhir (periode tanggal yang sama), per tahun
+                var tahunSekarang = DateTime.Now.Year;
+
+                var historis3Tahun = data
+                    .Where(d => d.Tanggal.Year >= tahunSekarang - 3 && d.Tanggal.Year < tahunSekarang)
+                    .Where(d =>
+                    {
+                        var t = new DateTime(2000, d.Tanggal.Month, d.Tanggal.Day);
+                        return t > start && t <= end;
+                    })
+                    .GroupBy(d => d.Tanggal.Year)
+                    .Select(g => g.Sum(x => x.Nominal))
+                    .ToList();
+
+                // hitung rata-rata historis
+                var rataRataHistoris = historis3Tahun.Any() ? historis3Tahun.Average() : 0;
+
+                // bandingkan: jika realisasiHariIni > rata-rata historis → pakai rata-rata historis
+                var finalRealisasiHari = (rataRataHistoris > 0)
+                    ? Math.Min(realisasiHariIni, rataRataHistoris)
+                    : realisasiHariIni;
+
+                return new KontrolPrediksi
+                {
+                    tgl = DateTime.Now,
+                    JenisPajak = jenisPajak.GetDescription(),
+                    Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
+                    RealisasiBulanLalu = realisasiBulanLalu,
+                    RealisasiBulanIni = realisasiBulanIni,
+                    RealisasiHari = finalRealisasiHari
+                };
+
+
+
+
+
+                /*var realisasiHariIni = check.Sum(d => d.TotalNominal);
                 return new KontrolPrediksi
                 {
                     tgl = DateTime.Now,
@@ -277,7 +315,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                     RealisasiBulanLalu = realisasiBulanLalu,
                     RealisasiBulanIni = realisasiBulanIni,
                     RealisasiHari = realisasiHariIni
-                };
+                };*/
             }
 
 
