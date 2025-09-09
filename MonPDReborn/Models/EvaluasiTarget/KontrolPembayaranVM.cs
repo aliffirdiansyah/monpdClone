@@ -3799,20 +3799,28 @@ namespace MonPDReborn.Models.EvaluasiTarget
                             queryAirTanah = queryAirTanah.Where(x => x.KategoriId == kategoriId);
                         }
 
-                        ret = queryAirTanah.Select(x => new DetailPajak
+                        ret = queryAirTanah
+                        .ToList()
+                        .Select(x =>
                         {
-                            Kategori = x.NamaKategori,
-                            JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
-                            NOP = x.Nop,
-                            Tahun = tahun,
-                            NamaOP = x.NamaOp,
-                            Alamat = x.AlamatOp,
-                            Ketetapan = x.Ketetapan ?? 0,
-                            Realisasi = x.Realisasi ?? 0,
-                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "-",
-                            Keterangan = x.Keterangan ?? "-",
+                            var ss = context.DbOpAbts
+                                            .FirstOrDefault(y => y.Nop == x.Nop);
+
+                            return new DetailPajak
+                            {
+                                Kategori = x.NamaKategori,
+                                JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                                NOP = x.Nop,
+                                Tahun = tahun,
+                                NamaOP = ss?.NamaOp ?? x.NamaOp,
+                                Alamat = ss?.AlamatOp ?? x.AlamatOp,
+                                Ketetapan = x.Ketetapan ?? 0,
+                                Realisasi = x.Realisasi ?? 0,
+                                Wilayah = "SURABAYA " + (ss.WilayahPajak ?? x.WilayahPajak) ?? "-",
+                                Keterangan = x.Keterangan ?? "-"
+                            };
                         })
-                            .ToList();
+                        .ToList();
                         break;
 
                     case EnumFactory.EPajak.Reklame:
