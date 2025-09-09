@@ -127,84 +127,82 @@ namespace AbtWs
             using (var _contSbyTax = DBClass.GetSurabayaTaxContext())
             {
                 var sql = @"
-                                        SELECT  A.NOP,
-                                C.NPWPD_NO NPWPD,
-                                C.NAMA NPWPD_NAMA,
-                                C.ALAMAT NPWPD_ALAMAT,
-                                6 PAJAK_ID,
-                                'PAJAK AIR TANAH' PAJAK_NAMA,
-                                A.NAMA NAMA_OP,
-                                A.ALAMAT ALAMAT_OP,
-                                A.ALAMAT_NO ALAMAT_OP_NO,
-                                A.RT ALAMAT_OP_RT,
-                                A.RW ALAMAT_OP_RW,
-                                A.TELP,
-                                A.KD_LURAH ALAMAT_OP_KD_LURAH,
-                                A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
-                                TGL_OP_TUTUP,
-                                TGL_MULAI_BUKA_OP,
-                                NVL(B.PERUNTUKAN, 1) PERUNTUKAN_ID,
-                                case
-                                when B.peruntukan=1 then 'NIAGA'
-                                when B.peruntukan=2 then 'NON NIAGA'
-                                when B.peruntukan=3 then 'BAHAN BAKU AIR' 
-                                else 'NIAGA'
-                                END PERUNTUKAN_NAMA,
-                                56 KATEGORI_ID,
-                                'AIR TANAH' KATEGORI_NAMA,
-                                1 IS_METERAN_AIR, 0 JUMLAH_KARYAWAN,
-                                DECODE(TGL_OP_TUTUP,NULL,0,1) IS_TUTUP,
-                                CASE
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 1' THEN '1'
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 2' THEN '2'
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 3' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 4' THEN '4'
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 5' THEN '5'
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 6' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 7' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = 'SURABAYA 8' THEN '2'
-                                    WHEN TO_CHAR(UPTB_ID) = '01' THEN '1'
-                                    WHEN TO_CHAR(UPTB_ID) = '02' THEN '2'
-                                    WHEN TO_CHAR(UPTB_ID) = '03' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = '04' THEN '4'
-                                    WHEN TO_CHAR(UPTB_ID) = '05' THEN '5'
-                                    WHEN TO_CHAR(UPTB_ID) = '07' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = '06' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = '08' THEN '2'
-                                    WHEN TO_CHAR(UPTB_ID) = '1' THEN '1'
-                                    WHEN TO_CHAR(UPTB_ID) = '2' THEN '2'
-                                    WHEN TO_CHAR(UPTB_ID) = '3' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = '4' THEN '4'
-                                    WHEN TO_CHAR(UPTB_ID) = '5' THEN '5'
-                                    WHEN TO_CHAR(UPTB_ID) = '7' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = '6' THEN '3'
-                                    WHEN TO_CHAR(UPTB_ID) = '8' THEN '2'
-                                    ELSE NULL
-                                END AS WILAYAH_PAJAK,
-                                sysdate INS_dATE, 'JOB' INS_BY,
-                                TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
-                                '-'  AKUN  ,
-                                '-'  NAMA_AKUN           ,
-                                '-'  JENIS             ,
-                                '-'  NAMA_JENIS        ,
-                                '-'  OBJEK            ,
-                                '-'  NAMA_OBJEK       ,
-                                '-'  RINCIAN         ,
-                                '-'  NAMA_RINCIAN     ,
-                                '-'  SUB_RINCIAN      ,
-                                '-'  NAMA_SUB_RINCIAN ,
-                                '-'  KELOMPOK      ,
-                                '-'  NAMA_KELOMPOK        
-                        FROM OBJEK_PAJAK A
-                        LEFT JOIN OBJEK_PAJAK_ABT B ON A.NOP=B.NOP
-                        JOIN NPWPD  C ON A.NPWPD=C.NPWPD_no
-                        JOIN M_KATEGORI_PAJAK D ON D.ID=A.KATEGORI
-                        LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
-WHERE A.NPWPD NOT IN (
-    select npwpd_no  
-    from npwpd 
-    WHERE REF_THN_PEL = 2023 OR NAMA LIKE '%FULAN%' OR NPWPD_NO = '3578200503840003'
-) and  TGL_OP_TUTUP IS  NULL OR ( to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND to_char(TGL_OP_TUTUP,'YYYY') >= :TAHUN)
+                    SELECT  A.NOP,
+                        C.NPWPD_NO NPWPD,
+                        C.NAMA NPWPD_NAMA,
+                        C.ALAMAT NPWPD_ALAMAT,
+                        6 PAJAK_ID,
+                        'PAJAK AIR TANAH' PAJAK_NAMA,
+                        A.NAMA NAMA_OP,
+                        A.ALAMAT ALAMAT_OP,
+                        A.ALAMAT_NO ALAMAT_OP_NO,
+                        A.RT ALAMAT_OP_RT,
+                        A.RW ALAMAT_OP_RW,
+                        A.TELP,
+                        A.KD_LURAH ALAMAT_OP_KD_LURAH,
+                        A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
+                        TGL_OP_TUTUP,
+                        TGL_MULAI_BUKA_OP,
+                        NVL(B1.PERUNTUKAN, 1) PERUNTUKAN_ID,
+                        CASE
+                            WHEN B1.peruntukan = 1 THEN 'NIAGA'
+                            WHEN B1.peruntukan = 2 THEN 'NON NIAGA'
+                            WHEN B1.peruntukan = 3 THEN 'BAHAN BAKU AIR' 
+                            ELSE 'NIAGA'
+                        END PERUNTUKAN_NAMA,
+                        56 KATEGORI_ID,
+                        'AIR TANAH' KATEGORI_NAMA,
+                        1 IS_METERAN_AIR,
+                        0 JUMLAH_KARYAWAN,
+                        DECODE(TGL_OP_TUTUP, NULL, 0, 1) IS_TUTUP,
+                        CASE
+                            WHEN TO_CHAR(UPTB_ID) IN ('SURABAYA 1','01','1') THEN '1'
+                            WHEN TO_CHAR(UPTB_ID) IN ('SURABAYA 2','02','2','8') THEN '2'
+                            WHEN TO_CHAR(UPTB_ID) IN ('SURABAYA 3','03','3','6','7') THEN '3'
+                            WHEN TO_CHAR(UPTB_ID) IN ('SURABAYA 4','04','4') THEN '4'
+                            WHEN TO_CHAR(UPTB_ID) IN ('SURABAYA 5','05','5') THEN '5'
+                            ELSE NULL
+                        END AS WILAYAH_PAJAK,
+                        SYSDATE INS_DATE, 
+                        'JOB' INS_BY,
+                        TO_NUMBER(TO_CHAR(SYSDATE,'YYYY')) TAHUN_BUKU,
+                        '-' AKUN,
+                        '-' NAMA_AKUN,
+                        '-' JENIS,
+                        '-' NAMA_JENIS,
+                        '-' OBJEK,
+                        '-' NAMA_OBJEK,
+                        '-' RINCIAN,
+                        '-' NAMA_RINCIAN,
+                        '-' SUB_RINCIAN,
+                        '-' NAMA_SUB_RINCIAN,
+                        '-' KELOMPOK,
+                        '-' NAMA_KELOMPOK        
+                FROM OBJEK_PAJAK A
+                LEFT JOIN OBJEK_PAJAK_ABT B1 
+                       ON A.NOP = B1.NOP 
+                      AND A.PAJAK_ID = 6
+                JOIN NPWPD  C 
+                      ON A.NPWPD = C.NPWPD_no
+                JOIN M_KATEGORI_PAJAK D 
+                      ON D.ID = A.KATEGORI
+                LEFT JOIN M_KECAMATAN B2 
+                       ON A.KD_CAMAT = B2.KD_CAMAT
+                WHERE A.PAJAK_ID = 6
+                  AND A.NPWPD NOT IN (
+                        SELECT npwpd_no  
+                        FROM npwpd 
+                        WHERE REF_THN_PEL = 2023 
+                           OR NAMA LIKE '%FULAN%' 
+                           OR NPWPD_NO = '3578200503840003'
+                  )
+                  AND (
+                        TGL_OP_TUTUP IS NULL
+                        OR (
+                            TO_CHAR(tgl_mulai_buka_op,'YYYY') <= :TAHUN 
+                        AND TO_CHAR(TGL_OP_TUTUP,'YYYY') >= :TAHUN
+                        )
+                  )
                                 ";
 
                 var result = _contSbyTax.Set<DbOpAbt>().FromSqlRaw(sql, new[] {
