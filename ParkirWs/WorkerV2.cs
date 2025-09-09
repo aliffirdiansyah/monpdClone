@@ -487,7 +487,7 @@ END AS WILAYAH_PAJAK,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU,'0' DIKELOLA, '0' PUNGUT_TARIF
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
-WHERE fk_pajak_daerah = '07' and status_op = 1
+WHERE fk_pajak_daerah = '07' and status_op != 0
 )
                     ";
 
