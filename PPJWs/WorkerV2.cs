@@ -178,7 +178,7 @@ END AS WILAYAH_PAJAK,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
-where fk_pajak_daerah = '05' and status_op != 0;
+where fk_pajak_daerah = '05' and status_op != 0
 )
                     ";
 

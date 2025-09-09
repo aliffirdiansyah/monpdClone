@@ -88,11 +88,11 @@ namespace ReklameWs
             var thnSetting = _contMonPd.SetYearJobScans.SingleOrDefault(x => x.IdPajak == KDPajak);
             tahunAmbil = tglServer.Year - Convert.ToInt32(thnSetting?.YearBefore ?? DateTime.Now.Year);
 
-            //// do fill db op abt
-            //if (IsGetDBOp())
-            //{
-            //    OpProcess();
-            //}
+            // do fill db op abt
+            if (IsGetDBOp())
+            {
+                OpProcess();
+            }
 
             // do fill realisasi
             RealisasiProcess();

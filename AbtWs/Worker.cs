@@ -143,11 +143,12 @@ namespace AbtWs
                                 A.KD_CAMAT ALAMAT_OP_KD_CAMAT,
                                 TGL_OP_TUTUP,
                                 TGL_MULAI_BUKA_OP,
-                                B.PERUNTUKAN PERUNTUKAN_ID,
+                                NVL(B.PERUNTUKAN, 1) PERUNTUKAN_ID,
                                 case
                                 when B.peruntukan=1 then 'NIAGA'
                                 when B.peruntukan=2 then 'NON NIAGA'
                                 when B.peruntukan=3 then 'BAHAN BAKU AIR' 
+                                else 'NIAGA'
                                 END PERUNTUKAN_NAMA,
                                 56 KATEGORI_ID,
                                 'AIR TANAH' KATEGORI_NAMA,
@@ -195,7 +196,7 @@ namespace AbtWs
                                 '-'  KELOMPOK      ,
                                 '-'  NAMA_KELOMPOK        
                         FROM OBJEK_PAJAK A
-                        JOIN OBJEK_PAJAK_ABT B ON A.NOP=B.NOP
+                        LEFT JOIN OBJEK_PAJAK_ABT B ON A.NOP=B.NOP
                         JOIN NPWPD  C ON A.NPWPD=C.NPWPD_no
                         JOIN M_KATEGORI_PAJAK D ON D.ID=A.KATEGORI
                         LEFT JOIN M_KECAMATAN B ON A.KD_CAMAT = B.KD_CAMAT
