@@ -22,7 +22,9 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
     .Visible(true)
     .ApplyFilter(GridApplyFilterMode.Auto)  // Bisa juga OnClick
     )
-
+    
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
     .HeaderFilter(hf => hf.Visible(true))
     .Columns(columns => {
         columns.AddFor(m => m.Col.Nama).Caption("Nama").Fixed(true).FixedPosition(HorizontalEdge.Left);

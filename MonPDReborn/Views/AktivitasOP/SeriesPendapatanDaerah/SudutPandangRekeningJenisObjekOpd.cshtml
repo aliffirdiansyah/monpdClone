@@ -25,6 +25,9 @@ Html.DevExtreme().DataGrid<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSu
     )
 
     .HeaderFilter(hf => hf.Visible(true))
+    
+    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+    .OnExporting("exportGrid")
     .Columns(columns => {
         columns.AddFor(m => m.Col.Nama).Caption("Nama").Fixed(true).FixedPosition(HorizontalEdge.Left);
         columns.AddFor(m => m.Col.TargetTahun1).Caption("Target").Format("#,##0");

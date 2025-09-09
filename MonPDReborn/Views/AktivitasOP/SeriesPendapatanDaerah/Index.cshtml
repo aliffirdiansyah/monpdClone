@@ -173,7 +173,12 @@
                     masterDetail: {
                         enabled: true,
                         template: SudutPandangRekeningJenis
+                    },export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
                     },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -223,6 +228,12 @@
                         enabled: true,
                         template: SudutPandangRekeningObjek
                     },
+                       export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -272,6 +283,12 @@
                         enabled: true,
                         template: SudutPandangRekeningRincian
                     },
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -321,6 +338,12 @@
                         enabled: true,
                         template: SudutPandangRekeningSubRincian
                     },
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -366,6 +389,12 @@
                             }
                         }
                     ],
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -415,6 +444,12 @@
                             } 
                         }
                     ],
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -468,6 +503,12 @@
                         enabled: true,
                         template: SudutPandangRekeningJenisObjekOpdOpd
                     },
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -517,6 +558,12 @@
                         enabled: true,
                         template: SudutPandangRekeningJenisObjekOpdSubrincian
                     },
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
@@ -562,6 +609,12 @@
                             }
                         }
                     ],
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: false,
+                        formats: ["xlsx", "pdf"]
+                    },
+                    onExporting: exportGrid,
                     width: "100%"
                 })
         }
