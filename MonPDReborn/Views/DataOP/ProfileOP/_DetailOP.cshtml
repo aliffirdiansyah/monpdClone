@@ -27,7 +27,7 @@
         )
         .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
         .OnExporting("exportGrid")
-        )
+        
         .Columns(columns =>
         {
             @* columns.Add().DataField("NOP").Caption("NOP"); *@
@@ -46,4 +46,5 @@
             });
         })
         )
+        
 </div>

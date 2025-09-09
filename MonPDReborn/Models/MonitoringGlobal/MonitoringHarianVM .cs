@@ -79,7 +79,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         Text = i.ToString()
                     });
                 }
-               
+
             }
         }
         public class Show
@@ -192,7 +192,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                
+
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -239,7 +239,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                
+
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -286,7 +286,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                
+
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -333,7 +333,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                
+
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -380,7 +380,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                
+
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -427,7 +427,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             {
                                 x.Key.Nop,
                                 x.Key.TglBayarPokok,
-                                
+
                                 Realisasi = x.Sum(q => q.NominalPokokBayar)
                             })
                             .ToList();
@@ -466,6 +466,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                         var dataRealisasiPbb = context.DbMonPbbs
                             .Where(x =>
                                 x.TglBayar.HasValue &&
+                                x.TahunBuku == tahun &&
                                 x.TglBayar.Value.Year == tahun &&
                                 x.TglBayar.Value.Month == bulan
                             )
@@ -562,7 +563,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglSspd.Year == tahun &&
                                 x.TglSspd.Month == bulan
                             )
-                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd})
+                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd })
                             .Select(x => new
                             {
                                 x.Key.Nop,
@@ -608,7 +609,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglSspd.Year == tahun &&
                                 x.TglSspd.Month == bulan
                             )
-                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd})
+                            .GroupBy(x => new { Nop = x.IdSspd, TglSspd = x.TglSspd })
                             .Select(x => new
                             {
                                 x.Key.Nop,
@@ -766,6 +767,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
                             context.DbMonPbbs
                             .Where(x =>
                                 x.TglBayar.HasValue &&
+                                x.TahunBuku == tahun &&
                                 x.TglBayar.Value.Year == tahun &&
                                 x.TglBayar.Value.Month == bulan
                             )
@@ -864,6 +866,7 @@ namespace MonPDReborn.Models.MonitoringGlobal
         {
             public DateTime Tanggal { get; set; }
             public string JenisPajak { get; set; } = null!;
+            public string namaHari => Tanggal.ToString("dddd", new CultureInfo("id-ID"));
             public decimal TargetHarian { get; set; }
             public decimal Realisasi { get; set; }
             public double Pencapaian => TargetHarian > 0 ? Math.Round((double)(Realisasi / TargetHarian) * 100, 2) : 0.0;

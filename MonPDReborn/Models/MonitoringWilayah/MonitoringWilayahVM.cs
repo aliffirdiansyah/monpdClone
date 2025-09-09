@@ -595,6 +595,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 var totalRealisasi = context.DbMonPbbs
                                         .Where(x =>
                                             x.TglBayar.HasValue
+                                            && x.TahunBuku == tahun
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
                                             && x.Uptb == Convert.ToInt32(uptb)
@@ -642,6 +643,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             var dataRealisasiWilayah = context.DbMonPbbs
                                 .Where(x =>
                                     x.TglBayar.HasValue &&
+                                    x.TahunBuku == tahun &&
                                     x.TglBayar.Value.Year == tahun &&
                                     x.TglBayar.Value.Month <= bulan &&
                                     uptb.Contains(x.Nop)
@@ -768,6 +770,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 var totalRealisasiPbb = context.DbMonPbbs
                                         .Where(x =>
                                             x.TglBayar.HasValue
+                                            && x.TahunBuku == tahun
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
                                             && x.Uptb == Convert.ToInt32(uptb)
@@ -973,6 +976,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             var totalRealisasiPbb = context.DbMonPbbs
                                     .Where(x =>
                                         x.TglBayar.HasValue
+                                        && x.TahunBuku == tahun
                                         && x.TglBayar.Value.Year == tahun
                                         && x.TglBayar.Value.Month <= bulan
                                         && x.Uptb == Convert.ToInt32(wilayah)
@@ -1201,6 +1205,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     var realisasiPajakPbb = context.DbMonPbbs
                             .Where(x =>
                                 x.TglBayar.HasValue
+                                && x.TahunBuku == tahun
                                 && x.TglBayar.Value.Year == tahun
                                 && x.TglBayar.Value.Month <= bulan
                             ).Sum(q => q.JumlahBayarPokok) ?? 0;
@@ -1427,6 +1432,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     var realisasiPajakPbb = context.DbMonPbbs
                             .Where(x =>
                                 x.TglBayar.HasValue
+                                && x.TahunBuku == tahun
                                 && x.TglBayar.Value.Year == tahun
                                 && x.TglBayar.Value.Month <= bulan
                                 && x.Uptb == uptb
@@ -2539,6 +2545,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 var totalRealisasiPbb = context.DbMonPbbs
                                         .Where(x =>
                                             x.TglBayar.HasValue
+                                            && x.TahunBuku == tahun
                                             && x.TglBayar.Value.Year == tahun
                                             && x.TglBayar.Value.Month <= bulan
                                             && x.Uptb == Convert.ToInt32(uptb)
@@ -2787,6 +2794,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             var totalRealisasiPbb = context.DbMonPbbs
                                     .Where(x =>
                                         x.TglBayar.HasValue
+                                        && x.TahunBuku == tahun
                                         && x.TglBayar.Value.Year == tahun
                                         && x.TglBayar.Value.Month <= bulan
                                         && x.Uptb == Convert.ToInt32(wilayah)

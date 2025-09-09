@@ -73,6 +73,11 @@
                                 <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
                             </button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
                     </ul>
                     break;
                 case EnumFactory.EPajak.JasaPerhotelan:
@@ -97,6 +102,11 @@
                                 <i class="ri ri-file-info-line fs-5 me-2"></i> Okupansi
                             </button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
                     </ul>
                     break;
                 case EnumFactory.EPajak.JasaKesenianHiburan:
@@ -109,6 +119,11 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
                                 <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
                             </button>
                         </li>
                         @* <li class="nav-item" role="presentation">
@@ -135,6 +150,11 @@
                                 <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
                             </button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
                     </ul>
                     break;
                 case EnumFactory.EPajak.TenagaListrik:
@@ -154,6 +174,11 @@
                             <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
                         </button>
                     </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
                 </ul>
                     break;
                 case EnumFactory.EPajak.Reklame:
@@ -173,6 +198,11 @@
                             <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
                         </button>
                     </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
                 </ul>
                     break;
                 case EnumFactory.EPajak.PBB:
@@ -228,6 +258,11 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
                             <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                            <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
                         </button>
                     </li>
                 </ul>
@@ -748,6 +783,19 @@
             fnPembayaranPajak();
         });
 
+    </script>
+
+    <script>
+        function openDetailNewTab(nop, pajak, KategoriId) {
+            if (!nop || !pajak || !KategoriId) return;
+
+            const url = `/ProfilePotensiOP/DetailPotensiOP` +
+                `?nop=${encodeURIComponent(nop)}` +
+                `&jenisPajak=${encodeURIComponent(pajak)}` +
+                `&kategori=${encodeURIComponent(KategoriId)}`;
+
+            window.open(url, '_blank');
+        }
     </script>
 }
 

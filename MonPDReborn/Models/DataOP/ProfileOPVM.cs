@@ -4293,6 +4293,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opResto.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opResto.KategoriId;
                             //isi data resto
                             ret.RestoRow.PendapatanRow = new DetailResto.Pendapatan
                             {
@@ -4322,6 +4323,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opListrik.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opListrik.KategoriId;
                         }
                         break;
 
@@ -4340,6 +4342,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opHotel.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opHotel.KategoriId;
                             //isi data hotel
                             ret.HotelRow.PendapatanRow = new DetailHotel.Pendapatan
                             {
@@ -4417,6 +4420,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opParkir.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opParkir.KategoriId;
                         }
                         break;
 
@@ -4435,6 +4439,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opHiburan.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opHiburan.KategoriId;
                         }
                         break;
 
@@ -4453,6 +4458,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opAbt.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = opAbt.KategoriId;
 
                             ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
                             {
@@ -4483,6 +4489,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opReklame.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opReklame.KategoriId;
                             //isi data reklame
                             /*ret.ReklameRow.PendapatanRow = new DetailReklame.Pendapatan
                             {
@@ -4512,6 +4519,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opPbb.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opPbb.KategoriId;
 
                             /*ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
                             {
@@ -4994,6 +5002,7 @@ namespace MonPDReborn.Models.DataOP
             public DateTime? TglBerlaku { get; set; }
             public DateTime? TglBerakhir { get; set; }
             public string NoPerusahaan { get; set; }
+            public decimal kategoriID { get; set; }
 
         }
         public class DataPerizinan

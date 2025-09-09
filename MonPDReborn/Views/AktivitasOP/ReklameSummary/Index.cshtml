@@ -15,11 +15,6 @@
                         <i class="bx bx-bar-chart-alt me-2"></i> Reklame Summary
                     </h4>
                 </div>
-                <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-outline-dark" title="Segarkan Reklame Summary" onclick="">
-                        <i class="mdi mdi-refresh align-middle"></i> Refresh
-                    </button>
-                </div>
             </div>
             <div class="card-body">
                 <div class="d-flex gap-2">
@@ -116,18 +111,32 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // saat pertama kali: kosongkan hasil
             $('#Show').html();
 
             // ketika tombol Terapkan Filter diklik
             $('.btn-success').on('click', function () {
+                var tahun = $('#tahunFilter').val();
+                var lokasi = $('#lokasiFilter').val();
+
+                if (!tahun || !lokasi) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Filter belum dipilih',
+                        text: '⚠ Silakan pilih filter Tahun dan Lokasi terlebih dahulu.',
+                        confirmButtonText: 'OK'
+                    });
+                    return; 
+                }
+
                 loadData();
                 loadDataTerbatas();
                 loadDataIsidentil();
+
                 $('#cardShow').removeClass('d-none');
                 $('#cardTerbatas').removeClass('d-none');
                 $('#cardInsidentil').removeClass('d-none');
             });
+
 
             function loadData() {
                 let tahun = $('#tahunFilter').val();
