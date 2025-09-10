@@ -91,11 +91,17 @@ namespace ReklameWs
             // do fill db op abt
             if (IsGetDBOp())
             {
-                OpProcess();
+                for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                {
+                    OpProcess(i);
+                }
             }
 
             // do fill realisasi
-            RealisasiProcess();
+            for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            {
+                RealisasiProcess(i);
+            }
 
             for (var i = tahunAmbil; i <= tglServer.Year; i++)
             {
@@ -528,7 +534,7 @@ namespace ReklameWs
             }
         }
 
-        private void OpProcess()
+        private void OpProcess(int tahunBuku)
         {
             var _contMonPd = DBClass.GetContext();
             using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
@@ -707,7 +713,7 @@ FROM (
     'PERMANEN' KATEGORI_NAMA,
 	NOR
 	FROM VWTABELPERMOHONAN@lihatreklame
-	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = EXTRACT(YEAR FROM SYSDATE)
+	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = :TAHUN
 	UNION ALL
 	SELECT NO_FORMULIR,
 	NO_PERUSAHAAN,
@@ -794,7 +800,7 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
     'INSIDENTIL' KATEGORI_NAMA,
 	CAST(NULL AS VARCHAR(500)) AS NOR
 	FROM VWTABELPERMOHONANINS@lihatreklame
-	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = EXTRACT(YEAR FROM SYSDATE)
+	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = :TAHUN
 	UNION ALL
 	SELECT NO_FORMULIR,
 	0 NO_PERUSAHAAN,
@@ -881,14 +887,16 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
     'TERBATAS' KATEGORI_NAMA,
 	NOR
 	FROM VWPERMOHONANSIMRLAMA1@lihatreklame
-	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = EXTRACT(YEAR FROM SYSDATE)
+	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = :TAHUN
 ) A
 
                     ";
 
-                var result = _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToList();
+                var result = _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql, new[] {
+                    new OracleParameter("TAHUN", tahunBuku)
+                }).ToList();
 
-                var existingr = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
+                var existingr = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
                 _contMonPd.DbOpReklames.RemoveRange(existingr);
 
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -983,7 +991,7 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
                         StatusVer = item.StatusVer,
                         TglVer = item.TglVer,
                         UserVer = item.UserVer,
-                        TahunBuku = DateTime.Now.Year,
+                        TahunBuku = tahunBuku,
                         TglOpTutup = item.TglOpTutup,
                         KategoriId = item.KategoriId,
                         Seq = item.Seq
@@ -1012,7 +1020,7 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
                 Console.ResetColor();
             }
         }
-        private void RealisasiProcess()
+        private void RealisasiProcess(int tahunBuku)
         {
             var _contMonPd = DBClass.GetContext();
             using (var _contMonitoringDb2 = DBClass.GetMonitoringDbContext())
@@ -1140,7 +1148,7 @@ LEFT JOIN
 		    SUM(NVL(JAMBONG,0)) AS JAMBONG,
 		    FLAG_PERMOHONAN
 		FROM VW_REALISASI_NRC@lihatreklame
-		WHERE EXTRACT(YEAR FROM TGL_BAYAR) = EXTRACT(YEAR FROM SYSDATE)
+		WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :TAHUN
 		GROUP BY
 		    NO_FORMULIR,
 		    FLAG_PERMOHONAN
@@ -1148,8 +1156,8 @@ LEFT JOIN
 	)
 ) mrhr
        ON mrhk.NO_FORMULIR = mrhr.NO_FORMULIR
-      AND EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = EXTRACT(YEAR FROM SYSDATE)
-WHERE EXTRACT(YEAR FROM mrhk.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
+      AND EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
+WHERE EXTRACT(YEAR FROM mrhk.TGLSKPD) = :TAHUN
 UNION ALL
 SELECT 
     mrhk.NO_FORMULIR AS NO_FORMULIR,
@@ -1178,7 +1186,7 @@ FROM
 		    SUM(NVL(JAMBONG,0)) AS JAMBONG,
 		    FLAG_PERMOHONAN
 		FROM VW_REALISASI_NRC@lihatreklame
-		WHERE EXTRACT(YEAR FROM TGL_BAYAR) = EXTRACT(YEAR FROM SYSDATE)
+		WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :TAHUN
 		GROUP BY
 		    NO_FORMULIR,
 		    FLAG_PERMOHONAN
@@ -1218,20 +1226,22 @@ LEFT JOIN
 	)
 ) mrhk
        ON mrhk.NO_FORMULIR = mrhr.NO_FORMULIR
-WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = EXTRACT(YEAR FROM SYSDATE)
-  AND EXTRACT(YEAR FROM mrhk.TGLSKPD) < EXTRACT(YEAR FROM SYSDATE))
+WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
+  AND EXTRACT(YEAR FROM mrhk.TGLSKPD) < :TAHUN)
 ";
 
                 var pembayaranSspdList = _contMonitoringDb2
                 .Set<OpSkpdSspdReklame>()
-                .FromSqlRaw(sql2)
+                .FromSqlRaw(sql2, new[] {
+                    new OracleParameter("TAHUN", tahunBuku)
+                })
                 .ToList();
 
                 // --- 2. Ambil data Op Reklame ---
-                var opList2 = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
+                var opList2 = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
 
                 // --- 3. Kosongkan tabel Monitoring ---
-                var existing = _contMonPd.DbMonReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
+                var existing = _contMonPd.DbMonReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
                 _contMonPd.DbMonReklames.RemoveRange(existing);
 
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -1481,7 +1491,7 @@ WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = EXTRACT(YEAR FROM SYSDATE)
                         newRow.StatusVer = 0;
                         newRow.TglVer = null;
                         newRow.UserVer = "-";
-                        newRow.TahunBuku = item.TAHUN_PAJAK ?? DateTime.Now.Year;
+                        newRow.TahunBuku = item.TAHUN_PAJAK ?? tahunBuku;
                         newRow.IdKetetapan = item.ID_KETETAPAN;
                         newRow.Tglpenetapan = item.TGLPENETAPAN;
                         newRow.TahunPajak = item.TAHUN_PAJAK.ToString();
