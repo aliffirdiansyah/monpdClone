@@ -1,0 +1,166 @@
+﻿@using System.Globalization
+@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.Report
+@{
+}
+
+
+<style type="text/css">
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+        .tg td, .tg th {
+            border-color: #000000;   /* hitam pekat */
+            border-style: solid;
+            border-width: 2px;       /* lebih tebal */
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            overflow: hidden;
+            word-break: normal;
+        }
+
+        .tg .tg-co5h {
+            background-color: #00b0f0;
+            border-color: black;
+            text-align: center;
+            vertical-align: middle
+        }
+
+        .tg .tg-0nru {
+            background-color: #92d050;
+            text-align: center;
+            vertical-align: middle
+        }
+
+        .tg .tg-xj4e {
+            background-color: #00b0f0;
+            text-align: center;
+            vertical-align: middle
+        }
+
+        .tg .tg-0lax {
+            text-align: left;
+            vertical-align: top
+        }
+
+        .tg .tg-1lax {
+            text-align: right;
+            vertical-align: top
+        }
+</style>
+<p>Target dan Realisasi Pendapatan Daerah (Per OPD Rinci)</p>
+<p>s.d @(Model.Tanggal.ToString("dd MMMM yyyy", new CultureInfo("id-ID")))</p>
+<table class="tg">
+    <thead>
+        <tr>
+            <th class="tg-co5h" rowspan="2">NO</th>
+            <th class="tg-co5h" rowspan="2">OPD/Rincian</th>
+            <th class="tg-co5h">Target</th>
+            <th class="tg-xj4e">Target</th>
+            <th class="tg-0nru">Realisasi</th>
+            <th class="tg-xj4e">Selisih</th>
+            <th class="tg-xj4e">%</th>
+            <th class="tg-xj4e">Target</th>
+            <th class="tg-0nru">Realisasi</th>
+            <th class="tg-xj4e">Selisih</th>
+            <th class="tg-xj4e">%</th>
+            <th class="tg-xj4e">%</th>
+        </tr>
+        <tr>
+            <th class="tg-co5h">APBD</th>
+            <th class="tg-xj4e">01 @(Model.Tanggal.ToString("MMM")) - @(DateTime.DaysInMonth(Model.Tahun, Model.Bulan)) @(Model.Tanggal.ToString("MMM"))</th>
+            <th class="tg-0nru">01 @(Model.Tanggal.ToString("MMM")) - @(Model.Tanggal.ToString("dd MMM"))</th>
+            <th class="tg-xj4e">Realisasi-Target</th>
+            <th class="tg-xj4e">01 @(Model.Tanggal.ToString("MMM")) - @(DateTime.DaysInMonth(Model.Tahun, Model.Bulan)) @(Model.Tanggal.ToString("MMM"))</th>
+            <th class="tg-xj4e">Jan - @(Model.Tanggal.ToString("MMM"))</th>
+            <th class="tg-0nru">01 Jan - @(Model.Tanggal.ToString("dd MMM"))</th>
+            <th class="tg-xj4e">Realisasi-Target</th>
+            <th class="tg-xj4e">Jan - @(Model.Tanggal.ToString("MMM"))</th>
+            <th class="tg-xj4e">APBD</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="tg-co5h">1</td>
+            <td class="tg-co5h">2</td>
+            <td class="tg-co5h">3</td>
+            <td class="tg-xj4e">4</td>
+            <td class="tg-0nru">5</td>
+            <td class="tg-xj4e">6=5-4</td>
+            <td class="tg-xj4e">7=5/4</td>
+            <td class="tg-xj4e">8</td>
+            <td class="tg-0nru">9</td>
+            <td class="tg-xj4e">10=9-8</td>
+            <td class="tg-xj4e">11=9/8</td>
+            <td class="tg-xj4e">12=9/3</td>
+        </tr>
+        @{
+            int no = 1;
+        }
+        @foreach (var opd in Model.ReportTrOpdRinci.Data)
+        {
+            <tr style="font-weight: bold; background-color: lightgrey;">
+                <td class="tg-0lax">@(no)</td>
+                <td class="tg-0lax">@(opd.Col.Nama)</td>
+                <td class="tg-1lax">@(opd.Col.TargetTotal.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-1lax">@(opd.Col.TargetBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-1lax">@(opd.Col.RealisasiBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-1lax">@(opd.Col.SelisihBulanIni < 0 ? $"({Math.Abs(opd.Col.SelisihBulanIni).ToString("n0", new CultureInfo("id-ID"))})" : opd.Col.SelisihBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-1lax">@(opd.Col.PersentaseBulanIni) %</td>
+                <td class="tg-1lax">@(opd.Col.TargetSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-1lax">@(opd.Col.RealisasiSampaiDengan < 0 ? $"({Math.Abs(opd.Col.RealisasiSampaiDengan).ToString("n0", new CultureInfo("id-ID"))})" : opd.Col.RealisasiSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-1lax">@(opd.Col.SelisihSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-1lax">@(opd.Col.PersentaseSampaiDengan) %</td>
+                <td class="tg-1lax">@(opd.Col.PersentaseTotal) %</td>
+            </tr>
+
+            foreach (var subr in opd.SubrincianList)
+            {
+                <tr>
+                    <td class="tg-0lax"></td>
+                    <td class="tg-0lax">@(subr.Col.Nama)</td>
+                    <td class="tg-1lax">@(subr.Col.TargetTotal.ToString("n0", new CultureInfo("id-ID")))</td>
+                    <td class="tg-1lax">@(subr.Col.TargetBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                    <td class="tg-1lax">@(subr.Col.RealisasiBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                    <td class="tg-1lax">@(subr.Col.SelisihBulanIni < 0 ? $"({Math.Abs(subr.Col.SelisihBulanIni).ToString("n0", new CultureInfo("id-ID"))})" : subr.Col.SelisihBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                    <td class="tg-1lax">@(subr.Col.PersentaseBulanIni) %</td>
+                    <td class="tg-1lax">@(subr.Col.TargetSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                    <td class="tg-1lax">@(subr.Col.RealisasiSampaiDengan < 0 ? $"({Math.Abs(subr.Col.RealisasiSampaiDengan).ToString("n0", new CultureInfo("id-ID"))})" : subr.Col.RealisasiSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                    <td class="tg-1lax">@(subr.Col.SelisihSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                    <td class="tg-1lax">@(subr.Col.PersentaseSampaiDengan) %</td>
+                    <td class="tg-1lax">@(subr.Col.PersentaseTotal) %</td>
+                </tr>
+            }
+
+            no++;
+        }
+    </tbody>
+    <tfoot>
+        @{
+            decimal totTargetTotal = Model.ReportTrOpdRinci.Data.Sum(x => x.Col.TargetTotal);
+            decimal totTargetBulanIni = Model.ReportTrOpdRinci.Data.Sum(x => x.Col.TargetBulanIni);
+            decimal totRealisasiBulanIni = Model.ReportTrOpdRinci.Data.Sum(x => x.Col.RealisasiBulanIni);
+            decimal totSelisihBulanIni = totRealisasiBulanIni - totTargetBulanIni;
+            decimal totPersentaseBulanIni = totTargetBulanIni > 0 ? Math.Round((totRealisasiBulanIni / totTargetBulanIni) * 100, 2) : 0;
+            decimal totTargetSampaiDengan = Model.ReportTrOpdRinci.Data.Sum(x => x.Col.TargetSampaiDengan);
+            decimal totRealisasiSampaiDengan = Model.ReportTrOpdRinci.Data.Sum(x => x.Col.RealisasiSampaiDengan);
+            decimal totSelisihSampaiDengan = totRealisasiSampaiDengan - totTargetSampaiDengan;
+            decimal totPersentaseSampaiDengan = totTargetSampaiDengan > 0 ? Math.Round((totRealisasiSampaiDengan / totTargetSampaiDengan) * 100, 2) : 0;
+            decimal totPersentaseTotal = totTargetTotal > 0 ? Math.Round((totRealisasiSampaiDengan / totTargetTotal) * 100, 2) : 0;
+        }
+        <tr style="font-weight: bold; background-color: #00b0f0;">
+                <td class="tg-0lax">></td>
+                <td class="tg-0lax">GRAND TOTAL</td>
+                <td class="tg-0lax">@(totTargetTotal.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-0lax">@(totTargetBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-0lax">@(totRealisasiBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-0lax">@(totSelisihBulanIni < 0 ? $"({Math.Abs(totSelisihBulanIni).ToString("n0", new CultureInfo("id-ID"))})" : totSelisihBulanIni.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-0lax">@(totPersentaseBulanIni) %</td>
+                <td class="tg-0lax">@(totTargetSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-0lax">@(totRealisasiSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-0lax">@(totSelisihSampaiDengan < 0 ? $"({Math.Abs(totSelisihSampaiDengan).ToString("n0", new CultureInfo("id-ID"))})" : totSelisihSampaiDengan.ToString("n0", new CultureInfo("id-ID")))</td>
+                <td class="tg-0lax">@(totPersentaseSampaiDengan) %</td>
+                <td class="tg-0lax">@(totPersentaseTotal) %</td>
+            </tr>
+    </tfoot>
+</table>

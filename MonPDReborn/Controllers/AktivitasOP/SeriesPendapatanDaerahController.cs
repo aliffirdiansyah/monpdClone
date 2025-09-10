@@ -68,5 +68,33 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+
+        public IActionResult Report(int type, int tahun, int bulan)
+        {
+            try
+            {
+                ViewData["Title"] = controllerName;
+
+                //static purposes
+                tahun = tahun == 0 ? DateTime.Now.Year : tahun;
+                bulan = bulan == 0 ? DateTime.Now.Month : bulan;
+                //end static purposes
+
+                var model = new Models.AktivitasOP.SeriesPendapatanDaerahVM.Report(type, tahun, bulan);
+                return View($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }

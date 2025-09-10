@@ -494,6 +494,18 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return result;
             }
+            public static ViewModel.ReportTrOpdRinci GetReportTrOpdRinci(int year, int bulan)
+            {
+                var result = new ViewModel.ReportTrOpdRinci();
+                result.Data = SeriesPendapatanDaerahVMLogic.Method.GetDataReportTrOpdRinci(year, bulan);
+                return result;
+            }
+            public static ViewModel.ReportTRopdWarna GetReportTRopdWarna(int year, int bulan)
+            {
+                var result = new ViewModel.ReportTRopdWarna();
+                result.Data = SeriesPendapatanDaerahVMLogic.Method.GetDataReportTRopdWarna(year, bulan);
+                return result;
+            }
         }
 
         public class ViewModel
@@ -567,6 +579,14 @@ namespace MonPDReborn.Models.AktivitasOP
             public class TahunRow
             {
                 public int Tahun { get; set; }
+            }
+            public class ReportTrOpdRinci
+            {
+                public List<SeriesPendapatanDaerahVMLogic.ViewModel.ReportTrOpdRinci.Opd> Data { get; set; } = new();
+            }
+            public class ReportTRopdWarna
+            {
+                public List<SeriesPendapatanDaerahVMLogic.ViewModel.ReportTRopdWarna.Opd> Data { get; set; } = new();
             }
         }
 
