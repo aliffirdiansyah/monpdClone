@@ -892,6 +892,9 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
 
                     ";
 
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{DateTime.Now} GET QUERY DB_OP_REKLAME_MONITORINGDB {tahunBuku}");
+                Console.ResetColor();
                 var result = _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql, new[] {
                     new OracleParameter("TAHUN", tahunBuku)
                 }).ToList();
@@ -900,7 +903,7 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
                 _contMonPd.DbOpReklames.RemoveRange(existingr);
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{DateTime.Now} DELETE DB_OP_REKLAME_MONITORINGDB (pending commit)");
+                Console.WriteLine($"{DateTime.Now} DELETE DB_OP_REKLAME_MONITORINGDB {tahunBuku} (pending commit)");
                 Console.ResetColor();
 
                 int process = 0;
@@ -1009,14 +1012,14 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
                 // Sekali save di akhir
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_OP_REKLAME_MONITORINGDB");
+                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_OP_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
 
                 _contMonPd.SaveChanges();
                 _contMonPd.ChangeTracker.Clear();
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{DateTime.Now} [FINISHED] DB_OP_REKLAME_MONITORINGDB");
+                Console.WriteLine($"{DateTime.Now} [FINISHED] DB_OP_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
             }
         }
@@ -1230,6 +1233,10 @@ WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
   AND EXTRACT(YEAR FROM mrhk.TGLSKPD) < :TAHUN)
 ";
 
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{DateTime.Now} GET DB_MON_REKLAME_MONITORINGDB {tahunBuku}");
+                Console.ResetColor();
+
                 var pembayaranSspdList = _contMonitoringDb2
                 .Set<OpSkpdSspdReklame>()
                 .FromSqlRaw(sql2, new[] {
@@ -1245,7 +1252,7 @@ WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
                 _contMonPd.DbMonReklames.RemoveRange(existing);
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{DateTime.Now} DELETE DB_MON_REKLAME_MONITORINGDB (pending commit)");
+                Console.WriteLine($"{DateTime.Now} DELETE DB_MON_REKLAME_MONITORINGDB {tahunBuku} (pending commit)");
                 Console.ResetColor();
 
                 // --- 4. Insert ulang data ---
@@ -1569,7 +1576,7 @@ WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
                 _contMonPd.DbMonReklames.AddRange(newRows);
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_MON_REKLAME_MONITORINGDB");
+                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_MON_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
 
                 // Sekali commit di akhir
@@ -1577,8 +1584,9 @@ WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
                 _contMonPd.ChangeTracker.Clear();
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\n{DateTime.Now} [SUCCESS] DB_MON_REKLAME_MONITORINGDB");
+                Console.WriteLine($"\n{DateTime.Now} [SUCCESS] DB_MON_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
+                Console.WriteLine($"");
             }
         }
         public static OracleConnection getOracleConnection()
