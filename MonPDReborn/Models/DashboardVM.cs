@@ -1204,10 +1204,18 @@ namespace MonPDReborn.Models
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
-                var dataRealisasiPbb = context.DbMonPbbs
-                    .Where(x => x.TglBayar.Value.Year >= yearLast && x.TglBayar.Value.Year <= year && x.TahunBuku == year && x.JumlahBayarPokok > 0)
-                    .GroupBy(x => new { x.TglBayar.Value.Year, PajakId = (int)(EnumFactory.EPajak.PBB) })
-                    .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.JumlahBayarPokok ?? 0) })
+                var dataRealisasiPbb = Enumerable.Range(yearLast, year - yearLast + 1)
+                    .Select(t => new
+                    {
+                        TahunBuku = t,
+                        PajakId = (int)EnumFactory.EPajak.PBB,
+                        Realisasi = context.DbMonPbbs
+                            .Where(x => x.TglBayar.HasValue
+                                        && x.TglBayar.Value.Year == t
+                                        && x.TahunBuku == t
+                                        && x.JumlahBayarPokok > 0)
+                            .Sum(x => x.JumlahBayarPokok ?? 0)
+                    })
                     .AsEnumerable();
 
                 var dataRealisasiBphtb = context.DbMonBphtbs
