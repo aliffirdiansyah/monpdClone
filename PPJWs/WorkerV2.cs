@@ -216,7 +216,15 @@ where fk_pajak_daerah = '05' and status_op != 0
                         newRow.Telp = item.Telp;
                         newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
                         newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
-                        newRow.TglOpTutup = item.TglOpTutup;
+                        newRow.TglOpTutup = null;
+                        if (item.TglOpTutup.HasValue && item.TglOpTutup.Value.Year <= 1990)
+                        {
+                            newRow.TglOpTutup = null;
+                        }
+                        else
+                        {
+                            newRow.TglOpTutup = item.TglOpTutup;
+                        }
                         newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
                         newRow.KategoriId = item.KategoriId;
                         newRow.KategoriNama = item.KategoriNama;
