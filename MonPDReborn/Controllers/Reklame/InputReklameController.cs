@@ -1,0 +1,101 @@
+﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using MonPDReborn.Lib.General;
+using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.Reklame.InputReklameVM;
+
+namespace MonPDReborn.Controllers.Reklame
+{
+    public class InputReklameController : BaseController
+    {
+        string URLView = string.Empty;
+
+        private readonly ILogger<InputReklameController> _logger;
+        private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
+        private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
+
+        const string TD_KEY = "TD_KEY";
+        const string MONITORING_ERROR_MESSAGE = "MONITORING_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
+        public InputReklameController(ILogger<InputReklameController> logger)
+        {
+            URLView = string.Concat("../Reklame/", GetType().Name.Replace("Controller", ""), "/");
+            _logger = logger;
+        }
+        public IActionResult Index()
+        {
+            try
+            {
+                ViewData["Title"] = controllerName;
+                var model = new Models.Reklame.InputReklameVM.Index();
+                return View($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult Show(string noFormulir)
+        {
+            try
+            {
+                var model = new Models.Reklame.InputReklameVM.Show(noFormulir);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        [HttpGet]
+        public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+
+            // EF Core query langsung, tanpa ToListAsync
+            var query = context.MUpayaReklames
+                .Select(item => new UpayaCbView
+                {
+                    Value = (int)item.Id,
+                    Text = item.Upaya ?? string.Empty
+                });
+
+            return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        [HttpGet]
+        public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
+        {
+            var context = DBClass.GetContext();
+
+            var query = context.MTindakanReklames
+                .Where(x => x.IdUpaya == idUpaya)
+                .Select(item => new TindakanCbView
+                {
+                    Value = (int)item.Id,
+                    Text = item.Tindakan ?? string.Empty
+                });
+
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+    }
+}

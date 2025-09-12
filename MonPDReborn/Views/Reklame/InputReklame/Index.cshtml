@@ -1,0 +1,176 @@
+﻿@model MonPDReborn.Models.Reklame.InputReklameVM.Index
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i> Input Upaya Reklame
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            fnShow();
+        });
+
+        function fnShow()
+        {
+            $.ajax({
+              url: '@(Url.Action("Show"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-Show').show();
+                 $('#Show').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-Show').hide();
+                        $('#Show').show();
+                        $('#Show').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-Show').hide();
+                 $('#Show').hide();
+                 $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+        function fnReloadTindakan(e) {
+            const selectedUpayaId = e.value;
+
+            console.log("Upaya dipilih:", selectedUpayaId); // cek value
+
+            const grid = $("#gridTindakan").dxDataGrid("instance");
+
+            if (!grid) {
+                console.error("Grid tidak ditemukan!");
+                return;
+            }
+
+            grid.option("dataSource", new DevExpress.data.CustomStore({
+                load: function () {
+                    return $.getJSON("/InputReklame/GetTindakan", {
+                        upayaId: selectedUpayaId
+                    }).then(data => {
+                        console.log("Data diterima:", data); // pastikan data ada
+                        return data;
+                    }).catch(err => {
+                        console.error("Gagal load data:", err);
+                    });
+                }
+            }));
+
+            grid.refresh();
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#formUpaya').on('submit', function (e) {
+                e.preventDefault();
+                simpanUpaya();
+            });
+        });
+        function fnGetParamsTindakan() {
+            return { idUpaya: function () { return $('#cbUpaya').dxSelectBox("instance").option('value') } }
+        }
+        function fnReloadTindakan() {
+            $("#cbTindakan").dxSelectBox("instance").option("value", null);
+            var selectBoxDataSource = $("#cbTindakan").dxSelectBox("instance").getDataSource();
+            selectBoxDataSource.load();
+
+        }
+        function simpanUpaya() {
+            var formData = new FormData($('#formUpaya')[0]);
+
+            $.ajax({
+                url: '@Url.Action("SimpanUpaya", "ReklameSummary")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#formUpaya')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var base64 = cellInfo.data.Lampiran;
+            var mime = 'image/png'; // atau 'image/jpeg' / 'application/pdf'
+
+            if (base64 && base64.length > 100) {
+                var dataUrl = 'data:' + mime + ';base64,' + base64;
+
+                $('<a>')
+                    .attr('href', dataUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', dataUrl)
+                            .addClass('img-thumbnail')
+                            .css({ height: '50px', width: 'auto', cursor: 'zoom-in' })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
+        }
+    </script>
+}

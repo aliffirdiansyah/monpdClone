@@ -40,4 +40,7 @@ public partial class VwMonHotel365
 
     [Column("REALISASI_2025", TypeName = "NUMBER")]
     public decimal? Realisasi2025 { get; set; }
+
+    [Column("KOEFISIEN_NILAI", TypeName = "NUMBER")]
+    public decimal? KoefisienNilai { get; set; }
 }

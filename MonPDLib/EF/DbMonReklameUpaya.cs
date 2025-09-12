@@ -40,6 +40,16 @@ public partial class DbMonReklameUpaya
     [Precision(10)]
     public int Seq { get; set; }
 
+    [Column("NIK_PETUGAS")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? NikPetugas { get; set; }
+
+    [Column("KD_AKTIFITAS")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? KdAktifitas { get; set; }
+
     [InverseProperty("DbMonReklameUpaya")]
     public virtual DbMonReklameUpayaDok? DbMonReklameUpayaDok { get; set; }
 }

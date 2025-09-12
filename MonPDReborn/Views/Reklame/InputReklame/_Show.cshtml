@@ -1,0 +1,52 @@
+﻿@model MonPDReborn.Models.Reklame.InputReklameVM.Show
+
+<form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
+    @Html.HiddenFor(m => m.Data.NewRowUpaya.NoFormulir)
+    <div class="mb-3">
+        <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
+        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
+                .ID("cbUpaya")
+                .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
+                .OnValueChanged("fnReloadTindakan")
+                .DisplayExpr("Text")
+                .ValueExpr("Value")
+                .SearchEnabled(true)
+                )
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
+        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
+                .ID("cbTindakan")
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                .DataSource(x => x.Mvc().Controller("InputReklame").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
+                .SearchEnabled(true)
+                )
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Data.NewRowUpaya.NamaPetugas" class="form-label">Petugas</label>
+        @Html.TextBoxFor(m => m.Data.NewRowUpaya.NamaPetugas, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
+        @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
+                .Type(DateBoxType.Date)
+                .DisplayFormat("dd MMM yyyy")
+                .Value(DateTime.Today))
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Lampiran" class="form-label"></label>
+        <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
+        <small class="form-text text-muted">
+            Hanya file gambar (.jpg, .jpeg, .png).
+        </small>
+        <span asp-validation-for="Lampiran" class="text-danger"></span>
+    </div>
+    <div class="mb-3 text-end">
+        <button type="button" class="btn btn-primary" onclick="simpanUpaya()">Simpan</button>
+    </div>
+</form>

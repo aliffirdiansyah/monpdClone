@@ -1219,9 +1219,9 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<MPetugasReklame>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C0034200");
+            entity.HasKey(e => e.Nik).HasName("SYS_C0034200");
 
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Nik).ValueGeneratedOnAdd();
             entity.Property(e => e.InsDate).ValueGeneratedOnAdd();
         });
 

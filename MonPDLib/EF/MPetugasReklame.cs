@@ -11,8 +11,10 @@ namespace MonPDLib.EF;
 public partial class MPetugasReklame
 {
     [Key]
-    [Column("ID", TypeName = "NUMBER")]
-    public decimal Id { get; set; }
+    [Column("NIK")]
+    [StringLength(16)]
+    [Unicode(false)]
+    public string Nik { get; set; } = null!;
 
     [Column("NAMA")]
     [StringLength(100)]
