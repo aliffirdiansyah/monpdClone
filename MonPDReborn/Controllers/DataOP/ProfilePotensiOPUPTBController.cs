@@ -56,7 +56,13 @@ namespace MonPDReborn.Controllers.DataOP
                 {
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
-                int wilayah = int.Parse(nama.Split(' ').Last());
+
+                string lastPart = nama.Split(' ').Last();
+
+                if (!int.TryParse(lastPart, out int wilayah))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
 
                 var model = new Models.DataOP.ProfilePotensiOPUPTBVM.ShowRekap(wilayah);
                 return PartialView($"{URLView}_{actionName}", model);

@@ -25,9 +25,19 @@ namespace MonPDReborn.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int? statusCode = null, string message)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var model = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            if (statusCode.HasValue)
+            {
+                ViewData["StatusCode"] = statusCode.Value;
+            }
+
+            return View(model);
         }
     }
 }
