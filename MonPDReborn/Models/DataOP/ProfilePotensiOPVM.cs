@@ -35,7 +35,7 @@ namespace MonPDReborn.Models.DataOP
 
                 // Capaian dalam persen: (RealisasiTotal / Potensi) * 100
                 DataDashboard.Capaian = DataDashboard.Potensi == 0 ? 0 :
-                    Math.Round((DataDashboard.RealisasiTotal / DataDashboard.Potensi) * 100, MidpointRounding.AwayFromZero, 2);
+                    Math.Round((DataDashboard.RealisasiTotal / DataDashboard.Potensi) * 100, 2);
 
                 // Jumlah OP
                 DataDashboard.RealisasiOP = DataRekapPotensi.Sum(r => r.Realisasi3);
