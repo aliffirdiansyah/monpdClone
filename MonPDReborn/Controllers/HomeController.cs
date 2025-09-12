@@ -25,7 +25,7 @@ namespace MonPDReborn.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error(int? statusCode = null, string message)
+        public IActionResult Error(int? statusCode = null)
         {
             var model = new ErrorViewModel
             {
