@@ -47,17 +47,10 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
-        public IActionResult ShowRekap(string jenisPajak)
+        public IActionResult ShowRekap(int wilayah)
         {
             try
             {
-                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
-                if (string.IsNullOrEmpty(nama))
-                {
-                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
-                }
-                int wilayah = int.Parse(nama.Split(' ').Last());
-
                 var model = new Models.DataOP.ProfilePotensiOPUPTBVM.ShowRekap(wilayah);
                 return PartialView($"{URLView}_{actionName}", model);
             }
@@ -89,24 +82,24 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
         [HttpGet]
-        public object GetDetailPotensi(DataSourceLoadOptions load_options, int JenisPajak)
+        public object GetDetailPotensi(DataSourceLoadOptions load_options, int JenisPajak, int wilayahPajak)
         {
-            var data = Models.DataOP.ProfilePotensiOPUPTBVM.Method.GetDetailPotensiList((EnumFactory.EPajak)JenisPajak);
+            var data = Models.DataOP.ProfilePotensiOPUPTBVM.Method.GetDetailPotensiList((EnumFactory.EPajak)JenisPajak, wilayahPajak);
             return DataSourceLoader.Load(data, load_options);
         }
         [HttpGet]
-        public object GetDetailPotensiHotel(DataSourceLoadOptions load_options, int JenisPajak)
+        public object GetDetailPotensiHotel(DataSourceLoadOptions load_options, int JenisPajak, int wilayahPajak)
         {
-            var data = Models.DataOP.ProfilePotensiOPUPTBVM.Method.GetDetailPotensiList((EnumFactory.EPajak)JenisPajak, true);
+            var data = Models.DataOP.ProfilePotensiOPUPTBVM.Method.GetDetailPotensiList((EnumFactory.EPajak)JenisPajak, true, wilayahPajak);
             return DataSourceLoader.Load(data, load_options);
         }
         [HttpGet]
-        public async Task<object> GetDataPotensi(DataSourceLoadOptions load_options, int JenisPajak, int kategori)
+        public async Task<object> GetDataPotensi(DataSourceLoadOptions load_options, int JenisPajak, int kategori, int wilayahPajak)
         {
             await Task.Delay(1000);
 
             var data = Models.DataOP.ProfilePotensiOPUPTBVM.Method.GetDataPotensiList(
-                (EnumFactory.EPajak)JenisPajak, kategori
+                (EnumFactory.EPajak)JenisPajak, kategori, wilayahPajak
             );
 
             return DataSourceLoader.Load(data, load_options);
