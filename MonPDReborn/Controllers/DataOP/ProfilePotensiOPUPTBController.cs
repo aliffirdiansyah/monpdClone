@@ -47,10 +47,17 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
-        public IActionResult ShowRekap(int wilayah)
+        public IActionResult ShowRekap()
         {
             try
             {
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+                int wilayah = int.Parse(nama.Split(' ').Last());
+
                 var model = new Models.DataOP.ProfilePotensiOPUPTBVM.ShowRekap(wilayah);
                 return PartialView($"{URLView}_{actionName}", model);
             }

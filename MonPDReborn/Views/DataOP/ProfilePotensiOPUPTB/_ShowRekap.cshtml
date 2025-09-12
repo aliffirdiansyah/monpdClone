@@ -231,18 +231,17 @@
         })
         .OnContentReady("function(e) { hitungPersentase(e); }")
         .MasterDetail(md => md
-        .Enabled(true)
-        .Template(
-    @<text>
-        @{
-        ViewData["JenisPajak"] = new JS("data.EnumPajak");
-        ViewData["wilayahPajak"] = new JS("data.wilayahPajak");
-        }
-        @await Html.PartialAsync("/Views/DataOP/ProfilePotensiOPUPTB/_ShowDetail.cshtml")
-        <% if (data.EnumPajak === 3) { %>
-        @await Html.PartialAsync("/Views/DataOP/ProfilePotensiOPUPTB/_ShowDetailHotel.cshtml")
-        <% } %>
-    </text>)
-        )
+            .Enabled(true)
+            .Template(
+        @<text>
+            @{
+            ViewData["JenisPajak"] = new JS("data.EnumPajak");
+            }
+            @await Html.PartialAsync("/Views/DataOP/ProfilePotensiOPUPTB/_ShowDetail.cshtml")
+            <% if (data.EnumPajak === 3) { %>
+            @await Html.PartialAsync("/Views/DataOP/ProfilePotensiOPUPTB/_ShowDetailHotel.cshtml")
+            <% } %>
+        </text>)
+            )
         )
 </div>

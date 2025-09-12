@@ -79,12 +79,10 @@
                 url: '@Url.Action("ShowRekap", "ProfilePotensiOPUPTB")',
                 type: 'GET',
                 beforeSend: function () {
-                    // Tampilkan spinner, sembunyikan konten
                     $('#loading2-ShowRekap').show();
                     $('#ShowRekap').hide();
                 },
                 success: function (result) {
-                    // Sembunyikan spinner, tampilkan hasil
                     $('#loading2-ShowRekap').hide();
                     $('#ShowRekap').html(result).show();
                 },
@@ -94,6 +92,8 @@
                 }
             });
         }
+
+
 
         function showDetail(container, options) {
             var jenisPajak = options.data?.JenisPajak;
