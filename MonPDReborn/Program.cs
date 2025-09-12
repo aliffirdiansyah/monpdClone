@@ -52,7 +52,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseSession();
-app.UseStatusCodePagesWithReExecute("/Home/Error", "?message='Error'&?statusCode={0}");
+app.UseStatusCodePagesWithReExecute("/Home/Error", "?message='Error'&?statusCode={404}");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");

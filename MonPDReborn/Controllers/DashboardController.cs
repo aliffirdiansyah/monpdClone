@@ -25,6 +25,18 @@ namespace MonPDReborn.Controllers
 
             try
             {
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                string lastPart = nama.Split(' ').Last();
+
+                if (int.TryParse(lastPart, out int wilayah))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 var model = new Models.DashboardVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
