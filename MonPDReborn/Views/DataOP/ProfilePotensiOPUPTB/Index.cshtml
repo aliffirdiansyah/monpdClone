@@ -243,6 +243,7 @@
 
             const jenisPajak = data.EnumPajak;
             const kategori = data.EnumKategori;
+            const wilayahPajak = data.WilayahPajak; // ✅ pakai nama property yang benar
             const value = cellInfo.value ?? 0;
 
             if (!jenisPajak || !kategori) {
@@ -267,7 +268,8 @@
                         type: 'GET',
                         data: {
                             JenisPajak: jenisPajak,
-                            Kategori: kategori
+                            Kategori: kategori,
+                            wilayahPajak: wilayahPajak // ✅ ikut dikirim ke server
                         },
                         success: function (response) {
                             $("#loader").hide();
@@ -298,6 +300,8 @@
 
             $(cellElement).append($link);
         }
+
+
 
         function detailOPCellTemplate(cellElement, cellInfo) {
             const value = cellInfo.value ?? 0;

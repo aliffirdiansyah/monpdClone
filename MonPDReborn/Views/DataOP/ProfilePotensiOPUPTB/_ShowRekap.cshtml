@@ -121,6 +121,7 @@
         .Columns(columns =>
         {
             columns.AddFor(x => x.JenisPajak).Caption("JENIS PAJAK").Alignment(HorizontalAlignment.Left).Fixed(true);
+            columns.AddFor(x => x.WilayahPajak).Caption("Wilayah").Visible(false);
             columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
             {
                 subColumns.AddFor(x => x.Target1).Caption("Target").Format("#,##0");
@@ -236,6 +237,7 @@
         @<text>
             @{
             ViewData["JenisPajak"] = new JS("data.EnumPajak");
+            ViewData["wilayahPajak"] = new JS("data.WilayahPajak");
             }
             @await Html.PartialAsync("/Views/DataOP/ProfilePotensiOPUPTB/_ShowDetail.cshtml")
             <% if (data.EnumPajak === 3) { %>

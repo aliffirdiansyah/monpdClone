@@ -13,15 +13,15 @@
 }
 <div class="table-responsive">
     @(
-            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DetailPotensi>()
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPUPTBVM.DetailPotensi>()
             .DataSource(d => d.Mvc()
             .LoadAction("GetDetailPotensi")
             .Key("Kategori")
             .LoadParams(new
             {
-                JenisPajak = ViewData["JenisPajak"],
-            wilayah = ViewData["wilayah"],
-            })
+            JenisPajak = ViewData["JenisPajak"],
+            wilayahPajak = ViewData["wilayahPajak"]
+        })
             )
             .ShowColumnLines(true)
             .ShowRowLines(true)
@@ -40,6 +40,7 @@
             {
 
                 columns.AddFor(x => x.Kategori).Caption("Kategori").Fixed(true);
+                columns.AddFor(x => x.WilayahPajak).Caption("Wilayah");
                 columns.Add().Caption(tahun1).Alignment(HorizontalAlignment.Center).Columns(subColumns =>
                 {
                     subColumns.AddFor(x => x.Target1).Caption("Target").Format("#,##0");

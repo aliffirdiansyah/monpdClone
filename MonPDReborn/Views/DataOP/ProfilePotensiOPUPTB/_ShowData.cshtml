@@ -1,4 +1,4 @@
-﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPVM.ShowData
+﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPUPTBVM.ShowData
 
 
 
@@ -27,7 +27,7 @@
 @if (Model.EnumKategori == 64)
 {
     @(
-        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPotensi>()
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPUPTBVM.DataPotensi>()
         .ID("dataPotensiGrid")
         .DataSource(d => d.Mvc()
             .LoadAction("GetDataPotensi")
@@ -35,7 +35,7 @@
             .LoadParams(new
             {
                 JenisPajak = Model.EnumPajak,
-                kategori = Model.EnumKategori
+                kategori = Model.EnumKategori,
             })
             .OnLoading("onDataGridContentLoad")
         )
@@ -168,7 +168,7 @@
 else
 {
     @(
-        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPVM.DataPotensi>()
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePotensiOPUPTBVM.DataPotensi>()
         .ID("dataPotensiGrid")
         .DataSource(d => d.Mvc()
             .LoadAction("GetDataPotensi")

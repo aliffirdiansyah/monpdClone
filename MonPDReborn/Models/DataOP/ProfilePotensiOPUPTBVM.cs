@@ -21,10 +21,11 @@ namespace MonPDReborn.Models.DataOP
         {
             public List<RekapPotensi> DataRekapPotensi { get; set; } = new();
             public Dashboard DataDashboard { get; set; } = new();
-
+            public int Wilayah { get; set; }
             public ShowRekap() { }
             public ShowRekap(int wilayah)
             {
+                Wilayah = wilayah;
                 DataRekapPotensi = Method.GetRekapPotensiList(wilayah);
                 DataDashboard = Method.GetDashboardData(wilayah);
                 // Total Potensi dari seluruh data rekap

@@ -101,12 +101,19 @@ namespace MonPDReborn.Controllers.DataOP
             return DataSourceLoader.Load(data, load_options);
         }
         [HttpGet]
-        public async Task<object> GetDataPotensi(DataSourceLoadOptions load_options, int JenisPajak, int kategori, int wilayahPajak)
+        public async Task<object> GetDataPotensi(DataSourceLoadOptions load_options, int JenisPajak, int kategori)
         {
+            var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+            if (string.IsNullOrEmpty(nama))
+            {
+                throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+            }
+            int wilayah = int.Parse(nama.Split(' ').Last());
+
             await Task.Delay(1000);
 
             var data = Models.DataOP.ProfilePotensiOPUPTBVM.Method.GetDataPotensiList(
-                (EnumFactory.EPajak)JenisPajak, kategori, wilayahPajak
+                (EnumFactory.EPajak)JenisPajak, kategori, wilayah
             );
 
             return DataSourceLoader.Load(data, load_options);
