@@ -136,6 +136,32 @@ namespace MonPDReborn.Controllers.Reklame
             });
         }
         [HttpGet]
+        public async Task<IActionResult> GetNikPetugas(string kdAktifitas)
+        {
+            if (string.IsNullOrEmpty(kdAktifitas))
+            {
+                return BadRequest("NIK Petugas tidak boleh kosong.");
+            }
+
+            var context = DBClass.GetContext();
+            var nikPetugas = await context.MPetugasReklames
+                .Where(x => x.KdAktifitas == kdAktifitas) // ganti filter dari KdAktifitas ke NIK
+                .Select(x => x.Nik)
+                .FirstOrDefaultAsync();
+
+            if (nikPetugas == null)
+            {
+                return NotFound($"Nama Petugas untuk NIK '{kdAktifitas}' tidak ditemukan.");
+            }
+
+            return Ok(new
+            {
+                KdAktifitas = kdAktifitas,
+                NikPetugas = nikPetugas
+            });
+        }
+
+        [HttpGet]
         public async Task<object> GetNoFormulir(DataSourceLoadOptions loadOptions)
         {
             var context = DBClass.GetContext();
@@ -171,6 +197,53 @@ namespace MonPDReborn.Controllers.Reklame
                 NoFormulir = noFormulir,
                 AlamatReklame = alamatReklame
             });
+        }
+        [HttpPost]
+        public IActionResult SimpanUpaya(Models.Reklame.InputReklameVM.Show input)
+        {
+            try
+            {
+                if (input.Lampiran == null && input.Lampiran.Length <= 0)
+                {
+                    throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
+                }
+                if (input.Lampiran != null && input.Lampiran.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        input.Lampiran.CopyTo(ms);
+                        input.Data.NewRowUpaya.Lampiran = ms.ToArray();
+                    }
+                }
+                var insert = new Models.Reklame.InputReklameVM.DetailUpaya.NewRow
+                {
+                    NoFormulir = input.Data.NewRowUpaya.NoFormulir,
+                    IdUpaya = input.SelectedUpaya,
+                    IdTindakan = input.SelectedTindakan,
+                    NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
+                    NIKPetugas = input.Data.NewRowUpaya.NIKPetugas,
+                    KdKatifitas = input.Data.NewRowUpaya.KdKatifitas,
+                    TglUpaya = input.Data.NewRowUpaya.TglUpaya,
+                    Lampiran = input.Data.NewRowUpaya.Lampiran,
+                };
+                Models.Reklame.InputReklameVM.Method.SimpanUpaya(insert);
+
+                response.Status = StatusEnum.Success;
+                response.Message = "Data Berhasil Disimpan";
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+            return Json(response);
         }
     }
 }

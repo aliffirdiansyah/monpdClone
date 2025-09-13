@@ -2,93 +2,103 @@
 
 <form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
     @Html.HiddenFor(m => m.Data.NewRowUpaya.NoFormulir)
-    <div class="mb-3">
-        <label asp-for="SelectedKdAktifitas" class="form-label">Kode Aktifitas</label>
-        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedKdAktifitas)
-                .ID("cbKdAktifitas")
-                .ValueExpr("Value")
-                .DisplayExpr("Text")
-                .DataSource(d => d.Mvc()
-                .Controller("InputReklame")
-                .LoadAction("GetKdAktifitas")
-                .Key("filter"))
-                .SearchExpr("Text")
-                .SearchEnabled(true)
-                .Placeholder("Pilih Kode Aktifitas")
-                .MinSearchLength(2)
-                .OnValueChanged("onKdAktifitasChanged")
-                )
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Nama Aktifitas</label>
-        <input type="text" id="txtNamaAktifitas" class="form-control" readonly />
-    </div>
-    <div class="mb-3">
-        <label asp-for="SelectedNoFormulir" class="form-label">Kode Aktifitas</label>
-        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedNoFormulir)
-                .ID("cbNoFormulir")
-                .ValueExpr("Value")
-                .DisplayExpr("Text")
-                .DataSource(d => d.Mvc()
-                .Controller("InputReklame")
-                .LoadAction("GetNoFormulir")
-                .Key("filter"))
-                .SearchExpr("Text")
-                .SearchEnabled(true)
-                .Placeholder("Pilih No Formulir")
-                .MinSearchLength(2)
-                .OnValueChanged("onNoFormulirChanged")
-                )
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Alamat Reklame</label>
-        <input type="text" id="txtAlamatReklame" class="form-control" readonly />
-    </div>
-    <div class="mb-3">
-        <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
-        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
-                .ID("cbUpaya")
-                .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
-                .OnValueChanged("fnReloadTindakan")
-                .DisplayExpr("Text")
-                .ValueExpr("Value")
-                .SearchEnabled(true)
-                )
+    <div class="row">
+
+        <div class="col-lg-3 mb-3">
+            <label asp-for="SelectedKdAktifitas" class="form-label">Kode Aktifitas</label>
+            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedKdAktifitas)
+                        .ID("cbKdAktifitas")
+                        .ValueExpr("Value")
+                        .DisplayExpr("Text")
+                        .DataSource(d => d.Mvc()
+                        .Controller("InputReklame")
+                        .LoadAction("GetKdAktifitas")
+                        .Key("filter"))
+                        .SearchExpr("Text")
+                        .SearchEnabled(true)
+                        .Placeholder("Pilih Kode Aktifitas")
+                        .MinSearchLength(2)
+                        .OnValueChanged("onKdAktifitasChanged")
+                        )
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <label class="form-label">Nama Petugas</label>
+            <input type="text" id="txtNamaAktifitas" class="form-control" readonly />
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <label class="form-label">NIK Petugas</label>
+            <input type="text" id="txtNikPetugas" class="form-control" readonly />
+        </div>
+
+        <div class="col-lg-5 mb-3">
+            <label asp-for="SelectedNoFormulir" class="form-label">No Formulir</label>
+            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedNoFormulir)
+                        .ID("cbNoFormulir")
+                        .ValueExpr("Value")
+                        .DisplayExpr("Text")
+                        .DataSource(d => d.Mvc()
+                        .Controller("InputReklame")
+                        .LoadAction("GetNoFormulir")
+                        .Key("filter"))
+                        .SearchExpr("Text")
+                        .SearchEnabled(true)
+                        .Placeholder("Pilih No Formulir")
+                        .MinSearchLength(2)
+                        .OnValueChanged("onNoFormulirChanged")
+                        )
+        </div>
+
+        <div class="col-lg-5 mb-3">
+            <label class="form-label">Alamat Reklame</label>
+            <input type="text" id="txtAlamatReklame" class="form-control" readonly />
+        </div>
+
+        <div class="col-lg-7 mb-3">
+            <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
+            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
+                        .ID("cbUpaya")
+                        .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
+                        .OnValueChanged("fnReloadTindakan")
+                        .DisplayExpr("Text")
+                        .ValueExpr("Value")
+                        .SearchEnabled(true)
+                        )
+        </div>
+
+        <div class="col-lg-7 mb-3">
+            <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
+            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
+                        .ID("cbTindakan")
+                        .ValueExpr("Value")
+                        .DisplayExpr("Text")
+                        .DataSource(x => x.Mvc().Controller("InputReklame").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
+                        .SearchEnabled(true)
+                        )
+        </div>
+
+        <div class="col-lg-7 mb-3">
+            <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
+            @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
+                        .Type(DateBoxType.Date)
+                        .DisplayFormat("dd MMM yyyy")
+                        .Value(DateTime.Today))
+        </div>
+
+        <div class="col-lg-7 mb-3">
+            <label asp-for="Lampiran" class="form-label"></label>
+            <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
+            <small class="form-text text-muted">
+                Hanya file gambar (.jpg, .jpeg, .png).
+            </small>
+            <span asp-validation-for="Lampiran" class="text-danger"></span>
+        </div>
+
     </div>
 
-    <div class="mb-3">
-        <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
-        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
-                .ID("cbTindakan")
-                .ValueExpr("Value")
-                .DisplayExpr("Text")
-                .DataSource(x => x.Mvc().Controller("InputReklame").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
-                .SearchEnabled(true)
-                )
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Data.NewRowUpaya.NamaPetugas" class="form-label">Petugas</label>
-        @Html.TextBoxFor(m => m.Data.NewRowUpaya.NamaPetugas, new { @class = "form-control" })
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
-        @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
-                .Type(DateBoxType.Date)
-                .DisplayFormat("dd MMM yyyy")
-                .Value(DateTime.Today))
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Lampiran" class="form-label"></label>
-        <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
-        <small class="form-text text-muted">
-            Hanya file gambar (.jpg, .jpeg, .png).
-        </small>
-        <span asp-validation-for="Lampiran" class="text-danger"></span>
-    </div>
     <div class="mb-3 text-end">
         <button type="button" class="btn btn-primary" onclick="simpanUpaya()">Simpan</button>
     </div>
+
 </form>
