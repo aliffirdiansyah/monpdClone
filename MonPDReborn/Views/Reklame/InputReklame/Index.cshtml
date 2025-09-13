@@ -113,7 +113,7 @@
             var formData = new FormData($('#formUpaya')[0]);
 
             $.ajax({
-                url: '@Url.Action("SimpanUpaya", "ReklameSummary")',
+                url: '@Url.Action("SimpanUpaya", "InputReklame")',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -177,12 +177,31 @@
         function onKdAktifitasChanged(e) {
             let kdAktifitas = e.value;
             if (!kdAktifitas) {
-                $("#txtNamaAktifitas").val("");
+                $("#txtNikPetugas").val("");
                 return;
             }
 
             $.ajax({
                 url: '@Url.Action("GetNamaAktifitas", "InputReklame")',
+                type: 'GET',
+                data: { kdAktifitas: kdAktifitas },
+                success: function (result) {
+                    $("#txtNikPetugas").val(result.namaAktifitas);
+                },
+                error: function () {
+                    $("#txtNikPetugas").val("Tidak ditemukan");
+                }
+            });
+        }
+        function onKdAktifitasChanged(e) {
+            let kdAktifitas = e.value;
+            if (!kdAktifitas) {
+                $("#txtNamaAktifitas").val("");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetNikPetugas", "InputReklame")',
                 type: 'GET',
                 data: { kdAktifitas: kdAktifitas },
                 success: function (result) {

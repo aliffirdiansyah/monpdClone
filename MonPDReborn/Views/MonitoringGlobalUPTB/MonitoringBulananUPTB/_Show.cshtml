@@ -1,0 +1,416 @@
+﻿@using static MonPDReborn.Models.MonitoringGlobalUPTB.MonitoringBulananUPTBVM.MonitoringBulananViewModels
+@model MonPDReborn.Models.MonitoringGlobalUPTB.MonitoringBulananUPTBVM.Show
+
+@{
+    int tahunSekarang = (int)ViewData["Tahun"];
+    int jenisPajakId = (int)ViewData["JenisPajakId"];
+}
+
+<div class="col-xxl-12 col-sm-12 project-card">
+    <div class="card card-height-100">
+        <div class="card-body">
+            <div class="d-flex flex-column h-100">
+                <div class="container-fluid mt-auto">
+                    <div class="p-3" style="background-color: #eef8ff; border: 1px solid #bce3ff; border-radius: 6px;">
+                        <div class="mb-2">
+                            <h6 class="mb-1">Pendapatan Pajak – @Model.Data.Tahun (@Model.Data.NamaJenisPajak)</h6>
+                            <span class="badge bg-warning text-dark me-2">@Model.Data.PersentaseDisplay %</span>
+                            <small class="text-muted">dari target @Model.Data.TargetDisplay</small>
+                        </div>
+
+                        <h4 class="fw-bold mb-3">@Model.Data.RealisasiDisplay</h4>
+
+                        <div class="d-flex align-items-center pb-2">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar-xs">
+                                    <div class="avatar-title bg-light rounded-circle text-muted fs-16">
+                                        <i class="mdi mdi-cash-multiple"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="progress animated-progress custom-progress progress-label">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: @Math.Round(Model.Data.Persentase)%" aria-valuenow="@Model.Data.Persentase" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="label">@Model.Data.PersentaseDisplay</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>
+            <span class="badge bg-primary-subtle text-primary badge-border">Realisasi @Model.Data.NamaJenisPajak</span>
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- KIRI -->
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-start mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                                        .ID("selectTahunNow")
+                                        .DataSource(new[] { tahunSekarang })
+                                        .Value(tahunSekarang)
+                                        .ReadOnly(true)
+                                        .Width(120)
+                                        )
+                </div>
+                @(
+                                Html.DevExtreme().DataGrid<BulananPajak>()
+                                .ID("gridAkpNow")
+                                .DataSource(Model.BulananPajakList)
+                                .ShowBorders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .RowAlternationEnabled(true)
+                                .ColumnAutoWidth(true)
+                                .Paging(p => p.Enabled(false))
+                                .HeaderFilter(h => h.Visible(false))
+                                .SearchPanel(sp => sp.Visible(false))
+                                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                                .OnExporting("exportGrid")
+                                .Columns(columns =>
+                                {
+                                    columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
+
+                                    columns.AddFor(c => c.AkpTarget).Caption("Target")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right)
+                                    .CellTemplate(new JS("bulananPajakRealisasi"));
+
+                                    columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                                    .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Selisih).Caption("Selisih")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                                })
+                                .Summary(s =>
+                                {
+                                    s.TotalItems(items =>
+                                    {
+                                        items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                        items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                        items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                        items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                        items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                                    });
+                                })
+                                )
+            </div>
+
+            <!-- KANAN -->
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-end mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                                        .ID("selectTahunOld")
+                                        .DataSource(new[] { 2024, 2023, 2022, 2021, 2020 })
+                                        .Value(2024)
+                                        .Width(120)
+                                        .Placeholder("Pilih Tahun")
+                                        .OnValueChanged("function(e) { $('#gridAkpTahun').dxDataGrid('instance').refresh(); }")
+                                        )
+                </div>
+                @(Html.DevExtreme().DataGrid<BulananPajak>()
+                                .ID("gridAkpTahun")
+                                                    // 2. Ubah DataSource menjadi dinamis
+                                .DataSource(d => d.Mvc()
+                                .Controller("MonitoringBulanan")
+                                .LoadAction("GetRealisasiTahunan")
+                                .LoadParams(new
+                                {
+                                    jenisPajak = jenisPajakId,
+                                    tahun = new JS("function() { return $('#selectTahunOld').dxSelectBox('instance').option('value'); }")
+                                })
+                                )
+                                .ShowBorders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .RowAlternationEnabled(true)
+                                .ColumnAutoWidth(true)
+                                .Paging(p => p.Enabled(false))
+                                .HeaderFilter(h => h.Visible(false))
+                                .SearchPanel(sp => sp.Visible(false))
+                                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                                .OnExporting("exportGrid")
+                                .Columns(columns =>
+                                {
+                                    columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
+
+                                    columns.AddFor(c => c.AkpTarget).Caption("Target")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right)
+                                    .CellTemplate(new JS("bulananPajakRealisasi"));
+
+                                    columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                                    .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Selisih).Caption("Selisih")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                                })
+                                .Summary(s =>
+                                {
+                                    s.TotalItems(items =>
+                                    {
+                                        items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                        items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                        items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                        items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                        items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                                    });
+                                })
+                                )
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 
+<div class="card">
+    <div class="card-header">
+        <h3><span class="badge bg-primary-subtle text-primary badge-border">Akumulasi @Model.Data.NamaJenisPajak</span></h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-start mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                                        .ID("selectTahunAkm")
+                                        .DataSource(new[] { tahunSekarang })
+                                        .Value(tahunSekarang)
+                                        .ReadOnly(true)
+                                        .Width(120)
+                                        )
+                </div>
+                @(Html.DevExtreme().DataGrid<BulananPajak>()
+                                .ID("gridAkumulasiAkpNow")
+                                .DataSource(Model.AkumulasiBulananPajakList)
+                                .ShowBorders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .RowAlternationEnabled(true)
+                                .ColumnAutoWidth(true)
+                                .Paging(p => p.Enabled(false))
+                                .HeaderFilter(h => h.Visible(false))
+                                .SearchPanel(sp => sp.Visible(false))
+                                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                                .OnExporting("exportGrid")
+                                .Columns(columns =>
+                                {
+                                    columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
+
+                                    columns.AddFor(c => c.AkpTarget).Caption("Target")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                                    .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Selisih).Caption("Selisih")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                                })
+                .Summary(s =>
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                            });
+                        })
+                                )
+            </div>
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-end mb-2">
+                    @(Html.DevExtreme().SelectBox()
+                                        .ID("selectTahunAkmOld")
+                                        .DataSource(new[] { 2024, 2023, 2022, 2021, 2020 })
+                                        .Value(2024)
+                                        .Width(120)
+                                        .Placeholder("Pilih Tahun")
+                                        .OnValueChanged("function(e) { $('#gridAkumulasiAkpTahun').dxDataGrid('instance').refresh(); }")
+                                        )
+                </div>
+                @(Html.DevExtreme().DataGrid<BulananPajak>()
+                                .ID("gridAkumulasiAkpTahun")
+                                .DataSource(d => d.Mvc()
+                                .Controller("MonitoringBulanan")
+                                .LoadAction("GetAkumulasiTahunan")
+                                .LoadParams(new
+                                {
+                                    jenisPajak = jenisPajakId,
+                                    tahun = new JS("function() { return $('#selectTahunAkmOld').dxSelectBox('instance').option('value'); }")
+                                })
+                                )
+                                .ShowBorders(true)
+                                .ShowColumnLines(true)
+                                .ShowRowLines(true)
+                                .RowAlternationEnabled(true)
+                                .ColumnAutoWidth(true)
+                                .Paging(p => p.Enabled(false))
+                                .HeaderFilter(h => h.Visible(false))
+                                .SearchPanel(sp => sp.Visible(false))
+                                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                                .OnExporting("exportGrid")
+                                .Columns(columns =>
+                                {
+                                    columns.AddFor(c => c.BulanNama).Caption("Bulan").Fixed(true);
+
+                                    columns.AddFor(c => c.AkpTarget).Caption("Target")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Realisasi).Caption("Realisasi")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Pencapaian).Caption("Pencapaian (%)")
+                                    .Format(new JS("function(value) { return value.toFixed(2) + ' %'; }"))
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                    columns.AddFor(c => c.Selisih).Caption("Selisih")
+                                    .Format("#,##0").Alignment(HorizontalAlignment.Right);
+                                })
+                .Summary(s =>
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.Add()
+                                    .Column("Bulan")
+                                    .SummaryType(SummaryType.Sum)
+                                    .DisplayFormat("Total");
+
+                                items.Add()
+                                    .Column("Target")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Realisasi")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Pencapaian")
+                                    .SummaryType(SummaryType.Avg)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0} %")
+                                    .Alignment(HorizontalAlignment.Right);
+
+                                items.Add()
+                                    .Column("Selisih")
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Rp {0}")
+                                    .Alignment(HorizontalAlignment.Right);
+                            });
+                        })
+                                )
+            </div>
+        </div>
+    </div>
+</div>
+
+ *@

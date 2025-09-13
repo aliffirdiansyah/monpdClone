@@ -35,6 +35,14 @@ namespace MonPDReborn.Models.Reklame
             public static void SimpanUpaya(DetailUpaya.NewRow NewRowUpaya)
             {
                 var context = DBClass.GetContext();
+                if (string.IsNullOrEmpty(NewRowUpaya.KdKatifitas))
+                {
+                    throw new ArgumentException("Kode Petugas tidak boleh kosong.");
+                }
+                if (string.IsNullOrEmpty(NewRowUpaya.NoFormulir))
+                {
+                    throw new ArgumentException("No Formulir tidak boleh kosong.");
+                }
                 if (NewRowUpaya.IdUpaya == 0)
                 {
                     throw new ArgumentException("Upaya tidak boleh kosong.");
@@ -73,6 +81,8 @@ namespace MonPDReborn.Models.Reklame
                 newUpaya.Upaya = upaya ?? "-";
                 newUpaya.Keterangan = tindakan ?? "-";
                 newUpaya.Petugas = NewRowUpaya.NamaPetugas;
+                newUpaya.NikPetugas = NewRowUpaya.NIKPetugas;
+                newUpaya.KdAktifitas = NewRowUpaya.KdKatifitas;
                 newUpaya.DbMonReklameUpayaDok.Gambar = NewRowUpaya.Lampiran;
 
 
@@ -114,6 +124,8 @@ namespace MonPDReborn.Models.Reklame
                 public int IdUpaya { get; set; }
                 public int IdTindakan { get; set; }
                 public string NamaPetugas { get; set; } = null!;
+                public string KdKatifitas { get; set; } = null!;
+                public string NIKPetugas { get; set; } = null!;
                 public DateTime TglUpaya { get; set; }
                 public byte[] Lampiran { get; set; } = null!;
             }

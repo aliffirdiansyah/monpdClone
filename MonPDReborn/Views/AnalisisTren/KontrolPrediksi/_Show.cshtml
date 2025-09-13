@@ -148,18 +148,22 @@
                     .Caption("Realisasi S.D Bulan Lalu").Format("#,##0");
 
                 columns.AddFor(m => m.RealisasiBulanIni)
-                    .Caption("Realisasi S.D Hari Ini").Format("#,##0");
+                    .Caption("Realisasi Bulan Ini").Format("#,##0");
 
-               columns.AddFor(m => m.RealisasiHari) 
-               .Name("RealisasiHari")  
+               columns.AddFor(m => m.RealisasiHari)
+               .Caption("Realisasi S.D Hari Ini") 
+               .Format("#,##0").Width(200);
+               
+               columns.AddFor(m => m.Prediksi) 
+               .Name("Prediksi")  
                .Caption("Prediksi Hari Ini S.D Dengan Tanggal") 
                .Format("#,##0").Width(200);
 
 
 
-                columns.AddFor(m => m.Jumlah)
+             @*    columns.AddFor(m => m.Jumlah)
             .Caption("Jumlah").Format("#,##0");
-
+ *@
                 columns.Add()
                     .Caption("%")
                     .CellTemplate(@<text>

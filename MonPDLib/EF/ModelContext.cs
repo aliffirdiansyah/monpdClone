@@ -229,6 +229,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MvDbeWilayah> MvDbeWilayahs { get; set; }
 
+    public virtual DbSet<MvPrediksi2025> MvPrediksi2025s { get; set; }
+
     public virtual DbSet<MvReklameRekapJalan> MvReklameRekapJalans { get; set; }
 
     public virtual DbSet<MvReklameRekapLiar> MvReklameRekapLiars { get; set; }
@@ -423,6 +425,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwMonHiburan> VwMonHiburans { get; set; }
 
+    public virtual DbSet<VwMonHiburan365> VwMonHiburan365s { get; set; }
+
     public virtual DbSet<VwMonHotel> VwMonHotels { get; set; }
 
     public virtual DbSet<VwMonHotel365> VwMonHotel365s { get; set; }
@@ -443,9 +447,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1299,6 +1303,11 @@ public partial class ModelContext : DbContext
             entity.ToView("MV_DBE_WILAYAH");
         });
 
+        modelBuilder.Entity<MvPrediksi2025>(entity =>
+        {
+            entity.ToView("MV_PREDIKSI_2025");
+        });
+
         modelBuilder.Entity<MvReklameRekapJalan>(entity =>
         {
             entity.ToView("MV_REKLAME_REKAP_JALAN");
@@ -2097,6 +2106,13 @@ public partial class ModelContext : DbContext
             entity.ToView("VW_MON_HIBURAN");
         });
 
+        modelBuilder.Entity<VwMonHiburan365>(entity =>
+        {
+            entity.ToView("VW_MON_HIBURAN_365");
+
+            entity.Property(e => e.JenisPajak).IsFixedLength();
+        });
+
         modelBuilder.Entity<VwMonHotel>(entity =>
         {
             entity.ToView("VW_MON_HOTEL");
@@ -2105,6 +2121,8 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<VwMonHotel365>(entity =>
         {
             entity.ToView("VW_MON_HOTEL_365");
+
+            entity.Property(e => e.JenisPajak).IsFixedLength();
         });
 
         modelBuilder.Entity<VwMonParkir>(entity =>
