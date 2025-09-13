@@ -532,14 +532,24 @@
                         </div>
                     </li>
                     <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
+
                     <li class="nav-item">
-                        <a class="nav-link menu-link @(currentController == "PROFILEPOTENSIOP" ? "active" : "")"
-                           href="@Url.Action("Index", "ProfilePotensiOPUPTB")" role="button">
+                        <a class="nav-link menu-link @(currentController == "PROFILEOP" ? "active" : "")"
+                           href="@Url.Action("Index", "ProfileOP")" role="button">
                             <i class="bx bx-home me-1 align-middle"></i>
-                            <span data-key="t-profilePotensi">Profil Potensi</span>
+                            <span data-key="t-profileOP">Profil OP</span>
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "PROFILEPOTENSIOP" ? "active" : "")"
+                           href="@Url.Action("Index", "ProfilePotensiOPUPTB")" role="button">
+                            <i class="bx bx-data me-1 align-middle"></i>
+                            <span data-key="t-profilePotensi">Profil Potensi</span>
+                        </a>
+                    </li>
+
+
+                    @* <li class="nav-item">
                         <a class="nav-link menu-link collapse @dataOPActiveClass"
                         href="#sidebarData"
                         data-bs-toggle="collapse"
@@ -559,13 +569,13 @@
                                         Profil OP
                                     </a>
                                 </li>
-                                @* <li class="nav-item">
+                                <li class="nav-item">
                                     <a class="nav-link @(currentController == "PROFILEPOTENSIOP" ? "active" : "")"
                                     href="@Url.Action("Index", "ProfilePotensiOP")"
                                     data-key="t-profilPotensi">
                                         Profil Potensi
                                     </a>
-                                </li> *@
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link @(currentController == "PROFILESPASIALOP" ? "active" : "")"
                                     href="@Url.Action("Index", "ProfileSpasialOP")"
@@ -589,7 +599,7 @@
                                 </li>
                             </ul>
                         </div>
-                    </li>
+                    </li> *@
                 </ul>
             </div>
         }
