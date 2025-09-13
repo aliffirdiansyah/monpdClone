@@ -173,4 +173,48 @@
             }
         }
     </script>
+    <script>
+        function onKdAktifitasChanged(e) {
+            let kdAktifitas = e.value;
+            if (!kdAktifitas) {
+                $("#txtNamaAktifitas").val("");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetNamaAktifitas", "InputReklame")',
+                type: 'GET',
+                data: { kdAktifitas: kdAktifitas },
+                success: function (result) {
+                    $("#txtNamaAktifitas").val(result.namaAktifitas);
+                },
+                error: function () {
+                    $("#txtNamaAktifitas").val("Tidak ditemukan");
+                }
+            });
+        }
+        function onNoFormulirChanged(e) {
+            let noFormulir = e.value;
+            if (!noFormulir) {
+                $("#txtAlamatReklame").val("");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetAlamatReklame", "InputReklame")',
+                type: 'GET',
+                data: { noFormulir: noFormulir },
+                success: function (result) {
+                    console.log("Response:", result);
+                    // PENTING: gunakan huruf besar sesuai response
+                    $("#txtAlamatReklame").val(result.AlamatReklame);
+                },
+                error: function (xhr) {
+                    console.log("Error:", xhr);
+                    $("#txtAlamatReklame").val("Tidak ditemukan");
+                }
+            });
+        }
+
+    </script>
 }

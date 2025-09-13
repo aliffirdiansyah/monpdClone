@@ -19,6 +19,8 @@ namespace MonPDReborn.Models.Reklame
             public DetailUpaya Data { get; set; } = new();
             public int SelectedUpaya { get; set; }
             public int SelectedTindakan { get; set; }
+            public string SelectedKdAktifitas { get; set; } = null!;
+            public string SelectedNoFormulir { get; set; } = null!;
             public IFormFile Lampiran { get; set; } = null!;
             public Show(string noFormulir) 
             {
@@ -86,6 +88,16 @@ namespace MonPDReborn.Models.Reklame
         public class TindakanCbView
         {
             public int Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+        public class KdAktifitasCbView
+        {
+            public string? Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+        public class NoFormulirCbView
+        {
+            public string? Value { get; set; }
             public string Text { get; set; } = null!;
         }
 

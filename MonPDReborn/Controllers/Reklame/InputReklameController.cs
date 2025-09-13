@@ -3,6 +3,7 @@ using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using MonPDReborn.Lib.General;
+using Microsoft.EntityFrameworkCore;
 using static MonPDReborn.Lib.General.ResponseBase;
 using static MonPDReborn.Models.Reklame.InputReklameVM;
 
@@ -96,6 +97,80 @@ namespace MonPDReborn.Controllers.Reklame
                 });
 
             return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        [HttpGet]
+        public async Task<object> GetKdAktifitas(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+            var query = context.MPetugasReklames
+                .Select(item => new KdAktifitasCbView
+                {
+                    Value = item.KdAktifitas,
+                    Text = item.KdAktifitas ?? string.Empty
+                });
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetNamaAktifitas(string kdAktifitas)
+        {
+            if (string.IsNullOrEmpty(kdAktifitas))
+            {
+                return BadRequest("Kode aktifitas tidak boleh kosong.");
+            }
+
+            var context = DBClass.GetContext();
+            var namaAktifitas = await context.MPetugasReklames
+                .Where(x => x.KdAktifitas == kdAktifitas)
+                .Select(x => x.Nama) // pastikan nama kolom sesuai
+                .FirstOrDefaultAsync();
+
+            if (namaAktifitas == null)
+            {
+                return NotFound($"Nama Aktifitas untuk kode '{kdAktifitas}' tidak ditemukan.");
+            }
+
+            return Ok(new
+            {
+                KdAktifitas = kdAktifitas,
+                NamaAktifitas = namaAktifitas
+            });
+        }
+        [HttpGet]
+        public async Task<object> GetNoFormulir(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
+            var query = context.DbOpReklames
+                .Select(item => new NoFormulirCbView
+                {
+                    Value = item.NoFormulir,
+                    Text = item.NoFormulir ?? string.Empty
+                });
+            return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAlamatReklame(string noFormulir)
+        {
+            if (string.IsNullOrEmpty(noFormulir))
+            {
+                return BadRequest("No Formuir tidak boleh kosong.");
+            }
+
+            var context = DBClass.GetContext();
+            var alamatReklame = await context.DbOpReklames
+                .Where(x => x.NoFormulir == noFormulir)
+                .Select(x => x.Alamat) // pastikan nama kolom sesuai
+                .FirstOrDefaultAsync();
+
+            if (alamatReklame == null)
+            {
+                return NotFound($"No Formuir untuk '{noFormulir}' tidak ditemukan.");
+            }
+
+            return Ok(new
+            {
+                NoFormulir = noFormulir,
+                AlamatReklame = alamatReklame
+            });
         }
     }
 }
