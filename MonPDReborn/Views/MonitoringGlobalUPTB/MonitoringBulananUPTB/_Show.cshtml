@@ -233,7 +233,7 @@
     </div>
 </div>
 
-@* 
+
 <div class="card">
     <div class="card-header">
         <h3><span class="badge bg-primary-subtle text-primary badge-border">Akumulasi @Model.Data.NamaJenisPajak</span></h3>
@@ -280,44 +280,6 @@
                                     columns.AddFor(c => c.Selisih).Caption("Selisih")
                                     .Format("#,##0").Alignment(HorizontalAlignment.Right);
                                 })
-                .Summary(s =>
-                        {
-                            s.TotalItems(items =>
-                            {
-                                items.Add()
-                                    .Column("Bulan")
-                                    .SummaryType(SummaryType.Sum)
-                                    .DisplayFormat("Total");
-
-                                items.Add()
-                                    .Column("Target")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Rp {0}")
-                                    .Alignment(HorizontalAlignment.Right);
-
-                                items.Add()
-                                    .Column("Realisasi")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Rp {0}")
-                                    .Alignment(HorizontalAlignment.Right);
-
-                                items.Add()
-                                    .Column("Pencapaian")
-                                    .SummaryType(SummaryType.Avg)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("{0} %")
-                                    .Alignment(HorizontalAlignment.Right);
-
-                                items.Add()
-                                    .Column("Selisih")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Rp {0}")
-                                    .Alignment(HorizontalAlignment.Right);
-                            });
-                        })
                                 )
             </div>
             <div class="col-lg-6">
@@ -369,48 +331,10 @@
                                     columns.AddFor(c => c.Selisih).Caption("Selisih")
                                     .Format("#,##0").Alignment(HorizontalAlignment.Right);
                                 })
-                .Summary(s =>
-                        {
-                            s.TotalItems(items =>
-                            {
-                                items.Add()
-                                    .Column("Bulan")
-                                    .SummaryType(SummaryType.Sum)
-                                    .DisplayFormat("Total");
-
-                                items.Add()
-                                    .Column("Target")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Rp {0}")
-                                    .Alignment(HorizontalAlignment.Right);
-
-                                items.Add()
-                                    .Column("Realisasi")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Rp {0}")
-                                    .Alignment(HorizontalAlignment.Right);
-
-                                items.Add()
-                                    .Column("Pencapaian")
-                                    .SummaryType(SummaryType.Avg)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("{0} %")
-                                    .Alignment(HorizontalAlignment.Right);
-
-                                items.Add()
-                                    .Column("Selisih")
-                                    .SummaryType(SummaryType.Sum)
-                                    .ValueFormat("#,##0")
-                                    .DisplayFormat("Rp {0}")
-                                    .Alignment(HorizontalAlignment.Right);
-                            });
-                        })
+                
                                 )
             </div>
         </div>
     </div>
 </div>
 
- *@
