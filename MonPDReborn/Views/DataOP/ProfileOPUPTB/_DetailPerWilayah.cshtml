@@ -1,0 +1,54 @@
+﻿
+
+@(
+Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetailOP>()
+    .DataSource(m => m.Mvc()
+        .LoadAction("GetDetailPerWilayah")
+        .LoadParams(new
+        {
+            JenisPajak = ViewData["JenisPajak"],
+            uptb = ViewData["uptb"],
+            kec = ViewData["kec"],
+            kel = ViewData["kel"]
+        })
+    )
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .RowAlternationEnabled(true)
+    .ColumnAutoWidth(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+    )
+    .Columns(columns =>
+    {
+        columns.AddFor(x => x.KategoriNama)
+                        .Caption("Kategori")
+                        .Fixed(true)
+                        .FixedPosition(HorizontalEdge.Left)
+                        .CssClass("fw-bold");
+
+        columns.AddFor(x => x.JmlOpAkhir).Caption("Jumlah OP").Format("#,##0").CellTemplate(new JS("detailWilayahCellTemplate"));
+    })
+    .Summary(s =>
+    {
+        s.TotalItems(items =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(x => x.KategoriNama)
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total");
+
+                items.AddFor(x => x.JmlOpAkhir)
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}");
+            });
+        });
+    })
+)

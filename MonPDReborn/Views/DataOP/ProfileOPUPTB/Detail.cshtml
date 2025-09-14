@@ -1,0 +1,801 @@
+﻿@using MonPDLib.General
+@using System.Globalization
+@model MonPDReborn.Models.DataOP.ProfileOPVM.Detail
+
+@{
+    var currentYear = DateTime.Now.Year;
+    var tahunMin1 = (currentYear - 1).ToString();
+    var tahunNow = currentYear.ToString();
+}
+<input type="hidden" id="DetailNOP" value="@Model.DataDetail.IdentitasPajak.NOP" />
+<input type="hidden" id="DetailJenisPajak" value="@((int)Model.Pajak)" />
+<div class="card position-relative overflow-hidden mb-4">
+    <!-- Header Background Image -->
+    <div class="position-relative w-100"
+         style="
+        height: 200px;
+        background: linear-gradient(135deg, rgba(57, 255, 20, 0.3), rgba(0, 255, 255, 0.5), rgba(57, 255, 20, 0.5)),
+                    url('https://www.transparenttextures.com/patterns/white-wall-3.png');
+        background-blend-mode: overlay;
+        background-size: cover;
+        border-radius: .5rem;
+     ">
+    </div>
+
+    <!-- Profile Avatar & Info -->
+    <div class="container position-relative" style="margin-top: -100px;">
+        <div class="d-flex flex-column align-items-center">
+            <div class="avatar-xxl mb-3 position-relative rounded-circle overflow-hidden border border-1 border-dark"
+                 style="width:120px; height:120px; background:#fff;">
+                <img src="~/assets/images/logosby.png"
+                     alt="Logo"
+                     style="width: 80%; height: 80%; object-fit: contain; margin: 10%; display: block;">
+            </div>
+            @switch (Model.Pajak)
+            {
+                case EnumFactory.EPajak.PBB:
+                    <div class="text-center">
+                        <h5 class="mb-1">@Model.DataDetail.IdentitasPajak.NamaNpwpd</h5>
+                        <p class="text-muted mb-0">@Model.DataDetail.IdentitasPajak.AlamatLengkap</p>
+                    </div>
+                    break;
+                default:
+                    <div class="text-center">
+                        <h5 class="mb-1">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h5>
+                        <p class="text-muted mb-0">@Model.DataDetail.IdentitasPajak.AlamatLengkap</p>
+                    </div>
+                    break;
+
+            }
+            
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="card bg-info-subtle shadow-none border-0 mt-4">
+        <div class="card-body px-4 py-3">
+            @switch (Model.Pajak)
+            {
+                case EnumFactory.EPajak.MakananMinuman:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.JasaPerhotelan:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-okupansi-tab" data-bs-toggle="pill" data-bs-target="#pills-okupansi" type="button" role="tab" aria-controls="pills-okupansi" aria-selected="false">
+                                <i class="ri ri-file-info-line fs-5 me-2"></i> Okupansi
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.JasaKesenianHiburan:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
+                        @* <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li> *@
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.JasaParkir:
+                    <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                                <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                                <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                                <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
+                    </ul>
+                    break;
+                case EnumFactory.EPajak.TenagaListrik:
+                <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                            <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                            <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                            <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                        </button>
+                    </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
+                </ul>
+                    break;
+                case EnumFactory.EPajak.Reklame:
+                <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                            <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                            <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                            <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                        </button>
+                    </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                            </button>
+                        </li>
+                </ul>
+                    break;
+                case EnumFactory.EPajak.PBB:
+                <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                            <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                            <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                            <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                        </button>
+                    </li>
+                </ul>
+                    break;
+                case EnumFactory.EPajak.BPHTB:
+                <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                            <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                            <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                            <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                        </button>
+                    </li>
+                </ul>
+                    break;
+                case EnumFactory.EPajak.AirTanah:
+                <ul class="nav nav-pills justify-content-center profile-tab rounded-0" id="profile-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                            <i class="ri ri-file-user-line fs-5 me-2"></i> Profil
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')" id="pills-pembayaran-tab" data-bs-toggle="pill" data-bs-target="#pills-pembayaran" type="button" role="tab" aria-controls="pills-pembayaran" aria-selected="false">
+                            <i class="ri-funds-fill fs-5 me-2"></i> Pembayaran
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-lokasi-tab" data-bs-toggle="pill" data-bs-target="#pills-lokasi" type="button" role="tab" aria-controls="pills-lokasi" aria-selected="false">
+                            <i class="ri ri-map-pin-user-fill fs-5 me-2"></i> Lokasi
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" type="button" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                            <i class="ri ri-search-eye-line fs-5 me-2"></i> Potensi OP
+                        </button>
+                    </li>
+                </ul>
+                    break;
+                case EnumFactory.EPajak.OpsenPkb:
+                    break;
+                case EnumFactory.EPajak.OpsenBbnkb:
+                    break;
+            }
+            
+        </div>
+    </div>
+</div>
+<!-- Tab Content Container -->
+<div class="tab-content" id="pills-tabContent">
+    <!-- Profil Tab -->
+    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <!-- Identitas Objek Pajak Card -->
+        @switch (Model.Pajak)
+        {
+            case EnumFactory.EPajak.Reklame:
+                <div class="card mb-4">
+                    <div class="card-header d-flex bg-header-color align-items-center">
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fs-16 text-dark mb-0">
+                                Identitas Objek Pajak
+                            </h4>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NPWPD</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NpwpdNo</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Wajib Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaNpwpd</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Alamat Lengkap</span>
+                            <span>@Model.DataDetail.IdentitasPajak.AlamatLengkap</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Wilayah Pajak</span>
+                            <span>SURABAYA @Model.DataDetail.IdentitasPajak.WilayahPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NOR</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NOP</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama OP</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Telp</span>
+                            <span>@Model.DataDetail.IdentitasPajak.Telepon</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Tanggal Mulai Berlaku</span>
+                            <span>@Model.DataDetail.IdentitasPajak.TglBerlaku.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Tanggal Mulai Berlaku</span>
+                            <span>@Model.DataDetail.IdentitasPajak.TglBerakhir.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.JenisPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.KategoriPajak</span>
+                        </li>
+                    </ul>
+                </div>
+                    break;
+            default:
+                <div class="card mb-4">
+                    <div class="card-header d-flex bg-header-color align-items-center">
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fs-16 text-dark mb-0">
+                                Identitas Objek Pajak
+                            </h4>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NPWPD</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NpwpdNo</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Wajib Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaNpwpd</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Alamat Lengkap</span>
+                            <span>@Model.DataDetail.IdentitasPajak.AlamatLengkap</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Wilayah Pajak</span>
+                            <span>SURABAYA @Model.DataDetail.IdentitasPajak.WilayahPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">NOP</span>
+                            <span>@Model.DataDetail.IdentitasPajak.FormattedNOP</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nama OP</span>
+                            <span>@Model.DataDetail.IdentitasPajak.NamaObjekPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Telp</span>
+                            <span>@Model.DataDetail.IdentitasPajak.Telepon</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Tanggal Buka</span>
+                            <span>@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.JenisPajak</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Jenis Objek Pajak</span>
+                            <span>@Model.DataDetail.IdentitasPajak.KategoriPajak</span>
+                        </li>
+                    </ul>
+                </div>
+                break;
+        }
+        
+
+        @* <!-- Card Row -->
+        <div class="row g-3">
+            <!-- Data Perizinan -->
+            <div class="col-md-6 col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header d-flex bg-header-color align-items-center">
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fs-16 text-dark mb-0">
+                                Data Perizinan
+                            </h4>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nomor IMB</span><span>@Model.DataDetail.Perizinan.NomorIMB</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Tanggal IMB</span><span>@Model.DataDetail.Perizinan.TanggalIMB</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nomor SITU/NIB</span><span>@Model.DataDetail.Perizinan.NomorSITU_NIB</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="fw-semibold">Nomor Izin Operasional</span><span>@Model.DataDetail.Perizinan.NomorIzinOperasional</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            @switch (Model.Pajak)
+            {
+                case EnumFactory.EPajak.MakananMinuman:
+                    <!-- Sarana Pendukung -->
+                    <div class="col-md-6 col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex bg-header-color align-items-center">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title fs-16 text-dark mb-0">
+                                        Sarana Pendukung
+                                    </h4>
+                                </div>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-semibold">Jumlah Karyawan</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.JumlahKaryawan</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-semibold">Metode Pembayaran</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.MetodePembayaran</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-semibold">Metode Penjualan</span><span>@Model.DataDetail.RestoRow.SaranaRestoPendukungRow.MetodePenjualan</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    break;
+
+                case EnumFactory.EPajak.TenagaListrik:
+
+                    break;
+
+                case EnumFactory.EPajak.JasaPerhotelan:
+                    <div class="col-md-6 col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex bg-header-color align-items-center">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title fs-16 text-dark mb-0">
+                                        Sarana Pendukung
+                                    </h4>
+                                </div>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-semibold">Jumlah Karyawan</span><span>@Model.DataDetail.HotelRow.SaranaHotelPendukungRow.JumlahKaryawan</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-semibold">MetodePembayaran</span><span>@Model.DataDetail.HotelRow.SaranaHotelPendukungRow.MetodePembayaran</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-semibold">MetodePenjualan</span><span>@Model.DataDetail.HotelRow.SaranaHotelPendukungRow.MetodePenjualan</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    break;
+
+                case EnumFactory.EPajak.JasaParkir:
+
+                    break;
+
+                case EnumFactory.EPajak.JasaKesenianHiburan:
+
+                    break;
+
+                case EnumFactory.EPajak.AirTanah:
+                    <div class="card mb-4">
+                        <div class="card bg-soft-secondary border-0">
+                            <div class="card-body px-4 py-3">
+                                <h4 class="fw-semibold mb-0">Sarana Pendukung</h4>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="fw-semibold">Kelompok </span><span>@Model.DataDetail.AbtRow.SaranaAbtPendukungRow.KelompokNama</span>
+                            </li>
+                        </ul>
+                    </div>
+                    break;
+
+                case EnumFactory.EPajak.Reklame:
+
+                    break;
+
+                case EnumFactory.EPajak.PBB:
+
+                    break;
+
+                case EnumFactory.EPajak.BPHTB:
+                    //
+                    break;
+
+                case EnumFactory.EPajak.OpsenPkb:
+                    //
+                    break;
+
+                case EnumFactory.EPajak.OpsenBbnkb:
+                    //
+                    break;
+
+                default:
+                    break;
+            }
+
+        </div> *@
+    </div>
+
+    <!-- Lokasi Tab -->
+    <div class="tab-pane fade show active" id="pills-pembayaran" role="tabpanel" aria-labelledby="pills-pembayaran-tab">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        🧾 PEMBAYARAN PAJAK @Model.Pajak.GetDescription().ToUpper() @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                    </h4>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-dark" onclick="fnPembayaranPajak('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)')">
+                        <i class="mdi mdi-refresh align-middle"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-PembayaranPajak" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="PembayaranPajak"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Lokasi Tab -->
+    <div class="tab-pane fade" id="pills-lokasi" role="tabpanel" aria-labelledby="pills-lokasi-tab">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i>Lokasi Objek Pajak
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="card-body px-0 py-3">
+            <iframe width="100%"
+                    height="400"
+                    style="border:0;"
+                    allowfullscreen
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=@(Uri.EscapeDataString(Model.DataDetail.IdentitasPajak.NamaObjekPajak??""))&output=embed">
+            </iframe>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-okupansi" role="tabpanel" aria-labelledby="pills-okupansi-tab">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i>Okupansi @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        @(
+                            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
+                            .ID("okupansiGrid")
+                            .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
+                            .KeyExpr("Bulan")
+                            .ShowBorders(true)
+                            .ShowColumnLines(true)
+                            .Paging(p => p.PageSize(12))
+                            .Columns(columns =>
+                            {
+                                columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                                columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
+                                columns.AddFor(m => m.TahunNow).Caption(tahunNow);
+                            })
+                            .Summary(s => {
+                                s.TotalItems(items => {
+                                    items.AddFor(x => x.BulanNama)
+                                        .SummaryType(SummaryType.Sum)
+                                        .DisplayFormat("Average");
+
+                                    items.AddFor(x => x.TahunMines1)
+                                        .SummaryType(SummaryType.Avg)
+                                        .ValueFormat("#,##0.00")
+                                        .DisplayFormat("{0}");
+
+                                    items.AddFor(x => x.TahunNow)
+                                        .SummaryType(SummaryType.Avg)
+                                        .ValueFormat("#,##0.00")
+                                        .DisplayFormat("{0}");
+                                });
+
+                            })
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+@* 
+@section Scripts {
+    <script>
+        $(document).on("change", "#tahunKiri", function () {
+            const tahun = $(this).val();
+            updateTabel('kiri', tahun);
+        });
+
+        $(document).on("change", "#tahunKanan", function () {
+            const tahun = $(this).val();
+            updateTabel('kanan', tahun);
+        });
+
+        function updateTabel(side, tahun) {
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+
+            $.ajax({
+                url: '/ProfilePembayaranOP/Detail',
+                type: 'GET',
+                data: {
+                    nop: nop,
+                    jenisPajak: jenisPajak,
+                    tahun: tahun,
+                    side: side
+                },
+                success: function (html) {
+                    if (side === 'kiri') {
+                        $('#tabelKiri').html(html);
+                    } else if (side === 'kanan') {
+                        $('#tabelKanan').html(html);
+                    }
+                },
+                error: function () {
+                    alert('Gagal memuat data pembayaran.');
+                }
+            });
+        }
+
+        function fnPembayaranPajak(nop, pajak)
+        {
+            $.ajax({
+              url: '@(Url.Action("Detail", "ProfilePembayaranOP"))',
+              data: {
+                    nop, pajak
+                },
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-PembayaranPajak').show();
+                 $('#PembayaranPajak').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-PembayaranPajak').hide();
+                        $('#PembayaranPajak').show();
+                        $('#PembayaranPajak').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-PembayaranPajak').hide();
+                 $('#PembayaranPajak').hide();
+                 $('#PembayaranPajak').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+    </script>
+} *@
+
+@section Scripts {
+    <script>
+        // Fungsi untuk bind event di _Detail dropdown
+        // function attachDetailEvents() {
+        //     $("#tahunKiri").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKiri", tahun);
+        //     });
+
+        //     $("#tahunKanan").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKanan", tahun);
+        //     });
+        // }
+
+                $(document).on("change", "#tahunKiri", function () {
+            fnPembayaranPajak();
+        });
+
+        $(document).on("change", "#tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+        function fnPembayaranPajak() {
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+
+            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
+            const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
+
+            $.ajax({
+                url: '@Url.Action("Detail", "ProfilePembayaranOP")',
+                type: 'GET',
+                data: {
+                    nop: nop,
+                    jenisPajak: jenisPajak,
+                    tahunKiri: tahunKiri,
+                    tahunKanan: tahunKanan
+                },
+                beforeSend: function () {
+                    $('#loading2-PembayaranPajak').show();
+                    $('#PembayaranPajak').hide();
+                },
+                success: function (response) {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html(response);
+                },
+                error: function () {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
+
+        // Bind event ke dropdown
+        $(document).on("change", "#tahunKiri, #tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+        // Panggil sekali saat halaman load
+        $(document).ready(function () {
+            fnPembayaranPajak();
+        });
+
+    </script>
+
+    <script>
+        function openDetailNewTab(nop, pajak, KategoriId) {
+            if (!nop || !pajak || !KategoriId) return;
+
+            const url = `/ProfilePotensiOP/DetailPotensiOP` +
+                `?nop=${encodeURIComponent(nop)}` +
+                `&jenisPajak=${encodeURIComponent(pajak)}` +
+                `&kategori=${encodeURIComponent(KategoriId)}`;
+
+            window.open(url, '_blank');
+        }
+    </script>
+}
+

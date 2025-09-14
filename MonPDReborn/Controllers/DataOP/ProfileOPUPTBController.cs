@@ -6,7 +6,6 @@ using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 using static MonPDReborn.Models.DataOP.ProfileOPUPTBVM;
-using static MonPDReborn.Models.DataOP.ProfileOPVM;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -31,7 +30,24 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                ViewData["Title"] = "Profil Objek Pajak UPTB";
+                //ViewData["Title"] = "Profil Objek Pajak UPTB";
+                ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                string lastPart = nama.Split(' ').Last();
+
+                if (!int.TryParse(lastPart, out int wilayah))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
+                // simpan nomor uptb ke ViewData
+                ViewData["UptbNumber"] = lastPart;
+
                 var model = new Models.DataOP.ProfileOPUPTBVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
@@ -51,22 +67,36 @@ namespace MonPDReborn.Controllers.DataOP
 
         public object GetDetailPerWilayah(DataSourceLoadOptions load_options, int JenisPajak, string uptb, string kec, string kel)
         {
-            var data = Models.DataOP.ProfileOPVM.Method.GetDataRekapPerWilayahDetailList((EnumFactory.EPajak)JenisPajak, uptb, kec, kel);
+            var data = Models.DataOP.ProfileOPUPTBVM.Method.GetDataRekapPerWilayahDetailList((EnumFactory.EPajak)JenisPajak, uptb, kec, kel);
             return DataSourceLoader.Load(data, load_options);
         }
 
         [HttpGet]
-        public object GetDetailPerWilayahHotel(DataSourceLoadOptions load_options, int JenisPajak, string uptb, string kec, string kel)
+        public object GetDetailPerWilayahHotel(DataSourceLoadOptions load_options, int JenisPajak, string kec, string kel)
         {
-            var data = Models.DataOP.ProfileOPVM.Method.GetDataRekapPerWilayahDetailList((EnumFactory.EPajak)JenisPajak, uptb, kec, kel, true);
+            var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA)?.ToString();
+            if (string.IsNullOrEmpty(nama))
+                throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+
+            var uptb = nama.Split(' ').Last(); // ambil UPTB dari session
+
+            var data = Models.DataOP.ProfileOPUPTBVM.Method.GetDataRekapPerWilayahDetailList((EnumFactory.EPajak)JenisPajak, uptb, kec, kel, true);
             return DataSourceLoader.Load(data, load_options);
         }
 
-        public IActionResult RekapPerWilayah(string uptb, string kec, string kel)
+        public async Task<IActionResult> RekapPerWilayahAsync(string kec, string kel)
         {
             try
             {
-                var model = new Models.DataOP.ProfileOPVM.RekapPerWilayah(uptb, kec, kel);
+
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA)?.ToString();
+                if (string.IsNullOrEmpty(nama))
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+
+                var uptb = nama.Split(' ').Last(); // ambil UPTB dari session
+
+
+                var model = new Models.DataOP.ProfileOPUPTBVM.RekapPerWilayah(uptb, kec, kel);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -103,14 +133,18 @@ namespace MonPDReborn.Controllers.DataOP
         }
 
         [HttpGet]
-        public async Task<object> GetKec(DataSourceLoadOptions loadOptions, string uptb)
-        {
+        public async Task<object> GetKec(DataSourceLoadOptions loadOptions)
+        {   
+
             var context = DBClass.GetContext();
 
             var dataList = new List<kecamatanView>();
 
-            if (!string.IsNullOrEmpty(uptb))
+            var namaUptb = HttpContext.Session.GetString(Utility.SESSION_NAMA);
+
+            if (!string.IsNullOrEmpty(namaUptb))
             {
+                string uptb = namaUptb.Split(' ').Last();
                 dataList = context.MWilayahs
                     .Where(x => x.Uptd == uptb && !string.IsNullOrEmpty(x.KdKecamatan))
                     .GroupBy(x => new { x.KdKecamatan, x.NmKecamatan })
@@ -146,6 +180,28 @@ namespace MonPDReborn.Controllers.DataOP
             }
 
             return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
+
+        public IActionResult DetailWilayahOP(int JenisPajak, int kategori, string kec, string kel)
+        {
+            try
+            {
+                // uptb langsung dari session, bukan dari JS
+                var namaUptb = HttpContext.Session.GetString(Utility.SESSION_NAMA);
+                string uptb = namaUptb?.Split(' ').Last();
+
+                Console.WriteLine($"[DEBUG] namaUptb: {namaUptb}, uptb: {uptb}, kec: {kec}, kel: {kel}");
+
+                var jenisPajak = (EnumFactory.EPajak)JenisPajak;
+                var filtered = Models.DataOP.ProfileOPUPTBVM.Method.GetDataRekapPerWilayahDetailOPList(jenisPajak, kategori, uptb, kec, kel);
+
+                return Json(filtered);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ ERROR: " + ex.Message);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }
