@@ -174,18 +174,505 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
+                        var dataTargetPPJPerBulan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Tgl = g.Key.Tgl,
+                                    Bulan = g.Key.Bulan,
+                                    Tahun = g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                });
+
+                        var nopListPPJ = context.DbOpListriks
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.WilayahPajak == ((int)wilayah).ToString() &&
+                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        var realisasiPPJPerBulan = context.DbMonPpjs
+                            .Where(x =>
+                                        x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month == bulan
+                                        && nopListPPJ.Contains(x.Nop)
+                                    )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                            .Select(x => new
+                            {
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok,
+                                Realisasi = x.Sum(q => q.NominalPokokBayar)
+                            })
+                            .ToList();
+
+                        foreach (var item in dataTargetPPJPerBulan)
+                        {
+                            var totalRealisasi = realisasiPPJPerBulan
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi ?? 0
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
+                        var dataTargetHotelPerBulan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Tgl = g.Key.Tgl,
+                                    Bulan = g.Key.Bulan,
+                                    Tahun = g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                });
+
+                        var nopListHotel = context.DbOpHotels
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.WilayahPajak == ((int)wilayah).ToString() &&
+                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        var realisasiHotelPerBulan = context.DbMonHotels
+                            .Where(x =>
+                                        x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month == bulan
+                                        && nopListHotel.Contains(x.Nop)
+                                    )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                            .Select(x => new
+                            {
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok,
+                                Realisasi = x.Sum(q => q.NominalPokokBayar)
+                            })
+                            .ToList();
+
+                        foreach (var item in dataTargetHotelPerBulan)
+                        {
+                            var totalRealisasi = realisasiHotelPerBulan
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi ?? 0
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
+                        var dataTargetParkirPerBulan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Tgl = g.Key.Tgl,
+                                    Bulan = g.Key.Bulan,
+                                    Tahun = g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                });
+
+                        var nopListParkir = context.DbOpParkirs
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.WilayahPajak == ((int)wilayah).ToString() &&
+                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        var realisasiParkirPerBulan = context.DbMonParkirs
+                            .Where(x =>
+                                        x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month == bulan
+                                        && nopListParkir.Contains(x.Nop)
+                                    )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                            .Select(x => new
+                            {
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok,
+                                Realisasi = x.Sum(q => q.NominalPokokBayar)
+                            })
+                            .ToList();
+
+                        foreach (var item in dataTargetParkirPerBulan)
+                        {
+                            var totalRealisasi = realisasiParkirPerBulan
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi ?? 0
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var dataTargetHiburanPerBulan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Tgl = g.Key.Tgl,
+                                    Bulan = g.Key.Bulan,
+                                    Tahun = g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                });
+
+                        var nopListHiburan = context.DbOpHiburans
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.WilayahPajak == ((int)wilayah).ToString() &&
+                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        var realisasiHiburanPerBulan = context.DbMonHiburans
+                            .Where(x =>
+                                        x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month == bulan
+                                        && nopListHiburan.Contains(x.Nop)
+                                    )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                            .Select(x => new
+                            {
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok,
+                                Realisasi = x.Sum(q => q.NominalPokokBayar)
+                            })
+                            .ToList();
+
+                        foreach (var item in dataTargetHiburanPerBulan)
+                        {
+                            var totalRealisasi = realisasiHiburanPerBulan
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi ?? 0
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                     case EnumFactory.EPajak.AirTanah:
+                        var dataTargetAbtPerBulan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Tgl = g.Key.Tgl,
+                                    Bulan = g.Key.Bulan,
+                                    Tahun = g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                });
+
+                        var nopListAbt = context.DbOpAbts
+                            .Where(x =>
+                                x.TahunBuku == tahun &&
+                                x.WilayahPajak == ((int)wilayah).ToString() &&
+                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        var realisasiAbtPerBulan = context.DbMonAbts
+                            .Where(x =>
+                                        x.TglBayarPokok.HasValue
+                                        && x.TglBayarPokok.Value.Year == tahun
+                                        && x.TglBayarPokok.Value.Month == bulan
+                                        && nopListAbt.Contains(x.Nop)
+                                    )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok, x.PajakId })
+                            .Select(x => new
+                            {
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok,
+                                Realisasi = x.Sum(q => q.NominalPokokBayar)
+                            })
+                            .ToList();
+
+                        foreach (var item in dataTargetAbtPerBulan)
+                        {
+                            var totalRealisasi = realisasiAbtPerBulan
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi ?? 0
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                     case EnumFactory.EPajak.PBB:
+                        var dataTargetPbbPerBulan = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Tgl = g.Key.Tgl,
+                                    Bulan = g.Key.Bulan,
+                                    Tahun = g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                });
+
+                        var realisasiPbbPerBulan = context.DbMonPbbs
+                            .Where(x => x.TglBayar.HasValue
+                                        && x.TglBayar.Value.Year == tahun
+                                        && x.TglBayar.Value.Month == bulan
+                                        && x.TahunBuku == tahun
+                                        && x.JumlahBayarPokok > 0
+                                        && x.Uptb == Convert.ToInt32(wilayah))
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayar, PajakId = 9 })
+                            .Select(g => new
+                            {
+                                g.Key.Nop,
+                                g.Key.TglBayarPokok,
+                                Realisasi = g.Sum(x => x.JumlahBayarPokok) ?? 0
+                            })
+                            .ToList();
+
+                        foreach (var item in dataTargetPbbPerBulan)
+                        {
+                            var totalRealisasi = realisasiPbbPerBulan
+                                .Where(x => x.TglBayarPokok.Value.Month == item.Bulan && x.TglBayarPokok.Value.Day == item.Tgl && x.TglBayarPokok.Value.Year == tahun)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                     default:
+                        var dataTargetPerhari = context.DbAkunTargetBulanUptbs
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.Uptb == (int)wilayah)
+                                .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
+                                .Select(g => new
+                                {
+                                    Tgl = g.Key.Tgl,
+                                    Bulan = g.Key.Bulan,
+                                    Tahun = g.Key.TahunBuku,
+                                    PajakId = g.Key.PajakId,
+                                    TotalTarget = g.Sum(x => x.Target)
+                                })
+                                .ToList();
+
+                        var realisasiPerHari = new List<(string Nop, DateTime Tgl, decimal Realisasi, int pajakId)>();
+
+                        var nopListSemuaAbt = context.DbOpAbts
+                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop).Distinct().ToList();
+                        var nopListSemuaResto = context.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop).Distinct().ToList();
+                        var nopListSemuaHotel = context.DbOpHotels
+                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop).Distinct().ToList();
+                        var nopListSemuaListrik = context.DbOpListriks
+                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop).Distinct().ToList();
+                        var nopListSemuaParkir = context.DbOpParkirs
+                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop).Distinct().ToList();
+                        var nopListSemuaHiburan = context.DbOpHiburans
+                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Select(x => x.Nop).Distinct().ToList();
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonRestos
+                            .Where(x =>
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan &&
+                                nopListSemuaResto.Contains(x.Nop)
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.MakananMinuman
+                            ))
+                            .ToList()
+                        );
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonAbts
+                            .Where(x =>
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan &&
+                                nopListSemuaAbt.Contains(x.Nop)
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.AirTanah
+                            ))
+                            .ToList()
+                        );
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonHotels
+                            .Where(x =>
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan &&
+                                nopListSemuaHotel.Contains(x.Nop)
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.JasaPerhotelan
+                            ))
+                            .ToList()
+                        );
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonPpjs
+                            .Where(x =>
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan &&
+                                nopListSemuaListrik.Contains(x.Nop)
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.TenagaListrik
+                            ))
+                            .ToList()
+                        );
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonParkirs
+                            .Where(x =>
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan &&
+                                nopListSemuaParkir.Contains(x.Nop)
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.JasaParkir
+                            ))
+                            .ToList()
+                        );
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonHiburans
+                            .Where(x =>
+                                x.TglBayarPokok.HasValue &&
+                                x.TglBayarPokok.Value.Year == tahun &&
+                                x.TglBayarPokok.Value.Month == bulan &&
+                                nopListSemuaHiburan.Contains(x.Nop)
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayarPokok.Value,
+                                x.Sum(q => q.NominalPokokBayar) ?? 0,
+                                (int)EnumFactory.EPajak.JasaKesenianHiburan
+                            ))
+                            .ToList()
+                        );
+
+                        realisasiPerHari.AddRange(
+                            context.DbMonPbbs
+                            .Where(x =>
+                                x.TglBayar.HasValue &&
+                                x.TahunBuku == tahun &&
+                                x.TglBayar.Value.Year == tahun &&
+                                x.TglBayar.Value.Month == bulan
+                                && x.JumlahBayarPokok > 0
+                                && x.Uptb == Convert.ToInt32(wilayah)
+                            )
+                            .GroupBy(x => new { x.Nop, TglBayar = x.TglBayar })
+                            .Select(x => new ValueTuple<string, DateTime, decimal, int>(
+                                x.Key.Nop,
+                                x.Key.TglBayar.Value,
+                                x.Sum(q => q.JumlahBayarPokok) ?? 0,
+                                (int)EnumFactory.EPajak.PBB
+                            ))
+                            .ToList()
+                        );
+
+                        foreach (var item in dataTargetPerhari)
+                        {
+                            var totalRealisasi = realisasiPerHari
+                                .Where(x => x.Tgl.Month == item.Bulan && x.Tgl.Day == item.Tgl && x.Tgl.Year == tahun && x.pajakId == item.PajakId)
+                                .Sum(x => x.Realisasi);
+
+                            MonitoringHarian result = new MonitoringHarian
+                            {
+                                Tanggal = new DateTime((int)item.Tahun, (int)item.Bulan, (int)item.Tgl),
+                                JenisPajak = ((EnumFactory.EPajak)item.PajakId).GetDescription(),
+                                TargetHarian = item.TotalTarget,
+                                Realisasi = totalRealisasi
+                            };
+
+                            ret.Add(result);
+                        }
                         break;
                 }
 
