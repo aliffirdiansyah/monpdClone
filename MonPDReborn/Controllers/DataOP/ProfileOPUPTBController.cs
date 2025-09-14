@@ -30,7 +30,7 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                //ViewData["Title"] = "Profil Objek Pajak UPTB";
+
                 ViewData["Title"] = controllerName;
                 var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
 
