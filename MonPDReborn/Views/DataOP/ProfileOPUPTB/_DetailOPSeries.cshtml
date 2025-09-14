@@ -1,0 +1,37 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.DetailOPSeries
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailSeries>()
+        .ID("detailOPGrid")
+        .DataSource(Model.Data) // Awalnya kosong
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+          @* columns.Add().DataField("NOP").Caption("NOP"); *@
+            columns.AddFor(x => x.FormattedNOP).Caption("NOP");
+            columns.AddFor(x => x.NamaOP).Caption("Nama OP");
+            columns.AddFor(x => x.Alamat).Caption("Alamat");
+            columns.AddFor(x => x.Wilayah).Caption("Wilayah");
+            columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b =>
+            {
+                b.Add()
+            .Text("Detail")
+            .Icon("search")
+            .OnClick("onDetail");
+            });
+        })
+        )
+</div>

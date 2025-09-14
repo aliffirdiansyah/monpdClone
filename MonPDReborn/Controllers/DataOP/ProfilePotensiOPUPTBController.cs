@@ -43,6 +43,7 @@ namespace MonPDReborn.Controllers.DataOP
                 {
                     return RedirectToAction("Error", "Home", new { statusCode = 403 });
                 }
+                ViewData["UptbNumber"] = lastPart;
                 var model = new Models.DataOP.ProfilePotensiOPUPTBVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
