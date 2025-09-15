@@ -570,37 +570,37 @@ namespace MonPDReborn.Models
 
                 //realisasi
                 var dataRealisasiResto = context.DbMonRestos
-                    .Where(x => x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaResto.Contains(x.Nop))
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaResto.Contains(x.Nop))
                     .GroupBy(x => new { x.TglBayarPokok.Value.Year, PajakId = (int)(EnumFactory.EPajak.MakananMinuman) })
                     .Select(x => new { TahunBuku = x.Key.Year, PajakId = x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
                 var dataRealisasiListrik = context.DbMonPpjs
-                    .Where(x => x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaListrik.Contains(x.Nop))
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaListrik.Contains(x.Nop))
                     .GroupBy(x => new { x.TglBayarPokok.Value.Year, PajakId = (int)(EnumFactory.EPajak.TenagaListrik) })
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
                 var dataRealisasiHotel = context.DbMonHotels
-                    .Where(x => x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaHotel.Contains(x.Nop))
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaHotel.Contains(x.Nop))
                     .GroupBy(x => new { x.TglBayarPokok.Value.Year, PajakId = (int)(EnumFactory.EPajak.JasaPerhotelan) })
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
                 var dataRealisasiParkir = context.DbMonParkirs
-                    .Where(x => x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaParkir.Contains(x.Nop))
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaParkir.Contains(x.Nop))
                     .GroupBy(x => new { x.TglBayarPokok.Value.Year, PajakId = (int)(EnumFactory.EPajak.JasaParkir) })
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
                 var dataRealisasiHiburan = context.DbMonHiburans
-                    .Where(x => x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaHiburan.Contains(x.Nop))
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaHiburan.Contains(x.Nop))
                     .GroupBy(x => new { x.TglBayarPokok.Value.Year, PajakId = (int)(EnumFactory.EPajak.JasaKesenianHiburan) })
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
                 var dataRealisasiAbt = context.DbMonAbts
-                    .Where(x => x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaAbt.Contains(x.Nop))
+                    .Where(x => x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year >= yearLast && x.TglBayarPokok.Value.Year <= year && nopListSemuaAbt.Contains(x.Nop))
                     .GroupBy(x => new { x.TglBayarPokok.Value.Year, PajakId = (int)(EnumFactory.EPajak.AirTanah) })
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
