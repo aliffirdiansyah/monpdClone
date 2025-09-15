@@ -93,6 +93,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonPbb> DbMonPbbs { get; set; }
 
+    public virtual DbSet<DbMonPbbKetetapan> DbMonPbbKetetapans { get; set; }
+
+    public virtual DbSet<DbMonPbbRealisasi> DbMonPbbRealisasis { get; set; }
+
     public virtual DbSet<DbMonPjOp> DbMonPjOps { get; set; }
 
     public virtual DbSet<DbMonPpj> DbMonPpjs { get; set; }
@@ -155,6 +159,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbPendapatanDaerah> DbPendapatanDaerahs { get; set; }
 
+    public virtual DbSet<DbPendapatanDaerahKoreksi> DbPendapatanDaerahKoreksis { get; set; }
+
     public virtual DbSet<DbPotensiAbt> DbPotensiAbts { get; set; }
 
     public virtual DbSet<DbPotensiHiburan> DbPotensiHiburans { get; set; }
@@ -197,6 +203,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MPegawai> MPegawais { get; set; }
 
+    public virtual DbSet<MPetugasReklame> MPetugasReklames { get; set; }
+
     public virtual DbSet<MTindakanReklame> MTindakanReklames { get; set; }
 
     public virtual DbSet<MTipekamarhotel> MTipekamarhotels { get; set; }
@@ -207,11 +215,21 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
 
+    public virtual DbSet<MvDbeMonPbb> MvDbeMonPbbs { get; set; }
+
+    public virtual DbSet<MvDbeMonPbbKecKel> MvDbeMonPbbKecKels { get; set; }
+
+    public virtual DbSet<MvDbePbbBulanUptb> MvDbePbbBulanUptbs { get; set; }
+
     public virtual DbSet<MvDbePbjt> MvDbePbjts { get; set; }
 
     public virtual DbSet<MvDbePbjtRekap> MvDbePbjtRekaps { get; set; }
 
     public virtual DbSet<MvDbePbjtRekapDetail> MvDbePbjtRekapDetails { get; set; }
+
+    public virtual DbSet<MvDbeWilayah> MvDbeWilayahs { get; set; }
+
+    public virtual DbSet<MvPrediksi2025> MvPrediksi2025s { get; set; }
 
     public virtual DbSet<MvReklameRekapJalan> MvReklameRekapJalans { get; set; }
 
@@ -407,7 +425,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwMonHiburan> VwMonHiburans { get; set; }
 
+    public virtual DbSet<VwMonHiburan365> VwMonHiburan365s { get; set; }
+
     public virtual DbSet<VwMonHotel> VwMonHotels { get; set; }
+
+    public virtual DbSet<VwMonHotel365> VwMonHotel365s { get; set; }
 
     public virtual DbSet<VwMonParkir> VwMonParkirs { get; set; }
 
@@ -417,11 +439,17 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
 
+    public virtual DbSet<VwTahunBulan6> VwTahunBulan6s { get; set; }
+
     public virtual DbSet<VwTargetAktivitasReklame> VwTargetAktivitasReklames { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
+    public virtual DbSet<VwTargetBulan6> VwTargetBulan6s { get; set; }
+
+    public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
+
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -811,6 +839,24 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KetetapanPokok).HasDefaultValueSql("0                     ");
         });
 
+        modelBuilder.Entity<DbMonPbbKetetapan>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Prop, e.Dati, e.Kec, e.Kel, e.Blok, e.Urut, e.Jenis, e.TahunPajak, e.JenisBuku }).HasName("DB_MON_PBB_KETETAPAN_PK");
+
+            entity.Property(e => e.JenisBuku).HasDefaultValueSql("0");
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
+            entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<DbMonPbbRealisasi>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Prop, e.Dati, e.Kec, e.Kel, e.Blok, e.Urut, e.Jenis, e.TahunPajak }).HasName("DB_MON_PBB_REALISASI_PK");
+
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
+        });
+
         modelBuilder.Entity<DbMonPjOp>(entity =>
         {
             entity.HasKey(e => new { e.Nip, e.Nop }).HasName("DB_MON_PJ_OP_PK");
@@ -1175,6 +1221,14 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
         });
 
+        modelBuilder.Entity<MPetugasReklame>(entity =>
+        {
+            entity.HasKey(e => e.Nik).HasName("SYS_C0034200");
+
+            entity.Property(e => e.Nik).ValueGeneratedOnAdd();
+            entity.Property(e => e.InsDate).ValueGeneratedOnAdd();
+        });
+
         modelBuilder.Entity<MTindakanReklame>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("M_TINDAKAN_REKLAME_PK");
@@ -1214,6 +1268,21 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
         });
 
+        modelBuilder.Entity<MvDbeMonPbb>(entity =>
+        {
+            entity.ToView("MV_DBE_MON_PBB");
+        });
+
+        modelBuilder.Entity<MvDbeMonPbbKecKel>(entity =>
+        {
+            entity.ToView("MV_DBE_MON_PBB_KEC_KEL");
+        });
+
+        modelBuilder.Entity<MvDbePbbBulanUptb>(entity =>
+        {
+            entity.ToView("MV_DBE_PBB_BULAN_UPTB");
+        });
+
         modelBuilder.Entity<MvDbePbjt>(entity =>
         {
             entity.ToView("MV_DBE_PBJT");
@@ -1227,6 +1296,16 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MvDbePbjtRekapDetail>(entity =>
         {
             entity.ToView("MV_DBE_PBJT_REKAP_DETAIL");
+        });
+
+        modelBuilder.Entity<MvDbeWilayah>(entity =>
+        {
+            entity.ToView("MV_DBE_WILAYAH");
+        });
+
+        modelBuilder.Entity<MvPrediksi2025>(entity =>
+        {
+            entity.ToView("MV_PREDIKSI_2025");
         });
 
         modelBuilder.Entity<MvReklameRekapJalan>(entity =>
@@ -2027,9 +2106,23 @@ public partial class ModelContext : DbContext
             entity.ToView("VW_MON_HIBURAN");
         });
 
+        modelBuilder.Entity<VwMonHiburan365>(entity =>
+        {
+            entity.ToView("VW_MON_HIBURAN_365");
+
+            entity.Property(e => e.JenisPajak).IsFixedLength();
+        });
+
         modelBuilder.Entity<VwMonHotel>(entity =>
         {
             entity.ToView("VW_MON_HOTEL");
+        });
+
+        modelBuilder.Entity<VwMonHotel365>(entity =>
+        {
+            entity.ToView("VW_MON_HOTEL_365");
+
+            entity.Property(e => e.JenisPajak).IsFixedLength();
         });
 
         modelBuilder.Entity<VwMonParkir>(entity =>
@@ -2052,14 +2145,30 @@ public partial class ModelContext : DbContext
             entity.ToView("VW_REKLAME_STATUS_PERPANJANGAN");
         });
 
+        modelBuilder.Entity<VwTahunBulan6>(entity =>
+        {
+            entity.ToView("VW_TAHUN_BULAN_6");
+        });
+
         modelBuilder.Entity<VwTargetAktivitasReklame>(entity =>
         {
             entity.ToView("VW_TARGET_AKTIVITAS_REKLAME");
+        });
+
+        modelBuilder.Entity<VwTargetBulan6>(entity =>
+        {
+            entity.ToView("VW_TARGET_BULAN_6");
+        });
+
+        modelBuilder.Entity<VwTargetBulanUptb6>(entity =>
+        {
+            entity.ToView("VW_TARGET_BULAN_UPTB_6");
         });
         modelBuilder.HasSequence("SEQ_DB_MON_BPHTB");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME");
         modelBuilder.HasSequence("SEQ_DB_MON_REKLAME_SURVEY");
         modelBuilder.HasSequence("SEQ_DB_OP_REKLAME");
+        modelBuilder.HasSequence("SEQ_PETUGAS_REKLAME");
 
         OnModelCreatingPartial(modelBuilder);
     }

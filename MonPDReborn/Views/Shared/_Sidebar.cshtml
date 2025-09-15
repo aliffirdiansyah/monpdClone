@@ -508,81 +508,64 @@
                         </div>
                     </li>
 
+
+                    @* Sidebar Wajib Pajak *@
                     <li class="menu-title"><span data-key="t-wajibPajak">Wajib Pajak</span></li>
                     <li class="nav-item">
-                        <a class="nav-link menu-link collapse @DataWPActiveClass"
-                        href="#sidebarDataWP"
-                        data-bs-toggle="collapse"
-                        role="button"
-                        aria-expanded="@DataWPExpanded"
-                        aria-controls="sidebarDataWP"
-                        style="background-color: #5EA8A4">
-                            <i class="bx bx-folder"></i>
-                            <span data-key="t-dataWP">Data Wajib Pajak</span>
+                        <a class="nav-link menu-link @(currentController == "PROFILEWP" ? "active" : "")"
+                           href="@Url.Action("Index", "ProfileWP")" role="button">
+                            <i class="bx bx-group me-1 align-middle"></i>
+                            <span data-key="t-profilWP">Profile WP</span>
                         </a>
-                        <div id="sidebarDataWP" class="menu-dropdown collapse @DataWPShowClass">
-                            <ul class="nav nav-sm flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link @(currentController == "PROFILEWP" ? "active" : "")"
-                                    href="@Url.Action("Index","ProfileWP")" data-key="t-profilWP">
-                                        Profile WP
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
                     </li>
-                    <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
+
+                    @* Sidebar Monitoring Global *@
+                    <li class="menu-title"><span data-key="t-objekPajak">Monitoring Global</span></li>
+
                     <li class="nav-item">
-                        <a class="nav-link menu-link collapse @dataOPActiveClass"
-                        href="#sidebarData"
-                        data-bs-toggle="collapse"
-                        role="button"
-                        aria-expanded="@dataOPExpanded"
-                        aria-controls="sidebarData"
-                        style="background-color: #5EA8A4">
-                            <i class="bx bx-data"></i>
-                            <span data-key="t-data">Data Objek Pajak</span>
+                        <a class="nav-link menu-link @(currentController == "MONITORINGHARIANUPTB" ? "active" : "")"
+                           href="@Url.Action("Index", "MonitoringHarianUPTB")" role="button">
+                            <i class="bx bx-bar-chart-alt me-1 align-middle"></i>
+                            <span data-key="t-profileOP">Monitoring Harian</span>
                         </a>
-                        <div id="sidebarData" class="menu-dropdown collapse @dataOPShowClass">
-                            <ul class="nav nav-sm flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link @(currentController == "PROFILEOP" ? "active" : "")"
-                                    href="@Url.Action("Index", "ProfileOP")"
-                                    data-key="t-profilOp">
-                                        Profil OP
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @(currentController == "PROFILEPOTENSIOP" ? "active" : "")"
-                                    href="@Url.Action("Index", "ProfilePotensiOP")"
-                                    data-key="t-profilPotensi">
-                                        Profil Potensi
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @(currentController == "PROFILESPASIALOP" ? "active" : "")"
-                                    href="@Url.Action("Index", "ProfileSpasialOP")"
-                                    data-key="t-profilSpasial">
-                                        Profil Spasial
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @(currentController == "PENETAPANOP" ? "active" : "")"
-                                    href="@Url.Action("Index", "PenetapanOP")"
-                                    data-key="t-penetapan">
-                                        Penetapan
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @(currentController == "PENCARIANOP" ? "active" : "")"
-                                    href="@Url.Action("Index", "PencarianOP")"
-                                    data-key="t-pencarian">
-                                        Pencarian
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "MONITORINGBULANANUPTB" ? "active" : "")"
+                           href="@Url.Action("Index", "MonitoringBulananUPTB")" role="button">
+                            <i class="bx bx-bar-chart-alt-2 me-1 align-middle"></i>
+                            <span data-key="t-profileOP">Monitoring Bulanan</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "MONITORINGTAHUNANUPTB" ? "active" : "")"
+                           href="@Url.Action("Index", "MonitoringTahunanUPTB")" role="button">
+                            <i class="bx bx-line-chart me-1 align-middle"></i>
+                            <span data-key="t-profileOP">Monitoring Tahunan</span>
+                        </a>
+                    </li>
+
+                    @* Sidebar Objek Pajak *@
+                    <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
+
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "PROFILEOPUPTB" ? "active" : "")"
+                           href="@Url.Action("Index", "ProfileOPUPTB")" role="button">
+                            <i class="bx bx-store-alt me-1 align-middle"></i>
+                            <span data-key="t-profileOPUPTB">Profil OP</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "PROFILEPOTENSIOPUPTB" ? "active" : "")"
+                           href="@Url.Action("Index", "ProfilePotensiOPUPTB")" role="button">
+                            <i class="bx bx-data me-1 align-middle"></i>
+                            <span data-key="t-profilePotensiUPTB">Profil Potensi</span>
+                        </a>
+                    </li>
+
+
+                   
                 </ul>
             </div>
         }

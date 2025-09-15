@@ -1,0 +1,337 @@
+﻿@model MonPDReborn.Models.DataOP.ProfilePotensiOPUPTBVM.Index
+
+@{
+    ViewData["Title"] = "Profile Potensi OP";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Rekap Data Potensi - UPTB @ViewData["UptbNumber"]
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-ShowRekap" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="ShowRekap"></div>
+
+                <div id="detailModal" class="modal fade" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content shadow-lg border-0 rounded-3">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailModalLabel">
+                                    <i class="bi bi-info-circle me-2"></i> Detail Data
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body p-4 mb-2" id="detailContent">
+                                <div class="text-center py-5 text-muted">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <div class="mt-2">Memuat data detail...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            fnShowRekap("");
+           // loadDetail("");  // Panggil semua data detail saat pertama load
+           var grid = $("#dataPotensiGrid").dxDataGrid("instance");
+            if (grid) {
+                grid.option("columnAutoWidth", true);
+                grid.refresh(); // ini aman, tidak menghapus data
+            }
+        });
+
+
+        function onDetail(e) {
+            const data = e.row?.data;
+            if (!data || !data.NOP || data.EnumPajak == null || data.KategoriId == null) return;
+
+            const url = `/ProfilePotensiOP/DetailPotensiOP` +
+                `?nop=${encodeURIComponent(data.NOP)}` +
+                `&jenisPajak=${encodeURIComponent(data.EnumPajak)}` +
+                `&kategori=${encodeURIComponent(data.KategoriId)}`;
+
+            window.open(url, '_blank');
+        }
+
+        function fnShowRekap() {
+            $.ajax({
+                url: '@Url.Action("ShowRekap", "ProfilePotensiOPUPTB")',
+                type: 'GET',
+                beforeSend: function () {
+                    $('#loading2-ShowRekap').show();
+                    $('#ShowRekap').hide();
+                },
+                success: function (result) {
+                    $('#loading2-ShowRekap').hide();
+                    $('#ShowRekap').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-ShowRekap').hide();
+                    $('#ShowRekap').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
+
+
+
+        function showDetail(container, options) {
+            var jenisPajak = options.data?.JenisPajak;
+            console.log("showDetail - JenisPajak:", jenisPajak);
+
+            // Buat inner container
+            var innerContainer = $("<div>").addClass("p-2");
+            container.append(innerContainer);
+
+            if (!jenisPajak) {
+                innerContainer.html('<div class="text-danger">Jenis Pajak tidak ditemukan.</div>');
+                return;
+            }
+
+            // Loading spinner
+            innerContainer.html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2 text-muted">Memuat data sub-detail...</div>
+                </div>
+            `);
+
+            $.ajax({
+                url: '@Url.Action("ShowDetail", "ProfilePotensiOPUPTB")',
+                type: 'GET',
+                data: { JenisPajak: jenisPajak },
+                success: function (result) {
+                    innerContainer.html(result);
+                },
+                error: function () {
+                    innerContainer.html('<div class="text-danger">❌ Gagal memuat data sub-detail.</div>');
+                }
+            });
+        }
+        function hitungPersentase(e) {
+            var dataSource = e.component.getDataSource();
+            var items = dataSource.items();
+
+            var $summaryCells = e.element.find(".dx-datagrid-total-footer .dx-datagrid-summary-item");
+
+            for (var i = 1; i <= 3; i++) {
+                var totalTarget = 0;
+                var totalRealisasi = 0;
+
+                // Hitung total target & realisasi dari semua row
+                items.forEach(function(item) {
+                    totalTarget += item["Target" + i] || 0;
+                    totalRealisasi += item["Realisasi" + i] || 0;
+                });
+
+                var persentase = totalTarget > 0 ? totalRealisasi / totalTarget : 0;
+
+                // Index summary (1-based) → (i * 3) + 1
+                var persentaseIndex = (i * 3) + 2;
+
+                // eq() itu 0-based
+                var $persentaseCell = $summaryCells.eq(persentaseIndex - 1);
+
+                if ($persentaseCell.length) {
+                    $persentaseCell.text(
+                        DevExpress.localization.formatNumber(persentase, "#,##0.00%")
+                    );
+                }
+            }
+        }
+        function hitungPersentaseDetail(e) {
+            var dataSource = e.component.getDataSource();
+            var items = dataSource.items();
+
+            var $summaryCells = e.element.find(".dx-datagrid-total-footer .dx-datagrid-summary-item");
+
+            for (var i = 1; i <= 3; i++) {
+                var totalTarget = 0;
+                var totalRealisasi = 0;
+
+                // Hitung total target & realisasi dari semua row
+                items.forEach(function(item) {
+                    totalTarget += item["Target" + i] || 0;
+                    totalRealisasi += item["Realisasi" + i] || 0;
+                });
+
+                var persentase = totalTarget > 0 ? totalRealisasi / totalTarget : 0;
+
+                // Index summary (1-based) → (i * 3) + 1
+                var persentaseIndex = (i * 3);
+
+                // eq() itu 0-based
+                var $persentaseCell = $summaryCells.eq(persentaseIndex - 1);
+
+                if ($persentaseCell.length) {
+                    $persentaseCell.text(
+                        DevExpress.localization.formatNumber(persentase, "#,##0.00%")
+                    );
+                }
+            }
+        }
+
+        function hitungPersentaseDataShow(e) {
+            var dataSource = e.component.getDataSource();
+            var items = dataSource.items();
+
+            var $summaryCells = e.element.find(".dx-datagrid-total-footer .dx-datagrid-summary-item");
+
+            for (var i = 1; i <= 3; i++) {
+                var totalTarget = 0;
+                var totalRealisasi = 0;
+
+                // Hitung total target & realisasi dari semua row
+                items.forEach(function(item) {
+                    totalTarget += item["Target" + i] || 0;
+                    totalRealisasi += item["Realisasi" + i] || 0;
+                });
+
+                var persentase = totalTarget > 0 ? totalRealisasi / totalTarget : 0;
+
+                // Index summary (1-based) → (i * 3) + 1
+                var persentaseIndex = (i * 4) + 2;
+
+                // eq() itu 0-based
+                var $persentaseCell = $summaryCells.eq(persentaseIndex - 1);
+
+                if ($persentaseCell.length) {
+                    $persentaseCell.text(
+                        DevExpress.localization.formatNumber(persentase, "#,##0.00%")
+                    );
+                }
+            }
+        }
+        function onDataGridContentLoad() {
+            $("#loading2-DataPotensi").show();
+
+        }
+        function onDataGridContentReady() {
+            $("#loading2-DataPotensi").hide();
+        }
+
+        function onDetailClickCellTemplate(cellElement, cellInfo) {
+            // Ambil data dari row
+            const data = cellInfo.data;
+
+            if (!data) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            const jenisPajak = data.EnumPajak;
+            const kategori = data.EnumKategori;
+            const wilayahPajak = data.WilayahPajak; // ✅ pakai nama property yang benar
+            const value = cellInfo.value ?? 0;
+
+            if (!jenisPajak || !kategori) {
+                DevExpress.ui.notify("Jenis Pajak atau Kategori kosong", "error", 2000);
+                return;
+            }
+
+            // Buat link clickable
+            const $link = $('<a>')
+                .addClass('text-info')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }))
+                .on('click', () => {
+                    // Tampilkan loader
+                    $("#loader").show();
+                    const $modal = $("#staticBackdropExtraLargeScrollable");
+                    $modal.modal("hide");
+
+                    // Panggil server
+                    $.ajax({
+                        url: '/ProfilePotensiOPUPTB/ShowData',
+                        type: 'GET',
+                        data: {
+                            JenisPajak: jenisPajak,
+                            Kategori: kategori,
+                            wilayahPajak: wilayahPajak // ✅ ikut dikirim ke server
+                        },
+                        success: function (response) {
+                            $("#loader").hide();
+
+                            if (response.Status === undefined) {
+                                $modal.find(".modal-title").html("Detail Potensi");
+                                $modal.find(".modal-body").html(response);
+                                $modal.modal('show');
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '<b style="color:orange">Peringatan</b>',
+                                    text: response.Message
+                                });
+                            }
+                        },
+                        error: function () {
+                            $("#loader").hide();
+                            $modal.find(".modal-title").html("Detail WP");
+                            $modal.find(".modal-body").html('<div class="text-danger">❌ Gagal memuat data detail.</div>');
+                            $modal.modal('show');
+                        },
+                        complete: function () {
+                            $("#loader").hide();
+                        }
+                    });
+                });
+
+            $(cellElement).append($link);
+        }
+
+
+
+        function detailOPCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            // Jika nilainya 0 atau null, tampilkan saja 0
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+
+            const nop = cellInfo.data.NOP;
+            const pajak = cellInfo.data.EnumPajak;
+
+            // Buat link klik
+            const $link = $('<a>')
+                .addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    const url = '@Url.Action("Detail", "ProfileOP")'
+                                + '?nop=' + nop
+                                + '&pajak=' + pajak;
+                    window.open(url, '_blank');
+                });
+
+            $(cellElement).append($link);
+        }
+
+
+
+    </script>
+}
+

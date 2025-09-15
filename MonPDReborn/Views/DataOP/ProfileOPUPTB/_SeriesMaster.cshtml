@@ -1,0 +1,36 @@
+﻿
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<object>()
+        .ID("SeriesGrid")
+        .DataSource(new JS("[]")) // Awalnya kosong
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            @* columns.Add().DataField("NOP").Caption("NOP"); *@
+            columns.Add().DataField("FormattedNOP").Caption("NOP");
+            columns.Add().DataField("NamaOP").Caption("Nama OP");
+            columns.Add().DataField("Alamat").Caption("Alamat");
+            columns.Add().DataField("Wilayah").Caption("Wilayah");
+            columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b =>
+            {
+                b.Add()
+            .Text("Detail")
+            .Icon("search")
+            .OnClick("onDetailSeries");
+            });
+        })
+        )
+</div>

@@ -1,0 +1,45 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.RekapDetailHotel
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailOkupansiHotel>()
+        .ID("rekapHotelGrid")  
+        .DataSource(Model.DataOkupansiHotel) 
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+        .Visible(true)
+        .Width(240)
+        .Placeholder("Cari...")
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(x => x.FormattedNOP).Caption("NOP");
+            columns.AddFor(x => x.NamaOP).Caption("Nama OP");
+            columns.AddFor(x => x.AlamatOP).Caption("Alamat");
+            columns.AddFor(x => x.TotalRoom).Caption("Jumlah Ruangan");
+            columns.AddFor(x => x.Wilayah).Caption("Wilayah");
+            columns.AddFor(x => x.RateOkupansi).Caption("Rate Okupansi");
+            columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Buttons(b =>
+            {
+                b.Add()
+            .Text("Detail") 
+            .Icon("search")
+            .OnClick("onDetail");
+            });
+        })
+        )
+</div>

@@ -1,0 +1,118 @@
+﻿@model MonPDReborn.Models.DataOP.ProfileOPVM.ShowSeries
+
+<div class="flex-grow-1">
+    <h4 class="card-title fs-16 mb-3">
+        Series Jumlah Objek Pajak
+    </h4>
+</div>
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3" style="border-top: 6px solid #7DF9FF;">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="flex-shrink-0 me-4">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="mdi mdi-home-city-outline fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Objek Pajak</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.TotalOpTahunIni.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3" style="border-top: 6px solid #7DF9FF;">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="flex-shrink-0 me-4">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="mdi mdi-chart-bell-curve-cumulative fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pertumbuhan</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.PertumbuhanOp.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3" style="border-top: 6px solid #7DF9FF;">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="flex-shrink-0 me-4">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="mdi mdi-trophy-outline fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Kenaikan Tertinggi</h5>
+                        <h4 class="mb-0 fw-bold">@Model.StatistikData.KenaikanTertinggiOp.ToString("N0")</h4>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesOP>()
+        .ID("SeriesOPGrid")
+        .DataSource(Model.DataSeriesOPList)
+        .ShowBorders(true)
+        .ShowRowLines(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowInfo(true)
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").CssClass("fw-bold");
+            columns.AddFor(m => m.Tahun2021).Caption("2021").Format("#,##0");
+            columns.AddFor(m => m.Tahun2022).Caption("2022").Format("#,##0");
+            columns.AddFor(m => m.Tahun2023).Caption("2023").Format("#,##0");
+            columns.AddFor(m => m.Tahun2024).Caption("2024").Format("#,##0");
+            columns.AddFor(m => m.Tahun2025).Caption("2025").Format("#,##0");
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.JenisPajak).SummaryType(SummaryType.Sum).DisplayFormat("Total");
+                items.AddFor(m => m.Tahun2021).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2022).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2023).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2024).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+                items.AddFor(m => m.Tahun2025).SummaryType(SummaryType.Sum).DisplayFormat("{0}").ValueFormat("#,##0");
+            });
+        })
+        .MasterDetail(md =>
+        {
+        md.Enabled(true);
+        md.Template(
+        @<text>
+            @{
+                ViewData["JenisPajak"] = new JS("data.EnumPajak");
+            }
+        @await Html.PartialAsync("~/Views/DataOP/ProfileOP/_SeriesDetail.cshtml")
+    </text>);
+        })
+        )
+</div>

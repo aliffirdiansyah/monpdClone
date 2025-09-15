@@ -2458,7 +2458,7 @@ namespace MonPDReborn.Models.DataOP
 
             public decimal PotensiOmzetRoomPerBulan => HargaRataRataRoom * Math.Ceiling(RataRataRoomTerjualPerHari) * 30;
 
-            public decimal OkupansiRateBanquet => KapasitasMaksimalPaxBanquetPerHari > 0 ? Math.Round((0.3m * OkupansiRateRoom) * 100) / 100 : 0;
+            public decimal OkupansiRateBanquet => KapasitasMaksimalPaxBanquetPerHari > 0 ? Math.Round((0.3m * OkupansiRateRoom) * 100, MidpointRounding.AwayFromZero) / 100 : 0;
 
             public decimal RataRataPaxBanquetTerjualPerHari => KapasitasMaksimalPaxBanquetPerHari * OkupansiRateBanquet;
 
@@ -2794,7 +2794,7 @@ namespace MonPDReborn.Models.DataOP
 
             // ========== Perhitungan Kategori Fitness/Pusat Kebugaran ==========
             public decimal EstimasiJumlahMemberFitnes =>
-                Math.Ceiling(((Math.Ceiling(Kapasitas * TurnoverWeekdays)*22) + (Math.Ceiling(Kapasitas * TurnoverWeekend)*8)) / 12);
+                Math.Ceiling(((Math.Ceiling(Kapasitas * TurnoverWeekdays) * 22) + (Math.Ceiling(Kapasitas * TurnoverWeekend) * 8)) / 12);
             public decimal OmzetPerBulanFitnes => HargaMemberFitness * Math.Ceiling(EstimasiJumlahMemberFitnes);
             public decimal PotensiPajakPerBulanFitnes => OmzetPerBulanFitnes * TarifPajak;
             public decimal PotensiPajakPerTahunFitnes => PotensiPajakPerBulanFitnes * BulanSisa;

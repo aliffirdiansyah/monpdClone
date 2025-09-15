@@ -1,0 +1,582 @@
+﻿@using MonPDReborn.Models.DataOP
+@model ProfilePotensiOPVM.DetailPotensiReklame
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Detail Potensi Pajak Reklame";
+
+}
+
+<style>
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 0.5rem;
+        gap: 2rem;
+    }
+
+    .label {
+        width: 160px;
+        flex-shrink: 0;
+        font-size: 14px;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+
+    .value {
+        flex-grow: 2;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 0;
+        white-space: normal;
+        word-break: break-word;
+    }
+</style>
+
+@if (Model != null)
+{
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card border border-primary border-2">
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-lg-8">
+                            <div class="d-flex p-3">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-soft-primary rounded-circle fs-1">
+                                            <i class="mdi mdi-water text-primary"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <h4 class="fs-16 fw-semibold">
+                                        Dashboard Pajak Reklame
+                                    </h4>
+                                    <p class="fs-16 lh-base">
+                                        NOR : @Model.NomorObjekReklame
+                                    </p>
+                                    <p class="fs-16 lh-base">
+                                        Jenis : @Model.JenisReklame
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card border border-primary border-2">
+                                <div class="d-flex p-3">
+                                    <h3 class="fs-16 fw-semibold">Status : @Model.Status</h3>
+                                </div>@* 
+                            <div class="d-flex p-3">
+                                <h3 class="fs-16 fw-semibold">Periode : @Model.Perio </h3>
+                            </div> *@
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card bg-soft-primary">
+                <div class="card-body">
+                    <h4 class="fs-14">RATA - RATA NSR</h4>
+                    <h3 class="fs-18 fw-semibold mb-1">Rp. @Model.RataRataNSR.ToString("N0")</h3>
+                    <h4 class="fs-14">Nilai sewa Reklame rata-rata</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card bg-soft-primary">
+                <div class="card-body">
+                    <h4 class="fs-14">RATA - RATA PAJAK REKLAME</h4>
+                    <h3 class="fs-18 fw-semibold mb-1">Rp. @Model.RataRataPajak.ToString("N0")</h3>
+                    <h4 class="fs-14">25% dari rata-rata NSR</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex bg-header-color align-items-center">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title text-black fs-16 mb-0">
+                            Detail NSR Tahunan
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">NSR Tahun Berjalan (NSR 0)</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun0.ToString("N0") </p>
+                        </div>
+                    </div><hr />
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">NSR Tahun-1</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun1.ToString("N0") </p>
+                        </div>
+                    </div><hr />
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">NSR Tahun-2</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun2.ToString("N0") </p>
+                        </div>
+                    </div><hr />
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">NSR Tahun-3</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun3.ToString("N0") </p>
+                        </div>
+                    </div><hr />
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">NSR Tahun-4</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">Rp. @Model.NSRTahun4.ToString("N0") </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Rata-rata NSR</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-semibold">Rp. @Model.RataRataNSR.ToString("N0") </p>
+                                        </div>
+                                    </div>
+                                    <small class="text-dark-50">Rata-rata Nilai Sewa Reklame dari data yang tersedia</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex bg-header-color align-items-center">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title text-black fs-16 mb-0">
+                            Perhitungan Pajak
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex-grow-1">
+                                        <h4 class="card-title text-black fs-16 mb-0">
+                                            Komponen Perhitungan
+                                        </h4>
+                                    </div>
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Rata-rata NSR</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-semibold">Rp. @Model.RataRataNSR.ToString("N0") </p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Tarif Pajak Reklame</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-semibold">@Model.TarifPajak.ToString("P1")</p>
+                                        </div>
+                                    </div><hr />
+                                    @{
+                                        decimal totalPajak = Model.RataRataNSR * Model.TarifPajak;
+                                    }
+                                    <div class="d-flex p-3 py-0">
+                                        <p class="fs-14 text-muted flex-grow-1">Total Pajak Reklame</p>
+                                        <div class="flex-shrink-0">
+                                            <p class="fs-16 fw-semibold">Rp. @totalPajak.ToString("N0")</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flex-grow-1">
+                                        <h4 class="card-title text-black fs-16 mb-0">
+                                            Rumus Perhitungan
+                                        </h4>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+                                            <div class="card bg-light">
+                                                <div class="card-body">
+                                                    <div class="flex-grow-1">
+                                                        <h4 class="card-title text-black fs-16 mb-0">
+                                                            Pajak = Rata-rata NSR x 20%
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="card bg-light">
+                                                <div class="card-body">
+                                                    <div class="flex-grow-1">
+                                                        <h4 class="card-title text-black fs-16 mb-0">
+                                                            = Rp. @Model.RataRataNSR.ToString("N0") * @Model.TarifPajak.ToString("P1") = <br /> Rp. @totalPajak.ToString("N0")
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex bg-header-color align-items-center">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title text-black fs-16 mb-0">
+                            Ringkasan Data
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">Nomor Objek Reklame</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">@Model.NomorObjekReklame </p>
+                        </div>
+                    </div>
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">Jenis Reklame</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">@Model.JenisReklame </p>
+                        </div>
+                    </div>
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">Status</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">@Model.Status </p>
+                        </div>
+                    </div>
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">Tarif Pajak</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">@Model.TarifPajak.ToString("P2") </p>
+                        </div>
+                    </div>
+                    <div class="d-flex p-3 py-0">
+                        <p class="fs-14 text-muted flex-grow-1">Konsistensi NSR</p>
+                        <div class="flex-shrink-0">
+                            <p class="fs-16 fw-semibold">@Model.KonsistensiNSR </p>
+                        </div>
+                    </div>
+                    @* <div class="d-flex p-3 py-0">
+                    <p class="fs-14 text-muted flex-grow-1">Tanggal Perhitungan</p>
+                    <div class="flex-shrink-0">
+                        <p class="fs-16 fw-semibold">Rp </p>
+                    </div>
+                </div> *@
+                </div>
+            </div>
+        </div>
+
+        @* <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Tren NSR 5 Tahun Terakhir
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="line_chart_gradient" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-black fs-16 mb-0">
+                        Perbandingan NSR dan Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="column_chart" data-colors='["--vz-danger", "--vz-primary", "--vz-success"]' class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div> *@
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex bg-header-color align-items-center">
+                    <div class="flex-grow-1">
+                        <h4 class="card-title text-black fs-16 mb-0">
+                            Informasi Tambahan
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header d-flex bg-header-color align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h4 class="card-title text-black fs-16 mb-0">
+                                            Tentang Pajak Reklame
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="fs-14">
+                                        Pajak Reklame adalah pajak atas penyelenggaraan reklame. Reklame adalah benda, alat, perbuatan, atau
+                                        media yang bentuk dan corak ragamnya dirancang untuk tujuan komersial memperkenalkan, menganjurkan,
+                                        mempromosikan, atau untuk menarik perhatian umum terhadap barang, jasa, orang, atau badan, yang dapat
+                                        dilihat, dibaca, didengar, dirasakan, dan/atau dinikmati oleh umum.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header d-flex bg-header-color align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h4 class="card-title text-black fs-16 mb-0">
+                                            Dasar Hukum
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <i class="ri-checkbox-blank-circle-fill"></i>
+                                            Peraturan Daerah tentang Pajak Daerah
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="ri-checkbox-blank-circle-fill"></i>
+                                            Peraturan Bupati/Walikota tentang Pajak Reklame
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="ri-checkbox-blank-circle-fill"></i>
+                                            UU No. 28 Tahun 2009 tentang Pajak Daerah dan Retribusi Daerah
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header d-flex bg-header-color align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h4 class="card-title text-black fs-16 mb-0">
+                                            Keterangan
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-row">
+                                        <p class="label">NOR</p>
+                                        <p class="value">Nomor Objek Reklame</p>
+                                    </div>
+                                    <div class="info-row">
+                                        <p class="label">NSR</p>
+                                        <p class="value">Nilai Sewa Reklame</p>
+                                    </div>
+                                    <div class="info-row">
+                                        <p class="label">NSR 0</p>
+                                        <p class="value">NST tahun berjala</p>
+                                    </div>
+                                    <div class="info-row">
+                                        <p class="label">NSR 1-4</p>
+                                        <p class="value">NSR 1-4 tahun sebelumnya</p>
+                                    </div>
+                                    <div class="info-row">
+                                        <p class="label">Permanen</p>
+                                        <p class="value">Reklame dengan konstruksi tetap</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-12">
+                <div class="card text-center shadow-sm border-0">
+                    <div class="card-body">
+                        <img src="~/assets/images/coming-soon-img.png" alt="Tidak Ada Data" class="img-fluid mb-4" style="max-width: 180px;" />
+                        <h5 class="card-title text-danger">Data Tidak Ditemukan</h5>
+                        <p class="card-text text-muted">
+                            Maaf, data yang Anda cari belum tersedia atau tidak ditemukan.
+                            @* Coba ubah filter atau periksa kembali input Anda. *@
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+        function renderLineChartGradient() {
+            const chartEl = document.querySelector("#line_chart_gradient");
+            if (!chartEl) return;
+
+            // Ambil warna dari data attribute
+            const rawColors = chartEl.getAttribute("data-colors");
+            const colorVars = JSON.parse(rawColors || "[]");
+            const chartColors = colorVars.map(c => getComputedStyle(document.documentElement).getPropertyValue(c.trim()) || c);
+
+            const options = {
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    toolbar: { show: false }
+                },
+                stroke: {
+                    width: 3,
+                    curve: 'smooth'
+                },
+                series: [{
+                    name: "Realisasi",
+                    data: [10, 40, 35, 50, 49, 60, 70, 91]
+                }],
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shade: 'light',
+                        type: "vertical",
+                        shadeIntensity: 0.5,
+                        gradientToColors: [chartColors[0]],
+                        inverseColors: false,
+                        opacityFrom: 0.6,
+                        opacityTo: 0.1,
+                        stops: [0, 90, 100]
+                    }
+                },
+                colors: chartColors,
+                markers: {
+                    size: 5,
+                    colors: chartColors,
+                    strokeColors: "#fff",
+                    strokeWidth: 2,
+                }
+            };
+
+            const chart = new ApexCharts(chartEl, options);
+            chart.render();
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderLineChartGradient();
+        });
+    </script>
+    <script>
+        function renderColumnChart() {
+            const chartEl = document.querySelector("#column_chart");
+            const colors = JSON.parse(chartEl.getAttribute("data-colors")).map(function(value) {
+                const cssVar = value.replace("--", "");
+                return getComputedStyle(document.documentElement).getPropertyValue(`--${cssVar}`).trim() || value;
+            });
+
+            const options = {
+                chart: {
+                    type: 'bar',
+                    height: 350
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '45%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                series: [
+                    {
+                        name: 'Produk A',
+                        data: [44, 55, 41, 67, 22, 43, 21]
+                    },
+                    {
+                        name: 'Produk B',
+                        data: [13, 23, 20, 8, 13, 27, 33]
+                    },
+                    {
+                        name: 'Produk C',
+                        data: [11, 17, 15, 15, 21, 14, 15]
+                    }
+                ],
+                colors: colors,
+                xaxis: {
+                    categories: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val + " unit";
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            };
+
+            const chart = new ApexCharts(chartEl, options);
+            chart.render();
+        }
+
+        // Jalankan saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", renderColumnChart);
+    </script>
+}
