@@ -23,7 +23,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                 SelectedPajak = 0;
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
-                    //.Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
+                    .Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
@@ -54,7 +54,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                 SelectedBulan = bulan;
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
-                    //.Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
+                    .Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
