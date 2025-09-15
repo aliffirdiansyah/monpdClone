@@ -74,7 +74,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             var realisasi = context.MvPrediksi2025s.AsQueryable();
 
             ret = context.MvPrediksi2025s
-                .Where(x => x.Tanggal >= tanggalAwal && x.Tanggal <= tanggalAkhir)
+                .Where(x => x.Tanggal >= tanggalAwal.AddDays(1) && x.Tanggal <= tanggalAkhir)
                 .GroupBy(x => new { PajakId = x.IdPajak })
                 .Select(x => new KontrolPrediksi()
                 {
@@ -392,9 +392,10 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
         public decimal RealisasiBulanIni { get; set; }
         public decimal RealisasiHari { get; set; }
         public decimal Prediksi { get; set; }
-        public decimal Jumlah => RealisasiBulanIni + RealisasiHari;
+        public decimal Jumlah => RealisasiBulanIni + Prediksi;
+        public decimal JumlahTotal => RealisasiBulanLalu + RealisasiBulanIni + Prediksi;
         public decimal Persentase => Target > 0
-            ? Math.Round((Jumlah / Target) * 100, 2)
+            ? Math.Round((JumlahTotal / Target) * 100, 2)
             : 0;
     }
 }
