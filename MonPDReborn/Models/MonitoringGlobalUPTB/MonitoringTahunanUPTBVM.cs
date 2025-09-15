@@ -59,25 +59,32 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                 //Target
                 var dataTargetMamin = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
-                                && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
+                                && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman
+                                && x.Uptb == wilayah).Sum(x => x.Target);
                 var dataTargetHotel = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
-                                && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Target);
+                                && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan
+                                && x.Uptb == wilayah).Sum(x => x.Target);
                 var dataTargetHiburan = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
-                                && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Target);
+                                && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan
+                                && x.Uptb == wilayah).Sum(x => x.Target);
                 var dataTargetParkir = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
-                                && x.PajakId == (int)EnumFactory.EPajak.JasaParkir).Sum(x => x.Target);
+                                && x.PajakId == (int)EnumFactory.EPajak.JasaParkir
+                                && x.Uptb == wilayah).Sum(x => x.Target);
                 var dataTargetListrik = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
-                                && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
+                                && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik
+                                && x.Uptb == wilayah).Sum(x => x.Target);
                 var dataTargetPbb = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
-                                && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
+                                && x.PajakId == (int)EnumFactory.EPajak.PBB
+                                && x.Uptb == wilayah).Sum(x => x.Target);
                 var dataTargetAbt = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
-                                && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
+                                && x.PajakId == (int)EnumFactory.EPajak.AirTanah
+                                && x.Uptb == wilayah).Sum(x => x.Target);
 
                 // RealisasiSD
                 var dataRealisasiMamin = context.DbMonRestos
