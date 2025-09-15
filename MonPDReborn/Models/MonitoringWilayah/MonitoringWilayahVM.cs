@@ -84,7 +84,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 {
                     JenisUptbList = Enum.GetValues(typeof(EnumFactory.EUPTB))
                     .Cast<EnumFactory.EUPTB>()
-                    .Where(x=> x == (EnumFactory.EUPTB)wilayah)
+                    .Where(x => x == (EnumFactory.EUPTB)wilayah)
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
@@ -144,6 +144,11 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 if (jenisPajak == EnumFactory.EPajak.Semua)
                 {
                     RealisasiJenisList = Method.GetDataRealisasiJenisList(tahun, bulan, (EnumFactory.EUPTB)wilayah);
+                    TotalWajibPajak = RealisasiJenisList.Sum(x => x.JmlWP);
+                }
+                else
+                {
+                    TotalWajibPajak = RealisasiWilayahList.Sum(x => x.JmlWP);
                 }
 
                 TotalTarget = RealisasiWilayahList.Sum(x => x.Target);
@@ -157,7 +162,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     PersenTotal = 0;
                 }
                 TotalPencapaianHarian = Method.TotalRealisasiPencapaianHarianPerHariIni(wilayah, tahun, bulan, jenisPajak);
-                TotalWajibPajak = RealisasiJenisList.Sum(x => x.JmlWP);
+                
             }
         }
 
@@ -189,12 +194,15 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 var ret = new List<RealisasiWilayah>();
                 var currentYear = DateTime.Now.Year;
                 var context = DBClass.GetContext();
-
+                
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpResto = context.DbOpRestos
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                             .Count();
                             var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
                             foreach (var uptb in uptbList)
@@ -223,12 +231,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
-                                    Status = ""
+                                    Status = "",
+                                    JmlWP = jmlWpResto
                                 });
                             }
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpResto = context.DbOpRestos
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == Convert.ToString((int)wilayah))
+                             .Count();
                             var nopList = context.DbOpRestos.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop)
                                     .Distinct()
@@ -254,7 +266,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Target = totalTarget,
                                 Realisasi = totalRealisasi ?? 0,
                                 Tren = 0,
-                                Status = ""
+                                Status = "",
+                                JmlWP = jmlWpResto
                             });
                         }
 
@@ -262,6 +275,9 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.TenagaListrik:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpPpj = context.DbOpListriks
+                            .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                            .Count();
                             var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
                             foreach (var uptb in uptbList)
@@ -290,12 +306,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
-                                    Status = ""
+                                    Status = "",
+                                    JmlWP = jmlWpPpj
                                 });
                             }
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpPpj = context.DbOpListriks
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == Convert.ToString((int)wilayah))
+                             .Count();
                             var nopList = context.DbOpListriks.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop)
                                     .Distinct()
@@ -321,7 +341,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Target = totalTarget,
                                 Realisasi = totalRealisasi ?? 0,
                                 Tren = 0,
-                                Status = ""
+                                Status = "",
+                                JmlWP = jmlWpPpj
                             });
                         }
 
@@ -329,6 +350,9 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.JasaPerhotelan:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpHotel = context.DbOpHotels
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                             .Count();
                             var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
                             foreach (var uptb in uptbList)
@@ -357,12 +381,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
-                                    Status = ""
+                                    Status = "",
+                                    JmlWP = jmlWpHotel
                                 });
                             }
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpHotel = context.DbOpHotels
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == Convert.ToString((int)wilayah))
+                             .Count();
                             var nopList = context.DbOpHotels.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop)
                                     .Distinct()
@@ -388,7 +416,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Target = totalTarget,
                                 Realisasi = totalRealisasi ?? 0,
                                 Tren = 0,
-                                Status = ""
+                                Status = "",
+                                JmlWP = jmlWpHotel
                             });
                         }
 
@@ -396,6 +425,9 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.JasaParkir:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpParkir = context.DbOpParkirs
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                             .Count();
                             var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
                             foreach (var uptb in uptbList)
@@ -424,12 +456,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
-                                    Status = ""
+                                    Status = "",
+                                    JmlWP = jmlWpParkir
                                 });
                             }
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpParkir = context.DbOpParkirs
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                             .Count();
                             var nopList = context.DbOpParkirs.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop)
                                     .Distinct()
@@ -455,7 +491,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Target = totalTarget,
                                 Realisasi = totalRealisasi ?? 0,
                                 Tren = 0,
-                                Status = ""
+                                Status = "",
+                                JmlWP = jmlWpParkir
                             });
                         }
 
@@ -463,6 +500,10 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.JasaKesenianHiburan:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpHiburan = context.DbOpHiburans
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                             .Count();
+
                             var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
                             foreach (var uptb in uptbList)
@@ -491,12 +532,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
-                                    Status = ""
+                                    Status = "",
+                                    JmlWP = jmlWpHiburan
                                 });
                             }
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpHiburan = context.DbOpHiburans
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == Convert.ToString((int)wilayah))
+                             .Count();
                             var nopList = context.DbOpHiburans.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop)
                                     .Distinct()
@@ -522,7 +567,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Target = totalTarget,
                                 Realisasi = totalRealisasi ?? 0,
                                 Tren = 0,
-                                Status = ""
+                                Status = "",
+                                JmlWP = jmlWpHiburan
                             });
                         }
 
@@ -530,6 +576,9 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.AirTanah:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpAbt = context.DbOpAbts
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                             .Count();
                             var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
                             foreach (var uptb in uptbList)
@@ -558,12 +607,16 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
-                                    Status = ""
+                                    Status = "",
+                                    JmlWP = jmlWpAbt
                                 });
                             }
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpAbt = context.DbOpAbts
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == Convert.ToString((int)wilayah))
+                             .Count();
                             var nopList = context.DbOpAbts.Where(x => x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
                                     .Select(x => x.Nop)
                                     .Distinct()
@@ -589,7 +642,8 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 Target = totalTarget,
                                 Realisasi = totalRealisasi ?? 0,
                                 Tren = 0,
-                                Status = ""
+                                Status = "",
+                                JmlWP = jmlWpAbt
                             });
                         }
 
@@ -600,6 +654,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     case EnumFactory.EPajak.PBB:
                         if (wilayah == EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpPbb = context.DbOpPbbs.Count();
                             var uptbList = context.MWilayahs.Select(x => x.Uptd).Distinct().ToList();
 
                             foreach (var uptb in uptbList)
@@ -625,12 +680,14 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                     Target = totalTarget,
                                     Realisasi = totalRealisasi ?? 0,
                                     Tren = 0,
-                                    Status = ""
+                                    Status = "",
+                                    JmlWP = jmlWpPbb
                                 });
                             }
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
+                            var jmlWpPbb = context.DbOpPbbs.Where(x=> x.Uptb == (decimal)wilayah).Count();
                             var dataPbbWilayah = context.DbMonPbbs
                                  .Where(x => x.TglBayar.Value.Year == tahun && Convert.ToInt32(x.Uptb) == (int)wilayah)
                                  .Select(x => new
@@ -692,6 +749,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 re.Realisasi = totalRealisasi ?? 0;
                                 re.Tren = 0;
                                 re.Status = "";
+                                re.JmlWP = jmlWpPbb;
 
                                 ret.Add(re);
                             }
@@ -3625,6 +3683,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
             public decimal Pencapaian => Target > 0 ? Math.Round((decimal)(Realisasi / Target) * 100, 2) : 0;
             public decimal Tren { get; set; }
             public string Status { get; set; } = null!;
+            public int JmlWP { get; set; }
         }
 
         public class RealisasiJenis
