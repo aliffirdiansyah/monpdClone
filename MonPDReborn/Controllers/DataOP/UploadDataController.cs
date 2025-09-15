@@ -2,6 +2,7 @@
 using MonPDReborn.Lib.General;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static MonPDReborn.Lib.General.ResponseBase;
+using MonPDLib.General;
 
 namespace MonPDReborn.Controllers.DataOP
 {
@@ -27,6 +28,18 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("UPLOAD"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
+
                 var model = new Models.DataOP.UploadDataVM.Index
                 {
                     TahunList = Enumerable.Range((DateTime.Now.Year + 6) - 10, 20)
