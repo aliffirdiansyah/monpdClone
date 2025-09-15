@@ -25,22 +25,22 @@
 
                     <div class="col-lg col-md-6">
                         @(Html.DevExtreme().DateBox()
-                                                .ID("tanggalAwal")
-                                                .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal Awal")
-                                                .StylingMode(EditorStylingMode.Outlined)
-                                                .Value(DateTime.Now)
-                                                .Max(DateTime.Now)
-                                                )
+                            .ID("tanggalAwal")
+                            .Type(DateBoxType.Date)
+                            .Placeholder("Tanggal Awal")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .Value(DateTime.Now)
+                            .Max(DateTime.Now)
+                            )
                     </div>
 
                     <div class="col-lg col-md-6">
                         @(Html.DevExtreme().DateBox()
-                                                .ID("tanggalAkhir")
-                                                .Type(DateBoxType.Date)
-                                                .Placeholder("Tanggal Akhir")
-                                                .StylingMode(EditorStylingMode.Outlined)
-                                                )
+                            .ID("tanggalAkhir")
+                            .Type(DateBoxType.Date)
+                            .Placeholder("Tanggal Akhir")
+                            .StylingMode(EditorStylingMode.Outlined)
+                            )
                     </div>
 
                     <div class="col-lg col-md-6">
@@ -117,17 +117,17 @@
 
     <script>
         $(document).ready(function () {
-           
-           
+
+
         });
 
-       
+
         $('#btnTerapkanFilter').on('click', function() {
-           
+
             const tglAwalDate = $('#tanggalAwal').dxDateBox('instance').option('value');
             const tglAkhirDate = $('#tanggalAkhir').dxDateBox('instance').option('value');
 
-           
+
             let tglAwalFormatted = null;
             if (tglAwalDate) {
                 const yyyy = tglAwalDate.getFullYear();
@@ -144,7 +144,7 @@
                 tglAkhirFormatted = `${yyyy}-${mm}-${dd}`;
             }
 
-           
+
             fnShow(tglAwalFormatted, tglAkhirFormatted);
         });
         function fnShow(tanggalAwal, tanggalAkhir) {
@@ -163,16 +163,26 @@
                     $('#loading2-Show').hide();
 
                     if (result.Status === undefined) {
-                       
+
                         $('#Show').html(result).show();
 
 
                         setTimeout(function () {
                             var grid = $("#KontrolPrediksiGrid").dxDataGrid("instance");
                             if (grid) {
-                                var tglAwal = DevExpress.localization.formatDate(new Date(tanggalAwal), "dd/MM/yyyy");
+                                var tglAwal = DevExpress.localization.formatDate(
+                                    new Date(new Date(tanggalAwal).setDate(new Date(tanggalAwal).getDate() + 1)),
+                                    "dd/MM/yyyy"
+                                );
                                 var tglAkhir = DevExpress.localization.formatDate(new Date(tanggalAkhir), "dd/MM/yyyy");
 
+                                var tglAwalRealisasi = DevExpress.localization.formatDate(
+                                    new Date(new Date(tanggalAwal).getFullYear(), new Date(tanggalAwal).getMonth(), 1),
+                                    "dd/MM/yyyy"
+                                );
+                                var tglAkhirRealisasi = DevExpress.localization.formatDate(new Date(tanggalAwal), "dd/MM/yyyy");
+
+                                grid.columnOption("Realisasi", "caption", "Realisasi Tgl " + tglAwalRealisasi + " s.d " + tglAkhirRealisasi);
                                 grid.columnOption("Prediksi", "caption", "Prediksi " + tglAwal + " s.d " + tglAkhir);
                             }
                         }, 200);

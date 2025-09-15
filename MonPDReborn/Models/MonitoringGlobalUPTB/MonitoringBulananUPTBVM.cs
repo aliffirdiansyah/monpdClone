@@ -24,6 +24,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                 JenisPajakList.Add(new SelectListItem { Value = "0", Text = "Semua Jenis Pajak" });
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
+                    .Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
@@ -44,6 +45,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                 JenisPajakList.Add(new SelectListItem { Value = "0", Text = "Semua Jenis Pajak" });
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
+                    .Where(x => x != EnumFactory.EPajak.Reklame && x != EnumFactory.EPajak.BPHTB && x != EnumFactory.EPajak.OpsenPkb && x != EnumFactory.EPajak.OpsenBbnkb)
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
