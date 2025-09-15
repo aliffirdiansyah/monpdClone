@@ -6,6 +6,7 @@ using MonPDLib.General;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Web.Mvc;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 
 namespace MonPDReborn.Models.MonitoringGlobalUPTB
@@ -99,7 +100,9 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
 
                         var nopListResto = context.DbOpRestos
                             .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
-                            .Select(x => x.Nop).Distinct().ToList();
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
 
                         var realisasiRestoPerBulan = context.DbMonRestos
                             .Where(x =>
