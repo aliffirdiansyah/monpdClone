@@ -205,12 +205,22 @@
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
 
+                    items.AddFor(m => m.Prediksi)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
                     items.AddFor(m => m.RealisasiHari)
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Jumlah)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                    items.AddFor(m => m.JumlahTotal)
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
