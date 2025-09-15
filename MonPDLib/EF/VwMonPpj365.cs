@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [Keyless]
-public partial class VwMonHotel365
+public partial class VwMonPpj365
 {
     [Column("TANGGAL_LABEL")]
     [StringLength(6)]
@@ -81,7 +81,7 @@ public partial class VwMonHotel365
     public decimal? IdPajak { get; set; }
 
     [Column("JENIS_PAJAK")]
-    [StringLength(21)]
+    [StringLength(20)]
     [Unicode(false)]
     public string? JenisPajak { get; set; }
 }

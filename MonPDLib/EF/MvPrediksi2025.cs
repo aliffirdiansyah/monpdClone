@@ -31,7 +31,4 @@ public partial class MvPrediksi2025
 
     [Column("PREDIKSI_2025", TypeName = "NUMBER")]
     public decimal? Prediksi2025 { get; set; }
-
-    [Column("GABUNGAN", TypeName = "NUMBER")]
-    public decimal? Gabungan { get; set; }
 }
