@@ -414,7 +414,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     default:
                         var dataTargetPerBulan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah)
+                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
                                 {
@@ -913,7 +913,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     default:
                         var dataTargetPerBulan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah)
+                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
                                 {

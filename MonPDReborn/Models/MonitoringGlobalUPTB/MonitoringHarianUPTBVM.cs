@@ -496,7 +496,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     default:
                         var dataTargetPerhari = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.Uptb == (int)wilayah)
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
                                 .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {

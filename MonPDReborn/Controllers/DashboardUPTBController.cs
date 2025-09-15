@@ -55,5 +55,31 @@ namespace MonPDReborn.Controllers
                 return RedirectToAction("Error", "Home", new { statusCode = 500 });
             }
         }
+        public IActionResult SeriesPajakDaerah()
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+                int wilayah = int.Parse(nama.Split(' ').Last());
+
+                var model = new Models.DashboardUPTBVM.SeriesPajakDaerah(wilayah);
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+                return Json(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+                return Json(response.ToInternalServerError());
+            }
+        }
     }
 }
