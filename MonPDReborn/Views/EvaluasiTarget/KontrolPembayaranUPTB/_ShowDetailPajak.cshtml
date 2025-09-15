@@ -1,0 +1,108 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranUPTBVM.DetailPembayaran
+
+@{
+    // Helper function untuk nama bulan
+    string GetNamaBulan(int bulan)
+    {
+        var namaBulan = new Dictionary<int, string>
+        {
+            {1, "Januari"}, {2, "Februari"}, {3, "Maret"}, {4, "April"},
+            {5, "Mei"}, {6, "Juni"}, {7, "Juli"}, {8, "Agustus"},
+            {9, "September"}, {10, "Oktober"}, {11, "November"}, {12, "Desember"}
+        };
+        return namaBulan.ContainsKey(bulan) ? namaBulan[bulan] : "";
+    }
+
+    // Tentukan judul berdasarkan kondisi
+    string headerTitle = "";
+
+    if (Model.IsTotal)
+    {
+        // Untuk summary/total
+        string namaBulan = GetNamaBulan(Model.Bulan);
+        string jenisPajak = Model.Data?.FirstOrDefault()?.JenisPajak ?? "";
+
+        if (jenisPajak.ToLower().Contains("hotel") || jenisPajak.ToLower().Contains("perhotelan"))
+        {
+            // Untuk hotel, tampilkan info hotel type
+            string hotelType = Model.IsHotelNonBintang ? "Hotel Non Bintang" : "Hotel Bintang";
+            headerTitle = $"Total Pembayaran {hotelType} Bulan {namaBulan}";
+        }
+        else
+        {
+            // Untuk pajak lainnya
+            headerTitle = $"Total Pembayaran Pajak Bulan {namaBulan}";
+        }
+    }
+    else
+    {
+        // Untuk detail per kategori
+        string kategori = Model.Data?.FirstOrDefault()?.Kategori ?? "";
+        headerTitle = $"Detail Kontrol Pembayaran Pajak : {kategori}";
+    }
+}
+
+<div class="card-header d-flex">
+    <div class="flex-grow-1">
+        <h4 class="card-title fs-16 mb-0">
+            @headerTitle
+        </h4>
+    </div>
+</div>
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranUPTBVM.DetailPajak>()
+        .ID("detailPajakGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP").CellTemplate(new JS("detailOPCellTemplate"));
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.Ketetapan).Caption("Potensi").Format("#,##0");
+            columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
+            columns.AddFor(m => m.Wilayah).Caption("Wilayah");
+            columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.AddFor(m => m.FormattedNOP)
+            .SummaryType(SummaryType.Sum)
+            .Alignment(HorizontalAlignment.Right)
+            .DisplayFormat("TOTAL");
+
+                items.AddFor(m => m.Ketetapan)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+
+                items.AddFor(m => m.Realisasi)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("{0}")
+            .ValueFormat("#,##0");
+            });
+        })
+
+        )
+</div>
