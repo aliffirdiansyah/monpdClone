@@ -154,6 +154,8 @@ namespace MonPDReborn.Controllers.DataOP
                         Text = g.Key.NmKecamatan
                     })
                     .ToList();
+
+                dataList.Add(new kecamatanView { Value = "000", Text = "-- Semua Kecamatan --" });
             }
 
             return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);

@@ -4762,7 +4762,9 @@ namespace MonPDReborn.Models.DataOP
             public List<OkupansiHotel> OkunpasiHotel { get; set; } = new();
             public string Uptb { get; set; } = null!;
             public string KdKecamatan { get; set; }
+            public string NmKecamatan { get; set; }
             public string KdKelurahan { get; set; }
+            public string NmKelurahan { get; set; }
         }
 
         public class RekapDetailOP

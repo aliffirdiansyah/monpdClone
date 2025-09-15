@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.General;
+using System.Diagnostics;
 using System.Globalization;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DataOP.ProfileOPVM;
@@ -37,121 +38,301 @@ namespace MonPDReborn.Models.DataOP
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
 
-                var dataResto = context.DbOpRestos
-                     .Where(x => x.TahunBuku == currentYear && x.PajakNama != "MAMIN" &&
-                                 (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
-                     .GroupBy(x => new { x.Nop })
-                     .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
-                     .Count();
-
-                var dataPpj = context.DbOpListriks
-                    .Where(x => x.TahunBuku == currentYear &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
-                    .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
-                    .Count();
-
-                var dataHotel = context.DbOpHotels
-                    .Where(x => x.TahunBuku == currentYear &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
-                    .GroupBy(x => new { x.Nop })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
-                    .Count();
-
-                var dataParkir = context.DbOpParkirs
-                    .Where(x => x.TahunBuku == currentYear &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
-                    .GroupBy(x => new { x.Nop })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
-                    .Count();
-
-                var dataHiburan = context.DbOpHiburans
-                    .Where(x => x.TahunBuku == currentYear &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
-                    .GroupBy(x => new { x.Nop })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
-                    .Count();
-
-                var dataAbt = context.DbOpAbts
-                    .Where(x => x.TahunBuku == currentYear &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
-                    .GroupBy(x => new { x.Nop, x.KategoriId })
-                    .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
-                    .Count();
-
-
-                var OpPbbAkhir = context.DbMonPbbs
-                    .Where(x => x.TahunBuku == currentYear && x.Uptb == Convert.ToDecimal(uptb) && x.AlamatKdCamat == kec && x.AlamatKdLurah == kel)
-                    .GroupBy(x => new { x.Nop })
-                    .Select(g => new { g.Key.Nop })
-                    .Count();
-
-
-
-                ret.Add(new RekapOP
+                if(kec == "000")
                 {
-                    JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
-                    EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
-                    JmlOpAkhir = dataResto,
-                    Uptb = uptb,
-                    KdKecamatan = kec,
-                    KdKelurahan = kel,
-                });
-                ret.Add(new RekapOP
-                {
-                    JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
-                    EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
-                    JmlOpAkhir = dataPpj,
-                    Uptb = uptb,
-                    KdKecamatan = kec,
-                    KdKelurahan = kel,
-                });
-                ret.Add(new RekapOP
-                {
-                    JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
-                    EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
-                    JmlOpAkhir = dataHotel,
-                    Uptb = uptb,
-                    KdKecamatan = kec,
-                    KdKelurahan = kel,
-                });
-                ret.Add(new RekapOP
-                {
-                    JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
-                    EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
-                    JmlOpAkhir = dataParkir,
-                    Uptb = uptb,
-                    KdKecamatan = kec,
-                    KdKelurahan = kel,
-                });
-                ret.Add(new RekapOP
-                {
-                    JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
-                    EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
-                    JmlOpAkhir = dataHiburan,
-                    Uptb = uptb,
-                    KdKecamatan = kec,
-                    KdKelurahan = kel,
-                });
-                ret.Add(new RekapOP
-                {
-                    JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
-                    EnumPajak = (int)EnumFactory.EPajak.AirTanah,
-                    JmlOpAkhir = dataAbt,
-                    Uptb = uptb,
-                    KdKecamatan = kec,
-                    KdKelurahan = kel,
-                });
-                ret.Add(new RekapOP
-                {
-                    JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
-                    EnumPajak = (int)EnumFactory.EPajak.PBB,
-                    JmlOpAkhir = OpPbbAkhir,
-                    Uptb = uptb,
-                    KdKecamatan = kec,
-                    KdKelurahan = kel,
-                });
+                    var kecKelList = context.MWilayahs
+                        .Where(x => x.Uptd == uptb)
+                        .Select(x => new { x.KdKecamatan, x.NmKecamatan, x.KdKelurahan, x.NmKelurahan })
+                        .ToList();
 
+                    foreach (var dataKecamatanKelurahan in kecKelList)
+                    {
+                        string nmKecamatan = string.Empty;
+                        string nmKelurahan = string.Empty;
+                        kec = dataKecamatanKelurahan.KdKecamatan;
+                        kel = dataKecamatanKelurahan.KdKelurahan;
+                        if (dataKecamatanKelurahan != null)
+                        {
+                            nmKecamatan = dataKecamatanKelurahan.NmKecamatan;
+                            nmKelurahan = dataKecamatanKelurahan.NmKelurahan;
+                        }
+
+                        var dataResto = context.DbOpRestos
+                         .Where(x => x.TahunBuku == currentYear && x.PajakNama != "MAMIN" &&
+                                     (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                         .GroupBy(x => new { x.Nop })
+                         .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                         .Count();
+
+                        var dataPpj = context.DbOpListriks
+                            .Where(x => x.TahunBuku == currentYear &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                            .GroupBy(x => new { x.Nop, x.KategoriId })
+                            .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                            .Count();
+
+                        var dataHotel = context.DbOpHotels
+                            .Where(x => x.TahunBuku == currentYear &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                            .Count();
+
+                        var dataParkir = context.DbOpParkirs
+                            .Where(x => x.TahunBuku == currentYear &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                            .Count();
+
+                        var dataHiburan = context.DbOpHiburans
+                            .Where(x => x.TahunBuku == currentYear &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                            .Count();
+
+                        var dataAbt = context.DbOpAbts
+                            .Where(x => x.TahunBuku == currentYear &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                            .GroupBy(x => new { x.Nop, x.KategoriId })
+                            .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                            .Count();
+
+
+                        var OpPbbAkhir = context.DbMonPbbs
+                            .Where(x => x.TahunBuku == currentYear && x.Uptb == Convert.ToDecimal(uptb) && x.AlamatKdCamat == kec && x.AlamatKdLurah == kel)
+                            .GroupBy(x => new { x.Nop })
+                            .Select(g => new { g.Key.Nop })
+                            .Count();
+
+
+
+                        ret.Add(new RekapOP
+                        {
+                            JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                            EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
+                            JmlOpAkhir = dataResto,
+                            Uptb = uptb,
+                            KdKecamatan = kec,
+                            KdKelurahan = kel,
+                            NmKecamatan = nmKecamatan,
+                            NmKelurahan = nmKelurahan
+                        });
+                        ret.Add(new RekapOP
+                        {
+                            JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
+                            EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
+                            JmlOpAkhir = dataPpj,
+                            Uptb = uptb,
+                            KdKecamatan = kec,
+                            KdKelurahan = kel,
+                            NmKecamatan = nmKecamatan,
+                            NmKelurahan = nmKelurahan
+                        });
+                        ret.Add(new RekapOP
+                        {
+                            JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
+                            EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                            JmlOpAkhir = dataHotel,
+                            Uptb = uptb,
+                            KdKecamatan = kec,
+                            KdKelurahan = kel,
+                            NmKecamatan = nmKecamatan,
+                            NmKelurahan = nmKelurahan
+                        });
+                        ret.Add(new RekapOP
+                        {
+                            JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
+                            EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
+                            JmlOpAkhir = dataParkir,
+                            Uptb = uptb,
+                            KdKecamatan = kec,
+                            KdKelurahan = kel,
+                            NmKecamatan = nmKecamatan,
+                            NmKelurahan = nmKelurahan
+                        });
+                        ret.Add(new RekapOP
+                        {
+                            JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
+                            EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
+                            JmlOpAkhir = dataHiburan,
+                            Uptb = uptb,
+                            KdKecamatan = kec,
+                            KdKelurahan = kel,
+                            NmKecamatan = nmKecamatan,
+                            NmKelurahan = nmKelurahan
+                        });
+                        ret.Add(new RekapOP
+                        {
+                            JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                            EnumPajak = (int)EnumFactory.EPajak.AirTanah,
+                            JmlOpAkhir = dataAbt,
+                            Uptb = uptb,
+                            KdKecamatan = kec,
+                            KdKelurahan = kel,
+                            NmKecamatan = nmKecamatan,
+                            NmKelurahan = nmKelurahan
+                        });
+                        ret.Add(new RekapOP
+                        {
+                            JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
+                            EnumPajak = (int)EnumFactory.EPajak.PBB,
+                            JmlOpAkhir = OpPbbAkhir,
+                            Uptb = uptb,
+                            KdKecamatan = kec,
+                            KdKelurahan = kel,
+                            NmKecamatan = nmKecamatan,
+                            NmKelurahan = nmKelurahan
+                        });
+
+                        Console.WriteLine($"KEC : {nmKecamatan}[{kec}], KEL : {nmKelurahan}[{kel}] [DONE]");
+                    }
+                }
+                else
+                {
+                    var dataKecamatanKelurahan = context.MWilayahs
+                        .Where(x => x.Uptd == uptb && x.KdKecamatan == kec && x.KdKelurahan == kel)
+                        .Select(x => new { x.NmKecamatan, x.NmKelurahan })
+                        .FirstOrDefault();
+
+                    string nmKecamatan = string.Empty;
+                    string nmKelurahan = string.Empty;
+                    if (dataKecamatanKelurahan != null)
+                    {
+                        nmKecamatan = dataKecamatanKelurahan.NmKecamatan;
+                        nmKelurahan = dataKecamatanKelurahan.NmKelurahan;
+                    }
+
+                    var dataResto = context.DbOpRestos
+                         .Where(x => x.TahunBuku == currentYear && x.PajakNama != "MAMIN" &&
+                                     (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                         .GroupBy(x => new { x.Nop })
+                         .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                         .Count();
+
+                    var dataPpj = context.DbOpListriks
+                        .Where(x => x.TahunBuku == currentYear &&
+                                    (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                        .GroupBy(x => new { x.Nop, x.KategoriId })
+                        .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                        .Count();
+
+                    var dataHotel = context.DbOpHotels
+                        .Where(x => x.TahunBuku == currentYear &&
+                                    (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                        .GroupBy(x => new { x.Nop })
+                        .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                        .Count();
+
+                    var dataParkir = context.DbOpParkirs
+                        .Where(x => x.TahunBuku == currentYear &&
+                                    (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                        .GroupBy(x => new { x.Nop })
+                        .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                        .Count();
+
+                    var dataHiburan = context.DbOpHiburans
+                        .Where(x => x.TahunBuku == currentYear &&
+                                    (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                        .GroupBy(x => new { x.Nop })
+                        .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                        .Count();
+
+                    var dataAbt = context.DbOpAbts
+                        .Where(x => x.TahunBuku == currentYear &&
+                                    (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == uptb && x.AlamatOpKdCamat == kec && x.AlamatOpKdLurah == kel)
+                        .GroupBy(x => new { x.Nop, x.KategoriId })
+                        .Select(g => new { g.Key.Nop, TglMulaiBukaOp = g.Min(y => y.TglMulaiBukaOp), KategoriId = g.First().KategoriId })
+                        .Count();
+
+
+                    var OpPbbAkhir = context.DbMonPbbs
+                        .Where(x => x.TahunBuku == currentYear && x.Uptb == Convert.ToDecimal(uptb) && x.AlamatKdCamat == kec && x.AlamatKdLurah == kel)
+                        .GroupBy(x => new { x.Nop })
+                        .Select(g => new { g.Key.Nop })
+                        .Count();
+
+
+
+                    ret.Add(new RekapOP
+                    {
+                        JenisPajak = EnumFactory.EPajak.MakananMinuman.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
+                        JmlOpAkhir = dataResto,
+                        Uptb = uptb,
+                        KdKecamatan = kec,
+                        KdKelurahan = kel,
+                        NmKecamatan = nmKecamatan,
+                        NmKelurahan = nmKelurahan
+                    });
+                    ret.Add(new RekapOP
+                    {
+                        JenisPajak = EnumFactory.EPajak.TenagaListrik.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
+                        JmlOpAkhir = dataPpj,
+                        Uptb = uptb,
+                        KdKecamatan = kec,
+                        KdKelurahan = kel,
+                        NmKecamatan = nmKecamatan,
+                        NmKelurahan = nmKelurahan
+                    });
+                    ret.Add(new RekapOP
+                    {
+                        JenisPajak = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
+                        JmlOpAkhir = dataHotel,
+                        Uptb = uptb,
+                        KdKecamatan = kec,
+                        KdKelurahan = kel,
+                        NmKecamatan = nmKecamatan,
+                        NmKelurahan = nmKelurahan
+                    });
+                    ret.Add(new RekapOP
+                    {
+                        JenisPajak = EnumFactory.EPajak.JasaParkir.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
+                        JmlOpAkhir = dataParkir,
+                        Uptb = uptb,
+                        KdKecamatan = kec,
+                        KdKelurahan = kel,
+                        NmKecamatan = nmKecamatan,
+                        NmKelurahan = nmKelurahan
+                    });
+                    ret.Add(new RekapOP
+                    {
+                        JenisPajak = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
+                        JmlOpAkhir = dataHiburan,
+                        Uptb = uptb,
+                        KdKecamatan = kec,
+                        KdKelurahan = kel,
+                        NmKecamatan = nmKecamatan,
+                        NmKelurahan = nmKelurahan
+                    });
+                    ret.Add(new RekapOP
+                    {
+                        JenisPajak = EnumFactory.EPajak.AirTanah.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.AirTanah,
+                        JmlOpAkhir = dataAbt,
+                        Uptb = uptb,
+                        KdKecamatan = kec,
+                        KdKelurahan = kel,
+                        NmKecamatan = nmKecamatan,
+                        NmKelurahan = nmKelurahan
+                    });
+                    ret.Add(new RekapOP
+                    {
+                        JenisPajak = EnumFactory.EPajak.PBB.GetDescription(),
+                        EnumPajak = (int)EnumFactory.EPajak.PBB,
+                        JmlOpAkhir = OpPbbAkhir,
+                        Uptb = uptb,
+                        KdKecamatan = kec,
+                        KdKelurahan = kel,
+                        NmKecamatan = nmKecamatan,
+                        NmKelurahan = nmKelurahan
+                    });
+                }
 
                 return ret;
             }
@@ -556,7 +737,9 @@ namespace MonPDReborn.Models.DataOP
             public List<OkupansiHotel> OkunpasiHotel { get; set; } = new();
             public string Uptb { get; set; } = null!;
             public string KdKecamatan { get; set; }
+            public string NmKecamatan { get; set; }
             public string KdKelurahan { get; set; }
+            public string NmKelurahan { get; set; }
         }
 
         public class DetailOP

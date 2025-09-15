@@ -3,7 +3,7 @@
 
 <div class="table-responsive">
     @(
-            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.RekapOP>()
+            Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPUPTBVM.RekapOP>()
                 .ID("wilayahGrid")
                 .ShowBorders(true)
                 .ShowColumnLines(true)
@@ -17,6 +17,18 @@
                 .DataSource(Model.RekapOpWilayahList)
                 .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
                 .OnExporting("exportGrid")
+                .Grouping(grouping => grouping.AutoExpandAll(true))
+                .SearchPanel(searchPanel => searchPanel.Visible(true))
+                .GroupPanel(groupPanel => groupPanel.Visible(true))
+                .Paging(paging => paging.PageSize(500))
+                .Pager(pager => {
+                    pager.Visible(true);
+                    pager.DisplayMode(GridPagerDisplayMode.Full);
+                    pager.ShowPageSizeSelector(true);
+                    pager.AllowedPageSizes(new JS("[500, 'all']"));
+                    pager.ShowInfo(true);
+                    pager.ShowNavigationButtons(true);
+                })
                 .Columns(columns => {
 
                     columns.AddFor(x => x.JenisPajak)
@@ -25,11 +37,20 @@
                         .FixedPosition(HorizontalEdge.Left)
                         .CssClass("fw-bold");
 
-                    columns.AddFor(x => x.JmlOpAkhir).Caption("Jumlah OP").Format("#,##0")@* .CellTemplate(new JS("detailSeriesCellTemplate")) *@;
-                        
+                    columns.AddFor(x => x.NmKecamatan)
+                        .Caption("KECAMATAN")
+                        .FixedPosition(HorizontalEdge.Left)
+                        .GroupIndex(0)
+                        .CssClass("fw-bold");
 
-                   
-                       
+                    columns.AddFor(x => x.NmKelurahan)
+                        .Caption("KELURAHAN")
+                        .FixedPosition(HorizontalEdge.Left)
+                        .GroupIndex(1)
+                        .CssClass("fw-bold");
+
+                    columns.AddFor(x => x.JmlOpAkhir).Caption("Jumlah OP").Format("#,##0")@* .CellTemplate(new JS("detailSeriesCellTemplate")) *@;
+    
                 })
                 .Summary(s => {
                     s.TotalItems(items => {

@@ -15,140 +15,11 @@
                 </div>
             </div>
             <div class="card-body">
-                @* <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#op-rekap" role="tab">
-                            Rekap Jumlah OP
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" onclick="fnShowSeries()">
-                            Series Jumlah OP
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#op-wilayah" role="tab">
-                            OP per Wilayah
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tpk-hotel" role="tab" onclick="fnShowTPK()">
-                            TPK Hotel
-                        </a>
-                    </li>
-                </ul>
- *@
-                @* <div class="tab-content text-muted">
-                    <!-- Tidak dipakai untuk UPTB -->
-                    <div class="tab-pane " id="op-rekap" role="tabpanel">
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="card-title fs-16 mb-0">Rekap Jumlah Objek Pajak</h4>
-                            <div class="dropdown">
-                                <select id="ddlTahun" class="form-select form-select mb-3 w-auto"
-                                        style="background-color: #f0f8ff; color: #333; border-color: #0d6efd;">
-                                    <!-- Tahun akan diisi dengan JavaScript -->
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="text-center">
-                            <div id="loading2-ShowRekap" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-
-                        <div id="ShowRekap"></div>
-
-                        <div class="modal fade" id="detailModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="detailModalLabel">
-                                            Detail Rekap
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                                    </div>
-                                    <div class="modal-body">
-
-                                        <div id="detailContainer" class="mt-4" style="display: none;">
-                                            @Html.Partial("~/Views/DataOP/ProfileOP/_RekapMaster.cshtml")
-                                        </div>
-
-                                        <div id="detailContainerHotel" class="mt-4" style="display: none;">
-                                            @Html.Partial("~/Views/DataOP/ProfileOP/_RekapDetailHotel.cshtml")
-                                        </div> 
-
-                                        <div id="detailLoading" class="text-center my-4">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> *@
-
-                    <!-- TIDAK DIPAKAI UNTUK UPTB-->
-                    @* <div class="tab-pane" id="op-series" role="tabpanel">
-                        <div class="text-center">
-                            <div id="loading2-ShowSeries" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-
-                        <div id="ShowSeries"></div>
-
-
-                        <div class="modal fade" id="detailModalSeries" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailModalSeriesLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="detailModalSeriesLabel">
-                                            Detail Series
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div id="detailContainerSeries" class="mt-4" style="display: none;">
-                                            @Html.Partial("~/Views/DataOP/ProfileOP/_DetailOP.cshtml")
-                                        </div>
-
-                                        <div id="detailLoadingSeries" class="text-center my-4">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div> *@
-
                     <!-- HANYA INI DIPAKAI UNTUK UPTB -->
                     <div class="tab-pane active" id="op-wilayah" role="tabpanel">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <!-- /* UPTB input box ditiadakan
-                                    <div class="col-md-3">
-                                        @(Html.DevExtreme().SelectBox()
-                                                .ID("uptbSelect")
-                                                .DataSource(d => d.Mvc().Controller("ProfileOPUPTB").LoadAction("GetUptb"))
-                                                .DisplayExpr("Text")
-                                                .ValueExpr("Value")
-                                                .Placeholder("Pilih UPTB")
-                                                .OnValueChanged("onUptbChanged")
-                                                )
-                                    </div> */ -->
-
                                     <div class="col-md-3">
                                         @(Html.DevExtreme().SelectBox()
                                                 .ID("kecSelect")
@@ -156,6 +27,7 @@
                                                 .DisplayExpr("Text")
                                                 .ValueExpr("Value")
                                                 .Placeholder("Pilih Kecamatan")
+                                                .ShowClearButton(true)
                                                 .OnValueChanged("onKecChanged")
                                                 )
                                     </div>
@@ -166,6 +38,7 @@
                                                 .DataSource(d => d.Mvc().Controller("ProfileOPUPTB").LoadAction("GetKel").LoadParams(new { kecamatan = "" }))
                                                 .DisplayExpr("Text")
                                                 .ValueExpr("Value")
+                                                .ShowClearButton(true)
                                                 .Placeholder("Pilih Kelurahan")
                                                 )
                                     </div>
@@ -243,13 +116,16 @@
         </div>
     </div>
 
-</div>
-
 
 
 @section Scripts {
     <script>
-             // Mendapatkan tahun sekarang
+        $(document).ready(function () {
+             showRekapKecKel("000","000");
+         });
+        </script>
+    <script>
+        // Mendapatkan tahun sekarang
          const currentYear = new Date().getFullYear();
          const startYear = 2021;
          const endYear = 2025;
@@ -1384,21 +1260,32 @@
 
         function onKecChanged(e) {
             let kelSelect = $("#kelSelect").dxSelectBox("instance");
-            kelSelect.option("dataSource", DevExpress.data.AspNet.createStore({
-                key: "Value",
-                loadUrl: "/ProfileOPUPTB/GetKel",
-                loadParams: { kecamatan: e.value }
-            }));
-            kelSelect.reset();
+
+            if (e.value === "000") {
+                kelSelect.option("readOnly", true);
+                kelSelect.reset();
+            } else {
+                kelSelect.option("readOnly", false);
+                kelSelect.option("dataSource", DevExpress.data.AspNet.createStore({
+                    key: "Value",
+                    loadUrl: "/ProfileOPUPTB/GetKel",
+                    loadParams: { kecamatan: e.value }
+                }));
+                kelSelect.reset();
+            }
         }
 
         function onTerapkanClick(e) {
             // uptb diambil dari session
-            // let uptb = $("#uptbSelect").dxSelectBox("instance").option("value");
             let kec = $("#kecSelect").dxSelectBox("instance").option("value");
             let kel = $("#kelSelect").dxSelectBox("instance").option("value");
 
-            if (!kec || !kel) {
+            if((kec == null && kel == null) || (kec == "000"))
+            {
+                kec = "000";
+                kel = "000";
+            }
+            else if (!kec || !kel) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Verifikasi Data',
@@ -1408,6 +1295,13 @@
                 return;
             }
 
+            showRekapKecKel(kec, kel);
+        }
+
+        function showRekapKecKel(kec, kel){
+
+            let kecSelect = $("#kecSelect").dxSelectBox("instance");
+            let kelSelect = $("#kelSelect").dxSelectBox("instance");
             $.ajax({
                  url: '/ProfileOPUPTB/RekapPerWilayah',
                  method: 'GET',
@@ -1417,26 +1311,38 @@
                  beforeSend: function () {
                   $('#loading2-ShowWilayah').show();
                   $('#ShowWilayah').hide();
-                   },
-                   success: function (response) {
-                         if (response.Status === undefined) {
-                             $('#loading2-ShowWilayah').hide();
-                             $('#ShowWilayah').show();
-                             $('#ShowWilayah').html(response);
-                         }
-                         else {
-                             swal.fire({
-                                 icon: 'warning',
-                                 title: '<b style="color:orange">Peringatan</b>',
-                                 text: response.Message
-                             })
-                         }
-                   },
-                   error: function (xhr, status, error) {
-                      $('#loading2-ShowWilayah').hide();
-                      $('#ShowWilayah').hide();
-                      $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                   }
+
+                  kecSelect.option("readOnly", true);
+                  kelSelect.option("readOnly", true);
+                },
+                success: function (response) {
+                        if (response.Status === undefined) {
+                            $('#loading2-ShowWilayah').hide();
+                            $('#ShowWilayah').show();
+                            $('#ShowWilayah').html(response);
+
+                            kecSelect.option("readOnly", false);
+                            kelSelect.option("readOnly", false);
+                        }
+                        else {
+                            swal.fire({
+                                icon: 'warning',
+                                title: '<b style="color:orange">Peringatan</b>',
+                                text: response.Message
+                            })
+
+                            kecSelect.option("readOnly", false);
+                            kelSelect.option("readOnly", false);
+                        }
+                },
+                error: function (xhr, status, error) {
+                    $('#loading2-ShowWilayah').hide();
+                    $('#ShowWilayah').hide();
+                    $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+
+                    kecSelect.option("readOnly", false);
+                    kelSelect.option("readOnly", false);
+                }
              });
         }
 
