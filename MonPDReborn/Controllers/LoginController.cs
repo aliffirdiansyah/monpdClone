@@ -67,6 +67,10 @@ namespace MonPDReborn.Controllers
                 HttpContext.Session.SetString(Utility.SESSION_NAMA, login.Email);
                 HttpContext.Session.SetInt32(Utility.SESSION_ROLE, Convert.ToInt32(login.RoleId));
 
+                if (login.Email.Contains("UPLOAD"))
+                {
+                    return RedirectToAction("Index", "UploadData");
+                }
                 if (login.Email.Contains("UPTB"))
                 {
                     return RedirectToAction("Index", "DashboardUPTB");
