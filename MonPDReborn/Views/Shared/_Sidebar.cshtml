@@ -340,7 +340,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link @(currentController == "MONITORINGTAHUNAN" ? "active" : "")"
                                        href="@Url.Action("Index","MonitoringTahunan")" data-key="t-tahunan">
-                                        Kontrol Tahunan
+                                        Realisasi Hari Ini
                                     </a>
                                 </li>
                             </ul>
@@ -361,7 +361,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link @(currentController == "KONTROLWILAYAH" ? "active" : "")"
                                        href="@Url.Action("Index","KontrolWilayah")" data-key="t-KontrolWilayah">
-                                        Kontrol Wilayah
+                                        Monitoring Wilayah
                                     </a>
                                 </li>
                             </ul>
@@ -535,7 +535,7 @@
                         <a class="nav-link menu-link @(currentController == "MONITORINGTAHUNANUPTB" ? "active" : "")"
                            href="@Url.Action("Index", "MonitoringTahunanUPTB")" role="button">
                             <i class="bx bx-line-chart me-1 align-middle"></i>
-                            <span data-key="t-profileOP">Monitoring Tahunan</span>
+                            <span data-key="t-profileOP">Realisasi Hari Ini</span>
                         </a>
                     </li>
 
@@ -543,7 +543,7 @@
                         <a class="nav-link menu-link @(currentController == "KONTROLWILAYAH" ? "active" : "")"
                            href="@Url.Action("Index", "KontrolWilayah")" role="button">
                             <i class="bx bx-map-pin me-1 align-middle"></i>
-                            <span data-key="t-KontrolWilayah">Monitoring Wilayah</span>
+                            <span data-key="t-KontrolWilayah">Monitoring Pendapatan</span>
                         </a>
                     </li>
 
@@ -562,6 +562,13 @@
                            href="@Url.Action("Index", "ProfilePotensiOPUPTB")" role="button">
                             <i class="bx bx-data me-1 align-middle"></i>
                             <span data-key="t-profilePotensiUPTB">Profil Potensi</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link"
+                           href="https://bapenda.surabaya.go.id:7073/MonitoringUser/PartisipasiMasyarakat" target="_blank" role="button">
+                            <i class="bx bx-data me-1 align-middle"></i>
+                            <span data-key="t-profilePotensiUPTB">Partisipasi Masyarakat</span>
                         </a>
                     </li>
 

@@ -38,9 +38,6 @@
                             <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PPJ">PPJ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Reklame">Reklame</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PBB">PBB</a>
                         </li>
                         <li class="nav-item">
@@ -61,7 +58,7 @@
 
                 <!-- Kontainer Dinamis untuk Masing-Masing Jenis Pajak -->
                 @{
-                    var jenisPajakList = new[] { "Hotel", "Restoran", "Parkir", "Hiburan", "Reklame", "PPJ", "ABT", "PBB", "AirTanah" };
+                    var jenisPajakList = new[] { "Hotel", "Restoran", "Parkir", "Hiburan", "PPJ", "ABT", "PBB", "AirTanah" };
                 }
 
                 @foreach (var jenis in jenisPajakList)
