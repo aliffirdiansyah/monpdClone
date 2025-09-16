@@ -30,6 +30,17 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("BAPENDA"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 if (jenisPajak != null)
                 {
                     var model = new Models.MonitoringGlobal.MonitoringBulananVM.Index((EnumFactory.EPajak)jenisPajak);

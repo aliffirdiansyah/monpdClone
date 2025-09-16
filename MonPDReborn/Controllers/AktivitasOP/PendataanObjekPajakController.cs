@@ -30,6 +30,17 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("BAPENDA"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 var model = new Models.AktivitasOP.PendataanObjekPajakVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

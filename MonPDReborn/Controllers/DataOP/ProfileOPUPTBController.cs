@@ -39,6 +39,11 @@ namespace MonPDReborn.Controllers.DataOP
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
 
+                if (!nama.Contains("UPTB"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
+
                 string lastPart = nama.Split(' ').Last();
 
                 if (!int.TryParse(lastPart, out int wilayah))
