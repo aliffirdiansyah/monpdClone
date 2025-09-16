@@ -528,16 +528,11 @@ namespace MonPDReborn.Models.AktivitasOP
 
                         JumlahOP = dataKategori.Sum(d => d.JumlahOP),
 
-                        TahunMines4 = dataKategori.Where(d => d.Tahun == tahunMulai)
-                                                  .Sum(d => d.Terpasang5),
-                        TahunMines3 = dataKategori.Where(d => d.Tahun == tahunMulai + 1)
-                                                  .Sum(d => d.Terpasang4),
-                        TahunMines2 = dataKategori.Where(d => d.Tahun == tahunMulai + 2)
-                                                  .Sum(d => d.Terpasang3),
-                        TahunMines1 = dataKategori.Where(d => d.Tahun == tahunMulai + 3)
-                                                  .Sum(d => d.Terpasang2),
-                        TahunNow = dataKategori.Where(d => d.Tahun == tahunMulai + 4)
-                                                  .Sum(d => d.Terpasang1)
+                        TahunMines4 = dataKategori.Sum(d => d.Terpasang5),
+                        TahunMines3 = dataKategori.Sum(d => d.Terpasang4),
+                        TahunMines2 = dataKategori.Sum(d => d.Terpasang3),
+                        TahunMines1 = dataKategori.Sum(d => d.Terpasang2),
+                        TahunNow = dataKategori.Sum(d => d.Terpasang1)
                     };
                 }).ToList();
 
@@ -637,6 +632,8 @@ namespace MonPDReborn.Models.AktivitasOP
             public string Alamat { get; set; } = null!;
             public DateTime TanggalPemasangan { get; set; }
             public string JenisPasang { get; set; } = null!;
+            public string StatusKunci { get; set; } = null!;
+            public string JenisAlat { get; set; } = null!;
 
             public bool IsTerpasangTS { get; set; }
             public bool IsTerpasangTB { get; set; }
