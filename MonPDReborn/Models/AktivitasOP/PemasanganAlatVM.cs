@@ -51,7 +51,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public List<SubDetailModal> PemasanganAlatDetailOP { get; set; } = new();
             public DetailOP(int jenisPajak, int kategori, int tahun, string status)
             {
-                PemasanganAlatDetailOP = Method.GetSubDetailOPData((EnumFactory.EPajak)jenisPajak, kategori, tahun, status);
+                /*PemasanganAlatDetailOP = Method.GetSubDetailOPData((EnumFactory.EPajak)jenisPajak, kategori, tahun, status);*/
             }
         }
         public class Method
@@ -335,7 +335,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 return result;
             }
 
-            public static List<SubDetailModal> GetSubDetailOPData(EnumFactory.EPajak jenisPajak, int kategori, int tahun, string status)
+            /*public static List<SubDetailModal> GetSubDetailOPData(EnumFactory.EPajak jenisPajak, int kategori, int tahun, string status)
             {
                 var ret = new List<SubDetailModal>();
                 var context = DBClass.GetContext();
@@ -428,7 +428,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
 
                 return ret;
-            }
+            }*/
 
             public static List<SeriesPemasanganAlat> GetSeriesAlatRekam()
             {
@@ -540,6 +540,11 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return result;
             }
+
+            /*public static List<SubDetailModal> GetDetailModal(EnumFactory.EPajak)
+            {
+
+            }*/
         }
 
         public class OPInfo
@@ -634,6 +639,9 @@ namespace MonPDReborn.Models.AktivitasOP
             public string JenisPasang { get; set; } = null!;
             public string StatusKunci { get; set; } = null!;
             public string JenisAlat { get; set; } = null!;
+            public string StatusOnline { get; set; } = null!;
+            public string TerakhirAktif { get; set; } = null!;
+
 
             public bool IsTerpasangTS { get; set; }
             public bool IsTerpasangTB { get; set; }
