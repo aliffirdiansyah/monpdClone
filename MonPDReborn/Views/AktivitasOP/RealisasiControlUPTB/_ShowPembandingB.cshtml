@@ -1,0 +1,100 @@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model RealisasiControlUPTBVM.ShowPembandingB
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th rowspan="2" class="text-center align-middle">NO</th>
+                <th rowspan="2" class="text-center align-middle">JENIS PAJAK</th>
+                <th rowspan="2" class="text-center align-middle">TARGET</th>
+                <th colspan="3" class="text-center">PEMBAYARAN BULAN INI</th>
+                <th colspan="5" class="text-center">PEMBAYARAN S.D. BULAN INI</th>
+            </tr>
+            <tr>
+                <th class="text-center">AKP</th>
+                <th class="text-center">Realisasi</th>
+                <th class="text-center">%</th>
+                <th class="text-center">AKP</th>
+                <th class="text-center">Realisasi</th>
+                <th class="text-center">% AKP Target</th>
+                <th class="text-center">% AKP Realisasi</th>
+                <th class="text-center">% Target</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int seq = 1;
+            }
+            @foreach (var item in Model.DataRealisasiList.Where(x => x.No > 0).ToList())
+            {
+                <tr>
+                    <td class="text-center">@seq</td>
+                    <td>@item.JenisPajak</td>
+                    <td class="text-end">@item.Target.ToString("#,##0")</td>
+                    <td class="text-end">@item.PembayaranBulanIni.AKP.ToString("#,##0")</td>
+                    <td class="text-end">@item.PembayaranBulanIni.Realisasi.ToString("#,##0")</td>
+                    <td class="text-end">@item.PembayaranBulanIni.Persen.ToString("n2")%</td>
+                    <td class="text-end">@item.PembayaranSDBI.AKP.ToString("#,##0")</td>
+                    <td class="text-end">@item.PembayaranSDBI.Realisasi.ToString("#,##0")</td>
+                    <td class="text-end">@item.PembayaranSDBI.PersenAkpTarget.ToString("n2")%</td>
+                    <td class="text-end">@item.PembayaranSDBI.PersenAkpRealisasi.ToString("n2")%</td>
+                    <td class="text-end">@item.PembayaranSDBI.PersenTarget.ToString("n2")%</td>
+                </tr>
+
+                seq++;
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2" class="text-center">TOTAL</th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.Target).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranBulanIni.AKP).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranBulanIni.Realisasi).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranBulanIni.Persen).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranSDBI.AKP).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @Model.DataRealisasiList.Sum(x => x.PembayaranSDBI.Realisasi).ToString("#,##0")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranSDBI.PersenAkpTarget).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranSDBI.PersenAkpRealisasi).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+
+                <th class="text-end">
+                    @(Model.DataRealisasiList.Count > 0
+                                        ? Model.DataRealisasiList.Average(x => x.PembayaranSDBI.PersenTarget).ToString("n2") + "%"
+                                        : "0.00%")
+                </th>
+            </tr>
+        </tfoot>
+
+    </table>
+
+</div>
