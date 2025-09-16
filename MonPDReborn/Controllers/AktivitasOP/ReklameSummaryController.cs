@@ -190,6 +190,27 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+
+        public IActionResult DetailSilang(int tahun, int bulan, int jenis, int kategori, int lokasi)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.SilangDetail(tahun, bulan, jenis, kategori, lokasi);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
         // Detail Upaya
         public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan , int lokasi)
         {
