@@ -8,7 +8,7 @@
 }
 <div class="table-responsive">
     @(
-        Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.DetailSeriesPemasanganAlat>()
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatUPTBVM.DetailSeriesPemasanganAlat>()
         .DataSource(d => d.Mvc()
         .LoadAction("GetDetailSeries")
         .Key("KategoriId")

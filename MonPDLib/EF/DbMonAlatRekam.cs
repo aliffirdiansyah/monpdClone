@@ -14,6 +14,9 @@ public partial class DbMonAlatRekam
     [Unicode(false)]
     public string? Nop { get; set; }
 
+    [Column("UPTB", TypeName = "NUMBER")]
+    public decimal? Uptb { get; set; }
+
     [Column("TMIN0", TypeName = "NUMBER")]
     public decimal? Tmin0 { get; set; }
 

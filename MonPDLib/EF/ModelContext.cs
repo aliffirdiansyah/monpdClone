@@ -1250,7 +1250,6 @@ public partial class ModelContext : DbContext
         {
             entity.HasKey(e => e.Nik).HasName("SYS_C0034200");
 
-            entity.Property(e => e.Nik).ValueGeneratedOnAdd();
             entity.Property(e => e.InsDate).ValueGeneratedOnAdd();
         });
 

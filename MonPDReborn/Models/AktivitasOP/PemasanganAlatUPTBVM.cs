@@ -43,7 +43,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public List<DataPemasanganAlat> DataPemasanganAlatList { get; set; } = new();
             public Tahunan(int wilayah)
             {
-                DataPemasanganAlatList = Method.GetTahunBerjalan();
+                DataPemasanganAlatList = Method.GetTahunBerjalan(wilayah);
             }
         }
         public class DetailOP
@@ -51,7 +51,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public List<SubDetailModal> PemasanganAlatDetailOP { get; set; } = new();
             public DetailOP(int jenisPajak, int kategori, int tahun, int wilayah)
             {
-                PemasanganAlatDetailOP = Method.GetDetailModal((EnumFactory.EPajak)jenisPajak, kategori, tahun);
+                PemasanganAlatDetailOP = Method.GetDetailModal((EnumFactory.EPajak)jenisPajak, kategori, tahun, wilayah);
             }
         }
         public class DetailTahun
@@ -59,7 +59,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public List<SubDetailDataModal> PemasanganAlatDetailTahun { get; set; } = new();
             public DetailTahun(int jenisPajak, int kategori, int status, int wilayah)
             {
-                PemasanganAlatDetailTahun = Method.GetTahunBerjalanModal((EnumFactory.EPajak)jenisPajak, kategori, status);
+                PemasanganAlatDetailTahun = Method.GetTahunBerjalanModal((EnumFactory.EPajak)jenisPajak, kategori, status, wilayah);
             }
         }
         public class Method
@@ -73,7 +73,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 int tahunMulai = tahunSekarang - 4;
 
                 ret = context.DbMonAlatRekams
-                   .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunMulai)
+                   .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunMulai && x.Uptb == wilayah)
                    .GroupBy(x => x.PajakId)
                    .Select(g => new SeriesPemasanganAlat
                    {
@@ -103,7 +103,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 return ret;
             }
 
-            public static List<DetailSeriesPemasanganAlat> GetDetailSeriesAlatRekam(EnumFactory.EPajak jenisPajak)
+            public static List<DetailSeriesPemasanganAlat> GetDetailSeriesAlatRekam(EnumFactory.EPajak jenisPajak, int wilayah)
             {
                 var ret = new List<DetailSeriesPemasanganAlat>();
                 using var context = DBClass.GetContext();
@@ -126,7 +126,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 // Ambil data pemasangan alat, group by KategoriId & Tahun
                 var query = context.DbMonAlatRekams
                     .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunMulai && x.TglTerpasang.Value.Year <= tahunSekarang
-                                && x.PajakId == (int)jenisPajak)
+                                && x.PajakId == (int)jenisPajak && x.Uptb == wilayah)
                     .GroupBy(x => new { x.KategoriId, x.TglTerpasang.Value.Year })
                     .Select(g => new
                     {
@@ -175,7 +175,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 return result;
             }
 
-            public static List<SubDetailModal> GetDetailModal(EnumFactory.EPajak jenisPajak, int kategori, int tahun)
+            public static List<SubDetailModal> GetDetailModal(EnumFactory.EPajak jenisPajak, int kategori, int tahun, int wilayah)
             {
                 using var context = DBClass.GetContext();
 
@@ -186,7 +186,8 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Where(x => x.PajakId == (int)jenisPajak
                                 && x.KategoriId == kategori
                                 && x.TglTerpasang.HasValue
-                                && x.TglTerpasang.Value.Year == tahun);
+                                && x.TglTerpasang.Value.Year == tahun
+                                && x.Uptb == wilayah);
 
                 switch (offset)
                 {
@@ -249,7 +250,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 return result;
             }
 
-            public static List<DataPemasanganAlat> GetTahunBerjalan()
+            public static List<DataPemasanganAlat> GetTahunBerjalan(int wilayah)
             {
                 var ret = new List<DataPemasanganAlat>();
                 var context = DBClass.GetContext();
@@ -257,7 +258,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 int tahunSekarang = DateTime.Now.Year;
 
                 ret = context.DbMonAlatRekams
-                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year == tahunSekarang)
+                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year == tahunSekarang && x.Uptb == wilayah)
                     .GroupBy(x => new { x.PajakId, x.Tahun })
                     .Select(g => new
                     {
@@ -299,7 +300,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return ret;
             }
-            public static List<DetailDataPemasanganAlat> GetDetailTahunBerjalan(EnumFactory.EPajak jenisPajak)
+            public static List<DetailDataPemasanganAlat> GetDetailTahunBerjalan(EnumFactory.EPajak jenisPajak, int wilayah)
             {
                 using var context = DBClass.GetContext();
                 int tahunSekarang = DateTime.Now.Year;
@@ -315,7 +316,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 // Ambil data pemasangan alat
                 var query = context.DbMonAlatRekams
                     .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year == tahunSekarang
-                                && x.PajakId == (int)jenisPajak)
+                                && x.PajakId == (int)jenisPajak && x.Uptb == wilayah)
                     .GroupBy(x => new { x.KategoriId })
                      .Select(g => new
                      {
@@ -357,7 +358,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 return result;
             }
 
-            public static List<SubDetailDataModal> GetTahunBerjalanModal(EnumFactory.EPajak jenisPajak, int kategori, int status)
+            public static List<SubDetailDataModal> GetTahunBerjalanModal(EnumFactory.EPajak jenisPajak, int kategori, int status, int wilayah)
             {
                 using var context = DBClass.GetContext();
                 int tahunSekarang = DateTime.Now.Year;
@@ -366,7 +367,8 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Where(x => x.PajakId == (int)jenisPajak
                                 && x.KategoriId == kategori
                                 && x.TglTerpasang.HasValue
-                                && x.TglTerpasang.Value.Year == tahunSekarang);
+                                && x.TglTerpasang.Value.Year == tahunSekarang
+                                && x.Uptb == wilayah);
                 switch (status)
                 {
                     case 1:

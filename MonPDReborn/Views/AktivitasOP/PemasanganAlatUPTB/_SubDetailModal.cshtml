@@ -1,11 +1,11 @@
-﻿@model MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.DetailOP
+﻿@model MonPDReborn.Models.AktivitasOP.PemasanganAlatUPTBVM.DetailOP
 
 <!-- Grid langsung dari Razor, ID tetap unik -->
 <h4 class="card-title fs-16 mb-3">
     Kategori Pajak: @Model.PemasanganAlatDetailOP.FirstOrDefault()?.Kategori
 </h4>
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.SubDetailModal>()
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatUPTBVM.SubDetailModal>()
         .ID("SubDetailGrid")
         .DataSource(Model.PemasanganAlatDetailOP)
         .ShowColumnLines(true)

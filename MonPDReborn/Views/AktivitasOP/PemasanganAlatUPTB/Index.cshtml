@@ -1,5 +1,5 @@
 ﻿@using MonPDReborn.Models.AktivitasOP
-@model PemasanganAlatVM.Index
+@model PemasanganAlatUPTBVM.Index
 
 @{
     ViewData["Title"] = "Pemasangan Alat";
@@ -89,7 +89,7 @@
 
         function loadShow() {
             $.ajax({
-                url: '@Url.Action("Show", "PemasanganAlat")',
+                url: '@Url.Action("Show", "PemasanganAlatUPTB")',
                 type: 'GET',
                 beforeSend: function () {
                     // Tampilkan spinner, sembunyikan konten
@@ -110,7 +110,7 @@
 
         function loadTahunan() {
             $.ajax({
-                url: '@Url.Action("Tahunan", "PemasanganAlat")',
+                url: '@Url.Action("Tahunan", "PemasanganAlatUPTB")',
                 type: 'GET',
                 beforeSend: function () {
                     // Tampilkan spinner, sembunyikan konten
@@ -198,7 +198,7 @@
 
         function loadSubDetail(jenisPajak, kategori, tahun) {
             $.ajax({
-                url: '/PemasanganAlat/SubDetailOPModal',
+                url: '/PemasanganAlatUPTB/SubDetailOPModal',
                 type: 'GET',
                 data: { jenisPajak, kategori, tahun},
                 beforeSend: function () {
@@ -233,7 +233,7 @@
 
         function loadSubDetailData(jenisPajak, kategori, status) {
             $.ajax({
-                url: '/PemasanganAlat/SubDetailDataModal',
+                url: '/PemasanganAlatUPTB/SubDetailDataModal',
                 type: 'GET',
                 data: { jenisPajak, kategori, status},
                 beforeSend: function () {

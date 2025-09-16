@@ -1,5 +1,5 @@
 ﻿@using MonPDReborn.Models.AktivitasOP
-@model PemasanganAlatVM.Tahunan
+@model PemasanganAlatUPTBVM.Tahunan
 @{
     var currentYear = DateTime.Now.Year;
     var tahun1 = (currentYear - 4).ToString();
@@ -9,7 +9,7 @@
     var tahun5 = currentYear.ToString();
 }
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<PemasanganAlatVM.DataPemasanganAlat>()
+    @(Html.DevExtreme().DataGrid<PemasanganAlatUPTBVM.DataPemasanganAlat>()
         .ID("pemasanganAlatTahunanGrid")
         .DataSource(Model.DataPemasanganAlatList)
         .ShowBorders(true)
