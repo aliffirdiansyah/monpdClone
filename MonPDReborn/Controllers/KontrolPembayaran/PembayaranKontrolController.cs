@@ -35,7 +35,11 @@ namespace MonPDReborn.Controllers.KontrolPembayaran
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
 
-                if (!nama.Contains("BAPENDA") || !nama.Contains("BKP"))
+                if (!nama.Contains("BAPENDA"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
+                if (!nama.Contains("BKP"))
                 {
                     return RedirectToAction("Error", "Home", new { statusCode = 403 });
                 }
