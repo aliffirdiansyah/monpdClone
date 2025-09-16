@@ -92,110 +92,99 @@
 
 </div>
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<PemasanganAlatVM.SeriesPemasanganAlat>()
-        .ID("pemasanganAlatGrid")
-        .DataSource(Model.SeriesPemasanganAlatList)
-        .ShowBorders(true)
-        .ShowColumnLines(true)
-        .RowAlternationEnabled(true)
-        .ShowRowLines(true)
-        .ShowColumnHeaders(true)
-        .ColumnAutoWidth(true)
-        .Paging(p => p.PageSize(10))
-        .Pager(p => p
-        .ShowPageSizeSelector(true)
-        .AllowedPageSizes(new[] { 5, 10, 20 })
-        .ShowInfo(true)
-        )
-        .Columns(columns =>
-        {
-            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Fixed(true);
-            columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP").Format("#,##0");
-
-            // Kolom-kolom tahunan
-            columns.Add().Caption(tahun1).Columns(sub =>
+    @(
+        Html.DevExtreme().DataGrid<PemasanganAlatVM.SeriesPemasanganAlat>()
+            .ID("pemasanganAlatGrid")
+            .DataSource(Model.SeriesPemasanganAlatList)
+            .ShowBorders(true)
+            .ShowColumnLines(true)
+            .RowAlternationEnabled(true)
+            .ShowRowLines(true)
+            .ShowColumnHeaders(true)
+            .ColumnAutoWidth(true)
+            .Paging(p => p.PageSize(10))
+            .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 5, 10, 20 })
+            .ShowInfo(true)
+            )
+            .Columns(columns =>
             {
-                sub.AddFor(m => m.Terpasang2021).Caption("Terpasang").Format("#,##0");
-            }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun2).Columns(sub =>
+                columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak").Fixed(true);
+                columns.AddFor(m => m.JumlahOP).Caption("Jumlah OP").Format("#,##0");
+
+                columns.Add().Caption("Terapasang").Columns(sub =>
+                {
+                    sub.AddFor(m => m.TahunMines4).Caption(tahun1).Format("#,##0");
+                    sub.AddFor(m => m.TahunMines3).Caption(tahun2).Format("#,##0");
+                    sub.AddFor(m => m.TahunMines2).Caption(tahun3).Format("#,##0");
+                    sub.AddFor(m => m.TahunMines1).Caption(tahun4).Format("#,##0");
+                    sub.AddFor(m => m.TahunNow).Caption(tahun5).Format("#,##0");
+                });
+                
+                columns.AddFor(m => m.TotalTerpasang).Caption("Total Terpassang").Format("#,##0");
+                columns.AddFor(m => m.BelumTahunNow).Caption("Belum Terpasang").Format("#,##0");
+            })
+            .Summary(summary =>
             {
-                sub.AddFor(m => m.Terpasang2022).Caption("Terpasang").Format("#,##0");
-            }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun3).Columns(sub =>
-            {
-                sub.AddFor(m => m.Terpasang2023).Caption("Terpasang").Format("#,##0");
-            }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun4).Columns(sub =>
-            {
-                sub.AddFor(m => m.Terpasang2024).Caption("Terpasang").Format("#,##0");
-            }).Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption(tahun5).Columns(sub =>
-            {
-                sub.AddFor(m => m.Terpasang2025).Caption("Terpasang").Format("#,##0");
-            }).Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.TotalTerpasang).Caption("Total Terpassang").Format("#,##0");
-            columns.AddFor(m => m.BelumTerpasang2025).Caption("Belum Terpasang").Format("#,##0");
-        })
-        .Summary(summary =>
-        {
-            summary.TotalItems(items =>
-            {
-                items.AddFor(m => m.JenisPajak)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("Total");
+                summary.TotalItems(items =>
+                {
+                    items.AddFor(m => m.JenisPajak)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("Total");
 
-                items.AddFor(m => m.JumlahOP)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.JumlahOP)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Terpasang2021)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.TahunMines4)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Terpasang2022)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.TahunMines3)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Terpasang2023)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.TahunMines2)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Terpasang2024)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.TahunMines1)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Terpasang2025)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.TahunNow)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-                items.AddFor(m => m.TotalTerpasang)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.TotalTerpasang)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
             
-                items.AddFor(m => m.BelumTerpasang2025)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
-            .DisplayFormat("{0}");
+                    items.AddFor(m => m.BelumTahunNow)
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}");
 
-            });
-        }).MasterDetail(md => md
-        .Enabled(true)
-        .Template(
-    @<text>
-        @{
-        ViewData["JenisPajak"] = new JS("data.EnumPajak");
-        }
-        @await Html.PartialAsync("/Views/AktivitasOP/PemasanganAlat/_ShowDetail.cshtml")
-    </text>)
-        )
+                });
+            }).MasterDetail(md => md
+            .Enabled(true)
+            .Template(
+        @<text>
+            @{
+            ViewData["JenisPajak"] = new JS("data.EnumPajak");
+            }
+            @await Html.PartialAsync("/Views/AktivitasOP/PemasanganAlat/_ShowDetail.cshtml")
+        </text>)
+            )
         )
 
 </div>

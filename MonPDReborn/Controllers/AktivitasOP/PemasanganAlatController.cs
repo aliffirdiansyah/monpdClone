@@ -69,7 +69,7 @@ namespace MonPDReborn.Controllers.Aktivitas
         [HttpGet]
         public object GetDetailSeries(DataSourceLoadOptions load_options, int JenisPajak)
         {
-            var data = Models.AktivitasOP.PemasanganAlatVM.Method.GetDetailSeriesPemasanganAlatList((EnumFactory.EPajak)JenisPajak);
+            var data = Models.AktivitasOP.PemasanganAlatVM.Method.GetDetailSeriesAlatRekam((EnumFactory.EPajak)JenisPajak);
             return DataSourceLoader.Load(data, load_options);
         }
         public IActionResult Tahunan()
