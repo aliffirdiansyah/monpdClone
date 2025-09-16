@@ -31,14 +31,7 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
                 
-                if (!nama.Contains("BAPENDA"))
-                {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
-                }
-                if (!nama.Contains("UPTB"))
-                {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
-                }
+                
                 string lastPart = nama.Split(' ').Last();
 
                 ViewData["Title"] = controllerName;

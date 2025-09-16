@@ -37,14 +37,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
 
-                if (!nama.Contains("BAPENDA"))
-                {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
-                }
-                if (!nama.Contains("MAGANG PENDATAAN"))
-                {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
-                }
+                
                 var model = new Models.EvaluasiTarget.KontrolPembayaranVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

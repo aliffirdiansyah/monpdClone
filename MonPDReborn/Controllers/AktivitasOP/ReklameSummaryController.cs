@@ -42,10 +42,7 @@ namespace MonPDReborn.Controllers.Aktivitas
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
 
-                if (!nama.Contains("BAPENDA") || !nama.Contains("MAGANG PENAGIHAN"))
-                {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
-                }
+                
                 var model = new Models.AktivitasOP.ReklameSummaryVM.Index();
                 return PartialView($"{URLView}{actionName}", model);
             }
