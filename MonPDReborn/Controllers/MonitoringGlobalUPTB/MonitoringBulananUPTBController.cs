@@ -32,11 +32,17 @@ namespace MonPDReborn.Controllers.MonitoringGlobalUPTB
             {
                 ViewData["Title"] = controllerName;
                 var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
                 if (string.IsNullOrEmpty(nama))
                 {
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
 
+                if (!nama.Contains("UPTB"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
+                
                 string lastPart = nama.Split(' ').Last();
 
                 if (!int.TryParse(lastPart, out int wilayah))

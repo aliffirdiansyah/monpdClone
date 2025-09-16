@@ -30,6 +30,17 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("BAPENDA") || !nama.Contains("MAGANG PENAGIHAN"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 if (jenisPajak == null || bulan == null || tahun == null)
                 {
                     var model = new Models.MonitoringGlobal.MonitoringHarianVM.Index();
