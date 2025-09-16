@@ -1,13 +1,13 @@
-﻿@model MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.DetailOP
+﻿@model MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.DetailTahun
 
 <!-- Grid langsung dari Razor, ID tetap unik -->
 <h4 class="card-title fs-16 mb-3">
-    Kategori Pajak: @Model.PemasanganAlatDetailOP.FirstOrDefault()?.Kategori
+    Kategori Pajak: @Model.PemasanganAlatDetailTahun.FirstOrDefault()?.Kategori
 </h4>
 <div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.SubDetailModal>()
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatVM.SubDetailDataModal>()
         .ID("SubDetailGrid")
-        .DataSource(Model.PemasanganAlatDetailOP)
+        .DataSource(Model.PemasanganAlatDetailTahun)
         .ShowColumnLines(true)
         .ShowRowLines(true)
         .ShowBorders(true)
@@ -21,7 +21,7 @@
         .ShowInfo(true)
         )
         .SearchPanel(sp => sp
-        .Visible(true) 
+        .Visible(true)
         .HighlightCaseSensitive(false)
         .Width(250)
         .Placeholder("Cari data...")
@@ -29,7 +29,7 @@
         .NoDataText("Data Tidak Ditemukan")
         .Columns(columns =>
         {
-           @*  columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+          @*  columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
             columns.AddFor(m => m.Kategori).Caption("Kategori"); *@
             columns.AddFor(m => m.FormattedNOP).Caption("NOP");
             columns.AddFor(m => m.NamaOP).Caption("Nama OP");

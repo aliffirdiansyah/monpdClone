@@ -7,7 +7,7 @@ using System.Linq.Dynamic.Core;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
-    public class PemasanganAlatVM
+    public class PemasanganAlatUPTBVM
     {
         public class Index
         {
@@ -22,9 +22,9 @@ namespace MonPDReborn.Models.AktivitasOP
             public List<SeriesPemasanganAlat> SeriesPemasanganAlatList { get; set; } = new();
             public DashboardData Data { get; set; } = new();
 
-            public Show()
+            public Show(int wilayah)
             {
-                SeriesPemasanganAlatList = Method.GetSeriesAlatRekam();
+                SeriesPemasanganAlatList = Method.GetSeriesAlatRekam(wilayah);
 
                 Data.HotelTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.JumlahOP);
                 Data.RestoTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.JumlahOP);
@@ -41,7 +41,7 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Tahunan
         {
             public List<DataPemasanganAlat> DataPemasanganAlatList { get; set; } = new();
-            public Tahunan()
+            public Tahunan(int wilayah)
             {
                 DataPemasanganAlatList = Method.GetTahunBerjalan();
             }
@@ -49,7 +49,7 @@ namespace MonPDReborn.Models.AktivitasOP
         public class DetailOP
         {
             public List<SubDetailModal> PemasanganAlatDetailOP { get; set; } = new();
-            public DetailOP(int jenisPajak, int kategori, int tahun)
+            public DetailOP(int jenisPajak, int kategori, int tahun, int wilayah)
             {
                 PemasanganAlatDetailOP = Method.GetDetailModal((EnumFactory.EPajak)jenisPajak, kategori, tahun);
             }
@@ -57,14 +57,14 @@ namespace MonPDReborn.Models.AktivitasOP
         public class DetailTahun
         {
             public List<SubDetailDataModal> PemasanganAlatDetailTahun { get; set; } = new();
-            public DetailTahun(int jenisPajak, int kategori, int status)
+            public DetailTahun(int jenisPajak, int kategori, int status, int wilayah)
             {
                 PemasanganAlatDetailTahun = Method.GetTahunBerjalanModal((EnumFactory.EPajak)jenisPajak, kategori, status);
             }
         }
         public class Method
         {
-            public static List<SeriesPemasanganAlat> GetSeriesAlatRekam()
+            public static List<SeriesPemasanganAlat> GetSeriesAlatRekam(int wilayah)
             {
                 var ret = new List<SeriesPemasanganAlat>();
                 var context = DBClass.GetContext();
@@ -539,6 +539,5 @@ namespace MonPDReborn.Models.AktivitasOP
             public bool IsTerpasangSB { get; set; }
 
         }
-
     }
 }

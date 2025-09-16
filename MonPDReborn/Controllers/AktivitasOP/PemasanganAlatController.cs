@@ -106,15 +106,36 @@ namespace MonPDReborn.Controllers.Aktivitas
         [HttpGet]
         public object GetDetailTahunan(DataSourceLoadOptions load_options, int JenisPajak)
         {
-            var data = Models.AktivitasOP.PemasanganAlatVM.Method.GetDetailTahunanPemasanganAlatList((EnumFactory.EPajak)JenisPajak);
+            var data = Models.AktivitasOP.PemasanganAlatVM.Method.GetDetailTahunBerjalan((EnumFactory.EPajak)JenisPajak);
             return DataSourceLoader.Load(data, load_options);
         }
-        public IActionResult SubDetailOPModal(int jenisPajak, int kategori, int tahun, string status)
+        public IActionResult SubDetailOPModal(int jenisPajak, int kategori, int tahun)
         {
             try
             {
-                var model = new Models.AktivitasOP.PemasanganAlatVM.DetailOP(jenisPajak, kategori, tahun, status);
+                var model = new Models.AktivitasOP.PemasanganAlatVM.DetailOP(jenisPajak, kategori, tahun);
                 return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailModal", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult SubDetailDataModal(int jenisPajak, int kategori, int status)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.PemasanganAlatVM.DetailTahun(jenisPajak, kategori, status);
+                return PartialView("../AktivitasOP/PemasanganAlat/_SubDetailDataModal", model);
             }
             catch (ArgumentException e)
             {
