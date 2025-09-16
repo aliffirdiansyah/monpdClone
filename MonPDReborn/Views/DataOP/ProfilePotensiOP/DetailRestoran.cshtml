@@ -58,7 +58,7 @@
             <div class="card border-red">
                 <div class="card-body">
                     <div class="row align-items-center">
-                        <div class="col-lg-8">
+                        <div class="col-lg-4">
                             <div class="d-flex p-3">
                                 <div class="flex-shrink-0">
                                     <div class="avatar-md me-3">
@@ -78,6 +78,14 @@
                                         @Model.FormattedNOP
                                     </p>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card-red-bright p-3 text-center">
+                                <button class="btn btn-primary"
+                                        onclick="window.open('/ProfileOP/Detail?nop=@Model.NOP&pajak=1', '_blank')">
+                                    Realisasi
+                                </button>
                             </div>
                         </div>
                         <div class="col-lg-4">
