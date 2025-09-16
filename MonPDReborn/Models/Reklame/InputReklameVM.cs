@@ -22,6 +22,7 @@ namespace MonPDReborn.Models.Reklame
             public string SelectedKdAktifitas { get; set; } = null!;
             public string SelectedNoFormulir { get; set; } = null!;
             public IFormFile Lampiran { get; set; } = null!;
+            public Show() { }
             public Show(string noFormulir) 
             {
                 Data.NoFormulir = noFormulir;
@@ -58,6 +59,10 @@ namespace MonPDReborn.Models.Reklame
                 if (string.IsNullOrEmpty(NewRowUpaya.NamaPetugas))
                 {
                     throw new ArgumentException("Nama Petugas tidak boleh kosong.");
+                }
+                if (string.IsNullOrEmpty(NewRowUpaya.NIKPetugas))
+                {
+                    throw new ArgumentException("NIK Petugas tidak boleh kosong.");
                 }
                 if (NewRowUpaya.Lampiran == null || NewRowUpaya.Lampiran.Length <= 0)
                 {
@@ -102,12 +107,12 @@ namespace MonPDReborn.Models.Reklame
         }
         public class KdAktifitasCbView
         {
-            public string? Value { get; set; }
+            public string Value { get; set; }
             public string Text { get; set; } = null!;
         }
         public class NoFormulirCbView
         {
-            public string? Value { get; set; }
+            public string Value { get; set; }
             public string Text { get; set; } = null!;
         }
 
