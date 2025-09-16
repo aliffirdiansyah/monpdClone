@@ -81,11 +81,15 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="card-red-bright p-3 text-center">
-                                <button class="btn btn-primary"
-                                        onclick="window.open('/ProfileOP/Detail?nop=@Model.NOP&pajak=1', '_blank')">
-                                    Realisasi
-                                </button>
+                            <div class="card-red-bright h-100 d-flex flex-column justify-content-between">
+                                <div class="p-3 text-center">
+                                    <h3 class="fs-16 fw-semibold text-dark mb-3">Detail Realisasi</h3>
+                                    <p class="fs-14 text-muted mb-4">Lihat detail realisasi pajak objek ini</p>
+                                    <button class="btn btn-light w-100"
+                                            onclick="window.open('/ProfileOP/Detail?nop=@Model.NOP&pajak=1', '_blank')">
+                                        <i class="ri-bar-chart-line me-1"></i> Realisasi
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-4">
