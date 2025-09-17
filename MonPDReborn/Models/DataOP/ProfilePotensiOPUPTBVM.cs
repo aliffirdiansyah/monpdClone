@@ -396,7 +396,7 @@ namespace MonPDReborn.Models.DataOP
                 var realisasiListrikNow = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear && dataPpj3.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetReklameNow = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.Reklame && x.Uptb == (decimal)wilayahPajak).Sum(x => x.Target);
-                var realisasiReklameNow = context.DbMonReklames.Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.Value.Year == currentYear - 1).Sum(x => x.NominalPokokBayar) ?? 0;
+                var realisasiReklameNow = context.DbMonReklames.Where(x => x.TahunBuku == currentYear && x.TglBayarPokok.Value.Year == currentYear ).Sum(x => x.NominalPokokBayar) ?? 0;
 
                 var targetAbtNow = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.AirTanah && x.Uptb == (decimal)wilayahPajak).Sum(x => x.Target);
                 var realisasiAbtNow = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear && dataAbt3.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
