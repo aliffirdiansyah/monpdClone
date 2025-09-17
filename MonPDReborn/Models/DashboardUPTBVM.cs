@@ -486,87 +486,46 @@ namespace MonPDReborn.Models
 
                 //Wilayah
                 var nopListSemuaAbt = context.DbOpAbts
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
+
                 var nopListSemuaResto = context.DbOpRestos
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x =>x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaHotel = context.DbOpHotels
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaListrik = context.DbOpListriks
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaParkir = context.DbOpParkirs
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaHiburan = context.DbOpHiburans
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
+
+                var nopListSemuaPbb = context.DbMonPbbs
+                    .Where(x => x.TahunBuku == year && x.Uptb == wilayah)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .AsQueryable();
 
 
                 //realisasi
@@ -606,19 +565,10 @@ namespace MonPDReborn.Models
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
-                var dataRealisasiPbb = Enumerable.Range(yearLast, year - yearLast + 1)
-                    .Select(t => new
-                    {
-                        TahunBuku = t,
-                        PajakId = (int)EnumFactory.EPajak.PBB,
-                        Realisasi = context.DbMonPbbs
-                            .Where(x => x.TglBayar.HasValue
-                                        && x.TglBayar.Value.Year == t
-                                        && x.TahunBuku == t
-                                        && x.JumlahBayarPokok > 0
-                                        && x.Uptb == Convert.ToInt32(wilayah))
-                            .Sum(x => x.JumlahBayarPokok ?? 0)
-                    })
+                var dataRealisasiPbb = context.DbMonPbbs
+                    .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year >= yearLast && x.TglBayar.Value.Year <= year && nopListSemuaPbb.Contains(x.Nop))
+                    .GroupBy(x => new { x.TglBayar.Value.Year, PajakId = (int)(EnumFactory.EPajak.PBB) })
+                    .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.JumlahBayarPokok ?? 0) })
                     .AsEnumerable();
 
                 //isi realisasi data
