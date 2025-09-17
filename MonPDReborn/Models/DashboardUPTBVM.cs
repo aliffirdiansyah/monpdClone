@@ -4,6 +4,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 using static MonPDReborn.Models.DataOP.ProfileOPVM;
 using static MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.MonitoringTahunanViewModels;
 
@@ -391,12 +392,12 @@ namespace MonPDReborn.Models
                 var dataTargetAbt = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.AirTanah && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 
                 #region Method Get Jumlah OP
-                var OpRestoAkhir = context.DbOpRestos.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpHotelAkhir = context.DbOpHotels.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpHiburanAkhir = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpParkirAkhir = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpListrikAkhir = context.DbOpListriks.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpAbtAkhir = context.DbOpAbts.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
+                var OpRestoAkhir = context.DbOpRestos.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpHotelAkhir = context.DbOpHotels.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpHiburanAkhir = context.DbOpHiburans.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpParkirAkhir = context.DbOpParkirs.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpListrikAkhir = context.DbOpListriks.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpAbtAkhir = context.DbOpAbts.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
                 var OpPbbAkhir = context.DbMonPbbs.Where(x => x.TahunBuku == currentYear && x.Uptb == wilayah).Select(x => x.Nop).Distinct().AsQueryable();
 
 
@@ -432,27 +433,27 @@ namespace MonPDReborn.Models
                     TargetMamin = dataTargetMamin,
                     RealisasiMamin = dataRealisasiMamin,
                     PersentaseMamin = dataTargetMamin != 0 ? Math.Round((dataRealisasiMamin / dataTargetMamin) * 100, 2) : 0,
-                    JumlahOpMamin = OpRestoAkhir.Where(x => x.PajakNama != "MAMIN").Count(),
+                    JumlahOpMamin = OpRestoAkhir.Where(x => x.PajakNama != "MAMIN" && x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetHotel = dataTargetHotel,
                     RealisasiHotel = dataRealisasiHotel,
                     PersentaseHotel = dataTargetHotel != 0 ? Math.Round((dataRealisasiHotel / dataTargetHotel) * 100, 2) : 0,
-                    JumlahOpHotel = OpHotelAkhir.Count(),
+                    JumlahOpHotel = OpHotelAkhir.Where(x=> x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetHiburan = dataTargetHiburan,
                     RealisasiHiburan = dataRealisasiHiburan,
                     PersentaseHiburan = dataTargetHiburan != 0 ? Math.Round((dataRealisasiHiburan / dataTargetHiburan) * 100, 2) : 0,
-                    JumlahOpHiburan = OpHiburanAkhir.Count(),
+                    JumlahOpHiburan = OpHiburanAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetParkir = dataTargetParkir,
                     RealisasiParkir = dataRealisasiParkir,
                     PersentaseParkir = dataTargetParkir != 0 ? Math.Round((dataRealisasiParkir / dataTargetParkir) * 100, 2) : 0,
-                    JumlahOpParkir = OpParkirAkhir.Count(),
+                    JumlahOpParkir = OpParkirAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetListrik = dataTargetListrik,
                     RealisasiListrik = dataRealisasiListrik,
                     PersentaseListrik = dataTargetListrik != 0 ? Math.Round((dataRealisasiListrik / dataTargetListrik) * 100, 2) : 0,
-                    JumlahOpListrik = OpListrikAkhir.Count(),
+                    JumlahOpListrik = OpListrikAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetPbb = dataTargetPbb,
                     RealisasiPbb = dataRealisasiPbb,
@@ -462,7 +463,7 @@ namespace MonPDReborn.Models
                     TargetAbt = dataTargetAbt,
                     RealisasiAbt = dataRealisasiAbt,
                     PersentaseAbt = dataTargetAbt != 0 ? Math.Round((dataRealisasiAbt / dataTargetAbt) * 100, 2) : 0,
-                    JumlahOpAbt = OpAbtAkhir.Count(),
+                    JumlahOpAbt = OpAbtAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     
                 };
