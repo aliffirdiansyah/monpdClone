@@ -1270,12 +1270,12 @@ namespace MonPDReborn.Models.DataOP
                             var targetReklame3 = context.DbAkunTargetObjekReklames.Where(x => x.TahunBuku == DateTime.Now.Year && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.TargetBulan) ?? 0;
                             var realisasiReklame3 = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == DateTime.Now.Year && x.FlagPermohonan.ToUpper() == item.Nama.ToUpper()).Sum(x => x.NominalPokokBayar) ?? 0;
 
-                            var totalPotensiReklame = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 1).Sum(q => q.Hit1bulan * 12) ?? 0;
+                            var totalPotensiReklame = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 1).Sum(q => q.Hit1bulan) ?? 0;
 
-                            var potensiReklameNext1 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.Hit1bulan * 12) ?? 0;
-                            var potensiReklameNext2 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.Hit1bulan * 12) ?? 0;
-                            var potensiReklameNext3 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 4).Sum(x => x.Hit1bulan * 12) ?? 0;
-                            var potensiReklameNext4 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 5).Sum(x => x.Hit1bulan * 12) ?? 0;
+                            var potensiReklameNext1 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 2).Sum(x => x.Hit1bulan) ?? 0;
+                            var potensiReklameNext2 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 3).Sum(x => x.Hit1bulan) ?? 0;
+                            var potensiReklameNext3 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 4).Sum(x => x.Hit1bulan) ?? 0;
+                            var potensiReklameNext4 = context.DbPotensiReklames.Where(x => x.FlagPermohonan.ToUpper() == item.Nama.ToUpper() && x.TahunBuku == DateTime.Now.Year + 5).Sum(x => x.Hit1bulan) ?? 0;
 
                             re.Target1 = targetReklame1;
                             re.Realisasi1 = realisasiReklame1;
