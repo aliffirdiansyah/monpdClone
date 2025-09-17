@@ -824,13 +824,11 @@ namespace MonPDReborn.Models.AktivitasOP
                 context.DbMonReklameUpayas.Add(newUpaya);
                 context.SaveChanges();
             }
-            public static DetailUpaya GetDetailUpaya(string noFormulir, int tahun, int bulan , int lokasi)
+            public static DetailUpaya GetDetailUpaya(string noFormulir, int tahun, int bulan, int lokasi)
             {
                 var context = DBClass.GetContext();
 
-                Expression<Func<MvReklameSummary, bool>> predicate;
-
-                // cari reklame sesuai lokasi (sama seperti sebelumnya)
+                // cari reklame sesuai lokasi
                 List<MvReklameSummary> reklameList = null;
 
                 if (lokasi == 1)
@@ -865,7 +863,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 if (reklameList == null || !reklameList.Any())
                     return null;
 
-                // kumpulkan semua formulir yang benar-benar match
+                // kumpulkan semua formulir yang match
                 var matchedFormulirs = reklameList
                     .SelectMany(r => new[]
                     {
@@ -876,10 +874,12 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Distinct()
                     .ToList();
 
-                // ambil semua upaya untuk semua formulir yang match
+                // ambil hanya upaya yang tidak memiliki KodeAktifitas
                 var dataUpayaList = context.DbMonReklameUpayas
                     .Include(x => x.DbMonReklameUpayaDok)
-                    .Where(x => matchedFormulirs.Contains(x.NoFormulir))
+                    .Where(x =>
+                        matchedFormulirs.Contains(x.NoFormulir) &&
+                        (x.KdAktifitas == null || x.KdAktifitas == "")) // ✅ filter hanya yang tidak ada kode aktifitas
                     .OrderByDescending(x => x.TglUpaya)
                     .Select(x => new DetailUpaya.DataUpaya
                     {
@@ -894,7 +894,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .ToList();
 
-                // karena reklameList bisa lebih dari 1, pilih salah satu untuk InfoReklame (misalnya yang pertama)
+                // pilih salah satu reklame untuk InfoReklame
                 var reklame = reklameList.First();
                 bool isFormulirA = matchedFormulirs.Contains(reklame.NoFormulirA);
 
@@ -925,9 +925,9 @@ namespace MonPDReborn.Models.AktivitasOP
                     DataUpayaList = dataUpayaList
                 };
 
-
                 return model;
             }
+
 
             public static List<DetailBongkar> GetDetailBongkar(int tahun, int bulan, int jenis, int kategori , int lokasi)
             {

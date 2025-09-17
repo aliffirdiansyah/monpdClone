@@ -104,7 +104,7 @@ namespace MonPDReborn.Controllers.Reklame
             var context = DBClass.GetContext();
 
             var result = context.MPetugasReklames
-                .Where(x => x.KdAktifitas == kode)
+                .Where(x => x.KdAktifitas.ToUpper().Trim() == kode.ToUpper().Trim())
                 .Select(x => new {
                     NamaPetugas = x.Nama,
                     NikPetugas = x.Nik
@@ -125,7 +125,7 @@ namespace MonPDReborn.Controllers.Reklame
 
             var context = DBClass.GetContext();
             var petugas = await context.MPetugasReklames
-                .Where(x => x.KdAktifitas == kdAktifitas)
+                .Where(x => x.KdAktifitas.ToUpper().Trim() == kdAktifitas.ToUpper().Trim())
                 .Select(x => new {
                     KdAktifitas = x.KdAktifitas,
                     NamaAktifitas = x.Nama,
@@ -144,7 +144,7 @@ namespace MonPDReborn.Controllers.Reklame
         {
             var context = DBClass.GetContext();
             var data = context.DbOpReklames
-                .Where(x => x.NoFormulir == filter)
+                .Where(x => x.NoFormulir.ToUpper().Trim() == filter.ToUpper().Trim())
                 .Select(x => new
                 {
                     NoFormulir = x.NoFormulir,
@@ -165,8 +165,8 @@ namespace MonPDReborn.Controllers.Reklame
 
             var context = DBClass.GetContext();
             var alamatReklame = await context.DbOpReklames
-                .Where(x => x.NoFormulir == noFormulir)
-                .Select(x => x.Alamat) // pastikan nama kolom sesuai
+                .Where(x => x.NoFormulir.ToUpper().Trim() == noFormulir.ToUpper().Trim())
+                .Select(x => x.Alamatreklame) // pastikan nama kolom sesuai
                 .FirstOrDefaultAsync();
 
             if (alamatReklame == null)
