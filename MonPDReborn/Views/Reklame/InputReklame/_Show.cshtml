@@ -1,52 +1,43 @@
 ﻿@model MonPDReborn.Models.Reklame.InputReklameVM.Show
 
-<form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
+<form id="formUpaya" asp-action="SimpanUpaya" asp-controller="InputReklame" method="post" enctype="multipart/form-data">
     @Html.HiddenFor(m => m.Data.NewRowUpaya.NoFormulir)
     <div class="row">
 
         <div class="col-lg-3 mb-3">
             <label asp-for="SelectedKdAktifitas" class="form-label">Kode Aktifitas</label>
-            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedKdAktifitas)
-                        .ID("cbKdAktifitas")
-                        .ValueExpr("Value")
-                        .DisplayExpr("Text")
-                        .DataSource(d => d.Mvc()
-                        .Controller("InputReklame")
-                        .LoadAction("GetKdAktifitas")
-                        .Key("filter"))
-                        .SearchExpr("Text")
-                        .SearchEnabled(true)
-                        .Placeholder("Pilih Kode Aktifitas")
-                        .MinSearchLength(2)
-                        .OnValueChanged("onKdAktifitasChanged")
+            @(Html.DevExtreme().TextBox()
+                        .ID("txtKdAktifitas")
+                        .Name("SelectedKdAktifitas")
+                        .Placeholder("Masukkan Kode Aktifitas")
+                        .ShowClearButton(true)
+                        .OnEnterKey("onKdAktifitasSearch")
                         )
         </div>
 
         <div class="col-lg-4 mb-3">
             <label class="form-label">Nama Petugas</label>
             <input type="text" id="txtNamaAktifitas" class="form-control" readonly />
+            <!-- Hidden input supaya ikut terkirim -->
+            <input type="hidden" id="hdNamaPetugas" name="Data.NewRowUpaya.NamaPetugas" />
         </div>
 
         <div class="col-lg-4 mb-3">
             <label class="form-label">NIK Petugas</label>
             <input type="text" id="txtNikPetugas" class="form-control" readonly />
+            <!-- Hidden input supaya ikut terkirim -->
+            <input type="hidden" id="hdNikPetugas" name="Data.NewRowUpaya.NIKPetugas" />
         </div>
+
 
         <div class="col-lg-5 mb-3">
             <label asp-for="SelectedNoFormulir" class="form-label">No Formulir</label>
-            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedNoFormulir)
-                        .ID("cbNoFormulir")
-                        .ValueExpr("Value")
-                        .DisplayExpr("Text")
-                        .DataSource(d => d.Mvc()
-                        .Controller("InputReklame")
-                        .LoadAction("GetNoFormulir")
-                        .Key("filter"))
-                        .SearchExpr("Text")
-                        .SearchEnabled(true)
-                        .Placeholder("Pilih No Formulir")
-                        .MinSearchLength(2)
-                        .OnValueChanged("onNoFormulirChanged")
+            @(Html.DevExtreme().TextBox()
+                        .ID("txtNoFormulir")
+                        .Name("SelectedNoFormulir")
+                        .Placeholder("Masukkan No Formulir")
+                        .ShowClearButton(true)
+                        .OnEnterKey("onNoFormulirSearch")
                         )
         </div>
 

@@ -99,80 +99,62 @@ namespace MonPDReborn.Controllers.Reklame
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
         [HttpGet]
-        public async Task<object> GetKdAktifitas(DataSourceLoadOptions loadOptions)
+        public IActionResult GetKdAktifitas(string kode)
         {
             var context = DBClass.GetContext();
-            var query = context.MPetugasReklames
-                .Select(item => new KdAktifitasCbView
-                {
-                    Value = item.KdAktifitas,
-                    Text = item.KdAktifitas ?? string.Empty
-                });
-            return await DataSourceLoader.LoadAsync(query, loadOptions);
+
+            var result = context.MPetugasReklames
+                .Where(x => x.KdAktifitas == kode)
+                .Select(x => new {
+                    NamaPetugas = x.Nama,
+                    NikPetugas = x.Nik
+                })
+                .FirstOrDefault();
+
+            if (result == null)
+                return Json(new { success = false, message = "Data tidak ditemukan" });
+
+            return Json(new { success = true, data = result });
         }
+
         [HttpGet]
         public async Task<IActionResult> GetNamaAktifitas(string kdAktifitas)
         {
             if (string.IsNullOrEmpty(kdAktifitas))
-            {
                 return BadRequest("Kode aktifitas tidak boleh kosong.");
-            }
 
             var context = DBClass.GetContext();
-            var namaAktifitas = await context.MPetugasReklames
+            var petugas = await context.MPetugasReklames
                 .Where(x => x.KdAktifitas == kdAktifitas)
-                .Select(x => x.Nama) // pastikan nama kolom sesuai
+                .Select(x => new {
+                    KdAktifitas = x.KdAktifitas,
+                    NamaAktifitas = x.Nama,
+                    NikPetugas = x.Nik
+                })
                 .FirstOrDefaultAsync();
 
-            if (namaAktifitas == null)
-            {
-                return NotFound($"Nama Aktifitas untuk kode '{kdAktifitas}' tidak ditemukan.");
-            }
+            if (petugas == null)
+                return NotFound($"Data petugas untuk kode '{kdAktifitas}' tidak ditemukan.");
 
-            return Ok(new
-            {
-                KdAktifitas = kdAktifitas,
-                NamaAktifitas = namaAktifitas
-            });
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetNikPetugas(string kdAktifitas)
-        {
-            if (string.IsNullOrEmpty(kdAktifitas))
-            {
-                return BadRequest("NIK Petugas tidak boleh kosong.");
-            }
-
-            var context = DBClass.GetContext();
-            var nikPetugas = await context.MPetugasReklames
-                .Where(x => x.KdAktifitas == kdAktifitas) // ganti filter dari KdAktifitas ke NIK
-                .Select(x => x.Nik)
-                .FirstOrDefaultAsync();
-
-            if (nikPetugas == null)
-            {
-                return NotFound($"Nama Petugas untuk NIK '{kdAktifitas}' tidak ditemukan.");
-            }
-
-            return Ok(new
-            {
-                KdAktifitas = kdAktifitas,
-                NikPetugas = nikPetugas
-            });
+            return Ok(petugas);
         }
 
         [HttpGet]
-        public async Task<object> GetNoFormulir(DataSourceLoadOptions loadOptions)
+        public IActionResult GetNoFormulir(string filter)
         {
             var context = DBClass.GetContext();
-            var query = context.DbOpReklames
-                .Select(item => new NoFormulirCbView
+            var data = context.DbOpReklames
+                .Where(x => x.NoFormulir == filter)
+                .Select(x => new
                 {
-                    Value = item.NoFormulir,
-                    Text = item.NoFormulir ?? string.Empty
-                });
-            return await DataSourceLoader.LoadAsync(query, loadOptions);
+                    NoFormulir = x.NoFormulir,
+                    AlamatReklame = x.Alamat // pastikan ini sesuai dengan field di DbOpReklames
+                })
+                .ToList();
+
+            return Json(data);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAlamatReklame(string noFormulir)
         {
@@ -217,12 +199,12 @@ namespace MonPDReborn.Controllers.Reklame
                 }
                 var insert = new Models.Reklame.InputReklameVM.DetailUpaya.NewRow
                 {
-                    NoFormulir = input.Data.NewRowUpaya.NoFormulir,
+                    NoFormulir = input.SelectedNoFormulir,
                     IdUpaya = input.SelectedUpaya,
                     IdTindakan = input.SelectedTindakan,
                     NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
                     NIKPetugas = input.Data.NewRowUpaya.NIKPetugas,
-                    KdKatifitas = input.Data.NewRowUpaya.KdKatifitas,
+                    KdKatifitas = input.SelectedKdAktifitas,
                     TglUpaya = input.Data.NewRowUpaya.TglUpaya,
                     Lampiran = input.Data.NewRowUpaya.Lampiran,
                 };
@@ -241,6 +223,7 @@ namespace MonPDReborn.Controllers.Reklame
             {
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
+                Console.WriteLine(ex);
                 return Json(response);
             }
             return Json(response);

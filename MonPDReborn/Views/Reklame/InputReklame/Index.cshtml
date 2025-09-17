@@ -1,6 +1,7 @@
 ﻿@model MonPDReborn.Models.Reklame.InputReklameVM.Index
 
 @{
+    ViewData["Title"] = "Input Upaya Reklame";
     Layout = "_Layout";
 }
 
@@ -174,63 +175,54 @@
         }
     </script>
     <script>
-        function onKdAktifitasChanged(e) {
-            let kdAktifitas = e.value;
-            if (!kdAktifitas) {
-                $("#txtNikPetugas").val("");
-                return;
-            }
+        function onKdAktifitasSearch(e) {
+            let kode = e.component.option("value");
+            if (!kode) return;
 
             $.ajax({
-                url: '@Url.Action("GetNamaAktifitas", "InputReklame")',
+                url: '/InputReklame/GetNamaAktifitas',
                 type: 'GET',
-                data: { kdAktifitas: kdAktifitas },
-                success: function (result) {
-                    $("#txtNikPetugas").val(result.namaAktifitas);
-                },
-                error: function () {
-                    $("#txtNikPetugas").val("Tidak ditemukan");
-                }
-            });
-        }
-        function onKdAktifitasChanged(e) {
-            let kdAktifitas = e.value;
-            if (!kdAktifitas) {
-                $("#txtNamaAktifitas").val("");
-                return;
-            }
+                data: { kdAktifitas: kode }, // sesuai parameter controller
+                success: function (res) {
+                    // tampilkan di UI
+                    $("#txtNamaAktifitas").val(res.NamaAktifitas || '');
+                    $("#txtNikPetugas").val(res.NikPetugas || '');
 
-            $.ajax({
-                url: '@Url.Action("GetNikPetugas", "InputReklame")',
-                type: 'GET',
-                data: { kdAktifitas: kdAktifitas },
-                success: function (result) {
-                    $("#txtNamaAktifitas").val(result.namaAktifitas);
-                },
-                error: function () {
-                    $("#txtNamaAktifitas").val("Tidak ditemukan");
-                }
-            });
-        }
-        function onNoFormulirChanged(e) {
-            let noFormulir = e.value;
-            if (!noFormulir) {
-                $("#txtAlamatReklame").val("");
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("GetAlamatReklame", "InputReklame")',
-                type: 'GET',
-                data: { noFormulir: noFormulir },
-                success: function (result) {
-                    console.log("Response:", result);
-                    // PENTING: gunakan huruf besar sesuai response
-                    $("#txtAlamatReklame").val(result.AlamatReklame);
+                    // isi hidden input agar ikut submit
+                    $("#hdNamaPetugas").val(res.NamaAktifitas || '');
+                    $("#hdNikPetugas").val(res.NikPetugas || '');
                 },
                 error: function (xhr) {
-                    console.log("Error:", xhr);
-                    $("#txtAlamatReklame").val("Tidak ditemukan");
+                    $("#txtNamaAktifitas").val('');
+                    $("#txtNikPetugas").val('');
+                    $("#hdNamaPetugas").val('');
+                    $("#hdNikPetugas").val('');
+
+                    DevExpress.ui.notify(xhr.responseText || "Terjadi kesalahan saat mencari data", "error", 2000);
+                }
+            });
+        }
+
+
+
+        function onNoFormulirSearch(e) {
+            let noFormulir = e.component.option("value");
+            if (!noFormulir) return;
+
+            $.ajax({
+                url: '/InputReklame/GetNoFormulir',
+                type: 'GET',
+                data: { filter: noFormulir },
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        $("#txtAlamatReklame").val(data[0].AlamatReklame);
+                    } else {
+                        $("#txtAlamatReklame").val('');
+                        DevExpress.ui.notify("No Formulir tidak ditemukan", "warning", 2000);
+                    }
+                },
+                error: function () {
+                    DevExpress.ui.notify("Terjadi kesalahan saat mencari data", "error", 2000);
                 }
             });
         }
