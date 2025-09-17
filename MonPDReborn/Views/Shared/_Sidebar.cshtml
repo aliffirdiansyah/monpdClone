@@ -497,7 +497,7 @@
                         <a class="nav-link menu-link @(currentController == "KONTROLPEMBAYARANUPTB" ? "active" : "")"
                            href="@Url.Action("Index", "KontrolPembayaranUPTB")" role="button">
                             <i class="bx bx-scatter-chart me-1 align-middle"></i>
-                            <span data-key="t-kontrolpembayaranuptb">Monitoring Pembayarn</span>
+                            <span data-key="t-kontrolpembayaranuptb">Monitoring Pembayaran</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -640,6 +640,57 @@
                            href="@Url.Action("Index", "UploadData")" role="button">
                             <i class="bx bx-group me-1 align-middle"></i>
                             <span data-key="t-UploadData">Upload Data</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else if (nama.Contains("PENDATAAN REKLAME"))
+        {
+            <div class="container-fluid">
+                <div id="two-column-menu"></div>
+                <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-upload">Pendataan Reklame</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "INPUTREKLAME" ? "active" : "")"
+                           href="@Url.Action("Index", "InputReklame")" role="button">
+                            <i class="bx bx-folder-plus me-1 align-middle"></i>
+                            <span data-key="t-InputReklameAdmin">Input Reklame</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "REKLAMESUMMARY" ? "active" : "")"
+                           href="@Url.Action("Index", "ReklameSummary")" role="button">
+                            <i class="bx bx-news me-1 align-middle"></i>
+                            <span data-key="t-ReklameSummaryAdmin">Reklame Summary</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "KONTROLREKLAME" ? "active" : "")"
+                           href="@Url.Action("Index", "Reklame")" role="button">
+                            <i class="bx bx-archive me-1 align-middle"></i>
+                            <span data-key="t-ReklameAdmin">Kontrol Reklame</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "REKLAMElIAR" ? "active" : "")"
+                           href="@Url.Action("Index", "ReklameLiar")" role="button">
+                            <i class="bx bx-calendar-exclamation me-1 align-middle"></i>
+                            <span data-key="t-ReklameLiarAdmin">Reklame Liar</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "PENDATAANREKLAME" ? "active" : "")"
+                           href="@Url.Action("Index", "PendataanReklame")" role="button">
+                            <i class="bx bx-file-blank me-1 align-middle"></i>
+                            <span data-key="t-PendataanReklameAdmin">Pendataan Reklame</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "PENCARIANREKLAME" ? "active" : "")"
+                           href="@Url.Action("Index", "PencarianReklame")" role="button">
+                            <i class="bx bx-search-alt me-1 align-middle"></i>
+                            <span data-key="t-PencarianReklameAdmin">Pencarian Reklame</span>
                         </a>
                     </li>
                 </ul>

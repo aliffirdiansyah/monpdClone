@@ -87,6 +87,10 @@ namespace MonPDReborn.Controllers
                 {
                     return RedirectToAction("Index", "PembayaranKontrol");
                 }
+                else if (login.Email.Contains("PENDATAAN REKLAME"))
+                {
+                    return RedirectToAction("Index", "InputReklame");
+                }
                 else
                 {
                     return RedirectToAction("Index", "Home");

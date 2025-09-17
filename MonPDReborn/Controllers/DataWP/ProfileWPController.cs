@@ -33,10 +33,6 @@ namespace MonPDReborn.Controllers.DataWP
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
 
-                if (!nama.Contains("BAPENDA") || !nama.Contains("UPTB"))
-                {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
-                }
                 var model = new Models.DataWP.ProfileWPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
