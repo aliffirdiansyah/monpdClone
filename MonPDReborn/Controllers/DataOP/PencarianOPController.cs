@@ -27,6 +27,16 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+                if (nama.Contains("BPK"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 ViewData["Title"] = controllerName;
                 if (string.IsNullOrEmpty(keyword))
                 {
@@ -57,16 +67,6 @@ namespace MonPDReborn.Controllers.DataOP
         {
             try
             {
-                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
-
-                if (string.IsNullOrEmpty(nama))
-                {
-                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
-                }
-                if (nama.Contains("BPK"))
-                {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
-                }
                 var model = new Models.DataOP.PencarianOPVM.Show(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
