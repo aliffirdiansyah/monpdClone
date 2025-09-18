@@ -452,6 +452,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public int TahunNow { get; set; }
             public int BelumTahunNow { get; set; }
             public int TotalTerpasang => TahunMines4 + TahunMines3 + TahunMines2 + TahunMines1 + TahunNow;
+            public int TotalBelumTerpasang => JumlahOP - TotalTerpasang;
         }
         public class DetailSeriesPemasanganAlat
         {
