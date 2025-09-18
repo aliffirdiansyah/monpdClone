@@ -41,11 +41,10 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
                 {
                     if (nama.Contains("BPK"))
                     {
+                        if (nama.Contains("MAGANG PENAGIHAN"))
+                        {
 
-                    }
-                    if (nama.Contains("MAGANG PENAGIHAN"))
-                    {
-
+                        }
                     }
                     else
                     {
