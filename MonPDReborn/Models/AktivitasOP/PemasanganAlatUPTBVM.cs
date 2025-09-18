@@ -20,30 +20,33 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Show
         {
             public List<SeriesPemasanganAlat> SeriesPemasanganAlatList { get; set; } = new();
-            public DashboardData Data { get; set; } = new();
 
             public Show(int wilayah)
             {
                 SeriesPemasanganAlatList = Method.GetSeriesAlatRekam(wilayah);
 
-                Data.HotelTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.JumlahOP);
-                Data.RestoTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.JumlahOP);
-                Data.ParkirTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.JumlahOP);
-                Data.HiburanTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.JumlahOP);
-
-                Data.HotelTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.TahunNow);
-                Data.RestoTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.TahunNow);
-                Data.ParkirTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.TahunNow);
-                Data.HiburanTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.TahunNow);
+                
             }
         }
 
         public class Tahunan
         {
             public List<DataPemasanganAlat> DataPemasanganAlatList { get; set; } = new();
+            public DashboardData Data { get; set; } = new();
+
             public Tahunan(int wilayah)
             {
                 DataPemasanganAlatList = Method.GetTahunBerjalan(wilayah);
+
+                Data.HotelTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.JumlahOP);
+                Data.RestoTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.JumlahOP);
+                Data.ParkirTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.JumlahOP);
+                Data.HiburanTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.JumlahOP);
+
+                Data.HotelTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.TotalTerpasang);
+                Data.RestoTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.TotalTerpasang);
+                Data.ParkirTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.TotalTerpasang);
+                Data.HiburanTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.TotalTerpasang);
             }
         }
         public class DetailOP
@@ -256,9 +259,10 @@ namespace MonPDReborn.Models.AktivitasOP
                 var context = DBClass.GetContext();
 
                 int tahunSekarang = DateTime.Now.Year;
+                int tahunAwal = tahunSekarang - 7;
 
                 ret = context.DbMonAlatRekams
-                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year == tahunSekarang && x.Uptb == wilayah)
+                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang && x.Uptb == wilayah)
                     .GroupBy(x => new { x.PajakId, x.Tahun })
                     .Select(g => new
                     {
@@ -304,6 +308,7 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 using var context = DBClass.GetContext();
                 int tahunSekarang = DateTime.Now.Year;
+                int tahunAwal = tahunSekarang - 7;
                 // Ambil daftar kategori
                 var kategoriList = context.MKategoriPajaks
                     .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
@@ -315,7 +320,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     .ToList();
                 // Ambil data pemasangan alat
                 var query = context.DbMonAlatRekams
-                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year == tahunSekarang
+                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang
                                 && x.PajakId == (int)jenisPajak && x.Uptb == wilayah)
                     .GroupBy(x => new { x.KategoriId })
                      .Select(g => new
@@ -362,12 +367,13 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 using var context = DBClass.GetContext();
                 int tahunSekarang = DateTime.Now.Year;
+                int tahunAwal = tahunSekarang - 7;
 
                 var query = context.DbMonAlatRekams
                     .Where(x => x.PajakId == (int)jenisPajak
                                 && x.KategoriId == kategori
                                 && x.TglTerpasang.HasValue
-                                && x.TglTerpasang.Value.Year == tahunSekarang
+                                && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang
                                 && x.Uptb == wilayah);
                 switch (status)
                 {
