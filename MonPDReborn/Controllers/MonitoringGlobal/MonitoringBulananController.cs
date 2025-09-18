@@ -39,7 +39,14 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
 
                 if (!nama.Contains("BAPENDA"))
                 {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                    if (nama.Contains("BPK"))
+                    {
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                    }
                 }
                 if (jenisPajak != null)
                 {
