@@ -408,7 +408,7 @@ namespace MonPDReborn.Models
                 var dataRealisasiHiburan = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpHiburanAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpParkirAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpListrikAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear && OpPbbAkhir.Contains(x.Nop)).Sum(x => x.JumlahBayarPokok) ?? 0;
+                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear && x.TahunBuku == currentYear && OpPbbAkhir.Contains(x.Nop)).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpAbtAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                 
                 // Total keseluruhan
@@ -565,10 +565,18 @@ namespace MonPDReborn.Models
                     .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.NominalPokokBayar ?? 0) })
                     .AsEnumerable();
 
-                var dataRealisasiPbb = context.DbMonPbbs
-                    .Where(x => x.TglBayar.HasValue && x.TglBayar.Value.Year >= yearLast && x.TglBayar.Value.Year <= year && nopListSemuaPbb.Contains(x.Nop))
-                    .GroupBy(x => new { x.TglBayar.Value.Year, PajakId = (int)(EnumFactory.EPajak.PBB) })
-                    .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.JumlahBayarPokok ?? 0) })
+                var dataRealisasiPbb = Enumerable.Range(yearLast, year - yearLast + 1)
+                    .Select(t => new
+                    {
+                        TahunBuku = t,
+                        PajakId = (int)EnumFactory.EPajak.PBB,
+                        Realisasi = context.DbMonPbbs
+                            .Where(x => x.TglBayar.HasValue
+                                        && x.TglBayar.Value.Year == t
+                                        && x.TahunBuku == t
+                                        && x.JumlahBayarPokok > 0)
+                            .Sum(x => x.JumlahBayarPokok ?? 0)
+                    })
                     .AsEnumerable();
 
                 //isi realisasi data
