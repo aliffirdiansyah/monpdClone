@@ -124,6 +124,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                 var dataRealisasiPbb = context.DbMonPbbs
                     .Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year 
                             && x.TglBayar.Value >= new DateTime(TanggalCutOff.Year, 1, 1) 
+                            && x.TahunBuku == TanggalCutOff.Year
                             && x.TglBayar.Value <= TanggalCutOff
                             && nopListSemuaPbb.Contains(x.Nop))
                     .Sum(x => x.JumlahBayarPokok) ?? 0;
