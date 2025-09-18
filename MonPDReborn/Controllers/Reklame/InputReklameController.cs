@@ -148,7 +148,7 @@ namespace MonPDReborn.Controllers.Reklame
                 .Select(x => new
                 {
                     NoFormulir = x.NoFormulir,
-                    AlamatReklame = x.Alamat // pastikan ini sesuai dengan field di DbOpReklames
+                    AlamatReklame = x.Alamatreklame // pastikan ini sesuai dengan field di DbOpReklames
                 })
                 .ToList();
 
