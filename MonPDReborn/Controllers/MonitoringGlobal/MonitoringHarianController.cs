@@ -37,9 +37,20 @@ namespace MonPDReborn.Controllers.MonitoringGlobal
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
 
-                if (!nama.Contains("BAPENDA") || !nama.Contains("MAGANG PENAGIHAN"))
+                if (!nama.Contains("BAPENDA"))
                 {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                    if (nama.Contains("BPK"))
+                    {
+
+                    }
+                    if (nama.Contains("MAGANG PENAGIHAN"))
+                    {
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                    }
                 }
                 if (jenisPajak == null || bulan == null || tahun == null)
                 {

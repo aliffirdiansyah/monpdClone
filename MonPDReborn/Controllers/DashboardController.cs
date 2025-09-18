@@ -33,9 +33,16 @@ namespace MonPDReborn.Controllers
 
                 string lastPart = nama.Split(' ').Last();
 
-                if (int.TryParse(lastPart, out int wilayah))
+                if (!nama.Contains("BAPENDA"))
                 {
-                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                    if (nama.Contains("BPK"))
+                    {
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                    }
                 }
                 var model = new Models.DashboardVM.Index();
                 return View($"{URLView}{actionName}", model);
