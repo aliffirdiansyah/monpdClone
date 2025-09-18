@@ -47,7 +47,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                     .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop).Distinct().AsQueryable();
                 var nopListSemuaListrik = context.DbOpListriks
-                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                     .Select(x => x.Nop).Distinct().AsQueryable();
                 var nopListSemuaParkir = context.DbOpParkirs
                     .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
@@ -81,7 +81,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                 var dataTargetListrik = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
                                 && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik
-                                && x.Uptb == wilayah).Sum(x => x.Target);
+                                && x.Uptb == wilayah && x.SubRincian == "2").Sum(x => x.Target);
                 var dataTargetPbb = context.DbAkunTargetBulanUptbs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year 
                                 && x.PajakId == (int)EnumFactory.EPajak.PBB

@@ -396,7 +396,7 @@ namespace MonPDReborn.Models
                 var OpHotelAkhir = context.DbOpHotels.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
                 var OpHiburanAkhir = context.DbOpHiburans.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
                 var OpParkirAkhir = context.DbOpParkirs.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
-                var OpListrikAkhir = context.DbOpListriks.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpListrikAkhir = context.DbOpListriks.Where(x => x.WilayahPajak == wilayah.ToString() && x.Sumber == 55).AsQueryable();
                 var OpAbtAkhir = context.DbOpAbts.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
                 var OpPbbAkhir = context.DbMonPbbs.Where(x => x.TahunBuku == currentYear && x.Uptb == wilayah).Select(x => x.Nop).Distinct().AsQueryable();
 
@@ -479,7 +479,7 @@ namespace MonPDReborn.Models
 
                 //target
                 var targetData = context.DbAkunTargetBulanUptbs
-                    .Where(x => x.TahunBuku >= yearLast && x.TahunBuku <= year && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                    .Where(x => x.TahunBuku >= yearLast && x.TahunBuku <= year && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21 && (x.PajakId != 2 || x.SubRincian == "2"))
                     .GroupBy(x => new { x.PajakId, x.TahunBuku })
                     .Select(x => new { TahunBuku = x.Key.TahunBuku, PajakId = x.Key.PajakId, Target = x.Sum(q => q.Target) })
                     .AsEnumerable();
@@ -504,7 +504,7 @@ namespace MonPDReborn.Models
                     .AsQueryable();
 
                 var nopListSemuaListrik = context.DbOpListriks
-                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                     .Select(x => x.Nop)
                     .Distinct()
                     .AsQueryable();

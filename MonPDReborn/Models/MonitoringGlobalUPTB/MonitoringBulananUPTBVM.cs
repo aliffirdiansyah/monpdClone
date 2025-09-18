@@ -142,7 +142,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         var dataTargetPPJPerBulan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah && x.SubRincian == "2")
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
                                 {
@@ -151,7 +151,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListListrik = context.DbOpListriks
-                            .Where(x =>x.WilayahPajak == ((int)wilayah).ToString())
+                            .Where(x =>x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                                 .Select(x => x.Nop).Distinct().ToList();
 
                         var realisasiListrikPerBulan = context.DbMonPpjs
@@ -416,7 +416,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     default:
                         var dataTargetPerBulan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21 && (x.PajakId != 2 || x.SubRincian == "2"))
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
                                 {
@@ -436,7 +436,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                             .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaListrik = context.DbOpListriks
-                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaParkir = context.DbOpParkirs
                             .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
@@ -626,7 +626,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         var dataTargetPPJPerBulan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Where(x => x.TahunBuku == tahun && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah && x.SubRincian == "2")
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
                                 {
@@ -635,7 +635,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListListrik = context.DbOpListriks
-                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                                 .Select(x => x.Nop).Distinct().ToList();
 
                         var realisasiListrikPerBulan = context.DbMonPpjs
@@ -918,7 +918,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     default:
                         var dataTargetPerBulan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                                .Where(x => x.TahunBuku == tahun && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21 && (x.PajakId != 2 || x.SubRincian == "2"))
                                 .GroupBy(x => new { x.Bulan })
                                 .Select(g => new
                                 {
@@ -938,7 +938,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                             .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaListrik = context.DbOpListriks
-                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaParkir = context.DbOpParkirs
                             .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
