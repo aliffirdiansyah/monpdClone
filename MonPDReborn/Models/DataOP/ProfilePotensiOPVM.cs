@@ -2303,9 +2303,6 @@ namespace MonPDReborn.Models.DataOP
 
                 return stabil ? "Stabil" : "Fluktuatif";
             }
-
-
-
         }
 
         public class Dashboard

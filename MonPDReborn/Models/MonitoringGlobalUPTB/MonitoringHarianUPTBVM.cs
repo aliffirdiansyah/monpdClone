@@ -452,6 +452,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         var realisasiPbbPerBulan = context.DbMonPbbs
                             .Where(x => x.TglBayar.HasValue
                                             && x.TglBayar.Value.Year == tahun
+                                            && x.TahunBuku == tahun
                                             && nopListPbb.Contains(x.Nop))
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayar, PajakId = 9 })
                             .Select(g => new
@@ -631,6 +632,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                             context.DbMonPbbs
                             .Where(x => x.TglBayar.HasValue
                                             && x.TglBayar.Value.Year == tahun
+                                            && x.TahunBuku == tahun
                                             && nopListSemuaPbb.Contains(x.Nop))
                             .GroupBy(x => new { x.Nop, TglBayar = x.TglBayar })
                             .Select(x => new ValueTuple<string, DateTime, decimal, int>(
