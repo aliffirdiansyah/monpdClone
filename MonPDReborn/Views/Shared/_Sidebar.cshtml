@@ -696,6 +696,57 @@
                 </ul>
             </div>
         }
+        else if (nama.Contains("BPK"))
+        {
+            <div class="container-fluid">
+                <div id="two-column-menu"></div>
+                <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-upload">MENU</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "DASHBOARDBPK" ? "active" : "")"
+                           href="@Url.Action("Index", "Dashboard")" role="button">
+                            <i class="bx bx-home me-1 align-middle"></i>
+                            <span data-key="t-DashboardAdmin">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "MONITORINGHARIBPK" ? "active" : "")"
+                           href="@Url.Action("Index", "MonitoringHarian")" role="button">
+                            <i class="bx bx-news me-1 align-middle"></i>
+                            <span data-key="t-ReklameSummaryAdmin">Kontrol Harian</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "MONITORINGBULANBPK" ? "active" : "")"
+                           href="@Url.Action("Index", "MonitoringBulanan")" role="button">
+                            <i class="bx bx-archive me-1 align-middle"></i>
+                            <span data-key="t-ReklameAdmin">Kontrol Bulanan</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "MONITORINGTAHUNBPK" ? "active" : "")"
+                           href="@Url.Action("Index", "MonitoringTahunan")" role="button">
+                            <i class="bx bx-calendar-exclamation me-1 align-middle"></i>
+                            <span data-key="t-ReklameLiarAdmin">Realisasi Hari Ini</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "SERIESPENDAPATANDAERAH" ? "active" : "")"
+                           href="@Url.Action("Index", "SeriesPendapatanDaerah")" role="button">
+                            <i class="bx bx-file-blank me-1 align-middle"></i>
+                            <span data-key="t-PendataanReklameAdmin">Series Pendapatan Daerah</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(currentController == "REALISASICONTROLBPK" ? "active" : "")"
+                           href="@Url.Action("Index", "RealisasiControl")" role="button">
+                            <i class="bx bx-search-alt me-1 align-middle"></i>
+                            <span data-key="t-PencarianReklameAdmin">Realisasi Control</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
         else if (nama.Contains("BENDAHARA"))
         {
             <div class="container-fluid">
