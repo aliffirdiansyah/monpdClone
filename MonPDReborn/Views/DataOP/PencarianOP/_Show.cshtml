@@ -49,6 +49,9 @@
         columns.AddFor(m => m.Alamat).Caption("Alamat");
         columns.AddFor(m => m.JenisOp).Caption("Jenis OP");
         columns.AddFor(m => m.JenisPenarikan).Caption("Jenis Penarikan");
+        columns.AddFor(m => m.StatusOnline).Caption("Status Alat");
+        columns.AddFor(m => m.StatusKunci).Caption("Status Kunci");
+        columns.AddFor(m => m.TerakhirAktif).Caption("Terakhir Aktif").Format("#,##0");
         columns.Add()
             .Caption("Aksi")
             .Type(GridCommandColumnType.Buttons)

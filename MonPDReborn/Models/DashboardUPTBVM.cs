@@ -387,7 +387,7 @@ namespace MonPDReborn.Models
                 var dataTargetHotel = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 var dataTargetHiburan = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 var dataTargetParkir = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaParkir && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
-                var dataTargetListrik = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
+                var dataTargetListrik = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik && x.Uptb == (decimal)wilayah && x.SubRincian == "2").Sum(x => x.Target);
                 var dataTargetPbb = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.PBB && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 var dataTargetAbt = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.AirTanah && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 

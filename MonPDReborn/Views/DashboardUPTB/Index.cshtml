@@ -21,7 +21,7 @@
     <div class="col-lg-3 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #3B82F6; height:87%; ">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaPerhotelan)')">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.JasaPerhotelan)')">
                     <div class="d-flex align-items-center">
                         <div class="bg-soft-info rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
                             <i class=" ri-hotel-line  text-info" style="font-size: 20px; line-height: 1;"></i>
@@ -38,7 +38,7 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: @Model.Data.PersentaseHotel.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseHotel.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
-                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaPerhotelan)')">
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.JasaPerhotelan)')">
                     <div class="col">
                         <small>Realisasi</small><br>
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiHotel.ToString("n0")</span>
@@ -61,7 +61,7 @@
     <div class="col-lg-3 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #00712D; height:87%;">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.MakananMinuman)')">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.MakananMinuman)')">
                     <div class="d-flex align-items-center">
                         <div class="bg-soft-success rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
                             <i class="ri-restaurant-line  text-success" style="font-size: 20px; line-height: 1;"></i>
@@ -78,7 +78,7 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: @Model.Data.PersentaseMamin.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseMamin.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
-                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.MakananMinuman)')">
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.MakananMinuman)')">
                     <div class="col">
                         <small>Realisasi</small><br>
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiMamin.ToString("n0")</span>
@@ -100,7 +100,7 @@
     <div class="col-lg-3 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #FF7A30; height:87%;">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaKesenianHiburan)')">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.JasaKesenianHiburan)')">
                     <div class="d-flex align-items-center">
                         <div class="bg-soft-danger rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
                             <i class=" ri-film-line  text-danger" style="font-size: 20px; line-height: 1;"></i>
@@ -117,7 +117,7 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: @Model.Data.PersentaseHiburan.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseHiburan.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
-                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaKesenianHiburan)')">
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.JasaKesenianHiburan)')">
                     <div class="col">
                         <small>Realisasi</small><br>
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiHiburan.ToString("n0")</span>
@@ -139,7 +139,7 @@
     <div class="col-lg-3 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #FACC15; height:87%;">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.TenagaListrik)')">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.TenagaListrik)')">
                     <div class="d-flex align-items-center">
                         <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color: rgba(250, 204, 21, 0.2);">
                             <i class="ri-lightbulb-flash-line " style="font-size: 20px; line-height: 1; color:#FACC15"></i>
@@ -156,7 +156,7 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color: #FACC15; width: @Model.Data.PersentaseListrik.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseListrik.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
-                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.TenagaListrik)')">
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.TenagaListrik)')">
                     <div class="col">
                         <small>Realisasi</small><br>
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiListrik.ToString("n0")</span>
@@ -178,7 +178,7 @@
     <div class="col-lg-4 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #8B5CF6; height:87%;">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaParkir)')">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.JasaParkir)')">
                     <div class="d-flex align-items-center">
                         <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:rgba(139, 92, 246, 0.2)">
                             <i class=" ri-car-line " style="font-size: 20px; line-height: 1; color: #8B5CF6;"></i>
@@ -195,7 +195,7 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color:#8B5CF6; width: @Model.Data.PersentaseParkir.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseParkir.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
-                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.JasaParkir)')">
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.JasaParkir)')">
                     <div class="col">
                         <small>Realisasi</small><br>
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiParkir.ToString("n0")</span>
@@ -217,7 +217,7 @@
     <div class="col-lg-4 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #EC4899; height:87%;">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.AirTanah)')">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.AirTanah)')">
                     <div class="d-flex align-items-center">
                         <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:rgba(236, 72, 153, 0.2);">
                             <i class="ri-mist-line " style="font-size: 20px; line-height: 1; color:#EC4899"></i>
@@ -234,7 +234,7 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color:#EC4899; width: @Model.Data.PersentaseAbt.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseAbt.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
-                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.AirTanah)')">
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.AirTanah)')">
                     <div class="col">
                         <small>Realisasi</small><br>
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiAbt.ToString("n0")</span>
@@ -256,7 +256,7 @@
     <div class="col-lg-4 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #06B6D4; height:87%;">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.PBB)')">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.PBB)')">
                     <div class="d-flex align-items-center">
                         <div class="rounded-circle d-flex justify-content-center align-items-center me-2" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0; background-color:rgba(6, 182, 212, 0.2)">
                             <i class=" ri-home-3-line " style="font-size: 20px; line-height: 1; color:#06B6D4"></i>
@@ -273,7 +273,7 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="background-color:#06B6D4; width: @Model.Data.PersentasePbb.ToString("N0")%;" aria-valuenow="@Model.Data.PersentasePbb.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
-                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.PBB)')">
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.PBB)')">
                     <div class="col">
                         <small>Realisasi</small><br>
                         <span class="fw-bold fs-15 text-dark">Rp @Model.Data.RealisasiPbb.ToString("n0")</span>
@@ -314,7 +314,7 @@
                         </div>
                     </div>
                     @* <div class="border-top pt-2 d-flex justify-content-between align-items-center">
-                        <button onclick="fnMonitoringWilayah('@((int)EnumFactory.EPajak.Semua)')" class="btn btn-sm btn-outline-info">
+                        <button onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.Semua)')" class="btn btn-sm btn-outline-info">
                             <i class="ri-file-search-line"></i> Detail
                         </button>
                     </div> *@
@@ -376,304 +376,21 @@
         </div>
     </div>
 </div>
-<div class="row">
-    @* <div class="col-lg-12">
-        <div class="card card-height-100">
-            <div class="card-header d-flex bg-header-color align-items-center">
-                <div class="flex-grow-1 mb-0">
-                    <h5 class="card-title text-dark">
-                        <i class="mdi mdi-chart-bar align-middle me-1"></i>JUMLAH OBJEK PAJAK
-                    </h5>
-                </div>
-                <div class="flex-shrink-0 mb-0">
-                    <a href="@Url.Action("Index", "ProfileOP")" target="_blank" class="btn btn-sm btn-light">
-                        <i class="ri-file-list-3-line align-middle"></i>
-                        Detail
-                    </a>
-                    <button class="btn btn-sm btn-outline-light" onclick="fnJumlahObjekPajakTahunan()">
-                        <i class="mdi mdi-refresh align-middle"></i>
-                        Refresh
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#op-tahunan" role="tab" aria-selected="false">
-                            JML OP TAHUNAN
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" aria-selected="false" onclick="fnJumlahObjekPajakSeries()">
-                            JML OP SERIES
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content text-muted">
-                    <div class="tab-pane active" id="op-tahunan" role="tabpanel">
-                        <div class="text-center">
-                            <div id="loading2-JumlahObjekPajakTahunan" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                        <div id="JumlahObjekPajakTahunan"></div>
-                    </div>
-                    <div class="tab-pane" id="op-series" role="tabpanel">
-                        <div class="text-center">
-                            <div id="loading2-JumlahObjekPajakSeries" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                        <div id="JumlahObjekPajakSeries"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> *@
 
-    <!-- Bagian PIUTANG -->
-    @* <div class="col-lg-12">
-        <div class="card card-height-100">
-            <div class="card-header d-flex bg-header-color align-items-center">
-                <div class="flex-grow-1">
-                    <h5 class="card-title fs-16 text-dark mb-0">
-                        <i class="mdi mdi-cash-multiple align-middle me-1"></i> PIUTANG
-                    </h5>
-                </div>
-                <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-outline-light" onclick="fnDataPiutang()">
-                        <i class="mdi mdi-refresh align-middle"></i>
-                        Refresh
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <h4 class="card-title fs-16 mb-3">
-                    Data Piutang
-                </h4>
-
-                <div class="text-center mb-4">
-                    <div class="text-center">
-                        <div id="loading2-DataPiutang" class="spinner-border text-primary" style="display: none">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="DataPiutang" class="mb-5"></div>
-                <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-xl modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Detail</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Isi modal akan diisi lewat JS -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
-        </div>
-    </div> *@
-
-    <!-- Bagian Mutasi -->
-    @* <div class="col-lg-12">
-        <div class="card card-height-100">
-            <div class="card-header d-flex bg-header-color align-items-center">
-                <div class="flex-grow-1">
-                    <h5 class="card-title fs-16 text-dark mb-0">
-                        <i class="mdi mdi-account-cash-outline align-middle me-1"></i> MUTASI
-                    </h5>
-                </div>
-                <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-outline-light" onclick="fnDataMutasi()">
-                        <i class="mdi mdi-refresh align-middle"></i>
-                        Refresh
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <h4 class="card-title fs-16 mb-3">
-                    Data Mutasi
-                </h4>
-
-                <div class="text-center mb-4">
-                    <div class="text-center">
-                        <div id="loading2-DataMutasi" class="spinner-border text-primary" style="display: none">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="DataMutasi"></div>
-            </div>
-
-        </div>
-    </div> *@
-</div>
 
 @section Scripts {
-    <script>
-        function getChartColorsArray(chartId) {
-            if (document.getElementById(chartId) !== null) {
-                var colors = document.getElementById(chartId).getAttribute("data-colors");
-                colors = JSON.parse(colors);
-                return colors.map(function (value) {
-                    var newValue = value.replace(" ", "");
-                    if (newValue.indexOf(",") === -1) {
-                        var color = getComputedStyle(document.documentElement).getPropertyValue(newValue);
-                        if (color) return color;
-                        else return newValue;;
-                    } else {
-                        var val = value.split(',');
-                        if (val.length == 2) {
-                            var rgbaColor = getComputedStyle(document.documentElement).getPropertyValue(val[0]);
-                            rgbaColor = "rgba(" + rgbaColor + "," + val[1] + ")";
-                            return rgbaColor;
-                        } else {
-                            return newValue;
-                        }
-                    }
-                });
-            }
-        }
-        var swiper = new Swiper(".pajakSlider", {
-            slidesPerView: 1,
-            spaceBetween: 24,
-            loop: true, // <--- ini penting
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                },
-                1024: {
-                    slidesPerView: 3,
-                },
-                1600: {
-                    slidesPerView: 4,
-                },
-            },
-        });
-                //  Line chart datalabel
-        var linechartDatalabelColors = getChartColorsArray("line_chart_datalabel");
-        var options = {
-            chart: {
-                height: 500,
-                type: 'line',
-                zoom: {
-                    enabled: false
-                },
-                toolbar: {
-                    show: false
-                }
-            },
-            colors: linechartDatalabelColors,
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                width: [3, 3],
-                curve: 'straight'
-            },
-            series: [{
-                name: "Target",
-                data: [@(Model.ChartData.Target1), @(Model.ChartData.Target2), @(Model.ChartData.Target3), @(Model.ChartData.Target4), @(Model.ChartData.Target5), @(Model.ChartData.Target6), @(Model.ChartData.Target7), @(Model.ChartData.Target8), @(Model.ChartData.Target9), @(Model.ChartData.Target10), @(Model.ChartData.Target11), @(Model.ChartData.Target12)]
-            }, {
-                name: "Realisasi",
-                data: [@(Model.ChartData.Realisasi1), @(Model.ChartData.Realisasi2), @(Model.ChartData.Realisasi3), @(Model.ChartData.Realisasi4), @(Model.ChartData.Realisasi5), @(Model.ChartData.Realisasi6), @(Model.ChartData.Realisasi7), @(Model.ChartData.Realisasi8), @(Model.ChartData.Realisasi9), @(Model.ChartData.Realisasi10), @(Model.ChartData.Realisasi11), @(Model.ChartData.Realisasi12)]
-            }],
-            title: {
-                text: 'Target & Realisasi PAD 2025',
-                align: 'left',
-                style: {
-                    fontWeight: 500,
-                },
-            },
-            grid: {
-                row: {
-                    colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
-                    opacity: 0.2
-                },
-                borderColor: '#f1f1f1'
-            },
-            markers: {
-                style: 'inverted',
-                size: 6
-            },
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
-                title: {
-                    text: 'Bulan'
-                }
-            },
-            yaxis: {
-                title: {
-                    text: 'Nominal'
-                },
-                labels: {
-                    formatter: function (val) {
-                        return 'Rp' + val.toLocaleString('id-ID');
-                    }
-                }
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return 'Rp' + val.toLocaleString('id-ID');
-                    }
-                }
-            },
-            legend: {
-                position: 'top',
-                horizontalAlign: 'right',
-                floating: true,
-                offsetY: -25,
-                offsetX: -5
-            },
-            responsive: [{
-                breakpoint: 600,
-                options: {
-                    chart: {
-                        toolbar: {
-                            show: false
-                        }
-                    },
-                    legend: {
-                        show: false
-                    },
-                }
-            }]
-        }
-
-        var chart = new ApexCharts(
-            document.querySelector("#line_chart_datalabel"),
-            options
-        );
-
-        chart.render();
-    </script>
+   
     <script>
 
         $(document).ready(function () {
             fnSeriesPajakDaerah();
-            fnDataPiutang();
-            fnDataMutasi();
         });
-        // function fnMonitoringKategori(jenisPajak) {
-        //     window.location.href = `/ProfileKategoriOP?jenisPajak=${jenisPajak}`;
-        // }
+        function fnMonitoringKategori(jenisPajak) {
+            window.location.href = `/ProfileKategoriOP?jenisPajak=${jenisPajak}`;
+        }
+        function fnMonitoringBulanan(jenisPajak) {
+            window.location.href = `/MonitoringBulananUPTB?jenisPajak=${jenisPajak}`;
+        }
         function fnMonitoringWilayah(jenisPajak) {
             window.location.href = `/KontrolWilayah?wilayah=${@Model.wil}&jenisPajak=${jenisPajak}`;
         }
