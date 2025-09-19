@@ -464,8 +464,9 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
                             var jmlWpParkir = context.DbOpParkirs
-                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                             .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.WilayahPajak == Convert.ToString((int)wilayah))
                              .Count();
+
                             var nopList = context.DbOpParkirs.Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                                     .Select(x => x.Nop)
                                     .Distinct()
@@ -743,7 +744,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                 .ToList();
 
                             var totalRealisasi = dataRealisasiWilayah
-                                .Where(x => x.TglBayarPokok.Value.Month == bulan)
+                                .Where(x => x.TglBayarPokok.Value.Month <= bulan)
                                 .Sum(x => x.Realisasi);
 
                             foreach (var item in targetPerUptb)
@@ -876,7 +877,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                                 re.Bulan = bulan;
                                                 re.Lokasi = $"UPTB {uptb}";
                                                 re.Target = item.Target;
-                                                re.Realisasi = totalRealisasiAbt ?? 0;
+                                                re.Realisasi = totalRealisasiResto ?? 0;
                                                 re.Tren = 0;
                                                 re.Status = "";
 
