@@ -31,7 +31,7 @@
 
 
         <div class="col-lg-5 mb-3">
-            <label asp-for="SelectedNoFormulir" class="form-label">No Formulir</label>
+            <label asp-for="SelectedNoFormulir" class="form-label"> Cari No Formulir</label>
             @(Html.DevExtreme().TextBox()
                         .ID("txtNoFormulir")
                         .Name("SelectedNoFormulir")
@@ -46,7 +46,18 @@
             <input type="text" id="txtAlamatReklame" class="form-control" readonly />
         </div>
 
-        <div class="col-lg-7 mb-3">
+        <div class="col-lg-5 mb-3">
+            <label asp-for="SelectedNOR" class="form-label">Cari NOR</label>
+            @(Html.DevExtreme().TextBox()
+                        .ID("txtNOR")
+                        .Name("SelectedNOR")
+                        .Placeholder("Masukkan NOR")
+                        .ShowClearButton(true)
+                        .OnEnterKey("onNORSearch")
+                        )
+        </div>
+
+        <div class="col-lg-8 mb-3">
             <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
             @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
                         .ID("cbUpaya")
@@ -58,7 +69,7 @@
                         )
         </div>
 
-        <div class="col-lg-7 mb-3">
+        <div class="col-lg-8 mb-3">
             <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
             @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
                         .ID("cbTindakan")
@@ -69,7 +80,7 @@
                         )
         </div>
 
-        <div class="col-lg-7 mb-3">
+        <div class="col-lg-8 mb-3">
             <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
             @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
                         .Type(DateBoxType.Date)
@@ -77,7 +88,7 @@
                         .Value(DateTime.Today))
         </div>
 
-        <div class="col-lg-7 mb-3">
+        <div class="col-lg-8 mb-3">
             <label asp-for="Lampiran" class="form-label"></label>
             <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
             <small class="form-text text-muted">

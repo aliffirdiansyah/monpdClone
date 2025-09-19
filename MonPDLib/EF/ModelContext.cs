@@ -217,6 +217,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
 
+    public virtual DbSet<MvDbOpResto> MvDbOpRestos { get; set; }
+
     public virtual DbSet<MvDbeMonPbb> MvDbeMonPbbs { get; set; }
 
     public virtual DbSet<MvDbeMonPbbKecKel> MvDbeMonPbbKecKels { get; set; }
@@ -969,16 +971,16 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbMonReklameUpaya>(entity =>
         {
-            entity.HasKey(e => new { e.NoFormulir, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_PK");
+            entity.HasKey(e => new { e.NoFormulir, e.Nor, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_PK");
         });
 
         modelBuilder.Entity<DbMonReklameUpayaDok>(entity =>
         {
-            entity.HasKey(e => new { e.NoformS, e.TglUpaya, e.Seq }).HasName("PK_DETAIL_UPLOAD_REKLAME");
+            entity.HasKey(e => new { e.NoformS, e.Nor, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_DOK_PK");
 
             entity.HasOne(d => d.DbMonReklameUpaya).WithOne(p => p.DbMonReklameUpayaDok)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("DB_MON_UPAYA_FK");
+                .HasConstraintName("DB_MON_REKLAME_UPAYA_DOK_FK");
         });
 
         modelBuilder.Entity<DbMonResto>(entity =>
@@ -1248,8 +1250,6 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<MPetugasReklame>(entity =>
         {
-            entity.HasKey(e => e.Nik).HasName("SYS_C0034200");
-
             entity.Property(e => e.InsDate).ValueGeneratedOnAdd();
         });
 
@@ -1290,6 +1290,30 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvDbOpResto>(entity =>
+        {
+            entity.ToView("MV_DB_OP_RESTO");
+
+            entity.Property(e => e.Akun).IsFixedLength();
+            entity.Property(e => e.AlamatOpNo).IsFixedLength();
+            entity.Property(e => e.AlamatOpRt).IsFixedLength();
+            entity.Property(e => e.AlamatOpRw).IsFixedLength();
+            entity.Property(e => e.InsBy).IsFixedLength();
+            entity.Property(e => e.Jenis).IsFixedLength();
+            entity.Property(e => e.Kelompok).IsFixedLength();
+            entity.Property(e => e.NamaAkun).IsFixedLength();
+            entity.Property(e => e.NamaJenis).IsFixedLength();
+            entity.Property(e => e.NamaKelompok).IsFixedLength();
+            entity.Property(e => e.NamaObjek).IsFixedLength();
+            entity.Property(e => e.NamaRincian).IsFixedLength();
+            entity.Property(e => e.NamaSubRincian).IsFixedLength();
+            entity.Property(e => e.Objek).IsFixedLength();
+            entity.Property(e => e.PajakNama).IsFixedLength();
+            entity.Property(e => e.Rincian).IsFixedLength();
+            entity.Property(e => e.SubRincian).IsFixedLength();
+            entity.Property(e => e.WilayahPajak).IsFixedLength();
         });
 
         modelBuilder.Entity<MvDbeMonPbb>(entity =>

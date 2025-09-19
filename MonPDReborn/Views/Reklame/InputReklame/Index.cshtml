@@ -227,5 +227,34 @@
             });
         }
 
+        function onNORSearch(e) {
+            let nor = e.component.option("value");
+            if (!nor) return;
+
+            $.ajax({
+                url: '/InputReklame/GetNOR',
+                type: 'GET',
+                data: { filter: nor },
+                success: function (res) {
+                    if (res.success) {
+                        DevExpress.ui.notify("NOR ditemukan!", "success", 2000);
+                        // console.log("Data ditemukan:", res.data);
+
+                        // Contoh: kalau mau isi otomatis field lain
+                        // $("#txtAlamatReklame").val(res.data.AlamatReklame);
+                    } else {
+                        DevExpress.ui.notify(res.message || "NOR tidak ditemukan", "warning", 2000);
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 404) {
+                        DevExpress.ui.notify("NOR tidak ditemukan", "warning", 2000);
+                    } else {
+                        DevExpress.ui.notify("Terjadi kesalahan saat mencari data", "error", 2000);
+                    }
+                }
+            });
+        }
+
     </script>
 }

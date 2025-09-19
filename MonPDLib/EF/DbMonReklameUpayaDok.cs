@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("NoformS", "TglUpaya", "Seq")]
+[PrimaryKey("NoformS", "Nor", "TglUpaya", "Seq")]
 [Table("DB_MON_REKLAME_UPAYA_DOK")]
+[Index("NoformS", "TglUpaya", "Seq", Name = "PK_DETAIL_UPLOAD_REKLAME", IsUnique = true)]
 public partial class DbMonReklameUpayaDok
 {
     [Key]
@@ -28,7 +29,13 @@ public partial class DbMonReklameUpayaDok
     [Precision(10)]
     public int Seq { get; set; }
 
-    [ForeignKey("NoformS, TglUpaya, Seq")]
+    [Key]
+    [Column("NOR")]
+    [StringLength(12)]
+    [Unicode(false)]
+    public string Nor { get; set; } = null!;
+
+    [ForeignKey("NoformS, Nor, TglUpaya, Seq")]
     [InverseProperty("DbMonReklameUpayaDok")]
     public virtual DbMonReklameUpaya DbMonReklameUpaya { get; set; } = null!;
 }

@@ -156,6 +156,33 @@ namespace MonPDReborn.Controllers.Reklame
         }
 
         [HttpGet]
+        public IActionResult GetNOR(string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+                return BadRequest(new { success = false, message = "NOR tidak boleh kosong" });
+
+            using var context = DBClass.GetContext();
+
+            // Cari data yang sesuai
+            var data = context.DbMonReklameSurveys
+                .Where(x => x.Nor.ToUpper().Trim() == filter.ToUpper().Trim())
+                .Select(x => new
+                {
+                    NOR = x.Nor,
+                })
+                .FirstOrDefault();
+
+            if (data == null)
+            {
+                // Bisa kembalikan NotFound (status code 404)
+                return NotFound(new { success = false, message = "NOR tidak ditemukan." });
+            }
+
+            return Json(new { success = true, data });
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> GetAlamatReklame(string noFormulir)
         {
             if (string.IsNullOrEmpty(noFormulir))
@@ -185,10 +212,18 @@ namespace MonPDReborn.Controllers.Reklame
         {
             try
             {
-                if (input.Lampiran == null && input.Lampiran.Length <= 0)
+                // ✅ Validasi minimal salah satu harus diisi (NoFormulir atau NOR)
+                if (string.IsNullOrWhiteSpace(input.SelectedNoFormulir) && string.IsNullOrWhiteSpace(input.SelectedNOR))
+                {
+                    throw new ArgumentException("Silakan isi salah satu: No Formulir atau NOR.");
+                }
+
+                // ✅ Validasi lampiran (masih seperti sebelumnya)
+                if (input.Lampiran == null || input.Lampiran.Length <= 0)
                 {
                     throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
                 }
+
                 if (input.Lampiran != null && input.Lampiran.Length > 0)
                 {
                     using (var ms = new MemoryStream())
@@ -197,17 +232,26 @@ namespace MonPDReborn.Controllers.Reklame
                         input.Data.NewRowUpaya.Lampiran = ms.ToArray();
                     }
                 }
+
+                // ✅ Simpan data
                 var insert = new Models.Reklame.InputReklameVM.DetailUpaya.NewRow
                 {
-                    NoFormulir = input.SelectedNoFormulir,
+                    NoFormulir = !string.IsNullOrWhiteSpace(input.SelectedNoFormulir)
+                        ? input.SelectedNoFormulir.Trim().ToUpper()
+                        : "-",
+
+                                        NOR = !string.IsNullOrWhiteSpace(input.SelectedNOR)
+                        ? input.SelectedNOR.Trim().ToUpper()
+                        : "-",
                     IdUpaya = input.SelectedUpaya,
                     IdTindakan = input.SelectedTindakan,
                     NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
                     NIKPetugas = input.Data.NewRowUpaya.NIKPetugas,
-                    KdKatifitas = input.SelectedKdAktifitas,
+                    KdKatifitas = input.SelectedKdAktifitas.Trim().ToUpper(),
                     TglUpaya = input.Data.NewRowUpaya.TglUpaya,
                     Lampiran = input.Data.NewRowUpaya.Lampiran,
                 };
+
                 Models.Reklame.InputReklameVM.Method.SimpanUpaya(insert);
 
                 response.Status = StatusEnum.Success;
@@ -228,5 +272,6 @@ namespace MonPDReborn.Controllers.Reklame
             }
             return Json(response);
         }
+
     }
 }

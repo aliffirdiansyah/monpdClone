@@ -47,6 +47,15 @@ public partial class VwMonBphtb365
     [Column("SUM_TMIN1", TypeName = "NUMBER")]
     public decimal? SumTmin1 { get; set; }
 
+    [Column("SUM_TMIN0", TypeName = "NUMBER")]
+    public decimal? SumTmin0 { get; set; }
+
+    [Column("TARGET_BULANAN", TypeName = "NUMBER")]
+    public decimal? TargetBulanan { get; set; }
+
+    [Column("PERSENTASE_CAPAIAN", TypeName = "NUMBER")]
+    public decimal? PersentaseCapaian { get; set; }
+
     [Column("KOEF", TypeName = "NUMBER")]
     public decimal? Koef { get; set; }
 
