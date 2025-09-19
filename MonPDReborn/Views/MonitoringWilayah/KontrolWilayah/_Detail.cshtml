@@ -26,16 +26,16 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilaya
             .Caption("Tanggal").Format("dd MMMM yyyy").Alignment(HorizontalAlignment.Center);
 
         columns.AddFor(m => m.Hari)
-            .Caption("Hari").Alignment(HorizontalAlignment.Center);
+            .Caption("Hari");
 
         columns.AddFor(m => m.Wilayah)
-            .Caption("Wilayah").Alignment(HorizontalAlignment.Center);
+            .Caption("Wilayah");
 
         columns.AddFor(m => m.JenisPajak)
-            .Caption("Jenis Pajak").Alignment(HorizontalAlignment.Center);
+            .Caption("Jenis Pajak");
 
         columns.AddFor(m => m.Realisasi).Format("#,##0")
-            .Caption("Realisasi").Alignment(HorizontalAlignment.Center);
+            .Caption("Realisasi");
 
        columns.Add()
             .Caption("Pencapaian (%)")
