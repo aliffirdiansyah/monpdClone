@@ -2,112 +2,136 @@
 
 <form id="formUpaya" asp-action="SimpanUpaya" asp-controller="InputReklame" method="post" enctype="multipart/form-data">
     @Html.HiddenFor(m => m.Data.NewRowUpaya.NoFormulir)
-    <div class="row">
 
-        <div class="col-lg-3 mb-3">
-            <label asp-for="SelectedKdAktifitas" class="form-label">Kode Aktifitas</label>
-            @(Html.DevExtreme().TextBox()
-                        .ID("txtKdAktifitas")
-                        .Name("SelectedKdAktifitas")
-                        .Placeholder("Masukkan Kode Aktifitas")
-                        .ShowClearButton(true)
-                        .OnEnterKey("onKdAktifitasSearch")
-                        )
-        </div>
+    <div class="row g-4">
+        <!-- ================= SECTION: PETUGAS ================= -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-light fw-bold">
+                    🧑‍💼 Data Petugas
+                </div>
+                <div class="card-body row g-3">
+                    <div class="col-lg-3">
+                        <label asp-for="SelectedKdAktifitas" class="form-label">Kode Aktifitas</label>
+                        @(Html.DevExtreme().TextBox()
+                                                .ID("txtKdAktifitas")
+                                                .Name("SelectedKdAktifitas")
+                                                .Placeholder("Masukkan Kode Aktifitas")
+                                                .ShowClearButton(true)
+                                                .OnEnterKey("onKdAktifitasSearch"))
+                    </div>
 
-        <div class="col-lg-4 mb-3">
-            <label class="form-label">Nama Petugas</label>
-            <input type="text" id="txtNamaAktifitas" class="form-control" readonly />
-            <!-- Hidden input supaya ikut terkirim -->
-            <input type="hidden" id="hdNamaPetugas" name="Data.NewRowUpaya.NamaPetugas" />
-        </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Nama Petugas</label>
+                        <input type="text" id="txtNamaAktifitas" class="form-control" readonly />
+                        <input type="hidden" id="hdNamaPetugas" name="Data.NewRowUpaya.NamaPetugas" />
+                    </div>
 
-        <div class="col-lg-4 mb-3">
-            <label class="form-label">NIK Petugas</label>
-            <input type="text" id="txtNikPetugas" class="form-control" readonly />
-            <!-- Hidden input supaya ikut terkirim -->
-            <input type="hidden" id="hdNikPetugas" name="Data.NewRowUpaya.NIKPetugas" />
-        </div>
-
-        <div class="col-12 mb-4">
-            <div class="alert alert-warning p-2" style="font-size: 0.9rem;">
-                ⚠️ Silakan isi salah satu: <strong>No Formulir</strong> atau <strong>NOR</strong>.
+                    <div class="col-lg-4">
+                        <label class="form-label">NIK Petugas</label>
+                        <input type="text" id="txtNikPetugas" class="form-control" readonly />
+                        <input type="hidden" id="hdNikPetugas" name="Data.NewRowUpaya.NIKPetugas" />
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-lg-5 mb-3">
-            <label asp-for="SelectedNoFormulir" class="form-label"> Cari No Formulir</label>
-            @(Html.DevExtreme().TextBox()
-                        .ID("txtNoFormulir")
-                        .Name("SelectedNoFormulir")
-                        .Placeholder("Masukkan No Formulir")
-                        .ShowClearButton(true)
-                        .OnEnterKey("onNoFormulirSearch")
-                        )
-            <div id="noFormulirMessage" class="mt-1" style="font-size: 0.9rem;"></div>
+        <!-- ================= SECTION: FORMULIR / NOR ================= -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-light fw-bold">
+                    📝 Data Formulir / NOR
+                </div>
+                <div class="card-body row g-3">
+                    <div class="col-12">
+                        <div class="alert alert-warning p-2" style="font-size: 0.9rem;">
+                            ⚠️ Silakan isi salah satu: <strong>No Formulir</strong> atau <strong>NOR</strong>.
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <label asp-for="SelectedNoFormulir" class="form-label">Cari No Formulir</label>
+                        @(Html.DevExtreme().TextBox()
+                                                .ID("txtNoFormulir")
+                                                .Name("SelectedNoFormulir")
+                                                .Placeholder("Masukkan No Formulir")
+                                                .ShowClearButton(true)
+                                                .OnEnterKey("onNoFormulirSearch"))
+                        <div id="noFormulirMessage" class="mt-1" style="font-size: 0.85rem;"></div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <label class="form-label">Alamat Reklame</label>
+                        <input type="text" id="txtAlamatReklame" class="form-control" readonly />
+                    </div>
+
+                    <div class="col-lg-6">
+                        <label asp-for="SelectedNOR" class="form-label">Cari NOR</label>
+                        @(Html.DevExtreme().TextBox()
+                                                .ID("txtNOR")
+                                                .Name("SelectedNOR")
+                                                .Placeholder("Masukkan NOR")
+                                                .ShowClearButton(true)
+                                                .OnEnterKey("onNORSearch"))
+                        <div id="norMessage" class="mt-1" style="font-size: 0.85rem;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-lg-5 mb-3">
-            <label class="form-label">Alamat Reklame</label>
-            <input type="text" id="txtAlamatReklame" class="form-control" readonly />
+        <!-- ================= SECTION: UPAYA ================= -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-light fw-bold">
+                    📌 Jenis Upaya
+                </div>
+                <div class="card-body row g-3">
+                    <div class="col-lg-7">
+                        <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
+                                                .ID("cbUpaya")
+                                                .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
+                                                .OnValueChanged("fnReloadTindakan")
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .SearchEnabled(true))
+                    </div>
+
+                    <div class="col-lg-7">
+                        <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
+                                                .ID("cbTindakan")
+                                                .ValueExpr("Value")
+                                                .DisplayExpr("Text")
+                                                .DataSource(x => x.Mvc().Controller("InputReklame").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
+                                                .SearchEnabled(true))
+                    </div>
+
+                    <div class="col-lg-7">
+                        <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
+                        @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
+                                                .Type(DateBoxType.Date)
+                                                .DisplayFormat("dd MMM yyyy")
+                                                .Value(DateTime.Today))
+                    </div>
+
+                    <div class="col-lg-7">
+                        <label asp-for="Lampiran" class="form-label">Lampiran</label>
+                        <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
+                        <small class="form-text text-muted">
+                            Hanya file gambar (.jpg, .jpeg, .png).
+                        </small>
+                        <span asp-validation-for="Lampiran" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-lg-5 mb-3">
-            <label asp-for="SelectedNOR" class="form-label">Cari NOR</label>
-            @(Html.DevExtreme().TextBox()
-                        .ID("txtNOR")
-                        .Name("SelectedNOR")
-                        .Placeholder("Masukkan NOR")
-                        .ShowClearButton(true)
-                        .OnEnterKey("onNORSearch")
-                        )
-            <div id="norMessage" class="mt-1" style="font-size: 0.9rem;"></div>
+        <!-- ================= BUTTON ================= -->
+        <div class="col-12 text-end">
+            <button type="button" class="btn btn-primary px-4" onclick="simpanUpaya()">
+                💾 Simpan
+            </button>
         </div>
-
-        <div class="col-lg-8 mb-3">
-            <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
-            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
-                        .ID("cbUpaya")
-                        .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
-                        .OnValueChanged("fnReloadTindakan")
-                        .DisplayExpr("Text")
-                        .ValueExpr("Value")
-                        .SearchEnabled(true)
-                        )
-        </div>
-
-        <div class="col-lg-8 mb-3">
-            <label asp-for="SelectedTindakan" class="form-label">Keterangan</label>
-            @(Html.DevExtreme().SelectBoxFor(m => m.SelectedTindakan)
-                        .ID("cbTindakan")
-                        .ValueExpr("Value")
-                        .DisplayExpr("Text")
-                        .DataSource(x => x.Mvc().Controller("InputReklame").LoadAction("GetTindakan").LoadParams(new JS("fnGetParamsTindakan()")))
-                        .SearchEnabled(true)
-                        )
-        </div>
-
-        <div class="col-lg-8 mb-3">
-            <label asp-for="Data.NewRowUpaya.TglUpaya" class="form-label">Tanggal Upaya</label>
-            @(Html.DevExtreme().DateBoxFor(m => m.Data.NewRowUpaya.TglUpaya)
-                        .Type(DateBoxType.Date)
-                        .DisplayFormat("dd MMM yyyy")
-                        .Value(DateTime.Today))
-        </div>
-
-        <div class="col-lg-8 mb-3">
-            <label asp-for="Lampiran" class="form-label"></label>
-            <input asp-for="Lampiran" class="form-control" accept=".jpg,.jpeg,.png" />
-            <small class="form-text text-muted">
-                Hanya file gambar (.jpg, .jpeg, .png).
-            </small>
-            <span asp-validation-for="Lampiran" class="text-danger"></span>
-        </div>
-
     </div>
-
-    <div class="mb-3 text-end">
-        <button type="button" class="btn btn-primary" onclick="simpanUpaya()">Simpan</button>
-    </div>
-
 </form>
