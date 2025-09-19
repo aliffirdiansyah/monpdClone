@@ -218,6 +218,13 @@ namespace MonPDReborn.Controllers.Reklame
                     throw new ArgumentException("Silakan isi salah satu: No Formulir atau NOR.");
                 }
 
+                if (!string.IsNullOrWhiteSpace(input.SelectedNoFormulir) &&
+                    input.SelectedNoFormulir.Trim().StartsWith("I", StringComparison.OrdinalIgnoreCase) &&
+                    !string.IsNullOrWhiteSpace(input.SelectedNOR))
+                {
+                    throw new ArgumentException("Reklame Insidentil tidak perlu mengisi NOR.");
+                }
+
                 // ✅ Validasi lampiran (masih seperti sebelumnya)
                 if (input.Lampiran == null || input.Lampiran.Length <= 0)
                 {
@@ -240,7 +247,7 @@ namespace MonPDReborn.Controllers.Reklame
                         ? input.SelectedNoFormulir.Trim().ToUpper()
                         : "-",
 
-                                        NOR = !string.IsNullOrWhiteSpace(input.SelectedNOR)
+                    NOR = !string.IsNullOrWhiteSpace(input.SelectedNOR)
                         ? input.SelectedNOR.Trim().ToUpper()
                         : "-",
                     IdUpaya = input.SelectedUpaya,

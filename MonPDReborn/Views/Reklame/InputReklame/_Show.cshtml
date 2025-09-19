@@ -29,6 +29,11 @@
             <input type="hidden" id="hdNikPetugas" name="Data.NewRowUpaya.NIKPetugas" />
         </div>
 
+        <div class="col-12 mb-4">
+            <div class="alert alert-warning p-2" style="font-size: 0.9rem;">
+                ⚠️ Silakan isi salah satu: <strong>No Formulir</strong> atau <strong>NOR</strong>.
+            </div>
+        </div>
 
         <div class="col-lg-5 mb-3">
             <label asp-for="SelectedNoFormulir" class="form-label"> Cari No Formulir</label>
@@ -39,6 +44,7 @@
                         .ShowClearButton(true)
                         .OnEnterKey("onNoFormulirSearch")
                         )
+            <div id="noFormulirMessage" class="mt-1" style="font-size: 0.9rem;"></div>
         </div>
 
         <div class="col-lg-5 mb-3">
@@ -55,6 +61,7 @@
                         .ShowClearButton(true)
                         .OnEnterKey("onNORSearch")
                         )
+            <div id="norMessage" class="mt-1" style="font-size: 0.9rem;"></div>
         </div>
 
         <div class="col-lg-8 mb-3">

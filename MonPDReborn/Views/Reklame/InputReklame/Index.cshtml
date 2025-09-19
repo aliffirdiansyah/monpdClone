@@ -214,18 +214,32 @@
                 type: 'GET',
                 data: { filter: noFormulir },
                 success: function (data) {
+                    let messageEl = $("#noFormulirMessage");
+
                     if (data && data.length > 0) {
                         $("#txtAlamatReklame").val(data[0].AlamatReklame);
+
+                        messageEl
+                            .text("✅ No Formulir ditemukan!")
+                            .css("color", "green");
+
                     } else {
                         $("#txtAlamatReklame").val('');
-                        DevExpress.ui.notify("No Formulir tidak ditemukan", "warning", 2000);
+
+                        messageEl
+                            .text("⚠️ No Formulir tidak ditemukan")
+                            .css("color", "orange");
                     }
                 },
                 error: function () {
-                    DevExpress.ui.notify("Terjadi kesalahan saat mencari data", "error", 2000);
+                    let messageEl = $("#noFormulirMessage");
+                    messageEl
+                        .text("❌ Terjadi kesalahan saat mencari data")
+                        .css("color", "red");
                 }
             });
         }
+
 
         function onNORSearch(e) {
             let nor = e.component.option("value");
@@ -236,25 +250,38 @@
                 type: 'GET',
                 data: { filter: nor },
                 success: function (res) {
-                    if (res.success) {
-                        DevExpress.ui.notify("NOR ditemukan!", "success", 2000);
-                        // console.log("Data ditemukan:", res.data);
+                    let messageEl = $("#norMessage");
 
-                        // Contoh: kalau mau isi otomatis field lain
-                        // $("#txtAlamatReklame").val(res.data.AlamatReklame);
+                    if (res.success) {
+                        messageEl
+                            .text("✅ NOR ditemukan!")
+                            .css("color", "green");
+
+                        // Bisa juga tampilkan detail data
+                        // messageEl.html(`✅ NOR ditemukan: ${res.data.NamaOP} - ${res.data.Alamat}`);
+
                     } else {
-                        DevExpress.ui.notify(res.message || "NOR tidak ditemukan", "warning", 2000);
+                        messageEl
+                            .text("⚠️ NOR tidak ditemukan")
+                            .css("color", "orange");
                     }
                 },
                 error: function (xhr) {
+                    let messageEl = $("#norMessage");
+
                     if (xhr.status === 404) {
-                        DevExpress.ui.notify("NOR tidak ditemukan", "warning", 2000);
+                        messageEl
+                            .text("⚠️ NOR tidak ditemukan")
+                            .css("color", "orange");
                     } else {
-                        DevExpress.ui.notify("Terjadi kesalahan saat mencari data", "error", 2000);
+                        messageEl
+                            .text("❌ Terjadi kesalahan saat mencari data")
+                            .css("color", "red");
                     }
                 }
             });
         }
+
 
     </script>
 }
