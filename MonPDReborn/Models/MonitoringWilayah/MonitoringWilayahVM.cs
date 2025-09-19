@@ -162,7 +162,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                     PersenTotal = 0;
                 }
                 TotalPencapaianHarian = Method.TotalRealisasiPencapaianHarianPerHariIni(wilayah, tahun, bulan, jenisPajak);
-                
+
             }
         }
 
@@ -194,7 +194,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 var ret = new List<RealisasiWilayah>();
                 var currentYear = DateTime.Now.Year;
                 var context = DBClass.GetContext();
-                
+
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
@@ -694,7 +694,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                         }
                         else if (wilayah != EnumFactory.EUPTB.SEMUA)
                         {
-                            var jmlWpPbb = context.DbOpPbbs.Where(x=> x.Uptb == (decimal)wilayah).Count();
+                            var jmlWpPbb = context.DbOpPbbs.Where(x => x.Uptb == (decimal)wilayah).Count();
                             var dataPbbWilayah = context.DbMonPbbs
                                  .Where(x => x.TglBayar.Value.Year == tahun && Convert.ToInt32(x.Uptb) == (int)wilayah)
                                  .Select(x => new
@@ -1450,27 +1450,27 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                     var jmlWpPbb = context.DbOpPbbs.Where(x => x.Uptb == uptb).Count();
 
-                    var nopABT = context.DbOpAbts.Where(x =>  x.WilayahPajak == uptb.ToString())
+                    var nopABT = context.DbOpAbts.Where(x => x.WilayahPajak == uptb.ToString())
                         .Select(x => x.Nop)
                         .AsQueryable();
 
-                    var nopResto = context.DbOpRestos.Where(x =>  x.WilayahPajak == uptb.ToString())
+                    var nopResto = context.DbOpRestos.Where(x => x.WilayahPajak == uptb.ToString())
                         .Select(x => x.Nop)
                         .AsQueryable();
 
-                    var nopHotel = context.DbOpHotels.Where(x =>  x.WilayahPajak == uptb.ToString())
+                    var nopHotel = context.DbOpHotels.Where(x => x.WilayahPajak == uptb.ToString())
                         .Select(x => x.Nop)
                         .AsQueryable();
 
-                    var nopPpj = context.DbOpListriks.Where(x =>  x.WilayahPajak == uptb.ToString() && x.Sumber == 55)
+                    var nopPpj = context.DbOpListriks.Where(x => x.WilayahPajak == uptb.ToString() && x.Sumber == 55)
                         .Select(x => x.Nop)
                         .AsQueryable();
 
-                    var nopParkir = context.DbOpParkirs.Where(x =>  x.WilayahPajak == uptb.ToString())
+                    var nopParkir = context.DbOpParkirs.Where(x => x.WilayahPajak == uptb.ToString())
                         .Select(x => x.Nop)
                         .AsQueryable();
 
-                    var nopHiburan = context.DbOpHiburans.Where(x =>  x.WilayahPajak == uptb.ToString())
+                    var nopHiburan = context.DbOpHiburans.Where(x => x.WilayahPajak == uptb.ToString())
                         .Select(x => x.Nop)
                         .AsQueryable();
 
@@ -3446,9 +3446,9 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             {
                                 x.Nop,
                                 Wilayah = Regex.Match(x.Uptb.ToString() ?? "", @"\d+").Value,
-                                NamaOp = "-",            // default untuk PBB
-                                AlamatOp = "-",          // default untuk PBB
-                                KategoriNama = "-",      // default untuk PBB
+                                NamaOp = x.WpNama ?? "-",            // default untuk PBB
+                                AlamatOp = x.AlamatOp ?? "-",          // default untuk PBB
+                                KategoriNama = x.Peruntukan ?? "-",      // default untuk PBB
                                 PajakId = 9m             // fix PajakId PBB
                             })
                             .ToList();
