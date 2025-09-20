@@ -212,12 +212,13 @@ namespace MonPDReborn.Controllers.Reklame
         {
             try
             {
-                // ✅ Validasi minimal salah satu harus diisi (NoFormulir atau NOR)
+                
                 if (string.IsNullOrWhiteSpace(input.SelectedNoFormulir) && string.IsNullOrWhiteSpace(input.SelectedNOR))
                 {
                     throw new ArgumentException("Silakan isi salah satu: No Formulir atau NOR.");
                 }
 
+               
                 if (!string.IsNullOrWhiteSpace(input.SelectedNoFormulir) &&
                     input.SelectedNoFormulir.Trim().StartsWith("I", StringComparison.OrdinalIgnoreCase) &&
                     !string.IsNullOrWhiteSpace(input.SelectedNOR))
@@ -225,7 +226,29 @@ namespace MonPDReborn.Controllers.Reklame
                     throw new ArgumentException("Reklame Insidentil tidak perlu mengisi NOR.");
                 }
 
-                // ✅ Validasi lampiran (masih seperti sebelumnya)
+                
+                using (var context = DBClass.GetContext())
+                {
+                    bool exists = false;
+
+                    if (!string.IsNullOrWhiteSpace(input.SelectedNoFormulir))
+                    {
+                        string noFormulirUpper = input.SelectedNoFormulir.Trim().ToUpper();
+                        exists = context.DbOpReklames.Any(x => x.NoFormulir.ToUpper() == noFormulirUpper);
+                        if (!exists)
+                            throw new ArgumentException($"No Formulir \"{noFormulirUpper}\" tidak ditemukan.");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(input.SelectedNOR))
+                    {
+                        string norUpper = input.SelectedNOR.Trim().ToUpper();
+                        exists = context.DbMonReklameSurveys.Any(x => x.Nor.ToUpper() == norUpper);
+                        if (!exists)
+                            throw new ArgumentException($"NOR \"{norUpper}\" tidak ditemukan.");
+                    }
+                }
+
+                
                 if (input.Lampiran == null || input.Lampiran.Length <= 0)
                 {
                     throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
@@ -240,7 +263,7 @@ namespace MonPDReborn.Controllers.Reklame
                     }
                 }
 
-                // ✅ Simpan data
+                
                 var insert = new Models.Reklame.InputReklameVM.DetailUpaya.NewRow
                 {
                     NoFormulir = !string.IsNullOrWhiteSpace(input.SelectedNoFormulir)
