@@ -414,6 +414,24 @@
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-laporanStrategis">Pengawasan Parkir</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "MonitoringCCTV" ? "active" : "")"
+                           href="@Url.Action("Index", "monitoringCCTV")" role="button">
+                            <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-monitoringCctv">Monitoring CCTV Parkir</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "RekapParkir" ? "active" : "")"
+                           href="@Url.Action("Index", "VendorParkir")" role="button">
+                            <i class=" bx bx-archive me-1 align-middle"></i><span data-key="t-rekapParkir">Rekap Parkir</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="container-fluid">
+                <div id="two-column-menu"></div>
+                <ul class="navbar-nav" id="navbar-nav">
                     <li class="menu-title"><span data-key="t-wajibPajak">Wajib Pajak</span></li>
                     <li class="nav-item">
                         <a class="nav-link menu-link collapse @DataWPActiveClass"
