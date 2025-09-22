@@ -226,7 +226,7 @@ namespace MonPDReborn.Controllers.Reklame
                     throw new ArgumentException("Reklame Insidentil tidak perlu mengisi NOR.");
                 }
 
-                
+
                 using (var context = DBClass.GetContext())
                 {
                     bool exists = false;
@@ -234,6 +234,12 @@ namespace MonPDReborn.Controllers.Reklame
                     if (!string.IsNullOrWhiteSpace(input.SelectedNoFormulir))
                     {
                         string noFormulirUpper = input.SelectedNoFormulir.Trim().ToUpper();
+
+                        if (!(noFormulirUpper.StartsWith("T") || noFormulirUpper.StartsWith("I")))
+                        {
+                            throw new ArgumentException($"Ini bukan No Formulir. Input kembali No Formulir.");
+                        }
+
                         exists = context.DbOpReklames.Any(x => x.NoFormulir.ToUpper() == noFormulirUpper);
                         if (!exists)
                             throw new ArgumentException($"No Formulir \"{noFormulirUpper}\" tidak ditemukan.");
@@ -248,7 +254,8 @@ namespace MonPDReborn.Controllers.Reklame
                     }
                 }
 
-                
+
+
                 if (input.Lampiran == null || input.Lampiran.Length <= 0)
                 {
                     throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
