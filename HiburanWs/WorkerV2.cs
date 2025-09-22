@@ -1033,53 +1033,54 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                                 break;
                         }
                     }
-                    else
+                }
+                else
+                {
+                    var katname = "";
+                    katname = kategori.Replace(" ", "").ToUpper().Trim();
+                    switch (katname)
                     {
-                        katname = kategori.Replace(" ", "").ToUpper().Trim();
-                        switch (katname)
-                        {
-                            case "FITNESS/PUSATKEBUGARAN":
-                                ret[0] = "43";
-                                ret[1] = "FITNESS/PUSAT KEBUGARAN";
-                                break;
-                            case "KARAOKEKELUARGA":
-                                ret[0] = "45";
-                                ret[1] = "KARAOKE KELUARGA";
-                                break;
-                            case "PANTIPIJAT/THERAPY/SAUNA/SPA":
-                                ret[0] = "48";
-                                ret[1] = "PANTI PIJAT/THERAPY/SAUNA/SPA";
-                                break;
-                            case "OLAHRAGA":
-                                ret[0] = "46";
-                                ret[1] = "OLAHRAGA";
-                                break;
-                            case "PERMAINANANAK":
-                                case "PERMAINANKETANGKASAN":
-                                ret[0] = "50";
-                                ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
-                                break;
-                            case "BAR/CAFE/KLABMALAM/DISKOTIK":
-                                ret[0] = "41";
-                                ret[1] = "BAR/CAFE/KLAB MALAM/DISKOTIK";
-                                break;
-                            case "PERMAINANANAK/PERMAINANKETANGKASAN":
-                                ret[0] = "50";
-                                ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
-                                break;
-                            case "BIOSKOP":
-                                ret[0] = "42";
-                                ret[1] = "BIOSKOP";
-                                break;
-                            case "KARAOKEDEWASA":
-                                ret[0] = "44";
-                                ret[1] = "KARAOKE DEWASA";
-                                break;
-                            default:
-                                ret[0] = "54";
-                                ret[1] = "HIBURAN";
-                                break;
-                        }
+                        case "FITNESS/PUSATKEBUGARAN":
+                            ret[0] = "43";
+                            ret[1] = "FITNESS/PUSAT KEBUGARAN";
+                            break;
+                        case "KARAOKEKELUARGA":
+                            ret[0] = "45";
+                            ret[1] = "KARAOKE KELUARGA";
+                            break;
+                        case "PANTIPIJAT/THERAPY/SAUNA/SPA":
+                            ret[0] = "48";
+                            ret[1] = "PANTI PIJAT/THERAPY/SAUNA/SPA";
+                            break;
+                        case "OLAHRAGA":
+                            ret[0] = "46";
+                            ret[1] = "OLAHRAGA";
+                            break;
+                        case "PERMAINANANAK":
+                        case "PERMAINANKETANGKASAN":
+                            ret[0] = "50";
+                            ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                            break;
+                        case "BAR/CAFE/KLABMALAM/DISKOTIK":
+                            ret[0] = "41";
+                            ret[1] = "BAR/CAFE/KLAB MALAM/DISKOTIK";
+                            break;
+                        case "PERMAINANANAK/PERMAINANKETANGKASAN":
+                            ret[0] = "50";
+                            ret[1] = "PERMAINAN ANAK/PERMAINAN KETANGKASAN";
+                            break;
+                        case "BIOSKOP":
+                            ret[0] = "42";
+                            ret[1] = "BIOSKOP";
+                            break;
+                        case "KARAOKEDEWASA":
+                            ret[0] = "44";
+                            ret[1] = "KARAOKE DEWASA";
+                            break;
+                        default:
+                            ret[0] = "54";
+                            ret[1] = "HIBURAN";
+                            break;
                     }
                 }
 
