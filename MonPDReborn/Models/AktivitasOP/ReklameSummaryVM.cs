@@ -901,7 +901,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Include(x => x.DbMonReklameUpayaDok)
                     .Where(x =>
                         matchedFormulirs.Contains(x.NoFormulir) &&
-                        (x.KdAktifitas == null || x.KdAktifitas == "")) // ✅ filter hanya yang tidak ada kode aktifitas
+                        (x.KdAktifitas == null || x.KdAktifitas == "-")) // ✅ filter hanya yang tidak ada kode aktifitas
                     .OrderByDescending(x => x.TglUpaya)
                     .Select(x => new DetailUpaya.DataUpaya
                     {
