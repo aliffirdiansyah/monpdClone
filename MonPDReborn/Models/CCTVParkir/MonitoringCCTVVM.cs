@@ -38,7 +38,7 @@ namespace MonPDReborn.Models.CCTVParkir
         }
         public class Method
         {
-            public static List<MonitoringCCTV> GetMonitoringCCTVList(int uptb)
+            public static List<MonitoringCCTV> GetMonitoringCCTVList(int uptbId)
             {
                 List<MonitoringCCTV> result = new()
         {
