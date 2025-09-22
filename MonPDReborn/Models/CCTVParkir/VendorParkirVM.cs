@@ -1,4 +1,5 @@
 ﻿using DevExtreme.AspNet.Mvc.Builders;
+using MonPDLib.General;
 using System.Web.Mvc;
 
 namespace MonPDReborn.Models.CCTVParkir
@@ -7,11 +8,17 @@ namespace MonPDReborn.Models.CCTVParkir
     {
         public class Index
         {
-            public int SelectedUptb { get; set; }
-            public List<SelectListItem> UptbList { get; set; } = new();
+            public List<SelectListItem> JenisUptbList { get; set; } = new();
+            public int SelectedUPTB { get; set; }
             public Index()
             {
-
+                JenisUptbList = Enum.GetValues(typeof(EnumFactory.EUPTB))
+                    .Cast<EnumFactory.EUPTB>()
+                    .Select(x => new SelectListItem
+                    {
+                        Value = ((int)x).ToString(),
+                        Text = x.GetDescription()
+                    }).ToList();
             }
         }
         public class Show
@@ -46,14 +53,15 @@ namespace MonPDReborn.Models.CCTVParkir
                 return result;
             }
         }
+        public class VendorParkir
+        {
+            public string Nop { get; set; } = null!;
+            public string NamaOp { get; set; } = null!;
+            public string AlamatOp { get; set; } = null!;
+            public string WilayahPajak { get; set; } = null!;
+            public int UptbId { get; set; }
+            public string Vendor { get; set; } = null!;
+        }
     }
-    public class VendorParkir
-    {
-        public string Nop { get; set; } = null!;
-        public string NamaOp { get; set; } = null!;
-        public string AlamatOp { get; set; } = null!;
-        public string WilayahPajak { get; set; } = null!;
-        public int UptbId { get; set; }
-        public string Vendor { get; set; } = null!;
-    }
+    
 }

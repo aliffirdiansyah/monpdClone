@@ -1,0 +1,30 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.Kapasitas
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid < MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTVKapasitas>()
+        .ID("vendorParkirGrid")
+        .DataSource(Model.MonitoringCCTVKapasitasList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Tanggal).Caption("Tanggal").Fixed(true);
+            columns.AddFor(m => m.KapasitasMotor).Caption("Kapasitas Motor").Format("#,##0");
+            columns.AddFor(m => m.KapasitasMobil).Caption("Kapasitas Mobil").Format("#,##0");
+            columns.AddFor(m => m.KapasitasTrukBus).Caption("Kapasitas Bus").Format("#,##0");
+            columns.AddFor(m => m.KapasitasTrukMini).Caption("Kapasitas Truk Mini").Format("#,##0");
+            columns.AddFor(m => m.KapasitasTrailer).Caption("Kapasitas Trailer").Format("#,##0");
+        })
+        )
+</div>
