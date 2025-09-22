@@ -4,6 +4,7 @@ using MonPDLib;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Models.PengawasanReklame.PencarianReklameVM;
 using static MonPDReborn.Lib.General.ResponseBase;
+using MonPDLib.General;
 
 namespace MonPDReborn.Controllers.PengawasanReklame
 {
@@ -28,6 +29,14 @@ namespace MonPDReborn.Controllers.PengawasanReklame
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+               
                 var model = new Models.PengawasanReklame.PencarianReklameVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

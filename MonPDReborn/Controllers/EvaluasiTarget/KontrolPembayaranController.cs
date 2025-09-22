@@ -30,7 +30,14 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
         {
             try
             {
-                ViewData["Title"] = controllerName;
+                ViewData["Title"] = controllerName; var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                
                 var model = new Models.EvaluasiTarget.KontrolPembayaranVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

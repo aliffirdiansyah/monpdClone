@@ -1,6 +1,7 @@
 ﻿@model MonPDReborn.Models.Reklame.InputReklameVM.Index
 
 @{
+    ViewData["Title"] = "Input Upaya Reklame";
     Layout = "_Layout";
 }
 
@@ -174,66 +175,113 @@
         }
     </script>
     <script>
-        function onKdAktifitasChanged(e) {
-            let kdAktifitas = e.value;
-            if (!kdAktifitas) {
-                $("#txtNikPetugas").val("");
-                return;
-            }
+        function onKdAktifitasSearch(e) {
+            let kode = e.component.option("value");
+            if (!kode) return;
 
             $.ajax({
-                url: '@Url.Action("GetNamaAktifitas", "InputReklame")',
+                url: '/InputReklame/GetNamaAktifitas',
                 type: 'GET',
-                data: { kdAktifitas: kdAktifitas },
-                success: function (result) {
-                    $("#txtNikPetugas").val(result.namaAktifitas);
-                },
-                error: function () {
-                    $("#txtNikPetugas").val("Tidak ditemukan");
-                }
-            });
-        }
-        function onKdAktifitasChanged(e) {
-            let kdAktifitas = e.value;
-            if (!kdAktifitas) {
-                $("#txtNamaAktifitas").val("");
-                return;
-            }
+                data: { kdAktifitas: kode }, // sesuai parameter controller
+                success: function (res) {
+                    // tampilkan di UI
+                    $("#txtNamaAktifitas").val(res.NamaAktifitas || '');
+                    $("#txtNikPetugas").val(res.NikPetugas || '');
 
-            $.ajax({
-                url: '@Url.Action("GetNikPetugas", "InputReklame")',
-                type: 'GET',
-                data: { kdAktifitas: kdAktifitas },
-                success: function (result) {
-                    $("#txtNamaAktifitas").val(result.namaAktifitas);
-                },
-                error: function () {
-                    $("#txtNamaAktifitas").val("Tidak ditemukan");
-                }
-            });
-        }
-        function onNoFormulirChanged(e) {
-            let noFormulir = e.value;
-            if (!noFormulir) {
-                $("#txtAlamatReklame").val("");
-                return;
-            }
-
-            $.ajax({
-                url: '@Url.Action("GetAlamatReklame", "InputReklame")',
-                type: 'GET',
-                data: { noFormulir: noFormulir },
-                success: function (result) {
-                    console.log("Response:", result);
-                    // PENTING: gunakan huruf besar sesuai response
-                    $("#txtAlamatReklame").val(result.AlamatReklame);
+                    // isi hidden input agar ikut submit
+                    $("#hdNamaPetugas").val(res.NamaAktifitas || '');
+                    $("#hdNikPetugas").val(res.NikPetugas || '');
                 },
                 error: function (xhr) {
-                    console.log("Error:", xhr);
-                    $("#txtAlamatReklame").val("Tidak ditemukan");
+                    $("#txtNamaAktifitas").val('');
+                    $("#txtNikPetugas").val('');
+                    $("#hdNamaPetugas").val('');
+                    $("#hdNikPetugas").val('');
+
+                    DevExpress.ui.notify(xhr.responseText || "Terjadi kesalahan saat mencari data", "error", 2000);
                 }
             });
         }
+
+
+
+        function onNoFormulirSearch(e) {
+            let noFormulir = e.component.option("value");
+            if (!noFormulir) return;
+
+            $.ajax({
+                url: '/InputReklame/GetNoFormulir',
+                type: 'GET',
+                data: { filter: noFormulir },
+                success: function (data) {
+                    let messageEl = $("#noFormulirMessage");
+
+                    if (data && data.length > 0) {
+                        $("#txtAlamatReklame").val(data[0].AlamatReklame);
+
+                        messageEl
+                            .text("✅ No Formulir ditemukan!")
+                            .css("color", "green");
+
+                    } else {
+                        $("#txtAlamatReklame").val('');
+
+                        messageEl
+                            .text("⚠️ No Formulir tidak ditemukan")
+                            .css("color", "orange");
+                    }
+                },
+                error: function () {
+                    let messageEl = $("#noFormulirMessage");
+                    messageEl
+                        .text("❌ Terjadi kesalahan saat mencari data")
+                        .css("color", "red");
+                }
+            });
+        }
+
+
+        function onNORSearch(e) {
+            let nor = e.component.option("value");
+            if (!nor) return;
+
+            $.ajax({
+                url: '/InputReklame/GetNOR',
+                type: 'GET',
+                data: { filter: nor },
+                success: function (res) {
+                    let messageEl = $("#norMessage");
+
+                    if (res.success) {
+                        messageEl
+                            .text("✅ NOR ditemukan!")
+                            .css("color", "green");
+
+                        // Bisa juga tampilkan detail data
+                        // messageEl.html(`✅ NOR ditemukan: ${res.data.NamaOP} - ${res.data.Alamat}`);
+
+                    } else {
+                        messageEl
+                            .text("⚠️ NOR tidak ditemukan")
+                            .css("color", "orange");
+                    }
+                },
+                error: function (xhr) {
+                    let messageEl = $("#norMessage");
+
+                    if (xhr.status === 404) {
+                        messageEl
+                            .text("⚠️ NOR tidak ditemukan")
+                            .css("color", "orange");
+                    } else {
+                        messageEl
+                            .text("❌ Terjadi kesalahan saat mencari data")
+                            .css("color", "red");
+                    }
+                }
+            });
+        }
+
 
     </script>
 }

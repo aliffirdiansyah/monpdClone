@@ -37,18 +37,6 @@
                         .FixedPosition(HorizontalEdge.Left)
                         .CssClass("fw-bold");
 
-                    columns.AddFor(x => x.NmKecamatan)
-                        .Caption("KECAMATAN")
-                        .FixedPosition(HorizontalEdge.Left)
-                        .GroupIndex(0)
-                        .CssClass("fw-bold");
-
-                    columns.AddFor(x => x.NmKelurahan)
-                        .Caption("KELURAHAN")
-                        .FixedPosition(HorizontalEdge.Left)
-                        .GroupIndex(1)
-                        .CssClass("fw-bold");
-
                     columns.AddFor(x => x.JmlOpAkhir).Caption("Jumlah OP").Format("#,##0")@* .CellTemplate(new JS("detailSeriesCellTemplate")) *@;
     
                 })

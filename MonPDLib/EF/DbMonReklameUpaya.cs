@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("NoFormulir", "TglUpaya", "Seq")]
+[PrimaryKey("NoFormulir", "Nor", "TglUpaya", "Seq")]
 [Table("DB_MON_REKLAME_UPAYA")]
 public partial class DbMonReklameUpaya
 {
@@ -49,6 +49,12 @@ public partial class DbMonReklameUpaya
     [StringLength(10)]
     [Unicode(false)]
     public string? KdAktifitas { get; set; }
+
+    [Key]
+    [Column("NOR")]
+    [StringLength(12)]
+    [Unicode(false)]
+    public string Nor { get; set; } = null!;
 
     [InverseProperty("DbMonReklameUpaya")]
     public virtual DbMonReklameUpayaDok? DbMonReklameUpayaDok { get; set; }

@@ -99,80 +99,89 @@ namespace MonPDReborn.Controllers.Reklame
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
         [HttpGet]
-        public async Task<object> GetKdAktifitas(DataSourceLoadOptions loadOptions)
+        public IActionResult GetKdAktifitas(string kode)
         {
             var context = DBClass.GetContext();
-            var query = context.MPetugasReklames
-                .Select(item => new KdAktifitasCbView
-                {
-                    Value = item.KdAktifitas,
-                    Text = item.KdAktifitas ?? string.Empty
-                });
-            return await DataSourceLoader.LoadAsync(query, loadOptions);
+
+            var result = context.MPetugasReklames
+                .Where(x => x.KdAktifitas.ToUpper().Trim() == kode.ToUpper().Trim())
+                .Select(x => new {
+                    NamaPetugas = x.Nama,
+                    NikPetugas = x.Nik
+                })
+                .FirstOrDefault();
+
+            if (result == null)
+                return Json(new { success = false, message = "Data tidak ditemukan" });
+
+            return Json(new { success = true, data = result });
         }
+
         [HttpGet]
         public async Task<IActionResult> GetNamaAktifitas(string kdAktifitas)
         {
             if (string.IsNullOrEmpty(kdAktifitas))
-            {
                 return BadRequest("Kode aktifitas tidak boleh kosong.");
-            }
 
             var context = DBClass.GetContext();
-            var namaAktifitas = await context.MPetugasReklames
-                .Where(x => x.KdAktifitas == kdAktifitas)
-                .Select(x => x.Nama) // pastikan nama kolom sesuai
+            var petugas = await context.MPetugasReklames
+                .Where(x => x.KdAktifitas.ToUpper().Trim() == kdAktifitas.ToUpper().Trim())
+                .Select(x => new {
+                    KdAktifitas = x.KdAktifitas,
+                    NamaAktifitas = x.Nama,
+                    NikPetugas = x.Nik
+                })
                 .FirstOrDefaultAsync();
 
-            if (namaAktifitas == null)
-            {
-                return NotFound($"Nama Aktifitas untuk kode '{kdAktifitas}' tidak ditemukan.");
-            }
+            if (petugas == null)
+                return NotFound($"Data petugas untuk kode '{kdAktifitas}' tidak ditemukan.");
 
-            return Ok(new
-            {
-                KdAktifitas = kdAktifitas,
-                NamaAktifitas = namaAktifitas
-            });
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetNikPetugas(string kdAktifitas)
-        {
-            if (string.IsNullOrEmpty(kdAktifitas))
-            {
-                return BadRequest("NIK Petugas tidak boleh kosong.");
-            }
-
-            var context = DBClass.GetContext();
-            var nikPetugas = await context.MPetugasReklames
-                .Where(x => x.KdAktifitas == kdAktifitas) // ganti filter dari KdAktifitas ke NIK
-                .Select(x => x.Nik)
-                .FirstOrDefaultAsync();
-
-            if (nikPetugas == null)
-            {
-                return NotFound($"Nama Petugas untuk NIK '{kdAktifitas}' tidak ditemukan.");
-            }
-
-            return Ok(new
-            {
-                KdAktifitas = kdAktifitas,
-                NikPetugas = nikPetugas
-            });
+            return Ok(petugas);
         }
 
         [HttpGet]
-        public async Task<object> GetNoFormulir(DataSourceLoadOptions loadOptions)
+        public IActionResult GetNoFormulir(string filter)
         {
             var context = DBClass.GetContext();
-            var query = context.DbOpReklames
-                .Select(item => new NoFormulirCbView
+            var data = context.DbOpReklames
+                .Where(x => x.NoFormulir.ToUpper().Trim() == filter.ToUpper().Trim())
+                .Select(x => new
                 {
-                    Value = item.NoFormulir,
-                    Text = item.NoFormulir ?? string.Empty
-                });
-            return await DataSourceLoader.LoadAsync(query, loadOptions);
+                    NoFormulir = x.NoFormulir,
+                    AlamatReklame = x.Alamatreklame // pastikan ini sesuai dengan field di DbOpReklames
+                })
+                .ToList();
+
+            return Json(data);
         }
+
+        [HttpGet]
+        public IActionResult GetNOR(string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+                return BadRequest(new { success = false, message = "NOR tidak boleh kosong" });
+
+            using var context = DBClass.GetContext();
+
+            // Cari data yang sesuai
+            var data = context.DbMonReklameSurveys
+                .Where(x => x.Nor.ToUpper().Trim() == filter.ToUpper().Trim())
+                .Select(x => new
+                {
+                    NOR = x.Nor,
+                })
+                .FirstOrDefault();
+
+            if (data == null)
+            {
+                // Bisa kembalikan NotFound (status code 404)
+                return NotFound(new { success = false, message = "NOR tidak ditemukan." });
+            }
+
+            return Json(new { success = true, data });
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> GetAlamatReklame(string noFormulir)
         {
@@ -183,8 +192,8 @@ namespace MonPDReborn.Controllers.Reklame
 
             var context = DBClass.GetContext();
             var alamatReklame = await context.DbOpReklames
-                .Where(x => x.NoFormulir == noFormulir)
-                .Select(x => x.Alamat) // pastikan nama kolom sesuai
+                .Where(x => x.NoFormulir.ToUpper().Trim() == noFormulir.ToUpper().Trim())
+                .Select(x => x.Alamatreklame) // pastikan nama kolom sesuai
                 .FirstOrDefaultAsync();
 
             if (alamatReklame == null)
@@ -203,10 +212,55 @@ namespace MonPDReborn.Controllers.Reklame
         {
             try
             {
-                if (input.Lampiran == null && input.Lampiran.Length <= 0)
+                
+                if (string.IsNullOrWhiteSpace(input.SelectedNoFormulir) && string.IsNullOrWhiteSpace(input.SelectedNOR))
+                {
+                    throw new ArgumentException("Silakan isi salah satu: No Formulir atau NOR.");
+                }
+
+               
+                if (!string.IsNullOrWhiteSpace(input.SelectedNoFormulir) &&
+                    input.SelectedNoFormulir.Trim().StartsWith("I", StringComparison.OrdinalIgnoreCase) &&
+                    !string.IsNullOrWhiteSpace(input.SelectedNOR))
+                {
+                    throw new ArgumentException("Reklame Insidentil tidak perlu mengisi NOR.");
+                }
+
+
+                using (var context = DBClass.GetContext())
+                {
+                    bool exists = false;
+
+                    if (!string.IsNullOrWhiteSpace(input.SelectedNoFormulir))
+                    {
+                        string noFormulirUpper = input.SelectedNoFormulir.Trim().ToUpper();
+
+                        if (!(noFormulirUpper.StartsWith("T") || noFormulirUpper.StartsWith("I")))
+                        {
+                            throw new ArgumentException($"Ini bukan No Formulir. Input kembali No Formulir.");
+                        }
+
+                        exists = context.DbOpReklames.Any(x => x.NoFormulir.ToUpper() == noFormulirUpper);
+                        if (!exists)
+                            throw new ArgumentException($"No Formulir \"{noFormulirUpper}\" tidak ditemukan.");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(input.SelectedNOR))
+                    {
+                        string norUpper = input.SelectedNOR.Trim().ToUpper();
+                        exists = context.DbMonReklameSurveys.Any(x => x.Nor.ToUpper() == norUpper);
+                        if (!exists)
+                            throw new ArgumentException($"NOR \"{norUpper}\" tidak ditemukan.");
+                    }
+                }
+
+
+
+                if (input.Lampiran == null || input.Lampiran.Length <= 0)
                 {
                     throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
                 }
+
                 if (input.Lampiran != null && input.Lampiran.Length > 0)
                 {
                     using (var ms = new MemoryStream())
@@ -215,17 +269,26 @@ namespace MonPDReborn.Controllers.Reklame
                         input.Data.NewRowUpaya.Lampiran = ms.ToArray();
                     }
                 }
+
+                
                 var insert = new Models.Reklame.InputReklameVM.DetailUpaya.NewRow
                 {
-                    NoFormulir = input.Data.NewRowUpaya.NoFormulir,
+                    NoFormulir = !string.IsNullOrWhiteSpace(input.SelectedNoFormulir)
+                        ? input.SelectedNoFormulir.Trim().ToUpper()
+                        : "-",
+
+                    NOR = !string.IsNullOrWhiteSpace(input.SelectedNOR)
+                        ? input.SelectedNOR.Trim().ToUpper()
+                        : "-",
                     IdUpaya = input.SelectedUpaya,
                     IdTindakan = input.SelectedTindakan,
                     NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
                     NIKPetugas = input.Data.NewRowUpaya.NIKPetugas,
-                    KdKatifitas = input.Data.NewRowUpaya.KdKatifitas,
+                    KdKatifitas = input.SelectedKdAktifitas.Trim().ToUpper(),
                     TglUpaya = input.Data.NewRowUpaya.TglUpaya,
                     Lampiran = input.Data.NewRowUpaya.Lampiran,
                 };
+
                 Models.Reklame.InputReklameVM.Method.SimpanUpaya(insert);
 
                 response.Status = StatusEnum.Success;
@@ -241,9 +304,11 @@ namespace MonPDReborn.Controllers.Reklame
             {
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
+                Console.WriteLine(ex);
                 return Json(response);
             }
             return Json(response);
         }
+
     }
 }

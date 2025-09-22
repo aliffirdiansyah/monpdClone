@@ -20,43 +20,54 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Show
         {
             public List<SeriesPemasanganAlat> SeriesPemasanganAlatList { get; set; } = new();
-            public DashboardData Data { get; set; } = new();
 
             public Show()
             {
-                SeriesPemasanganAlatList = Method.GetSeriesPemasanganAlatList();
+                SeriesPemasanganAlatList = Method.GetSeriesAlatRekam();
 
-                Data.HotelTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.JumlahOP);
-                Data.RestoTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.JumlahOP);
-                Data.ParkirTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.JumlahOP);
-                Data.HiburanTotal = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.JumlahOP);
-
-                Data.HotelTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Terpasang2025);
-                Data.RestoTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.Terpasang2025);
-                Data.ParkirTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.Terpasang2025);
-                Data.HiburanTerpasang = SeriesPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Terpasang2025);
+               
             }
         }
 
         public class Tahunan
         {
             public List<DataPemasanganAlat> DataPemasanganAlatList { get; set; } = new();
+            public DashboardData Data { get; set; } = new();
+
             public Tahunan()
             {
-                DataPemasanganAlatList = Method.GetTahunanPemasanganAlatList();
+                DataPemasanganAlatList = Method.GetTahunBerjalan();
+
+                Data.HotelTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.JumlahOP);
+                Data.RestoTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.JumlahOP);
+                Data.ParkirTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.JumlahOP);
+                Data.HiburanTotal = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.JumlahOP);
+
+                Data.HotelTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.TotalTerpasang);
+                Data.RestoTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.MakananMinuman).Sum(x => x.TotalTerpasang);
+                Data.ParkirTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaParkir).Sum(x => x.TotalTerpasang);
+                Data.HiburanTerpasang = DataPemasanganAlatList.Where(x => (EnumFactory.EPajak)x.EnumPajak == EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.TotalTerpasang);
             }
         }
         public class DetailOP
         {
             public List<SubDetailModal> PemasanganAlatDetailOP { get; set; } = new();
-            public DetailOP(int jenisPajak, int kategori, int tahun, string status)
+            public DetailOP(int jenisPajak, int kategori, int tahun)
             {
-                PemasanganAlatDetailOP = Method.GetSubDetailOPData((EnumFactory.EPajak)jenisPajak, kategori, tahun, status);
+                PemasanganAlatDetailOP = Method.GetDetailModal((EnumFactory.EPajak)jenisPajak, kategori, tahun);
+            }
+        }
+        public class DetailTahun
+        {
+            public List<SubDetailDataModal> PemasanganAlatDetailTahun { get; set; } = new();
+            public DetailTahun(int jenisPajak, int kategori, int status)
+            {
+                PemasanganAlatDetailTahun = Method.GetTahunBerjalanModal((EnumFactory.EPajak)jenisPajak, kategori, status);
             }
         }
         public class Method
         {
-            public static List<SeriesPemasanganAlat> GetSeriesPemasanganAlatList()
+            public static List<SeriesPemasanganAlat> GetSeriesAlatRekam()
             {
                 var ret = new List<SeriesPemasanganAlat>();
                 var context = DBClass.GetContext();
@@ -64,81 +75,50 @@ namespace MonPDReborn.Models.AktivitasOP
                 int tahunSekarang = DateTime.Now.Year;
                 int tahunMulai = tahunSekarang - 4;
 
-                ret = context.DbRekamAlatGabungs
-                    .Where(x => x.Tahun >= tahunMulai && x.Tahun <= tahunSekarang)
-                    .GroupBy(x => new { x.PajakId, x.Tahun })
-                    .Select(g => new
-                    {
-                        g.Key.PajakId,
-                        g.Key.Tahun,
-                        JumlahOP = g.Count(),
-                        Terpasang = g.Select(x => x.Nop)
-                         .Distinct()
-                         .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.IsTs == 1 || y.IsTb == 1 || y.IsSb == 1))),
+                ret = context.DbMonAlatRekams
+                   .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunMulai)
+                   .GroupBy(x => x.PajakId)
+                   .Select(g => new SeriesPemasanganAlat
+                   {
+                       EnumPajak = (int)(EnumFactory.EPajak)g.Key,
+                       JenisPajak = ((EnumFactory.EPajak)g.Key).GetDescription(),
+                       JumlahOP = g.Select(x => x.Nop).Distinct().Count(),
 
-                        BelumTerpasang = g.Select(x => x.Nop)
-                        .Distinct()
-                        .Count(nop => g.Any(y => y.Nop == nop &&
-                                                (y.IsTs == 0 && y.IsTb == 0 && y.IsSb == 0)))
-                    })
-                    .AsNoTracking()
-                    .ToList()
-                    .GroupBy(x => x.PajakId)
-                    .Select(g =>
-                    {
-                        var s = new SeriesPemasanganAlat
-                        {
-                            EnumPajak = (int)(EnumFactory.EPajak)g.Key,
-                            JenisPajak = ((EnumFactory.EPajak)g.Key).GetDescription(),
-                            JumlahOP = g.Sum(x => x.JumlahOP)
-                        };
+                       TahunMines4 = g.Where(x => x.Tmin4 == 1)
+                                      .Select(x => x.Nop).Distinct().Count(),
 
-                        foreach (var row in g)
-                        {
-                            if (row.Tahun == tahunMulai)
-                            {
-                                s.Terpasang2021 = row.Terpasang;
-                                s.BelumTerpasang2021 = row.BelumTerpasang;
-                            }
-                            else if (row.Tahun == tahunMulai + 1)
-                            {
-                                s.Terpasang2022 = row.Terpasang;
-                                s.BelumTerpasang2022 = row.BelumTerpasang;
-                            }
-                            else if (row.Tahun == tahunMulai + 2)
-                            {
-                                s.Terpasang2023 = row.Terpasang;
-                                s.BelumTerpasang2023 = row.BelumTerpasang;
-                            }
-                            else if (row.Tahun == tahunMulai + 3)
-                            {
-                                s.Terpasang2024 = row.Terpasang;
-                                s.BelumTerpasang2024 = row.BelumTerpasang;
-                            }
-                            else if (row.Tahun == tahunMulai + 4)
-                            {
-                                s.Terpasang2025 = row.Terpasang;
-                                s.BelumTerpasang2025 = row.BelumTerpasang;
-                            }
-                        }
-                        return s;
-                    })
-                    .ToList();
+                       TahunMines3 = g.Where(x => x.Tmin3 == 1)
+                                      .Select(x => x.Nop).Distinct().Count(),
+
+                       TahunMines2 = g.Where(x => x.Tmin2 == 1)
+                                      .Select(x => x.Nop).Distinct().Count(),
+
+                       TahunMines1 = g.Where(x => x.Tmin1 == 1)
+                                      .Select(x => x.Nop).Distinct().Count(),
+
+                       TahunNow = g.Where(x => x.Tmin0 == 1)
+                                   .Select(x => x.Nop).Distinct().Count()
+                   })
+                   .AsNoTracking()
+                   .ToList();
 
 
                 return ret;
             }
-            public static List<DetailSeriesPemasanganAlat> GetDetailSeriesPemasanganAlatList(EnumFactory.EPajak jenisPajak)
+
+            public static List<DetailSeriesPemasanganAlat> GetDetailSeriesAlatRekam(EnumFactory.EPajak jenisPajak)
             {
+                var ret = new List<DetailSeriesPemasanganAlat>();
                 using var context = DBClass.GetContext();
 
                 int tahunSekarang = DateTime.Now.Year;
                 int tahunMulai = tahunSekarang - 4;
 
                 // Ambil daftar kategori
+                // Ambil daftar kategori sesuai jenis pajak
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
+                    .Where(x => x.PajakId == (int)jenisPajak)
+                    .OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
@@ -146,88 +126,142 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .ToList();
 
-                // Ambil data pemasangan alat
-                var query = context.DbRekamAlatGabungs
-                    .Where(x => x.Tahun >= tahunMulai && x.Tahun <= tahunSekarang
+                // Ambil data pemasangan alat, group by KategoriId & Tahun
+                var query = context.DbMonAlatRekams
+                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunMulai && x.TglTerpasang.Value.Year <= tahunSekarang
                                 && x.PajakId == (int)jenisPajak)
-                    .GroupBy(x => new { x.KategoriId, x.Tahun })
+                    .GroupBy(x => new { x.KategoriId, x.TglTerpasang.Value.Year })
                     .Select(g => new
                     {
                         g.Key.KategoriId,
-                        g.Key.Tahun,
-                        JumlahOP = g.Count(),
-                        Terpasang = g.Select(x => x.Nop)
-                                     .Distinct()
-                                     .Count(nop => g.Any(y => y.Nop == nop &&
-                                                  (y.IsTs == 1 || y.IsTb == 1 || y.IsSb == 1))),
-                        BelumTerpasang = g.Select(x => x.Nop)
-                                          .Distinct()
-                                          .Count(nop => g.Any(y => y.Nop == nop &&
-                                                  (y.IsTs == 0 && y.IsTb == 0 && y.IsSb == 0)))
+                        g.Key.Year,
+                        JumlahOP = g.Select(x => x.Nop).Distinct().Count(),
+
+                        // Hitung hanya NOP unik yang punya TminX = 1
+                        Terpasang1 = g.Select(x => x.Nop).Distinct()
+                                      .Count(nop => g.Any(y => y.Nop == nop && y.Tmin0 == 1)),
+                        Terpasang2 = g.Select(x => x.Nop).Distinct()
+                                      .Count(nop => g.Any(y => y.Nop == nop && y.Tmin1 == 1)),
+                        Terpasang3 = g.Select(x => x.Nop).Distinct()
+                                      .Count(nop => g.Any(y => y.Nop == nop && y.Tmin2 == 1)),
+                        Terpasang4 = g.Select(x => x.Nop).Distinct()
+                                      .Count(nop => g.Any(y => y.Nop == nop && y.Tmin3 == 1)),
+                        Terpasang5 = g.Select(x => x.Nop).Distinct()
+                                      .Count(nop => g.Any(y => y.Nop == nop && y.Tmin4 == 1)),
                     })
                     .ToList();
 
-                var result = new List<DetailSeriesPemasanganAlat>();
-
-                foreach (var kategori in kategoriList)
+                // Bentuk hasil akhir
+                var result = kategoriList.Select(kategori =>
                 {
-                    var s = new DetailSeriesPemasanganAlat
+                    var dataKategori = query.Where(q => q.KategoriId == kategori.Id).ToList();
+
+                    return new DetailSeriesPemasanganAlat
                     {
                         EnumPajak = (int)jenisPajak,
                         JenisPajak = jenisPajak.GetDescription(),
                         KategoriId = (int)kategori.Id,
-                        KategoriNama = kategori.Nama
+                        KategoriNama = kategori.Nama,
+
+                        JumlahOP = dataKategori.Sum(d => d.JumlahOP),
+
+                        TahunMines4 = dataKategori.Sum(d => d.Terpasang5),
+                        TahunMines3 = dataKategori.Sum(d => d.Terpasang4),
+                        TahunMines2 = dataKategori.Sum(d => d.Terpasang3),
+                        TahunMines1 = dataKategori.Sum(d => d.Terpasang2),
+                        TahunNow = dataKategori.Sum(d => d.Terpasang1)
                     };
+                }).ToList();
 
-                    var dataKategori = query.Where(q => q.KategoriId == kategori.Id).ToList();
 
-                    s.JumlahOP = dataKategori.Sum(d => d.JumlahOP);
-
-                    foreach (var row in dataKategori)
-                    {
-                        if (row.Tahun == tahunMulai)
-                        {
-                            s.Terpasang2021 = row.Terpasang;
-                            s.BelumTerpasang2021 = row.BelumTerpasang;
-                        }
-                        else if (row.Tahun == tahunMulai + 1)
-                        {
-                            s.Terpasang2022 = row.Terpasang;
-                            s.BelumTerpasang2022 = row.BelumTerpasang;
-                        }
-                        else if (row.Tahun == tahunMulai + 2)
-                        {
-                            s.Terpasang2023 = row.Terpasang;
-                            s.BelumTerpasang2023 = row.BelumTerpasang;
-                        }
-                        else if (row.Tahun == tahunMulai + 3)
-                        {
-                            s.Terpasang2024 = row.Terpasang;
-                            s.BelumTerpasang2024 = row.BelumTerpasang;
-                        }
-                        else if (row.Tahun == tahunMulai + 4)
-                        {
-                            s.Terpasang2025 = row.Terpasang;
-                            s.BelumTerpasang2025 = row.BelumTerpasang;
-                        }
-                    }
-
-                    result.Add(s);
-                }
 
                 return result;
             }
 
+            public static List<SubDetailModal> GetDetailModal(EnumFactory.EPajak jenisPajak, int kategori, int tahun)
+            {
+                using var context = DBClass.GetContext();
 
-            public static List<DataPemasanganAlat> GetTahunanPemasanganAlatList()
+                int tahunSekarang = DateTime.Now.Year;
+                int offset = tahunSekarang - tahun; // hitung selisih tahun
+
+                var query = context.DbMonAlatRekams
+                    .Where(x => x.PajakId == (int)jenisPajak
+                                && x.KategoriId == kategori
+                                && x.TglTerpasang.HasValue
+                                && x.TglTerpasang.Value.Year == tahun);
+
+                switch (offset)
+                {
+                    case 0: // tahun sekarang
+                        query = query.Where(x => x.Tmin0 == 1);
+                        break;
+                    case 1:
+                        query = query.Where(x => x.Tmin1 == 1);
+                        break;
+                    case 2:
+                        query = query.Where(x => x.Tmin2 == 1);
+                        break;
+                    case 3:
+                        query = query.Where(x => x.Tmin3 == 1);
+                        break;
+                    case 4:
+                        query = query.Where(x => x.Tmin4 == 1);
+                        break;
+                    default:
+                        query = query.Where(x => false); // tahun di luar range
+                        break;
+                }
+
+                var rows = query
+                    .AsNoTracking()
+                    .ToList();
+
+
+                var latestPerNop = rows
+                    .GroupBy(r => r.Nop)
+                    .Distinct()
+                    .Select(g => g.OrderByDescending(r => r.TglTerpasang).First())
+                    .ToList();
+
+                var result = latestPerNop.Select(x =>
+                {
+                    // aman parsing jam
+                    var jam = string.IsNullOrWhiteSpace(x.Jam) ? "00:00:00" : x.Jam;
+                    if (!TimeSpan.TryParse(jam, out var ts)) ts = TimeSpan.Zero;
+
+                    string terakhirAktif = (x.Tahun > 0 && x.Bln > 0 && x.Tgl > 0)
+                        ? new DateTime((int)x.Tahun, (int)x.Bln, (int)x.Tgl).Add(ts).ToString("dd/MM/yyyy HH:mm:ss")
+                        : "Tidak Ada Data";
+
+                    return new SubDetailModal
+                    {
+                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                        Kategori = x.KategoriNama,
+                        NamaOP = x.NamaOp,
+                        NOP = x.Nop,
+                        Alamat = x.AlamatOp,
+                        TanggalPemasangan = x.TglTerpasang ?? DateTime.MinValue,
+                        JenisPasang = x.JenisAlat,
+                        StatusKunci = x.StatusKunci == 1 ? "Terkunci" : "Tidak Terkunci",
+                        StatusOnline = x.StatusOnline == 1 ? "Online" : "Offline",
+                        TerakhirAktif = terakhirAktif
+                    };
+                }).ToList();
+
+                return result;
+            }
+
+            public static List<DataPemasanganAlat> GetTahunBerjalan()
             {
                 var ret = new List<DataPemasanganAlat>();
                 var context = DBClass.GetContext();
 
                 int tahunSekarang = DateTime.Now.Year;
+                int tahunAwal = tahunSekarang - 7;
 
-                ret = context.DbRekamAlatGabungs
-                    .Where(x => x.Tahun <= tahunSekarang)
+                ret = context.DbMonAlatRekams
+                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang)
                     .GroupBy(x => new { x.PajakId, x.Tahun })
                     .Select(g => new
                     {
@@ -237,15 +271,15 @@ namespace MonPDReborn.Models.AktivitasOP
                         TerpasangTS = g.Select(x => x.Nop)
                          .Distinct()
                          .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.IsTs == 1))),
+                                      (y.JenisAlat == "TS"))),
                         TerpasangTB = g.Select(x => x.Nop)
                          .Distinct()
                          .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.IsTb == 1))),
+                                      (y.JenisAlat == "TB"))),
                         TerpasangSB = g.Select(x => x.Nop)
                          .Distinct()
                          .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.IsSb == 1))),
+                                      (y.JenisAlat == "SB"))),
                     })
                     .AsNoTracking()
                     .ToList()
@@ -269,12 +303,11 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return ret;
             }
-            public static List<DetailDataPemasanganAlat> GetDetailTahunanPemasanganAlatList(EnumFactory.EPajak jenisPajak)
+            public static List<DetailDataPemasanganAlat> GetDetailTahunBerjalan(EnumFactory.EPajak jenisPajak)
             {
                 using var context = DBClass.GetContext();
-
                 int tahunSekarang = DateTime.Now.Year;
-
+                int tahunAwal = tahunSekarang - 7;
                 // Ambil daftar kategori
                 var kategoriList = context.MKategoriPajaks
                     .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
@@ -284,10 +317,9 @@ namespace MonPDReborn.Models.AktivitasOP
                         Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
                     })
                     .ToList();
-
                 // Ambil data pemasangan alat
-                var query = context.DbRekamAlatGabungs
-                    .Where(x => x.Tahun <= tahunSekarang
+                var query = context.DbMonAlatRekams
+                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang
                                 && x.PajakId == (int)jenisPajak)
                     .GroupBy(x => new { x.KategoriId })
                      .Select(g => new
@@ -297,20 +329,18 @@ namespace MonPDReborn.Models.AktivitasOP
                          TerpasangTS = g.Select(x => x.Nop)
                          .Distinct()
                          .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.IsTs == 1))),
+                                      (y.JenisAlat == "TS"))),
                          TerpasangTB = g.Select(x => x.Nop)
                          .Distinct()
                          .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.IsTb == 1))),
+                                      (y.JenisAlat == "TB"))),
                          TerpasangSB = g.Select(x => x.Nop)
                          .Distinct()
                          .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.IsSb == 1))),
+                                      (y.JenisAlat == "SB"))),
                      })
                     .ToList();
-
                 var result = new List<DetailDataPemasanganAlat>();
-
                 foreach (var kategori in kategoriList)
                 {
                     var s = new DetailDataPemasanganAlat
@@ -320,14 +350,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         KategoriId = (int)kategori.Id,
                         KategoriNama = kategori.Nama
                     };
-
                     var dataKategori = query.Where(q => q.KategoriId == kategori.Id).ToList();
-
                     s.JumlahOP = dataKategori.Sum(d => d.JumlahOP);
-                    s.TerpasangTS = dataKategori.Sum(x => x.TerpasangTS);
-                    s.TerpasangTB = dataKategori.Sum(x => x.TerpasangTB);
-                    s.TerpasangSB = dataKategori.Sum(x => x.TerpasangSB);
-
+                    s.TerpasangTS = dataKategori.Sum(d => d.TerpasangTS);
+                    s.TerpasangTB = dataKategori.Sum(d => d.TerpasangTB);
+                    s.TerpasangSB = dataKategori.Sum(d => d.TerpasangSB);
 
                     result.Add(s);
                 }
@@ -335,106 +362,68 @@ namespace MonPDReborn.Models.AktivitasOP
                 return result;
             }
 
-            public static List<SubDetailModal> GetSubDetailOPData(EnumFactory.EPajak jenisPajak, int kategori, int tahun, string status)
+            public static List<SubDetailDataModal> GetTahunBerjalanModal(EnumFactory.EPajak jenisPajak, int kategori, int status)
             {
-                var ret = new List<SubDetailModal>();
-                var context = DBClass.GetContext();
-                if (status == "TerpasangTS")
-                {
-                    ret = context.DbRekamAlatGabungs
-                    .Where(x => x.IsTs == 1 && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
-                    .Select(x => new SubDetailModal()
-                    {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        Kategori = x.KategoriNama,
-                        NamaOP = x.NamaOp,
-                        NOP = x.Nop,
-                        Alamat = x.AlamatOp,
-                        TanggalPemasangan = x.TglTerpasang.HasValue ? x.TglTerpasang.Value : DateTime.MinValue,
-                        JenisPasang = "Tax Surveillance"
-                    })
-                    .ToList();
-                }
-                else if (status == "TerpasangTB")
-                {
-                    ret = context.DbRekamAlatGabungs
-                    .Where(x => x.IsTb == 1 && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
-                    .Select(x => new SubDetailModal()
-                    {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        Kategori = x.KategoriNama,
-                        NamaOP = x.NamaOp,
-                        NOP = x.Nop,
-                        Alamat = x.AlamatOp,
-                        TanggalPemasangan = x.TglTerpasang.HasValue ? x.TglTerpasang.Value : DateTime.MinValue,
-                        JenisPasang = "Tapping Box"
-                    })
-                    .ToList();
-                }
-                else if (status == "TerpasangSB")
-                {
-                    ret = context.DbRekamAlatGabungs
-                    .Where(x => x.IsSb == 1 && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
-                    .Select(x => new SubDetailModal()
-                    {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        Kategori = x.KategoriNama,
-                        NamaOP = x.NamaOp,
-                        NOP = x.Nop,
-                        Alamat = x.AlamatOp,
-                        TanggalPemasangan = x.TglTerpasang.HasValue ? x.TglTerpasang.Value : DateTime.MinValue,
-                        JenisPasang = "Sinkron Box"
-                    })
-                    .ToList();
-                }
-                else if (status == "Terpasang")
-                {
-                    ret = context.DbRekamAlatGabungs
-                    .Where(x => (x.IsTs == 1 || x.IsTb == 1 || x.IsSb == 1) && x.Tahun == tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
-                    .Select(x => new SubDetailModal()
-                    {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        Kategori = x.KategoriNama,
-                        NamaOP = x.NamaOp,
-                        NOP = x.Nop,
-                        Alamat = x.AlamatOp,
-                        TanggalPemasangan = x.TglTerpasang.HasValue ? x.TglTerpasang.Value : DateTime.MinValue,
-                        JenisPasang = x.IsTs == 1 ? "Tax Surveillance"
-                            : x.IsTb == 1 ? "Tapping Box"
-                            : x.IsSb == 1 ? "Sinkron Box"
-                            : "Belum Terpasang"
-                    })
-                    .ToList();
-                }
-                else if (status == "BelumTerpasang")
-                {
-                    ret = context.DbRekamAlatGabungs
-                    .Where(x => (x.IsTs == 0 && x.IsTb == 0 && x.IsSb == 0) && x.Tahun <= tahun && x.KategoriId == kategori && x.PajakId == (int)jenisPajak)
-                    .Select(x => new SubDetailModal()
-                    {
-                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
-                        Kategori = x.KategoriNama,
-                        NamaOP = x.NamaOp,
-                        NOP = x.Nop,
-                        Alamat = x.AlamatOp,
-                        TanggalPemasangan = x.TglTerpasang.HasValue ? x.TglTerpasang.Value : DateTime.MinValue,
-                        JenisPasang = x.IsTs == 1 ? "Tax Surveillance"
-                            : x.IsTb == 1 ? "Tapping Box"
-                            : x.IsSb == 1 ? "Sinkron Box"
-                            : "Belum Terpasang"
-                    })
-                    .ToList();
-                }
+                using var context = DBClass.GetContext();
+                int tahunSekarang = DateTime.Now.Year;
+                int tahunAwal = tahunSekarang - 7;
 
+                var query = context.DbMonAlatRekams
+                    .Where(x => x.PajakId == (int)jenisPajak
+                                && x.KategoriId == kategori
+                                && x.TglTerpasang.HasValue
+                                && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang);
+                switch (status)
+                {
+                    case 1:
+                        query = query.Where(x => x.JenisAlat == "TS");
+                        break;
+                    case 2:
+                        query = query.Where(x => x.JenisAlat == "TB");
+                        break;
+                    case 3:
+                        query = query.Where(x => x.JenisAlat == "SB");
+                        break;
+                    case 0:
+                        query = query.Where(x => x.JenisAlat == "TS" || x.JenisAlat == "TB" || x.JenisAlat == "SB");
+                        break;
+                    default:
+                        query = query.Where(x => false); // status di luar range
+                        break;
+                }
+                var rows = query
+                    .AsNoTracking()
+                    .ToList();
+                var latestPerNop = rows
+                    .GroupBy(r => r.Nop)
+                    .Distinct()
+                    .Select(g => g.OrderByDescending(r => r.TglTerpasang).First())
+                    .ToList();
+                var result = latestPerNop.Select(x =>
+                {
+                    // aman parsing jam
+                    var jam = string.IsNullOrWhiteSpace(x.Jam) ? "00:00:00" : x.Jam;
+                    if (!TimeSpan.TryParse(jam, out var ts)) ts = TimeSpan.Zero;
+                    string terakhirAktif = (x.Tahun > 0 && x.Bln > 0 && x.Tgl > 0)
+                        ? new DateTime((int)x.Tahun, (int)x.Bln, (int)x.Tgl).Add(ts).ToString("dd/MM/yyyy HH:mm:ss")
+                        : "Tidak Ada Data";
+                    return new SubDetailDataModal
+                    {
+                        JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
+                        Kategori = x.KategoriNama,
+                        NamaOP = x.NamaOp,
+                        NOP = x.Nop,
+                        Alamat = x.AlamatOp,
+                        TanggalPemasangan = x.TglTerpasang ?? DateTime.MinValue,
+                        JenisPasang = x.JenisAlat,
+                        StatusKunci = x.StatusKunci == 1 ? "Terkunci" : "Tidak Terkunci",
+                        StatusOnline = x.StatusOnline == 1 ? "Online" : "Offline",
+                        TerakhirAktif = terakhirAktif
+                    };
+                }).ToList();
 
-                return ret;
+                return result;
             }
-
-        }
-        public class OPInfo
-        {
-            public string Nop { get; set; }
-            public int JenisPajak { get; set; }
         }
         public class DashboardData
         {
@@ -452,17 +441,18 @@ namespace MonPDReborn.Models.AktivitasOP
             public int EnumPajak { get; set; }
             public string JenisPajak { get; set; } = null!;
             public int JumlahOP { get; set; }
-            public int Terpasang2021 { get; set; }
-            public int BelumTerpasang2021 { get; set; }
-            public int Terpasang2022 { get; set; }
-            public int BelumTerpasang2022 { get; set; }
-            public int Terpasang2023 { get; set; }
-            public int BelumTerpasang2023 { get; set; }
-            public int Terpasang2024 { get; set; }
-            public int BelumTerpasang2024 { get; set; }
-            public int Terpasang2025 { get; set; }
-            public int BelumTerpasang2025 { get; set; }
-            public int TotalTerpasang => Terpasang2021 + Terpasang2022 + Terpasang2023 + Terpasang2024 + Terpasang2025;
+            public int TahunMines4 { get; set; }
+            public int BelumTahunMines4 { get; set; }
+            public int TahunMines3 { get; set; }
+            public int BelumTahunMines3 { get; set; }
+            public int TahunMines2 { get; set; }
+            public int BelumTahunMines2 { get; set; }
+            public int TahunMines1 { get; set; }
+            public int BelumTahunMines1 { get; set; }
+            public int TahunNow { get; set; }
+            public int BelumTahunNow { get; set; }
+            public int TotalTerpasang => TahunMines4 + TahunMines3 + TahunMines2 + TahunMines1 + TahunNow;
+            public int TotalBelumTerpasang => JumlahOP - TotalTerpasang;
         }
         public class DetailSeriesPemasanganAlat
         {
@@ -471,17 +461,18 @@ namespace MonPDReborn.Models.AktivitasOP
             public string KategoriNama { get; set; } = null!;
             public int KategoriId { get; set; }
             public int JumlahOP { get; set; }
-            public int Terpasang2021 { get; set; }
-            public int BelumTerpasang2021 { get; set; }
-            public int Terpasang2022 { get; set; }
-            public int BelumTerpasang2022 { get; set; }
-            public int Terpasang2023 { get; set; }
-            public int BelumTerpasang2023 { get; set; }
-            public int Terpasang2024 { get; set; }
-            public int BelumTerpasang2024 { get; set; }
-            public int Terpasang2025 { get; set; }
-            public int BelumTerpasang2025 { get; set; }
-            public int TotalTerpasang => Terpasang2021 + Terpasang2022 + Terpasang2023 + Terpasang2024 + Terpasang2025;
+            public int TahunMines4 { get; set; }
+            public int BelumTahunMines4 { get; set; }
+            public int TahunMines3 { get; set; }
+            public int BelumTahunMines3 { get; set; }
+            public int TahunMines2 { get; set; }
+            public int BelumTahunMines2 { get; set; }
+            public int TahunMines1 { get; set; }
+            public int BelumTahunMines1 { get; set; }
+            public int TahunNow { get; set; }
+            public int BelumTahunNow { get; set; }
+            public int TotalTerpasang => TahunMines4 + TahunMines3 + TahunMines2 + TahunMines1 + TahunNow;
+            public int TotalBelumTerpasang => JumlahOP - TotalTerpasang;
         }
 
         public class DataPemasanganAlat
@@ -520,6 +511,35 @@ namespace MonPDReborn.Models.AktivitasOP
             public string Alamat { get; set; } = null!;
             public DateTime TanggalPemasangan { get; set; }
             public string JenisPasang { get; set; } = null!;
+            public string StatusKunci { get; set; } = null!;
+            public string JenisAlat { get; set; } = null!;
+            public string StatusOnline { get; set; } = null!;
+            public string TerakhirAktif { get; set; } = null!;
+            public decimal status { get; set; }
+
+
+            public bool IsTerpasangTS { get; set; }
+            public bool IsTerpasangTB { get; set; }
+            public bool IsTerpasangSB { get; set; }
+
+        }
+
+        public class SubDetailDataModal
+        {
+            public string JenisPajak { get; set; } = null!;
+            public string Kategori { get; set; } = null!;
+            public string NamaOP { get; set; } = null!;
+            public string NOP { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string Alamat { get; set; } = null!;
+            public DateTime TanggalPemasangan { get; set; }
+            public string JenisPasang { get; set; } = null!;
+            public string StatusKunci { get; set; } = null!;
+            public string JenisAlat { get; set; } = null!;
+            public string StatusOnline { get; set; } = null!;
+            public string TerakhirAktif { get; set; } = null!;
+            public decimal status { get; set; }
+
 
             public bool IsTerpasangTS { get; set; }
             public bool IsTerpasangTB { get; set; }

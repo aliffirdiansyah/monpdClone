@@ -24,11 +24,17 @@
         {
             columns.AddFor(x => x.KategoriNama).Caption("Kategori").Fixed(true);
             columns.AddFor(x => x.JumlahOP).Caption("Jumlah OP").Format("#,##0");
-            columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            columns.Add().Caption("Terapasang").Columns(sub =>
+            {
+                sub.AddFor(m => m.TerpasangTS).Caption("TS").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+                sub.AddFor(m => m.TerpasangTB).Caption("TB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+                sub.AddFor(m => m.TerpasangSB).Caption("SB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            });
+            @* columns.AddFor(m => m.TerpasangTS).Caption("Terpasang TS").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
             columns.AddFor(m => m.TerpasangTB).Caption("Terpasang TB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
-            columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            columns.AddFor(m => m.TerpasangSB).Caption("Terpasang SB").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate")); *@
             columns.AddFor(m => m.TotalTerpasang).Caption("Total Terpasang").Format("#,##0");
-            columns.AddFor(m => m.BelumTerpasang).Caption("Belum Terpasang").Format("#,##0").CellTemplate(new JS("kategoriDataCellTemplate"));
+            columns.AddFor(m => m.BelumTerpasang).Caption("Belum Terpasang").Format("#,##0");
 
         })
         .Summary(summary =>

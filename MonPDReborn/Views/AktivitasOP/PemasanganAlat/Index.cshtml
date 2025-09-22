@@ -20,33 +20,10 @@
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 text-dark mb-0">
-                        Pemasangan Alat Rekam Online - Series
+                        Pemasangan Alat Rekam Online - Tahun
                     </h4>
                 </div>
                 <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="loadShow()">
-                    <i class="mdi mdi-refresh align-middle"></i> Refresh
-                </button>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div id="Show"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex bg-header-color align-items-center">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 text-dark mb-0">
-                        Pemasangan Alat Pada Objek Pajak
-                    </h4>
-                </div>
-                <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
                     <i class="mdi mdi-refresh align-middle"></i> Refresh
                 </button>
             </div>
@@ -74,6 +51,29 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        Pemasangan Alat Rekam Online - Series
+                    </h4>
+                </div>
+                <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
+                    <i class="mdi mdi-refresh align-middle"></i> Refresh
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
             </div>
         </div>
     </div>
@@ -134,17 +134,22 @@
             const kategori = cellInfo.data.KategoriId;
 
             const dataField = cellInfo.column.dataField;
+            const tahunSekarang = new Date().getFullYear();
 
-            const match = dataField.match(/(Terpasang|BelumTerpasang)(\d{4})/);
-            const status = match ? match[1] : '';
-            const tahun = match ? parseInt(match[2], 10) : 0;
+            // Cari angka dari nama kolom (misalnya TMIN0 → 0)
+            let tahun = tahunSekarang;
+            const match = dataField.match(/TMIN(\d+)/i);
+            if (match) {
+                const offset = parseInt(match[1], 10);
+                tahun = tahunSekarang - offset;
+            }
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
                 .attr('href', 'javascript:void(0);')
                 .attr('title', 'Lihat Detail')
                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                .on('click', () => loadSubDetail(jenisPajak, kategori, tahun, status));
+                .on('click', () => loadSubDetail(jenisPajak, kategori, tahun));
 
             const $wrapper = $('<div>')
                 .css({
@@ -160,15 +165,22 @@
         function kategoriDataCellTemplate(cellElement, cellInfo) {
             const jenisPajak = cellInfo.data.EnumPajak;
             const kategori = cellInfo.data.KategoriId;
-            const tahun = new Date().getFullYear();
-            const status = cellInfo.column.dataField;
+
+            // Ambil caption kolom, misalnya "TS", "TB", atau "SB"
+            const caption = (cellInfo.column.caption || "").toUpperCase();
+
+            // Mapping caption ke angka status
+            let status = null;
+            if (caption === "TS") status = 1;
+            else if (caption === "TB") status = 2;
+            else if (caption === "SB") status = 3;
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
                 .attr('href', 'javascript:void(0);')
-                .attr('title', 'Lihat Detail')
+                .attr('title', `Status: ${caption}`)
                 .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
-                .on('click', () => loadSubDetail(jenisPajak, kategori, tahun, status));
+                .on('click', () => loadSubDetailData(jenisPajak, kategori, status));
 
             const $wrapper = $('<div>')
                 .css({
@@ -181,11 +193,49 @@
             $(cellElement).append($wrapper);
         }
 
-        function loadSubDetail(jenisPajak, kategori, tahun, status) {
+
+
+
+        function loadSubDetail(jenisPajak, kategori, tahun) {
             $.ajax({
                 url: '/PemasanganAlat/SubDetailOPModal',
                 type: 'GET',
-                data: { jenisPajak, kategori, tahun, status},
+                data: { jenisPajak, kategori, tahun},
+                beforeSend: function () {
+                    $("#loader").show();
+                    $("#staticBackdropLargeScrollable").modal('hide');
+                },
+                success: function (response) {
+                    $("#loader").hide();
+                    if (response.Status === undefined) {
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail OP Pemasangan Alat");
+                        $("#staticBackdropLargeScrollable .modal-body").html(response);
+                        $("#staticBackdropLargeScrollable").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $("#loader").hide();
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
+                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#staticBackdropLargeScrollable").modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+
+        function loadSubDetailData(jenisPajak, kategori, status) {
+            $.ajax({
+                url: '/PemasanganAlat/SubDetailDataModal',
+                type: 'GET',
+                data: { jenisPajak, kategori, status},
                 beforeSend: function () {
                     $("#loader").show();
                     $("#staticBackdropLargeScrollable").modal('hide');

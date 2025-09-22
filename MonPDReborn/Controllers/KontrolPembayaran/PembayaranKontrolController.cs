@@ -28,6 +28,14 @@ namespace MonPDReborn.Controllers.KontrolPembayaran
             try
             {
                 ViewData["Title"] = "Dashboard Profil Objek Pajak";
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                
                 var model = new Models.KontrolPembayaran.PembayaranKontrolVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

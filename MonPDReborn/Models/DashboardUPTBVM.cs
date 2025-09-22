@@ -4,6 +4,7 @@ using MonPDLib.EF;
 using MonPDLib.General;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 using static MonPDReborn.Models.DataOP.ProfileOPVM;
 using static MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.MonitoringTahunanViewModels;
 
@@ -386,17 +387,17 @@ namespace MonPDReborn.Models
                 var dataTargetHotel = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 var dataTargetHiburan = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 var dataTargetParkir = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaParkir && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
-                var dataTargetListrik = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
+                var dataTargetListrik = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik && x.Uptb == (decimal)wilayah && x.SubRincian == "2").Sum(x => x.Target);
                 var dataTargetPbb = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.PBB && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 var dataTargetAbt = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.AirTanah && x.Uptb == (decimal)wilayah).Sum(x => x.Target);
                 
                 #region Method Get Jumlah OP
-                var OpRestoAkhir = context.DbOpRestos.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpHotelAkhir = context.DbOpHotels.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpHiburanAkhir = context.DbOpHiburans.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpParkirAkhir = context.DbOpParkirs.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpListrikAkhir = context.DbOpListriks.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).AsQueryable();
-                var OpAbtAkhir = context.DbOpAbts.Where(x => x.TahunBuku == currentYear && x.WilayahPajak == wilayah.ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
+                var OpRestoAkhir = context.DbOpRestos.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpHotelAkhir = context.DbOpHotels.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpHiburanAkhir = context.DbOpHiburans.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpParkirAkhir = context.DbOpParkirs.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
+                var OpListrikAkhir = context.DbOpListriks.Where(x => x.WilayahPajak == wilayah.ToString() && x.Sumber == 55).AsQueryable();
+                var OpAbtAkhir = context.DbOpAbts.Where(x => x.WilayahPajak == wilayah.ToString()).AsQueryable();
                 var OpPbbAkhir = context.DbMonPbbs.Where(x => x.TahunBuku == currentYear && x.Uptb == wilayah).Select(x => x.Nop).Distinct().AsQueryable();
 
 
@@ -407,7 +408,7 @@ namespace MonPDReborn.Models
                 var dataRealisasiHiburan = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpHiburanAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpParkirAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                 var dataRealisasiListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpListrikAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear && OpPbbAkhir.Contains(x.Nop)).Sum(x => x.JumlahBayarPokok) ?? 0;
+                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == currentYear && x.TahunBuku == currentYear && OpPbbAkhir.Contains(x.Nop)).Sum(x => x.JumlahBayarPokok) ?? 0;
                 var dataRealisasiAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == currentYear && OpAbtAkhir.Select(x => x.Nop).ToList().Contains(x.Nop)).Sum(x => x.NominalPokokBayar) ?? 0;
                 
                 // Total keseluruhan
@@ -432,27 +433,27 @@ namespace MonPDReborn.Models
                     TargetMamin = dataTargetMamin,
                     RealisasiMamin = dataRealisasiMamin,
                     PersentaseMamin = dataTargetMamin != 0 ? Math.Round((dataRealisasiMamin / dataTargetMamin) * 100, 2) : 0,
-                    JumlahOpMamin = OpRestoAkhir.Where(x => x.PajakNama != "MAMIN").Count(),
+                    JumlahOpMamin = OpRestoAkhir.Where(x => x.PajakNama != "MAMIN" && x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetHotel = dataTargetHotel,
                     RealisasiHotel = dataRealisasiHotel,
                     PersentaseHotel = dataTargetHotel != 0 ? Math.Round((dataRealisasiHotel / dataTargetHotel) * 100, 2) : 0,
-                    JumlahOpHotel = OpHotelAkhir.Count(),
+                    JumlahOpHotel = OpHotelAkhir.Where(x=> x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetHiburan = dataTargetHiburan,
                     RealisasiHiburan = dataRealisasiHiburan,
                     PersentaseHiburan = dataTargetHiburan != 0 ? Math.Round((dataRealisasiHiburan / dataTargetHiburan) * 100, 2) : 0,
-                    JumlahOpHiburan = OpHiburanAkhir.Count(),
+                    JumlahOpHiburan = OpHiburanAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetParkir = dataTargetParkir,
                     RealisasiParkir = dataRealisasiParkir,
                     PersentaseParkir = dataTargetParkir != 0 ? Math.Round((dataRealisasiParkir / dataTargetParkir) * 100, 2) : 0,
-                    JumlahOpParkir = OpParkirAkhir.Count(),
+                    JumlahOpParkir = OpParkirAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetListrik = dataTargetListrik,
                     RealisasiListrik = dataRealisasiListrik,
                     PersentaseListrik = dataTargetListrik != 0 ? Math.Round((dataRealisasiListrik / dataTargetListrik) * 100, 2) : 0,
-                    JumlahOpListrik = OpListrikAkhir.Count(),
+                    JumlahOpListrik = OpListrikAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     TargetPbb = dataTargetPbb,
                     RealisasiPbb = dataRealisasiPbb,
@@ -462,7 +463,7 @@ namespace MonPDReborn.Models
                     TargetAbt = dataTargetAbt,
                     RealisasiAbt = dataRealisasiAbt,
                     PersentaseAbt = dataTargetAbt != 0 ? Math.Round((dataRealisasiAbt / dataTargetAbt) * 100, 2) : 0,
-                    JumlahOpAbt = OpAbtAkhir.Count(),
+                    JumlahOpAbt = OpAbtAkhir.Where(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear)).Count(),
 
                     
                 };
@@ -478,94 +479,53 @@ namespace MonPDReborn.Models
 
                 //target
                 var targetData = context.DbAkunTargetBulanUptbs
-                    .Where(x => x.TahunBuku >= yearLast && x.TahunBuku <= year && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                    .Where(x => x.TahunBuku >= yearLast && x.TahunBuku <= year && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21 && (x.PajakId != 2 || x.SubRincian == "2"))
                     .GroupBy(x => new { x.PajakId, x.TahunBuku })
                     .Select(x => new { TahunBuku = x.Key.TahunBuku, PajakId = x.Key.PajakId, Target = x.Sum(q => q.Target) })
                     .AsEnumerable();
 
                 //Wilayah
                 var nopListSemuaAbt = context.DbOpAbts
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
+
                 var nopListSemuaResto = context.DbOpRestos
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x =>x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaHotel = context.DbOpHotels
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaListrik = context.DbOpListriks
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaParkir = context.DbOpParkirs
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
 
                 var nopListSemuaHiburan = context.DbOpHiburans
-                    .Where(x =>
-                        x.TahunBuku >= yearLast &&
-                        x.TahunBuku <= year &&
-                        x.WilayahPajak == ((int)wilayah).ToString() &&
-                        (
-                            !x.TglOpTutup.HasValue ||
-                            (x.TglOpTutup.Value.Year >= yearLast && x.TglOpTutup.Value.Year <= year)
-                        )
-                    )
+                    .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                     .Select(x => x.Nop)
                     .Distinct()
-                    .ToList();
+                    .AsQueryable();
+
+                var nopListSemuaPbb = context.DbMonPbbs
+                    .Where(x => x.TahunBuku == year && x.Uptb == wilayah)
+                    .Select(x => x.Nop)
+                    .Distinct()
+                    .AsQueryable();
 
 
                 //realisasi
@@ -614,8 +574,7 @@ namespace MonPDReborn.Models
                             .Where(x => x.TglBayar.HasValue
                                         && x.TglBayar.Value.Year == t
                                         && x.TahunBuku == t
-                                        && x.JumlahBayarPokok > 0
-                                        && x.Uptb == Convert.ToInt32(wilayah))
+                                        && x.JumlahBayarPokok > 0)
                             .Sum(x => x.JumlahBayarPokok ?? 0)
                     })
                     .AsEnumerable();

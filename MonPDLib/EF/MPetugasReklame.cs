@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
+[PrimaryKey("Nik", "Username", "KdAktifitas")]
 [Table("M_PETUGAS_REKLAME")]
-[Index("Username", Name = "SYS_C0034201", IsUnique = true)]
 public partial class MPetugasReklame
 {
     [Key]
@@ -21,11 +21,13 @@ public partial class MPetugasReklame
     [Unicode(false)]
     public string Nama { get; set; } = null!;
 
+    [Key]
     [Column("USERNAME")]
     [StringLength(50)]
     [Unicode(false)]
     public string Username { get; set; } = null!;
 
+    [Key]
     [Column("KD_AKTIFITAS")]
     [StringLength(10)]
     [Unicode(false)]

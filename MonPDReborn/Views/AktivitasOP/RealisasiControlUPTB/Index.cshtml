@@ -1,0 +1,278 @@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model RealisasiControlUPTBVM.Index
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Realisasi Kontrol OP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn3.devexpress.com/jslib/23.2.6/css/dx.light.css" rel="stylesheet" />
+    <script src="https://cdn3.devexpress.com/jslib/23.2.6/js/dx.all.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-1 text-center">
+                                <img src="~/assets/images/logosby.png" alt="Logo Pemkot Surabaya" style="width: 80px; height: auto;" />
+                            </div>
+                            <div class="col-11 text-center">
+                                <h5 class="mb-1 fw-bold">PEMERINTAH KOTA SURABAYA</h5>
+                                <h6 class="mb-1">BADAN PENDAPATAN DAERAH KOTA SURABAYA</h6>
+                                <p class="mb-0 small">
+                                    Jalan Jimerto Nomor 25 - 27 Surabaya 60272 <br />
+                                    Telepon (031) 5312144, ext. 584,345,388 Faksimile (031) 5351486
+                                </p>
+                                <h6 class="mt-2 text-primary fw-bold">
+                                    REALISASI PENDAPATAN BANDING AKP PENDAPATAN TAHUN ANGGARAN 2025
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-0">Realisasi Pendapatan Banding AKP Pendapatan</h5>
+                            <small id="lastRefresh" class="text-muted d-block mt-2">
+                                Terakhir di-refresh: -
+                            </small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" id="btnRefresh">
+                            <i class="bi bi-arrow-repeat"></i>
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-Show" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="Show"></div>
+                        <h4>Pembanding Data</h4>
+                        <div class="flex-grow-1">
+                            @{
+                                int startYearA = DateTime.Now.Year - 6;
+                                int currentYearA = DateTime.Now.Year -1;
+                            }
+                            <div class="input-group">
+                                <label class="input-group-text" for="inputGroupSelect01">Tahun</label>
+                                <select class="form-select" id="TahunA" onchange="fnShowPembandingA()">
+                                    @for (int year = startYearA; year <= currentYearA; year++)
+                                    {
+                                        if (year == currentYearA)
+                                        {
+                                            <option value="@year" selected>@year</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0"></div>
+                        
+                        <div id="loading-ShowPembandingA" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="ShowPembandingA"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            @* <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Detail Realisasi per UPTB & Bidang</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-Detail" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="Detail"></div>
+                    </div>
+                </div>
+            </div> *@
+        </div>
+        <hr />
+        @* <div class="row">
+            <h4>Pembanding Data</h4>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex">
+                        <div class="flex-grow-1">
+                            @{
+                                int startYearA = DateTime.Now.Year - 6;   
+                                int currentYearA = DateTime.Now.Year;    
+                            }
+                            <div class="input-group">
+                                <label class="input-group-text" for="inputGroupSelect01">Tahun</label>
+                                <select class="form-select" id="TahunA" onchange="fnShowPembandingA()">
+                                    @for (int year = startYearA; year <= currentYearA; year++)
+                                    {
+                                        if (year == currentYearA)
+                                        {
+                                            <option value="@year" selected>@year</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0"></div>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-ShowPembandingA" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="ShowPembandingA"></div>
+                        <div id="ShowPembandingA"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex">
+                        <div class="flex-grow-1">
+                            @{
+                                int startYearB = DateTime.Now.Year - 6;
+                                int currentYearB = DateTime.Now.Year;
+                            }
+                            <div class="input-group">
+                                <label class="input-group-text" for="inputGroupSelect01">Tahun</label>
+                                <select class="form-select" id="TahunB" onchange="fnShowPembandingB()">
+                                    @for (int year = startYearB; year <= currentYearB; year++)
+                                    {
+                                        if (year == currentYearB)
+                                        {
+                                            <option value="@year" selected>@year</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@year">@year</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="flex-shrink-0"></div>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading-ShowPembandingB" class="text-center" style="display: none;"><div class="spinner-border"></div></div>
+                        <div id="ShowPembandingB"></div>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+    </div>
+</body>
+</html>
+
+
+
+<script>
+    $(document).ready(function () {
+        loadShow();
+        fnShowPembandingA();
+        fnShowPembandingB();
+    });
+
+    function loadShow() {
+        $.ajax({
+            url: '@Url.Action("Show", "RealisasiControlUPTB")',
+            type: 'GET',
+            beforeSend: function () { $('#loading-Show').show(); },
+            success: function (result) { $('#Show').html(result); },
+            error: function () { $('#Show').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-Show').hide(); }
+        });
+    }
+
+    function loadDetail() {
+        $.ajax({
+            url: '@Url.Action("Detail", "RealisasiControlUPTB")',
+            type: 'GET',
+            beforeSend: function () { $('#loading-Detail').show(); },
+            success: function (result) { $('#Detail').html(result); },
+            error: function () { $('#Detail').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-Detail').hide(); }
+        });
+    }
+
+    function fnShowPembandingA() {
+        var tahun = $('#TahunA').val();
+        $.ajax({
+            url: '@Url.Action("ShowPembandingA")',
+            type: 'GET',
+            data:{tahun},
+            beforeSend: function () { $('#loading-ShowPembandingA').show(); },
+            success: function (result) { $('#ShowPembandingA').html(result); },
+            error: function () { $('#ShowPembandingA').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-ShowPembandingA').hide(); }
+        });
+    }
+
+    function fnShowPembandingB() {
+        var tahun = $('#TahunB').val();
+        $.ajax({
+            url: '@Url.Action("ShowPembandingB")',
+            type: 'GET',
+            data:{tahun},
+            beforeSend: function () { $('#loading-ShowPembandingB').show(); },
+            success: function (result) { $('#ShowPembandingB').html(result); },
+            error: function () { $('#ShowPembandingB').html('<p class="text-danger">Gagal memuat data.</p>'); },
+            complete: function () { $('#loading-ShowPembandingB').hide(); }
+        });
+    }
+    function refreshAll() {
+        loadShow();
+        loadDetail();
+        fnShowPembandingA();
+        fnShowPembandingB();
+
+        // Update tulisan kapan terakhir refresh
+        var now = new Date();
+        var formattedTime = now.toLocaleString("id-ID", {
+            weekday: "long",  // Senin, Selasa, ...
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
+
+        $("#lastRefresh").text("Terakhir di-refresh: " + formattedTime);
+    }
+
+
+    $(document).ready(function () {
+        // Jalankan refresh pertama kali
+        refreshAll();
+
+        // Klik manual
+        $("#btnRefresh").on("click", function () {
+            refreshAll();
+        });
+
+        // Auto refresh 15 menit
+        setInterval(function () {
+            refreshAll();
+        }, 900000);
+    });
+
+
+</script>

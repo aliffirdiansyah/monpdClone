@@ -132,10 +132,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListResto = context.DbOpRestos
-                            .Where(x => 
-                                x.TahunBuku == tahun && 
-                                x.WilayahPajak == ((int)wilayah).ToString() && 
-                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop)
                             .Distinct()
                             .ToList();
@@ -175,7 +172,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
                         var dataTargetPPJPerBulan = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah)
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == (int)wilayah && x.SubRincian == "2")
                                 .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {
@@ -187,10 +184,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListPPJ = context.DbOpListriks
-                            .Where(x =>
-                                x.TahunBuku == tahun &&
-                                x.WilayahPajak == ((int)wilayah).ToString() &&
-                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                             .Select(x => x.Nop)
                             .Distinct()
                             .ToList();
@@ -242,10 +236,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListHotel = context.DbOpHotels
-                            .Where(x =>
-                                x.TahunBuku == tahun &&
-                                x.WilayahPajak == ((int)wilayah).ToString() &&
-                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop)
                             .Distinct()
                             .ToList();
@@ -297,10 +288,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListParkir = context.DbOpParkirs
-                            .Where(x =>
-                                x.TahunBuku == tahun &&
-                                x.WilayahPajak == ((int)wilayah).ToString() &&
-                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop)
                             .Distinct()
                             .ToList();
@@ -352,10 +340,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListHiburan = context.DbOpHiburans
-                            .Where(x =>
-                                x.TahunBuku == tahun &&
-                                x.WilayahPajak == ((int)wilayah).ToString() &&
-                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop)
                             .Distinct()
                             .ToList();
@@ -407,10 +392,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                 });
 
                         var nopListAbt = context.DbOpAbts
-                            .Where(x =>
-                                x.TahunBuku == tahun &&
-                                x.WilayahPajak == ((int)wilayah).ToString() &&
-                                (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop)
                             .Distinct()
                             .ToList();
@@ -461,13 +443,17 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                                     TotalTarget = g.Sum(x => x.Target)
                                 });
 
+                        var nopListPbb = context.DbMonPbbs
+                                .Where(x => x.TahunBuku == tahun && x.Uptb == wilayah)
+                                .Select(x => x.Nop)
+                                .Distinct()
+                                .AsQueryable();
+
                         var realisasiPbbPerBulan = context.DbMonPbbs
                             .Where(x => x.TglBayar.HasValue
-                                        && x.TglBayar.Value.Year == tahun
-                                        && x.TglBayar.Value.Month == bulan
-                                        && x.TahunBuku == tahun
-                                        && x.JumlahBayarPokok > 0
-                                        && x.Uptb == Convert.ToInt32(wilayah))
+                                            && x.TglBayar.Value.Year == tahun
+                                            && x.TahunBuku == tahun
+                                            && nopListPbb.Contains(x.Nop))
                             .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayar, PajakId = 9 })
                             .Select(g => new
                             {
@@ -496,7 +482,7 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         break;
                     default:
                         var dataTargetPerhari = context.DbAkunTargetBulanUptbs
-                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                                .Where(x => x.TahunBuku == tahun && x.Bulan == bulan && x.Uptb == (int)wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21 && (x.PajakId != 2 || x.SubRincian == "2"))
                                 .GroupBy(x => new { x.PajakId, x.Tgl, x.Bulan, x.TahunBuku })
                                 .Select(g => new
                                 {
@@ -511,23 +497,28 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
                         var realisasiPerHari = new List<(string Nop, DateTime Tgl, decimal Realisasi, int pajakId)>();
 
                         var nopListSemuaAbt = context.DbOpAbts
-                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaResto = context.DbOpRestos
-                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaHotel = context.DbOpHotels
-                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaListrik = context.DbOpListriks
-                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString() && x.Sumber == 55)
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaParkir = context.DbOpParkirs
-                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop).Distinct().ToList();
                         var nopListSemuaHiburan = context.DbOpHiburans
-                            .Where(x => x.TahunBuku == tahun && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                            .Where(x => x.WilayahPajak == ((int)wilayah).ToString())
                             .Select(x => x.Nop).Distinct().ToList();
+                        var nopListSemuaPbb = context.DbMonPbbs
+                            .Where(x => x.TahunBuku == tahun && x.Uptb == wilayah)
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .AsQueryable();
 
                         realisasiPerHari.AddRange(
                             context.DbMonRestos
@@ -639,14 +630,10 @@ namespace MonPDReborn.Models.MonitoringGlobalUPTB
 
                         realisasiPerHari.AddRange(
                             context.DbMonPbbs
-                            .Where(x =>
-                                x.TglBayar.HasValue &&
-                                x.TahunBuku == tahun &&
-                                x.TglBayar.Value.Year == tahun &&
-                                x.TglBayar.Value.Month == bulan
-                                && x.JumlahBayarPokok > 0
-                                && x.Uptb == Convert.ToInt32(wilayah)
-                            )
+                            .Where(x => x.TglBayar.HasValue
+                                            && x.TglBayar.Value.Year == tahun
+                                            && x.TahunBuku == tahun
+                                            && nopListSemuaPbb.Contains(x.Nop))
                             .GroupBy(x => new { x.Nop, TglBayar = x.TglBayar })
                             .Select(x => new ValueTuple<string, DateTime, decimal, int>(
                                 x.Key.Nop,

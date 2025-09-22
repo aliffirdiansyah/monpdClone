@@ -1,0 +1,271 @@
+﻿@using MonPDReborn.Models.AktivitasOP
+@model PemasanganAlatUPTBVM.Index
+
+@{
+    ViewData["Title"] = "Pemasangan Alat";
+    Layout = "_Layout";
+}
+<style>
+    .neon-left-glow {
+        border-left: 6px solid #00FFFF;
+        box-shadow: -5px 0 5px #00FFFF, -10px 0 10px #00FFFF, -20px 0 20px #00FFFF, -30px 0 30px #0ff, -40px 0 40px #0ff;
+        color: #00FFFF;
+    }
+
+</style>
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        Pemasangan Alat Rekam Online - Tahun
+                    </h4>
+                </div>
+                <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="loadShow()">
+                    <i class="mdi mdi-refresh align-middle"></i> Refresh
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Tahunan" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Tahunan"></div>
+                <div class="modal fade" id="TahunanModal" tabindex="-1" role="dialog" aria-labelledby="TahunanModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="flex-grow-1">
+                                    <h4 class="card-title fs-16 mb-0">
+                                        Detail Objek Pajak Berdasarkan Kategori
+                                    </h4>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="TahunanModalContainer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        Pemasangan Alat Rekam Online - Series
+                    </h4>
+                </div>
+                <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="fnSeriesPajakDaerah()">
+                    <i class="mdi mdi-refresh align-middle"></i> Refresh
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadShow("");
+            loadTahunan("");
+        });
+
+        function loadShow() {
+            $.ajax({
+                url: '@Url.Action("Show", "PemasanganAlatUPTB")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
+
+        function loadTahunan() {
+            $.ajax({
+                url: '@Url.Action("Tahunan", "PemasanganAlatUPTB")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Tahunan').show();
+                    $('#Tahunan').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Tahunan').hide();
+                    $('#Tahunan').html(result).show();
+                },
+                error: function () {
+                    $('#loading2-Tahunan').hide();
+                    $('#Tahunan').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+        }
+
+        function kategoriSeriesCellTemplate(cellElement, cellInfo) {
+            const jenisPajak = cellInfo.data.EnumPajak;
+            const kategori = cellInfo.data.KategoriId;
+
+            const dataField = cellInfo.column.dataField;
+            const tahunSekarang = new Date().getFullYear();
+
+            // Cari angka dari nama kolom (misalnya TMIN0 → 0)
+            let tahun = tahunSekarang;
+            const match = dataField.match(/TMIN(\d+)/i);
+            if (match) {
+                const offset = parseInt(match[1], 10);
+                tahun = tahunSekarang - offset;
+            }
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => loadSubDetail(jenisPajak, kategori, tahun));
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function kategoriDataCellTemplate(cellElement, cellInfo) {
+            const jenisPajak = cellInfo.data.EnumPajak;
+            const kategori = cellInfo.data.KategoriId;
+
+            // Ambil caption kolom, misalnya "TS", "TB", atau "SB"
+            const caption = (cellInfo.column.caption || "").toUpperCase();
+
+            // Mapping caption ke angka status
+            let status = null;
+            if (caption === "TS") status = 1;
+            else if (caption === "TB") status = 2;
+            else if (caption === "SB") status = 3;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', `Status: ${caption}`)
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => loadSubDetailData(jenisPajak, kategori, status));
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+
+
+
+        function loadSubDetail(jenisPajak, kategori, tahun) {
+            $.ajax({
+                url: '/PemasanganAlatUPTB/SubDetailOPModal',
+                type: 'GET',
+                data: { jenisPajak, kategori, tahun},
+                beforeSend: function () {
+                    $("#loader").show();
+                    $("#staticBackdropLargeScrollable").modal('hide');
+                },
+                success: function (response) {
+                    $("#loader").hide();
+                    if (response.Status === undefined) {
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail OP Pemasangan Alat");
+                        $("#staticBackdropLargeScrollable .modal-body").html(response);
+                        $("#staticBackdropLargeScrollable").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $("#loader").hide();
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
+                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#staticBackdropLargeScrollable").modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+
+        function loadSubDetailData(jenisPajak, kategori, status) {
+            $.ajax({
+                url: '/PemasanganAlatUPTB/SubDetailDataModal',
+                type: 'GET',
+                data: { jenisPajak, kategori, status},
+                beforeSend: function () {
+                    $("#loader").show();
+                    $("#staticBackdropLargeScrollable").modal('hide');
+                },
+                success: function (response) {
+                    $("#loader").hide();
+                    if (response.Status === undefined) {
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail OP Pemasangan Alat");
+                        $("#staticBackdropLargeScrollable .modal-body").html(response);
+                        $("#staticBackdropLargeScrollable").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $("#loader").hide();
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail WP");
+                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#staticBackdropLargeScrollable").modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+
+    </script>
+}
+

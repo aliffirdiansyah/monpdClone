@@ -23,7 +23,7 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilaya
     .OnExporting("exportGrid")
     .Columns(columns => {
         columns.AddFor(m => m.Tanggal)
-            .Caption("Tanggal").Format("dd MMMM yyyy");
+            .Caption("Tanggal").Format("dd MMMM yyyy").Alignment(HorizontalAlignment.Center);
 
         columns.AddFor(m => m.Hari)
             .Caption("Hari");
@@ -34,26 +34,26 @@ Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringWilayah.MonitoringWilaya
         columns.AddFor(m => m.JenisPajak)
             .Caption("Jenis Pajak");
 
-        columns.AddFor(m => m.Target).Format("#,##0")
-            .Caption("Target");
-
         columns.AddFor(m => m.Realisasi).Format("#,##0")
             .Caption("Realisasi");
 
-        columns.Add()
+       columns.Add()
             .Caption("Pencapaian (%)")
             .CellTemplate(@<text>
                 <% 
                     var val = data.Pencapaian;
                     var color = val >= 90 ? "bg-success" : val >= 70 ? "bg-warning" : "bg-danger";
                 %>
-                <div class="d-flex align-items-center w-100">
-                    <div class="me-2 fw-semibold"><%= val %>%</div>
-                    <div class="progress w-100" style="height:6px;">
+                <div class="d-flex align-items-center" style="width:100%;">
+                    <div style="width:50px; text-align:right;" class="fw-semibold"><%= val %>%</div>
+            
+                    <div class="progress flex-grow-1 ms-2" style="height:6px;">
                         <div class="progress-bar <%= color %>" style="width:<%= val %>%"></div>
                     </div>
                 </div>
             </text>);
+
+
         columns.Add()
              .Type(GridCommandColumnType.Buttons)
              .Buttons(b =>

@@ -30,11 +30,12 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
                 {
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
-
+                
+                
                 string lastPart = nama.Split(' ').Last();
 
                 ViewData["Title"] = controllerName;
-                if (wilayah == null && !string.IsNullOrEmpty(lastPart))
+                if (lastPart != "0" && lastPart != "BAPENDA")
                 {
                     jenisPajak = 0;
                     var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Index(Convert.ToInt32(lastPart), jenisPajak.Value);
