@@ -265,6 +265,11 @@ namespace MonPDReborn.Controllers.Aktivitas
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(input.Data.NewRowUpaya.NoFormulir) && string.IsNullOrWhiteSpace(input.SelectedNOR))
+                {
+                    throw new ArgumentException("Silakan isi salah satu: No Formulir atau NOR.");
+                }
+
                 if (input.Lampiran == null && input.Lampiran.Length <= 0)
                 {
                     throw new ArgumentException("Lampiran tidak boleh kosong. Silahkan upload file lampiran yang sesuai.");
@@ -280,9 +285,14 @@ namespace MonPDReborn.Controllers.Aktivitas
                 var insert = new Models.AktivitasOP.ReklameSummaryVM.DetailUpaya.NewRow
                 {
                     NoFormulir = input.Data.NewRowUpaya.NoFormulir,
+                    NOR = !string.IsNullOrWhiteSpace(input.SelectedNOR)
+                        ? input.SelectedNOR.Trim().ToUpper()
+                        : "-",
                     IdUpaya = input.SelectedUpaya,
                     IdTindakan = input.SelectedTindakan,
                     NamaPetugas = input.Data.NewRowUpaya.NamaPetugas,
+                    NIKPetugas = "-",
+                    KdKatifitas = "-",
                     TglUpaya = input.Data.NewRowUpaya.TglUpaya,
                     Lampiran = input.Data.NewRowUpaya.Lampiran,
                 };

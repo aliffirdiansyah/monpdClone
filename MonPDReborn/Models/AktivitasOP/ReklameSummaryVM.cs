@@ -105,6 +105,7 @@ namespace MonPDReborn.Models.AktivitasOP
             public DetailUpaya Data { get; set; } = new();
             public int SelectedUpaya { get; set; }
             public int SelectedTindakan { get; set; }
+            public string SelectedNOR { get; set; } = null!;
             public IFormFile Lampiran { get; set; } = null!;
             public GetDetailUpaya() { }
             public GetDetailUpaya(string noFormulir, int tahun, int bulan , int lokasi)
@@ -780,46 +781,67 @@ namespace MonPDReborn.Models.AktivitasOP
             public static void SimpanUpaya(DetailUpaya.NewRow NewRowUpaya)
             {
                 var context = DBClass.GetContext();
+                if (string.IsNullOrEmpty(NewRowUpaya.NoFormulir) && string.IsNullOrEmpty(NewRowUpaya.NOR))
+                    throw new ArgumentException("Silakan isi salah satu: No Formulir atau NOR.");
+
                 if (NewRowUpaya.IdUpaya == 0)
-                {
                     throw new ArgumentException("Upaya tidak boleh kosong.");
-                }
+
                 if (NewRowUpaya.IdTindakan == 0)
-                {
                     throw new ArgumentException("Keterangan tidak boleh kosong.");
-                }
+
                 if (NewRowUpaya.TglUpaya == null || NewRowUpaya.TglUpaya == DateTime.MinValue)
-                {
                     throw new ArgumentException("Tanggal Upaya tidak boleh kosong.");
-                }
+
                 if (string.IsNullOrEmpty(NewRowUpaya.NamaPetugas))
-                {
                     throw new ArgumentException("Nama Petugas tidak boleh kosong.");
-                }
+
+                if (string.IsNullOrEmpty(NewRowUpaya.NIKPetugas))
+                    throw new ArgumentException("NIK Petugas tidak boleh kosong.");
+
                 if (NewRowUpaya.Lampiran == null || NewRowUpaya.Lampiran.Length <= 0)
+                    throw new ArgumentException("Lampiran foto tidak boleh kosong.");
+
+                var tindakan = context.MTindakanReklames
+                    .Where(x => x.Id == NewRowUpaya.IdTindakan && x.IdUpaya == NewRowUpaya.IdUpaya)
+                    .Select(x => x.Tindakan)
+                    .SingleOrDefault();
+
+                var upaya = context.MUpayaReklames
+                    .Where(x => x.Id == NewRowUpaya.IdUpaya)
+                    .Select(x => x.Upaya)
+                    .SingleOrDefault();
+
+                var seq = 1;
+                if (!string.IsNullOrEmpty(NewRowUpaya.NoFormulir))
                 {
-                    throw new ArgumentException("lampiran foto tidak boleh kosong.");
+                    seq = context.DbMonReklameUpayas
+                        .Where(x => x.NoFormulir == NewRowUpaya.NoFormulir)
+                        .Select(x => x.Seq)
+                        .Count() + 1;
                 }
-                var tindakan = context.MTindakanReklames.Where(x => x.Id == NewRowUpaya.IdTindakan && x.IdUpaya == NewRowUpaya.IdUpaya).SingleOrDefault().Tindakan;
-                var upaya = context.MUpayaReklames.Where(x => x.Id == NewRowUpaya.IdUpaya).SingleOrDefault().Upaya;
+                else if (!string.IsNullOrEmpty(NewRowUpaya.NOR))
+                {
+                    seq = context.DbMonReklameUpayas
+                        .Where(x => x.Nor == NewRowUpaya.NOR)
+                        .Select(x => x.Seq)
+                        .Count() + 1;
+                }
 
-                var seq = context.DbMonReklameUpayas
-                    .Where(x => x.NoFormulir == NewRowUpaya.NoFormulir)
-                    .Select(x => x.Seq)
-                    .Count() + 1;
-
-
+                // Simpan data
                 var newUpaya = new MonPDLib.EF.DbMonReklameUpaya();
                 newUpaya.DbMonReklameUpayaDok = new DbMonReklameUpayaDok();
 
-                newUpaya.NoFormulir = NewRowUpaya.NoFormulir;
+                newUpaya.NoFormulir = NewRowUpaya.NoFormulir.Trim().ToUpper();
+                newUpaya.Nor = NewRowUpaya.NOR.Trim().ToUpper();
                 newUpaya.Seq = seq;
                 newUpaya.TglUpaya = NewRowUpaya.TglUpaya;
                 newUpaya.Upaya = upaya ?? "-";
                 newUpaya.Keterangan = tindakan ?? "-";
                 newUpaya.Petugas = NewRowUpaya.NamaPetugas;
+                newUpaya.NikPetugas = NewRowUpaya.NIKPetugas;
+                newUpaya.KdAktifitas = NewRowUpaya.KdKatifitas;
                 newUpaya.DbMonReklameUpayaDok.Gambar = NewRowUpaya.Lampiran;
-
 
                 context.DbMonReklameUpayas.Add(newUpaya);
                 context.SaveChanges();
@@ -1655,9 +1677,12 @@ namespace MonPDReborn.Models.AktivitasOP
             public class NewRow
             {
                 public string NoFormulir { get; set; } = null!;
+                public string NOR { get; set; } = null!;
                 public int IdUpaya { get; set; }
                 public int IdTindakan { get; set; }
                 public string NamaPetugas { get; set; } = null!;
+                public string KdKatifitas { get; set; } = null!;
+                public string NIKPetugas { get; set; } = null!;
                 public DateTime TglUpaya { get; set; }
                 public byte[] Lampiran { get; set; } = null!;
             }
