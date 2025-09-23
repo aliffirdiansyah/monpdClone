@@ -1,9 +1,18 @@
-﻿@model MonPDReborn.Models.CCTVParkir.VendorParkirVM.Index
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.Index
 
 @{
-    ViewData["Title"] = "Vendor Parkir";
+    ViewData["Title"] = "Monitoring CCTV Parkir";
     Layout = "_Layout";
 }
+<style>
+    .neon-left-glow {
+        border-left: 6px solid #00FFFF;
+        box-shadow: -5px 0 5px #00FFFF, -10px 0 10px #00FFFF, -20px 0 20px #00FFFF, -30px 0 30px #0ff, -40px 0 40px #0ff;
+        color: #00FFFF;
+    }
+
+</style>
+
 <div class="row">
 
     <div class="col-lg-12">
@@ -51,13 +60,12 @@
 
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         $(document).ready(function () {
-            // ✅ Panggil Show pertama kali dengan "semua wilayah"
+          
             loadShow();
 
-            // ✅ Event onValueChanged di SelectBox
             $("#SelectedUPTB").dxSelectBox("instance").option("onValueChanged", function (e) {
                 loadShow(e.value);
             });
@@ -67,9 +75,9 @@
             $("#loading2-Show").show();
 
             $.ajax({
-                url: '/VendorParkir/Show', // ✅ sesuaikan dengan action kamu
+                url: '/MonitoringCCTV/Show', 
                 type: 'GET',
-                data: { uptb: selectedUptb }, // ✅ kirim filter (null = semua wilayah)
+                data: { uptb: selectedUptb }, 
                 success: function (result) {
                     $("#Show").html(result);
                 },
@@ -82,7 +90,39 @@
             });
         }
     </script>
+    <script>
+        function lihatDetailModal(nop) {
+            // Tampilkan modal
+            $("#staticBackdropLargeScrollable").modal("show");
+
+            // Kosongkan / tampilkan loading spinner saat request
+            $("#staticBackdropLargeScrollable .modal-body").html(`
+                <div class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+
+            // Ambil konten detail via AJAX
+            $.get('/MonitoringCCTV/Detail', { nop: nop })
+                .done(function (html) {
+                    $("#staticBackdropLargeScrollable .modal-body").html(html);
+                })
+                .fail(function () {
+                    $("#staticBackdropLargeScrollable .modal-body").html(
+                        `<div class="text-danger text-center p-3">
+                            Gagal memuat data detail.
+                        </div>`
+                    );
+                });
+        }
+
+        function lihatDetailNewTab(nop) {
+            // Buka halaman detail di tab baru
+            window.open('/MonitoringCCTV/Kapasitas?nop=' + encodeURIComponent(nop), '_blank');
+        }
+    </script>
+
 
 }
-
-

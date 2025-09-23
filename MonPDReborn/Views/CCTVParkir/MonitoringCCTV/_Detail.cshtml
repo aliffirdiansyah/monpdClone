@@ -1,0 +1,28 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.Detail
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTVDet>()
+        .ID("detCCTVGrid")
+        .DataSource(Model.MonitoringCCTVDetList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Tgl).Caption("Tanggal").Format("dd MMM yyyy");
+            columns.AddFor(m => m.TglDown).Caption("Tanggal Down").Format("dd MMM yyyy HH:mm:ss");
+            columns.AddFor(m => m.TglAktif).Caption("Tanggal Up").Format("dd MMM yyyy HH:mm:ss");
+            columns.AddFor(m => m.DownTime).Caption("Down Time");
+        })
+        )
+</div>
