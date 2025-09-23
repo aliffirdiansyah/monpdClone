@@ -19,8 +19,9 @@
         )
         .Columns(columns =>
         {
-            columns.AddFor(m => m.TglDown).Caption("Tanggal");
-            columns.AddFor(m => m.StatusAktif).Caption("Status Aktif");
+            columns.AddFor(m => m.Tgl).Caption("Tanggal");
+            columns.AddFor(m => m.TglDown).Caption("Tanggal Down");
+            columns.AddFor(m => m.TglAktif).Caption("Tanggal Up");
             columns.AddFor(m => m.DownTime).Caption("Down Time");
         })
         )

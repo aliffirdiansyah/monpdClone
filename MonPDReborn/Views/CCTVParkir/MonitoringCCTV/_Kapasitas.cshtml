@@ -11,33 +11,63 @@
                 <h4 class="card-title text-dark mb-0">Monitoring Parkir</h4>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    @(
-                        Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTVKapasitas>()
-                        .ID("vendorParkirGrid")
-                        .DataSource(Model.MonitoringCCTVKapasitasList)
-                        .ShowBorders(true)
-                        .ShowColumnLines(true)
-                        .RowAlternationEnabled(true)
-                        .ShowRowLines(true)
-                        .ShowColumnHeaders(true)
-                        .ColumnAutoWidth(true)
-                        .Paging(p => p.PageSize(10))
-                        .Pager(p => p
-                        .ShowPageSizeSelector(true)
-                        .AllowedPageSizes(new[] { 5, 10, 20 })
-                        .ShowInfo(true)
-                        )
-                        .Columns(columns =>
-                        {
-                            columns.AddFor(m => m.Tanggal).Caption("Tanggal").Fixed(true);
-                            columns.AddFor(m => m.KapasitasMotor).Caption("Kapasitas Motor").Format("#,##0");
-                            columns.AddFor(m => m.KapasitasMobil).Caption("Kapasitas Mobil").Format("#,##0");
-                            columns.AddFor(m => m.KapasitasTrukBus).Caption("Kapasitas Bus").Format("#,##0");
-                            columns.AddFor(m => m.KapasitasTrukMini).Caption("Kapasitas Truk Mini").Format("#,##0");
-                            columns.AddFor(m => m.KapasitasTrailer).Caption("Kapasitas Trailer").Format("#,##0");
-                        })
-                        )
+                <div class="row g-3 align-items-center">
+
+                    <div class="col-lg col-md-6">
+                        @(Html.DevExtreme().DateBox()
+                                .ID("tanggalAwal")
+                                .Type(DateBoxType.Date)
+                                .Placeholder("Tanggal Awal")
+                                .StylingMode(EditorStylingMode.Outlined)
+                                .Value(DateTime.Now)
+                                .Max(DateTime.Now)
+                                )
+                    </div>
+
+                    <div class="col-lg col-md-6">
+                        @(Html.DevExtreme().DateBox()
+                                .ID("tanggalAkhir")
+                                .Type(DateBoxType.Date)
+                                .Placeholder("Tanggal Akhir")
+                                .StylingMode(EditorStylingMode.Outlined)
+                                )
+                    </div>
+
+                    <div class="col-lg col-md-6">
+                        <button type="button" id="btnTerapkanFilter" class="btn btn-success w-100">
+                            Terapkan Filter
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        @(
+                            Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTVKapasitas>()
+                            .ID("vendorParkirGrid")
+                            .DataSource(Model.MonitoringCCTVKapasitasList)
+                            .ShowBorders(true)
+                            .ShowColumnLines(true)
+                            .RowAlternationEnabled(true)
+                            .ShowRowLines(true)
+                            .ShowColumnHeaders(true)
+                            .ColumnAutoWidth(true)
+                            .Paging(p => p.PageSize(10))
+                            .Pager(p => p
+                            .ShowPageSizeSelector(true)
+                            .AllowedPageSizes(new[] { 5, 10, 20 })
+                            .ShowInfo(true)
+                            )
+                            .Columns(columns =>
+                            {
+                                columns.AddFor(m => m.Tanggal).Caption("Tanggal");
+                                columns.AddFor(m => m.KapasitasMotor).Caption("Jumlah Motor").Format("#,##0");
+                                columns.AddFor(m => m.KapasitasMobil).Caption("Jumlah Mobil").Format("#,##0");
+                                columns.AddFor(m => m.KapasitasTrukBus).Caption("Jumlah Bus").Format("#,##0");
+                                columns.AddFor(m => m.KapasitasTrukMini).Caption("Jumlah Truk Mini").Format("#,##0");
+                                columns.AddFor(m => m.KapasitasTrailer).Caption("Jumlah Trailer").Format("#,##0");
+                            })
+                            )
+                    </div>
+
                 </div>
             </div>
         </div>
