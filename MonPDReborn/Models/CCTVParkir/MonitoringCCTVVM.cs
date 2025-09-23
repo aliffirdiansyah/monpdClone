@@ -50,16 +50,16 @@ namespace MonPDReborn.Models.CCTVParkir
             {
                 List<MonitoringCCTV> result = new()
                 {
-                    new MonitoringCCTV { Nop = "3171010001", NamaOp = "Parkir Plaza Surabaya", AlamatOp = "Jl. Pemuda No. 1", WilayahPajak = "Genteng", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
-                    new MonitoringCCTV { Nop = "3171010002", NamaOp = "Parkir Tunjungan Plaza", AlamatOp = "Jl. Basuki Rahmat No. 8", WilayahPajak = "Tegalsari", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
-                    new MonitoringCCTV { Nop = "3171010003", NamaOp = "Parkir Galaxy Mall", AlamatOp = "Jl. Dharmahusada Indah Timur", WilayahPajak = "Mulyorejo", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Non-Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
-                    new MonitoringCCTV { Nop = "3171010004", NamaOp = "Parkir Royal Plaza", AlamatOp = "Jl. Ahmad Yani No. 16", WilayahPajak = "Wonokromo", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
-                    new MonitoringCCTV {Nop = "3171010005", NamaOp = "Parkir Pakuwon Mall", AlamatOp = "Jl. Puncak Indah Lontar", WilayahPajak = "Sambikerep", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
-                    new MonitoringCCTV {Nop = "3171010006", NamaOp = "Parkir City of Tomorrow", AlamatOp = "Jl. Ahmad Yani No. 288", WilayahPajak = "Jambangan", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Non-Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
-                    new MonitoringCCTV {Nop = "3171010007", NamaOp = "Parkir Lenmarc", AlamatOp = "Jl. Bukit Darmo Golf", WilayahPajak = "Sukomanunggal", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
-                    new MonitoringCCTV {Nop = "3171010008", NamaOp = "Parkir BG Junction", AlamatOp = "Jl. Bubutan No. 1", WilayahPajak = "Bubutan", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
-                    new MonitoringCCTV {Nop = "3171010009", NamaOp = "Parkir Ciputra World", AlamatOp = "Jl. Mayjen Sungkono No. 87", WilayahPajak = "Sawahan", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Non-Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
-                    new MonitoringCCTV {Nop = "3171010010", NamaOp = "Parkir Grand City", AlamatOp = "Jl. Walikota Mustajab No. 1", WilayahPajak = "Genteng", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Aktif", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)}
+                    new MonitoringCCTV { Nop = "3171010001", NamaOp = "Parkir Plaza Surabaya", AlamatOp = "Jl. Pemuda No. 1", WilayahPajak = "Genteng", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Online", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
+                    new MonitoringCCTV { Nop = "3171010002", NamaOp = "Parkir Tunjungan Plaza", AlamatOp = "Jl. Basuki Rahmat No. 8", WilayahPajak = "Tegalsari", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Online", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
+                    new MonitoringCCTV { Nop = "3171010003", NamaOp = "Parkir Galaxy Mall", AlamatOp = "Jl. Dharmahusada Indah Timur", WilayahPajak = "Mulyorejo", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Offline", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
+                    new MonitoringCCTV { Nop = "3171010004", NamaOp = "Parkir Royal Plaza", AlamatOp = "Jl. Ahmad Yani No. 16", WilayahPajak = "Wonokromo", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Online", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50) },
+                    new MonitoringCCTV {Nop = "3171010005", NamaOp = "Parkir Pakuwon Mall", AlamatOp = "Jl. Puncak Indah Lontar", WilayahPajak = "Sambikerep", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Online", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
+                    new MonitoringCCTV {Nop = "3171010006", NamaOp = "Parkir City of Tomorrow", AlamatOp = "Jl. Ahmad Yani No. 288", WilayahPajak = "Jambangan", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Offline", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
+                    new MonitoringCCTV {Nop = "3171010007", NamaOp = "Parkir Lenmarc", AlamatOp = "Jl. Bukit Darmo Golf", WilayahPajak = "Sukomanunggal", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Online", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
+                    new MonitoringCCTV {Nop = "3171010008", NamaOp = "Parkir BG Junction", AlamatOp = "Jl. Bubutan No. 1", WilayahPajak = "Bubutan", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Online", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
+                    new MonitoringCCTV {Nop = "3171010009", NamaOp = "Parkir Ciputra World", AlamatOp = "Jl. Mayjen Sungkono No. 87", WilayahPajak = "Sawahan", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Offline", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)},
+                    new MonitoringCCTV {Nop = "3171010010", NamaOp = "Parkir Grand City", AlamatOp = "Jl. Walikota Mustajab No. 1", WilayahPajak = "Genteng", UptbId = uptbId, TglTerpasang = DateTime.Now.AddMinutes(-5), Vendor = "Jasmita", StatusAktif = "Online", TglTerakhirAktif = DateTime.Today.AddDays(-9).AddHours(17).AddMinutes(45).AddSeconds(50)}
                 };
                 return result;
             }
@@ -130,7 +130,23 @@ namespace MonPDReborn.Models.CCTVParkir
             public int Jam => (TglDown - TglAktif).Hours;
             public int Menit => (TglDown - TglAktif).Minutes;
 
-            public string DownTime => $"{Hari} Hari {Jam} Jam {Menit} Menit";
+            public string DownTime
+            {
+                get
+                {
+                    var parts = new List<string>();
+
+                    if (Hari > 0) parts.Add($"{Hari} Hari");
+                    if (Jam > 0) parts.Add($"{Jam} Jam");
+                    if (Menit > 0) parts.Add($"{Menit} Menit");
+
+                    // Kalau semua 0 (misal TglDown == TglAktif)
+                    if (parts.Count == 0)
+                        return "0 Menit";
+
+                    return string.Join(" ", parts);
+                }
+            }
         }
         public class MonitoringCCTVKapasitas
         {

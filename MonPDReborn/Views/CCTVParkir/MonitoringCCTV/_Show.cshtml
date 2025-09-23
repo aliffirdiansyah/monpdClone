@@ -77,10 +77,10 @@
             columns.AddFor(m => m.Nop).Caption("NOP").Fixed(true);
             columns.AddFor(m => m.NamaOp).Caption("Nama OP");
             columns.AddFor(m => m.AlamatOp).Caption("Alamat OP");
-            columns.AddFor(m => m.TglTerpasang).Caption("Tgl Terpasang");
+            columns.AddFor(m => m.TglTerpasang).Caption("Tgl Terpasang").Format("dd MMM yyyy");
             columns.AddFor(m => m.Vendor).Caption("Vendor");
-            columns.AddFor(m => m.StatusAktif).Caption("Status Aktif");
-            columns.AddFor(m => m.TglTerakhirAktif).Caption("Terakhir Aktif").Format("yyyy-MM-dd HH:mm:ss");
+            columns.AddFor(m => m.StatusAktif).Caption("Kondisi CCTV");
+            columns.AddFor(m => m.TglTerakhirAktif).Caption("Terakhir Aktif").Format("dd MMM yyyy HH:mm:ss");
 
             // ✅ Kolom Action
             columns.Add()

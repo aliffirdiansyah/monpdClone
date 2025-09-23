@@ -58,7 +58,7 @@
                             )
                             .Columns(columns =>
                             {
-                                columns.AddFor(m => m.Tanggal).Caption("Tanggal");
+                                columns.AddFor(m => m.Tanggal).Caption("Tanggal").Format("dd MMM yyyy");
                                 columns.AddFor(m => m.KapasitasMotor).Caption("Jumlah Motor").Format("#,##0");
                                 columns.AddFor(m => m.KapasitasMobil).Caption("Jumlah Mobil").Format("#,##0");
                                 columns.AddFor(m => m.KapasitasTrukBus).Caption("Jumlah Bus").Format("#,##0");
