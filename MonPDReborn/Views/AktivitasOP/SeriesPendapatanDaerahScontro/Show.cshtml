@@ -11,24 +11,93 @@
         border: 1px solid #000;
         padding: 5px;
         text-align: left;
+        white-space: nowrap; /* supaya tabel tidak patah ke bawah */
     }
 
+    /* Header */
     thead {
         background-color: #d3d3d3;
         font-weight: bold;
         text-align: center;
     }
 
+    /* Lebar kolom fix */
     th:first-child, td:first-child {
-        width: 3%;
+        min-width: 60px; /* Kolom NO, kasih fix biar stabil */
+        max-width: 60px;
+        text-align: center;
     }
 
     th:nth-child(2), td:nth-child(2) {
-        width: 40%;
+        min-width: 250px; /* Kolom URAIAN */
     }
 
-    th:nth-child(3), th:nth-child(4), th:nth-child(5) {
-        width: 19%;
+    /* Freeze kolom NO */
+    th:first-child {
+        position: sticky;
+        left: 0;
+        background: #d3d3d3; /* abu-abu untuk header */
+        z-index: 5;
+    }
+
+    td:first-child {
+        position: sticky;
+        left: 0;
+        background: #fff; /* default putih isi */
+        z-index: 4;
+    }
+
+    /* Freeze kolom URAIAN */
+    th:nth-child(2) {
+        position: sticky;
+        left: 60px;
+        background: #d3d3d3; /* abu-abu untuk header */
+        z-index: 5;
+    }
+
+    td:nth-child(2) {
+        position: sticky;
+        left: 60px;
+        background: #fff; /* default putih isi */
+        z-index: 4;
+    }
+
+    /* Row total */
+    .total-row td {
+        font-weight: bold;
+        background: #e0e0e0; /* warna khusus total */
+    }
+
+        /* Freeze untuk total row */
+        .total-row td:first-child {
+            position: sticky;
+            left: 0;
+            background: #e0e0e0; /* sama dengan warna total */
+            z-index: 9;
+        }
+
+        .total-row td:nth-child(2) {
+            position: sticky;
+            left: 60px; /* sesuai lebar kolom NO */
+            background: #e0e0e0;
+            z-index: 9;
+        }
+
+        .total-row td[colspan="2"] {
+            position: sticky;
+            left: 0;
+            background: #e0e0e0;
+            z-index: 9;
+            min-width: 310px; /* sesuai gabungan kolom NO (60) + URAIAN (250) */
+            max-width: 310px;
+        }
+
+    /* Freeze header */
+    thead th {
+        position: sticky;
+        top: 0;
+        background: #d3d3d3;
+        z-index: 4;
     }
 
     .align-right {
@@ -56,6 +125,7 @@
     .bold {
         font-weight: bold;
     }
+
 </style>
 
 @{
@@ -70,7 +140,7 @@
     var idnCulture = new CultureInfo("id-ID");
 }
 
-<div class="table-responsive">
+<div class="table-responsive overflow-x:auto; max-width:100%;">
     <table class="table">
         <thead>
             <tr>
@@ -814,9 +884,6 @@
                 <td style="text-align: right">@(Model.Data.FormatScontro7.RealisasiLainLainSesuaiPerundangan.ToString("n0", idnCulture))</td>
                 <td style="text-align: right">@(Model.Data.FormatScontro7.PersentaseLainLainSesuaiPerundangan)%</td>
             </tr>
-            <tr>
-                <td colspan="5" style="height: 10px; border-left: none; border-right: none;"></td>
-            </tr>
             <tr style="font-weight: bold">
                 <td>B</td>
                 <td>PENERIMAAN PEMBIAYAAN</td>
@@ -917,11 +984,8 @@
                 <td style="text-align: right">@(Model.Data.FormatScontro7.RealisasiPenerimaanKembaliPemberianPinjaman.ToString("n0", idnCulture))</td>
                 <td style="text-align: right">@(Model.Data.FormatScontro7.PersentasePenerimaanKembaliPemberianPinjaman)%</td>
             </tr>
-            <tr>
-                <td colspan="5" style="height: 10px; border-left: none; border-right: none;"></td>
-            </tr>
             <tr style="font-weight: bold">
-                <td colspan="2">JUMLAH TOTAL PENERIMAAN (A+B)</td>
+                <td class="total-row" colspan="2">JUMLAH TOTAL PENERIMAAN (A+B)</td>
                 <td style="text-align: right">@(Model.Data.FormatScontro1.TargetJumlahTotalPenerimaan.ToString("n0", idnCulture))</td>
                 <td style="text-align: right">@(Model.Data.FormatScontro1.RealisasiJumlahTotalPenerimaan.ToString("n0", idnCulture))</td>
                 <td style="text-align: right">@(Model.Data.FormatScontro1.PersentaseJumlahTotalPenerimaan)%</td>
