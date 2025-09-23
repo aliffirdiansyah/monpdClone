@@ -210,7 +210,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerahUrgent" ? "active" : "")"
                                 href="@Url.Action("Index", "SeriesPendapatanDaerahUrgent")" target="_blank" role="button">
-                                    <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerahUrgent">Series Pendapatan Daerah Akun</span>
+                                    <i class=" bx bx-bar-chart-alt  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerahUrgent">Series Pendapatan Daerah Akun</span>
                                 </a>
                             </li>
                             @* <li class="nav-item">
@@ -378,6 +378,18 @@
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-laporanStrategis">Pengawasan Parkir</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "MonitoringCCTV" ? "active" : "")"
+                           href="@Url.Action("Index", "monitoringCCTV")" role="button">
+                            <i class="bx bx-cctv me-1 align-middle"></i><span data-key="t-monitoringCctv">Monitoring CCTV Parkir</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="container-fluid">
+                <div id="two-column-menu"></div>
+                <ul class="navbar-nav" id="navbar-nav">
                     <li class="menu-title"><span data-key="t-laporanStrategis">Pengawasan Reklame</span></li>
                     <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ReklameSummary" ? "active" : "")"
@@ -413,24 +425,6 @@
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "InputReklame" ? "active" : "")"
                            href="@Url.Action("Index", "InputReklame")" role="button">
                             <i class="bx bx-folder-plus  me-1 align-middle"></i><span data-key="t-inputreklame">Input Reklame</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="container-fluid">
-                <div id="two-column-menu"></div>
-                <ul class="navbar-nav" id="navbar-nav">
-                    <li class="menu-title"><span data-key="t-laporanStrategis">Pengawasan Parkir</span></li>
-                    <li class="nav-item">
-                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "MonitoringCCTV" ? "active" : "")"
-                           href="@Url.Action("Index", "monitoringCCTV")" role="button">
-                            <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-monitoringCctv">Monitoring CCTV Parkir</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "RekapParkir" ? "active" : "")"
-                           href="@Url.Action("Index", "VendorParkir")" role="button">
-                            <i class=" bx bx-archive me-1 align-middle"></i><span data-key="t-rekapParkir">Rekap Parkir</span>
                         </a>
                     </li>
                 </ul>

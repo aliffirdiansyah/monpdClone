@@ -234,7 +234,7 @@ namespace MonPDReborn.Models.DataOP
                             StatusKunci = alat != null ? (alat.kunci == 1 ? "Terkunci" : "Tidak Terkunci") : "Tidak Ada Data",
                             StatusOnline = alat != null ? (alat.online == 1 ? "Online" : "Offline") : "Tidak Ada Data",
                             Wilayah = "SURABAYA " + (x.WilayahPajak ?? ""),
-                            EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
+                            EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
                             Tahun = (int)x.TahunBuku
                         };
                     }).ToList();
@@ -310,7 +310,7 @@ namespace MonPDReborn.Models.DataOP
                             StatusOnline = alat != null ? (alat.online == 1 ? "Online" : "Offline") : "Tidak Ada Data",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + (x.WilayahPajak ?? ""),
-                            EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
+                            EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                             Tahun = (int)x.TahunBuku
                         };
                     }).ToList();
@@ -387,7 +387,7 @@ namespace MonPDReborn.Models.DataOP
                             StatusOnline = alat != null ? (alat.online == 1 ? "Online" : "Offline") : "Tidak Ada Data",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + (x.WilayahPajak ?? ""),
-                            EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
+                            EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                             Tahun = (int)x.TahunBuku
                         };
                     }).ToList();
