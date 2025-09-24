@@ -78,6 +78,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MutasiBankWs", "MutasiBankW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBPendapatanDaerahWs", "DBPendapatanDaerahWs\DBPendapatanDaerahWs.csproj", "{9231B1E7-406F-4223-AEBE-58C215B04C0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkirCctvDs", "ParkirCctvDs\ParkirCctvDs.csproj", "{ECDF7CCC-5806-43AE-B15B-2A941DDB4FF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -224,6 +226,10 @@ Global
 		{9231B1E7-406F-4223-AEBE-58C215B04C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9231B1E7-406F-4223-AEBE-58C215B04C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9231B1E7-406F-4223-AEBE-58C215B04C0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECDF7CCC-5806-43AE-B15B-2A941DDB4FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDF7CCC-5806-43AE-B15B-2A941DDB4FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECDF7CCC-5806-43AE-B15B-2A941DDB4FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDF7CCC-5806-43AE-B15B-2A941DDB4FF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
