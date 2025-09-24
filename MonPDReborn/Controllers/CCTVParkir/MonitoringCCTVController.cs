@@ -115,5 +115,25 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
+        public IActionResult Log(string nop, int jenisKend)
+        {
+            try
+            {
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.Log(nop, jenisKend);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }
