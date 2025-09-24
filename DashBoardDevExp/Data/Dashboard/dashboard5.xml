@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="PBB Wilayah V1" />
+  <DataSources>
+    <SqlDataSource Name="Oracle Data Source" ComponentName="sqlDataSource1">
+      <Connection Name="connection" ProviderKey="Oracle">
+        <Parameters>
+          <Parameter Name="server" Value="10.21.39.80:1521/devdb" />
+          <Parameter Name="database" Value="" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="OracleProviderType" Value="ODPManaged" />
+          <Parameter Name="userid" Value="monpd" />
+          <Parameter Name="password" Value="monpd2025" />
+        </Parameters>
+      </Connection>
+      <Query Type="CustomSqlQuery" Name="PbbWilayah">
+        <Sql>SELECT *
+FROM MV_DBE_WILAYAH</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="TahunList">
+        <Sql>SELECT  EXTRACT (YEAR FROM SYSDATE) +1  - LEVEL AS tahun
+FROM dual
+CONNECT BY LEVEL &lt;= 6</Sql>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+      <CalculatedFields>
+        <CalculatedField Name="FncRasioAtasTargetAll" Expression="[TARGET] / [TARGETALL] " DataType="Auto" DataMember="PbbWilayah" />
+        <CalculatedField Name="FncTotalRealisasiSPPT" Expression="[REALISASI_SPPT_MURNI] + [REALISASI_SPPT_TUNGGAKAN] " DataType="Auto" DataMember="PbbWilayah" />
+        <CalculatedField Name="FncTotalRealisasiKetetapan" Expression="[REALISASI_MURNI] + [REALISASI_TUNGGAKAN] " DataType="Auto" DataMember="PbbWilayah" />
+      </CalculatedFields>
+    </SqlDataSource>
+  </DataSources>
+  <Parameters>
+    <Parameter Name="TahunBuku" Type="System.Int16" Value="2025">
+      <DynamicListLookUpSettings DataSourceName="sqlDataSource1" DataMember="TahunList" ValueMember="TAHUN" DisplayMember="TAHUN" SortByMember="TAHUN" SortOrder="Descending" />
+    </Parameter>
+  </Parameters>
+  <Items>
+    <Grid ComponentName="gridDashboardItem1" Name="TARGET DAN REALISASI UPTB" DataSource="sqlDataSource1" DataMember="PbbWilayah" FilterString="[DataItem3] = ?TahunBuku">
+      <InteractivityOptions IgnoreMasterFilters="true" MasterFilterMode="Single" />
+      <DataItems>
+        <Dimension DataMember="UPTB" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="TARGET" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Dimension>
+        <Measure DataMember="FncRasioAtasTargetAll" SummaryType="Average" DefaultId="DataItem1">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_MURNI" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="SPPT_TUNGGAKAN" DefaultId="DataItem6">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_TUNGGAKAN" DefaultId="DataItem7">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem8">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_MURNI" DefaultId="DataItem9">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_TUNGGAKAN" DefaultId="DataItem10">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_TUNGGAKAN" DefaultId="DataItem11">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncTotalRealisasiSPPT" DefaultId="DataItem12">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncTotalRealisasiKetetapan" DefaultId="DataItem13">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem3" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem2" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="Rasio Target PBB">
+          <Measure DefaultId="DataItem1" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT MURNI">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET. MURNI">
+          <Measure DefaultId="DataItem5" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT TUNG.">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET. TUNG.">
+          <Measure DefaultId="DataItem7" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA. SPPT MURNI">
+          <Measure DefaultId="DataItem8" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA. KET. MURNI">
+          <Measure DefaultId="DataItem9" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA. SPPT TUNG.">
+          <Measure DefaultId="DataItem10" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA. KET. TUNG.">
+          <Measure DefaultId="DataItem11" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TTL REA. SPPT">
+          <Measure DefaultId="DataItem12" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TTL REA. KET.">
+          <Measure DefaultId="DataItem13" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem2" Name="Grid 2" DataSource="sqlDataSource1" DataMember="PbbWilayah">
+      <InteractivityOptions MasterFilterMode="Single" />
+      <DataItems>
+        <Dimension DataMember="KECAMATAN" DefaultId="DataItem0" />
+        <Dimension DataMember="KELURAHAN" DefaultId="DataItem1" />
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem1" />
+        </GridDimensionColumn>
+        <GridMeasureColumn>
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn>
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem3" Name="Grid 1" DataSource="sqlDataSource1" DataMember="PbbWilayah">
+      <DataItems>
+        <Dimension DataMember="KECAMATAN" DefaultId="DataItem0" />
+        <Dimension DataMember="KELURAHAN" DefaultId="DataItem1" />
+        <Dimension DataMember="KATEGORI_NAMA" DefaultId="DataItem2" />
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem1" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem2" />
+        </GridDimensionColumn>
+        <GridMeasureColumn>
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn>
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutItem DashboardItem="gridDashboardItem1" />
+        <LayoutGroup>
+          <LayoutItem DashboardItem="gridDashboardItem2" />
+          <LayoutItem DashboardItem="gridDashboardItem3" />
+        </LayoutGroup>
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

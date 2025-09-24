@@ -324,112 +324,129 @@ LEFT JOIN POTENSIBYR@NRC B ON  A.T_PROP_KD=SPPT_PROP AND A.T_DATI2_KD=SPPT_KOTA 
                 int jmlData = realisasiMonitoringDb.Count;
                 int index = 0;
                 var newList = new List<MonPDLib.EF.DbMonPbb>();
-                var updateList = new List<MonPDLib.EF.DbMonPbb>();
+                //var updateList = new List<MonPDLib.EF.DbMonPbb>();
+                var removeEx = _contMonPd.DbMonPbbs.Where(x => x.TahunBuku == tahunBuku).ToList();
                 swProses.Start();
                 foreach (var itemRealisasi in realisasiMonitoringDb)
                 {
-                    var realisasi = _contMonPd.DbMonPbbs.Find(itemRealisasi.NOP,(decimal)tahunBuku, itemRealisasi.TAHUN_PAJAK);
-                    if (realisasi != null)
+                    var OP = _contMonPd.DbOpPbbs.Find(itemRealisasi.NOP);
+
+                    if (OP != null)
                     {
-                        realisasi.KategoriId = itemRealisasi.ID_PERUNTUKAN;
-                        realisasi.KategoriNama = itemRealisasi.PERUNTUKAN;
-                        realisasi.IsLunas = itemRealisasi.LUNAS=="Y"?1:0;
-                        realisasi.TglBayar = itemRealisasi.TGL_BAYAR;
-                        realisasi.PokokPajak = itemRealisasi.POKOK;
-                        realisasi.JumlahBayarPokok = itemRealisasi.BAYAR_POKOK;
-                        realisasi.JumlahBayarSanksi = itemRealisasi.BAYAR_SANKSI;                        
-                        updateList.Add(realisasi);
+                        //var OP = OPL.First();
+                        //var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
+                        //var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
+
+                        var newRow = new DbMonPbb();
+                        newRow.Nop = OP.Nop;
+                        newRow.TahunBuku = tahunBuku;
+                        newRow.KategoriId = OP.KategoriId;
+                        newRow.KategoriNama = OP.KategoriNama;
+                        newRow.AlamatOp = OP.AlamatOp;
+                        newRow.AlamatOpNo = OP.AlamatOpNo;
+                        newRow.AlamatOpRt = OP.AlamatOpRt;
+                        newRow.AlamatOpRw = OP.AlamatOpRw;
+                        newRow.AlamatKdCamat = OP.AlamatKdCamat;
+                        newRow.AlamatKdLurah = OP.AlamatKdLurah;
+                        newRow.Uptb = OP.Uptb;
+                        newRow.AlamatWp = OP.AlamatWp;
+                        newRow.AlamatWpNo = OP.AlamatWpNo;
+                        newRow.AlamatWpKel = OP.AlamatWpKel;
+                        newRow.AlamatWpKota = OP.AlamatWpKota;
+                        newRow.WpNama = OP.WpNama;
+                        newRow.WpNpwp = OP.WpNpwp;
+                        newRow.TahunPajak = itemRealisasi.TAHUN_PAJAK;
+                        newRow.PokokPajak = itemRealisasi.POKOK;
+                        newRow.KategoriOp = OP.KategoriNama;
+                        newRow.Peruntukan = itemRealisasi.PERUNTUKAN;
+                        newRow.IsLunas = itemRealisasi.LUNAS == "Y" ? 1 : 0;
+                        newRow.TglBayar = itemRealisasi.TGL_BAYAR;
+                        newRow.JumlahBayarPokok = itemRealisasi.BAYAR_POKOK;
+                        newRow.JumlahBayarSanksi = itemRealisasi.BAYAR_SANKSI;
+                        newRow.InsDate = DateTime.Now;
+                        newRow.InsBy = "JOB";
+                        newList.Add(newRow);
                     }
                     else
                     {
-                        var OP = _contMonPd.DbOpPbbs.Find(itemRealisasi.NOP);
-
-                        if (OP != null)
-                        {
-                            //var OP = OPL.First();
-                            var AkunPokok = GetDbAkunPokok(tahunBuku, KDPajak, (int)OP.KategoriId);
-                            var AkunSanksi = GetDbAkunSanksi(tahunBuku, KDPajak, (int)OP.KategoriId);
-
-                            var newRow = new DbMonPbb();
-                            newRow.Nop = OP.Nop;
-                            newRow.TahunBuku = tahunBuku;
-                            newRow.KategoriId = OP.KategoriId;
-                            newRow.KategoriNama = OP.KategoriNama;
-                            newRow.AlamatOp = OP.AlamatOp;
-                            newRow.AlamatOpNo = OP.AlamatOpNo ;
-                            newRow.AlamatOpRt = OP.AlamatOpRt;
-                            newRow.AlamatOpRw = OP.AlamatOpRw;
-                            newRow.AlamatKdCamat = OP.AlamatKdCamat;
-                            newRow.AlamatKdLurah = OP.AlamatKdLurah;
-                            newRow.Uptb = OP.Uptb;
-                            newRow.AlamatWp = OP.AlamatWp;
-                            newRow.AlamatWpNo = OP.AlamatWpNo;
-                            newRow.AlamatWpKel = OP.AlamatWpKel;
-                            newRow.AlamatWpKota = OP.AlamatWpKota;
-                            newRow.WpNama = OP.WpNama;
-                            newRow.WpNpwp= OP.WpNpwp;
-                            newRow.TahunPajak = itemRealisasi.TAHUN_PAJAK;
-                            newRow.PokokPajak = itemRealisasi.POKOK;
-                            newRow.KategoriOp = OP.KategoriNama;
-                            newRow.Peruntukan = itemRealisasi.PERUNTUKAN;
-                            newRow.IsLunas = itemRealisasi.LUNAS=="Y"?1:0;
-                            newRow.TglBayar= itemRealisasi.TGL_BAYAR;
-                            newRow.JumlahBayarPokok= itemRealisasi.BAYAR_POKOK;
-                            newRow.JumlahBayarSanksi = itemRealisasi.BAYAR_SANKSI;
-                            newRow.InsDate = DateTime.Now;
-                            newRow.InsBy = "JOB";                            
-                            newList.Add(newRow);
-                        }
-                        else
-                        {
-                            var newRow = new DbMonPbb();
-                            newRow.Nop = itemRealisasi.NOP;
-                            newRow.TahunBuku = tahunBuku;
-                            newRow.KategoriId = 72;
-                            newRow.KategoriNama = "LAIN-LAIN";
-                            newRow.AlamatOp = "-";
-                            newRow.AlamatOpNo = "-";
-                            newRow.AlamatOpRt = "-";
-                            newRow.AlamatOpRw = "-";
-                            newRow.AlamatKdCamat = "-";
-                            newRow.AlamatKdLurah = "-";
-                            newRow.Uptb = 0;
-                            newRow.AlamatWp = "-";
-                            newRow.AlamatWpNo = "-";
-                            newRow.AlamatWpKel = "-";
-                            newRow.AlamatWpKota = "-";
-                            newRow.WpNama = "-";
-                            newRow.WpNpwp = "-";
-                            newRow.TahunPajak = itemRealisasi.TAHUN_PAJAK;
-                            newRow.PokokPajak = itemRealisasi.POKOK;
-                            newRow.KategoriOp = "LAIN-LAIN";
-                            newRow.Peruntukan = itemRealisasi.PERUNTUKAN;
-                            newRow.IsLunas = itemRealisasi.LUNAS == "Y" ? 1 : 0;
-                            newRow.TglBayar = itemRealisasi.TGL_BAYAR;
-                            newRow.JumlahBayarPokok = itemRealisasi.BAYAR_POKOK;
-                            newRow.JumlahBayarSanksi = itemRealisasi.BAYAR_SANKSI;
-                            newRow.InsDate = DateTime.Now;
-                            newRow.InsBy = "JOB";                            
-                            newList.Add(newRow);
-                        }
+                        var newRow = new DbMonPbb();
+                        newRow.Nop = itemRealisasi.NOP;
+                        newRow.TahunBuku = tahunBuku;
+                        newRow.KategoriId = 72;
+                        newRow.KategoriNama = "LAIN-LAIN";
+                        newRow.AlamatOp = "-";
+                        newRow.AlamatOpNo = "-";
+                        newRow.AlamatOpRt = "-";
+                        newRow.AlamatOpRw = "-";
+                        newRow.AlamatKdCamat = "-";
+                        newRow.AlamatKdLurah = "-";
+                        newRow.Uptb = 0;
+                        newRow.AlamatWp = "-";
+                        newRow.AlamatWpNo = "-";
+                        newRow.AlamatWpKel = "-";
+                        newRow.AlamatWpKota = "-";
+                        newRow.WpNama = "-";
+                        newRow.WpNpwp = "-";
+                        newRow.TahunPajak = itemRealisasi.TAHUN_PAJAK;
+                        newRow.PokokPajak = itemRealisasi.POKOK;
+                        newRow.KategoriOp = "LAIN-LAIN";
+                        newRow.Peruntukan = itemRealisasi.PERUNTUKAN;
+                        newRow.IsLunas = itemRealisasi.LUNAS == "Y" ? 1 : 0;
+                        newRow.TglBayar = itemRealisasi.TGL_BAYAR;
+                        newRow.JumlahBayarPokok = itemRealisasi.BAYAR_POKOK;
+                        newRow.JumlahBayarSanksi = itemRealisasi.BAYAR_SANKSI;
+                        newRow.InsDate = DateTime.Now;
+                        newRow.InsBy = "JOB";
+                        newList.Add(newRow);
                     }
+
+                    //var newRow = new DbMonPbb();
+                    //newRow.Nop = itemRealisasi.NOP;
+                    //newRow.TahunBuku = tahunBuku;
+                    //newRow.KategoriId = itemRealisasi.ID_PERUNTUKAN;
+                    //newRow.KategoriNama = itemRealisasi.PERUNTUKAN;
+                    //newRow.AlamatOp = "-";
+                    //newRow.AlamatOpNo = "-";
+                    //newRow.AlamatOpRt = "-";
+                    //newRow.AlamatOpRw = "-";
+                    //newRow.AlamatKdCamat = "-";
+                    //newRow.AlamatKdLurah = "-";
+                    //newRow.Uptb = 0;
+                    //newRow.AlamatWp = "-";
+                    //newRow.AlamatWpNo = "-";
+                    //newRow.AlamatWpKel = "-";
+                    //newRow.AlamatWpKota = "-";
+                    //newRow.WpNama = "-";
+                    //newRow.WpNpwp = "-";
+                    //newRow.TahunPajak = itemRealisasi.TAHUN_PAJAK;
+                    //newRow.PokokPajak = itemRealisasi.POKOK;
+                    //newRow.KategoriOp = "LAIN-LAIN";
+                    //newRow.Peruntukan = itemRealisasi.PERUNTUKAN;
+                    //newRow.IsLunas = itemRealisasi.LUNAS == "Y" ? 1 : 0;
+                    //newRow.TglBayar = itemRealisasi.TGL_BAYAR;
+                    //newRow.JumlahBayarPokok = itemRealisasi.BAYAR_POKOK;
+                    //newRow.JumlahBayarSanksi = itemRealisasi.BAYAR_SANKSI;
+                    //newRow.InsDate = DateTime.Now;
+                    //newRow.InsBy = "JOB";
+                    //newList.Add(newRow);
                     index++;
                     double persen = ((double)index / jmlData) * 100;
-                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} REALISASI HOTEL TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")} Baru: {newList.Count.ToString("n0")}, Update: {updateList.Count.ToString("n0")}     [({persen:F2}%)]");
+                    Console.Write($"\r{tglMulai.ToString("dd MMM yyyy HH:mm:ss")} REALISASI PBB TAHUN {tahunBuku} JML DATA {jmlData.ToString("n0")}     [({persen:F2}%)]");
                 }
                 Console.WriteLine("Updating DB!");
+
+                if (removeEx.Any())
+                {
+                    _contMonPd.DbMonPbbs.RemoveRange(removeEx);
+                    _contMonPd.SaveChanges();
+                }
+
                 if (newList.Any())
                 {
                     _contMonPd.DbMonPbbs.AddRange(newList);
                     _contMonPd.SaveChanges();
                 }
-
-
-                if (updateList.Any())
-                {
-                    _contMonPd.DbMonPbbs.UpdateRange(updateList);
-                    _contMonPd.SaveChanges();
-                }
+                
                 swProses.Stop();
                 Console.Write($"Done Proses Query :{swQuery.Elapsed.TotalSeconds} Sec, Proses Data {swProses.Elapsed.TotalSeconds} Sec");
                 Console.WriteLine($"");

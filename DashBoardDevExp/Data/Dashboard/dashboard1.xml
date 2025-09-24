@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Dashboard>
-  <Title Text="Target dan Realisasi" />
+  <Title Text="PBB Series" />
   <DataSources>
     <SqlDataSource Name="Oracle Data Source" ComponentName="sqlDataSource1">
       <Connection Name="connection" ProviderKey="Oracle">
@@ -14,112 +14,537 @@
           <Parameter Name="password" Value="monpd2025" />
         </Parameters>
       </Connection>
-      <Query Type="CustomSqlQuery" Name="TargetSql">
-        <Parameter Name="TahunBuku" Type="System.Int32">2025</Parameter>
-        <Sql>SELECT A.TAHUN_BUKU,C.NAMA,C.ID PAJAK_ID,B.BULAN, B.TARGET
-                    FROM DB_AKUN_TARGET A
-                    JOIN DB_AKUN_TARGET_BULAN B ON   A.TAHUN_BUKU=B.TAHUN_BUKU AND   A.AKUN=B.AKUN AND A.KELOMPOK =B.KELOMPOK AND 
-                                                                            A.JENIS=B.JENIS AND A.OBJEK=B.OBJEK AND A.RINCIAN=B.RINCIAN AND A.SUB_RINCIAN=B.SUB_RINCIAN AND A.PAJAK_ID=B.PAJAK_ID  
-                    JOIN M_PAJAK C ON A.PAJAK_ID=C.ID
-                    WHERE A.TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6
-order by TAHUN_BUKU DESC , C.ID ASC</Sql>
+      <Query Type="CustomSqlQuery" Name="SeriesPBB">
+        <Sql>SELECT A.TAHUN_BUKU,TARGET,SPPT_MURNI,KETETAPAN_MURNI,SPPT_TUNGGAKAN,KETETAPAN_TUNGGAKAN,REALISASI_MURNI,REALISASI_TUNGGAKAN,REALISASI_SPPT_MURNI,REALISASI_SPPT_TUNGGAKAN,
+            (REALISASI_MURNI / NULLIF(TARGET, 0)) AS RASIO_MURNI,
+            (REALISASI_TUNGGAKAN / NULLIF(TARGET, 0)) AS RASIO_TUNGGAKAN,
+            ( (NVL(REALISASI_MURNI,0)+NVL(REALISASI_TUNGGAKAN,0)) / NULLIF(TARGET, 0)) AS PENCAPAIAN
+FROM (
+SELECT TAHUN_BUKU,NAMA,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU,NAMA
+) A
+LEFT JOIN (
+SELECT TAHUN_BUKU,
+            SUM(DECODE(JENIS_BUKU,0,1,0)) SPPT_MURNI,
+            SUM(DECODE(JENIS_BUKU,0,KETETAPAN,0)) KETETAPAN_MURNI,
+            SUM(DECODE(JENIS_BUKU,1,1,0)) SPPT_TUNGGAKAN,
+            SUM(DECODE(JENIS_BUKU,1,KETETAPAN,0)) KETETAPAN_TUNGGAKAN,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_TUNGGAKAN,     
+              SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_TUNGGAKAN        
+FROM MV_DBE_MON_PBB
+GROUP BY TAHUN_BUKU
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
+ORDER BY TAHUN_BUKU DESC</Sql>
       </Query>
-      <Query Type="CustomSqlQuery" Name="KetetapanSql">
-        <Sql>SELECT NOP,TAHUN_PAJAK,MASA_PAJAK,KETETAPAN_TOTAL,PAJAK_ID,JENIS_KETETAPAN,TAHUN_BUKU
-                    FROM DB_MON_KETETAPAN_HPP
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
-                    UNION ALL
-                    SELECT NOP,TAHUN_PAJAK,MASA_PAJAK,KETETAPAN_TOTAL,PAJAK_ID,JENIS_KETETAPAN,TAHUN_BUKU
-                    FROM DB_MON_KETETAPAN_HR
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
-                    UNION ALL
-                    SELECT NOP,TAHUN_PAJAK_KETETAPAN TAHUN_PAJAK,MASA_PAJAK_KETETAPAN MASA_PAJAK,POKOK_PAJAK_KETETAPAN KETETAPAN_TOTAL,6 PAJAK_ID,'SKPD' JENIS_KETETAPAN,TAHUN_BUKU
-                    FROM DB_MON_abt
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                     
-                    UNION ALL
-                    SELECT SPPT_NOP,TAHUN,MASA,POKOK,12 PAJAK_ID,'SPTPD' JENIS_KETETAPAN,TO_NUMBER(TO_CHAR(TGL_BAYAR,'YYYY'))
-                    FROM DB_MON_BPHTB
-                    WHERE TO_CHAR(TGL_BAYAR,'YYYY') &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
-                    UNION ALL
-                    SELECT NO_FORMULIR,TO_NUMBER(TAHUN_PAJAK),TO_NUMBER(BULAN_PAJAK),PAJAK_POKOK,7 PAJAK_ID,'SKPD',TAHUN_BUKU 
-                    FROM DB_MON_REKLAME
-                    WHERE  TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6</Sql>
+      <Query Type="CustomSqlQuery" Name="PivotSeries">
+        <Sql>SELECT tahun_buku,
+    target,
+    REGEXP_SUBSTR(jenis_subjenis, '[^:]+', 1, 1) AS subjenis,
+    REGEXP_SUBSTR(jenis_subjenis, '[^:]+', 1, 2) AS jenis,
+    nilai
+FROM (
+SELECT A.TAHUN_BUKU,TARGET,SPPT_MURNI,KETETAPAN_MURNI,SPPT_TUNGGAKAN,KETETAPAN_TUNGGAKAN,REALISASI_MURNI,REALISASI_TUNGGAKAN,REALISASI_SPPT_MURNI,REALISASI_SPPT_TUNGGAKAN
+FROM (
+SELECT TAHUN_BUKU,NAMA,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU,NAMA
+) A
+LEFT JOIN (
+SELECT TAHUN_BUKU,
+            SUM(DECODE(JENIS_BUKU,0,1,0)) SPPT_MURNI,
+            SUM(DECODE(JENIS_BUKU,0,KETETAPAN,0)) KETETAPAN_MURNI,
+            SUM(DECODE(JENIS_BUKU,1,1,0)) SPPT_TUNGGAKAN,
+            SUM(DECODE(JENIS_BUKU,1,KETETAPAN,0)) KETETAPAN_TUNGGAKAN,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_TUNGGAKAN,     
+              SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_TUNGGAKAN        
+FROM MV_DBE_MON_PBB
+GROUP BY TAHUN_BUKU
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
+ORDER BY TAHUN_BUKU DESC
+) A
+UNPIVOT (
+    nilai FOR jenis_subjenis IN (
+        sppt_murni        AS 'SPPT:Murni',
+        ketetapan_murni   AS 'Ketetapan:Murni',
+        sppt_tunggakan    AS 'SPPT:Tunggakan',
+        ketetapan_tunggakan AS 'Ketetapan:Tunggakan'
+    )
+)</Sql>
       </Query>
-      <Query Type="CustomSqlQuery" Name="TahunPajakListSql">
-        <Sql>SELECT TO_CHAR(SYSDATE,'YYYY') +1  - LEVEL AS tahun
-FROM dual
-CONNECT BY LEVEL &lt;= 6</Sql>
+      <Query Type="CustomSqlQuery" Name="DetailBulan">
+        <Sql>SELECT A.TAHUN_BUKU,BULAN,TARGET,SPPT_MURNI,KETETAPAN_MURNI,SPPT_TUNGGAKAN,KETETAPAN_TUNGGAKAN,REALISASI_MURNI,REALISASI_TUNGGAKAN,REALISASI_SPPT_MURNI,REALISASI_SPPT_TUNGGAKAN,
+            (REALISASI_MURNI / NULLIF(TARGET, 0)) AS RASIO_MURNI,
+            (REALISASI_TUNGGAKAN / NULLIF(TARGET, 0)) AS RASIO_TUNGGAKAN,
+            ( (NVL(REALISASI_MURNI,0)+NVL(REALISASI_TUNGGAKAN,0)) / NULLIF(TARGET, 0)) AS PENCAPAIAN
+FROM (
+SELECT TAHUN_BUKU,BULAN,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU,BULAN
+) A
+LEFT JOIN (
+SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR) BULAN_BAYAR,
+            SUM(DECODE(JENIS_BUKU,0,1,0)) SPPT_MURNI,
+            SUM(DECODE(JENIS_BUKU,0,KETETAPAN,0)) KETETAPAN_MURNI,
+            SUM(DECODE(JENIS_BUKU,1,1,0)) SPPT_TUNGGAKAN,
+            SUM(DECODE(JENIS_BUKU,1,KETETAPAN,0)) KETETAPAN_TUNGGAKAN,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_TUNGGAKAN,     
+              SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_TUNGGAKAN        
+FROM MV_DBE_MON_PBB
+GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR)
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.BULAN=B.BULAN_BAYAR
+ORDER BY BULAN_BAYAR ASC</Sql>
       </Query>
-      <Query Type="CustomSqlQuery" Name="CONTOH1">
-        <Sql>SELECT TAHUN_BUKU,PAJAK_ID,SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL
-                    FROM DB_MON_KETETAPAN_HPP
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6
-                    GROUP BY TAHUN_BUKU,PAJAK_ID                        
-                    UNION ALL
-                    SELECT TAHUN_BUKU,PAJAK_ID,SUM(KETETAPAN_TOTAL) KETETAPAN_TOTAL
-                    FROM DB_MON_KETETAPAN_HR
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6   
-                    GROUP BY TAHUN_BUKU,PAJAK_ID</Sql>
+      <Query Type="CustomSqlQuery" Name="AllinOne">
+        <Sql>SELECT A.TAHUN_BUKU,A.BULAN,A.UPTB,A.TARGET,B.SPPT_MURNI,B.KETETAPAN_MURNI,B.SPPT_TUNGGAKAN,B.KETETAPAN_TUNGGAKAN,
+            REALISASI_MURNI,REALISASI_TUNGGAKAN,REALISASI_SPPT_MURNI,REALISASI_SPPT_TUNGGAKAN,
+            (REALISASI_MURNI / NULLIF(TARGET, 0)) AS RASIO_MURNI,
+            (REALISASI_TUNGGAKAN / NULLIF(TARGET, 0)) AS RASIO_TUNGGAKAN,
+            ( (NVL(REALISASI_MURNI,0)+NVL(REALISASI_TUNGGAKAN,0)) / NULLIF(TARGET, 0)) AS PENCAPAIAN
+FROM(
+SELECT TAHUN_BUKU,BULAN,UPTB,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_UPTB_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU,BULAN,UPTB
+) A
+LEFT JOIN (
+SELECT TAHUN_BUKU,UPTB,1 BULAN,
+            SUM(DECODE(JENIS_BUKU,0,1,0)) SPPT_MURNI,
+            SUM(DECODE(JENIS_BUKU,0,KETETAPAN,0)) KETETAPAN_MURNI,
+            SUM(DECODE(JENIS_BUKU,1,1,0)) SPPT_TUNGGAKAN,
+            SUM(DECODE(JENIS_BUKU,1,KETETAPAN,0)) KETETAPAN_TUNGGAKAN
+FROM MV_DBE_MON_PBB
+GROUP BY TAHUN_BUKU,UPTB
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.BULAN=B.BULAN AND A.UPTB=B.UPTB
+LEFT JOIN
+(
+SELECT TAHUN_BUKU,UPTB,EXTRACT (MONTH FROM TGL_BAYAR) BULAN_BAYAR,
+           SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_TUNGGAKAN,     
+              SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_TUNGGAKAN     
+FROM MV_DBE_MON_PBB A
+WHERE TAHUN_BUKU_BAYAR IS NOT NULL 
+GROUP BY TAHUN_BUKU,UPTB,EXTRACT (MONTH FROM TGL_BAYAR)
+) C ON A.TAHUN_BUKU=C.TAHUN_BUKU AND A.BULAN=C.BULAN_BAYAR AND A.UPTB=C.UPTB</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="KategoriNama">
+        <Sql>SELECT A.*,TARGET
+FROM (
+SELECT A.*,REALISASI_MURNI,REALISASI_TUNGGAKAN,REALISASI_SPPT_MURNI,REALISASI_SPPT_TUNGGAKAN
+FROM (
+SELECT TAHUN_BUKU,KATEGORI_NAMA,
+            SUM(DECODE(JENIS_BUKU,0,1,0)) SPPT_MURNI,
+            SUM(DECODE(JENIS_BUKU,0,KETETAPAN,0)) KETETAPAN_MURNI,
+            SUM(DECODE(JENIS_BUKU,1,1,0)) SPPT_TUNGGAKAN,
+            SUM(DECODE(JENIS_BUKU,1,KETETAPAN,0)) KETETAPAN_TUNGGAKAN
+FROM MV_DBE_MON_PBB
+GROUP BY TAHUN_BUKU,KATEGORI_NAMA
+) A
+LEFT JOIN (
+SELECT TAHUN_BUKU,KATEGORI_NAMA,
+           SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_TUNGGAKAN,     
+              SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_TUNGGAKAN     
+FROM MV_DBE_MON_PBB A
+WHERE TAHUN_BUKU_BAYAR IS NOT NULL 
+GROUP BY TAHUN_BUKU,KATEGORI_NAMA
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.KATEGORI_NAMA=B.KATEGORI_NAMA
+) A
+LEFT JOIN 
+(
+SELECT TAHUN_BUKU,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_UPTB_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU</Sql>
       </Query>
       <ConnectionOptions CloseConnection="true" />
+      <CalculatedFields>
+        <CalculatedField Name="TOTAL_SPPT_REALISASI" Expression="[REALISASI_SPPT_MURNI] + [REALISASI_SPPT_TUNGGAKAN] " DataType="Decimal" DataMember="SeriesPBB" />
+        <CalculatedField Name="TOTAL_REALISASI" Expression="[REALISASI_MURNI] + [REALISASI_TUNGGAKAN] " DataType="Decimal" DataMember="SeriesPBB" />
+        <CalculatedField Name="TotalSPPT" Expression="[REALISASI_SPPT_MURNI] + [REALISASI_SPPT_TUNGGAKAN] " DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="TotalRealisasi" Expression="[REALISASI_MURNI] + [REALISASI_TUNGGAKAN] " DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncRasioMurni" Expression="Sum( [REALISASI_MURNI]  )  / Sum( [TARGET] ) " DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncRasioTunggakan" Expression="Sum( [REALISASI_TUNGGAKAN] ) / Sum( [TARGET]  )" DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncPencapaian" Expression="Sum( [REALISASI_MURNI] + [REALISASI_TUNGGAKAN] ) / Sum( [TARGET] )" DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncTotalRealisasi" Expression="Sum([REALISASI_MURNI] + [REALISASI_TUNGGAKAN] )" DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncRasioKategoriMurni" Expression="[KETETAPAN_MURNI] / [TARGET] " DataType="Auto" DataMember="KategoriNama" />
+      </CalculatedFields>
     </SqlDataSource>
   </DataSources>
-  <Parameters>
-    <Parameter Name="TahunBuku" Type="System.Int16" Value="2025">
-      <DynamicListLookUpSettings DataSourceName="sqlDataSource1" DataMember="TahunPajakListSql" ValueMember="TAHUN" DisplayMember="TAHUN" SortByMember="TAHUN" SortOrder="Descending" />
-    </Parameter>
-  </Parameters>
   <Items>
-    <Grid ComponentName="gridDashboardItem1" Name="Target" DataSource="sqlDataSource1" DataMember="TargetSql" FilterString="[DataItem0] = ?TahunBuku" IsMasterFilterCrossDataSource="true">
-      <InteractivityOptions MasterFilterMode="Multiple" />
+    <Grid ComponentName="gridDashboardItem1" Name="PBB SERIES" DataSource="sqlDataSource1" DataMember="AllinOne" IsMasterFilterCrossDataSource="true">
+      <InteractivityOptions IgnoreMasterFilters="true" MasterFilterMode="Single" />
       <DataItems>
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem0">
-          <NumericFormat FormatType="General" />
+        <Dimension DataMember="TAHUN_BUKU" SortOrder="Descending" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
         </Dimension>
-        <Dimension DataMember="NAMA" DefaultId="DataItem1" />
-        <Measure DataMember="TARGET" DefaultId="DataItem2">
+        <Measure DataMember="TARGET" DefaultId="DataItem1">
           <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
         </Measure>
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem3" />
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem4" />
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem5" />
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_MURNI" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="SPPT_TUNGGAKAN" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_TUNGGAKAN" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem6">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_MURNI" DefaultId="DataItem9">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioMurni" SummaryType="Average" DefaultId="DataItem10">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_TUNGGAKAN" DefaultId="DataItem11">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_TUNGGAKAN" DefaultId="DataItem13">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioTunggakan" SummaryType="Average" DefaultId="DataItem14">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Measure DataMember="TotalSPPT" DefaultId="DataItem7">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="TotalRealisasi" DefaultId="DataItem8">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncPencapaian" SummaryType="Average" DefaultId="DataItem12">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
       </DataItems>
-      <HiddenDimensions>
-        <Dimension DefaultId="DataItem4" />
-        <Dimension DefaultId="DataItem5" />
-      </HiddenDimensions>
       <GridColumns>
-        <GridDimensionColumn Name="TAHUN BUKU">
+        <GridDimensionColumn Name="THN BUKU">
           <Dimension DefaultId="DataItem0" />
         </GridDimensionColumn>
-        <GridDimensionColumn Name="PAJAK ID">
-          <Dimension DefaultId="DataItem3" />
-        </GridDimensionColumn>
-        <GridDimensionColumn Name="PAJAK">
-          <Dimension DefaultId="DataItem1" />
-        </GridDimensionColumn>
         <GridMeasureColumn Name="TARGET">
+          <Measure DefaultId="DataItem1" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT MURNI">
           <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET. MURNI">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT TUNG">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET. TUNG">
+          <Measure DefaultId="DataItem5" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA. SPPT MURNI">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA. MURNI">
+          <Measure DefaultId="DataItem9" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="RASIO MURNI">
+          <Measure DefaultId="DataItem10" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA SPPT TUNG">
+          <Measure DefaultId="DataItem11" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA TUNG">
+          <Measure DefaultId="DataItem13" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="RASIO TUNG">
+          <Measure DefaultId="DataItem14" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TTL REA SPPT">
+          <Measure DefaultId="DataItem7" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TTL REA NOMINAL">
+          <Measure DefaultId="DataItem8" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="%">
+          <Measure DefaultId="DataItem12" />
         </GridMeasureColumn>
       </GridColumns>
       <GridOptions />
       <ColumnFilterOptions />
     </Grid>
-    <Grid ComponentName="gridDashboardItem2" Name="Grid 1" DataSource="sqlDataSource1" DataMember="CONTOH1">
+    <Grid ComponentName="gridDashboardItem2" Name="DETAIL BULAN" DataSource="sqlDataSource1" DataMember="AllinOne" IsMasterFilterCrossDataSource="true">
+      <InteractivityOptions MasterFilterMode="Multiple" />
       <DataItems>
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem0" />
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem1" />
-        <Measure DataMember="KETETAPAN_TOTAL" DefaultId="DataItem2" />
+        <Dimension DataMember="BULAN" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Measure DataMember="TARGET" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_MURNI" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_TUNGGAKAN" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncTotalRealisasi" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioMurni" DefaultId="DataItem5">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Measure DataMember="FncRasioTunggakan" DefaultId="DataItem6">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Measure DataMember="FncPencapaian" DefaultId="DataItem7">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
       </DataItems>
       <GridColumns>
         <GridDimensionColumn>
           <Dimension DefaultId="DataItem0" />
         </GridDimensionColumn>
+        <GridMeasureColumn Name="TARGET">
+          <Measure DefaultId="DataItem1" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REALISASI MURNI">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REALISASI TUNGGAKAN">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TOTAL REALISASI">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="RASIO MURNI">
+          <Measure DefaultId="DataItem5" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="RASIO TUNG">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="%">
+          <Measure DefaultId="DataItem7" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem3" Name="DETAIL UPTB" DataSource="sqlDataSource1" DataMember="AllinOne">
+      <DataItems>
+        <Dimension DataMember="UPTB" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Measure DataMember="TARGET" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_MURNI" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_TUNGGAKAN" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncPencapaian" DefaultId="DataItem4">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+      </DataItems>
+      <GridColumns>
         <GridDimensionColumn>
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="TARGET">
+          <Measure DefaultId="DataItem1" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REALISASI MURNI">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REALISASI TUNG">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="%">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem4" Name="KATEGORI SPPT" DataSource="sqlDataSource1" DataMember="KategoriNama">
+      <DataItems>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem0">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="KATEGORI_NAMA" DefaultId="DataItem1" />
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_MURNI" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="SPPT_TUNGGAKAN" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_TUNGGAKAN" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem6">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_MURNI" DefaultId="DataItem7">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_TUNGGAKAN" DefaultId="DataItem8">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_TUNGGAKAN" DefaultId="DataItem9">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioKategoriMurni" DefaultId="DataItem10">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn Name="THN BUKU">
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn Name="KATEGORI">
           <Dimension DefaultId="DataItem1" />
         </GridDimensionColumn>
-        <GridMeasureColumn>
+        <GridMeasureColumn Name="RASIO ATAS TARGET">
+          <Measure DefaultId="DataItem10" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT MURNI">
           <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KETETAPAN MURNI">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT TUNG">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KETETAPAN TUNG">
+          <Measure DefaultId="DataItem5" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA SPPT MURNI">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA MURNI">
+          <Measure DefaultId="DataItem7" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA SPPT TUNG">
+          <Measure DefaultId="DataItem8" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA TUNG">
+          <Measure DefaultId="DataItem9" />
         </GridMeasureColumn>
       </GridColumns>
       <GridOptions />
@@ -128,8 +553,14 @@ CONNECT BY LEVEL &lt;= 6</Sql>
   </Items>
   <LayoutTree>
     <LayoutGroup>
-      <LayoutItem DashboardItem="gridDashboardItem1" />
-      <LayoutItem DashboardItem="gridDashboardItem2" />
+      <LayoutGroup Orientation="Vertical" Weight="1.3191314554489886">
+        <LayoutItem DashboardItem="gridDashboardItem1" Weight="0.9065737593257079" />
+        <LayoutGroup Weight="1.5501915880226287">
+          <LayoutItem DashboardItem="gridDashboardItem2" Weight="1.7479990483106418" />
+          <LayoutItem DashboardItem="gridDashboardItem3" Weight="1.1233078383649369" />
+        </LayoutGroup>
+        <LayoutItem DashboardItem="gridDashboardItem4" Weight="1.104393727208073" />
+      </LayoutGroup>
     </LayoutGroup>
   </LayoutTree>
 </Dashboard>
