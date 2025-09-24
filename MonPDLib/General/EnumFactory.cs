@@ -31,11 +31,11 @@ namespace MonPDLib.General
         public enum EJobName
         {
             DBOPABT,
-            DBOPHOTEL, 
-            DBOPRESTORAN, 
-            DBOPPARKIR, 
-            DBOPHIBURAN, 
-            DBOPLISTRIK, 
+            DBOPHOTEL,
+            DBOPRESTORAN,
+            DBOPPARKIR,
+            DBOPHIBURAN,
+            DBOPLISTRIK,
             DBOPPBB,
             DBOPREKLAME,
             DBOPREKLAMESURAT,
@@ -783,6 +783,13 @@ namespace MonPDLib.General
             JasaKesenianHiburan = 903
         }
 
+        public enum EVendorParkirCCTV
+        {
+            [Description("Jasnita")]
+            Jasnita = 1,
+            [Description("Telkom")]
+            Telkom = 2
+        }
         public enum EUPTB
         {
             [Description("Semua UPTB")]

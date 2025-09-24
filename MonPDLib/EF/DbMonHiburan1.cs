@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [Keyless]
-public partial class DbMonResto
+public partial class DbMonHiburan1
 {
     [Column("NOP")]
     [StringLength(100)]
@@ -127,8 +127,10 @@ public partial class DbMonResto
     [Unicode(false)]
     public string? NamaSubRincian { get; set; }
 
-    [Column("TAHUN_PAJAK_KETETAPAN", TypeName = "NUMBER")]
-    public decimal? TahunPajakKetetapan { get; set; }
+    [Column("TAHUN_PAJAK_KETETAPAN")]
+    [StringLength(40)]
+    [Unicode(false)]
+    public string? TahunPajakKetetapan { get; set; }
 
     [Column("MASA_PAJAK_KETETAPAN", TypeName = "NUMBER")]
     public decimal? MasaPajakKetetapan { get; set; }

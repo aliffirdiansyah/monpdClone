@@ -79,7 +79,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonHiburan> DbMonHiburans { get; set; }
 
+    public virtual DbSet<DbMonHiburan1> DbMonHiburan1s { get; set; }
+
     public virtual DbSet<DbMonHotel> DbMonHotels { get; set; }
+
+    public virtual DbSet<DbMonHotel2> DbMonHotel2s { get; set; }
 
     public virtual DbSet<DbMonKetetapanHpp> DbMonKetetapanHpps { get; set; }
 
@@ -130,6 +134,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
 
     public virtual DbSet<DbMonResto> DbMonRestos { get; set; }
+
+    public virtual DbSet<DbMonResto2> DbMonResto2s { get; set; }
 
     public virtual DbSet<DbMonUpayaPad> DbMonUpayaPads { get; set; }
 
@@ -201,6 +207,12 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MKategoriUpaya> MKategoriUpayas { get; set; }
 
+    public virtual DbSet<MOpParkirCctv> MOpParkirCctvs { get; set; }
+
+    public virtual DbSet<MOpParkirCctvDet> MOpParkirCctvDets { get; set; }
+
+    public virtual DbSet<MOpParkirCctvLog> MOpParkirCctvLogs { get; set; }
+
     public virtual DbSet<MPajak> MPajaks { get; set; }
 
     public virtual DbSet<MPegawai> MPegawais { get; set; }
@@ -216,6 +228,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MUserLogin> MUserLogins { get; set; }
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
+
+    public virtual DbSet<MvDbOpPhr> MvDbOpPhrs { get; set; }
 
     public virtual DbSet<MvDbOpResto> MvDbOpRestos { get; set; }
 
@@ -355,6 +369,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TOpHotelLocation> TOpHotelLocations { get; set; }
 
+    public virtual DbSet<TOpParkirCctv> TOpParkirCctvs { get; set; }
+
     public virtual DbSet<TOpParkirLocation> TOpParkirLocations { get; set; }
 
     public virtual DbSet<TOpPpjLocation> TOpPpjLocations { get; set; }
@@ -469,9 +485,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -807,7 +823,84 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<DbMonHiburan1>(entity =>
+        {
+            entity.ToView("DB_MON_HIBURAN1");
+
+            entity.Property(e => e.Akun).IsFixedLength();
+            entity.Property(e => e.AkunKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.AkunKetetapan).IsFixedLength();
+            entity.Property(e => e.AkunPokokBayar).IsFixedLength();
+            entity.Property(e => e.AkunSanksiBayar).IsFixedLength();
+            entity.Property(e => e.Jenis).IsFixedLength();
+            entity.Property(e => e.JenisKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.JenisKetetapan).IsFixedLength();
+            entity.Property(e => e.JenisPokokBayar).IsFixedLength();
+            entity.Property(e => e.JenisSanksiBayar).IsFixedLength();
+            entity.Property(e => e.KategoriKetetapan).IsFixedLength();
+            entity.Property(e => e.Kelompok).IsFixedLength();
+            entity.Property(e => e.KelompokKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.KelompokKetetapan).IsFixedLength();
+            entity.Property(e => e.KelompokPokokBayar).IsFixedLength();
+            entity.Property(e => e.KelompokSanksiBayar).IsFixedLength();
+            entity.Property(e => e.NamaAkun).IsFixedLength();
+            entity.Property(e => e.NamaJenis).IsFixedLength();
+            entity.Property(e => e.NamaKelompok).IsFixedLength();
+            entity.Property(e => e.NamaObjek).IsFixedLength();
+            entity.Property(e => e.NamaRincian).IsFixedLength();
+            entity.Property(e => e.NamaSubRincian).IsFixedLength();
+            entity.Property(e => e.Objek).IsFixedLength();
+            entity.Property(e => e.ObjekKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.ObjekKetetapan).IsFixedLength();
+            entity.Property(e => e.ObjekPokokBayar).IsFixedLength();
+            entity.Property(e => e.ObjekSanksiBayar).IsFixedLength();
+            entity.Property(e => e.PajakNama).IsFixedLength();
+            entity.Property(e => e.Rincian).IsFixedLength();
+            entity.Property(e => e.RincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.RincianKetetapan).IsFixedLength();
+            entity.Property(e => e.RincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.RincianSanksiBayar).IsFixedLength();
+            entity.Property(e => e.SubRincian).IsFixedLength();
+            entity.Property(e => e.SubRincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianKetetapan).IsFixedLength();
+            entity.Property(e => e.SubRincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianSanksiBayar).IsFixedLength();
+        });
+
         modelBuilder.Entity<DbMonHotel>(entity =>
+        {
+            entity.ToView("DB_MON_HOTEL");
+
+            entity.Property(e => e.AkunKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.AkunKetetapan).IsFixedLength();
+            entity.Property(e => e.AkunPokokBayar).IsFixedLength();
+            entity.Property(e => e.AkunSanksiBayar).IsFixedLength();
+            entity.Property(e => e.JenisKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.JenisKetetapan).IsFixedLength();
+            entity.Property(e => e.JenisPokokBayar).IsFixedLength();
+            entity.Property(e => e.JenisSanksiBayar).IsFixedLength();
+            entity.Property(e => e.KategoriKetetapan).IsFixedLength();
+            entity.Property(e => e.Kelompok).IsFixedLength();
+            entity.Property(e => e.KelompokKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.KelompokKetetapan).IsFixedLength();
+            entity.Property(e => e.KelompokPokokBayar).IsFixedLength();
+            entity.Property(e => e.KelompokSanksiBayar).IsFixedLength();
+            entity.Property(e => e.NamaKelompok).IsFixedLength();
+            entity.Property(e => e.ObjekKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.ObjekKetetapan).IsFixedLength();
+            entity.Property(e => e.ObjekPokokBayar).IsFixedLength();
+            entity.Property(e => e.ObjekSanksiBayar).IsFixedLength();
+            entity.Property(e => e.RincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.RincianKetetapan).IsFixedLength();
+            entity.Property(e => e.RincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.RincianSanksiBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianKetetapan).IsFixedLength();
+            entity.Property(e => e.SubRincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianSanksiBayar).IsFixedLength();
+        });
+
+        modelBuilder.Entity<DbMonHotel2>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_HOTEL_PK");
 
@@ -984,6 +1077,50 @@ public partial class ModelContext : DbContext
         });
 
         modelBuilder.Entity<DbMonResto>(entity =>
+        {
+            entity.ToView("DB_MON_RESTO");
+
+            entity.Property(e => e.Akun).IsFixedLength();
+            entity.Property(e => e.AkunKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.AkunKetetapan).IsFixedLength();
+            entity.Property(e => e.AkunPokokBayar).IsFixedLength();
+            entity.Property(e => e.AkunSanksiBayar).IsFixedLength();
+            entity.Property(e => e.Jenis).IsFixedLength();
+            entity.Property(e => e.JenisKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.JenisKetetapan).IsFixedLength();
+            entity.Property(e => e.JenisPokokBayar).IsFixedLength();
+            entity.Property(e => e.JenisSanksiBayar).IsFixedLength();
+            entity.Property(e => e.KategoriKetetapan).IsFixedLength();
+            entity.Property(e => e.Kelompok).IsFixedLength();
+            entity.Property(e => e.KelompokKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.KelompokKetetapan).IsFixedLength();
+            entity.Property(e => e.KelompokPokokBayar).IsFixedLength();
+            entity.Property(e => e.KelompokSanksiBayar).IsFixedLength();
+            entity.Property(e => e.NamaAkun).IsFixedLength();
+            entity.Property(e => e.NamaJenis).IsFixedLength();
+            entity.Property(e => e.NamaKelompok).IsFixedLength();
+            entity.Property(e => e.NamaObjek).IsFixedLength();
+            entity.Property(e => e.NamaRincian).IsFixedLength();
+            entity.Property(e => e.NamaSubRincian).IsFixedLength();
+            entity.Property(e => e.Objek).IsFixedLength();
+            entity.Property(e => e.ObjekKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.ObjekKetetapan).IsFixedLength();
+            entity.Property(e => e.ObjekPokokBayar).IsFixedLength();
+            entity.Property(e => e.ObjekSanksiBayar).IsFixedLength();
+            entity.Property(e => e.PajakNama).IsFixedLength();
+            entity.Property(e => e.Rincian).IsFixedLength();
+            entity.Property(e => e.RincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.RincianKetetapan).IsFixedLength();
+            entity.Property(e => e.RincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.RincianSanksiBayar).IsFixedLength();
+            entity.Property(e => e.SubRincian).IsFixedLength();
+            entity.Property(e => e.SubRincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianKetetapan).IsFixedLength();
+            entity.Property(e => e.SubRincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianSanksiBayar).IsFixedLength();
+        });
+
+        modelBuilder.Entity<DbMonResto2>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.TahunPajakKetetapan, e.MasaPajakKetetapan, e.SeqPajakKetetapan, e.TahunBuku }).HasName("DB_MON_RESTO_PK");
 
@@ -1231,6 +1368,20 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
         });
 
+        modelBuilder.Entity<MOpParkirCctvDet>(entity =>
+        {
+            entity.HasOne(d => d.NopNavigation).WithMany(p => p.MOpParkirCctvDets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DET_OP");
+        });
+
+        modelBuilder.Entity<MOpParkirCctvLog>(entity =>
+        {
+            entity.HasOne(d => d.MOpParkirCctvDet).WithOne(p => p.MOpParkirCctvLog)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LOG_DET");
+        });
+
         modelBuilder.Entity<MPajak>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("M_PAJAK_PK");
@@ -1290,6 +1441,13 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvDbOpPhr>(entity =>
+        {
+            entity.ToView("MV_DB_OP_PHR");
+
+            entity.Property(e => e.Dibayar).IsFixedLength();
         });
 
         modelBuilder.Entity<MvDbOpResto>(entity =>
@@ -1985,6 +2143,15 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<TMutasiPiutang>(entity =>
         {
             entity.HasKey(e => new { e.Mutasi, e.TahunBuku }).HasName("PK_MUTASI_PIUTANG");
+        });
+
+        modelBuilder.Entity<TOpParkirCctv>(entity =>
+        {
+            entity.Property(e => e.JenisKend).HasDefaultValueSql("0");
+
+            entity.HasOne(d => d.MOpParkirCctvDet).WithMany(p => p.TOpParkirCctvs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TRANS_DET");
         });
 
         modelBuilder.Entity<TPemeriksaan>(entity =>
