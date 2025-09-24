@@ -55,7 +55,7 @@
 
 
         function printReport() {
-            var printContents = document.getElementById('Show').innerHTML;
+            var printContents = document.getElementById('printArea').innerHTML;
             var originalContents = document.body.innerHTML;
 
             document.body.innerHTML = printContents;
@@ -96,6 +96,24 @@
                 el.style.display = display;
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#table').DataTable({
+                dom: 'Bfrtip', // tambahkan tombol di atas tabel
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: '🖨️ Print',
+                        title: 'Laporan Penerimaan Daerah',
+                        exportOptions: {
+                            columns: ':visible' // hanya kolom yang terlihat
+                        }
+                    }
+                ]
+            });
+        });
     </script>
 
 
