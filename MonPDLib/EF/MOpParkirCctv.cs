@@ -23,15 +23,15 @@ public partial class MOpParkirCctv
     [Column("ALAMAT_OP")]
     [StringLength(300)]
     [Unicode(false)]
-    public string? AlamatOp { get; set; }
+    public string AlamatOp { get; set; } = null!;
 
     [Column("WILAYAH_PAJAK")]
     [Precision(10)]
-    public int? WilayahPajak { get; set; }
+    public int WilayahPajak { get; set; }
 
     [Column("VENDOR")]
     [Precision(10)]
-    public int? Vendor { get; set; }
+    public int Vendor { get; set; }
 
     [InverseProperty("NopNavigation")]
     public virtual ICollection<MOpParkirCctvDet> MOpParkirCctvDets { get; set; } = new List<MOpParkirCctvDet>();

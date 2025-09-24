@@ -23,10 +23,10 @@ public partial class MOpParkirCctvDet
 
     [Column("CCTV_MODE")]
     [Precision(3)]
-    public byte? CctvMode { get; set; }
+    public byte CctvMode { get; set; }
 
     [Column("TGL_PASANG", TypeName = "DATE")]
-    public DateTime? TglPasang { get; set; }
+    public DateTime TglPasang { get; set; }
 
     [InverseProperty("MOpParkirCctvDet")]
     public virtual MOpParkirCctvLog? MOpParkirCctvLog { get; set; }

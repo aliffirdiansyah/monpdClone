@@ -22,7 +22,7 @@ public partial class MOpParkirCctvLog
     public int CctvId { get; set; }
 
     [Column("TGL_AKTIF", TypeName = "DATE")]
-    public DateTime? TglAktif { get; set; }
+    public DateTime TglAktif { get; set; }
 
     [Column("TGL_DOWN", TypeName = "DATE")]
     public DateTime? TglDown { get; set; }

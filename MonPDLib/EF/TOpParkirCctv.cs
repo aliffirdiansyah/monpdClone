@@ -45,7 +45,7 @@ public partial class TOpParkirCctv
 
     [Column("JENIS_KEND")]
     [Precision(2)]
-    public byte? JenisKend { get; set; }
+    public byte JenisKend { get; set; }
 
     [Column("PLAT_NO")]
     [StringLength(20)]

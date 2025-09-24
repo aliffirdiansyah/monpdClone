@@ -2147,7 +2147,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<TOpParkirCctv>(entity =>
         {
-            entity.Property(e => e.JenisKend).HasDefaultValueSql("0");
+            entity.Property(e => e.JenisKend).HasDefaultValueSql("0 ");
 
             entity.HasOne(d => d.MOpParkirCctvDet).WithMany(p => p.TOpParkirCctvs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
