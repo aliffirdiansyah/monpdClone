@@ -867,7 +867,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 public decimal RealisasiPenerimaanKembaliPemberianPinjaman { get; set; }
                 public decimal PersentasePenerimaanKembaliPemberianPinjaman => Math.Round(TargetPenerimaanKembaliPemberianPinjaman > 0 ? (RealisasiPenerimaanKembaliPemberianPinjaman / TargetPenerimaanKembaliPemberianPinjaman) * 100 : 0, 2);
                 public decimal TargetJumlahTotalPenerimaan => TargetPendapatan + TargetPendapatanTransfer + TargetLainLainPendapatanSah + TargetPenerimaanPembiayaan;
-                public decimal RealisasiJumlahTotalPenerimaan => RealisasiPendapatan + RealisasiPendapatanTransfer + RealisasiLainLainPendapatanSah + RealisasiPenerimaanPembiayaan;
+                public decimal RealisasiJumlahTotalPenerimaan => RealisasiPendapatanAsliDaerah + RealisasiPendapatanTransfer + RealisasiLainLainPendapatanSah + RealisasiPenerimaanPembiayaan;
                 public decimal PersentaseJumlahTotalPenerimaan => Math.Round(TargetJumlahTotalPenerimaan > 0 ? (RealisasiJumlahTotalPenerimaan / TargetJumlahTotalPenerimaan) * 100 : 0, 2);
             }
         }
