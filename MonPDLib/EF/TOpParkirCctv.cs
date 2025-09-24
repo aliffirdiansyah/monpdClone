@@ -44,8 +44,8 @@ public partial class TOpParkirCctv
     public DateTime Waktu { get; set; }
 
     [Column("JENIS_KEND")]
-    [Precision(2)]
-    public byte JenisKend { get; set; }
+    [Precision(10)]
+    public int JenisKend { get; set; }
 
     [Column("PLAT_NO")]
     [StringLength(20)]
