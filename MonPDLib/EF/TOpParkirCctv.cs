@@ -40,8 +40,8 @@ public partial class TOpParkirCctv
     [Precision(10)]
     public int? WilayahPajak { get; set; }
 
-    [Column("WAKTU", TypeName = "DATE")]
-    public DateTime Waktu { get; set; }
+    [Column("WAKTU_MASUK", TypeName = "DATE")]
+    public DateTime WaktuMasuk { get; set; }
 
     [Column("JENIS_KEND")]
     [Precision(10)]
@@ -51,6 +51,9 @@ public partial class TOpParkirCctv
     [StringLength(20)]
     [Unicode(false)]
     public string? PlatNo { get; set; }
+
+    [Column("WAKTU_KELUAR", TypeName = "DATE")]
+    public DateTime? WaktuKeluar { get; set; }
 
     [ForeignKey("Nop, CctvId")]
     [InverseProperty("TOpParkirCctvs")]
