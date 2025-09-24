@@ -11,6 +11,21 @@
 
 }
 
+
+<style>
+    .tahun-filter input[type="checkbox"] {
+        width: 20px; /* lebar kotak checkbox */
+        height: 20px; /* tinggi kotak checkbox */
+        cursor: pointer;
+    }
+
+    .tahun-filter label {
+        font-size: 18px; /* ukuran teks label */
+        margin-right: 15px; /* jarak antar label */
+        cursor: pointer;
+    }
+</style>
+
 <div class="col-lg-12">
     <div class="card">
         <div class="card-header d-flex bg-header-color align-items-center">
@@ -29,8 +44,8 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <div class="mb-2">
-                <label><strong>Pilih Tahun:</strong></label><br>
+            <div class="mb-2 tahun-filter">
+                <label><strong>Tambah Tahun:</strong></label><br>
 
                 <input type="checkbox" id="chkTahun1" onchange="toggleColumn('tahun1')" />
                 <label for="chkTahun1">@(tahun1)</label>
@@ -63,6 +78,7 @@
             document.body.innerHTML = originalContents;
         }
 
+
         function loadData() {
             $.ajax({
                 url: '@Url.Action("Show")',
@@ -89,14 +105,19 @@
     </script>
 
     <script>
-        function toggleColumn(className, checkbox) {
-            let display = checkbox.checked ? "table-cell" : "none";
-
+        function toggleColumn(className) {
             document.querySelectorAll("." + className).forEach(el => {
-                el.style.display = display;
+                const currentDisplay = window.getComputedStyle(el).display;
+                if (currentDisplay === "none") {
+                    el.style.display = "table-cell"; // tampilkan lagi sebagai kolom tabel
+                } else {
+                    el.style.display = "none"; // sembunyikan
+                }
             });
         }
     </script>
+
+  
 
 
 }

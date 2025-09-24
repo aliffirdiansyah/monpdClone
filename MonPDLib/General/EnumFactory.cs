@@ -776,11 +776,12 @@ namespace MonPDLib.General
         }
         public enum EPajakBlok
         {
-            MakananMinuman = 902,
-            TenagaListrik = 905,
             JasaPerhotelan = 901,
+            MakananMinuman = 902,
+            JasaKesenianHiburan = 903,
+            TenagaListrik = 905,
             JasaParkir = 907,
-            JasaKesenianHiburan = 903
+            AirTanah = 908,
         }
 
         public enum EVendorParkirCCTV
@@ -789,6 +790,17 @@ namespace MonPDLib.General
             Jasnita = 1,
             [Description("Telkom")]
             Telkom = 2
+        }
+        public enum EJenisKendParkirCCTV
+        {
+            [Description("Unknown")]
+            Unknown = 0,
+            [Description("Motor")]
+            Motor = 1,
+            [Description("Mobil")]
+            Mobil = 2,
+            [Description("Truck")]
+            Truck = 3,
         }
         public enum EUPTB
         {
