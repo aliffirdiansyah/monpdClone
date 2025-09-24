@@ -55,13 +55,14 @@
 
 
         function printReport() {
-            var printContents = document.getElementById('printArea').innerHTML;
+            var printContents = document.getElementById('Show').innerHTML;
             var originalContents = document.body.innerHTML;
 
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
         }
+
 
         function loadData() {
             $.ajax({
@@ -89,32 +90,19 @@
     </script>
 
     <script>
-        function toggleColumn(className, checkbox) {
-            let display = checkbox.checked ? "table-cell" : "none";
-
+        function toggleColumn(className) {
             document.querySelectorAll("." + className).forEach(el => {
-                el.style.display = display;
+                const currentDisplay = window.getComputedStyle(el).display;
+                if (currentDisplay === "none") {
+                    el.style.display = "table-cell"; // tampilkan lagi sebagai kolom tabel
+                } else {
+                    el.style.display = "none"; // sembunyikan
+                }
             });
         }
     </script>
 
-    <script>
-        $(document).ready(function () {
-            $('#table').DataTable({
-                dom: 'Bfrtip', // tambahkan tombol di atas tabel
-                buttons: [
-                    {
-                        extend: 'print',
-                        text: '🖨️ Print',
-                        title: 'Laporan Penerimaan Daerah',
-                        exportOptions: {
-                            columns: ':visible' // hanya kolom yang terlihat
-                        }
-                    }
-                ]
-            });
-        });
-    </script>
+  
 
 
 }

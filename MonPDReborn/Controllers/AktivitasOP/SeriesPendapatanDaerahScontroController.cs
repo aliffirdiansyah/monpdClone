@@ -32,5 +32,23 @@ namespace MonPDReborn.Controllers.AktivitasOP
                 return Json(response.ToInternalServerError());
             }
         }
+
+        public IActionResult ShowPrint()
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var model = new Models.AktivitasOP.SeriesPendapatanDaerahScontroVM.Show();
+                return View($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException ex) 
+            { 
+                return Json(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return Json(response.ToInternalServerError());
+            }
+        }
     }
 }

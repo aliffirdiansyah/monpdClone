@@ -41,11 +41,11 @@
         }
 
         th:first-child, td:first-child {
-            width: 3% !important;
+            width: 2% !important;
         }
 
         th:nth-child(2), td:nth-child(2) {
-            width: 40% !important;
+            width: 10% !important;
         }
 
         th:nth-child(3), th:nth-child(4), th:nth-child(5),
@@ -225,7 +225,7 @@
 }
 
 <div id="printArea">
-    <div class="table-responsive overflow-x:auto; max-width:100%;">
+    <div class="table-responsive" style="overflow-x:auto; max-width:100%;">
         <table id="table" class="table">
             <thead>
                 <tr>
@@ -1098,76 +1098,4 @@
         </table>
     </div>
 </div>
-
-
-<script>
-    function toggleColumn(className) {
-        document.querySelectorAll("." + className).forEach(el => {
-            const currentDisplay = window.getComputedStyle(el).display;
-            if (currentDisplay === "none") {
-                el.style.display = "table-cell"; // tampilkan lagi sebagai kolom tabel
-            } else {
-                el.style.display = "none"; // sembunyikan
-            }
-        });
-    }
-</script>
-<script>
-    $(document).ready(function () {
-        $('#table').DataTable({
-            paging: false,
-            ordering: false,
-            searching: false,
-            info: false,
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'excel',
-                    text: '📊 Excel',
-                    exportOptions: { columns: ':visible' },
-                    customize: function (xlsx) {
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        // Buat header row bold
-                        $('row[r=1] c', sheet).attr('s', '2');
-
-                        // Buat total row (row terakhir) bold
-                        var lastRow = $('row', sheet).last().attr('r');
-                        $('row[r=' + lastRow + '] c', sheet).attr('s', '2');
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    text: '📄 PDF',
-                    exportOptions: { columns: ':visible' },
-                    customize: function (doc) {
-                        doc.defaultStyle.fontSize = 10;
-                        doc.styles.tableHeader.fontSize = 11;
-                        doc.styles.tableHeader.fillColor = [211, 211, 211]; // abu-abu
-                        doc.styles.tableHeader.bold = true;
-
-                        var body = doc.content[1].table.body;
-
-                        // Align angka ke kanan mulai kolom ke-3
-                        body.forEach(function (row, i) {
-                            row.forEach(function (cell, j) {
-                                if (j > 1 && typeof cell.text === 'string' && !isNaN(cell.text)) {
-                                    cell.alignment = 'right';
-                                }
-                            });
-                        });
-
-                        // Format total row (baris terakhir)
-                        var lastRow = body[body.length - 1];
-                        lastRow.forEach(function (cell) {
-                            cell.fillColor = [224, 224, 224]; // warna abu lebih gelap
-                            cell.fontSize = 10;
-                            cell.bold = true;
-                        });
-                    }
-                }
-            ]
-        });
-    });
-</script>
 
