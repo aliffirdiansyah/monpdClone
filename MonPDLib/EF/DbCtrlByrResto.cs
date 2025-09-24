@@ -10,36 +10,36 @@ namespace MonPDLib.EF;
 public partial class DbCtrlByrResto
 {
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(100)]
     [Unicode(false)]
     public string? Nop { get; set; }
 
     [Column("TAHUN", TypeName = "NUMBER")]
-    public decimal Tahun { get; set; }
+    public decimal? Tahun { get; set; }
 
     [Column("BULAN", TypeName = "NUMBER")]
-    public decimal Bulan { get; set; }
+    public decimal? Bulan { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
     public decimal? KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
-    [StringLength(150)]
+    [StringLength(38)]
     [Unicode(false)]
     public string? NamaKategori { get; set; }
 
     [Column("WILAYAH_PAJAK")]
-    [StringLength(20)]
+    [StringLength(1)]
     [Unicode(false)]
     public string? WilayahPajak { get; set; }
 
     [Column("NAMA_OP")]
-    [StringLength(150)]
+    [StringLength(255)]
     [Unicode(false)]
     public string? NamaOp { get; set; }
 
     [Column("ALAMAT_OP")]
-    [StringLength(250)]
+    [StringLength(255)]
     [Unicode(false)]
     public string? AlamatOp { get; set; }
 

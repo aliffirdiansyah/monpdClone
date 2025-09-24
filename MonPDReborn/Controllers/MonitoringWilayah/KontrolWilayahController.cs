@@ -25,8 +25,24 @@ namespace MonPDReborn.Controllers.MonitoringWilayah
         {
             try
             {
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+                
+                
+                string lastPart = nama.Split(' ').Last();
+
                 ViewData["Title"] = controllerName;
-                if (wilayah == null || jenisPajak == null)
+                if (lastPart != "0" && lastPart != "BAPENDA")
+                {
+                    jenisPajak = 0;
+                    var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Index(Convert.ToInt32(lastPart), jenisPajak.Value);
+
+                    return View($"{URLView}{actionName}", model);
+                }
+                else if (wilayah == null && jenisPajak == null)
                 {
                     var model = new Models.MonitoringWilayah.MonitoringWilayahVM.Index();
 

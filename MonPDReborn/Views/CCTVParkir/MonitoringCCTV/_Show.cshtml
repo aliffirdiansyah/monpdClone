@@ -1,0 +1,107 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.Show
+
+
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-store-3-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total CCTV</h5>
+                        <h2 class="mb-0 fw-bold">0</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-hotel-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">CCTV Aktif</h5>
+                        <h2 class="mb-0 fw-bold">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-car-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">CCTV Non Aktif</h5>
+                        <h2 class="mb-0 fw-bold">0</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTV>()
+        .ID("MonitoringCCTVGrid")
+        .DataSource(Model.MonitoringCCTVList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Nop).Caption("NOP").Fixed(true);
+            columns.AddFor(m => m.NamaOp).Caption("Nama OP");
+            columns.AddFor(m => m.AlamatOp).Caption("Alamat OP");
+            columns.AddFor(m => m.TglTerpasang).Caption("Tgl Terpasang").Format("dd MMM yyyy");
+            columns.AddFor(m => m.Vendor).Caption("Vendor");
+            columns.AddFor(m => m.StatusAktif).Caption("Kondisi CCTV");
+            columns.AddFor(m => m.TglTerakhirAktif).Caption("Terakhir Aktif").Format("dd MMM yyyy HH:mm:ss");
+
+            // ✅ Kolom Action
+            columns.Add()
+            .Caption("Action")
+            .Width(200)
+            .Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+                <div class="d-flex justify-content-center gap-2">
+                    <!-- Tombol Modal -->
+                    <button class="btn btn-sm btn-primary" onclick="lihatDetailModal('<%- data.Nop %>')" title="Lihat di Modal">
+                        <i class="bx bx-area"></i>
+                    </button>
+                    <!-- Tombol New Tab -->
+                    <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>')" title="Buka di Tab Baru">
+                        <i class="bx bx-archive"></i>
+                    </button>
+                </div>
+            </text>)
+            ;
+        })
+        )
+
+</div>
+

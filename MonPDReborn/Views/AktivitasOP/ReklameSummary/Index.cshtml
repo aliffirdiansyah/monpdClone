@@ -15,11 +15,6 @@
                         <i class="bx bx-bar-chart-alt me-2"></i> Reklame Summary
                     </h4>
                 </div>
-                <div class="flex-shrink-0">
-                    <button class="btn btn-sm btn-outline-dark" title="Segarkan Reklame Summary" onclick="">
-                        <i class="mdi mdi-refresh align-middle"></i> Refresh
-                    </button>
-                </div>
             </div>
             <div class="card-body">
                 <div class="d-flex gap-2">
@@ -116,18 +111,32 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // saat pertama kali: kosongkan hasil
             $('#Show').html();
 
             // ketika tombol Terapkan Filter diklik
             $('.btn-success').on('click', function () {
+                var tahun = $('#tahunFilter').val();
+                var lokasi = $('#lokasiFilter').val();
+
+                if (!tahun || !lokasi) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Filter belum dipilih',
+                        text: '⚠ Silakan pilih filter Tahun dan Lokasi terlebih dahulu.',
+                        confirmButtonText: 'OK'
+                    });
+                    return; 
+                }
+
                 loadData();
                 loadDataTerbatas();
                 loadDataIsidentil();
+
                 $('#cardShow').removeClass('d-none');
                 $('#cardTerbatas').removeClass('d-none');
                 $('#cardInsidentil').removeClass('d-none');
             });
+
 
             function loadData() {
                 let tahun = $('#tahunFilter').val();
@@ -436,6 +445,56 @@
 
         function loadDetailBongkar(tahun, bulan, jenis, kategori, lokasi) {
             const url = `/ReklameSummary/DetailBongkar?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}&lokasi=${encodeURIComponent(lokasi)}`;
+            window.open(url, '_blank');
+        }
+
+        function getNamaKategoriSilangFromColumn(columnName) {
+            switch (columnName) {
+                case 'JmlSilangJT': return 1;
+                case 'JmlSilangPanjang': return 2;
+                case 'JmlSilangKB': return 3;
+                default: return 0; // fallback
+            }
+        }
+
+        function SilangCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
+
+            const namaKolom = cellInfo.column.dataField;
+            const kategori = getNamaKategoriSilangFromColumn(namaKolom);
+            const kategoriLabel = kategoriText(kategori);
+            const jenisLabel = jenisText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                $("#kategoriSpan").text(kategoriLabel);
+                $("#jenisSpan").text(jenisLabel);
+
+                loadDetailSilang(tahun, bulan, jenis, kategori, lokasi);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function loadDetailSilang(tahun, bulan, jenis, kategori, lokasi) {
+            const url = `/ReklameSummary/DetailSilang?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}&lokasi=${encodeURIComponent(lokasi)}`;
             window.open(url, '_blank');
         }
 

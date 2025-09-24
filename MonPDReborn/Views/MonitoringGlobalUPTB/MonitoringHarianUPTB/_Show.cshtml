@@ -1,0 +1,101 @@
+﻿@model MonPDReborn.Models.MonitoringGlobalUPTB.MonitoringHarianUPTBVM.Show
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card card-animate shadow-lg rounded-3 p-3" style="border-top: 6px solid #66BB6A; height:80%;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="  ri-focus-3-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Target</h5>
+                        <h3 class="mb-0 fw-bold">@MonPDLib.General.Extension.FormatRupiahFull(Model.Data.TotalTarget)</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate shadow-lg rounded-3 p-3" style="border-top: 6px solid #66BB6A; height:80%;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-money-dollar-box-line text-warning fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Realisasi</h5>
+                        <h3 class="mb-0 fw-bold">@MonPDLib.General.Extension.FormatRupiahFull(Model.Data.TotalRealisasi)</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate shadow-lg rounded-3 p-3" style="border-top: 6px solid #66BB6A; height:80%;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class="ri-bar-chart-2-line text-success fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Pencapaian</h5>
+                        <h3 class="mb-0 fw-bold">@Model.Data.Pencapaian.ToString("N2")%</h3>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.MonitoringGlobalUPTB.MonitoringHarianUPTBVM.MonitoringHarian>()
+        .ID("KontrolPrediksiGrid")
+        .DataSource(Model.DataMonitoringHarianList.OrderBy(x => x.Tanggal).ToList())
+        .KeyExpr("JenisPajak")
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns =>
+        {
+
+            columns.AddFor(m => m.Tanggal).Format("dd MMM yyyy")
+            .Caption("Tanggal");
+
+            columns.AddFor(m => m.namaHari).Caption("Hari");
+
+            columns.AddFor(m => m.JenisPajak)
+            .Caption("Jenis Pajak");
+
+
+            columns.AddFor(m => m.Realisasi)
+            .Caption("Realisasi").Format("#,##0").Alignment(HorizontalAlignment.Right);
+
+
+
+
+        })
+        )
+</div>

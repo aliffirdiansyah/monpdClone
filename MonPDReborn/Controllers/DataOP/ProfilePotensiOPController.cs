@@ -31,6 +31,23 @@ namespace MonPDReborn.Controllers.DataOP
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("BAPENDA"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
+                string lastPart = nama.Split(' ').Last();
+
+                if (int.TryParse(lastPart, out int wilayah))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 var model = new Models.DataOP.ProfilePotensiOPVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

@@ -1,0 +1,44 @@
+﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahVM.Report
+@{
+
+}
+
+<button class="btn btn-primary" onclick="printReport()">Cetak</button>
+<div class="row">
+    <div class="col-md-12">
+        <div id="report">
+            @{
+                switch (Model.Type)
+                {
+                    case 1:
+                        <h4 class="text-center">TR OPD RINCI</h4>
+                        @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/ReportTrOpdRinci.cshtml", Model)
+                        ;
+                        break;
+                    case 2:
+                        <h4 class="text-center">TR OPD</h4>
+                        @await Html.PartialAsync("~/Views/AktivitasOP/SeriesPendapatanDaerah/ReportTRopdWarna.cshtml", Model)
+                        ;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function printReport() {
+            var printContents = document.getElementById('report').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+}

@@ -91,11 +91,17 @@ namespace ReklameWs
             // do fill db op abt
             if (IsGetDBOp())
             {
-                OpProcess();
+                for (var i = tahunAmbil; i <= tglServer.Year; i++)
+                {
+                    OpProcess(i);
+                }
             }
 
             // do fill realisasi
-            RealisasiProcess();
+            for (var i = tahunAmbil; i <= tglServer.Year; i++)
+            {
+                RealisasiProcess(i);
+            }
 
             for (var i = tahunAmbil; i <= tglServer.Year; i++)
             {
@@ -528,7 +534,7 @@ namespace ReklameWs
             }
         }
 
-        private void OpProcess()
+        private void OpProcess(int tahunBuku)
         {
             var _contMonPd = DBClass.GetContext();
             using (var _contMonitoringDb = DBClass.GetMonitoringDbContext())
@@ -707,7 +713,7 @@ FROM (
     'PERMANEN' KATEGORI_NAMA,
 	NOR
 	FROM VWTABELPERMOHONAN@lihatreklame
-	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = EXTRACT(YEAR FROM SYSDATE)
+	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = :TAHUN
 	UNION ALL
 	SELECT NO_FORMULIR,
 	NO_PERUSAHAAN,
@@ -794,7 +800,7 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
     'INSIDENTIL' KATEGORI_NAMA,
 	CAST(NULL AS VARCHAR(500)) AS NOR
 	FROM VWTABELPERMOHONANINS@lihatreklame
-	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = EXTRACT(YEAR FROM SYSDATE)
+	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = :TAHUN
 	UNION ALL
 	SELECT NO_FORMULIR,
 	0 NO_PERUSAHAAN,
@@ -881,18 +887,23 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
     'TERBATAS' KATEGORI_NAMA,
 	NOR
 	FROM VWPERMOHONANSIMRLAMA1@lihatreklame
-	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = EXTRACT(YEAR FROM SYSDATE)
+	WHERE EXTRACT(YEAR FROM TGL_PERMOHONAN) = :TAHUN
 ) A
 
                     ";
 
-                var result = _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql).ToList();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{DateTime.Now} GET QUERY DB_OP_REKLAME_MONITORINGDB {tahunBuku}");
+                Console.ResetColor();
+                var result = _contMonitoringDb.Set<DbOpReklame>().FromSqlRaw(sql, new[] {
+                    new OracleParameter("TAHUN", tahunBuku)
+                }).ToList();
 
-                var existingr = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
+                var existingr = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
                 _contMonPd.DbOpReklames.RemoveRange(existingr);
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{DateTime.Now} DELETE DB_OP_REKLAME_MONITORINGDB (pending commit)");
+                Console.WriteLine($"{DateTime.Now} DELETE DB_OP_REKLAME_MONITORINGDB {tahunBuku} (pending commit)");
                 Console.ResetColor();
 
                 int process = 0;
@@ -983,7 +994,7 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
                         StatusVer = item.StatusVer,
                         TglVer = item.TglVer,
                         UserVer = item.UserVer,
-                        TahunBuku = DateTime.Now.Year,
+                        TahunBuku = tahunBuku,
                         TglOpTutup = item.TglOpTutup,
                         KategoriId = item.KategoriId,
                         Seq = item.Seq
@@ -1001,108 +1012,247 @@ TGL_MULAI_BERLAKU AS TGL_MULAI_BUKA_OP,
                 // Sekali save di akhir
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_OP_REKLAME_MONITORINGDB");
+                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_OP_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
 
                 _contMonPd.SaveChanges();
                 _contMonPd.ChangeTracker.Clear();
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{DateTime.Now} [FINISHED] DB_OP_REKLAME_MONITORINGDB");
+                Console.WriteLine($"{DateTime.Now} [FINISHED] DB_OP_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
             }
         }
-        private void RealisasiProcess()
+        private void RealisasiProcess(int tahunBuku)
         {
             var _contMonPd = DBClass.GetContext();
             using (var _contMonitoringDb2 = DBClass.GetMonitoringDbContext())
             {
                 var opList = _contMonPd.DbOpReklames.ToList();
                 var sql2 = @"
-SELECT 	A.NO_FORMULIR,
-		NO_SKPD ID_KETETAPAN,
-		TGLSKPD TGLPENETAPAN,
-		EXTRACT(YEAR FROM TGLSKPD) AS TAHUN_PAJAK,
-		EXTRACT(MONTH FROM TGLSKPD) AS BULAN_PAJAK,
-        A.PAJAKLB PAJAK_POKOK,
-		1 JNS_KETETAPAN,
-		TGL_JTEMPO_SKPD,
-		'-' AKUN,
-		'-' NAMA_AKUN,
-		'-' KELOMPOK,
-		'-' NAMA_KELOMPOK,
-		'-' JENIS,
-		'-' NAMA_JENIS,
-		'-' OBJEK,
-		'-' NAMA_OBJEK,
-		'-' RINCIAN,
-		'-' NAMA_RINCIAN,
-		'-' SUB_RINCIAN,
-		'-' NAMA_SUB_RINCIAN,
-		EXTRACT(YEAR FROM TGLSKPD) AS TAHUN_PAJAK_KETETAPAN,
-		EXTRACT(MONTH FROM TGLSKPD) AS MASA_PAJAK_KETETAPAN,
-		1 SEQ_PAJAK_KETETAPAN,
-		JENISSURAT KATEGORI_KETETAPAN,
-		TGLSKPD TGL_KETETAPAN,
-		TGL_JTEMPO_SKPD TGL_JATUH_TEMPO_BAYAR,
-		STATUS_BERKAS IS_LUNAS_KETETAPAN,
-		A.TGL_BAYAR TGL_LUNAS_KETETAPAN,
-		PAJAK POKOK_PAJAK_KETETAPAN,
-		0 PENGURANG_POKOK_KETETAPAN,
-		'-' AKUN_KETETAPAN,
-		'-' KELOMPOK_KETETAPAN,
-		'-' JENIS_KETETAPAN,
-		'-' OBJEK_KETETAPAN,
-		'-' RINCIAN_KETETAPAN,
-		'-' SUB_RINCIAN_KETETAPAN,
-		B.TGL_BAYAR TGL_BAYAR_POKOK,
-		B.REALISASI NOMINAL_POKOK_BAYAR,
-		B.TGL_BAYAR TGL_BAYAR_SANKSI,
-		B.SANKSI NOMINAL_SANKSI_BAYAR,
-		'-' AKUN_SANKSI_BAYAR,
-		'-' KELOMPOK_SANKSI_BAYAR,
-		'-' JENIS_SANKSI_BAYAR,
-		'-' OBJEK_SANKSI_BAYAR,
-		'-' RINCIAN_SANKSI_BAYAR,
-		'-' SUB_RINCIAN_SANKSI_BAYAR,
-		B.TGL_BAYAR TGL_BAYAR_SANKSI_KENAIKAN,
-		B.JAMBONG NOMINAL_JAMBONG_BAYAR,
-		'-' AKUN_JAMBONG_BAYAR,
-		'-' KELOMPOK_JAMBONG_BAYAR,
-		'-' JENIS_JAMBONG_BAYAR,
-		'-' OBJEK_JAMBONG_BAYAR,
-		'-' RINCIAN_JAMBONG_BAYAR,
-		'-' SUB_RINCIAN_JAMBONG_BAYAR,
-		sysdate INS_dATE, 
-		'JOB' INS_BY,
-		sysdate UPD_DATE, 
-		'JOB' UPD_BY,
-		NO_SKPD NO_KETETAPAN,
-        ROWNUM SEQ
-FROM VW_KETETAPAN_NRC@lihatreklame A
-LEFT JOIN (
-	SELECT NO_FORMULIR, TGL_BAYAR, SUM(PAJAKLB) REALISASI, SUM(SANKSI) SANKSI, SUM(JAMBONG) JAMBONG
-	FROM VW_REALISASI_NRC@lihatreklame
-    WHERE EXTRACT(YEAR FROM TGL_BAYAR) = EXTRACT(YEAR FROM SYSDATE)
-	GROUP BY NO_FORMULIR, TGL_BAYAR
-) B ON A.NO_FORMULIR = B.NO_FORMULIR AND A.TGL_BAYAR = B.TGL_BAYAR
-WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
+SELECT 
+	NO_FORMULIR,
+	NO_SKPD AS ID_KETETAPAN,
+	TGLSKPD AS TGLPENETAPAN,
+	EXTRACT(YEAR FROM TGLSKPD) AS TAHUN_PAJAK,
+	EXTRACT(MONTH FROM TGLSKPD) AS BULAN_PAJAK,
+	PAJAK_KETETAPAN AS PAJAK_POKOK,
+	1 AS JNS_KETETAPAN,
+	TGL_JTEMPO_SKPD,
+	'4' AS AKUN,	
+	'Pendapatan Daerah' AS NAMA_AKUN,
+	'4.1' AS KELOMPOK,	
+	'Pendapatan Asli Daerah (PAD)' AS NAMA_KELOMPOK,
+	'4.1.01' AS JENIS,	
+	'Pajak Daerah' AS NAMA_JENIS,	
+	'4.1.01.09' AS OBJEK,
+	'Pajak Reklame' AS NAMA_OBJEK,	
+	 CASE WHEN FLAG_PERMOHONAN = 'INSIDENTIL' THEN '4.1.01.09.02' ELSE '4.1.01.09.01' END AS RINCIAN,
+	 CASE WHEN FLAG_PERMOHONAN = 'INSIDENTIL' THEN 'Pajak Reklame Kain' ELSE 'Pajak Reklame Papan/Billboard/Videotron/ Megatron' END AS NAMA_RINCIAN,
+	 CASE WHEN FLAG_PERMOHONAN = 'INSIDENTIL' THEN '4.1.01.09.02.0001' ELSE '4.1.01.09.01.0001' END AS SUB_RINCIAN,
+	 CASE WHEN FLAG_PERMOHONAN = 'INSIDENTIL' THEN 'Pajak Reklame Kain' ELSE 'Pajak Reklame Papan/Billboard/Videotron/ Megatron' END AS NAMA_SUB_RINCIAN,
+	 EXTRACT(YEAR FROM TGLSKPD) AS TAHUN_PAJAK_KETETAPAN,	
+	 EXTRACT(MONTH FROM TGLSKPD) AS MASA_PAJAK_KETETAPAN,
+	 ROWNUM AS SEQ_PAJAK_KETETAPAN,
+	 JENISSURAT AS KATEGORI_KETETAPAN,
+	 TGLSKPD AS TGL_KETETAPAN,
+	 CASE WHEN PAJAK_KETETAPAN = PAJAKLB_REALISASI THEN 1 ELSE 0 END AS IS_LUNAS_KETETAPAN,
+	 TGL_BAYAR AS TGL_LUNAS_KETETAPAN,
+	 PAJAK_KETETAPAN AS POKOK_PAJAK_KETETAPAN,
+	 TGL_JTEMPO_SKPD AS TGL_JATUH_TEMPO_BAYAR,	
+	 TGL_BAYAR AS TGL_BAYAR_POKOK,	
+	 PAJAKLB_REALISASI AS NOMINAL_POKOK_BAYAR,	
+	 TGL_BAYAR AS TGL_BAYAR_SANKSI,	
+	 SANKSI AS NOMINAL_SANKSI_BAYAR,	
+	 '-' AS AKUN_SANKSI_BAYAR,	
+	 '-' AS KELOMPOK_SANKSI_BAYAR,	
+	 '-' AS JENIS_SANKSI_BAYAR,	
+	 '-' AS OBJEK_SANKSI_BAYAR,	
+	 '-' AS RINCIAN_SANKSI_BAYAR,	
+	 '-' AS SUB_RINCIAN_SANKSI_BAYAR,	
+	 TGL_BAYAR AS TGL_BAYAR_SANKSI_KENAIKAN,	
+	 JAMBONG AS NOMINAL_JAMBONG_BAYAR,	
+	 '-' AS AKUN_JAMBONG_BAYAR,	
+	 '-' AS KELOMPOK_JAMBONG_BAYAR,	
+	 '-' AS JENIS_JAMBONG_BAYAR,	
+	 '-' AS OBJEK_JAMBONG_BAYAR,	
+	 '-' AS RINCIAN_JAMBONG_BAYAR,	
+	 '-' AS SUB_RINCIAN_JAMBONG_BAYAR,
+    0 PENGURANG_POKOK_KETETAPAN,
+    '-' AKUN_KETETAPAN,
+	'-' KELOMPOK_KETETAPAN,
+	'-' JENIS_KETETAPAN,
+	'-' OBJEK_KETETAPAN,
+	'-' RINCIAN_KETETAPAN,
+	'-' SUB_RINCIAN_KETETAPAN,
+	 SYSDATE AS INS_DATE,
+	 'JOB' AS INS_BY,
+	 SYSDATE AS UPD_DATE,
+	 'JOB' AS UPD_BY,
+	 NO_SKPD AS NO_KETETAPAN,	
+	 ROWNUM AS SEQ
+FROM (
+SELECT 
+    mrhk.NO_FORMULIR AS NO_FORMULIR,
+    mrhk.NO_SKPD,
+    mrhk.TGLSKPD,
+    mrhk.PAJAK AS PAJAK_KETETAPAN,
+    mrhk.TGL_JTEMPO_SKPD,
+    mrhk.JENISSURAT,
+    mrhk.FLAG_PERMOHONAN,
+    mrhr.NO_FORMULIR AS NO_FORMULIR_A,
+    mrhr.TGL_BAYAR,
+    mrhr.PAJAKLB AS PAJAKLB_REALISASI,
+    mrhr.SANKSI,
+    mrhr.JAMBONG
+FROM 
+(
+	SELECT * FROM
+	(
+		SELECT 
+		    NO_SKPD,
+		    NO_FORMULIR,
+		    TGLSKPD,
+		    TGL_JTEMPO_SKPD,
+		    PAJAK,
+		    PAJAKLB,
+		    SANKSI,
+		    JAMBONG,
+		    FLAG_PERMOHONAN,
+		    JENISSURAT,
+		    STATUS_BERKAS
+		FROM VW_KETETAPAN_NRC@lihatreklame
+		GROUP BY     
+		    NO_SKPD,
+		    NO_FORMULIR,
+		    TGLSKPD,
+		    TGL_JTEMPO_SKPD,
+		    PAJAK,
+		    PAJAKLB,
+		    SANKSI,
+		    JAMBONG,
+		    FLAG_PERMOHONAN,
+		    JENISSURAT,
+		    STATUS_BERKAS
+		ORDER BY NO_FORMULIR
+	)
+) mrhk
+LEFT JOIN 
+(
+	SELECT * FROM
+	(
+		SELECT
+		    MAX(TGL_BAYAR) AS TGL_BAYAR,
+		    NO_FORMULIR,
+		    SUM(NVL(PAJAKLB,0)) AS PAJAKLB,
+		    SUM(NVL(SANKSI,0)) AS SANKSI,
+		    SUM(NVL(BUNGA,0)) AS BUNGA,
+		    SUM(NVL(TOTALSANKSI,0)) AS TOTALSANKSI,
+		    SUM(NVL(JAMBONG,0)) AS JAMBONG,
+		    FLAG_PERMOHONAN
+		FROM VW_REALISASI_NRC@lihatreklame
+		WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :TAHUN
+		GROUP BY
+		    NO_FORMULIR,
+		    FLAG_PERMOHONAN
+		ORDER BY NO_FORMULIR
+	)
+) mrhr
+       ON mrhk.NO_FORMULIR = mrhr.NO_FORMULIR
+      AND EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
+WHERE EXTRACT(YEAR FROM mrhk.TGLSKPD) = :TAHUN
+UNION ALL
+SELECT 
+    mrhk.NO_FORMULIR AS NO_FORMULIR,
+    mrhk.NO_SKPD,
+    mrhk.TGLSKPD,
+    mrhk.PAJAK AS PAJAK_KETETAPAN,
+    mrhk.TGL_JTEMPO_SKPD,
+    mrhk.JENISSURAT,
+    mrhk.FLAG_PERMOHONAN,
+    mrhr.NO_FORMULIR AS NO_FORMULIR_A,
+    mrhr.TGL_BAYAR,
+    mrhr.PAJAKLB AS PAJAKLB_REALISASI,
+    mrhr.SANKSI,
+    mrhr.JAMBONG
+FROM 
+(
+	SELECT * FROM
+	(
+		SELECT
+		    MAX(TGL_BAYAR) AS TGL_BAYAR,
+		    NO_FORMULIR,
+		    SUM(NVL(PAJAKLB,0)) AS PAJAKLB,
+		    SUM(NVL(SANKSI,0)) AS SANKSI,
+		    SUM(NVL(BUNGA,0)) AS BUNGA,
+		    SUM(NVL(TOTALSANKSI,0)) AS TOTALSANKSI,
+		    SUM(NVL(JAMBONG,0)) AS JAMBONG,
+		    FLAG_PERMOHONAN
+		FROM VW_REALISASI_NRC@lihatreklame
+		WHERE EXTRACT(YEAR FROM TGL_BAYAR) = :TAHUN
+		GROUP BY
+		    NO_FORMULIR,
+		    FLAG_PERMOHONAN
+		ORDER BY NO_FORMULIR
+	)
+) mrhr
+LEFT JOIN 
+(
+	SELECT * FROM
+	(
+		SELECT 
+		    NO_SKPD,
+		    NO_FORMULIR,
+		    TGLSKPD,
+		    TGL_JTEMPO_SKPD,
+		    PAJAK,
+		    PAJAKLB,
+		    SANKSI,
+		    JAMBONG,
+		    FLAG_PERMOHONAN,
+		    JENISSURAT,
+		    STATUS_BERKAS
+		FROM VW_KETETAPAN_NRC@lihatreklame
+		GROUP BY     
+		    NO_SKPD,
+		    NO_FORMULIR,
+		    TGLSKPD,
+		    TGL_JTEMPO_SKPD,
+		    PAJAK,
+		    PAJAKLB,
+		    SANKSI,
+		    JAMBONG,
+		    FLAG_PERMOHONAN,
+		    JENISSURAT,
+		    STATUS_BERKAS
+		ORDER BY NO_FORMULIR
+	)
+) mrhk
+       ON mrhk.NO_FORMULIR = mrhr.NO_FORMULIR
+WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
+  AND EXTRACT(YEAR FROM mrhk.TGLSKPD) < :TAHUN)
 ";
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{DateTime.Now} GET DB_MON_REKLAME_MONITORINGDB {tahunBuku}");
+                Console.ResetColor();
 
                 var pembayaranSspdList = _contMonitoringDb2
                 .Set<OpSkpdSspdReklame>()
-                .FromSqlRaw(sql2)
+                .FromSqlRaw(sql2, new[] {
+                    new OracleParameter("TAHUN", tahunBuku)
+                })
                 .ToList();
 
                 // --- 2. Ambil data Op Reklame ---
-                var opList2 = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
+                var opList2 = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
 
                 // --- 3. Kosongkan tabel Monitoring ---
-                var existing = _contMonPd.DbMonReklames.Where(x => x.TahunBuku == DateTime.Now.Year).ToList();
+                var existing = _contMonPd.DbMonReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
                 _contMonPd.DbMonReklames.RemoveRange(existing);
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{DateTime.Now} DELETE DB_MON_REKLAME_MONITORINGDB (pending commit)");
+                Console.WriteLine($"{DateTime.Now} DELETE DB_MON_REKLAME_MONITORINGDB {tahunBuku} (pending commit)");
                 Console.ResetColor();
 
                 // --- 4. Insert ulang data ---
@@ -1348,7 +1498,7 @@ WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
                         newRow.StatusVer = 0;
                         newRow.TglVer = null;
                         newRow.UserVer = "-";
-                        newRow.TahunBuku = item.TAHUN_PAJAK ?? DateTime.Now.Year;
+                        newRow.TahunBuku = item.TAHUN_PAJAK ?? tahunBuku;
                         newRow.IdKetetapan = item.ID_KETETAPAN;
                         newRow.Tglpenetapan = item.TGLPENETAPAN;
                         newRow.TahunPajak = item.TAHUN_PAJAK.ToString();
@@ -1426,7 +1576,7 @@ WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
                 _contMonPd.DbMonReklames.AddRange(newRows);
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_MON_REKLAME_MONITORINGDB");
+                Console.WriteLine($"\n{DateTime.Now} [SAVING] DB_MON_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
 
                 // Sekali commit di akhir
@@ -1434,8 +1584,9 @@ WHERE EXTRACT(YEAR FROM A.TGLSKPD) = EXTRACT(YEAR FROM SYSDATE)
                 _contMonPd.ChangeTracker.Clear();
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\n{DateTime.Now} [SUCCESS] DB_MON_REKLAME_MONITORINGDB");
+                Console.WriteLine($"\n{DateTime.Now} [SUCCESS] DB_MON_REKLAME_MONITORINGDB {tahunBuku}");
                 Console.ResetColor();
+                Console.WriteLine($"");
             }
         }
         public static OracleConnection getOracleConnection()

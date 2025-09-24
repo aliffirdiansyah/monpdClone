@@ -359,95 +359,311 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return result;
             }
+            public static List<ViewModel.ReportTrOpdRinci.Opd> GetDataReportTrOpdRinci(int tahunBuku, int bulan)
+            {
+                var result = new List<ViewModel.ReportTrOpdRinci.Opd>();
+                var context = DBClass.GetContext();
 
+                var tanggal = DateTime.Now;
+                if (tahunBuku < tanggal.Year && bulan < tanggal.Month)
+                {
+                    tanggal = new DateTime(tahunBuku, bulan, 31);
+                }
+
+                var query = context.DbPendapatanDaerahs
+                    .Where(x => x.TahunBuku == tahunBuku)
+                    .GroupBy(x => new
+                    {
+                        x.KodeOpd,
+                        x.NamaOpd,
+                        x.SubRincian,
+                        x.NamaSubRincian,
+                        x.Bulan
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.KodeOpd,
+                        x.Key.NamaOpd,
+                        x.Key.SubRincian,
+                        x.Key.NamaSubRincian,
+                        x.Key.Bulan,
+                        Target = x.Sum(y => y.Target),
+                        Realisasi = x.Sum(y => y.Realisasi)
+                    })
+                    .OrderBy(x => x.KodeOpd)
+                    .ThenBy(x => x.SubRincian)
+                    .ToList();
+
+                var opdList = query.GroupBy(x => new { x.KodeOpd, x.NamaOpd })
+                    .Select(x => new { x.Key.KodeOpd, x.Key.NamaOpd })
+                    .ToList();
+
+                foreach (var opd in opdList)
+                {
+                    string nama = opd.NamaOpd;
+                    decimal targetTotal = query.Where(x => x.KodeOpd == opd.KodeOpd).Sum(x => x.Target);
+                    decimal targetSampaiDengan = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan <= tanggal.Month).Sum(x => x.Target);
+                    decimal realisasiSampaiDengan = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan <= tanggal.Month).Sum(x => x.Realisasi);
+                    decimal targetBulanIni = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan == tanggal.Month).Sum(x => x.Target);
+                    decimal realisasiBulanIni = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan == tanggal.Month).Sum(x => x.Realisasi);
+
+                    var res = new ViewModel.ReportTrOpdRinci.Opd();
+                    res.Col.Nama = nama;
+                    res.Col.TargetTotal = targetTotal;
+                    res.Col.TargetSampaiDengan = targetSampaiDengan;
+                    res.Col.RealisasiSampaiDengan = realisasiSampaiDengan;
+                    res.Col.TargetBulanIni = targetBulanIni;
+                    res.Col.RealisasiBulanIni = realisasiBulanIni;
+
+
+                    var subrincianList = query
+                        .Where(x => x.KodeOpd == opd.KodeOpd)
+                        .GroupBy(x => new { x.SubRincian, x.NamaSubRincian })
+                        .Select(x => new { x.Key.SubRincian, x.Key.NamaSubRincian })
+                        .ToList();
+                    foreach (var subrincian in subrincianList)
+                    {
+                        string namaSubrincian = subrincian.NamaSubRincian;
+                        decimal targetTotalSubrincian = query.Where(x => x.KodeOpd == opd.KodeOpd && x.SubRincian == subrincian.SubRincian).Sum(x => x.Target);
+                        decimal targetSampaiDenganSubrincian = query.Where(x => x.KodeOpd == opd.KodeOpd && x.SubRincian == subrincian.SubRincian && x.Bulan <= tanggal.Month).Sum(x => x.Target);
+                        decimal realisasiSampaiDenganSubrincian = query.Where(x => x.KodeOpd == opd.KodeOpd && x.SubRincian == subrincian.SubRincian && x.Bulan <= tanggal.Month).Sum(x => x.Realisasi);
+                        decimal targetBulanIniSubrincian = query.Where(x => x.KodeOpd == opd.KodeOpd && x.SubRincian == subrincian.SubRincian && x.Bulan == tanggal.Month).Sum(x => x.Target);
+                        decimal realisasiBulanIniSubrincian = query.Where(x => x.KodeOpd == opd.KodeOpd && x.SubRincian == subrincian.SubRincian && x.Bulan == tanggal.Month).Sum(x => x.Realisasi);
+
+                        var re = new ViewModel.ReportTrOpdRinci.Subrincian();
+                        re.Col.Nama = namaSubrincian;
+                        re.Col.TargetTotal = targetTotalSubrincian;
+                        re.Col.TargetSampaiDengan = targetSampaiDenganSubrincian;
+                        re.Col.RealisasiSampaiDengan = realisasiSampaiDenganSubrincian;
+                        re.Col.TargetBulanIni = targetBulanIniSubrincian;
+                        re.Col.RealisasiBulanIni = realisasiBulanIniSubrincian;
+
+                        res.SubrincianList.Add(re);
+                    }
+
+                    result.Add(res);
+                }
+
+                return result;
+            }
+            public static List<ViewModel.ReportTRopdWarna.Opd> GetDataReportTRopdWarna(int tahunBuku, int bulan)
+            {
+                var result = new List<ViewModel.ReportTRopdWarna.Opd>();
+                var context = DBClass.GetContext();
+
+                var tanggal = DateTime.Now;
+                if (tahunBuku < tanggal.Year && bulan < tanggal.Month)
+                {
+                    tanggal = new DateTime(tahunBuku, bulan, 31);
+                }
+
+                var query = context.DbPendapatanDaerahs
+                    .Where(x => x.TahunBuku == tahunBuku)
+                    .GroupBy(x => new
+                    {
+                        x.KodeOpd,
+                        x.NamaOpd,
+                        x.Bulan
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.KodeOpd,
+                        x.Key.NamaOpd,
+                        x.Key.Bulan,
+                        Target = x.Sum(y => y.Target),
+                        Realisasi = x.Sum(y => y.Realisasi)
+                    })
+                    .OrderBy(x => x.KodeOpd)
+                    .ToList();
+
+                var opdList = query.GroupBy(x => new { x.KodeOpd, x.NamaOpd })
+                    .Select(x => new { x.Key.KodeOpd, x.Key.NamaOpd })
+                    .ToList();
+
+                foreach (var opd in opdList)
+                {
+                    string nama = opd.NamaOpd;
+                    decimal targetTotal = query.Where(x => x.KodeOpd == opd.KodeOpd).Sum(x => x.Target);
+                    decimal targetSampaiDengan = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan <= tanggal.Month).Sum(x => x.Target);
+                    decimal realisasiSampaiDengan = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan <= tanggal.Month).Sum(x => x.Realisasi);
+                    decimal targetBulanIni = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan == tanggal.Month).Sum(x => x.Target);
+                    decimal realisasiBulanIni = query.Where(x => x.KodeOpd == opd.KodeOpd && x.Bulan == tanggal.Month).Sum(x => x.Realisasi);
+
+                    var res = new ViewModel.ReportTRopdWarna.Opd();
+                    res.Col.Nama = nama;
+                    res.Col.TargetTotal = targetTotal;
+                    res.Col.TargetSampaiDengan = targetSampaiDengan;
+                    res.Col.RealisasiSampaiDengan = realisasiSampaiDengan;
+                    res.Col.TargetBulanIni = targetBulanIni;
+                    res.Col.RealisasiBulanIni = realisasiBulanIni;
+
+                    if (res.Col.PersentaseTotal >= 0 && res.Col.PersentaseTotal < 70)
+                    {
+                        res.Col.Status = 0; // Merah
+                    }
+                    else if (res.Col.PersentaseTotal >= 70 && res.Col.PersentaseTotal < 75)
+                    {
+                        res.Col.Status = 1; // Kuning
+                    }
+                    else if (res.Col.PersentaseTotal >= 75)
+                    {
+                        res.Col.Status = 2; // Hijau
+                    }
+
+                    result.Add(res);
+                }
+
+                return result;
+            }
+        }
+        public class ViewModel
+        {
+            public class SudutPandangRekening
+            {
+                public class Akun
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Kelompok> RekKelompoks { get; set; } = new List<Kelompok>();
+                }
+                public class Kelompok
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Jenis> RekJeniss { get; set; } = new List<Jenis>();
+                }
+                public class Jenis
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Objek> RekObjeks { get; set; } = new List<Objek>();
+                }
+                public class Objek
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Rincian> RekRincians { get; set; } = new List<Rincian>();
+                }
+                public class Rincian
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<SubRincian> RekSubRincians { get; set; } = new List<SubRincian>();
+                }
+                public class SubRincian
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                }
+            }
+            public class SudutPandangOpd
+            {
+                public class Opd
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<SubOpd> RekSubOpds { get; set; } = new List<SubOpd>();
+                }
+                public class SubOpd
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                }
+            }
+            public class SudutPandangRekeningJenisObjekOpd
+            {
+                public class Jenis
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Obyek> RekObyeks { get; set; } = new List<Obyek>();
+                }
+                public class Obyek
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Opd> RekOpds { get; set; } = new List<Opd>();
+                }
+                public class Opd
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<SubRincian> RekSubRincians { get; set; } = new List<SubRincian>();
+                }
+                public class SubRincian
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                }
+            }
+            public class TahunRow
+            {
+                public int Tahun { get; set; }
+            }
+
+            public class ReportTrOpdRinci
+            {
+                public class Opd
+                {
+                    public FormatColumn.ReportColumnA Col { get; set; } = new();
+                    public List<Subrincian> SubrincianList { get; set; } = new List<Subrincian>();
+                }
+                public class Subrincian
+                {
+                    public FormatColumn.ReportColumnA Col { get; set; } = new();
+                }
+            }
+
+            public class ReportTRopdWarna
+            {
+                public class Opd
+                {
+                    public FormatColumn.ReportColumnB Col { get; set; } = new();
+                }
+            }
+        }
+        public class FormatColumn
+        {
+            public class ColumnA
+            {
+                public string Kode { get; set; } = "";
+                public string Nama { get; set; } = "";
+                public decimal Target { get; set; } = 0;
+                public decimal Realisasi { get; set; } = 0;
+                public decimal Persentase { get; set; } = 0;
+            }
+
+            public class ReportColumnA
+            {
+                public string Nama { get; set; } = "";
+                public decimal TargetTotal { get; set; } = 0;
+                public decimal TargetSampaiDengan { get; set; } = 0;
+                public decimal RealisasiSampaiDengan { get; set; } = 0;
+                public decimal SelisihSampaiDengan => RealisasiSampaiDengan - TargetSampaiDengan;
+                public decimal PersentaseSampaiDengan => TargetSampaiDengan > 0
+                    ? Math.Round((RealisasiSampaiDengan / TargetSampaiDengan) * 100, 2)
+                    : 0;
+                public decimal TargetBulanIni { get; set; } = 0;
+                public decimal RealisasiBulanIni { get; set; } = 0;
+                public decimal SelisihBulanIni => RealisasiBulanIni - TargetBulanIni;
+                public decimal PersentaseBulanIni => TargetBulanIni > 0
+                   ? Math.Round((RealisasiBulanIni / TargetBulanIni) * 100, 2)
+                   : 0;
+                public decimal PersentaseTotal => TargetTotal > 0
+                   ? Math.Round((RealisasiSampaiDengan / TargetTotal) * 100, 2)
+                   : 0;
+            }
+
+            public class ReportColumnB
+            {
+                public string Nama { get; set; } = "";
+                public decimal TargetTotal { get; set; } = 0;
+                public decimal TargetSampaiDengan { get; set; } = 0;
+                public decimal RealisasiSampaiDengan { get; set; } = 0;
+                public decimal SelisihSampaiDengan => RealisasiSampaiDengan - TargetSampaiDengan;
+                public decimal PersentaseSampaiDengan => TargetSampaiDengan > 0
+                    ? Math.Round((RealisasiSampaiDengan / TargetSampaiDengan) * 100, 2)
+                    : 0;
+                public decimal TargetBulanIni { get; set; } = 0;
+                public decimal RealisasiBulanIni { get; set; } = 0;
+                public decimal SelisihBulanIni => RealisasiBulanIni - TargetBulanIni;
+                public decimal PersentaseBulanIni => TargetBulanIni > 0
+                   ? Math.Round((RealisasiBulanIni / TargetBulanIni) * 100, 2)
+                   : 0;
+                public decimal PersentaseTotal => TargetTotal > 0
+                   ? Math.Round((RealisasiSampaiDengan / TargetTotal) * 100, 2)
+                   : 0;
+                public int Status { get; set; } = 0;
+            }
         }
     }
 
-    public class ViewModel
-    {
-        public class SudutPandangRekening
-        {
-            public class Akun
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<Kelompok> RekKelompoks { get; set; } = new List<Kelompok>();
-            }
-            public class Kelompok
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<Jenis> RekJeniss { get; set; } = new List<Jenis>();
-            }
-            public class Jenis
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<Objek> RekObjeks { get; set; } = new List<Objek>();
-            }
-            public class Objek
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<Rincian> RekRincians { get; set; } = new List<Rincian>();
-            }
-            public class Rincian
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<SubRincian> RekSubRincians { get; set; } = new List<SubRincian>();
-            }
-            public class SubRincian
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-            }
-        }
-        public class SudutPandangOpd
-        {
-            public class Opd
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<SubOpd> RekSubOpds { get; set; } = new List<SubOpd>();
-            }
-            public class SubOpd
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-            }
-        }
-        public class SudutPandangRekeningJenisObjekOpd
-        {
-            public class Jenis
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<Obyek> RekObyeks { get; set; } = new List<Obyek>();
-            }
-            public class Obyek
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<Opd> RekOpds { get; set; } = new List<Opd>();
-            }
-            public class Opd
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-                public List<SubRincian> RekSubRincians { get; set; } = new List<SubRincian>();
-            }
-            public class SubRincian
-            {
-                public FormatColumn.ColumnA Col { get; set; } = new();
-            }
-        }
-        public class TahunRow
-        {
-            public int Tahun { get; set; }
-        }
-    }
-
-
-
-    public class FormatColumn
-    {
-        public class ColumnA
-        {
-            public string Kode { get; set; } = "";
-            public string Nama { get; set; } = "";
-            public decimal Target { get; set; } = 0;
-            public decimal Realisasi { get; set; } = 0;
-            public decimal Persentase { get; set; } = 0;
-        }
-    }
 }

@@ -30,7 +30,14 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
         {
             try
             {
-                ViewData["Title"] = controllerName;
+                ViewData["Title"] = controllerName; var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                
                 var model = new Models.EvaluasiTarget.KontrolPembayaranVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
@@ -48,9 +55,9 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
-        public IActionResult Show(int tahun, string jenisPajak)
+        public IActionResult Show(int tahun, string jenisPajak, int uptb)
         {
-            var response = new ResponseBase(); // Pastikan ResponseResult ini adalah class response standar kamu
+            var response = new ResponseBase();
 
             try
             {
@@ -98,9 +105,15 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                         return BadRequest("Jenis pajak tidak dikenal: " + jenisPajak);
                 }
 
-                // Inisialisasi ViewModel
-                var model = new KontrolPembayaranVM.Show(tahun, enumPajak);
+                // Konversi uptb (int) ke enum EUPTB
+                if (!Enum.IsDefined(typeof(EUPTB), uptb))
+                {
+                    return BadRequest("UPTB tidak valid: " + uptb);
+                }
+                var enumUptb = (EUPTB)uptb;
 
+                // Inisialisasi ViewModel sesuai constructor baru
+                var model = new KontrolPembayaranVM.Show(tahun, enumPajak, enumUptb);
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_Show.cshtml", model);
             }
@@ -117,6 +130,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                 return Json(response);
             }
         }
+
 
         public IActionResult ShowUpaya(int tahun, string jenisPajak)
         {
@@ -186,7 +200,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                 return Json(response);
             }
         }
-        public IActionResult ShowPotensi(int tahun, string jenisPajak)
+        public IActionResult ShowPotensi(int tahun, string jenisPajak, int uptb)
         {
             var response = new ResponseBase(); // Pastikan ResponseResult ini adalah class response standar kamu
 
@@ -236,8 +250,15 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                         return BadRequest("Jenis pajak tidak dikenal: " + jenisPajak);
                 }
 
+                // Konversi uptb (int) ke enum EUPTB
+                if (!Enum.IsDefined(typeof(EUPTB), uptb))
+                {
+                    return BadRequest("UPTB tidak valid: " + uptb);
+                }
+                var enumUptb = (EUPTB)uptb;
+
                 // Inisialisasi ViewModel
-                var model = new KontrolPembayaranVM.ShowPotensi(tahun, enumPajak);
+                var model = new KontrolPembayaranVM.ShowPotensi(tahun, enumPajak, enumUptb);
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowPotensi.cshtml", model);
             }
@@ -255,20 +276,53 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
             }
         }
 
-        public IActionResult DetailPembayaran(int jenisPajak, int kategoriId, int bulan, int tahun, int status , bool isTotal = false, bool isHotelNonBintang = false)
+        public IActionResult DetailPembayaran(
+            int jenisPajak,
+            int kategoriId,
+            int bulan,
+            int tahun,
+            int status,
+            int uptb, // tambahkan uptb di parameter
+            bool isTotal = false,
+            bool isHotelNonBintang = false)
         {
+            var response = new ResponseBase();
+
             try
             {
+                // Validasi dan konversi uptb ke enum
+                if (!Enum.IsDefined(typeof(EnumFactory.EUPTB), uptb))
+                {
+                    return BadRequest("UPTB tidak valid: " + uptb);
+                }
+                var enumUptb = (EnumFactory.EUPTB)uptb;
+
                 DetailPembayaran model;
+
                 if (isTotal)
                 {
                     // Untuk summary/total - tidak perlu kategoriId, tapi perlu info hotel type
-                    model = new DetailPembayaran((EnumFactory.EPajak)jenisPajak, tahun, bulan, status, true, isHotelNonBintang);
+                    model = new DetailPembayaran(
+                        (EnumFactory.EPajak)jenisPajak,
+                        tahun,
+                        bulan,
+                        status,
+                        enumUptb,
+                        true,
+                        isHotelNonBintang
+                    );
                 }
                 else
                 {
-                    // Untuk detail kategori - existing logic
-                    model = new DetailPembayaran((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan, status);
+                    // Untuk detail kategori
+                    model = new DetailPembayaran(
+                        (EnumFactory.EPajak)jenisPajak,
+                        kategoriId,
+                        tahun,
+                        bulan,
+                        status,
+                        enumUptb
+                    );
                 }
 
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailPajak.cshtml", model);
@@ -279,7 +333,7 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                 response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
                 return Json(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
@@ -288,24 +342,54 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
         }
 
 
+
         //buat endpoint untuk mengaplikasikan dari method DetailPotensiPajak (jenis pajak, kategori, tahun , bulan )
-        public IActionResult DetailPotensiPajak(int jenisPajak, int kategoriId, int bulan, int tahun , bool isTotal = false , bool isHotelNonBintang = false)
+        public IActionResult DetailPotensiPajak(
+    int jenisPajak,
+    int kategoriId,
+    int bulan,
+    int tahun,
+    int uptb, // tambahkan uptb di parameter
+    bool isTotal = false,
+    bool isHotelNonBintang = false)
         {
+            var response = new ResponseBase();
+
             try
             {
+                // Validasi dan konversi uptb ke enum
+                if (!Enum.IsDefined(typeof(EnumFactory.EUPTB), uptb))
+                {
+                    return BadRequest("UPTB tidak valid: " + uptb);
+                }
+                var enumUptb = (EnumFactory.EUPTB)uptb;
+
                 DetailPotensiPajak model;
 
-                if( isTotal)
+                if (isTotal)
                 {
                     // Untuk summary/total - tidak perlu kategoriId, tapi perlu info hotel type
-                    model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, tahun, bulan, true , isHotelNonBintang);
+                    model = new DetailPotensiPajak(
+                        (EnumFactory.EPajak)jenisPajak,
+                        tahun,
+                        bulan,
+                        enumUptb,
+                        true,
+                        isHotelNonBintang
+                    );
                 }
                 else
                 {
-                    // Untuk detail kategori - existing logic
-                    model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan);
+                    // Untuk detail kategori
+                    model = new DetailPotensiPajak(
+                        (EnumFactory.EPajak)jenisPajak,
+                        kategoriId,
+                        tahun,
+                        bulan,
+                        enumUptb
+                    );
                 }
-                    //var model = new DetailPotensiPajak((EnumFactory.EPajak)jenisPajak, kategoriId, tahun, bulan);
+
                 return PartialView("~/Views/EvaluasiTarget/KontrolPembayaran/_ShowDetailPotensiPajak.cshtml", model);
             }
             catch (ArgumentException e)
@@ -314,15 +398,13 @@ namespace MonPDReborn.Controllers.EvaluasiTarget
                 response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
                 return Json(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
         }
-
-
         public IActionResult UpayaDetail(int jenisPajak, int kategoriId, int bulan, int tahun, int status)
         {
             try

@@ -1,0 +1,123 @@
+﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanDaerahScontroVM.Index
+
+@{
+    var tahun1 = (DateTime.Now.Year) - 6;
+    var tahun2 = (DateTime.Now.Year) - 5;
+    var tahun3 = (DateTime.Now.Year) - 4;
+    var tahun4 = (DateTime.Now.Year) - 3;
+    var tahun5 = (DateTime.Now.Year) - 2;
+    var tahun6 = (DateTime.Now.Year) - 1;
+    var tahun7 = (DateTime.Now.Year);
+
+}
+
+
+<style>
+    .tahun-filter input[type="checkbox"] {
+        width: 20px; /* lebar kotak checkbox */
+        height: 20px; /* tinggi kotak checkbox */
+        cursor: pointer;
+    }
+
+    .tahun-filter label {
+        font-size: 18px; /* ukuran teks label */
+        margin-right: 15px; /* jarak antar label */
+        cursor: pointer;
+    }
+</style>
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header d-flex bg-header-color align-items-center">
+            <div class="flex-grow-1">
+                <h4 class="card-title text-dark fs-16 mb-0">
+                    Series Pendapatan Daerah Scontro
+                </h4>
+            </div>
+            <div class="flex-shrink-0">
+                <button class="btn btn-primary" onclick="printReport()">Cetak</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="text-center">
+                <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="mb-2 tahun-filter">
+                <label><strong>Tambah Tahun:</strong></label><br>
+
+                <input type="checkbox" id="chkTahun1" onchange="toggleColumn('tahun1')" />
+                <label for="chkTahun1">@(tahun1)</label>
+
+                <input type="checkbox" id="chkTahun2" onchange="toggleColumn('tahun2')" />
+                <label for="chkTahun2">@(tahun2)</label>
+
+                <input type="checkbox" id="chkTahun3" onchange="toggleColumn('tahun3')" />
+                <label for="chkTahun3">@(tahun3)</label>
+            </div>
+
+            <div id="Show"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadData();
+        })
+
+
+        function printReport() {
+            var printContents = document.getElementById('Show').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+
+
+        function loadData() {
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                beforeSend: function () {
+                    // Tampilkan spinner, sembunyikan konten
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (result) {
+                    // Sembunyikan spinner, tampilkan hasil
+                    $('#loading2-Show').hide();
+                    $('#Show').show();
+                    $('#Show').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Gagal memuat data Show:", error);
+                    $('#loading2-Show').hide();
+                    $('#Show').html('<div class="alert alert-danger">❌ Gagal memuat data Show.</div>').show();
+                }
+            });
+
+        }
+    </script>
+
+    <script>
+        function toggleColumn(className) {
+            document.querySelectorAll("." + className).forEach(el => {
+                const currentDisplay = window.getComputedStyle(el).display;
+                if (currentDisplay === "none") {
+                    el.style.display = "table-cell"; // tampilkan lagi sebagai kolom tabel
+                } else {
+                    el.style.display = "none"; // sembunyikan
+                }
+            });
+        }
+    </script>
+
+  
+
+
+}

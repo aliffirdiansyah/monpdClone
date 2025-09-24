@@ -31,7 +31,13 @@ namespace MonPDReborn.Controllers
                 {
                     throw new ArgumentException("Session tidak ditemukan dalam sesi.");
                 }
-                int wilayah = int.Parse(nama.Split(' ').Last());
+
+                string lastPart = nama.Split(' ').Last();
+
+                if (!int.TryParse(lastPart, out int wilayah))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
 
                 var model = new Models.DashboardUPTBVM.Index(wilayah);
                 return View($"{URLView}{actionName}", model);
@@ -46,8 +52,33 @@ namespace MonPDReborn.Controllers
             {
                 _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
                 ViewBag.ErrorMessage = "Terjadi kesalahan sistem. Silakan coba lagi.";
-                var model = new Models.DashboardUPTBVM.Index("Terjadi kesalahan sistem. Silakan coba lagi.");
-                return View($"{URLView}{actionName}", model);
+                return RedirectToAction("Error", "Home", new { statusCode = 500 });
+            }
+        }
+        public IActionResult SeriesPajakDaerah()
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+                int wilayah = int.Parse(nama.Split(' ').Last());
+
+                var model = new Models.DashboardUPTBVM.SeriesPajakDaerah(wilayah);
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+                return Json(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+                return Json(response.ToInternalServerError());
             }
         }
     }

@@ -749,7 +749,7 @@ namespace MonPDReborn.Models.DataOP
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.WpNama,
-                                Alamat = x.AlamatWp,
+                                Alamat = x.AlamatOp,
                                 Wilayah = "SURABAYA " + x.Uptb ?? "-",
                                 Kecamatan = x.AlamatKdCamat,
                                 Kelurahan = x.AlamatKdLurah
@@ -4293,6 +4293,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opResto.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opResto.KategoriId;
                             //isi data resto
                             ret.RestoRow.PendapatanRow = new DetailResto.Pendapatan
                             {
@@ -4322,6 +4323,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opListrik.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opListrik.KategoriId;
                         }
                         break;
 
@@ -4340,6 +4342,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opHotel.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opHotel.KategoriId;
                             //isi data hotel
                             ret.HotelRow.PendapatanRow = new DetailHotel.Pendapatan
                             {
@@ -4380,8 +4383,11 @@ namespace MonPDReborn.Models.DataOP
                                                                    TahunMines1 = sub?.TahunMines1 ?? 0,
                                                                    TahunNow = (b.Bulan <= bulanSekarang) ? (sub?.TahunNow ?? 0) : 0
                                                                })
+                                                              .GroupBy(x => x.Bulan)
+                                                              .Select(g => g.First())
                                                               .OrderBy(x => x.Bulan)
                                                               .ToList();
+
 
 
                             //ret.HotelRow.BanquetHotelDetailList = context.DbOpBanquets
@@ -4414,6 +4420,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opParkir.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opParkir.KategoriId;
                         }
                         break;
 
@@ -4432,6 +4439,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opHiburan.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opHiburan.KategoriId;
                         }
                         break;
 
@@ -4450,6 +4458,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.EnumPajak = pajak;
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opAbt.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = opAbt.KategoriId;
 
                             ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
                             {
@@ -4466,10 +4475,63 @@ namespace MonPDReborn.Models.DataOP
 
                     case EnumFactory.EPajak.Reklame:
                         var opReklame = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop);
+                        if (opReklame != null)
+                            {
+                            ret.IdentitasPajak.WilayahPajak = "-";
+                            ret.IdentitasPajak.NpwpdNo = opReklame.NoWp;
+                            ret.IdentitasPajak.NamaNpwpd = opReklame.Nama;
+                            ret.IdentitasPajak.NOP = opReklame.Nor;
+                            ret.IdentitasPajak.NamaObjekPajak = opReklame.NamaPerusahaan;
+                            ret.IdentitasPajak.AlamatLengkap = opReklame.AlamatPerusahaan;
+                            ret.IdentitasPajak.Telepon = opReklame.TelpPerusahaan;
+                            ret.IdentitasPajak.TglBerlaku = opReklame.TglMulaiBerlaku;
+                            ret.IdentitasPajak.TglBerakhir = opReklame.TglAkhirBerlaku;
+                            ret.IdentitasPajak.EnumPajak = pajak;
+                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                            ret.IdentitasPajak.KategoriPajak = opReklame.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opReklame.KategoriId;
+                            //isi data reklame
+                            /*ret.ReklameRow.PendapatanRow = new DetailReklame.Pendapatan
+                            {
+                                //isi data pendapatan jika ada
+                            };
+                            ret.ReklameRow.SaranaReklamePendukungRow = new DetailReklame.SaranaPendukung
+                            {
+                                JumlahKaryawan = (int)opReklame.JumlahKaryawan,
+                                MetodePembayaran = opReklame.MetodePembayaran,
+                                MetodePenjualan = opReklame.MetodePenjualan
+                            };*/
+                        }
                         break;
 
                     case EnumFactory.EPajak.PBB:
                         var opPbb = context.DbOpPbbs.FirstOrDefault(x => x.Nop == nop);
+                        if (opPbb != null)
+                        {
+                            ret.IdentitasPajak.WilayahPajak =
+                                (opPbb.Uptb != null ? "UPTB " + opPbb.Uptb.ToString() : ""); 
+                            ret.IdentitasPajak.NpwpdNo = opPbb.WpNpwp ?? "-";
+                            ret.IdentitasPajak.NamaNpwpd = opPbb.WpNama ?? "-";
+                            ret.IdentitasPajak.NOP = opPbb.Nop;
+                            ret.IdentitasPajak.NamaObjekPajak = "-";
+                            ret.IdentitasPajak.AlamatLengkap = opPbb.AlamatOp;
+                            ret.IdentitasPajak.Telepon = "-";
+                            ret.IdentitasPajak.EnumPajak = pajak;
+                            ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
+                            ret.IdentitasPajak.KategoriPajak = opPbb.KategoriNama;
+                            ret.IdentitasPajak.kategoriID = (int)opPbb.KategoriId;
+
+                            /*ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
+                            {
+                                //isi data pendapatan jika ada
+                            };
+
+                            ret.AbtRow.SaranaAbtPendukungRow = new DetailAbt.SaranaPendukung
+                            {
+                                KelompokNama = opPbb.NamaKelompok,
+                            };*/
+
+                        }
                         break;
 
                     case EnumFactory.EPajak.BPHTB:
@@ -4700,7 +4762,9 @@ namespace MonPDReborn.Models.DataOP
             public List<OkupansiHotel> OkunpasiHotel { get; set; } = new();
             public string Uptb { get; set; } = null!;
             public string KdKecamatan { get; set; }
+            public string NmKecamatan { get; set; }
             public string KdKelurahan { get; set; }
+            public string NmKelurahan { get; set; }
         }
 
         public class RekapDetailOP
@@ -4768,6 +4832,7 @@ namespace MonPDReborn.Models.DataOP
             public DetailHotel HotelRow { get; set; } = new();
             public DetailResto RestoRow { get; set; } = new();
             public DetailAbt AbtRow { get; set; } = new();
+            public DetailPbb PbbRow { get; set; } = new();
 
         }
 
@@ -4936,6 +5001,11 @@ namespace MonPDReborn.Models.DataOP
             public EnumFactory.EPajak EnumPajak { get; set; }
             public string JenisPajak { get; set; }
             public string KategoriPajak { get; set; }
+            public DateTime? TglBerlaku { get; set; }
+            public DateTime? TglBerakhir { get; set; }
+            public string NoPerusahaan { get; set; }
+            public decimal kategoriID { get; set; }
+
         }
         public class DataPerizinan
         {
@@ -5047,6 +5117,15 @@ namespace MonPDReborn.Models.DataOP
             {
 
             }
+            public class SaranaPendukung
+            {
+                public string KelompokNama { get; set; }
+            }
+        }
+
+        public class DetailPbb
+        {
+            public SaranaPendukung SaranaPbbPendukungRow { get; set; } = new();
             public class SaranaPendukung
             {
                 public string KelompokNama { get; set; }

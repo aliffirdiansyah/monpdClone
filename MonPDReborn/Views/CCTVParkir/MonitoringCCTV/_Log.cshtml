@@ -1,0 +1,28 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.Log
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTVLog>()
+        .ID("MonitoringCCTVGrid")
+        .DataSource(Model.MonitoringCCTVLogList)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.PlatNo).Caption("Nomor Kendaraan");
+            columns.AddFor(m => m.JenisKendaraanNama).Caption("Jenis Kendaraan");
+            columns.AddFor(m => m.WaktuIn).Caption("Waktu Masuk").Format("dd MMM yyyy HH:mm:ss");
+            columns.AddFor(m => m.WaktuOut).Caption("Waktu Keluar").Format("dd MMM yyyy HH:mm:ss");
+        })
+    )
+</div>

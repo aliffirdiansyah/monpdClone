@@ -1,0 +1,113 @@
+﻿@{
+    var currentYear = DateTime.Now.Year;
+    var tahun1 = (currentYear - 4).ToString();
+    var tahun2 = (currentYear - 3).ToString();
+    var tahun3 = (currentYear - 2).ToString();
+    var tahun4 = (currentYear - 1).ToString();
+    var tahun5 = currentYear.ToString();
+}
+
+@(Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.SeriesDetail>()
+    .DataSource(m => m.Mvc()
+        .LoadAction("GetSeriesDetailData")
+        .Key("Kategori")
+        .LoadParams(new
+        {
+            JenisPajak = ViewData["JenisPajak"],
+        })
+    )
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+    .ShowBorders(true)
+    .ShowColumnHeaders(true)
+    .RowAlternationEnabled(true)
+    .ColumnAutoWidth(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+    )
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Kategori)
+            .Caption("Kategori")
+            .CssClass("fw-bold").CssClass("fw-bold");
+
+        columns.AddFor(m => m.TahunMines4)
+            .DataField("TahunMines4")
+            .Caption(tahun1)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
+            .CalculateCellValue("data => data.TahunMines4");
+
+        columns.AddFor(m => m.TahunMines3)
+            .DataField("TahunMines3")
+            .Caption(tahun2)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
+            .CalculateCellValue("data => data.TahunMines3");
+
+        columns.AddFor(m => m.TahunMines2)
+            .DataField("TahunMines2")
+            .Caption(tahun3)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
+            .CalculateCellValue("data => data.TahunMines2");
+
+        columns.AddFor(m => m.TahunMines1)
+            .DataField("TahunMines1")
+            .Caption(tahun4)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
+            .CalculateCellValue("data => data.TahunMines1");
+
+        columns.AddFor(m => m.TahunNow)
+            .DataField("TahunNow")
+            .Caption(tahun5)
+            .CellTemplate(new JS("kategoriSeriesCellTemplate"))
+            .CalculateCellValue("data => data.TahunNow");
+    })
+    .Summary(s =>
+    {
+        s.TotalItems(items =>
+        {
+            items.Add()
+                .Column("Kategori")
+                .SummaryType(SummaryType.Sum)
+                .DisplayFormat("Total")
+                .Alignment(HorizontalAlignment.Center);
+
+            items.Add()
+                .Column("TahunMines4")
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("TahunMines3")
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("TahunMines2")
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("TahunMines1")
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+
+            items.Add()
+                .Column("TahunNow")
+                .SummaryType(SummaryType.Sum)
+                .ValueFormat("#,##0")
+                .DisplayFormat("{0}")
+                .Alignment(HorizontalAlignment.Right);
+        });
+    })
+)

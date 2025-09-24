@@ -2,6 +2,7 @@
 using MonPDReborn.Lib.General;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static MonPDReborn.Lib.General.ResponseBase;
+using MonPDLib.General;
 
 namespace MonPDReborn.Controllers.AktivitasOP
 {
@@ -27,6 +28,17 @@ namespace MonPDReborn.Controllers.AktivitasOP
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("UPLOAD"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 var model = new Models.AktivitasOP.PemeriksaanPajakUploadVM.Index
                 {
                     TahunList = Enumerable.Range(DateTime.Now.Year - 5, 6)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Models.DataOP.UploadDataKategoriPajakVM.ViewModel;
 
@@ -26,6 +27,17 @@ namespace MonPDReborn.Controllers.DataOP
             ViewData["Title"] = "Upload Kategori OP";
             try
             {
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("UPLOAD"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 var model = new Models.DataOP.UploadDataKategoriPajakVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

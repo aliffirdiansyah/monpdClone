@@ -1,0 +1,287 @@
+﻿@model MonPDReborn.Models.Reklame.InputReklameVM.Index
+
+@{
+    ViewData["Title"] = "Input Upaya Reklame";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i> Input Upaya Reklame
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            fnShow();
+        });
+
+        function fnShow()
+        {
+            $.ajax({
+              url: '@(Url.Action("Show"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-Show').show();
+                 $('#Show').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-Show').hide();
+                        $('#Show').show();
+                        $('#Show').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-Show').hide();
+                 $('#Show').hide();
+                 $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+        function fnReloadTindakan(e) {
+            const selectedUpayaId = e.value;
+
+            console.log("Upaya dipilih:", selectedUpayaId); // cek value
+
+            const grid = $("#gridTindakan").dxDataGrid("instance");
+
+            if (!grid) {
+                console.error("Grid tidak ditemukan!");
+                return;
+            }
+
+            grid.option("dataSource", new DevExpress.data.CustomStore({
+                load: function () {
+                    return $.getJSON("/InputReklame/GetTindakan", {
+                        upayaId: selectedUpayaId
+                    }).then(data => {
+                        console.log("Data diterima:", data); // pastikan data ada
+                        return data;
+                    }).catch(err => {
+                        console.error("Gagal load data:", err);
+                    });
+                }
+            }));
+
+            grid.refresh();
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#formUpaya').on('submit', function (e) {
+                e.preventDefault();
+                simpanUpaya();
+            });
+        });
+        function fnGetParamsTindakan() {
+            return { idUpaya: function () { return $('#cbUpaya').dxSelectBox("instance").option('value') } }
+        }
+        function fnReloadTindakan() {
+            $("#cbTindakan").dxSelectBox("instance").option("value", null);
+            var selectBoxDataSource = $("#cbTindakan").dxSelectBox("instance").getDataSource();
+            selectBoxDataSource.load();
+
+        }
+        function simpanUpaya() {
+            var formData = new FormData($('#formUpaya')[0]);
+
+            $.ajax({
+                url: '@Url.Action("SimpanUpaya", "InputReklame")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    if (response.Status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.Message
+                        });
+
+                        $('#formUpaya')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            });
+        }
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var base64 = cellInfo.data.Lampiran;
+            var mime = 'image/png'; // atau 'image/jpeg' / 'application/pdf'
+
+            if (base64 && base64.length > 100) {
+                var dataUrl = 'data:' + mime + ';base64,' + base64;
+
+                $('<a>')
+                    .attr('href', dataUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', dataUrl)
+                            .addClass('img-thumbnail')
+                            .css({ height: '50px', width: 'auto', cursor: 'zoom-in' })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
+        }
+    </script>
+    <script>
+        function onKdAktifitasSearch(e) {
+            let kode = e.component.option("value");
+            if (!kode) return;
+
+            $.ajax({
+                url: '/InputReklame/GetNamaAktifitas',
+                type: 'GET',
+                data: { kdAktifitas: kode }, // sesuai parameter controller
+                success: function (res) {
+                    // tampilkan di UI
+                    $("#txtNamaAktifitas").val(res.NamaAktifitas || '');
+                    $("#txtNikPetugas").val(res.NikPetugas || '');
+
+                    // isi hidden input agar ikut submit
+                    $("#hdNamaPetugas").val(res.NamaAktifitas || '');
+                    $("#hdNikPetugas").val(res.NikPetugas || '');
+                },
+                error: function (xhr) {
+                    $("#txtNamaAktifitas").val('');
+                    $("#txtNikPetugas").val('');
+                    $("#hdNamaPetugas").val('');
+                    $("#hdNikPetugas").val('');
+
+                    DevExpress.ui.notify(xhr.responseText || "Terjadi kesalahan saat mencari data", "error", 2000);
+                }
+            });
+        }
+
+
+
+        function onNoFormulirSearch(e) {
+            let noFormulir = e.component.option("value");
+            if (!noFormulir) return;
+
+            $.ajax({
+                url: '/InputReklame/GetNoFormulir',
+                type: 'GET',
+                data: { filter: noFormulir },
+                success: function (data) {
+                    let messageEl = $("#noFormulirMessage");
+
+                    if (data && data.length > 0) {
+                        $("#txtAlamatReklame").val(data[0].AlamatReklame);
+
+                        messageEl
+                            .text("✅ No Formulir ditemukan!")
+                            .css("color", "green");
+
+                    } else {
+                        $("#txtAlamatReklame").val('');
+
+                        messageEl
+                            .text("⚠️ No Formulir tidak ditemukan")
+                            .css("color", "orange");
+                    }
+                },
+                error: function () {
+                    let messageEl = $("#noFormulirMessage");
+                    messageEl
+                        .text("❌ Terjadi kesalahan saat mencari data")
+                        .css("color", "red");
+                }
+            });
+        }
+
+
+        function onNORSearch(e) {
+            let nor = e.component.option("value");
+            if (!nor) return;
+
+            $.ajax({
+                url: '/InputReklame/GetNOR',
+                type: 'GET',
+                data: { filter: nor },
+                success: function (res) {
+                    let messageEl = $("#norMessage");
+
+                    if (res.success) {
+                        messageEl
+                            .text("✅ NOR ditemukan!")
+                            .css("color", "green");
+
+                        // Bisa juga tampilkan detail data
+                        // messageEl.html(`✅ NOR ditemukan: ${res.data.NamaOP} - ${res.data.Alamat}`);
+
+                    } else {
+                        messageEl
+                            .text("⚠️ NOR tidak ditemukan")
+                            .css("color", "orange");
+                    }
+                },
+                error: function (xhr) {
+                    let messageEl = $("#norMessage");
+
+                    if (xhr.status === 404) {
+                        messageEl
+                            .text("⚠️ NOR tidak ditemukan")
+                            .css("color", "orange");
+                    } else {
+                        messageEl
+                            .text("❌ Terjadi kesalahan saat mencari data")
+                            .css("color", "red");
+                    }
+                }
+            });
+        }
+
+
+    </script>
+}

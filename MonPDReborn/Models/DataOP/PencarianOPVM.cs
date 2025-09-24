@@ -2,6 +2,7 @@
 using MonPDLib;
 using MonPDLib.General;
 using System.Globalization;
+using static MonPDReborn.Models.DashboardUPTBVM.ViewModel;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.DataOP
@@ -64,7 +65,23 @@ namespace MonPDReborn.Models.DataOP
                 }
                 var context = DBClass.GetContext();
                 var ret = new List<DataPencarianOp>();
-                var dbrekapTs = context.DbRekamAlatGabungs
+                var alatRekam = context.DbMonAlatRekams
+                    .Where(x => (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
+                    .Select(x => new
+                    {
+                        Nop = x.Nop,
+                        JenisPajak = x.PajakId,
+                        jenisAlat = x.JenisAlat,
+                        tgl = x.Tgl,
+                        bln = x.Bln,
+                        thn = x.Tahun,
+                        jam = x.Jam,
+                        online = x.StatusOnline,
+                        kunci = x.StatusKunci
+                    })
+                    .ToList();
+
+                /*var dbrekapTs = context.DbRekamAlatGabungs
                     .Select(x => new
                     {
                         Nop = x.Nop,
@@ -73,7 +90,8 @@ namespace MonPDReborn.Models.DataOP
                         IsTb = x.IsTb,
                         IsSb = x.IsSb
                     })
-                    .ToList();
+                    .ToList();*/
+
                 var dataResto = context.DbOpRestos
                     .Where(x => (x.Npwpd == keyword) || (x.NpwpdNama == keyword) || (x.Nop == keyword) || (x.NamaOp.ToUpper().Contains(keyword.ToUpper())) || (x.AlamatOp.ToUpper().Contains(keyword.ToUpper())))
                     .OrderByDescending(x => x.TahunBuku)
@@ -88,27 +106,63 @@ namespace MonPDReborn.Models.DataOP
                         return g.FirstOrDefault(x => x.TglOpTutup != null);
                     })
                     .Where(x => x != null)
-                    .Select(
-                        x => new DataPencarianOp
+                    .Select(x =>
+                    {
+                        // Ambil alat rekam terbaru untuk NOP ini
+                        var alat = alatRekam
+                            .Where(y => y.Nop == x.Nop)
+                            .OrderByDescending(y => y.thn)
+                            .ThenByDescending(y => y.bln)
+                            .ThenByDescending(y => y.tgl)
+                            .ThenByDescending(y => y.jam)
+                            .FirstOrDefault();
+
+                        // Hitung TerakhirAktif
+                        string terakhirAktif;
+                        if (alat != null)
+                        {
+                            var jam = string.IsNullOrWhiteSpace(alat.jam) ? "00:00:00" : alat.jam;
+                            if (!TimeSpan.TryParse(jam, out var ts)) ts = TimeSpan.Zero;
+
+                            if (alat.thn > 0 && alat.bln > 0 && alat.tgl > 0)
+                            {
+                                terakhirAktif = new DateTime((int)alat.thn, (int)alat.bln, (int)alat.tgl)
+                                    .Add(ts)
+                                    .ToString("dd-MM-yyyy HH:mm:ss");
+                            }
+                            else
+                            {
+                                terakhirAktif = "Tidak Ada Data";
+                            }
+                        }
+                        else
+                        {
+                            terakhirAktif = "Offline";
+                        }
+
+                        return new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.MakananMinuman.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
-                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
-                                : "Belum Terpasang")
-                            : "Tidak Terpasang",
+                            JenisPenarikan = alat != null
+                                ? (alat.jenisAlat == "TS" ? "Tax Surveillance"
+                                    : alat.jenisAlat == "TB" ? "Tapping Box"
+                                    : alat.jenisAlat == "SB" ? "Sinkron Box"
+                                    : "Belum Terpasang")
+                                : "Tidak Terpasang",
+                            TerakhirAktif = terakhirAktif,
+                            StatusKunci = alat != null ? (alat.kunci == 1 ? "Terkunci" : "Tidak Terkunci") : "Tidak Ada Data",
+                            StatusOnline = alat != null ? (alat.online == 1 ? "Online" : "Offline") : "Tidak Ada Data",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
-                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
+                            Wilayah = "SURABAYA " + (x.WilayahPajak ?? ""),
                             EnumPajak = (int)EnumFactory.EPajak.MakananMinuman,
                             Tahun = (int)x.TahunBuku
-                        }
-                    )
-                    .ToList();
+                        };
+                    }).ToList();
+
                 if (dataResto.Count > 0)
                 {
                     ret.AddRange(dataResto);
@@ -128,26 +182,62 @@ namespace MonPDReborn.Models.DataOP
                         return g.FirstOrDefault(x => x.TglOpTutup != null);
                     })
                     .Where(x => x != null)
-                    .Select(
-                        x => new DataPencarianOp
+                    .Select(x =>
+                    {
+                        // Ambil alat rekam terbaru untuk NOP ini
+                        var alat = alatRekam
+                            .Where(y => y.Nop == x.Nop)
+                            .OrderByDescending(y => y.thn)
+                            .ThenByDescending(y => y.bln)
+                            .ThenByDescending(y => y.tgl)
+                            .ThenByDescending(y => y.jam)
+                            .FirstOrDefault();
+
+                        // Hitung TerakhirAktif
+                        string terakhirAktif;
+                        if (alat != null)
+                        {
+                            var jam = string.IsNullOrWhiteSpace(alat.jam) ? "00:00:00" : alat.jam;
+                            if (!TimeSpan.TryParse(jam, out var ts)) ts = TimeSpan.Zero;
+
+                            if (alat.thn > 0 && alat.bln > 0 && alat.tgl > 0)
+                            {
+                                terakhirAktif = new DateTime((int)alat.thn, (int)alat.bln, (int)alat.tgl)
+                                    .Add(ts)
+                                    .ToString("dd-MM-yyyy HH:mm:ss");
+                            }
+                            else
+                            {
+                                terakhirAktif = "Tidak Ada Data";
+                            }
+                        }
+                        else
+                        {
+                            terakhirAktif = "Offline";
+                        }
+
+                        return new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.JasaPerhotelan.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
-                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
-                                : "Belum Terpasang")
-                            : "Tidak Terpasang",
+                            JenisPenarikan = alat != null
+                                ? (alat.jenisAlat == "TS" ? "Tax Surveillance"
+                                    : alat.jenisAlat == "TB" ? "Tapping Box"
+                                    : alat.jenisAlat == "SB" ? "Sinkron Box"
+                                    : "Belum Terpasang")
+                                : "Tidak Terpasang",
+                            TerakhirAktif = terakhirAktif,
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
-                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
+                            StatusKunci = alat != null ? (alat.kunci == 1 ? "Terkunci" : "Tidak Terkunci") : "Tidak Ada Data",
+                            StatusOnline = alat != null ? (alat.online == 1 ? "Online" : "Offline") : "Tidak Ada Data",
+                            Wilayah = "SURABAYA " + (x.WilayahPajak ?? ""),
                             EnumPajak = (int)EnumFactory.EPajak.JasaPerhotelan,
                             Tahun = (int)x.TahunBuku
-                        }
-                    ).ToList();
+                        };
+                    }).ToList();
 
                 if (dataHotel.Count > 0)
                 {
@@ -168,26 +258,62 @@ namespace MonPDReborn.Models.DataOP
                         return g.FirstOrDefault(x => x.TglOpTutup != null);
                     })
                     .Where(x => x != null)
-                    .Select(
-                        x => new DataPencarianOp
+                    .Select(x =>
+                    {
+                        // Ambil alat rekam terbaru untuk NOP ini
+                        var alat = alatRekam
+                            .Where(y => y.Nop == x.Nop)
+                            .OrderByDescending(y => y.thn)
+                            .ThenByDescending(y => y.bln)
+                            .ThenByDescending(y => y.tgl)
+                            .ThenByDescending(y => y.jam)
+                            .FirstOrDefault();
+
+                        // Hitung TerakhirAktif
+                        string terakhirAktif;
+                        if (alat != null)
+                        {
+                            var jam = string.IsNullOrWhiteSpace(alat.jam) ? "00:00:00" : alat.jam;
+                            if (!TimeSpan.TryParse(jam, out var ts)) ts = TimeSpan.Zero;
+
+                            if (alat.thn > 0 && alat.bln > 0 && alat.tgl > 0)
+                            {
+                                terakhirAktif = new DateTime((int)alat.thn, (int)alat.bln, (int)alat.tgl)
+                                    .Add(ts)
+                                    .ToString("dd-MM-yyyy HH:mm:ss");
+                            }
+                            else
+                            {
+                                terakhirAktif = "Tidak Ada Data";
+                            }
+                        }
+                        else
+                        {
+                            terakhirAktif = "Offline";
+                        }
+
+                        return new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.JasaKesenianHiburan.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
-                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
-                                : "Belum Terpasang")
-                            : "Tidak Terpasang",
+                            JenisPenarikan = alat != null
+                                ? (alat.jenisAlat == "TS" ? "Tax Surveillance"
+                                    : alat.jenisAlat == "TB" ? "Tapping Box"
+                                    : alat.jenisAlat == "SB" ? "Sinkron Box"
+                                    : "Belum Terpasang")
+                                : "Tidak Terpasang",
+                            TerakhirAktif = terakhirAktif,
+                            StatusKunci = alat != null ? (alat.kunci == 1 ? "Terkunci" : "Tidak Terkunci") : "Tidak Ada Data",
+                            StatusOnline = alat != null ? (alat.online == 1 ? "Online" : "Offline") : "Tidak Ada Data",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
-                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
+                            Wilayah = "SURABAYA " + (x.WilayahPajak ?? ""),
                             EnumPajak = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                             Tahun = (int)x.TahunBuku
-                        }
-                    ).ToList();
+                        };
+                    }).ToList();
 
                 if (dataHiburan.Count > 0)
                 {
@@ -209,26 +335,62 @@ namespace MonPDReborn.Models.DataOP
                         return g.FirstOrDefault(x => x.TglOpTutup != null);
                     })
                     .Where(x => x != null)
-                    .Select(
-                        x => new DataPencarianOp
+                    .Select(x =>
+                    {
+                        // Ambil alat rekam terbaru untuk NOP ini
+                        var alat = alatRekam
+                            .Where(y => y.Nop == x.Nop)
+                            .OrderByDescending(y => y.thn)
+                            .ThenByDescending(y => y.bln)
+                            .ThenByDescending(y => y.tgl)
+                            .ThenByDescending(y => y.jam)
+                            .FirstOrDefault();
+
+                        // Hitung TerakhirAktif
+                        string terakhirAktif;
+                        if (alat != null)
+                        {
+                            var jam = string.IsNullOrWhiteSpace(alat.jam) ? "00:00:00" : alat.jam;
+                            if (!TimeSpan.TryParse(jam, out var ts)) ts = TimeSpan.Zero;
+
+                            if (alat.thn > 0 && alat.bln > 0 && alat.tgl > 0)
+                            {
+                                terakhirAktif = new DateTime((int)alat.thn, (int)alat.bln, (int)alat.tgl)
+                                    .Add(ts)
+                                    .ToString("dd-MM-yyyy HH:mm:ss");
+                            }
+                            else
+                            {
+                                terakhirAktif = "Tidak Ada Data";
+                            }
+                        }
+                        else
+                        {
+                            terakhirAktif = "Offline";
+                        }
+
+                        return new DataPencarianOp
                         {
                             NOP = x.Nop,
                             Nama = x.NamaOp,
                             Alamat = x.AlamatOp,
                             JenisOp = EnumFactory.EPajak.JasaParkir.GetDescription(),
                             KategoriOp = x.KategoriNama,
-                            JenisPenarikan = dbrekapTs.Any(y => y.Nop == x.Nop)
-                            ? (dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTs == 1 ? "Tax Surveillance"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsTb == 1 ? "Tapping Box"
-                                : dbrekapTs.FirstOrDefault(y => y.Nop == x.Nop)?.IsSb == 1 ? "Sinkron Box"
-                                : "Belum Terpasang")
-                            : "Tidak Terpasang",
+                            JenisPenarikan = alat != null
+                                ? (alat.jenisAlat == "TS" ? "Tax Surveillance"
+                                    : alat.jenisAlat == "TB" ? "Tapping Box"
+                                    : alat.jenisAlat == "SB" ? "Sinkron Box"
+                                    : "Belum Terpasang")
+                                : "Tidak Terpasang",
+                            TerakhirAktif = terakhirAktif,
+                            StatusKunci = alat != null ? (alat.kunci == 1 ? "Terkunci" : "Tidak Terkunci") : "Tidak Ada Data",
+                            StatusOnline = alat != null ? (alat.online == 1 ? "Online" : "Offline") : "Tidak Ada Data",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
-                            Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
+                            Wilayah = "SURABAYA " + (x.WilayahPajak ?? ""),
                             EnumPajak = (int)EnumFactory.EPajak.JasaParkir,
                             Tahun = (int)x.TahunBuku
-                        }
-                    ).ToList();
+                        };
+                    }).ToList();
 
                 if (dataParkir.Count > 0)
                 {
@@ -258,6 +420,8 @@ namespace MonPDReborn.Models.DataOP
                             JenisOp = EnumFactory.EPajak.TenagaListrik.GetDescription(),
                             KategoriOp = x.KategoriNama ?? "",
                             JenisPenarikan = "Tidak Ada",
+                            StatusKunci = "Tidak Ada",
+                            StatusOnline = "Tidak Ada",
                             StatusNOP = x.TglOpTutup != null ? "Tutup" : "Buka",
                             Wilayah = "SURABAYA " + x.WilayahPajak ?? "",
                             EnumPajak = (int)EnumFactory.EPajak.TenagaListrik,
@@ -281,6 +445,8 @@ namespace MonPDReborn.Models.DataOP
                             JenisOp = EnumFactory.EPajak.Reklame.GetDescription(),
                             KategoriOp = "Reklame",
                             JenisPenarikan = "Tidak Ada",
+                            StatusKunci = "Tidak Ada",
+                            StatusOnline = "Tidak Ada",
                             StatusNOP = "Buka",
                             Wilayah = "-",
                             EnumPajak = (int)EnumFactory.EPajak.Reklame,
@@ -317,6 +483,8 @@ namespace MonPDReborn.Models.DataOP
                             JenisOp = EnumFactory.EPajak.AirTanah.GetDescription(),
                             KategoriOp = x.KategoriNama ?? "",
                             JenisPenarikan = "Tidak Ada",
+                            StatusKunci = "Tidak Ada",
+                            StatusOnline = "Tidak Ada",
                             StatusNOP = "Buka",
                             Wilayah = "-",
                             EnumPajak = (int)EnumFactory.EPajak.AirTanah,
@@ -623,6 +791,9 @@ namespace MonPDReborn.Models.DataOP
             public string JenisOp { get; set; } = null!;
             public string KategoriOp { get; set; } = null!;
             public string JenisPenarikan { get; set; } = "Tidak Terapasang";
+            public string TerakhirAktif { get; set; } = null!;
+            public string StatusOnline { get; set; } = null!;
+            public string StatusKunci { get; set; } = null!;
             public int EnumPajak { get; set; }
             public int Tahun { get; set; }
         }

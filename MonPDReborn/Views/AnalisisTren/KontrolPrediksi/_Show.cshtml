@@ -142,23 +142,31 @@
                     .Caption("Jenis Pajak");
 
                 columns.AddFor(m => m.Target)
-                   .Caption("Target").Format("#,##0");
+                   .Caption("Target").Format("#,##0").Width(200);
 
                 columns.AddFor(m => m.RealisasiBulanLalu)
-                    .Caption("Realisasi S.D Bulan Lalu").Format("#,##0");
+                    .Caption("Realisasi S.D Bulan Lalu").Format("#,##0").Width(200);
 
                 columns.AddFor(m => m.RealisasiBulanIni)
-                    .Caption("Realisasi S.D Hari Ini").Format("#,##0");
+                .Name("Realisasi")
+            .Caption("Realisasi Bulan Ini").Format("#,##0").Width(200);
 
-               columns.AddFor(m => m.RealisasiHari) 
-               .Name("RealisasiHari")  
+               @* columns.AddFor(m => m.RealisasiHari)
+               .Caption("Realisasi S.D Hari Ini") 
+               .Format("#,##0").Width(200); *@
+               
+               columns.AddFor(m => m.Prediksi) 
+               .Name("Prediksi")  
                .Caption("Prediksi Hari Ini S.D Dengan Tanggal") 
                .Format("#,##0").Width(200);
 
 
 
                 columns.AddFor(m => m.Jumlah)
-            .Caption("Jumlah").Format("#,##0");
+            .Caption("Total Bulan Ini").Format("#,##0").Width(200);
+
+                columns.AddFor(m => m.JumlahTotal)
+            .Caption("Total S.D Bulan Ini").Format("#,##0").Width(200);
 
                 columns.Add()
                     .Caption("%")
@@ -197,12 +205,22 @@
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
 
+                    items.AddFor(m => m.Prediksi)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
                     items.AddFor(m => m.RealisasiHari)
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
 
                     items.AddFor(m => m.Jumlah)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                    items.AddFor(m => m.JumlahTotal)
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");

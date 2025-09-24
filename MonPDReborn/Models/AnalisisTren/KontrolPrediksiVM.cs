@@ -1,4 +1,6 @@
-﻿using MonPDLib;
+﻿using DevExpress.Pdf.Native.BouncyCastle.Asn1.X509;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using MonPDLib;
 using MonPDLib.General;
 using static MonPDReborn.Models.AktivitasWP.PenghimbauanVM;
 
@@ -31,7 +33,8 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
             if (tanggalAwal.Value.Year != tanggalAkhir.Value.Year)
                 throw new ArgumentException("Tanggal awal dan akhir harus di tahun yang sama.");
 
-            DataKontrolPrediksiList = Method.GetDataList(tanggalAwal.Value, tanggalAkhir.Value);
+            //DataKontrolPrediksiList = Method.GetDataList(tanggalAwal.Value, tanggalAkhir.Value);
+            DataKontrolPrediksiList = Method.GetDataMVList(tanggalAwal.Value, tanggalAkhir.Value);
         }
     }
 
@@ -46,13 +49,55 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                 RataRataPencapaian = 87.15
             };
         }
+        public static List<KontrolPrediksi> GetDataMVList(DateTime tanggalAwal, DateTime tanggalAkhir)
+        {
+            var ret = new List<KontrolPrediksi>();
+            var context = DBClass.GetContext();
+            var currentYear = DateTime.Now.Year;
+            var cutOffAwalTahun = new DateTime(tanggalAwal.Year, 1, 1);
+            var cutOffAwalBulanIni = new DateTime(tanggalAwal.Year, tanggalAwal.Month, 1);
+            var cutOffAwalBulanLalu = new DateTime(tanggalAwal.Year, tanggalAwal.Month, 1).AddMonths(-1);
+            var cutOffAkhirBulanLalu = new DateTime(
+                cutOffAwalBulanLalu.Year,
+                cutOffAwalBulanLalu.Month,
+                DateTime.DaysInMonth(cutOffAwalBulanLalu.Year, cutOffAwalBulanLalu.Month)
+            );
 
+            var targetDict = context.DbAkunTargets
+                .Where(x => x.TahunBuku == currentYear)
+                .GroupBy(x => x.PajakId)
+                .ToDictionary(
+                    g => (int)g.Key,
+                    g => g.Sum(y => y.Target)
+                );
+
+            var realisasi = context.MvPrediksi2025s.AsQueryable();
+
+            ret = context.MvPrediksi2025s
+                .Where(x => x.Tanggal >= tanggalAwal.AddDays(1) && x.Tanggal <= tanggalAkhir)
+                .GroupBy(x => new { PajakId = x.IdPajak })
+                .Select(x => new KontrolPrediksi()
+                {
+                    tgl = DateTime.Now,
+                    PajakId = (int)x.Key.PajakId,
+                    JenisPajak = ((EnumFactory.EPajak)x.Key.PajakId).GetDescription(),
+                    Target = targetDict.ContainsKey((int)x.Key.PajakId) ? targetDict[(int)x.Key.PajakId] : 0,
+                    RealisasiBulanLalu = realisasi.Where(y => y.Tanggal >= cutOffAwalTahun && y.Tanggal <= cutOffAkhirBulanLalu && y.IdPajak == x.Key.PajakId).Sum(y => y.Realisasi2025) ?? 0,
+                    RealisasiBulanIni = realisasi.Where(y => y.Tanggal >= cutOffAwalBulanIni && y.Tanggal <= tanggalAwal && y.IdPajak == x.Key.PajakId).Sum(y => y.Realisasi2025) ?? 0,
+                    RealisasiHari = realisasi.Where(y => y.Tanggal >= cutOffAwalTahun && y.Tanggal <= tanggalAwal && y.IdPajak == x.Key.PajakId).Sum(y => y.Realisasi2025) ?? 0,
+                    Prediksi = x.Sum(x => x.Prediksi2025) ?? 0
+                })
+                .OrderBy(x => x.PajakId)
+                .ToList();
+
+            return ret;
+        }
         public static List<KontrolPrediksi> GetDataList(DateTime tanggalAwal, DateTime tanggalAkhir)
         {
 
             var context = DBClass.GetContext();
             var currentYear = DateTime.Now.Year;
-            var bulanLaluCutoff = new DateTime(currentYear, tanggalAkhir.Month , 1).AddDays(-1);
+            var bulanLaluCutoff = new DateTime(currentYear, tanggalAkhir.Month, 1).AddDays(-1);
             var awalTahun = new DateTime(currentYear, 1, 1);
 
             var list = new List<KontrolPrediksi>();
@@ -140,7 +185,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
 
             // ==== PBB ====
             var pbbData = context.DbMonPbbs
-                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2)
+                .Where(x => x.TglBayar != null && x.TglBayar.Value.Year <= currentYear && x.TglBayar.Value.Year >= currentYear - 2 && x.TahunBuku == currentYear && x.JumlahBayarPokok > 0)
                 .Select(x => new PajakData
                 {
                     Tanggal = x.TglBayar.Value,
@@ -259,16 +304,55 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                         return t > start && t <= end;
                     })
                     .GroupBy(d => new { d.Tanggal.Year, d.Tanggal.Month, d.Tanggal.Day })
-                    .Select(g => new {
+                    .Select(g => new
+                    {
                         g.Key.Year,
                         g.Key.Month,
                         g.Key.Day,
-                        TotalNominal = g.Sum(x => x.Nominal)  // ← jumlahkan nominal tiap grup
+                        TotalNominal = g.Sum(x => x.Nominal)  // jumlahkan nominal tiap grup
                     })
                     .ToList();
 
-
+                // hitung realisasi hari ini (tahun berjalan)
                 var realisasiHariIni = check.Sum(d => d.TotalNominal);
+
+                // ambil historis 3 tahun terakhir (periode tanggal yang sama), per tahun
+                var tahunSekarang = DateTime.Now.Year;
+
+                var historis3Tahun = data
+                    .Where(d => d.Tanggal.Year >= tahunSekarang - 3 && d.Tanggal.Year < tahunSekarang)
+                    .Where(d =>
+                    {
+                        var t = new DateTime(2000, d.Tanggal.Month, d.Tanggal.Day);
+                        return t > start && t <= end;
+                    })
+                    .GroupBy(d => d.Tanggal.Year)
+                    .Select(g => g.Sum(x => x.Nominal))
+                    .ToList();
+
+                // hitung rata-rata historis
+                var rataRataHistoris = historis3Tahun.Any() ? historis3Tahun.Average() : 0;
+
+                // bandingkan: jika realisasiHariIni > rata-rata historis → pakai rata-rata historis
+                var finalRealisasiHari = (rataRataHistoris > 0)
+                    ? Math.Min(realisasiHariIni, rataRataHistoris)
+                    : realisasiHariIni;
+
+                return new KontrolPrediksi
+                {
+                    tgl = DateTime.Now,
+                    JenisPajak = jenisPajak.GetDescription(),
+                    Target = targetDict.ContainsKey(id) ? targetDict[id] : 0,
+                    RealisasiBulanLalu = realisasiBulanLalu,
+                    RealisasiBulanIni = realisasiBulanIni,
+                    RealisasiHari = finalRealisasiHari
+                };
+
+
+
+
+
+                /*var realisasiHariIni = check.Sum(d => d.TotalNominal);
                 return new KontrolPrediksi
                 {
                     tgl = DateTime.Now,
@@ -277,7 +361,7 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
                     RealisasiBulanLalu = realisasiBulanLalu,
                     RealisasiBulanIni = realisasiBulanIni,
                     RealisasiHari = realisasiHariIni
-                };
+                };*/
             }
 
 
@@ -301,14 +385,17 @@ namespace MonPDReborn.Models.AnalisisTren.KontrolPrediksiVM
     public class KontrolPrediksi
     {
         public DateTime tgl { get; set; }
+        public int PajakId { get; set; }
         public string JenisPajak { get; set; } = null!;
         public decimal Target { get; set; }
         public decimal RealisasiBulanLalu { get; set; }
         public decimal RealisasiBulanIni { get; set; }
         public decimal RealisasiHari { get; set; }
-        public decimal Jumlah => RealisasiBulanIni + RealisasiHari;
+        public decimal Prediksi { get; set; }
+        public decimal Jumlah => RealisasiBulanIni + Prediksi;
+        public decimal JumlahTotal => RealisasiBulanLalu + RealisasiBulanIni + Prediksi;
         public decimal Persentase => Target > 0
-            ? Math.Round((Jumlah / Target) * 100, 2)
+            ? Math.Round((JumlahTotal / Target) * 100, 2)
             : 0;
     }
 }

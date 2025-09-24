@@ -13,7 +13,7 @@
             <div class="card border border-secondary border-2">
                 <div class="card-body">
                     <div class="row align-items-center">
-                        <div class="col-lg-8">
+                        <div class="col-lg-4">
                             <div class="d-flex p-3">
                                 <div class="flex-shrink-0">
                                     <div class="avatar-md me-3">
@@ -32,6 +32,18 @@
                                     <p class="fs-16 text-dark">
                                         @Model.FormattedNOP
                                     </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border border-secondary h-100 d-flex flex-column justify-content-between">
+                                <div class="p-3 text-center">
+                                    <h3 class="fs-16 fw-semibold text-dark mb-3">Detail Realisasi</h3>
+                                    <p class="fs-14 text-muted mb-4">Lihat detail realisasi pajak objek ini</p>
+                                    <button class="btn btn-light w-100"
+                                            onclick="window.open('/ProfileOP/Detail?nop=@Model.NOP&pajak=4', '_blank')">
+                                        <i class="ri-bar-chart-line me-1"></i> Realisasi
+                                    </button>
                                 </div>
                             </div>
                         </div>

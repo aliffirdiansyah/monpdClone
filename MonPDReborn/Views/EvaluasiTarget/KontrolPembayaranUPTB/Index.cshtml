@@ -1,0 +1,687 @@
+﻿@model MonPDReborn.Models.EvaluasiTarget.KontrolPembayaranUPTBVM.Index
+
+@{
+    ViewData["Title"] = "Monitoring Pembayaran UPTB";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-0">
+                        Dashboard Kontrol Pembayaran
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <!-- Tab Jenis Pajak -->
+                    <ul class="nav nav-tabs" id="jenisPajakTabs">
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab active" href="#" data-jenis="Hotel">Hotel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Restoran">Restoran</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Parkir">Parkir</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="Hiburan">Hiburan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PPJ">PPJ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="PBB">PBB</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link jenis-pajak-tab" href="#" data-jenis="AirTanah">AirTanah</a>
+                        </li>
+                    </ul>
+
+                    <!-- Filter Tahun di kanan -->
+                    <div id="tahunGroup">
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1 active" data-tahun="2025">2025</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1" data-tahun="2024">2024</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1" data-tahun="2023">2023</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link me-1" data-tahun="2022">2022</button>
+                        <button class="btn btn-sm btn-outline-secondary tahun-link" data-tahun="2021">2021</button>
+                    </div>
+                </div>
+
+
+                <!-- Kontainer Dinamis untuk Masing-Masing Jenis Pajak -->
+                @{
+                    var jenisPajakList = new[] { "Hotel", "Restoran", "Parkir", "Hiburan", "PPJ", "ABT", "PBB", "AirTanah" };
+                }
+
+                @foreach (var jenis in jenisPajakList)
+                {
+                    var isFirst = (jenis == jenisPajakList.First());
+                    <div id="container-@jenis" class="tab-content" style="display:@(isFirst ? "block" : "none");">
+                        <h4 class="card-title fs-16 mb-1">Kontrol Pembayaran Pajak</h4>
+                        <div id="kontrolPembayaranContainer-@jenis" class="mb-5"></div>
+                        <div id="kontrolPembayaranSpinner-@jenis" class="text-center py-3" style="display:none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading pembayaran…</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Loading pembayaran…</div>
+                        </div>
+
+                        @* <h4 class="card-title fs-16 mb-1">Kontrol Upaya Pajak</h4>
+                        <div id="kontrolUpayaContainer-@jenis" class="mb-5"></div>
+                        <div id="kontrolUpayaSpinner-@jenis" class="text-center py-3" style="display:none">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading upaya…</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Loading upaya…</div>
+                        </div> *@
+
+                        <h4 class="card-title fs-16 mb-1">Kontrol Potensi Pajak</h4>
+                        <div id="kontrolPotensiContainer-@jenis"></div>
+                        <div id="kontrolPotensiSpinner-@jenis" class="text-center py-3" style="display:none">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading potensi…</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Loading potensi…</div>
+                        </div>
+                    </div>
+                }
+
+
+
+                <div class="modal fade" id="modalDetailPajak" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex">
+                                <div class="flex-grow-1">
+                                    <h4 class="modal-title fs-16 mb-0">
+                                        Data OP Pembayaran Pajak
+                                    </h4>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center p-3">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="modalDetailPotensi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex">
+                                <div class="flex-grow-1">
+                                    <h4 class="modal-title fs-16 mb-0">
+                                        Data OP Pembayaran Pajak
+                                    </h4>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center p-3">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="modalDetailUpaya" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex">
+                                <div class="flex-grow-1">
+                                    <h4 class="modal-title fs-16 mb-0">
+                                        Data OP Upaya Pembayaran Pajak
+                                    </h4>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center p-3">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+
+        let currentJenis = 'Hotel';
+        let currentTahun = 2025;
+
+        function showLoadingFor(jenisPajak) {
+            $('[id^="container-"]').hide();
+            $(`#container-${jenisPajak}`).show();
+
+            ["Pembayaran", "Upaya", "Potensi"].forEach(section => {
+                $(`#kontrol${section}Container-${jenisPajak}`).hide().empty();
+                $(`#kontrol${section}Spinner-${jenisPajak}`).show();
+            });
+        }
+
+        function loadSection(url, jenisPajak, tahun, spinnerId, containerId, errorMsg) {
+            const spinner = $(`#${spinnerId}`);
+            const container = $(`#${containerId}`);
+
+            $.ajax({
+                url: url,
+                data: { jenisPajak, tahun}, // ✅ kirim uptb juga
+                success: function (html) {
+                    spinner.hide();
+                    container.html(html).show();
+                    container.find("script").each(function () {
+                        $.globalEval(this.text || this.textContent || this.innerHTML || '');
+                    });
+                },
+                error: function () {
+                    spinner.hide();
+                    container.html(`<div class="text-danger">${errorMsg}</div>`).show();
+                }
+            });
+        }
+
+        function loadShow(jenisPajak, tahun) {
+            currentJenis = jenisPajak;
+            currentTahun = tahun;
+
+            $('.jenis-pajak-tab').removeClass('active');
+            $(`.jenis-pajak-tab[data-jenis="${jenisPajak}"]`).addClass('active');
+
+            $('#tahunGroup .tahun-link').removeClass('active');
+            $(`#tahunGroup .tahun-link[data-tahun="${tahun}"]`).addClass('active');
+
+            showLoadingFor(jenisPajak);
+
+            loadSection('/KontrolPembayaranUPTB/Show', jenisPajak, tahun,
+                `kontrolPembayaranSpinner-${jenisPajak}`,
+                `kontrolPembayaranContainer-${jenisPajak}`,
+                'Gagal memuat data pembayaran.');
+
+            loadSection('/KontrolPembayaranUPTB/ShowUpaya', jenisPajak, tahun,
+                `kontrolUpayaSpinner-${jenisPajak}`,
+                `kontrolUpayaContainer-${jenisPajak}`,
+                'Gagal memuat data upaya.');
+
+            loadSection('/KontrolPembayaranUPTB/ShowPotensi', jenisPajak, tahun,
+                `kontrolPotensiSpinner-${jenisPajak}`,
+                `kontrolPotensiContainer-${jenisPajak}`,
+                'Gagal memuat data potensi.');
+        }
+
+        $(document).ready(function () {
+           
+            // Load default
+            loadShow(currentJenis, currentTahun);
+
+            // Klik Tahun
+            $('#tahunGroup').on('click', '.tahun-link', function (e) {
+                e.preventDefault();
+                const tahunDipilih = $(this).data('tahun');
+                loadShow(currentJenis, tahunDipilih);
+            });
+
+            // Klik Jenis Pajak
+            $('#jenisPajakTabs').on('click', '.jenis-pajak-tab', function (e) {
+                e.preventDefault();
+                const jenisDipilih = $(this).data('jenis');
+                loadShow(jenisDipilih, currentTahun);
+            });
+
+        });
+
+
+
+        //Region Cell Template untuk grab data dan binding untuk di teruskan
+
+        function showPajakCellTemplate(cellElement, cellInfo) {
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const kategoriId = cellInfo.data.kategoriId;
+            const tahun = currentTahun;
+
+            // Ambil angka bulan dari nama field (contoh: Byr1 → 1)
+            const fieldName = cellInfo.column.dataField || '';
+            const matchBulan = fieldName.match(/\d+$/);
+            const bulan = matchBulan ? parseInt(matchBulan[0]) : 0;
+
+            // Ambil status dari caption kolom
+            const colCaption = cellInfo.column.caption?.toUpperCase() || '';
+            let status = '';
+            if (colCaption.includes('BYR')) {
+                status = '1';
+            } else if (colCaption.includes('N/TS')) {
+                status = '2';
+            } else if (colCaption.includes('BLM')) {
+                status = '0';
+            } else if (colCaption.includes('OP BUKA')) {
+                status = '3';
+            }
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', `Lihat Detail ${status}`)
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => onPajakClick(jenisPajak, kategoriId, tahun, bulan, status)); // ✅ Kirim uptb
+
+            $(cellElement).append($link);
+        }
+
+        function upayaPajakCellTemplate(cellElement, cellInfo) {
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const kategoriId = cellInfo.data.kategoriId;
+            const tahun = currentTahun;
+
+            // Ambil angka bulan dari nama field (contoh: Byr1 → 1)
+            const fieldName = cellInfo.column.dataField || '';
+            const matchBulan = fieldName.match(/\d+$/);
+            const bulan = matchBulan ? parseInt(matchBulan[0]) : 0;
+
+            // Ambil status dari caption kolom
+            const colCaption = cellInfo.column.caption?.toUpperCase() || '';
+            let status = '';
+            if (colCaption.includes('HIMB')) {
+                status = '0';
+            } else if (colCaption.includes('TEGUR')) {
+                status = '1';
+            } else if (colCaption.includes('SIL')) {
+                status = '2';
+            } else if (colCaption.includes('KEJAK')) {
+                status = '3';
+            }
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', `Lihat Detail ${status}`)
+                .text((cellInfo.value ?? 0).toLocaleString('id-ID'))
+                .on('click', () => onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status, false, false)); // ✅ Kirim uptb
+
+            $(cellElement).append($link);
+        }
+
+        function showPotensiCellTemplate(cellElement, cellInfo) {
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const kategoriId = cellInfo.data.kategoriId;
+            const tahun = currentTahun;
+
+            // Mapping singkatan field → nomor bulan
+            const bulanMap = {
+                Jan: 1, Feb: 2, Mar: 3, Apr: 4, Mei: 5, Jun: 6,
+                Jul: 7, Agt: 8, Sep: 9, Okt: 10, Nov: 11, Des: 12
+            };
+
+            const fieldName = cellInfo.column.dataField || '';
+            const bulan = bulanMap[fieldName] || 0;
+            const value = cellInfo.value ?? 0;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', `Lihat Detail Potensi`)
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => onPotensiClick(jenisPajak, kategoriId, tahun, bulan, false)); // ✅ Kirim uptb
+
+            $(cellElement).append($link);
+        }
+
+
+    </script>
+
+
+    <script>
+
+
+
+        //Region On Click ( function deliver property )
+
+                // === HANDLER KLIK ===
+        function onPajakClick(jenisPajak, kategoriId, tahun, bulan, status, isTotal = false, isHotelNonBintang = false) {
+            showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status, isTotal, isHotelNonBintang);
+        }
+
+        function onPotensiClick(jenisPajak, kategoriId, tahun, bulan, isTotal = false, isHotelNonBintang = false) {
+            showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan, isTotal, isHotelNonBintang);
+        }
+
+        function onUpayaClick(jenisPajak, kategoriId, tahun, bulan, status) {
+            showDetailUpaya(jenisPajak, kategoriId, tahun, bulan, status);
+        }
+
+
+        // === DETAIL SHOW (HIT ENDPOINT DI CONTROLLER) ===
+        function showDetailPajak(jenisPajak, kategoriId, tahun, bulan, status, isTotal = false, isHotelNonBintang = false) {
+            const requestData = {
+                jenisPajak: jenisPajak,
+                bulan: bulan,
+                tahun: tahun,
+                status: status,
+                isTotal: isTotal
+            };
+
+            if (!isTotal) {
+                requestData.kategoriId = kategoriId;
+            } else {
+                requestData.isHotelNonBintang = isHotelNonBintang;
+            }
+
+            $.ajax({
+                url: '/KontrolPembayaranUPTB/DetailPembayaran',
+                type: 'GET',
+                data: requestData,
+                beforeSend: function () {
+                    $('#modalDetailPajak .modal-body').html('<div class="text-center p-3">Loading…</div>');
+                    $('#modalDetailPajak').modal('show');
+                },
+                success: function (html) {
+                    $('#modalDetailPajak .modal-body').html(html);
+                },
+                error: function () {
+                    $('#modalDetailPajak .modal-body').html('<div class="text-danger">⚠ Gagal memuat data</div>');
+                }
+            });
+        }
+
+        function showDetailPotensiPajak(jenisPajak, kategoriId, tahun, bulan, isTotal = false, isHotelNonBintang = false) {
+            const requestData = {
+                jenisPajak: jenisPajak,
+                bulan: bulan,
+                tahun: tahun,
+                isTotal: isTotal
+            };
+
+            if (!isTotal) {
+                requestData.kategoriId = kategoriId;
+            } else {
+                requestData.isHotelNonBintang = isHotelNonBintang;
+            }
+
+            $.ajax({
+                url: '/KontrolPembayaranUPTB/DetailPotensiPajak',
+                type: 'GET',
+                data: requestData,
+                beforeSend: function () {
+                    $('#modalDetailPotensi .modal-body').html('<div class="text-center p-3">Loading…</div>');
+                    $('#modalDetailPotensi').modal('show');
+                },
+                success: function (html) {
+                    $('#modalDetailPotensi .modal-body').html(html);
+                },
+                error: function () {
+                    $('#modalDetailPotensi .modal-body').html('<div class="text-danger">⚠ Gagal memuat data</div>');
+                }
+            });
+        }
+
+        function showDetailUpaya(jenisPajak, kategoriId, tahun, bulan, status) {
+            $.ajax({
+                url: '/KontrolPembayaranUPTB/UpayaDetail',
+                type: 'GET',
+                data: {
+                    jenisPajak: jenisPajak,
+                    kategoriId: kategoriId,
+                    bulan: bulan,
+                    tahun: tahun,
+                    status: status,
+                },
+                beforeSend: function () {
+                    $('#modalDetailUpaya .modal-body').html('<div class="text-center p-3">Loading…</div>');
+                    $('#modalDetailUpaya').modal('show');
+                },
+                success: function (html) {
+                    $('#modalDetailUpaya .modal-body').html(html);
+                },
+                error: function () {
+                    $('#modalDetailUpaya .modal-body').html('<div class="text-danger">⚠ Gagal memuat data</div>');
+                }
+            });
+        }
+
+
+        //detail object pajak dari nop
+        function detailOPCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            // Jika nilainya 0 atau null, tampilkan saja 0
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+
+            const nop = cellInfo.data.NOP;
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+            const pajak = jenisPajakMap[currentJenis] || 0;
+
+            // Buat link klik
+            const $link = $('<a>')
+                .addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    const url = '@Url.Action("Detail", "ProfileOP")'
+                                + '?nop=' + nop
+                                + '&pajak=' + pajak;
+                    window.open(url, '_blank');
+                });
+
+            $(cellElement).append($link);
+        }
+    </script>
+
+
+    <script>
+        //bagian Total Summary saja
+
+        function onSummaryPajakPrepared(e) {
+            if (e.rowType === "totalFooter") {
+                const clickableColumns = [
+                    "OPbuka1", "Byr1", "Blm1", "OPbuka2", "Byr2", "Blm2",
+                    "OPbuka3", "Byr3", "Blm3", "OPbuka4", "Byr4", "Blm4",
+                    "OPbuka5", "Byr5", "Blm5", "OPbuka6", "Byr6", "Blm6",
+                    "OPbuka7", "Byr7", "Blm7", "OPbuka8", "Byr8", "Blm8",
+                    "OPbuka9", "Byr9", "Blm9", "OPbuka10", "Byr10", "Blm10",
+                    "OPbuka11", "Byr11", "Blm11", "OPbuka12", "Byr12", "Blm12"
+                ];
+
+                if (clickableColumns.includes(e.column.dataField)) {
+                    e.cellElement.css({
+                        "cursor": "pointer",
+                        "color": "#0d6efd",
+                        "font-weight": "bold"
+                    });
+
+                    const fieldName = e.column.dataField || '';
+                    const matchBulan = fieldName.match(/\d+$/);
+                    const bulan = matchBulan ? parseInt(matchBulan[0]) : 0;
+
+                    let status = '';
+                    let statusText = '';
+                    if (fieldName.startsWith('OPbuka')) {
+                        status = '3';
+                        statusText = 'OP BUKA';
+                    } else if (fieldName.startsWith('Byr')) {
+                        status = '1';
+                        statusText = 'SUDAH BAYAR';
+                    } else if (fieldName.startsWith('Nts')) {
+                        status = '2';
+                        statusText = 'TIDAK/TIDAK SETOR';
+                    } else if (fieldName.startsWith('Blm')) {
+                        status = '0';
+                        statusText = 'BELUM BAYAR';
+                    }
+
+                    const bulanNames = ['', 'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
+                                      'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'];
+                    const bulanName = bulanNames[bulan] || '';
+
+                    e.cellElement.attr("title", `Klik untuk lihat detail ${statusText} di bulan ${bulanName}`);
+
+                    e.cellElement.off("click").on("click", function() {
+                        if (bulan > 0 && status !== '') {
+                            const gridId = e.component.element().attr('id');
+                            const isHotelNonBintang = gridId && gridId.includes('gridPembayaranNon');
+
+                            console.log("Grid ID:", gridId);
+                            console.log("isHotelNonBintang:", isHotelNonBintang);
+
+                            onSummaryPajakClick(bulan, status, isHotelNonBintang);
+                        }
+                    });
+
+                    e.cellElement.hover(
+                        function() { $(this).css("text-decoration", "underline"); },
+                        function() { $(this).css("text-decoration", "none"); }
+                    );
+                }
+            }
+        }
+
+
+
+
+        function onSummaryPotensiPrepared(e) {
+            if (e.rowType === "totalFooter") {
+                // Daftar kolom bulan yang boleh diklik (exclude "Kategori")
+                const clickableColumns = [
+                    "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+                    "Jul", "Agt", "Sep", "Okt", "Nov", "Des"
+                ];
+
+                if (clickableColumns.includes(e.column.dataField)) {
+                    // Styling untuk menunjukkan bahwa cell bisa diklik
+                    e.cellElement.css({
+                        "cursor": "pointer",
+                        "color": "#0d6efd",
+                        "font-weight": "bold"
+                    });
+
+                    e.cellElement.attr("title", `Klik untuk lihat detail dibulan ${e.column.dataField.toUpperCase()}`);
+
+                    // Bind click event
+                    e.cellElement.off("click").on("click", function() {
+                        // Mapping field name ke nomor bulan
+                        const bulanMap = {
+                            Jan: 1, Feb: 2, Mar: 3, Apr: 4, Mei: 5, Jun: 6,
+                            Jul: 7, Agt: 8, Sep: 9, Okt: 10, Nov: 11, Des: 12
+                        };
+
+                        const bulan = bulanMap[e.column.dataField] || 0;
+                        if (bulan > 0) {
+                            // Detect hotel type dari grid ID
+                            const gridId = e.component.element().attr('id');
+                            const isHotelNonBintang = gridId && gridId.includes('gridPotensiNon');
+                            onSummaryPotensiClick(bulan, isHotelNonBintang);
+                        }
+                    });
+
+
+                    // Hover effects
+                    e.cellElement.hover(
+                        function() { $(this).css("text-decoration", "underline"); },
+                        function() { $(this).css("text-decoration", "none"); }
+                    );
+                }
+            }
+        }
+
+
+        //Bagian onClicknya
+
+        function onSummaryPajakClick(bulan, status, isHotelNonBintang = false, uptb = 0) {
+            const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const tahun = currentTahun;
+
+            // Call dengan isTotal = true, kategoriId = 0, dan isHotelNonBintang flag
+            onPajakClick(jenisPajak, 0, tahun, bulan, status, true, isHotelNonBintang);
+        }
+
+        function onSummaryPotensiClick(bulan , isHotelNonBintang = false) {
+                const jenisPajakMap = {
+                'Restoran': 1,
+                'PPJ': 2,
+                'Hotel': 3,
+                'Parkir': 4,
+                'Hiburan': 5,
+                'AirTanah': 6,
+                'Reklame': 7,
+                'PBB': 9,
+                'BPHTB': 12,
+            };
+
+            const jenisPajak = jenisPajakMap[currentJenis] || 0;
+            const tahun = currentTahun;
+
+            // Call with isTotal = true, kategoriId = 0, dan isHotelNonBintang flag
+            onPotensiClick(jenisPajak, 0, tahun, bulan, true, isHotelNonBintang);
+        }
+
+    </script>
+
+}

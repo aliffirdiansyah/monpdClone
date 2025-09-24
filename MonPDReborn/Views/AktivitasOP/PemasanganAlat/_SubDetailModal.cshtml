@@ -13,6 +13,7 @@
         .ShowBorders(true)
         .ShowColumnHeaders(true)
         .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
         .Paging(p => p.PageSize(10))
         .Pager(p => p
         .ShowPageSizeSelector(true)
@@ -35,6 +36,9 @@
             columns.AddFor(m => m.Alamat).Caption("Alamat");
             columns.AddFor(m => m.TanggalPemasangan).Caption("Tanggal Pemasangan").DataType(GridColumnDataType.Date).Format("dd MMMM yyyy");
             columns.AddFor(m => m.JenisPasang).Caption("Jenis Alat");
+            columns.AddFor(m => m.StatusKunci).Caption("Status Kunci");
+            columns.AddFor(m => m.StatusOnline).Caption("Status Online");
+            columns.AddFor(m => m.TerakhirAktif).Caption("Terakhir Aktif");
         })
         )
 </div>

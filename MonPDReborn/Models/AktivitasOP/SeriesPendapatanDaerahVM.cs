@@ -68,6 +68,38 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
+        public class Report
+        {
+            public int Type { get; set; }
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+            public DateTime Tanggal { get; set; } = DateTime.Now;
+            public SeriesPendapatanDaerahVMMethod.ViewModel.ReportTrOpdRinci ReportTrOpdRinci { get; set; } = new();
+            public SeriesPendapatanDaerahVMMethod.ViewModel.ReportTRopdWarna ReportTRopdWarna { get; set; } = new();
+            public Report(int type, int tahun, int bulan)
+            {
+                Type = type;
+                Tahun = tahun;
+                Bulan = bulan;
+                Tanggal = DateTime.Now;
+                if (tahun < Tanggal.Year && bulan < Tanggal.Month)
+                {
+                    Tanggal = new DateTime(tahun, bulan, 31);
+                }
+                switch (type)
+                {
+                    case 1:
+                        ReportTrOpdRinci = Method.GetReportTrOpdRinci(tahun, bulan);
+                        break;
+                    case 2:
+                        ReportTRopdWarna = Method.GetReportTRopdWarna(tahun, bulan);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         public class Method
         {
             public static List<SeriesPendapatanDaerahVMMethod.ViewModel.TahunRow> GetTahun()
@@ -85,6 +117,14 @@ namespace MonPDReborn.Models.AktivitasOP
             public static List<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis> GetSudutPandangRekeningJenisObjekOpd(int tahun)
             {
                 return SeriesPendapatanDaerahVMMethod.Method.GetSudutPandangRekeningJenisObjekOpdData(tahun);
+            }
+            public static SeriesPendapatanDaerahVMMethod.ViewModel.ReportTrOpdRinci GetReportTrOpdRinci(int tahun, int bulan)
+            {
+                return SeriesPendapatanDaerahVMMethod.Method.GetReportTrOpdRinci(tahun, bulan);
+            }
+            public static SeriesPendapatanDaerahVMMethod.ViewModel.ReportTRopdWarna GetReportTRopdWarna(int tahun, int bulan)
+            {
+                return SeriesPendapatanDaerahVMMethod.Method.GetReportTRopdWarna(tahun, bulan);
             }
         }
     }

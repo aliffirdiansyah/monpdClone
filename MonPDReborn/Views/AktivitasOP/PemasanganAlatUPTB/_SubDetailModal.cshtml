@@ -1,0 +1,45 @@
+﻿@model MonPDReborn.Models.AktivitasOP.PemasanganAlatUPTBVM.DetailOP
+
+<!-- Grid langsung dari Razor, ID tetap unik -->
+<h4 class="card-title fs-16 mb-3">
+    Kategori Pajak: @Model.PemasanganAlatDetailOP.FirstOrDefault()?.Kategori
+</h4>
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.AktivitasOP.PemasanganAlatUPTBVM.SubDetailModal>()
+        .ID("SubDetailGrid")
+        .DataSource(Model.PemasanganAlatDetailOP)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+        .Visible(true) 
+        .HighlightCaseSensitive(false)
+        .Width(250)
+        .Placeholder("Cari data...")
+        )
+        .NoDataText("Data Tidak Ditemukan")
+        .Columns(columns =>
+        {
+           @*  columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+            columns.AddFor(m => m.Kategori).Caption("Kategori"); *@
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat");
+            columns.AddFor(m => m.TanggalPemasangan).Caption("Tanggal Pemasangan").DataType(GridColumnDataType.Date).Format("dd MMMM yyyy");
+            columns.AddFor(m => m.JenisPasang).Caption("Jenis Alat");
+            columns.AddFor(m => m.StatusKunci).Caption("Status Kunci");
+            columns.AddFor(m => m.StatusOnline).Caption("Status Online");
+            columns.AddFor(m => m.TerakhirAktif).Caption("Terakhir Aktif");
+        })
+        )
+</div>
+

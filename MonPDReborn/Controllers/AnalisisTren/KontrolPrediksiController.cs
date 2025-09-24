@@ -1,5 +1,6 @@
 ﻿using DevExpress.DataAccess.Native.Web;
 using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 using MonPDReborn.Controllers.DataWP;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
@@ -28,6 +29,17 @@ namespace MonPDReborn.Controllers.AnalisisTren
             try
             {
                 ViewData["Title"] = controllerName;
+                var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+
+                if (string.IsNullOrEmpty(nama))
+                {
+                    throw new ArgumentException("Session tidak ditemukan dalam sesi.");
+                }
+
+                if (!nama.Contains("BAPENDA"))
+                {
+                    return RedirectToAction("Error", "Home", new { statusCode = 403 });
+                }
                 var model = new Models.AnalisisTren.KontrolPrediksiVM.Index();
                 return View($"{URLView}{actionName}", model);
             }

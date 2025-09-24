@@ -1,0 +1,96 @@
+﻿@model MonPDReborn.Models.MonitoringGlobalUPTB.MonitoringTahunanUPTBVM.Index
+
+@{
+    ViewData["Title"] = "Monitoring Tahunan";
+    Layout = "_Layout";
+}
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center bg-header-color">
+        <h4 class="card-title text-dark mb-0">LAPORAN TAHUNAN PAJAK DAERAH KOTA SURABAYA</h4>
+    </div>
+    <div class="card-body">
+        @using DevExtreme.AspNet.Mvc
+
+        <div class="card-body">
+            <div class="row g-3 align-items-center mb-3">
+
+                <div class="col-lg-3 col-md-4">
+                    @(Html.DevExtreme().DateBoxFor(m => m.TanggalCutOff)
+                                        .ID("date-cutoff")
+                                        .Type(DateBoxType.Date) // Menentukan tipe input adalah tanggal
+                                        .DisplayFormat("yyyy-MM-dd") // Format tanggal yang ditampilkan
+                                        .Placeholder("Pilih Tanggal Cut Off...")
+                                        .Value(DateTime.Now) // Mengatur tanggal default ke hari ini
+
+                                        // 3. Terapkan styling yang sama dengan SelectBox
+                                        .StylingMode(EditorStylingMode.Outlined)
+                                        .ElementAttr("class", "form-select") // Gunakan kelas yang sama jika perlu
+                                        )
+                </div>
+
+                <div class="col-lg-2 col-md-3">
+                    <button type="button" onclick="fnShow()" class="btn btn-success w-100">
+                        <i class="ri-search-line me-1"></i> Terapkan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center">
+    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div id="card-Show" class="card" style="display:none">
+    <div class="card-header d-flex">
+        <div class="flex-grow-1">
+            <h4 class="card-title"></h4>
+        </div>
+        <div class="flex-shrink-0"></div>
+    </div>
+    <div class="card-body">
+        <div id="Show"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            fnShow();
+        });
+        function fnShow() {
+            var tglCutOff = $("#TanggalCutOff").val();
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: {tglCutOff },
+                beforeSend: function () {
+                    $("#card-Show").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    if(response.Status === undefined){
+                        $("#card-Show").show();
+                        $("#Show").html(response);
+                    } else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+    </script>
+}

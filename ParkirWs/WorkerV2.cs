@@ -448,6 +448,7 @@ SELECT NVL(REPLACE(A.FK_NOP, '.', ''), '-') NOP,NVL(FK_NPWPD, '-') NPWPD,NAMA_OP
               CASE
               	WHEN EXTRACT(YEAR FROM TGL_TUTUP) <= 1990 THEN NULL
               	WHEN EXTRACT(YEAR FROM TGL_TUTUP) IS NULL THEN NULL
+                WHEN STATUS_OP != 0 THEN NULL
               	ELSE TGL_TUTUP
               END AS TGL_OP_TUTUP,
               NVL(TGL_BUKA,TO_DATE('01012000','DDMMYYYY')) TGL_MULAI_BUKA_OP, 0 METODE_PENJUALAN,        0 METODE_PEMBAYARAN,        0 JUMLAH_KARYAWAN,  
@@ -487,13 +488,8 @@ END AS WILAYAH_PAJAK,
 '-'  NAMA_RINCIAN,'-'  SUB_RINCIAN,'-'  NAMA_SUB_RINCIAN,'-'  KELOMPOK,
             '-'  NAMA_KELOMPOK,1  IS_TUTUP,'-'  NPWPD_NAMA, '-'  NPWPD_ALAMAT,1 TAHUN_BUKU,'0' DIKELOLA, '0' PUNGUT_TARIF
 FROM VW_SIMPADA_OP_all_mon@LIHATHPPSERVER A
-WHERE NAMA_PAJAK_DAERAH=:PAJAK AND A.FK_NOP IS NOT NULL
+WHERE fk_pajak_daerah = '07' and status_op != 0
 )
-WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
-            (   TGL_OP_TUTUP IS  NULL OR
-                 TO_CHAR(TGL_OP_TUTUP,'YYYY') >= :TAHUN OR
-                 TO_CHAR(TGL_OP_TUTUP,'YYYY') <=1990
-             )
                     ";
 
                 var result = _contMonitoringDB.Set<DbOpParkir>().FromSqlRaw(sql, new[] {
@@ -529,7 +525,15 @@ WHERE  to_char(tgl_mulai_buka_op,'YYYY') <=:TAHUN AND
                         newRow.Telp = item.Telp;
                         newRow.AlamatOpKdLurah = item.AlamatOpKdLurah;
                         newRow.AlamatOpKdCamat = item.AlamatOpKdCamat;
-                        newRow.TglOpTutup = item.TglOpTutup;
+                        newRow.TglOpTutup = null;
+                        if (item.TglOpTutup.HasValue && item.TglOpTutup.Value.Year <= 1990)
+                        {
+                            newRow.TglOpTutup = null;
+                        }
+                        else
+                        {
+                            newRow.TglOpTutup = item.TglOpTutup;
+                        }
                         newRow.TglMulaiBukaOp = item.TglMulaiBukaOp;
 
                         var kategori = GetKategoriOvveride(item.Nop);
