@@ -46,6 +46,15 @@ namespace MonPDReborn.Models.CCTVParkir
                 MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop);
             }
         }
+        public class Log
+        {
+            public List<MonitoringCCTVLog> MonitoringCCTVLogList { get; set; } = new();
+            public Log(string nop, int jenisKend)
+            {
+                MonitoringCCTVLogList = Method.GetMonitoringCCTVLog(nop, jenisKend);
+            }
+        }
+
         public class Method
         {
             public static List<MonitoringCCTV> GetMonitoringCCTVList(int uptbId)
@@ -85,7 +94,6 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
-
             public static List<MonitoringCCTVDet> GetMonitoringCCTVDetList(string nop)
             {
                 var result = new List<MonitoringCCTVDet>();
@@ -105,7 +113,6 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
-
             public static List<MonitoringCCTVKapasitas> GetMonitoringCCTVKapasitas(string nop)
             {
                 var result = new List<MonitoringCCTVKapasitas>();
@@ -140,12 +147,12 @@ namespace MonPDReborn.Models.CCTVParkir
                 }).ToList();
                 return result;
             }
-            public static List<MonitoringCCTVLog> GetMonitoringCCTVLog(string nop)
+            public static List<MonitoringCCTVLog> GetMonitoringCCTVLog(string nop, int jenisKend)
             {
                 var result = new List<MonitoringCCTVLog>();
                 var context = DBClass.GetContext();
                 result = context.TOpParkirCctvs
-                .Where(l => l.Nop == nop && l.WaktuKeluar != null)
+                .Where(l => l.Nop == nop && l.JenisKend == jenisKend)
                 .Select(l => new MonitoringCCTVLog
                 {
                     Nop = l.Nop,

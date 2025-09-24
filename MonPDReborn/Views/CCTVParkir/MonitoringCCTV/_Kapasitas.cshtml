@@ -59,12 +59,8 @@
                             .Columns(columns =>
                             {
                                 columns.AddFor(m => m.Tanggal).Caption("Tanggal").Format("dd MMM yyyy");
-                                @* columns.AddFor(m => m.KapasitasMotor).Caption("Jumlah Motor").Format("#,##0");
-                                columns.AddFor(m => m.KapasitasMobil).Caption("Jumlah Mobil").Format("#,##0");
-                                columns.AddFor(m => m.KapasitasTrukBus).Caption("Jumlah Bus").Format("#,##0");
-                                columns.AddFor(m => m.KapasitasTrukMini).Caption("Jumlah Truk Mini").Format("#,##0");
-                                columns.AddFor(m => m.KapasitasTrailer).Caption("Jumlah Trailer").Format("#,##0");
-                                columns.AddFor(m => m.EstPajak).Caption("Est Pajak").Format("#,##0"); *@
+                                columns.AddFor(m => m.Kapasitas).Caption("Jumlah Kendaraan").Format("#.##0");
+                                columns.AddFor(m => m.Tarif).Caption("Tarif").Format("#.##0");
                             })
                             )
                     </div>
