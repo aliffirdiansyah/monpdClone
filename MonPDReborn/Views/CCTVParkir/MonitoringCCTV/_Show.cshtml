@@ -12,7 +12,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">Total CCTV</h5>
-                        <h2 class="mb-0 fw-bold">0</h2>
+                        <h2 class="mb-0 fw-bold">@Model.TotalCCTV.ToString("n0")</h2>
 
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">CCTV Aktif</h5>
-                        <h2 class="mb-0 fw-bold">0</h2>
+                        <h2 class="mb-0 fw-bold">@Model.TotalAktif.ToString("n0")</h2>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="text-muted">CCTV Non Aktif</h5>
-                        <h2 class="mb-0 fw-bold">0</h2>
+                        <h2 class="mb-0 fw-bold">@Model.TotalNonAktif.ToString("n0")</h2>
 
                     </div>
                 </div>
@@ -74,7 +74,7 @@
         )
         .Columns(columns =>
         {
-            columns.AddFor(m => m.Nop).Caption("NOP").Fixed(true);
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP").Fixed(true);
             columns.AddFor(m => m.NamaOp).Caption("Nama OP");
             columns.AddFor(m => m.AlamatOp).Caption("Alamat OP");
             columns.AddFor(m => m.TglTerpasang).Caption("Tgl Terpasang").Format("dd MMM yyyy");
