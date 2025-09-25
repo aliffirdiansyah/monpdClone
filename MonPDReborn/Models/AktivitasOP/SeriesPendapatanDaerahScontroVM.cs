@@ -323,8 +323,8 @@ namespace MonPDReborn.Models.AktivitasOP
                     result.FormatScontro3.TargetLainLainPendapatanSah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.3" }).Contains(x.Kelompok)).Sum(x => x.Target);
                     result.FormatScontro3.RealisasiLainLainPendapatanSah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.3" }).Contains(x.Kelompok)).Sum(x => x.Realisasi);
 
-                    result.FormatScontro3.TargetLainLainSesuaiPerundangan = 0;
-                    result.FormatScontro3.RealisasiLainLainSesuaiPerundangan = 0;
+                    result.FormatScontro3.TargetLainLainSesuaiPerundangan = query.Where(x => x.TahunBuku == tahun && (new[] { "4.3" }).Contains(x.Kelompok)).Sum(x => x.Target);
+                    result.FormatScontro3.RealisasiLainLainSesuaiPerundangan = query.Where(x => x.TahunBuku == tahun && (new[] { "4.3" }).Contains(x.Kelompok)).Sum(x => x.Realisasi);
 
                     result.FormatScontro3.TargetPenerimaanPembiayaan = 0;
                     result.FormatScontro3.RealisasiPenerimaanPembiayaan = 0;
