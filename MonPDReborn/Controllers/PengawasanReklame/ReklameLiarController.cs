@@ -41,6 +41,7 @@ namespace MonPDReborn.Controllers.PengawasanReklame
                 return Json(response);
             }
         }
+
         public IActionResult Show()
         {
             try

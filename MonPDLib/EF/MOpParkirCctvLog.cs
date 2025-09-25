@@ -18,8 +18,9 @@ public partial class MOpParkirCctvLog
 
     [Key]
     [Column("CCTV_ID")]
-    [Precision(10)]
-    public int CctvId { get; set; }
+    [StringLength(150)]
+    [Unicode(false)]
+    public string CctvId { get; set; } = null!;
 
     [Column("TGL_AKTIF", TypeName = "DATE")]
     public DateTime TglAktif { get; set; }

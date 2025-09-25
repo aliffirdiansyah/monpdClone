@@ -485,9 +485,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1379,7 +1379,7 @@ public partial class ModelContext : DbContext
         {
             entity.HasOne(d => d.MOpParkirCctvDet).WithOne(p => p.MOpParkirCctvLog)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_LOG_DET");
+                .HasConstraintName("M_OP_PARKIR_CCTV_LOG_FK");
         });
 
         modelBuilder.Entity<MPajak>(entity =>
@@ -2151,7 +2151,7 @@ public partial class ModelContext : DbContext
 
             entity.HasOne(d => d.MOpParkirCctvDet).WithMany(p => p.TOpParkirCctvs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TRANS_DET");
+                .HasConstraintName("T_OP_PARKIR_CCTV_FK");
         });
 
         modelBuilder.Entity<TPemeriksaan>(entity =>
