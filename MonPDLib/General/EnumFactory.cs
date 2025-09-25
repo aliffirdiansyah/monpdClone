@@ -1263,7 +1263,9 @@ namespace MonPDLib.General
 
         public enum EAktif
         {
+            [Description("Tidak Aktif")]
             TidakAktif = 0,
+            [Description("Aktif")]
             Aktif = 1
         }
 

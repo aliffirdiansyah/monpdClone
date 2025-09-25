@@ -35,4 +35,7 @@ public partial class MOpParkirCctv
 
     [InverseProperty("NopNavigation")]
     public virtual ICollection<MOpParkirCctvDet> MOpParkirCctvDets { get; set; } = new List<MOpParkirCctvDet>();
+
+    [InverseProperty("NopNavigation")]
+    public virtual ICollection<MOpParkirCctvJasnitum> MOpParkirCctvJasnita { get; set; } = new List<MOpParkirCctvJasnitum>();
 }

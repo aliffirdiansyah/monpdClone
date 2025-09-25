@@ -26,6 +26,9 @@ namespace MonPDReborn.Models.CCTVParkir
         public class Show
         {
             public List<MonitoringCCTV> MonitoringCCTVList { get; set; } = new();
+            public decimal TotalCCTV => MonitoringCCTVList.Count;
+            public decimal TotalAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "AKTIF");
+            public decimal TotalNonAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "NONAKTIF" || c.StatusAktif.ToUpper() == "-");
             public Show(int uptb)
             {
                 MonitoringCCTVList = Method.GetMonitoringCCTVList(uptb);
@@ -62,38 +65,117 @@ namespace MonPDReborn.Models.CCTVParkir
             {
                 var result = new List<MonitoringCCTV>();
                 var context = DBClass.GetContext();
+                if (uptbId == 0)
+                {
+                    result = (
+                        from c in context.MOpParkirCctvs
+                        join d in context.MOpParkirCctvDets on c.Nop equals d.Nop into dets
+                        from d in dets.DefaultIfEmpty()
+                        join l in context.MOpParkirCctvLogs
+                            on new { d.Nop, d.CctvId } equals new { l.Nop, l.CctvId } into logs
+                        from l in logs.DefaultIfEmpty()
+                        group new { c, d, l } by new
+                        {
+                            c.Nop,
+                            c.NamaOp,
+                            c.AlamatOp,
+                            c.WilayahPajak,
+                            c.Vendor
+                        }
+                        into g
+                        select new
+                        {
+                            g.Key.Nop,
+                            g.Key.NamaOp,
+                            g.Key.AlamatOp,
+                            g.Key.WilayahPajak,
+                            g.Key.Vendor,
+                            Dets = g.Select(x => x.d).Where(d => d != null),
+                            Logs = g.Select(x => x.l).Where(l => l != null)
+                        }
+                    )
+                    .AsEnumerable()
+                    .Select(g =>
+                    {
+                        var tglTerpasang = g.Dets
+                            .Select(d => (DateTime?)d.TglPasang)
+                            .Min();
 
-                //result = context.MOpParkirCctvs
-                //    .Include(x => x.MOpParkirCctvDets).ThenInclude(d => d.MOpParkirCctvLog)
-                ////.Where(c => c.WilayahPajak == uptbId)
-                //.Select(c => new MonitoringCCTV
-                //{
-                //    Nop = c.Nop,
-                //    NamaOp = c.NamaOp,
-                //    AlamatOp = c.AlamatOp,
-                //    WilayahPajak = ((EnumFactory.EUPTB)c.WilayahPajak).GetDescription(),
-                //    UptbId = c.WilayahPajak,
+                        var lastLog = g.Logs
+                            .OrderByDescending(l => l.TglAktif)
+                            .FirstOrDefault();
 
-                //    TglTerpasang = c.MOpParkirCctvDets
-                //        .OrderBy(d => d.TglPasang)
-                //        .Select(d => d.TglPasang)
-                //        .FirstOrDefault(),
+                        return new MonitoringCCTV
+                        {
+                            Nop = g.Nop,
+                            NamaOp = g.NamaOp,
+                            AlamatOp = g.AlamatOp,
+                            WilayahPajak = ((EnumFactory.EUPTB)g.WilayahPajak).GetDescription(),
+                            UptbId = g.WilayahPajak,
+                            TglTerpasang = tglTerpasang,
+                            Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
+                            StatusAktif = lastLog?.Status ?? "-",
+                            TglTerakhirAktif = lastLog?.TglAktif
+                        };
+                    })
+                    .ToList();
+                }
+                else
+                {
+                    result = (
+                        from c in context.MOpParkirCctvs
+                        join d in context.MOpParkirCctvDets on c.Nop equals d.Nop into dets
+                        from d in dets.DefaultIfEmpty()
+                        join l in context.MOpParkirCctvLogs
+                            on new { d.Nop, d.CctvId } equals new { l.Nop, l.CctvId } into logs
+                        from l in logs.DefaultIfEmpty()
+                        where c.WilayahPajak == uptbId
+                        group new { c, d, l } by new
+                        {
+                            c.Nop,
+                            c.NamaOp,
+                            c.AlamatOp,
+                            c.WilayahPajak,
+                            c.Vendor
+                        }
+                        into g
+                        select new
+                        {
+                            g.Key.Nop,
+                            g.Key.NamaOp,
+                            g.Key.AlamatOp,
+                            g.Key.WilayahPajak,
+                            g.Key.Vendor,
+                            Dets = g.Select(x => x.d).Where(d => d != null),
+                            Logs = g.Select(x => x.l).Where(l => l != null)
+                        }
+                    )
+                    .AsEnumerable()
+                    .Select(g =>
+                    {
+                        var tglTerpasang = g.Dets
+                            .Select(d => (DateTime?)d.TglPasang)
+                            .Min();
 
-                //    Vendor = ((EnumFactory.EVendorParkirCCTV)c.Vendor).GetDescription(),
+                        var lastLog = g.Logs
+                            .OrderByDescending(l => l.TglAktif)
+                            .FirstOrDefault();
 
-                //    StatusAktif = c.MOpParkirCctvDets
-                //        .Select(d => d.MOpParkirCctvLog)
-                //        .OrderByDescending(l => l.TglAktif)
-                //        .Select(l => l.Status)
-                //        .FirstOrDefault() ?? "-",
-
-                //    TglTerakhirAktif = c.MOpParkirCctvDets
-                //        .Select(d => d.MOpParkirCctvLog)
-                //        .OrderByDescending(l => l.TglAktif)
-                //        .Select(l => (DateTime?)l.TglAktif)
-                //        .FirstOrDefault() ?? DateTime.Now
-                //})
-                //.ToList();
+                        return new MonitoringCCTV
+                        {
+                            Nop = g.Nop,
+                            NamaOp = g.NamaOp,
+                            AlamatOp = g.AlamatOp,
+                            WilayahPajak = ((EnumFactory.EUPTB)g.WilayahPajak).GetDescription(),
+                            UptbId = g.WilayahPajak,
+                            TglTerpasang = tglTerpasang,
+                            Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
+                            StatusAktif = lastLog?.Status ?? "-",
+                            TglTerakhirAktif = lastLog?.TglAktif
+                        };
+                    })
+                    .ToList();
+                }
 
                 return result;
             }
@@ -174,18 +256,20 @@ namespace MonPDReborn.Models.CCTVParkir
         public class MonitoringCCTV
         {
             public string Nop { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
             public string NamaOp { get; set; } = null!;
             public string AlamatOp { get; set; } = null!;
             public string WilayahPajak { get; set; } = null!;
             public int UptbId { get; set; }
             public string StatusAktif { get; set; } = null!;
-            public DateTime TglTerpasang { get; set; } = DateTime.MinValue;
+            public DateTime? TglTerpasang { get; set; } = DateTime.MinValue;
             public string Vendor { get; set; } = null!;
-            public DateTime TglTerakhirAktif { get; set; } = DateTime.MinValue;
+            public DateTime? TglTerakhirAktif { get; set; } = DateTime.MinValue;
         }
         public class MonitoringCCTVDet
         {
             public string Nop { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
             public DateTime Tgl { get; set; }
             public DateTime TglAktif { get; set; }
             public DateTime TglDown { get; set; }
@@ -216,6 +300,7 @@ namespace MonPDReborn.Models.CCTVParkir
         public class MonitoringCCTVKapasitas
         {
             public string Nop { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
             public DateTime Tanggal { get; set; }
             public int JenisKendaraan { get; set; }
             public string JenisKendaraanNama => ((EnumFactory.EJenisKendParkirCCTV)JenisKendaraan).GetDescription();
@@ -226,6 +311,7 @@ namespace MonPDReborn.Models.CCTVParkir
         public class MonitoringCCTVLog
         {
             public string Nop { get; set; } = null!;
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
             public int JenisKendaraan { get; set; }
             public string JenisKendaraanNama { get; set; } = null!;
             public DateTime WaktuIn { get; set; }

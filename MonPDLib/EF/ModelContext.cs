@@ -211,6 +211,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MOpParkirCctvDet> MOpParkirCctvDets { get; set; }
 
+    public virtual DbSet<MOpParkirCctvJasnitum> MOpParkirCctvJasnita { get; set; }
+
     public virtual DbSet<MOpParkirCctvLog> MOpParkirCctvLogs { get; set; }
 
     public virtual DbSet<MPajak> MPajaks { get; set; }
@@ -1373,6 +1375,17 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.NopNavigation).WithMany(p => p.MOpParkirCctvDets)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DET_OP");
+        });
+
+        modelBuilder.Entity<MOpParkirCctvJasnitum>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.CctvId }).HasName("M_OP_PARKIR_CCTV_JASNITA_PK");
+
+            entity.Property(e => e.CctvId).HasDefaultValueSql("0                     ");
+
+            entity.HasOne(d => d.NopNavigation).WithMany(p => p.MOpParkirCctvJasnita)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("M_OP_PARKIR_CCTV_JASNITA_R01");
         });
 
         modelBuilder.Entity<MOpParkirCctvLog>(entity =>
