@@ -62,33 +62,33 @@ namespace MonPDReborn.Models.CCTVParkir
                 var result = new List<MonitoringCCTV>();
                 var context = DBClass.GetContext();
                 result = context.MOpParkirCctvs
-                .Include(x => x.MOpParkirCctvDets)
-                    .ThenInclude(d => d.MOpParkirCctvLog)
-                .Where(x => x.WilayahPajak == uptbId)
-                .Select(x => new MonitoringCCTV
+                .Where(c => c.WilayahPajak == uptbId)
+                .Select(c => new MonitoringCCTV
                 {
-                    Nop = x.Nop,
-                    NamaOp = x.NamaOp,
-                    AlamatOp = x.AlamatOp,
-                    WilayahPajak = ((EnumFactory.EUPTB)x.WilayahPajak).GetDescription(),
-                    UptbId = x.WilayahPajak,
-                    TglTerpasang = x.MOpParkirCctvDets
-                                        .OrderBy(d => d.TglPasang)
-                                        .Select(d => d.TglPasang)
-                                        .FirstOrDefault(),
-                    Vendor = ((EnumFactory.EVendorParkirCCTV)x.Vendor).GetDescription(),
+                    Nop = c.Nop,
+                    NamaOp = c.NamaOp,
+                    AlamatOp = c.AlamatOp,
+                    WilayahPajak = ((EnumFactory.EUPTB)c.WilayahPajak).GetDescription(),
+                    UptbId = c.WilayahPajak,
 
-                    StatusAktif = x.MOpParkirCctvDets
-                                        .Where(d => d.MOpParkirCctvLog != null)
-                                        .OrderByDescending(d => d.MOpParkirCctvLog.TglAktif)
-                                        .Select(d => d.MOpParkirCctvLog.Status)
-                                        .FirstOrDefault() ?? "-",
+                    TglTerpasang = c.MOpParkirCctvDets
+                        .OrderBy(d => d.TglPasang)
+                        .Select(d => d.TglPasang)
+                        .FirstOrDefault(),
 
-                    TglTerakhirAktif = x.MOpParkirCctvDets
-                                            .Where(d => d.MOpParkirCctvLog != null)
-                                            .OrderByDescending(d => d.MOpParkirCctvLog.TglAktif)
-                                            .Select(d => d.MOpParkirCctvLog.TglAktif)
-                                            .FirstOrDefault()
+                    Vendor = ((EnumFactory.EVendorParkirCCTV)c.Vendor).GetDescription(),
+
+                    StatusAktif = c.MOpParkirCctvDets
+                        .Select(d => d.MOpParkirCctvLog)
+                        .OrderByDescending(l => l.TglAktif)
+                        .Select(l => l.Status)
+                        .FirstOrDefault() ?? "-",
+
+                    TglTerakhirAktif = c.MOpParkirCctvDets
+                        .Select(d => d.MOpParkirCctvLog)
+                        .OrderByDescending(l => l.TglAktif)
+                        .Select(l => (DateTime?)l.TglAktif)
+                        .FirstOrDefault() ?? DateTime.Now
                 })
                 .ToList();
 
