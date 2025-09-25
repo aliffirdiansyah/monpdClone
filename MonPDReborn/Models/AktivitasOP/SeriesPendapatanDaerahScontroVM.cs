@@ -690,20 +690,20 @@ namespace MonPDReborn.Models.AktivitasOP
                     result.FormatScontro7.TargetBphtb = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.01.16.01.0001", "4.1.01.16.02.0001" }).Contains(x.SubRincian)).Sum(x => x.Target);
                     result.FormatScontro7.RealisasiBphtb = query.Where(predicate: x => x.TahunBuku == tahun && (new[] { "4.1.01.16.01.0001","4.1.01.16.02.0001" }).Contains(x.SubRincian)).Sum(x => x.Realisasi);
 
-                    result.FormatScontro7.TargetRetribusiDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.2" }).Contains(x.Jenis)).Sum(x => x.Target);
-                    result.FormatScontro7.RealisasiRetribusiDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.2" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
+                    result.FormatScontro7.TargetRetribusiDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.02" }).Contains(x.Jenis)).Sum(x => x.Target);
+                    result.FormatScontro7.RealisasiRetribusiDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.02" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
 
-                    result.FormatScontro7.TargetHpkd = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.3" }).Contains(x.Jenis)).Sum(x => x.Target);
-                    result.FormatScontro7.RealisasiHpkd = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.3" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
+                    result.FormatScontro7.TargetHpkd = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.03" }).Contains(x.Jenis)).Sum(x => x.Target);
+                    result.FormatScontro7.RealisasiHpkd = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.03" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
 
-                    result.FormatScontro7.TargetLainlainPad = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.4" }).Contains(x.Jenis)).Sum(x => x.Target);
-                    result.FormatScontro7.RealisasiLainlainPad = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.4" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
+                    result.FormatScontro7.TargetLainlainPad = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.04" }).Contains(x.Jenis)).Sum(x => x.Target);
+                    result.FormatScontro7.RealisasiLainlainPad = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.04" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
 
                     result.FormatScontro7.TargetPendapatanTransfer = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2" }).Contains(x.Kelompok)).Sum(x => x.Target);
                     result.FormatScontro7.RealisasiPendapatanTransfer = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2" }).Contains(x.Kelompok)).Sum(x => x.Realisasi);
 
-                    result.FormatScontro7.TargetTransferPemerintahPusat = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.1" }).Contains(x.Jenis)).Sum(x => x.Target);
-                    result.FormatScontro7.RealisasiTransferPemerintahPusat = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.1" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
+                    result.FormatScontro7.TargetTransferPemerintahPusat = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.01" }).Contains(x.Jenis)).Sum(x => x.Target);
+                    result.FormatScontro7.RealisasiTransferPemerintahPusat = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.01" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
 
                     result.FormatScontro7.TargetDanaPerimbangan = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.01.01.01.0005", "4.2.01.01.01.0006", "4.2.01.01.01.0009", "4.2.01.01.01.0013", "4.2.01.01.02.0001", "4.2.01.07.01.0001", "4.2.01.07.01.0002", "4.2.01.07.01.0003", "4.2.01.07.01.0004", "4.2.01.07.02.0001", "4.2.01.07.02.0002", "4.2.01.07.02.0003", "4.2.01.07.02.0005", "4.2.01.07.02.0006", "4.2.01.07.02.0009", "4.2.01.08.01.0001", "4.2.01.08.02.0001", "4.2.01.08.02.0003", "4.2.01.08.02.0004", "4.2.01.08.02.0005", "4.2.01.09.01.0060", "4.2.01.09.02.0004", "4.2.01.09.02.0005", "4.2.01.09.02.0009", "4.2.01.09.02.0016", "4.2.01.09.02.0021", "4.2.01.09.02.0022", "4.2.01.09.02.0023", "4.2.01.09.02.0026", "4.2.01.09.02.0027", "4.2.01.09.02.0028", "4.2.01.09.02.0029", "4.2.01.09.02.0030", "4.2.01.09.02.0031", "4.2.01.09.02.0033", "4.2.01.09.02.0035" }).Contains(x.SubRincian)).Sum(x => x.Target);
                     result.FormatScontro7.RealisasiDanaPerimbangan = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.01.01.01.0005", "4.2.01.01.01.0006", "4.2.01.01.01.0009", "4.2.01.01.01.0013", "4.2.01.01.02.0001", "4.2.01.07.01.0001", "4.2.01.07.01.0002", "4.2.01.07.01.0003", "4.2.01.07.01.0004", "4.2.01.07.02.0001", "4.2.01.07.02.0002", "4.2.01.07.02.0003", "4.2.01.07.02.0005", "4.2.01.07.02.0006", "4.2.01.07.02.0009", "4.2.01.08.01.0001", "4.2.01.08.02.0001", "4.2.01.08.02.0003", "4.2.01.08.02.0004", "4.2.01.08.02.0005", "4.2.01.09.01.0060", "4.2.01.09.02.0004", "4.2.01.09.02.0005", "4.2.01.09.02.0009", "4.2.01.09.02.0016", "4.2.01.09.02.0021", "4.2.01.09.02.0022", "4.2.01.09.02.0023", "4.2.01.09.02.0026", "4.2.01.09.02.0027", "4.2.01.09.02.0028", "4.2.01.09.02.0029", "4.2.01.09.02.0030", "4.2.01.09.02.0031", "4.2.01.09.02.0033", "4.2.01.09.02.0035" }).Contains(x.SubRincian)).Sum(x => x.Realisasi);
@@ -723,8 +723,8 @@ namespace MonPDReborn.Models.AktivitasOP
                     result.FormatScontro7.TargetInsentifFiskal = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.01.02.01.0001","4.2.01.06.01.0001" }).Contains(x.SubRincian)).Sum(x => x.Target);
                     result.FormatScontro7.RealisasiInsentifFiskal = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.01.02.01.0001","4.2.01.06.01.0001" }).Contains(x.SubRincian)).Sum(x => x.Realisasi);
 
-                    result.FormatScontro7.TargetPendapatanTransferAntarDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.2" }).Contains(x.Jenis)).Sum(x => x.Target);
-                    result.FormatScontro7.RealisasiPendapatanTransferAntarDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.2" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
+                    result.FormatScontro7.TargetPendapatanTransferAntarDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.02" }).Contains(x.Jenis)).Sum(x => x.Target);
+                    result.FormatScontro7.RealisasiPendapatanTransferAntarDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.02" }).Contains(x.Jenis)).Sum(x => x.Realisasi);
 
                     result.FormatScontro7.TargetBagiHasilDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.02.01.01.0001","4.2.02.01.01.0002","4.2.02.01.01.0003","4.2.02.01.01.0004","4.2.02.01.01.0005" }).Contains(x.SubRincian)).Sum(x => x.Target);
                     result.FormatScontro7.RealisasiBagiHasilDaerah = query.Where(x => x.TahunBuku == tahun && (new[] { "4.2.02.01.01.0001","4.2.02.01.01.0002","4.2.02.01.01.0003","4.2.02.01.01.0004","4.2.02.01.01.0005" }).Contains(x.SubRincian)).Sum(x => x.Realisasi);
