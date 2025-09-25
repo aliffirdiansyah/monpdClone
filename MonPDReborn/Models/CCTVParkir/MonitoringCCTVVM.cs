@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DevExpress.CodeParser;
+using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.General;
 using System.Web.Mvc;
@@ -61,36 +62,38 @@ namespace MonPDReborn.Models.CCTVParkir
             {
                 var result = new List<MonitoringCCTV>();
                 var context = DBClass.GetContext();
-                result = context.MOpParkirCctvs
-                .Include(x => x.MOpParkirCctvDets)
-                    .ThenInclude(d => d.MOpParkirCctvLog)
-                .Where(x => x.WilayahPajak == uptbId)
-                .Select(x => new MonitoringCCTV
-                {
-                    Nop = x.Nop,
-                    NamaOp = x.NamaOp,
-                    AlamatOp = x.AlamatOp,
-                    WilayahPajak = ((EnumFactory.EUPTB)x.WilayahPajak).GetDescription(),
-                    UptbId = x.WilayahPajak,
-                    TglTerpasang = x.MOpParkirCctvDets
-                                        .OrderBy(d => d.TglPasang)
-                                        .Select(d => d.TglPasang)
-                                        .FirstOrDefault(),
-                    Vendor = ((EnumFactory.EVendorParkirCCTV)x.Vendor).GetDescription(),
 
-                    StatusAktif = x.MOpParkirCctvDets
-                                        .Where(d => d.MOpParkirCctvLog != null)
-                                        .OrderByDescending(d => d.MOpParkirCctvLog.TglAktif)
-                                        .Select(d => d.MOpParkirCctvLog.Status)
-                                        .FirstOrDefault() ?? "-",
+                //result = context.MOpParkirCctvs
+                //    .Include(x => x.MOpParkirCctvDets).ThenInclude(d => d.MOpParkirCctvLog)
+                ////.Where(c => c.WilayahPajak == uptbId)
+                //.Select(c => new MonitoringCCTV
+                //{
+                //    Nop = c.Nop,
+                //    NamaOp = c.NamaOp,
+                //    AlamatOp = c.AlamatOp,
+                //    WilayahPajak = ((EnumFactory.EUPTB)c.WilayahPajak).GetDescription(),
+                //    UptbId = c.WilayahPajak,
 
-                    TglTerakhirAktif = x.MOpParkirCctvDets
-                                            .Where(d => d.MOpParkirCctvLog != null)
-                                            .OrderByDescending(d => d.MOpParkirCctvLog.TglAktif)
-                                            .Select(d => d.MOpParkirCctvLog.TglAktif)
-                                            .FirstOrDefault()
-                })
-                .ToList();
+                //    TglTerpasang = c.MOpParkirCctvDets
+                //        .OrderBy(d => d.TglPasang)
+                //        .Select(d => d.TglPasang)
+                //        .FirstOrDefault(),
+
+                //    Vendor = ((EnumFactory.EVendorParkirCCTV)c.Vendor).GetDescription(),
+
+                //    StatusAktif = c.MOpParkirCctvDets
+                //        .Select(d => d.MOpParkirCctvLog)
+                //        .OrderByDescending(l => l.TglAktif)
+                //        .Select(l => l.Status)
+                //        .FirstOrDefault() ?? "-",
+
+                //    TglTerakhirAktif = c.MOpParkirCctvDets
+                //        .Select(d => d.MOpParkirCctvLog)
+                //        .OrderByDescending(l => l.TglAktif)
+                //        .Select(l => (DateTime?)l.TglAktif)
+                //        .FirstOrDefault() ?? DateTime.Now
+                //})
+                //.ToList();
 
                 return result;
             }

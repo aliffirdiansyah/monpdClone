@@ -18,8 +18,9 @@ public partial class MOpParkirCctvDet
 
     [Key]
     [Column("CCTV_ID")]
-    [Precision(10)]
-    public int CctvId { get; set; }
+    [StringLength(150)]
+    [Unicode(false)]
+    public string CctvId { get; set; } = null!;
 
     [Column("CCTV_MODE")]
     [Precision(3)]

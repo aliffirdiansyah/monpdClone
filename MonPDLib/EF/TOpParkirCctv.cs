@@ -23,8 +23,9 @@ public partial class TOpParkirCctv
 
     [Key]
     [Column("CCTV_ID")]
-    [Precision(10)]
-    public int CctvId { get; set; }
+    [StringLength(150)]
+    [Unicode(false)]
+    public string CctvId { get; set; } = null!;
 
     [Column("NAMA_OP")]
     [StringLength(200)]
