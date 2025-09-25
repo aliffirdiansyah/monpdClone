@@ -30,18 +30,20 @@
         {
             groupBox1 = new GroupBox();
             dataGridView1 = new DataGridView();
+            button1 = new Button();
+            groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(button1);
             groupBox1.Dock = DockStyle.Top;
             groupBox1.Location = new Point(0, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(800, 53);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
-            groupBox1.Text = "groupBox1";
             // 
             // dataGridView1
             // 
@@ -55,6 +57,16 @@
             dataGridView1.Size = new Size(800, 397);
             dataGridView1.TabIndex = 2;
             // 
+            // button1
+            // 
+            button1.Location = new Point(53, 21);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 0;
+            button1.Text = "Gas";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -63,8 +75,10 @@
             Controls.Add(dataGridView1);
             Controls.Add(groupBox1);
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += Form1_Load;
+            groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
@@ -73,5 +87,6 @@
 
         private GroupBox groupBox1;
         private DataGridView dataGridView1;
+        private Button button1;
     }
 }
