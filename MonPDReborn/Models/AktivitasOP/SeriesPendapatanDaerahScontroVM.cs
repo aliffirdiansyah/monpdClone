@@ -660,8 +660,8 @@ namespace MonPDReborn.Models.AktivitasOP
                     result.FormatScontro7.TargetPendapatanAsliDaerah = query.Where(x => x.TahunBuku == tahun && x.Kelompok == "4.1").Sum(x => x.Target);
                     result.FormatScontro7.RealisasiPendapatanAsliDaerah = query.Where(x => x.TahunBuku == tahun && x.Kelompok == "4.1").Sum(x => x.Realisasi);
 
-                    result.FormatScontro7.TargetPajakDaerah = query.Where(x => x.TahunBuku == tahun && x.Jenis == "4.1.1").Sum(x => x.Target);
-                    result.FormatScontro7.RealisasiPajakDaerah = query.Where(x => x.TahunBuku == tahun && x.Jenis == "4.1.1").Sum(x => x.Realisasi);
+                    result.FormatScontro7.TargetPajakDaerah = query.Where(x => x.TahunBuku == tahun && x.Jenis == "4.1.01").Sum(x => x.Target);
+                    result.FormatScontro7.RealisasiPajakDaerah = query.Where(x => x.TahunBuku == tahun && x.Jenis == "4.1.01").Sum(x => x.Realisasi);
 
                     result.FormatScontro7.TargetPajakHotel = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.01.19.03.0001" }).Contains(x.SubRincian)).Sum(x => x.Target);
                     result.FormatScontro7.RealisasiPajakHotel = query.Where(x => x.TahunBuku == tahun && (new[] { "4.1.01.19.03.0001" }).Contains(x.SubRincian)).Sum(x => x.Realisasi);
