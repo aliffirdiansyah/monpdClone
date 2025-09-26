@@ -44,10 +44,15 @@ public partial class MOpParkirCctvJasnitum
     public string IpAddress { get; set; } = null!;
 
     [Key]
-    [Column("CCTV_ID", TypeName = "NUMBER")]
-    public decimal CctvId { get; set; }
+    [Column("CCTV_ID")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string CctvId { get; set; } = null!;
 
     [ForeignKey("Nop")]
     [InverseProperty("MOpParkirCctvJasnita")]
     public virtual MOpParkirCctv NopNavigation { get; set; } = null!;
+
+    [InverseProperty("MOpParkirCctvJasnitum")]
+    public virtual ICollection<TOpParkirCctv> TOpParkirCctvs { get; set; } = new List<TOpParkirCctv>();
 }

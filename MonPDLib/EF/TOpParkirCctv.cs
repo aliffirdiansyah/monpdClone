@@ -60,4 +60,8 @@ public partial class TOpParkirCctv
     [ForeignKey("Nop, CctvId")]
     [InverseProperty("TOpParkirCctvs")]
     public virtual MOpParkirCctvDet MOpParkirCctvDet { get; set; } = null!;
+
+    [ForeignKey("Nop, CctvId")]
+    [InverseProperty("TOpParkirCctvs")]
+    public virtual MOpParkirCctvJasnitum MOpParkirCctvJasnitum { get; set; } = null!;
 }

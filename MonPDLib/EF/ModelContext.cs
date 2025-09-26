@@ -1381,7 +1381,7 @@ public partial class ModelContext : DbContext
         {
             entity.HasKey(e => new { e.Nop, e.CctvId }).HasName("M_OP_PARKIR_CCTV_JASNITA_PK");
 
-            entity.Property(e => e.CctvId).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.CctvId).HasDefaultValueSql("'0                     '");
 
             entity.HasOne(d => d.NopNavigation).WithMany(p => p.MOpParkirCctvJasnita)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -2165,6 +2165,10 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.MOpParkirCctvDet).WithMany(p => p.TOpParkirCctvs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("T_OP_PARKIR_CCTV_FK");
+
+            entity.HasOne(d => d.MOpParkirCctvJasnitum).WithMany(p => p.TOpParkirCctvs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_OP_PARKIR_CCTV_FK_JASNITA");
         });
 
         modelBuilder.Entity<TPemeriksaan>(entity =>

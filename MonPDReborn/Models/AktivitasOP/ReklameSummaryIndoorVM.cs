@@ -1,8 +1,9 @@
-﻿using MonPDLib;
+﻿using Microsoft.EntityFrameworkCore;
+using MonPDLib;
 using MonPDLib.EF;
 using System.Globalization;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 
 namespace MonPDReborn.Models.AktivitasOP
@@ -717,14 +718,25 @@ namespace MonPDReborn.Models.AktivitasOP
                         BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
                         Tahun = tahun,
                         NoFormulir = s.NoFormulir ?? "",
-                        Nama = s.Nama ?? "",
-                        AlamatOP = s.Alamatreklame ?? "",
-                        DetailLokasi = s.DetailLokasi ?? "",
-                        IsiReklame = s.IsiReklame ?? "",
-                        AkhirBerlaku = s.TglAkhirBerlaku.HasValue ? $"{s.TglAkhirBerlaku.Value:dd MMM yyyy}" : "",
-                        JumlahNilai = s.PajakPokok ?? 0,
+                        Nama = (kategori == 3)
+                            ? string.Concat(s.NamaA ?? "", " (", s.NamaPerusahaanA ?? "", ")")
+                            : string.Concat(s.Nama ?? "", " (", s.NamaPerusahaan ?? "", ")"),
+                        AlamatOP = (kategori == 3) ? (s.AlamatreklameA ?? string.Empty) : (s.Alamatreklame ?? string.Empty),
+                        IsiReklame = (kategori == 3) ? (s.IsiReklameA ?? string.Empty) : (s.IsiReklame ?? string.Empty),
+                        DetailLokasi = (kategori == 3) ? (s.DetailLokasiA ?? string.Empty) : (s.DetailLokasi ?? string.Empty),
+                        AkhirBerlaku = (kategori == 3 && s.TglAkhirBerlakuA.HasValue)
+                            ? $"{s.TglAkhirBerlakuA.Value:dd MMM yyyy} (TEGURAN)"
+                            : (s.TglAkhirBerlaku.HasValue
+                                ? $"{s.TglAkhirBerlaku.Value:dd MMM yyyy} (TEGURAN)"
+                                : string.Empty),
+                        MasaTahunPajak = (kategori == 3 && s.TglMulaiBerlakuA.HasValue && s.TglAkhirBerlakuA.HasValue)
+                            ? $"{s.TahunA} ({s.TglMulaiBerlakuA.Value:dd MMM yyyy} - {s.TglAkhirBerlakuA.Value:dd MMM yyyy})"
+                            : (s.TglMulaiBerlaku.HasValue && s.TglAkhirBerlaku.HasValue
+                                ? $"{s.Tahun} ({s.TglMulaiBerlaku.Value:dd MMM yyyy} - {s.TglAkhirBerlaku.Value:dd MMM yyyy})"
+                                : string.Empty),
+                        JumlahNilai = (kategori == 3) ? (s.PajakPokokA ?? 0) : (s.PajakPokok ?? 0),
+                        InformasiEmail = email,
                         JumlahUpaya = jumlahUpaya,
-                        InformasiEmail = email
                     };
                 }).ToList();
 
