@@ -419,4 +419,73 @@
         }
 
     </script>
+    <script>
+        function getNamadKategoriFromColumn(columnName) {
+            switch (columnName) {
+                case 'TegurJT': return 1;
+                case 'TegurPanjang': return 2;
+                case 'TegurKB': return 3;
+                default: return 0; // fallback
+            }
+        }
+
+        function kategoridText(kategori) {
+            switch (kategori) {
+                case 1: return "Belum Bayar";
+                case 2: return "Belum Perpanjangan";
+                case 3: return "Belum Bayar";
+                default: return "Kategori Tidak Diketahui";
+            }
+        }
+
+        function jenisdText(jenisId) {
+            switch (jenisId) {
+                case 1: return "Insidentil";
+                case 2: return "Permanen";
+                case 3: return "Terbatas";
+                default: return "Jenis Tidak Diketahui";
+            }
+        }
+
+        function TegurCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+
+            const namaKolom = cellInfo.column.dataField;
+            const kategori = getNamadKategoriFromColumn(namaKolom);
+            const kategoriLabel = kategoridText(kategori);
+            const jenisLabel = jenisdText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                $("#kategoriSpan").text(kategoriLabel);
+                $("#jenisSpan").text(jenisLabel);
+
+                loadDetailTegur(tahun, bulan, jenis, kategori);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function loadDetailTegur(tahun, bulan, jenis, kategori) {
+            const url = `/ReklameSummaryIndoor/DetailTeguran?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+            window.open(url, '_blank');
+        }
+
+    </script>
 }

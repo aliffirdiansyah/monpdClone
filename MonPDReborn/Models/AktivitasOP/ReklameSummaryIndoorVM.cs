@@ -74,6 +74,15 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
+        public class TeguranDetail
+        {
+            public List<DetailTeguran> Data { get; set; } = new();
+            public TeguranDetail(int tahun, int bulan, int jenis, int kategori)
+            {
+                Data = Method.GetDetailTegur(tahun, bulan, jenis, kategori);
+            }
+        }
+
         // Detail Upaya
 
         public class GetDetailUpaya
@@ -96,6 +105,7 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
 
+
         public class Method
         {
             public static List<ReklamePermanen> GetReklamePermanen(int tahun)
@@ -104,8 +114,19 @@ namespace MonPDReborn.Models.AktivitasOP
                 var context = DBClass.GetContext();
 
                 var dataPer = context.MvReklameSummaries.AsQueryable();
+                var dataUpaya = context.DbMonReklameUpayas.AsQueryable();
+
                 for (int i = 1; i <= 12; i++)
                 {
+                    var bulan = i;
+
+                    // join summary dengan upaya
+                    var joinData = from s in dataPer
+                                   join u in dataUpaya on s.NoFormulir equals u.NoFormulir into g
+                                   from u in g.DefaultIfEmpty() // left join
+                                   where s.Tahun == tahun && s.Bulan == bulan
+                                   select new { s, u };
+
                     var currentDate = new DateTime(tahun, i, 1);
                     ret.Add(new ReklamePermanen()
                     {
@@ -114,38 +135,41 @@ namespace MonPDReborn.Models.AktivitasOP
                         Tahun = tahun,
                         Jenis = 2, // Jenis 3 untuk Terbatas
 
-                        SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i  && x.NoFormulir != null && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Count(),
-                        NilaiJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.PajakPokok) ?? 0,
+                        SKPDJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i  && x.s.NoFormulir != null).Count(),
+                        NilaiJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null).Sum(x => x.s.PajakPokok) ?? 0,
 
-                        JmlBantipJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.Bantip) ?? 0,
-                        JmlSilangJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.Silang) ?? 0,
-                        JmlBongkarJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.Bongkar) ?? 0,
+                        JmlBantipJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null).Sum(x => x.s.Bantip) ?? 0,
+                        JmlSilangJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null).Sum(x => x.s.Silang) ?? 0,
+                        JmlBongkarJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null).Sum(x => x.s.Bongkar) ?? 0,
+                        TegurJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null && x.u.Upaya == "TEGURAN").Count(),
 
-                        SKPDBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Count(),
-                        NilaiBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null && !x.s.TglBayarPokok.HasValue).Count(),
+                        NilaiBlmJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null && !x.s.TglBayarPokok.HasValue).Sum(x => x.s.PajakPokok) ?? 0,
 
-                        SKPDPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.TglBayarPokok.HasValue && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Count(),
-                        NilaiPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.TglBayarPokok.HasValue && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.PajakPokok) ?? 0,
+                        SKPDPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.TglBayarPokok.HasValue).Count(),
+                        NilaiPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.TglBayarPokok.HasValue).Sum(x => x.s.PajakPokok) ?? 0,
 
-                        SKPDBlmPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.IsPerpanjangan == 0 && x.Tahun == tahun && x.Bulan == i && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Count(),
-                        NilaiBlmPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.IsPerpanjangan == 0 && x.Tahun == tahun && x.Bulan == i && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.PajakPokok) ?? 0,
+                        SKPDBlmPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.IsPerpanjangan == 0 && x.s.Tahun == tahun && x.s.Bulan == i).Count(),
+                        NilaiBlmPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.IsPerpanjangan == 0 && x.s.Tahun == tahun && x.s.Bulan == i).Sum(x => x.s.PajakPokok) ?? 0,
 
-                        JmlBantipPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.IsPerpanjangan == 0 && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.Bantip) ?? 0,
-                        JmlSilangPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.IsPerpanjangan == 0 && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.Silang) ?? 0,
-                        JmlBongkarPanjang = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.IsPerpanjangan == 0 && x.LetakReklame == "DALAM RUANGAN (IN DOOR)").Sum(x => x.Bongkar) ?? 0,
+                        JmlBantipPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.IsPerpanjangan == 0).Sum(x => x.s.Bantip) ?? 0,
+                        JmlSilangPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.IsPerpanjangan == 0).Sum(x => x.s.Silang) ?? 0,
+                        JmlBongkarPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.IsPerpanjangan == 0).Sum(x => x.s.Bongkar) ?? 0,
+                        TegurPanjang = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.IsPerpanjangan == 0 && x.u.Upaya == "TEGURAN").Count(),
 
-                        SKPDKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Count(),
-                        NilaiKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Sum(x => x.PajakPokok) ?? 0,
+                        SKPDKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i).Count(),
+                        NilaiKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i).Sum(x => x.s.PajakPokok) ?? 0,
 
-                        SKPDPanjangKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.TglBayarPokokA.HasValue && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Count(),
-                        NilaiPanjangKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.TglBayarPokokA.HasValue && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Sum(x => x.PajakPokokA) ?? 0,
+                        SKPDPanjangKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i && x.s.TglBayarPokokA.HasValue).Count(),
+                        NilaiPanjangKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i && x.s.TglBayarPokokA.HasValue).Sum(x => x.s.PajakPokokA) ?? 0,
 
-                        JmlBantipKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Sum(x => x.BantipA) ?? 0,
-                        JmlSilangKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Sum(x => x.SilangA) ?? 0,
-                        JmlBongkarKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Sum(x => x.BongkarA) ?? 0,
+                        JmlBantipKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i).Sum(x => x.s.BantipA) ?? 0,
+                        JmlSilangKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i).Sum(x => x.s.SilangA) ?? 0,
+                        JmlBongkarKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i).Sum(x => x.s.BongkarA) ?? 0,
+                        TegurKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i && x.u.Upaya == "TEGURAN").Count(),
 
-                        SKPDBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue) && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Count(),
-                        NilaiBlmKB = dataPer.Where(x => x.IdFlagPermohonanA == 2 && x.TahunA == tahun && x.BulanA == i && (!x.TglBayarPokokA.HasValue) && x.LetakReklameA == "DALAM RUANGAN (IN DOOR)").Sum(x => x.PajakPokokA) ?? 0
+                        SKPDBlmKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i && (!x.s.TglBayarPokokA.HasValue)).Count(),
+                        NilaiBlmKB = joinData.Where(x => x.s.IdFlagPermohonanA == 2 && x.s.TahunA == tahun && x.s.BulanA == i && (!x.s.TglBayarPokokA.HasValue)).Sum(x => x.s.PajakPokokA) ?? 0
                     });
                 }
 
@@ -269,41 +293,35 @@ namespace MonPDReborn.Models.AktivitasOP
                 {
                     predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
                                      !string.IsNullOrEmpty(x.NoFormulir) &&
-                                     !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis 
-                                     && x.LetakReklame == "DALAM RUANGAN (IN DOOR)";  
+                                     !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis ;  
                 }
                 else if (jenis == 1 && kategori == 2)
                 {
                     predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
-                                     !string.IsNullOrEmpty(x.NoFormulirA) && x.IdFlagPermohonan == jenis
-                                     && x.LetakReklame == "DALAM RUANGAN (IN DOOR)";
+                                     !string.IsNullOrEmpty(x.NoFormulirA) && x.IdFlagPermohonan == jenis;
                 }
                 else if (jenis == 1 && kategori == 3)
                 {
                     predicate = x => x.IdFlagPermohonanA == jenis &&
                                      x.TahunA == tahun && x.BulanA == bulan &&
-                                     !x.NominalPokokBayarA.HasValue && 
-                                     x.LetakReklameA == "DALAM RUANGAN (IN DOOR)";
+                                     !x.NominalPokokBayarA.HasValue;
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 1)
                 {
                     predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
                                      !string.IsNullOrEmpty(x.NoFormulir) &&
-                                     !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis && 
-                                     x.LetakReklame == "DALAM RUANGAN (IN DOOR)";
+                                     !x.TglBayarPokok.HasValue && x.IdFlagPermohonan == jenis;
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 2)
                 {
                     predicate = x => x.Tahun == tahun && x.Bulan == bulan &&
-                                     x.IsPerpanjangan == 0 && x.IdFlagPermohonan == jenis && 
-                                     x.LetakReklame == "DALAM RUANGAN (IN DOOR)";
+                                     x.IsPerpanjangan == 0 && x.IdFlagPermohonan == jenis;
                 }
                 else if ((jenis == 2 || jenis == 3) && kategori == 3)
                 {
                     predicate = x => x.IdFlagPermohonanA == jenis &&
                                      x.TahunA == tahun && x.BulanA == bulan &&
-                                     !x.TglBayarPokokA.HasValue && 
-                                     x.LetakReklameA == "DALAM RUANGAN (IN DOOR)";
+                                     !x.TglBayarPokokA.HasValue;
                 }
 
                 var rawData = context.MvReklameSummaries
@@ -328,7 +346,18 @@ namespace MonPDReborn.Models.AktivitasOP
                     string jumlahUpaya = "0";
                     if (!string.IsNullOrEmpty(key) && upayaGrouped.TryGetValue(key, out var upayaList))
                     {
-                        jumlahUpaya = $"{upayaList.Count}x: {string.Join(", ", upayaList)}";
+                        if (upayaList.Count == 0)
+                        {
+                            jumlahUpaya = "0 (belum ada upaya)";
+                        }
+                        else
+                        {
+                            jumlahUpaya = $"{upayaList.Count}x: {string.Join(", ", upayaList)}";
+                        }
+                    }
+                    else
+                    {
+                        jumlahUpaya = "0 (tidak ada data)";
                     }
 
                     return new DetailSummary
@@ -629,6 +658,84 @@ namespace MonPDReborn.Models.AktivitasOP
             }
 
 
+            public static List<DetailTeguran> GetDetailTegur(int tahun, int bulan, int jenis, int kategori)
+            {
+                using var context = DBClass.GetContext();
+
+                // Query utama dengan join via NOP
+                var query = from s in context.MvReklameSummaries
+
+                            join u in context.DbMonReklameUpayas
+                                on s.NoFormulir.Trim().ToLower() equals u.NoFormulir.Trim().ToLower()
+                                into upayaJoin
+                            from subU in upayaJoin.DefaultIfEmpty()
+
+                            join e in context.DbMonReklameEmails
+                                on s.NoFormulir.Trim().ToLower() equals e.NoFormulir.Trim().ToLower()
+                                into emailJoin
+                            from subE in emailJoin.DefaultIfEmpty()
+
+                            where
+                                (jenis == 1 && kategori == 1 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan) ||
+                                (jenis == 1 && kategori == 2 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
+                                (jenis == 1 && kategori == 3 && s.IdFlagPermohonanA == 1 && s.TahunA == tahun && s.BulanA == bulan && s.BongkarA == 1) ||
+                                (jenis == 2 && kategori == 1 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan) ||
+                                (jenis == 2 && kategori == 2 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
+                                (jenis == 2 && kategori == 3 && s.IdFlagPermohonanA == 2 && s.TahunA == tahun && s.BulanA == bulan) ||
+                                (jenis == 3 && kategori == 1 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan) ||
+                                (jenis == 3 && kategori == 2 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
+                                (jenis == 3 && kategori == 3 && s.IdFlagPermohonanA == 3 && s.TahunA == tahun && s.BulanA == bulan)
+
+                            select new
+                            {
+                                Summary = s,
+                                Upaya = subU,
+                                Email = subE
+                            };
+
+                var data = query.AsNoTracking().ToList();
+
+                // Group per NOP agar unik
+                var grouped = data
+                    .GroupBy(x => x.Summary.NoFormulir.Trim().ToLower())
+                    .Select(g =>
+                    {
+                        var s = g.First().Summary;
+
+                        // ambil email unik
+                        var email = g
+                            .Where(x => x.Email != null)
+                            .Select(x => x.Email.Email)
+                            .Distinct()
+                            .FirstOrDefault() ?? "";
+
+                        // ambil upaya unik "TEGURAN"
+                        var upayaList = g
+                            .Where(x => x.Upaya != null && x.Upaya.Upaya.Contains("TEGURAN"))
+                            .Select(x => x.Upaya.Upaya)
+                            .Distinct()
+                            .ToList();
+
+                        string jumlahUpaya = upayaList.Any()
+                            ? $"{upayaList.Count}x: {string.Join(", ", upayaList)}"
+                            : "0";
+
+                        return new DetailTeguran
+                        {
+                            Bulan = bulan,
+                            BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                            Tahun = tahun,
+                            NoFormulir = s.NoFormulir, // tetap bisa tampilkan NoFormulir
+                            Nama = s.Nama,
+                            JumlahUpaya = jumlahUpaya,
+                            InformasiEmail = email
+                        };
+                    })
+                    .ToList();
+
+                return grouped;
+            }
+
 
 
         }
@@ -666,7 +773,9 @@ namespace MonPDReborn.Models.AktivitasOP
             public decimal NilaiPanjangKB { get; set; }
             public int SKPDBlmKB { get; set; }
             public decimal NilaiBlmKB { get; set; }
-
+            public decimal TegurJT { get; set; }
+            public decimal TegurPanjang { get; set; }
+            public decimal TegurKB { get; set; }
             public decimal JmlBantipJT { get; set; }
             public decimal JmlSilangJT { get; set; }
             public decimal JmlBongkarJT { get; set; }
@@ -795,6 +904,22 @@ namespace MonPDReborn.Models.AktivitasOP
             }
         }
         public class DetailBongkar
+        {
+            public string DetailLokasi { get; set; } = null!;
+            public string BulanNama { get; set; } = null!;
+            public int Bulan { get; set; }
+            public int Tahun { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string AkhirBerlaku { get; set; } = null!;
+            public string MasaTahunPajak { get; set; } = null!;
+            public decimal JumlahNilai { get; set; }
+            public string? InformasiEmail { get; set; }
+            public string JumlahUpaya { get; set; } = null!;
+        }
+        public class DetailTeguran
         {
             public string DetailLokasi { get; set; } = null!;
             public string BulanNama { get; set; } = null!;
