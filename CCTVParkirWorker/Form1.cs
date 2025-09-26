@@ -9,6 +9,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CCTVParkirWorker
 {
@@ -21,6 +22,7 @@ namespace CCTVParkirWorker
         public string _URL;
         public string _USER;
         public string _PASS;
+        public string _TOKEN;
         public int _INTERVAL_DAY;
 
         private Dictionary<int, CancellationTokenSource> _taskTokens = new Dictionary<int, CancellationTokenSource>();
@@ -32,7 +34,7 @@ namespace CCTVParkirWorker
         {
             dataGridView1.AllowUserToAddRows = false;
 
-            _parkirList = GetDataParkirCctv();
+            _parkirList = GetOpParkirCctv();
 
             foreach (var item in _parkirList)
             {
@@ -57,7 +59,7 @@ namespace CCTVParkirWorker
             _URL = "http://202.146.133.26/grpc";
             _USER = "bapendasby";
             _PASS = "surabaya2025!!";
-            _INTERVAL_DAY = 90;
+            _INTERVAL_DAY = 10;
 
             dataGridView1.CellClick += DataGridView1_CellClick;
             btnStartAll.Click += BtnStartAll_Click;
@@ -121,83 +123,18 @@ namespace CCTVParkirWorker
                 while (!token.IsCancellationRequested) // loop terus
                 {
                     UpdateLog(row, "Fetching...");
-                    // logic
-                    var bearer = await GenerateToken(row);
-                    using (var client = new HttpClient())
-                    {
-                        // Bearer Token Auth
-                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", bearer);
 
-                        // Headers
-                        client.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
-                        var tglBackDate = DateTime.Now.AddDays(-1 * _INTERVAL_DAY);
-                        tglBackDate = new DateTime(tglBackDate.Year, tglBackDate.Month, tglBackDate.Day, 0, 0, 0);
+                    var tglAwal = DateTime.Now.AddDays(-1 * _INTERVAL_DAY);
+                    var tglAkhir = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
 
-                        var body = new
-                        {
-                            method = "axxonsoft.bl.events.EventHistoryService.ReadEvents",
-                            data = new
-                            {
-                                range = new
-                                {
-                                    begin_time = tglBackDate.ToString("yyyyMMdd'T'HHmmss.'000'"),
-                                    end_time = DateTime.Now.ToString("yyyyMMdd'T'HHmmss.'999'")
-                                },
-                                filters = new
-                                {
-                                    filters = new[]
-                                    {
-                                        new {
-                                            type = "ET_DetectorEvent",
-                                            subjects = op.AccessPoint
-                                        }
-                            }
-                                },
-                                limit = 1000,
-                                offset = 0,
-                                descending = true
-                            }
-                        };
+                    var dataCctvParkir = await Task.Run(() => GetDataParkirCctv(row, op, tglAwal, tglAkhir, token));
+                    await InsertToDb(op, dataCctvParkir, row, token);
 
-                        var jsonBody = JsonSerializer.Serialize(body);
-                        var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                        UpdateLog(row, $"Getting Data {tglBackDate} s/d {DateTime.Now}");
-                        HttpResponseMessage response = await client.PostAsync(_URL, content);
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            UpdateLog(row, "Data Received, Processing...");
-
-                            var rawResponse = await response.Content.ReadAsStringAsync();
-                            var apiResponse = ConvertSseOutputJson(rawResponse);
-                            var res = JsonSerializer.Deserialize<EventAll.EventAllResponse>(apiResponse);
-                            if(res == null)
-                            {
-                                throw new Exception("Response dari API tidak valid");
-                            }
-
-                            await InsertToDb(op, res, row, token);
-
-                            row.Cells["LastConnected"].Value = DateTime.Now.ToString();
-                            UpdateLog(row, "Inserted");
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            UpdateLog(row,$"Token kadaluarsa, refresh token dan ulangi...");
-
-                            // Refresh token hanya sekali (di attempt pertama gagal 403)
-                            await GenerateToken(row);
-                        }
-                        else
-                        {
-                            UpdateLog(row, $"Error: {response.StatusCode}, Message: {response.Content}");
-                        }
-                    }
+                    row.Cells["LastConnected"].Value = DateTime.Now.ToString();
+                    UpdateLog(row, "Inserted");
 
                     if (token.IsCancellationRequested)
                     break;
-
 
                     var nextRun = DateTime.Now.AddMinutes(_INTERVAL_API);
                     UpdateLog(row, $"[DONE] Next Run: {nextRun:dd/MM/yyyy HH:mm:ss}");
@@ -231,78 +168,225 @@ namespace CCTVParkirWorker
                     btnCell.Value = "Start";
                 }
 
-                UpdateLog(row, "Error: " + ex.Message);
+                UpdateLog(row, $"{op.AccessPoint} Error: " + ex.Message);
 
                 return;
             }
         }
-        public async Task InsertToDb(ParkirView op, EventAll.EventAllResponse data, DataGridViewRow row, CancellationToken token)
+
+        public async Task<List<EventAll.EventAllResponse>> GetDataParkirCctv(DataGridViewRow row, ParkirView op, DateTime tglAwal, DateTime tglAkhir, CancellationToken token)
+        {
+            var result = new List<EventAll.EventAllResponse>();
+
+            using (var client = new HttpClient())
+            {
+                await GenerateToken(row);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN);
+                client.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+
+                int totalData = 0;
+                int limit = 20;
+                int offset = 0;
+                bool hasMore = true;
+                int attempt = 0;
+                const int maxRetry = 5;
+
+                while (hasMore)
+                {
+                    try
+                    {
+                        // 🔹 cek cancel sebelum request
+                        token.ThrowIfCancellationRequested();
+
+                        var resEvent = new EventAll.EventAllResponse();
+
+                        do
+                        {
+                            // 🔹 cek cancel di setiap iterasi retry
+                            token.ThrowIfCancellationRequested();
+
+                            var body = new
+                            {
+                                method = "axxonsoft.bl.events.EventHistoryService.ReadEvents",
+                                data = new
+                                {
+                                    range = new
+                                    {
+                                        begin_time = tglAwal.ToString("yyyyMMdd'T'HHmmss.'000'"),
+                                        end_time = tglAkhir.ToString("yyyyMMdd'T'HHmmss.'999'")
+                                    },
+                                    filters = new
+                                    {
+                                        filters = new[]
+                                        {
+                                new {
+                                    type = "ET_DetectorEvent",
+                                    subjects = op.AccessPoint
+                                }
+                            }
+                                    },
+                                    limit = limit,
+                                    offset = offset,
+                                    descending = true
+                                }
+                            };
+
+                            var jsonBody = JsonSerializer.Serialize(body);
+                            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                            //UpdateLog(row, $"Getting Data {tglAwal} s/d {tglAkhir}");
+
+                            // 🔹 kirim request dengan token
+                            HttpResponseMessage response = await client.PostAsync(_URL, content, token);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                UpdateLog(row, "Data Received, Processing...");
+
+                                var rawResponse = await response.Content.ReadAsStringAsync(token);
+                                var apiResponse = ConvertSseOutputJson(rawResponse);
+                                var res = JsonSerializer.Deserialize<EventAll.EventAllResponse>(apiResponse);
+
+                                if (res == null)
+                                    throw new Exception("Response dari API tidak valid");
+
+                                resEvent = res;
+                                break;
+                            }
+                            else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                            {
+                                UpdateLog(row, "Token kadaluarsa, refresh token dan ulangi...");
+                                await GenerateToken(row);
+                            }
+                            else
+                            {
+                                UpdateLog(row, $"Error: {response.StatusCode}");
+                            }
+
+                            attempt++;
+                            if (attempt >= maxRetry)
+                            {
+                                UpdateLog(row, $"Gagal setelah {maxRetry} percobaan pada offset {offset}");
+                                break;
+                            }
+
+                        } while (attempt < maxRetry);
+
+                        // 🔹 setelah selesai mencoba, cek cancel
+                        token.ThrowIfCancellationRequested();
+
+                        if (resEvent == null || resEvent.Items == null || resEvent.Items.Count == 0)
+                        {
+                            UpdateLog(row, $"Tidak ada data event di offset {offset}");
+                            hasMore = false;
+                        }
+                        else
+                        {
+                            UpdateLog(row, $"Dapat {resEvent.Items.Count} event/items di offset {offset}");
+                            result.Add(resEvent);
+
+                            totalData += resEvent.Items.Count;
+                            if (resEvent.Items.Count < limit)
+                            {
+                                UpdateLog(row, $"Data sudah habis, total {totalData} event.");
+                                hasMore = false;
+                            }
+                            else
+                            {
+                                offset += limit;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        UpdateLog(row, $"Error: {ex.Message}");
+                    }
+                }
+            }
+
+            return result;
+        }
+        public async Task InsertToDb(ParkirView op, List<EventAll.EventAllResponse> dataList, DataGridViewRow row, CancellationToken token)
         {
             await using var context = DBClass.GetContext();
 
-            int index = 0;
-            var jmlData = data.Items.Count;
-            foreach (var item in data.Items)
+            var toInsert = new List<TOpParkirCctv>();
+
+            UpdateLog(row, $"Processing...");
+
+            foreach (var data in dataList)
             {
-                if (item.Body?.Details?.Count > 0)
+                int index = 0;
+                int jmlData = data.Items.Count;
+
+                foreach (var item in data.Items)
                 {
-
-                    UpdateLog(row, $"Total Data {jmlData}");
-
-                    foreach (var detail in item.Body.Details)
+                    if (item.Body?.Details?.Count > 0)
                     {
-                        token.ThrowIfCancellationRequested();
-
-                        var ar = detail.AutoRecognitionResult;
-                        if (ar == null)
-                            continue;
-
-                        var id = item.Body.Guid;
-
-                        // gunakan AnyAsync
-                        bool dataExist = await context.TOpParkirCctvs
-                            .AnyAsync(x => x.Id == id, token);
-
-                        if (!dataExist)
+                        foreach (var detail in item.Body.Details)
                         {
-                            var insert = new TOpParkirCctv
-                            {
-                                Id = id,
-                                Nop = op.NOP,
-                                CctvId = op.CCTVId,
-                                NamaOp = op.Nama,
-                                AlamatOp = op.Alamat,
-                                WilayahPajak = op.Uptb,
-                                WaktuMasuk = DateTime.ParseExact(
-                                    ar.TimeBegin,
-                                    "yyyyMMdd'T'HHmmss.ffffff",
-                                    System.Globalization.CultureInfo.InvariantCulture
-                                ),
-                                JenisKend = (int)GetJenisKendaraan(ar.VehicleClass),
-                                PlatNo = ar.Hypotheses != null && ar.Hypotheses.Count > 0
-                                    ? ar.Hypotheses[0].PlateFull
-                                    : "",
-                                WaktuKeluar = DateTime.ParseExact(
-                                    ar.TimeBegin,
-                                    "yyyyMMdd'T'HHmmss.ffffff",
-                                    System.Globalization.CultureInfo.InvariantCulture
-                                ),
-                                Direction = (int)GetDirection(ar.Direction),
-                                Log = $"ID:{id},DIRECTION:{ar.Direction},VEHICLE_CLASS:{ar.VehicleClass ?? "-"},VEHICLE_BRAND:{ar.VehicleBrand ?? "-"},VEHICLE_MODEL:{ar.VehicleModel ?? "-"}"
-                            };
+                            token.ThrowIfCancellationRequested();
 
-                            // tambahkan async
-                            await context.TOpParkirCctvs.AddAsync(insert, token);
-                            await context.SaveChangesAsync(token);
+                            var ar = detail.AutoRecognitionResult;
+                            if (ar == null)
+                                continue;
+
+                            var id = item.Body.Guid;
+
+                            bool dataExist = await context.TOpParkirCctvs
+                                .AnyAsync(x => x.Id == id, token);
+
+                            if (!dataExist)
+                            {
+                                var insert = new TOpParkirCctv
+                                {
+                                    Id = id,
+                                    Nop = op.NOP,
+                                    CctvId = op.CCTVId,
+                                    NamaOp = op.Nama,
+                                    AlamatOp = op.Alamat,
+                                    WilayahPajak = op.Uptb,
+                                    WaktuMasuk = ParseFlexibleDate(ar.TimeBegin),
+                                    WaktuKeluar = ParseFlexibleDate(ar.TimeBegin),
+                                    JenisKend = (int)GetJenisKendaraan(ar.VehicleClass),
+                                    PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "",
+                                    Direction = (int)GetDirection(ar.Direction),
+                                    Log = $"ID:{id},DIR:{ar.Direction},CLASS:{ar.VehicleClass ?? "-"},BRAND:{ar.VehicleBrand ?? "-"},MODEL:{ar.VehicleModel ?? "-"}"
+                                };
+
+                                toInsert.Add(insert);
+                            }
                         }
                     }
-                }
 
-                index++;
-                double persen = ((double)index / jmlData) * 100;
-                UpdateLog(row, $"({persen:F2}%)");
+                    index++;
+                    double persen = ((double)index / jmlData) * 100;
+                    UpdateLog(row, $"({persen:F2}%)");
+                }
+            }
+
+            // simpan semua sekaligus
+            if (toInsert.Count > 0)
+            {
+                toInsert = toInsert
+                   .GroupBy(x => new { x.Id, x.Nop, x.CctvId })
+                   .Select(g => g.First())
+                   .ToList();
+
+                
+                UpdateLog(row, $"Inserting {toInsert.Count} record(s).");
+                await context.TOpParkirCctvs.AddRangeAsync(toInsert, token);
+                await context.SaveChangesAsync(token);
+                UpdateLog(row, $"Inserted {toInsert.Count} record(s).");
+            }
+            else
+            {
+                UpdateLog(row, "No new data to insert.");
             }
         }
+
         private async void BtnStartAll_Click(object sender, EventArgs e)
         {
             // Disable tombol start, enable tombol stop
@@ -369,7 +453,7 @@ namespace CCTVParkirWorker
 
             row.Cells["Log"].Value = message; // ✅ replace, bukan append
         }
-        public List<ParkirView> GetDataParkirCctv()
+        public List<ParkirView> GetOpParkirCctv()
         {
             var result = new List<ParkirView>();
 
@@ -407,7 +491,7 @@ namespace CCTVParkirWorker
         {
             return _parkirList.FirstOrDefault(q => q.Id == id);
         }
-        private async Task<string> GenerateToken(DataGridViewRow row)
+        private async Task GenerateToken(DataGridViewRow row)
         {
             using (var client = new HttpClient())
             {
@@ -439,7 +523,7 @@ namespace CCTVParkirWorker
                     string result = await response.Content.ReadAsStringAsync();
                     var obj = JsonObject.Parse(result);
 
-                    return obj?["token_value"]?.ToString() ?? ""; // ambil token
+                    _TOKEN = obj?["token_value"]?.ToString() ?? ""; // ambil token
                 }
                 else
                 {
@@ -491,6 +575,44 @@ namespace CCTVParkirWorker
                 default:
                     return EnumFactory.CctvParkirDirection.Unknown;
             }
+        }
+        public static DateTime ParseFlexibleDate(string timeStr)
+        {
+            if (string.IsNullOrWhiteSpace(timeStr))
+            {
+                throw new ArgumentException("timeStr tidak boleh kosong");
+            }
+
+            var formats = new[]
+            {
+        "yyyyMMdd'T'HHmmss.ffffff",  // 20250924T083638.867000
+        "yyyyMMdd'T'HHmmss.fff",     // 20250924T083638.867
+        "yyyyMMdd'T'HHmmss",         // ✅ 20250925T073926 (kasus kamu)
+        "yyyy-MM-dd'T'HH:mm:ss.ffffff",
+        "yyyy-MM-dd'T'HH:mm:ss.fff",
+        "yyyy-MM-dd'T'HH:mm:ss",
+        "yyyyMMddHHmmss",            // 20250925073926 (tanpa 'T')
+        "yyyy-MM-dd HH:mm:ss",       // 2025-09-25 07:39:26
+        "yyyy/MM/dd HH:mm:ss",       // 2025/09/25 07:39:26
+        "yyyyMMdd'T'HHmmssZ",        // 20250925T073926Z
+        "yyyy-MM-dd'T'HH:mm:ssZ",    // 2025-09-25T07:39:26Z
+        "yyyy-MM-dd'T'HH:mm:ssK"     // 2025-09-25T07:39:26+07:00
+    };
+
+            foreach (var fmt in formats)
+            {
+                if (DateTime.TryParseExact(
+                    timeStr,
+                    fmt,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.AdjustToUniversal,
+                    out DateTime result))
+                {
+                    return result;
+                }
+            }
+
+            throw new Exception(timeStr + " tidak sesuai format yang dikenali.");
         }
     }
 }
