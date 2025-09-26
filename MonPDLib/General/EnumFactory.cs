@@ -802,6 +802,15 @@ namespace MonPDLib.General
             [Description("Truck")]
             Truck = 3,
         }
+        public enum CctvParkirDirection
+        {
+            [Description("Unknown")]
+            Unknown = 0,
+            [Description("Incoming")]
+            Incoming = 1,
+            [Description("Outgoing")]
+            Outgoing = 2
+        }
         public enum EUPTB
         {
             [Description("Semua UPTB")]

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
             Id = new DataGridViewTextBoxColumn();
             Nop = new DataGridViewTextBoxColumn();
@@ -41,8 +41,10 @@
             LastConnected = new DataGridViewTextBoxColumn();
             Action = new DataGridViewButtonColumn();
             Status = new DataGridViewTextBoxColumn();
-            ErrMessage = new DataGridViewTextBoxColumn();
+            Error = new DataGridViewTextBoxColumn();
             Log = new DataGridViewTextBoxColumn();
+            btnStartAll = new Button();
+            btnStopAll = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -51,10 +53,10 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Id, Nop, Nama, Alamat, Uptb, CctvId, AccessPoint, Mode, LastConnected, Action, Status, ErrMessage, Log });
-            dataGridView1.Location = new Point(12, 12);
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Id, Nop, Nama, Alamat, Uptb, CctvId, AccessPoint, Mode, LastConnected, Action, Status, Error, Log });
+            dataGridView1.Location = new Point(12, 77);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(776, 426);
+            dataGridView1.Size = new Size(776, 361);
             dataGridView1.TabIndex = 0;
             // 
             // Id
@@ -111,26 +113,46 @@
             // 
             // Status
             // 
-            dataGridViewCellStyle1.BackColor = Color.Red;
-            Status.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = Color.Red;
+            Status.DefaultCellStyle = dataGridViewCellStyle2;
             Status.HeaderText = "Status";
             Status.Name = "Status";
             // 
-            // ErrMessage
+            // Error
             // 
-            ErrMessage.HeaderText = "Err Message";
-            ErrMessage.Name = "ErrMessage";
+            Error.HeaderText = "Err Message";
+            Error.Name = "Error";
             // 
             // Log
             // 
             Log.HeaderText = "Log";
             Log.Name = "Log";
             // 
+            // btnStartAll
+            // 
+            btnStartAll.Location = new Point(32, 28);
+            btnStartAll.Name = "btnStartAll";
+            btnStartAll.Size = new Size(90, 23);
+            btnStartAll.TabIndex = 1;
+            btnStartAll.Text = "Start All";
+            btnStartAll.UseVisualStyleBackColor = true;
+            // 
+            // btnStopAll
+            // 
+            btnStopAll.Location = new Point(682, 28);
+            btnStopAll.Name = "btnStopAll";
+            btnStopAll.Size = new Size(90, 23);
+            btnStopAll.TabIndex = 2;
+            btnStopAll.Text = "Stop All";
+            btnStopAll.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnStopAll);
+            Controls.Add(btnStartAll);
             Controls.Add(dataGridView1);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
@@ -154,7 +176,9 @@
         private DataGridViewTextBoxColumn LastConnected;
         private DataGridViewButtonColumn Action;
         private DataGridViewTextBoxColumn Status;
-        private DataGridViewTextBoxColumn ErrMessage;
+        private DataGridViewTextBoxColumn Error;
         private DataGridViewTextBoxColumn Log;
+        private Button btnStartAll;
+        private Button btnStopAll;
     }
 }
