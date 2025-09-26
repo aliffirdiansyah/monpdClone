@@ -106,7 +106,7 @@ SELECT TAHUN_BUKU, BULAN , PAJAK_ID,KATEGORI_ID,KATEGORI_NAMA,TGL_MULAI_BUKA_OP 
                         -1
            END STATUS_BAYAR
 FROM MV_DBE_PBJT
-) A WHERE STATUS_BAYAR != -1     </Sql>
+) A WHERE STATUS_BAYAR != -1</Sql>
       </Query>
       <ConnectionOptions CloseConnection="true" />
     </SqlDataSource>
@@ -146,6 +146,35 @@ FROM MV_DBE_PBJT
         <Dimension DefaultId="DataItem2" />
         <Dimension DefaultId="DataItem3" />
       </HiddenDimensions>
+      <FormatRules>
+        <GridItemFormatRule Name="Format Rule 1" DataItem="DataItem8" DataItemApplyTo="DataItem8">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorRedFlag" />
+            <Value1 Type="System.Decimal" Value="0" />
+            <Value2 Type="System.Decimal" Value="0.5" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+        <GridItemFormatRule Name="Format Rule 2" DataItem="DataItem8" DataItemApplyTo="DataItem8">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorCircledYellowExclamation" />
+            <Value1 Type="System.Decimal" Value="0.511" />
+            <Value2 Type="System.Decimal" Value="0.9" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+        <GridItemFormatRule Name="Format Rule 3" DataItem="DataItem8" DataItemApplyTo="DataItem8">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="ShapeLightRedCircle" />
+            <Value1 Type="System.Decimal" Value="0.901" />
+            <Value2 Type="System.Decimal" Value="0.999" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+        <GridItemFormatRule Name="Format Rule 4" DataItem="DataItem8" DataItemApplyTo="DataItem8">
+          <FormatConditionValue Condition="GreaterOrEqual">
+            <IconSettings IconType="IndicatorCircledGreenCheck" />
+            <Value1 Type="System.Decimal" Value="1" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+      </FormatRules>
       <GridColumns>
         <GridDimensionColumn Name="TAHUN">
           <Dimension DefaultId="DataItem1" />
@@ -205,6 +234,35 @@ FROM MV_DBE_PBJT
         <Dimension DefaultId="DataItem8" />
         <Dimension DefaultId="DataItem9" />
       </HiddenDimensions>
+      <FormatRules>
+        <GridItemFormatRule Name="Format Rule 1" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorRedFlag" />
+            <Value1 Type="System.Decimal" Value="0" />
+            <Value2 Type="System.Decimal" Value="0.5" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+        <GridItemFormatRule Name="Format Rule 2" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="IndicatorCircledYellowExclamation" />
+            <Value1 Type="System.Decimal" Value="0.511" />
+            <Value2 Type="System.Decimal" Value="0.9" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+        <GridItemFormatRule Name="Format Rule 3" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="Between">
+            <IconSettings IconType="ShapeLightRedCircle" />
+            <Value1 Type="System.Decimal" Value="0.901" />
+            <Value2 Type="System.Decimal" Value="0.999" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+        <GridItemFormatRule Name="Format Rule 4" DataItem="DataItem4" DataItemApplyTo="DataItem4">
+          <FormatConditionValue Condition="GreaterOrEqual">
+            <IconSettings IconType="IndicatorCircledGreenCheck" />
+            <Value1 Type="System.Decimal" Value="1" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+      </FormatRules>
       <GridColumns>
         <GridDimensionColumn>
           <Dimension DefaultId="DataItem0" />
@@ -323,8 +381,8 @@ FROM MV_DBE_PBJT
     <LayoutGroup>
       <LayoutGroup Orientation="Vertical" Weight="1.0629645824223874">
         <LayoutGroup>
-          <LayoutItem DashboardItem="gridDashboardItem1" Weight="1.074587215532385" />
-          <LayoutItem DashboardItem="gridDashboardItem2" Weight="1.1439214999876919" />
+          <LayoutItem DashboardItem="gridDashboardItem1" Weight="1.109537971177787" />
+          <LayoutItem DashboardItem="gridDashboardItem2" Weight="1.1089707443422898" />
           <LayoutItem DashboardItem="gridDashboardItem4" />
         </LayoutGroup>
         <LayoutItem DashboardItem="gridDashboardItem3" Weight="0.9370354175776126" />

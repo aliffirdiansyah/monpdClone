@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Dashboard>
-  <Title Text="PBJT Target dan Realisasi" />
+  <Title Text="PBB Wilayah" />
   <DataSources>
     <SqlDataSource Name="Oracle Data Source" ComponentName="sqlDataSource1">
       <Connection Name="connection" ProviderKey="Oracle">
@@ -14,621 +14,397 @@
           <Parameter Name="password" Value="monpd2025" />
         </Parameters>
       </Connection>
-      <Query Type="CustomSqlQuery" Name="PBJTTdanR">
-        <Sql>SELECT A.*,B.JUMLAH_OP
-FROM (                        
-SELECT A.TAHUN_BUKU,A.PAJAK_ID,NAMA,TARGET,REALISASI,(realisasi / NULLIF(target, 0)) AS PENCAPAIAN
-FROM (
-                SELECT TAHUN_BUKU,B.ID PAJAK_ID,B.NAMA , SUM(TARGET) TARGET
-                FROM DB_AKUN_TARGET A
-                JOIN M_PAJAK B ON A.PAJAK_ID=B.ID
-                WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5 AND B.ID IN (1,2,3,4,5,6)
-                GROUP BY TAHUN_BUKU,B.ID ,B.NAMA
-) A
-LEFT JOIN (
-SELECT TAHUN_BUKU,3 PAJAK_ID,SUM(NOMINAL_POKOK_BAYAR) REALISASI 
-FROM DB_MON_HOTEL
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU
-UNION ALL
-SELECT TAHUN_BUKU,1 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_RESTO
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU
-UNION ALL
-SELECT TAHUN_BUKU,5 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_HIBURAN
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU
-UNION ALL
-SELECT TAHUN_BUKU,4 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_PARKIR
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU
-UNION ALL
-SELECT TAHUN_BUKU,2 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_PPJ
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU
-UNION ALL
-SELECT TAHUN_BUKU, 6 PAJAK_ID,
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_ABT
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU
-)  B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.PAJAK_ID=B.PAJAK_ID
-) A
-JOIN (            
-            SELECT TAHUN_BUKU,3 ID, COUNT(1) JUMLAH_OP
-            FROM DB_OP_HOTEL
-            WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-            GROUP BY TAHUN_BUKU
-            UNION ALL
-            SELECT TAHUN_BUKU,1 ID,COUNT(1) JUMLAH_OP
-            FROM DB_OP_RESTO
-            WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5 AND PAJAK_NAMA != 'MAMIN'
-            GROUP BY TAHUN_BUKU
-            UNION ALL
-            SELECT TAHUN_BUKU,5 ID,COUNT(1) JUMLAH_OP
-            FROM DB_OP_HIBURAN
-            WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-            GROUP BY TAHUN_BUKU
-            UNION ALL
-            SELECT TAHUN_BUKU,4 ID,COUNT(1) JUMLAH_OP
-            FROM DB_OP_PARKIR
-            WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-            GROUP BY TAHUN_BUKU
-            UNION ALL
-            SELECT TAHUN_BUKU,2 ID,COUNT(1) JUMLAH_OP
-            FROM DB_OP_LISTRIK
-            WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-            GROUP BY TAHUN_BUKU            
-            UNION ALL
-            SELECT TAHUN_BUKU,6 ID,COUNT(1) JUMLAH_OP
-            FROM DB_OP_ABT
-            WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-            GROUP BY TAHUN_BUKU
-        ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.PAJAK_ID=B.ID</Sql>
-      </Query>
-      <Query Type="CustomSqlQuery" Name="TahunBukuList">
-        <Sql>SELECT TO_CHAR(SYSDATE,'YYYY') +1  - LEVEL AS tahun
+      <Query Type="CustomSqlQuery" Name="TahunList">
+        <Sql>SELECT  EXTRACT (YEAR FROM SYSDATE) +1  - LEVEL AS tahun
 FROM dual
 CONNECT BY LEVEL &lt;= 6</Sql>
       </Query>
-      <Query Type="CustomSqlQuery" Name="DetailBulan">
-        <Sql>SELECT A.TAHUN_BUKU,A.BULAN,A.PAJAK_ID,JML_OP,TARGET,REALISASI,PENCAPAIAN
+      <Query Type="CustomSqlQuery" Name="AllinOne">
+        <Sql>SELECT A.*,B.TARGET TARGET_ALL
 FROM (
-SELECT A.TAHUN_BUKU,A.BULAN, A.PAJAK_ID,NAMA,TARGET,REALISASI,(realisasi / NULLIF(target, 0)) AS PENCAPAIAN
-FROM (
-                SELECT TAHUN_BUKU,BULAN,B.ID PAJAK_ID,B.NAMA , SUM(TARGET) TARGET
-                FROM DB_AKUN_TARGET_BULAN A
-                JOIN M_PAJAK B ON A.PAJAK_ID=B.ID
-                WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5 AND B.ID IN (1,2,3,4,5,6)
-                GROUP BY TAHUN_BUKU,BULAN,B.ID ,B.NAMA
+SELECT A.TAHUN_BUKU,A.BULAN,A.UPTB,A.TARGET,B.SPPT_MURNI,B.KETETAPAN_MURNI,B.SPPT_TUNGGAKAN,B.KETETAPAN_TUNGGAKAN,
+            REALISASI_MURNI,REALISASI_TUNGGAKAN,REALISASI_SPPT_MURNI,REALISASI_SPPT_TUNGGAKAN,
+            (REALISASI_MURNI / NULLIF(TARGET, 0)) AS RASIO_MURNI,
+            (REALISASI_TUNGGAKAN / NULLIF(TARGET, 0)) AS RASIO_TUNGGAKAN,
+            ( (NVL(REALISASI_MURNI,0)+NVL(REALISASI_TUNGGAKAN,0)) / NULLIF(TARGET, 0)) AS PENCAPAIAN
+FROM(
+SELECT TAHUN_BUKU,BULAN,UPTB,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_UPTB_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU,BULAN,UPTB
 ) A
 LEFT JOIN (
-SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN,3 PAJAK_ID,SUM(NOMINAL_POKOK_BAYAR) REALISASI 
-FROM DB_MON_HOTEL
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
-UNION ALL
-SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),1 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_RESTO
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
-UNION ALL
-SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),5 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_HIBURAN
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
-UNION ALL
-SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),4 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_PARKIR
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
-UNION ALL
-SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK),2 PAJAK_ID, 
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_PPJ
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
-UNION ALL
-SELECT TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK), 6 PAJAK_ID,
-            SUM(NOMINAL_POKOK_BAYAR) REALISASI
-FROM DB_MON_ABT
-WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-GROUP BY TAHUN_BUKU,EXTRACT(MONTH FROM TGL_BAYAR_POKOK)
-)  B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.PAJAK_ID=B.PAJAK_ID AND A.BULAN=B.BULAN            
+SELECT TAHUN_BUKU,UPTB,1 BULAN,
+            SUM(DECODE(JENIS_BUKU,0,1,0)) SPPT_MURNI,
+            SUM(DECODE(JENIS_BUKU,0,KETETAPAN,0)) KETETAPAN_MURNI,
+            SUM(DECODE(JENIS_BUKU,1,1,0)) SPPT_TUNGGAKAN,
+            SUM(DECODE(JENIS_BUKU,1,KETETAPAN,0)) KETETAPAN_TUNGGAKAN
+FROM MV_DBE_MON_PBB
+GROUP BY TAHUN_BUKU,UPTB
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.BULAN=B.BULAN AND A.UPTB=B.UPTB
+LEFT JOIN
+(
+SELECT TAHUN_BUKU,UPTB,EXTRACT (MONTH FROM TGL_BAYAR) BULAN_BAYAR,
+           SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_TUNGGAKAN,     
+              SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_MURNI,
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_TUNGGAKAN     
+FROM MV_DBE_MON_PBB A
+WHERE TAHUN_BUKU_BAYAR IS NOT NULL 
+GROUP BY TAHUN_BUKU,UPTB,EXTRACT (MONTH FROM TGL_BAYAR)
+) C ON A.TAHUN_BUKU=C.TAHUN_BUKU AND A.BULAN=C.BULAN_BAYAR AND A.UPTB=C.UPTB
 ) A
-JOIN (
-            SELECT TAHUN_BUKU,BULAN,PAJAK_ID,SUM(STATUS) JML_OP
-FROM (
-SELECT A.*,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT 3 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_HOTEL
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-)                                
-GROUP BY TAHUN_BUKU,BULAN,PAJAK_ID
-UNION ALL
-SELECT TAHUN_BUKU,BULAN,PAJAK_ID,SUM(STATUS) JML_OP
-FROM (
-SELECT A.*,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT 1 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_RESTO
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6            AND PAJAK_NAMA!='MAMIN'                   
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-)                                
-GROUP BY TAHUN_BUKU,BULAN,PAJAK_ID
-UNION ALL
-SELECT TAHUN_BUKU,BULAN,PAJAK_ID,SUM(STATUS) JML_OP
-FROM (
-SELECT A.*,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT 2 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_LISTRIK
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-)                                
-GROUP BY TAHUN_BUKU,BULAN,PAJAK_ID
-UNION ALL
-SELECT TAHUN_BUKU,BULAN,PAJAK_ID,SUM(STATUS) JML_OP
-FROM (
-SELECT A.*,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT 4 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_PARKIR
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-)                                
-GROUP BY TAHUN_BUKU,BULAN,PAJAK_ID
-UNION ALL
-SELECT TAHUN_BUKU,BULAN,PAJAK_ID,SUM(STATUS) JML_OP
-FROM (
-SELECT A.*,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT 5 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_HIBURAN
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-)                                
-GROUP BY TAHUN_BUKU,BULAN,PAJAK_ID
-UNION ALL
-SELECT TAHUN_BUKU,BULAN,PAJAK_ID,SUM(STATUS) JML_OP
-FROM (
-SELECT A.*,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT 6 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_ABT
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-)                                
-GROUP BY TAHUN_BUKU,BULAN,PAJAK_ID
-) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.BULAN=B.BULAN AND A.PAJAK_ID=B.PAJAK_ID
-ORDER BY A.TAHUN_BUKU DESC,A.PAJAK_ID, A.BULAN</Sql>
+LEFT JOIN
+(
+SELECT TAHUN_BUKU,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_UPTB_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU</Sql>
       </Query>
-      <Query Type="CustomSqlQuery" Name="DetailPBJT">
-        <Sql>SELECT A.*,
-            B.TAHUN_PAJAK_KETETAPAN,B.MASA_PAJAK_KETETAPAN, BULAN_BAYAR, TAHUN_BAYAR,NOMINAL_POKOK_BAYAR, TGL_REALISASI
+      <Query Type="CustomSqlQuery" Name="KecamatanKelurahan">
+        <Sql>SELECT B.*,A.TARGET TARGETALL
 FROM (
-SELECT A.TAHUN_BUKU,A.BULAN, A.PAJAK_ID,NAMA,TARGET,B.NOP,B.NAMA_OP,B.ALAMAT_OP,B.KATEGORI_NAMA,TGL_MULAI_BUKA_OP,TGL_OP_TUTUP
-FROM (
-                SELECT TAHUN_BUKU,BULAN,B.ID PAJAK_ID,B.NAMA , SUM(TARGET) TARGET
-                FROM DB_AKUN_TARGET_BULAN A
-                JOIN M_PAJAK B ON A.PAJAK_ID=B.ID
-                WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5 AND B.ID IN (1,2,3,4,5,6)
-                GROUP BY TAHUN_BUKU,BULAN,B.ID ,B.NAMA
+SELECT TAHUN_BUKU,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_UPTB_6
+WHERE PAJAK_ID=9
+GROUP BY TAHUN_BUKU
 ) A
-LEFT JOIN (
-                -- resto
-                SELECT A.*, NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
+LEFT JOIN
+(
+SELECT B.*,KECAMATAN,KELURAHAN,KATEGORI_NAMA,
+            SPPT_MURNI,
+            KETETAPAN_MURNI,
+            SPPT_TUNGGAKAN,
+            KETETAPAN_TUNGGAKAN,            
+            REALISASI_MURNI,
+            REALISASI_TUNGGAKAN,     
+            REALISASI_SPPT_MURNI,
+            REALISASI_SPPT_TUNGGAKAN
 FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,
-                                1 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_resto
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-                -- end resto
-                UNION ALL
-                -- listrik
-                SELECT A.*, NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,
-                                2 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_LISTRIK
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-                -- end listrik
-                UNION ALL
-                -- HOTEL
-                SELECT A.*, NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,
-                                3 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_HOTEL
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-                -- end HOTEL
-                UNION ALL
-                -- PARKIR
-                SELECT A.*, NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,
-                                4 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_PARKIR
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-                -- end PARKIR
-                UNION ALL
-                -- HIBURAN
-                SELECT A.*, NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,
-                                5 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_HIBURAN
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-                -- end HIBURAN
-                UNION ALL
-                -- PAT
-                SELECT A.*, NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,PAJAK_ID,TGL_MULAI_BUKA_OP, TGL_OP_TUTUP,BLN_TUTUP,THN_TUTUP,            
-            CASE
-             WHEN TGL_OP_TUTUP IS NULL THEN 1
-             WHEN ADD_MONTHS(TRUNC(TO_DATE(A.TAHUN_BUKU, 'YYYY'), 'YYYY'), A.BULAN - 1)  &gt; ADD_MONTHS(TRUNC(TO_DATE(THN_TUTUP, 'YYYY'), 'YYYY'), BLN_TUTUP - 1) THEN 0
-             ELSE
-             1 END STATUS             
-FROM (
-SELECT TAHUN_BUKU, EXTRACT (MONTH FROM AWAL_BULAN) BULAN 
-FROM (
-SELECT tb.tahun TAHUN_BUKU,ADD_MONTHS(TRUNC(TO_DATE(tb.tahun, 'YYYY'), 'YYYY'), lvl - 1) AS awal_bulan
-FROM (
-                SELECT TO_CHAR(SYSDATE,'YYYY') + 1 - LEVEL AS tahun
-                FROM dual
-                CONNECT BY LEVEL &lt;= 6
-        ) tb
-CROSS JOIN (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL &lt;= 12)
-)
-)  A
-LEFT JOIN (                    
-                    SELECT NOP,NAMA_OP,ALAMAT_OP,KATEGORI_NAMA,
-                                6 PAJAK_ID,TAHUN_BUKU, TGL_MULAI_BUKA_OP , TGL_OP_TUTUP, EXTRACT (MONTH FROM TGL_OP_TUTUP) BLN_TUTUP,EXTRACT (YEAR FROM TGL_OP_TUTUP) THN_TUTUP
-                    FROM DB_OP_ABT
-                    WHERE TAHUN_BUKU &gt;= TO_CHAR(SYSDATE,'YYYY')-6                               
-                ) B ON A.TAHUN_BUKU=B.TAHUN_BUKU
-                -- end PAT                
-) B ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.BULAN=B.BULAN AND B.STATUS=1 AND A.PAJAK_ID=B.PAJAK_ID
-) A
-LEFT JOIN (            
-                    SELECT TAHUN_BUKU,1 PAJAK_ID,NOP,TAHUN_PAJAK_KETETAPAN,MASA_PAJAK_KETETAPAN, EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN_BAYAR, EXTRACT(YEAR FROM TGL_BAYAR_POKOK) TAHUN_BAYAR,NOMINAL_POKOK_BAYAR,TGL_BAYAR_POKOK TGL_REALISASI 
-                    FROM DB_MON_RESTO
-                    WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-                    UNION ALL
-                    SELECT TAHUN_BUKU,2 PAJAK_ID,NOP,TAHUN_PAJAK_KETETAPAN,MASA_PAJAK_KETETAPAN, EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN_BAYAR, EXTRACT(YEAR FROM TGL_BAYAR_POKOK) TAHUN_BAYAR,NOMINAL_POKOK_BAYAR,TGL_BAYAR_POKOK TGL_REALISASI 
-                    FROM DB_MON_PPJ
-                    WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-                    UNION ALL
-                    SELECT TAHUN_BUKU,3 PAJAK_ID,NOP,TAHUN_PAJAK_KETETAPAN,MASA_PAJAK_KETETAPAN, EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN_BAYAR, EXTRACT(YEAR FROM TGL_BAYAR_POKOK) TAHUN_BAYAR,NOMINAL_POKOK_BAYAR,TGL_BAYAR_POKOK TGL_REALISASI 
-                    FROM DB_MON_HOTEL
-                    WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-                    UNION ALL
-                    SELECT TAHUN_BUKU,4 PAJAK_ID,NOP,TAHUN_PAJAK_KETETAPAN,MASA_PAJAK_KETETAPAN, EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN_BAYAR, EXTRACT(YEAR FROM TGL_BAYAR_POKOK) TAHUN_BAYAR,NOMINAL_POKOK_BAYAR,TGL_BAYAR_POKOK TGL_REALISASI 
-                    FROM DB_MON_PARKIR
-                    WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-                    UNION ALL
-                    SELECT TAHUN_BUKU,5 PAJAK_ID,NOP,TAHUN_PAJAK_KETETAPAN,MASA_PAJAK_KETETAPAN, EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN_BAYAR, EXTRACT(YEAR FROM TGL_BAYAR_POKOK) TAHUN_BAYAR,NOMINAL_POKOK_BAYAR,TGL_BAYAR_POKOK TGL_REALISASI 
-                    FROM DB_MON_HIBURAN
-                    WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-                    UNION ALL
-                    SELECT TAHUN_BUKU,6 PAJAK_ID,NOP,TAHUN_PAJAK_KETETAPAN,MASA_PAJAK_KETETAPAN, EXTRACT(MONTH FROM TGL_BAYAR_POKOK) BULAN_BAYAR, EXTRACT(YEAR FROM TGL_BAYAR_POKOK) TAHUN_BAYAR,NOMINAL_POKOK_BAYAR,TGL_BAYAR_POKOK TGL_REALISASI 
-                    FROM DB_MON_ABT
-                    WHERE TAHUN_BUKU &gt;= EXTRACT(YEAR FROM SYSDATE) -5
-) B ON A.TAHUN_BUKU = B.TAHUN_BUKU AND A.BULAN=B.BULAN_BAYAR AND A.PAJAK_ID=B.PAJAK_ID AND A.NOP=B.NOP 
-</Sql>
+SELECT TAHUN_BUKU,UPTB,SUM(TARGET) TARGET 
+FROM VW_TARGET_BULAN_UPTB_6
+WHERE PAJAK_ID=9 
+GROUP BY TAHUN_BUKU,UPTB
+) B
+LEFT JOIN
+(
+SELECT TAHUN_BUKU,UPTB,KECAMATAN,KELURAHAN,KATEGORI_NAMA,
+            SUM(DECODE(JENIS_BUKU,0,1,0)) SPPT_MURNI,
+            SUM(DECODE(JENIS_BUKU,0,KETETAPAN,0)) KETETAPAN_MURNI,
+            SUM(DECODE(JENIS_BUKU,1,1,0)) SPPT_TUNGGAKAN,
+            SUM(DECODE(JENIS_BUKU,1,KETETAPAN,0)) KETETAPAN_TUNGGAKAN,            
+            SUM(
+                    CASE
+                        WHEN TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_MURNI,
+            SUM(
+                    CASE
+                        WHEN  TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN REALISASI
+                    ELSE
+                    0 END
+                 ) REALISASI_TUNGGAKAN,     
+              SUM(
+                    CASE
+                        WHEN  TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=0 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_MURNI,
+            SUM(
+                    CASE
+                        WHEN  TAHUN_BUKU_BAYAR IS NOT NULL AND TAHUN_BUKU_BAYAR=TAHUN_BUKU AND JENIS_BUKU=1 THEN 1
+                    ELSE
+                    0 END
+                 ) REALISASI_SPPT_TUNGGAKAN     
+FROM MV_DBE_MON_PBB_KEC_KEL
+WHERE TAHUN_BUKU=2024
+GROUP BY TAHUN_BUKU,UPTB,KECAMATAN,KELURAHAN,KATEGORI_NAMA
+) A ON A.TAHUN_BUKU=B.TAHUN_BUKU AND A.UPTB=B.UPTB
+) B ON A.TAHUN_BUKU=B.TAHUN_BUKU</Sql>
       </Query>
       <ConnectionOptions CloseConnection="true" />
+      <CalculatedFields>
+        <CalculatedField Name="FncRasioUptbTarget" Expression="[TARGET] / [TARGET_ALL] " DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncRasioMurni" Expression="Sum( [REALISASI_MURNI]  )  / Sum( [TARGET] ) " DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncRasioTunggakan" Expression="Sum( [REALISASI_TUNGGAKAN] ) / Sum( [TARGET]  )" DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncTotalRealisasiSPPT" Expression="[REALISASI_SPPT_MURNI] + [REALISASI_SPPT_TUNGGAKAN] " DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncTotalRealisasi" Expression="Sum([REALISASI_MURNI] + [REALISASI_TUNGGAKAN] )" DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncPencapaian" Expression="Sum( [REALISASI_MURNI] + [REALISASI_TUNGGAKAN] ) / Sum( [TARGET] )" DataType="Auto" DataMember="AllinOne" />
+        <CalculatedField Name="FncPencapaianMurni" Expression="Iif([KETETAPAN_MURNI] = 0, 0, [REALISASI_MURNI] / [KETETAPAN_MURNI])" DataType="Auto" DataMember="KecamatanKelurahan" />
+        <CalculatedField Name="FncTotalRealisasiSpptKecamatan" Expression="[REALISASI_SPPT_MURNI] + [REALISASI_SPPT_TUNGGAKAN] " DataType="Auto" DataMember="KecamatanKelurahan" />
+        <CalculatedField Name="FncTotalRealisasiKecamatan" Expression="[REALISASI_MURNI] + [REALISASI_TUNGGAKAN] " DataType="Auto" DataMember="KecamatanKelurahan" />
+        <CalculatedField Name="FncRasioRealisasiTungKecamatan" Expression="Iif([KETETAPAN_TUNGGAKAN] = 0, 0, [REALISASI_TUNGGAKAN]  / [KETETAPAN_TUNGGAKAN])  " DataType="Auto" DataMember="KecamatanKelurahan" />
+        <CalculatedField Name="FncRasioAtasTarget" Expression="[KETETAPAN_MURNI] / [TARGETALL] " DataType="Auto" DataMember="KecamatanKelurahan" />
+        <CalculatedField Name="FncRasioRealisasiMurni" Expression="[REALISASI_MURNI] / [TARGET] " DataType="Auto" DataMember="KecamatanKelurahan" />
+        <CalculatedField Name="FncRasioRealisasiTunggakan" Expression="[REALISASI_TUNGGAKAN] / [TARGET] " DataType="Auto" DataMember="KecamatanKelurahan" />
+        <CalculatedField Name="FncRasioPencapaian" Expression="[FncTotalRealisasiKecamatan] / [TARGET] " DataType="Auto" DataMember="KecamatanKelurahan" />
+      </CalculatedFields>
     </SqlDataSource>
   </DataSources>
   <Parameters>
-    <Parameter Name="TahunBuku" Type="System.Int16" Value="2025">
-      <DynamicListLookUpSettings DataSourceName="sqlDataSource1" DataMember="TahunBukuList" ValueMember="TAHUN" DisplayMember="TAHUN" SortByMember="TAHUN" SortOrder="Descending" />
+    <Parameter Name="TahunBuku" Type="System.Int16">
+      <DynamicListLookUpSettings DataSourceName="sqlDataSource1" DataMember="TahunList" ValueMember="TAHUN" DisplayMember="TAHUN" SortByMember="TAHUN" SortOrder="Descending" />
     </Parameter>
   </Parameters>
   <Items>
-    <Grid ComponentName="gridDashboardItem1" Name="Target dan Realisasi" DataSource="sqlDataSource1" DataMember="PBJTTdanR" FilterString="[DataItem6] = ?TahunBuku" IsMasterFilterCrossDataSource="true">
-      <InteractivityOptions IgnoreMasterFilters="true" MasterFilterMode="Multiple" />
+    <Grid ComponentName="gridDashboardItem1" Name="REKAP BY UPTB" DataSource="sqlDataSource1" DataMember="KecamatanKelurahan" FilterString="[DataItem12] = ?TahunBuku">
+      <InteractivityOptions IgnoreMasterFilters="true" MasterFilterMode="Single" />
       <DataItems>
-        <Dimension DataMember="NAMA" DefaultId="DataItem1" />
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem5" />
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem6" />
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem0" />
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem7">
+        <Dimension DataMember="UPTB" DefaultId="DataItem0">
           <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
         </Dimension>
-        <Dimension DataMember="TARGET" DefaultId="DataItem2">
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem2">
           <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
-        </Dimension>
-        <Dimension DataMember="REALISASI" DefaultId="DataItem3">
+        </Measure>
+        <Measure DataMember="KETETAPAN_MURNI" DefaultId="DataItem3">
           <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
-        </Dimension>
-        <Dimension DataMember="PENCAPAIAN" DefaultId="DataItem4">
+        </Measure>
+        <Measure DataMember="SPPT_TUNGGAKAN" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_TUNGGAKAN" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem6">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_MURNI" DefaultId="DataItem7">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioRealisasiMurni" DefaultId="DataItem8">
+          <NumericFormat FormatType="Percent" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_TUNGGAKAN" DefaultId="DataItem9">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_TUNGGAKAN" DefaultId="DataItem10">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioRealisasiTunggakan" DefaultId="DataItem11">
+          <NumericFormat FormatType="Percent" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioAtasTarget" DefaultId="DataItem13">
           <NumericFormat FormatType="Percent" />
-        </Dimension>
-        <Dimension DataMember="JUMLAH_OP" DefaultId="DataItem8">
+        </Measure>
+        <Measure DataMember="FncTotalRealisasiSpptKecamatan" DefaultId="DataItem14">
           <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncTotalRealisasiKecamatan" DefaultId="DataItem15">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioPencapaian" DefaultId="DataItem16">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Dimension DataMember="TARGET" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Dimension>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem12">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
         </Dimension>
       </DataItems>
-      <HiddenDimensions>
-        <Dimension DefaultId="DataItem5" />
-        <Dimension DefaultId="DataItem6" />
-      </HiddenDimensions>
       <GridColumns>
-        <GridDimensionColumn Name="Id">
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem12" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
           <Dimension DefaultId="DataItem0" />
         </GridDimensionColumn>
-        <GridDimensionColumn Name="Tahun">
-          <Dimension DefaultId="DataItem7" />
-        </GridDimensionColumn>
-        <GridDimensionColumn Name="Nama">
+        <GridDimensionColumn Name="TARGET">
           <Dimension DefaultId="DataItem1" />
         </GridDimensionColumn>
-        <GridDimensionColumn Name="Jumlah OP">
-          <Dimension DefaultId="DataItem8" />
-        </GridDimensionColumn>
-        <GridDimensionColumn Name="Target">
-          <Dimension DefaultId="DataItem2" />
-        </GridDimensionColumn>
-        <GridDimensionColumn Name="Realisasi">
-          <Dimension DefaultId="DataItem3" />
-        </GridDimensionColumn>
-        <GridDimensionColumn Name="Pencapaian">
-          <Dimension DefaultId="DataItem4" />
-        </GridDimensionColumn>
+        <GridMeasureColumn Name="Rasio Atas Target PBB">
+          <Measure DefaultId="DataItem13" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT MURNI">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET MURNI">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT TUNG">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET TUNG">
+          <Measure DefaultId="DataItem5" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA SPPT MURNI">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA MURNI">
+          <Measure DefaultId="DataItem7" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA SPPT TUNG">
+          <Measure DefaultId="DataItem9" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA TUNG">
+          <Measure DefaultId="DataItem10" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TOTAL REALISASI SPPT">
+          <Measure DefaultId="DataItem14" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TOTAL REALISASI">
+          <Measure DefaultId="DataItem15" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="RASIO MURNI">
+          <Measure DefaultId="DataItem8" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="RASIO TUNG">
+          <Measure DefaultId="DataItem11" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="%">
+          <Measure DefaultId="DataItem16" />
+        </GridMeasureColumn>
       </GridColumns>
       <GridOptions />
       <ColumnFilterOptions />
     </Grid>
-    <Grid ComponentName="gridDashboardItem2" Name="Grid 1" DataSource="sqlDataSource1" DataMember="PBJTTdanR">
-      <GridOptions />
-      <ColumnFilterOptions />
-    </Grid>
-    <Grid ComponentName="gridDashboardItem3" Name="Detail per Bulan" DataSource="sqlDataSource1" DataMember="DetailBulan" IsMasterFilterCrossDataSource="true">
-      <InteractivityOptions MasterFilterMode="Multiple" />
+    <Grid ComponentName="gridDashboardItem2" Name="KECAMATAN" DataSource="sqlDataSource1" DataMember="KecamatanKelurahan">
+      <InteractivityOptions MasterFilterMode="Single" />
       <DataItems>
-        <Dimension DataMember="JML_OP" DefaultId="DataItem3">
-          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
-        </Dimension>
-        <Dimension DataMember="BULAN" DefaultId="DataItem2">
+        <Dimension DataMember="UPTB" DefaultId="DataItem0">
           <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
         </Dimension>
-        <Dimension DataMember="TARGET" DefaultId="DataItem4">
-          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
-        </Dimension>
-        <Measure DataMember="REALISASI" DefaultId="DataItem5">
+        <Dimension DataMember="KECAMATAN" DefaultId="DataItem1" />
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem2">
           <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
         </Measure>
-        <Dimension DataMember="PENCAPAIAN" DefaultId="DataItem6">
+        <Measure DataMember="KETETAPAN_MURNI" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="SPPT_TUNGGAKAN" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_TUNGGAKAN" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem6">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_MURNI" DefaultId="DataItem7">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_TUNGGAKAN" DefaultId="DataItem8">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_TUNGGAKAN" DefaultId="DataItem9">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncTotalRealisasiSpptKecamatan" DefaultId="DataItem10">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncPencapaianMurni" SummaryType="Average" DefaultId="DataItem11">
           <NumericFormat FormatType="Percent" />
-        </Dimension>
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem7">
-          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
-        </Dimension>
-        <Dimension DataMember="PAJAK_ID" DefaultId="DataItem0" />
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem1" />
-        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem8" />
+        </Measure>
+        <Measure DataMember="FncTotalRealisasiKecamatan" DefaultId="DataItem12">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="FncRasioRealisasiTungKecamatan" SummaryType="Average" DefaultId="DataItem13">
+          <NumericFormat FormatType="Percent" />
+        </Measure>
+        <Dimension DataMember="KELURAHAN" DefaultId="DataItem14" />
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem15" />
       </DataItems>
-      <HiddenDimensions>
-        <Dimension DefaultId="DataItem0" />
-        <Dimension DefaultId="DataItem1" />
-      </HiddenDimensions>
       <GridColumns>
-        <GridDimensionColumn Name="Bulan">
-          <Dimension DefaultId="DataItem2" />
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem15" />
         </GridDimensionColumn>
-        <GridDimensionColumn Name="Jumlah OP">
-          <Dimension DefaultId="DataItem3" />
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem0" />
         </GridDimensionColumn>
-        <GridDimensionColumn Name="Target">
-          <Dimension DefaultId="DataItem4" />
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem1" />
         </GridDimensionColumn>
-        <GridMeasureColumn Name="Realisasi">
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem14" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="SPPT MURNI">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET MURNI">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="SPPT TUNG">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KET TUNG">
           <Measure DefaultId="DataItem5" />
         </GridMeasureColumn>
+        <GridMeasureColumn Name="REA SPPT MURNI">
+          <Measure DefaultId="DataItem6" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA MURNI">
+          <Measure DefaultId="DataItem7" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA SPPT TUNG">
+          <Measure DefaultId="DataItem8" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REA TUNG">
+          <Measure DefaultId="DataItem9" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TOTAL REALISASI SPPT">
+          <Measure DefaultId="DataItem10" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="TOTAL REALISASI">
+          <Measure DefaultId="DataItem12" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="PENCAPAIAN MURNI">
+          <Measure DefaultId="DataItem11" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="PENCAPAIAN TUNGGAKAN">
+          <Measure DefaultId="DataItem13" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions ColumnWidthMode="AutoFitToContents" />
+      <ColumnFilterOptions ShowFilterRow="true" />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem3" Name="KATEGORI SPPT" DataSource="sqlDataSource1" DataMember="KecamatanKelurahan">
+      <InteractivityOptions MasterFilterMode="Single" />
+      <DataItems>
+        <Dimension DataMember="KATEGORI_NAMA" DefaultId="DataItem0" />
+        <Measure DataMember="SPPT_MURNI" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem2">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="KETETAPAN_MURNI" DefaultId="DataItem3">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Measure DataMember="REALISASI_SPPT_MURNI" DefaultId="DataItem4">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" IncludeGroupSeparator="true" />
+        </Measure>
+        <Dimension DataMember="UPTB" DefaultId="DataItem5">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="KECAMATAN" DefaultId="DataItem6" />
+        <Dimension DataMember="KELURAHAN" DefaultId="DataItem7" />
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem5" />
+        </GridDimensionColumn>
         <GridDimensionColumn>
           <Dimension DefaultId="DataItem6" />
         </GridDimensionColumn>
@@ -636,7 +412,36 @@ LEFT JOIN (
           <Dimension DefaultId="DataItem7" />
         </GridDimensionColumn>
         <GridDimensionColumn>
-          <Dimension DefaultId="DataItem8" />
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Name="SPPT MURNI">
+          <Measure DefaultId="DataItem1" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="KETETAPAN MURNI">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="RELISASI SPPT">
+          <Measure DefaultId="DataItem2" />
+        </GridMeasureColumn>
+        <GridMeasureColumn Name="REALISASI KETETAPAN">
+          <Measure DefaultId="DataItem4" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions />
+      <ColumnFilterOptions />
+    </Grid>
+    <Grid ComponentName="gridDashboardItem4" Name="Grid 1" DataSource="sqlDataSource1" DataMember="KecamatanKelurahan">
+      <InteractivityOptions MasterFilterMode="Single" />
+      <DataItems>
+        <Dimension DataMember="TAHUN_BUKU" DefaultId="DataItem0" />
+        <Dimension DataMember="UPTB" DefaultId="DataItem1" />
+      </DataItems>
+      <GridColumns>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem0" />
+        </GridDimensionColumn>
+        <GridDimensionColumn>
+          <Dimension DefaultId="DataItem1" />
         </GridDimensionColumn>
       </GridColumns>
       <GridOptions />
@@ -644,12 +449,15 @@ LEFT JOIN (
     </Grid>
   </Items>
   <LayoutTree>
-    <LayoutGroup Orientation="Vertical">
-      <LayoutGroup Weight="0.7035673606854934">
-        <LayoutItem DashboardItem="gridDashboardItem1" />
-        <LayoutItem DashboardItem="gridDashboardItem3" />
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutItem DashboardItem="gridDashboardItem1" Weight="1.1069571410114902" />
+        <LayoutItem DashboardItem="gridDashboardItem4" Weight="0.8930428589885097" />
+        <LayoutGroup Weight="1.461962026219312">
+          <LayoutItem DashboardItem="gridDashboardItem2" Weight="1.6115230772725864" />
+          <LayoutItem DashboardItem="gridDashboardItem3" Weight="0.9033911179600065" />
+        </LayoutGroup>
       </LayoutGroup>
-      <LayoutItem DashboardItem="gridDashboardItem2" Weight="1.2964326393145065" />
     </LayoutGroup>
   </LayoutTree>
 </Dashboard>

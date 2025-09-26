@@ -82,6 +82,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkirCctvDs", "ParkirCctvD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CobaAPICctv", "CobaAPICctv\CobaAPICctv.csproj", "{BA254938-E54F-49AE-A36F-E1E672DA9E27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCTVParkirWorker", "CCTVParkirWorker\CCTVParkirWorker.csproj", "{33126C8C-4179-4D58-A978-A6AA18F08A1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -236,6 +238,10 @@ Global
 		{BA254938-E54F-49AE-A36F-E1E672DA9E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA254938-E54F-49AE-A36F-E1E672DA9E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA254938-E54F-49AE-A36F-E1E672DA9E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33126C8C-4179-4D58-A978-A6AA18F08A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33126C8C-4179-4D58-A978-A6AA18F08A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33126C8C-4179-4D58-A978-A6AA18F08A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33126C8C-4179-4D58-A978-A6AA18F08A1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
