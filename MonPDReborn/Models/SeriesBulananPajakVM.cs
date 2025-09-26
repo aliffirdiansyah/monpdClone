@@ -1,6 +1,6 @@
 ﻿namespace MonPDReborn.Models
 {
-    public class RealisasiPajakDaerahVM
+    public class SeriesBulananPajakVM
     {
         public class Index
         {

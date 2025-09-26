@@ -1,9 +1,142 @@
-﻿
+﻿@model MonPDReborn.Models.SeriesBulananPajakVM.Index
+
 
 @{
     ViewData["Title"] = "Series Bulanan Pajak";
     Layout = "_Layout";
 }
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 5px;
+        text-align: left;
+        white-space: nowrap; /* supaya tabel tidak patah ke bawah */
+    }
+
+    /* Header */
+    thead {
+        background-color: #d3d3d3;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    /* Lebar kolom fix */
+    th:first-child, td:first-child {
+        min-width: 60px; /* Kolom NO, kasih fix biar stabil */
+        max-width: 60px;
+        text-align: center;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+        min-width: 250px; /* Kolom URAIAN */
+    }
+
+    /* Freeze kolom NO */
+    th:first-child {
+        position: sticky;
+        left: 0;
+        background: #d3d3d3; /* abu-abu untuk header */
+        z-index: 5;
+    }
+
+    td:first-child {
+        position: sticky;
+        left: 0;
+        background: #fff; /* default putih isi */
+        z-index: 4;
+    }
+
+    /* Freeze kolom URAIAN */
+    th:nth-child(2) {
+        position: sticky;
+        left: 60px;
+        background: #d3d3d3; /* abu-abu untuk header */
+        z-index: 5;
+    }
+
+    td:nth-child(2) {
+        position: sticky;
+        left: 60px;
+        background: #fff; /* default putih isi */
+        z-index: 4;
+    }
+
+    /* Row total */
+    .total-row td {
+        font-weight: bold;
+        background: #e0e0e0; /* warna khusus total */
+    }
+
+        /* Freeze untuk total row */
+        .total-row td:first-child {
+            position: sticky;
+            left: 0;
+            background: #e0e0e0; /* sama dengan warna total */
+            z-index: 9;
+        }
+
+        .total-row td:nth-child(2) {
+            position: sticky;
+            left: 60px; /* sesuai lebar kolom NO */
+            background: #e0e0e0;
+            z-index: 9;
+        }
+
+        .total-row td[colspan="2"] {
+            position: sticky;
+            left: 0;
+            background: #e0e0e0;
+            z-index: 9;
+            min-width: 310px; /* sesuai gabungan kolom NO (60) + URAIAN (250) */
+            max-width: 310px;
+        }
+
+    /* Freeze header */
+    thead th {
+        position: sticky;
+        top: 0;
+        background: #d3d3d3;
+        z-index: 4;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+
+    .total-row {
+        font-weight: bold;
+        background-color: #e0e0e0;
+    }
+
+    .sub-total-row {
+        font-weight: bold;
+        background-color: #f2f2f2;
+    }
+
+    .pad-left {
+        padding-left: 20px;
+    }
+
+    .pad-more-left {
+        padding-left: 40px;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .tahun1, .tahun2, .tahun3 {
+        display: none;
+    }
+
+</style>
 
 <div class="row">
     <div class="col-lg-12">
@@ -41,13 +174,23 @@
                     <tbody>
                         <tr>
                             <td>PBJT atas Makanan dan/atau Minuman</td>
-                            <td>736,275,239,787</td><td>55,256,415,760</td>
-                            <td>57,138,524,562</td><td>50,361,621,386</td>
-                            <td>62,926,698,656</td><td>62,868,039,205</td>
-                            <td>63,200,171,508</td><td>62,439,245,685</td>
-                            <td>60,536,398,194</td><td>58,635,280,208</td>
-                            <td>-</td><td>-</td><td>-</td><td>533,362,395,164</td>
-                            <td>202,912,844,623</td><td>72.44%</td></tr>
+                            <td>736,275,239,787</td>
+                            <td>55,256,415,760</td>
+                            <td>57,138,524,562</td>
+                            <td>50,361,621,386</td>
+                            <td>62,926,698,656</td>
+                            <td>62,868,039,205</td>
+                            <td>63,200,171,508</td>
+                            <td>62,439,245,685</td>
+                            <td>60,536,398,194</td>
+                            <td>58,635,280,208</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>533,362,395,164</td>
+                            <td>202,912,844,623</td>
+                            <td>72.44%</td>
+                        </tr>
                         <tr><td>PBJT atas Tenaga Listrik</td><td>766,551,662,201</td><td>62,818,852,323</td><td>59,174,464,560</td><td>52,956,698,665</td><td>47,302,947,831</td><td>55,301,084,155</td><td>56,654,361,293</td><td>59,970,970,442</td><td>59,091,027,096</td><td>60,428,236,751</td><td>-</td><td>-</td><td>-</td><td>513,698,643,116</td><td>252,853,019,085</td><td>67.01%</td></tr>
                         <tr><td>PBJT atas Jasa Perhotelan</td><td>405,688,598,057</td><td>25,819,948,362</td><td>27,422,583,737</td><td>28,910,844,460</td><td>21,080,838,834</td><td>25,102,480,969</td><td>29,789,054,231</td><td>29,839,962,558</td><td>29,053,899,938</td><td>29,468,136,242</td><td>-</td><td>-</td><td>-</td><td>246,487,749,331</td><td>159,200,848,726</td><td>60.76%</td></tr>
                         <tr><td>PBJT atas Jasa Parkir</td><td>62,125,343,640</td><td>3,347,869,608</td><td>4,512,806,688</td><td>4,357,344,992</td><td>4,521,115,094</td><td>4,514,838,589</td><td>4,655,986,070</td><td>4,677,900,918</td><td>4,838,001,397</td><td>5,044,103,148</td><td>-</td><td>-</td><td>-</td><td>40,469,966,504</td><td>21,655,377,136</td><td>65.14%</td></tr>

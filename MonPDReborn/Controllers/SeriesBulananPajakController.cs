@@ -4,18 +4,18 @@ using MonPDReborn.Lib.General;
 
 namespace MonPDReborn.Controllers
 {
-    public class RealisasiPajakDaerahController : BaseController
+    public class SeriesBulananPajakController : BaseController
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<RealisasiPajakDaerahController> _logger;
+        private readonly ILogger<SeriesBulananPajakController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
         const string TD_KEY = "TD_KEY";
 
         const string INPUTPENDATAAN_ERROR_MESSAGE = "INPUTPENDATAAN_ERROR_MESSAGE";
-        public RealisasiPajakDaerahController(ILogger<RealisasiPajakDaerahController> logger)
+        public SeriesBulananPajakController(ILogger<SeriesBulananPajakController> logger)
         {
             URLView = string.Concat("../", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
@@ -47,14 +47,14 @@ namespace MonPDReborn.Controllers
                     }
                 }
                 // ini diganti
-                var model = new Models.RealisasiPajakDaerahVM.Index();
+                var model = new Models.SeriesBulananPajakVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
                 // ini diganti
-                var model = new Models.RealisasiPajakDaerahVM.Index("Error, Pada Saat GetData");
+                var model = new Models.SeriesBulananPajakVM.Index("Error, Pada Saat GetData");
                 return View($"{URLView}{actionName}", model);
             }
             catch (Exception ex)
@@ -62,7 +62,7 @@ namespace MonPDReborn.Controllers
                 _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
                 ViewBag.ErrorMessage = "Terjadi kesalahan sistem. Silakan coba lagi.";
                 // ini diganti
-                var model = new Models.RealisasiPajakDaerahVM.Index("Terjadi kesalahan sistem. Silakan coba lagi.");
+                var model = new Models.SeriesBulananPajakVM.Index("Terjadi kesalahan sistem. Silakan coba lagi.");
                 return View($"{URLView}{actionName}", model);
             }
         }
