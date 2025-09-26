@@ -30,12 +30,12 @@ namespace MonPDReborn.Controllers.Aktivitas
             URLView = string.Concat("../AktivitasOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? keyword)
         {
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.Index();
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.Index(keyword);
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -161,6 +161,26 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.TeguranDetail(tahun, bulan, jenis, kategori);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult CariReklame(string keyword)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryIndoorVM.ReklameCari(keyword);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

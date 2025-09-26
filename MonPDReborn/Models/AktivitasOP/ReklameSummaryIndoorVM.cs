@@ -14,9 +14,9 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Index
         {
             public string Keyword { get; set; } = null!;
-            public Index()
+            public Index(string keyword)
             {
-
+                Keyword = keyword;
             }
 
         }
@@ -81,6 +81,15 @@ namespace MonPDReborn.Models.AktivitasOP
             public TeguranDetail(int tahun, int bulan, int jenis, int kategori)
             {
                 Data = Method.GetDetailTegur(tahun, bulan, jenis, kategori);
+            }
+        }
+
+        public class ReklameCari
+        {
+            public List<PencarianReklame> Data { get; set; } = new();
+            public ReklameCari(string keyword)
+            {
+                Data = Method.GetDataPencarianReklame(keyword);
             }
         }
 
@@ -743,6 +752,84 @@ namespace MonPDReborn.Models.AktivitasOP
                 return ret;
             }
 
+            public static List<PencarianReklame> GetDataPencarianReklame(string keyword)
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    throw new ArgumentException("Keyword harus diisi");
+                }
+                if (keyword.Length < 3)
+                {
+                    throw new ArgumentException("Keyword harus diisi minimal 3");
+                }
+                if (keyword.Length == 24 || keyword.Contains("."))
+                {
+                    keyword = keyword.Replace(".", "");
+                }
+                var context = DBClass.GetContext();
+
+                var upayaGrouped = context.DbMonReklameUpayas
+                   .Where(x => x.NoFormulir == keyword)
+                   .GroupBy(x => x.NoFormulir.Trim().ToLower())
+                   .Select(g => new { Key = g.Key, List = g.Select(u => u.Upaya).ToList() })
+                   .ToDictionary(x => x.Key, x => x.List);
+
+                string jumlahUpaya = "0";
+                if (!string.IsNullOrEmpty(keyword) && upayaGrouped.TryGetValue(keyword, out var upayaList))
+                {
+                    jumlahUpaya = $"{upayaList.Count}x: {string.Join(", ", upayaList)}";
+                }
+
+                var ret = context.MvReklameSummaries
+                    .Where(x => (x.NoFormulir != null && x.NoFormulir.Contains(keyword)) ||
+                                (x.NoFormulirA != null && x.NoFormulirA.Contains(keyword)) ||
+                                (x.Nama != null && x.Nama.Contains(keyword)) ||
+                                (x.NamaA != null && x.NamaA.Contains(keyword)) ||
+                                (x.NamaPerusahaan != null && x.NamaPerusahaan.Contains(keyword)) ||
+                                (x.NamaPerusahaanA != null && x.NamaPerusahaanA.Contains(keyword)) ||
+                                (x.Alamatreklame != null && x.Alamatreklame.Contains(keyword)) ||
+                                (x.AlamatreklameA != null && x.AlamatreklameA.Contains(keyword)) ||
+                                (x.IsiReklame != null && x.IsiReklame.Contains(keyword)) ||
+                                (x.IsiReklameA != null && x.IsiReklameA.Contains(keyword))
+                          )
+                    .OrderByDescending(x => x.Tahun)
+                    .ThenByDescending(x => x.Bulan)
+                    .Take(100)
+                    .Select(x => new PencarianReklame
+                    {
+                        NoFormulir = !string.IsNullOrEmpty(x.NoFormulir)
+                            ? x.NoFormulir
+                            : (x.NoFormulirA ?? "") ?? "-",
+                        Nama = !string.IsNullOrEmpty(x.Nama)
+                            ? x.Nama
+                            : (x.NamaA ?? "") ?? "-",
+                        AlamatOP = !string.IsNullOrEmpty(x.Alamatreklame)
+                            ? x.Alamatreklame
+                            : (x.AlamatreklameA ?? "") ?? "-",
+                        IsiReklame = !string.IsNullOrEmpty(x.IsiReklame)
+                            ? x.IsiReklame
+                            : (x.IsiReklameA ?? "") ?? "-",
+                        AkhirBerlaku = x.TglAkhirBerlaku.HasValue
+                            ? x.TglAkhirBerlaku.Value.ToString("dd MMM yyyy")
+                            : (x.TglAkhirBerlakuA.HasValue
+                                ? x.TglAkhirBerlakuA.Value.ToString("dd MMM yyyy")
+                                : "") ?? "-",
+                        MasaTahunPajak = x.Tahun.HasValue
+                            ? x.Tahun.Value.ToString()
+                            : (x.TahunA.HasValue
+                                ? x.TahunA.Value.ToString()
+                                : "") ?? "-",
+                        DetailLokasi = !string.IsNullOrEmpty(x.DetailLokasi)
+                            ? x.DetailLokasi
+                            : (x.DetailLokasiA ?? "") ?? "-",
+                        JumlahNilai = x.PajakPokok.HasValue ? x.PajakPokok.Value : (x.PajakPokokA.HasValue ? x.PajakPokokA.Value : 0),
+                        JumlahUpaya = jumlahUpaya
+                    })
+                    .ToList();
+
+                return ret;
+            }
+
 
 
 
@@ -928,6 +1015,22 @@ namespace MonPDReborn.Models.AktivitasOP
             public string JumlahUpaya { get; set; } = null!;
         }
         public class DetailTeguran
+        {
+            public string DetailLokasi { get; set; } = null!;
+            public string BulanNama { get; set; } = null!;
+            public int Bulan { get; set; }
+            public int Tahun { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string Nama { get; set; } = null!;
+            public string AlamatOP { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string AkhirBerlaku { get; set; } = null!;
+            public string MasaTahunPajak { get; set; } = null!;
+            public decimal JumlahNilai { get; set; }
+            public string? InformasiEmail { get; set; }
+            public string JumlahUpaya { get; set; } = null!;
+        }
+        public class PencarianReklame
         {
             public string DetailLokasi { get; set; } = null!;
             public string BulanNama { get; set; } = null!;
