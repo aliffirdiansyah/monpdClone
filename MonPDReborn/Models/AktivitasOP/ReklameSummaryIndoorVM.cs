@@ -662,79 +662,75 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 using var context = DBClass.GetContext();
 
-                // Query utama dengan join via NOP
-                var query = from s in context.MvReklameSummaries
-
-                            join u in context.DbMonReklameUpayas
-                                on s.NoFormulir.Trim().ToLower() equals u.NoFormulir.Trim().ToLower()
-                                into upayaJoin
-                            from subU in upayaJoin.DefaultIfEmpty()
-
-                            join e in context.DbMonReklameEmails
-                                on s.NoFormulir.Trim().ToLower() equals e.NoFormulir.Trim().ToLower()
-                                into emailJoin
-                            from subE in emailJoin.DefaultIfEmpty()
-
-                            where
-                                (jenis == 1 && kategori == 1 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan) ||
-                                (jenis == 1 && kategori == 2 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
-                                (jenis == 1 && kategori == 3 && s.IdFlagPermohonanA == 1 && s.TahunA == tahun && s.BulanA == bulan && s.BongkarA == 1) ||
-                                (jenis == 2 && kategori == 1 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan) ||
-                                (jenis == 2 && kategori == 2 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
-                                (jenis == 2 && kategori == 3 && s.IdFlagPermohonanA == 2 && s.TahunA == tahun && s.BulanA == bulan) ||
-                                (jenis == 3 && kategori == 1 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan) ||
-                                (jenis == 3 && kategori == 2 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
-                                (jenis == 3 && kategori == 3 && s.IdFlagPermohonanA == 3 && s.TahunA == tahun && s.BulanA == bulan)
-
-                            select new
-                            {
-                                Summary = s,
-                                Upaya = subU,
-                                Email = subE
-                            };
-
-                var data = query.AsNoTracking().ToList();
-
-                // Group per NOP agar unik
-                var grouped = data
-                    .GroupBy(x => x.Summary.NoFormulir.Trim().ToLower())
-                    .Select(g =>
-                    {
-                        var s = g.First().Summary;
-
-                        // ambil email unik
-                        var email = g
-                            .Where(x => x.Email != null)
-                            .Select(x => x.Email.Email)
-                            .Distinct()
-                            .FirstOrDefault() ?? "";
-
-                        // ambil upaya unik "TEGURAN"
-                        var upayaList = g
-                            .Where(x => x.Upaya != null && x.Upaya.Upaya.Contains("TEGURAN"))
-                            .Select(x => x.Upaya.Upaya)
-                            .Distinct()
-                            .ToList();
-
-                        string jumlahUpaya = upayaList.Any()
-                            ? $"{upayaList.Count}x: {string.Join(", ", upayaList)}"
-                            : "0";
-
-                        return new DetailTeguran
-                        {
-                            Bulan = bulan,
-                            BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
-                            Tahun = tahun,
-                            NoFormulir = s.NoFormulir, // tetap bisa tampilkan NoFormulir
-                            Nama = s.Nama,
-                            JumlahUpaya = jumlahUpaya,
-                            InformasiEmail = email
-                        };
-                    })
+                // ambil hanya NoFormulir yang ada upaya TEGURAN
+                var formulirTeguran = context.DbMonReklameUpayas
+                    .Where(u => !string.IsNullOrEmpty(u.NoFormulir) && u.Upaya == "TEGURAN")
+                    .Select(u => u.NoFormulir.Trim().ToLower())
+                    .Distinct()
                     .ToList();
 
-                return grouped;
+                // filter summary sesuai jenis + kategori + hanya yang punya teguran
+                var summaries = context.MvReklameSummaries
+                    .Where(s =>
+                        formulirTeguran.Contains(s.NoFormulir.Trim().ToLower()) &&
+                        (
+                            (jenis == 1 && kategori == 1 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan) ||
+                            (jenis == 1 && kategori == 2 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
+                            (jenis == 1 && kategori == 3 && s.IdFlagPermohonanA == 1 && s.TahunA == tahun && s.BulanA == bulan && s.BongkarA == 1) ||
+                            (jenis == 2 && kategori == 1 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan) ||
+                            (jenis == 2 && kategori == 2 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
+                            (jenis == 2 && kategori == 3 && s.IdFlagPermohonanA == 2 && s.TahunA == tahun && s.BulanA == bulan) ||
+                            (jenis == 3 && kategori == 1 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan) ||
+                            (jenis == 3 && kategori == 2 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
+                            (jenis == 3 && kategori == 3 && s.IdFlagPermohonanA == 3 && s.TahunA == tahun && s.BulanA == bulan)
+                        )
+                    )
+                    .AsNoTracking()
+                    .ToList();
+
+                // ambil email
+                var emails = context.DbMonReklameEmails
+                    .Where(e => !string.IsNullOrEmpty(e.NoFormulir))
+                    .GroupBy(e => e.NoFormulir.Trim().ToLower())
+                    .Select(g => new { Key = g.Key, Email = g.FirstOrDefault().Email })
+                    .ToDictionary(x => x.Key, x => x.Email);
+
+                // ambil jumlah upaya teguran per NoFormulir
+                var upayaGrouped = context.DbMonReklameUpayas
+                    .Where(u => !string.IsNullOrEmpty(u.NoFormulir) && u.Upaya == "TEGURAN")
+                    .GroupBy(u => u.NoFormulir.Trim().ToLower())
+                    .Select(g => new { Key = g.Key, List = g.Select(x => x.Upaya).ToList() })
+                    .ToDictionary(x => x.Key, x => x.List);
+
+                // mapping ke DetailTeguran
+                var ret = summaries.Select(s =>
+                {
+                    var key = s.NoFormulir?.Trim().ToLower();
+                    string email = (key != null && emails.TryGetValue(key, out var e)) ? e : "";
+                    string jumlahUpaya = (key != null && upayaGrouped.TryGetValue(key, out var list))
+                        ? $"{list.Count}x: {string.Join(", ", list)}"
+                        : "0";
+
+                    return new DetailTeguran
+                    {
+                        Bulan = bulan,
+                        BulanNama = new DateTime(tahun, bulan, 1).ToString("MMMM", new CultureInfo("id-ID")),
+                        Tahun = tahun,
+                        NoFormulir = s.NoFormulir ?? "",
+                        Nama = s.Nama ?? "",
+                        AlamatOP = s.Alamatreklame ?? "",
+                        DetailLokasi = s.DetailLokasi ?? "",
+                        IsiReklame = s.IsiReklame ?? "",
+                        AkhirBerlaku = s.TglAkhirBerlaku.HasValue ? $"{s.TglAkhirBerlaku.Value:dd MMM yyyy}" : "",
+                        JumlahNilai = s.PajakPokok ?? 0,
+                        JumlahUpaya = jumlahUpaya,
+                        InformasiEmail = email
+                    };
+                }).ToList();
+
+                return ret;
             }
+
 
 
 

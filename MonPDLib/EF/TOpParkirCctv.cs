@@ -12,8 +12,9 @@ public partial class TOpParkirCctv
 {
     [Key]
     [Column("ID")]
-    [Precision(10)]
-    public int Id { get; set; }
+    [StringLength(250)]
+    [Unicode(false)]
+    public string Id { get; set; } = null!;
 
     [Key]
     [Column("NOP")]
