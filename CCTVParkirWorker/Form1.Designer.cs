@@ -28,44 +28,103 @@
         /// </summary>
         private void InitializeComponent()
         {
-            groupBox1 = new GroupBox();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
-            button1 = new Button();
-            groupBox1.SuspendLayout();
+            Id = new DataGridViewTextBoxColumn();
+            Nop = new DataGridViewTextBoxColumn();
+            Nama = new DataGridViewTextBoxColumn();
+            Alamat = new DataGridViewTextBoxColumn();
+            Uptb = new DataGridViewTextBoxColumn();
+            CctvId = new DataGridViewTextBoxColumn();
+            AccessPoint = new DataGridViewTextBoxColumn();
+            Mode = new DataGridViewTextBoxColumn();
+            LastConnected = new DataGridViewTextBoxColumn();
+            Action = new DataGridViewButtonColumn();
+            Status = new DataGridViewTextBoxColumn();
+            ErrMessage = new DataGridViewTextBoxColumn();
+            Log = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(button1);
-            groupBox1.Dock = DockStyle.Top;
-            groupBox1.Location = new Point(0, 0);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(800, 53);
-            groupBox1.TabIndex = 0;
-            groupBox1.TabStop = false;
-            // 
             // dataGridView1
             // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(0, 53);
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Id, Nop, Nama, Alamat, Uptb, CctvId, AccessPoint, Mode, LastConnected, Action, Status, ErrMessage, Log });
+            dataGridView1.Location = new Point(12, 12);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(800, 397);
-            dataGridView1.TabIndex = 2;
+            dataGridView1.Size = new Size(776, 426);
+            dataGridView1.TabIndex = 0;
             // 
-            // button1
+            // Id
             // 
-            button1.Location = new Point(53, 21);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 0;
-            button1.Text = "Gas";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            // 
+            // Nop
+            // 
+            Nop.HeaderText = "Nop";
+            Nop.Name = "Nop";
+            // 
+            // Nama
+            // 
+            Nama.HeaderText = "Nama";
+            Nama.Name = "Nama";
+            // 
+            // Alamat
+            // 
+            Alamat.HeaderText = "Alamat";
+            Alamat.Name = "Alamat";
+            // 
+            // Uptb
+            // 
+            Uptb.HeaderText = "Uptb";
+            Uptb.Name = "Uptb";
+            // 
+            // CctvId
+            // 
+            CctvId.HeaderText = "Cctv Id";
+            CctvId.Name = "CctvId";
+            // 
+            // AccessPoint
+            // 
+            AccessPoint.HeaderText = "Access Point";
+            AccessPoint.Name = "AccessPoint";
+            // 
+            // Mode
+            // 
+            Mode.HeaderText = "Mode";
+            Mode.Name = "Mode";
+            // 
+            // LastConnected
+            // 
+            LastConnected.HeaderText = "Last Connected";
+            LastConnected.Name = "LastConnected";
+            // 
+            // Action
+            // 
+            Action.HeaderText = "Action";
+            Action.Name = "Action";
+            Action.Resizable = DataGridViewTriState.True;
+            Action.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // Status
+            // 
+            dataGridViewCellStyle1.BackColor = Color.Red;
+            Status.DefaultCellStyle = dataGridViewCellStyle1;
+            Status.HeaderText = "Status";
+            Status.Name = "Status";
+            // 
+            // ErrMessage
+            // 
+            ErrMessage.HeaderText = "Err Message";
+            ErrMessage.Name = "ErrMessage";
+            // 
+            // Log
+            // 
+            Log.HeaderText = "Log";
+            Log.Name = "Log";
             // 
             // Form1
             // 
@@ -73,20 +132,29 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(dataGridView1);
-            Controls.Add(groupBox1);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += Form1_Load;
-            groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private GroupBox groupBox1;
         private DataGridView dataGridView1;
-        private Button button1;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn Nop;
+        private DataGridViewTextBoxColumn Nama;
+        private DataGridViewTextBoxColumn Alamat;
+        private DataGridViewTextBoxColumn Uptb;
+        private DataGridViewTextBoxColumn CctvId;
+        private DataGridViewTextBoxColumn AccessPoint;
+        private DataGridViewTextBoxColumn Mode;
+        private DataGridViewTextBoxColumn LastConnected;
+        private DataGridViewButtonColumn Action;
+        private DataGridViewTextBoxColumn Status;
+        private DataGridViewTextBoxColumn ErrMessage;
+        private DataGridViewTextBoxColumn Log;
     }
 }

@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using MonPDLib;
+using MonPDLib.EF;
 using System;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -42,7 +46,6 @@ namespace CobaAPICctv
                 }
 
                 var getEventList = await GetEventList(cameraList);
-
                 var rekapResults = await SetRekap(getEventList);
 
                 var x = "";
@@ -236,7 +239,6 @@ namespace CobaAPICctv
 
             return allEvents;
         }
-
         public async Task<List<ViewModel.RekapResult>> SetRekap(List<ViewModel.EventAll.EventAllResponse> eventList)
         {
             var result = new List<ViewModel.RekapResult>();
@@ -288,47 +290,61 @@ namespace CobaAPICctv
                             result.Add(res);
                         }
 
-                        var arx = detail.AutoRecognitionResultEx;
-                        if (arx != null)
-                        {
-                            var res = new ViewModel.RekapResult();
-                            res.EventType = "AutoRecognitionResultEx";
-                            res.Name = item.Body.OriginExt.FriendlyName;
-                            res.Direction = arx.Direction.Value;
-                            res.TimeBegin = arx.TimeBegin.ToString();
-                            res.TimeEnd = arx.TimeEnd.ToString();
-                            if (arx.Hypotheses != null && arx.Hypotheses.Count > 0)
-                            {
-                                foreach (var w in arx.Hypotheses)
-                                {
-                                    res.HypothesisOcrQuality = w.OcrQuality;
-                                    res.HypothesisPlateFull = w.PlateFull;
-                                    res.HypothesisPlateRectangleX = w.PlateRectangle.X;
-                                    res.HypothesisPlateRectangleY = w.PlateRectangle.Y;
-                                    res.HypothesisPlateRectangleW = w.PlateRectangle.W;
-                                    res.HypothesisPlateRectangleH = w.PlateRectangle.H;
-                                    res.HypothesisPlateRectangleIndex = w.PlateRectangle.Index;
-                                    res.HypothesisTimeBest = w.TimeBest;
-                                    res.HypothesisCountry = w.Country;
-                                    res.HypothesisPlateState = w.PlateState;
-                                } 
-                            }
+                        //var arx = detail.AutoRecognitionResultEx;
+                        //if (arx != null)
+                        //{
+                        //    var res = new ViewModel.RekapResult();
+                        //    res.EventType = "AutoRecognitionResultEx";
+                        //    res.Name = item.Body.OriginExt.FriendlyName;
+                        //    res.Direction = arx.Direction.Value;
+                        //    res.TimeBegin = arx.TimeBegin.ToString();
+                        //    res.TimeEnd = arx.TimeEnd.ToString();
+                        //    if (arx.Hypotheses != null && arx.Hypotheses.Count > 0)
+                        //    {
+                        //        foreach (var w in arx.Hypotheses)
+                        //        {
+                        //            res.HypothesisOcrQuality = w.OcrQuality;
+                        //            res.HypothesisPlateFull = w.PlateFull;
+                        //            res.HypothesisPlateRectangleX = w.PlateRectangle.X;
+                        //            res.HypothesisPlateRectangleY = w.PlateRectangle.Y;
+                        //            res.HypothesisPlateRectangleW = w.PlateRectangle.W;
+                        //            res.HypothesisPlateRectangleH = w.PlateRectangle.H;
+                        //            res.HypothesisPlateRectangleIndex = w.PlateRectangle.Index;
+                        //            res.HypothesisTimeBest = w.TimeBest;
+                        //            res.HypothesisCountry = w.Country;
+                        //            res.HypothesisPlateState = w.PlateState;
+                        //        } 
+                        //    }
 
                             
-                            res.VehicleClass = arx.VehicleClass?.Value ?? "";
-                            res.VehicleColor = arx.VehicleColor?.Value ?? "";
-                            res.VehicleBrand = arx.VehicleBrand?.Value ?? "";
-                            res.VehicleModel = arx.VehicleModel?.Value ?? "";
-                            res.HeadlightsStatus = "";
-                            res.VehicleSpeed = 0;
-                            res.VehicleSpeedKmph = 0;
-                            res.PlateType = arx.PlateType?.Value ?? "";
-                            result.Add(res);
-                        }
+                        //    res.VehicleClass = arx.VehicleClass?.Value ?? "";
+                        //    res.VehicleColor = arx.VehicleColor?.Value ?? "";
+                        //    res.VehicleBrand = arx.VehicleBrand?.Value ?? "";
+                        //    res.VehicleModel = arx.VehicleModel?.Value ?? "";
+                        //    res.HeadlightsStatus = "";
+                        //    res.VehicleSpeed = 0;
+                        //    res.VehicleSpeedKmph = 0;
+                        //    res.PlateType = arx.PlateType?.Value ?? "";
+                        //    result.Add(res);
+                        //}
                     }
                 }
             }
             
+            return result;
+        }
+        public async Task<List<MOpParkirCctv>> MappingData(List<ViewModel.RekapResult> rekapList)
+        {
+            var result = new List<MOpParkirCctv>();
+            var context = DBClass.GetContext();
+            //Nop
+            //NamaOp
+            //AlamatOp
+            //WilayahPajak
+            //Vendor
+
+
+
             return result;
         }
         public async Task<ViewModel.EventAll.EventAllResponse?> GetEventAll(int limit, int offset, string access_point, DateTime tgl_awal, DateTime tgl_akhir)
@@ -1191,8 +1207,9 @@ namespace CobaAPICctv
 
         public class RekapResult
         {
-            public string EventType { get; set; }
             public string Name { get; set; }
+            public string AccessPoint { get; set; }
+            public string EventType { get; set; }
             public string Direction { get; set; }
             public string TimeBegin { get; set; }
             public string TimeEnd { get; set; }

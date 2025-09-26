@@ -12,7 +12,8 @@ namespace CCTVParkirWorker
         public string NOP { get; set; }
         public string Nama { get; set; }
         public string Alamat { get; set; }
-        public int CCTVId { get; set; }
+        public int Uptb { get; set; }
+        public string CCTVId { get; set; }
         public string AccessPoint { get; set; }
         public string Mode { get; set; }
         public string Status { get; set; }

@@ -28,13 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            comboBox1 = new ComboBox();
+            cbWilayah = new ComboBox();
             textBox1 = new TextBox();
-            wilayahCb = new Label();
+            wil = new Label();
             interval = new Label();
             btnView = new Button();
             dataGridView1 = new DataGridView();
-            button1 = new Button();
             CheckBox = new DataGridViewCheckBoxColumn();
             Nop = new DataGridViewTextBoxColumn();
             Nama = new DataGridViewTextBoxColumn();
@@ -42,16 +41,17 @@
             Status = new DataGridViewTextBoxColumn();
             LastRun = new DataGridViewTextBoxColumn();
             Message = new DataGridViewTextBoxColumn();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
-            // comboBox1
+            // cbWilayah
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(121, 49);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(194, 23);
-            comboBox1.TabIndex = 0;
+            cbWilayah.FormattingEnabled = true;
+            cbWilayah.Location = new Point(121, 49);
+            cbWilayah.Name = "cbWilayah";
+            cbWilayah.Size = new Size(194, 23);
+            cbWilayah.TabIndex = 0;
             // 
             // textBox1
             // 
@@ -60,14 +60,14 @@
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 1;
             // 
-            // wilayahCb
+            // wil
             // 
-            wilayahCb.AutoSize = true;
-            wilayahCb.Location = new Point(66, 52);
-            wilayahCb.Name = "wilayahCb";
-            wilayahCb.Size = new Size(49, 15);
-            wilayahCb.TabIndex = 2;
-            wilayahCb.Text = "Wilayah";
+            wil.AutoSize = true;
+            wil.Location = new Point(66, 52);
+            wil.Name = "wil";
+            wil.Size = new Size(49, 15);
+            wil.TabIndex = 2;
+            wil.Text = "Wilayah";
             // 
             // interval
             // 
@@ -96,15 +96,6 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(776, 322);
             dataGridView1.TabIndex = 5;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(713, 415);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 6;
-            button1.Text = "START";
-            button1.UseVisualStyleBackColor = true;
             // 
             // CheckBox
             // 
@@ -148,6 +139,15 @@
             Message.HeaderText = "Message";
             Message.Name = "Message";
             // 
+            // button1
+            // 
+            button1.Location = new Point(713, 415);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 6;
+            button1.Text = "START";
+            button1.UseVisualStyleBackColor = true;
+            // 
             // ParkirCctv
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -157,9 +157,9 @@
             Controls.Add(dataGridView1);
             Controls.Add(btnView);
             Controls.Add(interval);
-            Controls.Add(wilayahCb);
+            Controls.Add(wil);
             Controls.Add(textBox1);
-            Controls.Add(comboBox1);
+            Controls.Add(cbWilayah);
             Name = "ParkirCctv";
             Text = "ParkirCctv";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -169,9 +169,9 @@
 
         #endregion
 
-        private ComboBox comboBox1;
+        private ComboBox cbWilayah;
         private TextBox textBox1;
-        private Label wilayahCb;
+        private Label wil;
         private Label interval;
         private Button btnView;
         private DataGridView dataGridView1;
