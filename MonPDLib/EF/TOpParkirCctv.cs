@@ -57,6 +57,11 @@ public partial class TOpParkirCctv
     [Column("WAKTU_KELUAR", TypeName = "DATE")]
     public DateTime? WaktuKeluar { get; set; }
 
+    [Column("LOG")]
+    [StringLength(300)]
+    [Unicode(false)]
+    public string? Log { get; set; }
+
     [ForeignKey("Nop, CctvId")]
     [InverseProperty("TOpParkirCctvs")]
     public virtual MOpParkirCctvDet MOpParkirCctvDet { get; set; } = null!;

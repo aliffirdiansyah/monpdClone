@@ -22,17 +22,41 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="d-flex gap-2">
-                    <select id="tahunFilter" class="form-select rounded-pill mb-3" aria-label="Pilih Tahun" style="max-width: 200px;">
-                        <option selected disabled>Pilih Tahun</option>
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                    </select>
-                    <button type="button" class="btn btn-success rounded-pill mb-3">
-                        Terapkan Filter
-                    </button>
+                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#op-rekap" role="tab">
+                            Reklame Summary
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" onclick="fnShowSeries()">
+                            Pencarian Reklame
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content text-muted">
+                    <div class="tab-pane active" id="op-rekap" role="tabpanel">
+                        <div class="d-flex gap-2">
+                            <select id="tahunFilter" class="form-select rounded-pill mb-3" aria-label="Pilih Tahun" style="max-width: 200px;">
+                                <option selected disabled>Pilih Tahun</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
+                            <button type="button" class="btn btn-success rounded-pill mb-3">
+                                Terapkan Filter
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="op-series" role="tabpanel">
+                        @(Html.DevExtreme().TextBoxFor(x => x.Keyword)
+                            .Placeholder("Cari berdasarkan No Formulir")
+                            .Width("100%")
+                            )
+                    </div>
                 </div>
+                
             </div>
 
         </div>
