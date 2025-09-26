@@ -35,7 +35,4 @@ public partial class MOpParkirCctvDet
     [ForeignKey("Nop")]
     [InverseProperty("MOpParkirCctvDets")]
     public virtual MOpParkirCctv NopNavigation { get; set; } = null!;
-
-    [InverseProperty("MOpParkirCctvDet")]
-    public virtual ICollection<TOpParkirCctv> TOpParkirCctvs { get; set; } = new List<TOpParkirCctv>();
 }

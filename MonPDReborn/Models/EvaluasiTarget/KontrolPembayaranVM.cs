@@ -1014,6 +1014,11 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .ToList();
 
+                var nopList = context.DbOpRestos
+                    .Where(x => x.TahunBuku == tahun && x.PajakNama != "MAMIN")
+                    .Select(x => x.Nop)
+                    .ToList();
+
                 if (uptb != EUPTB.SEMUA)
                 {
                     var kontrolPembayaranList = context.DbCtrlByrRestos

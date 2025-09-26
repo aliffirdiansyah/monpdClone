@@ -109,6 +109,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklame> DbMonReklames { get; set; }
 
+    public virtual DbSet<DbMonReklame2> DbMonReklame2s { get; set; }
+
     public virtual DbSet<DbMonReklameAktivita> DbMonReklameAktivitas { get; set; }
 
     public virtual DbSet<DbMonReklameAktivitasDet> DbMonReklameAktivitasDets { get; set; }
@@ -1007,6 +1009,18 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KodeObyek).IsFixedLength();
             entity.Property(e => e.NoKetetapan).HasDefaultValueSql("'-' ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonReklame2>(entity =>
+        {
+            entity.HasKey(e => new { e.NoFormulir, e.Seq, e.TahunBuku }).HasName("DB_MON_REKLAME2_PK");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+            entity.Property(e => e.KelasJalan).IsFixedLength();
+            entity.Property(e => e.KodeJenis).IsFixedLength();
+            entity.Property(e => e.KodeObyek).IsFixedLength();
+            entity.Property(e => e.NoKetetapan).HasDefaultValueSql("'-' ");
+            entity.Property(e => e.UpdDate).HasDefaultValueSql("SYSDATE ");
         });
 
         modelBuilder.Entity<DbMonReklameAktivita>(entity =>
@@ -2161,14 +2175,6 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<TOpParkirCctv>(entity =>
         {
             entity.Property(e => e.JenisKend).HasDefaultValueSql("0 ");
-
-            entity.HasOne(d => d.MOpParkirCctvDet).WithMany(p => p.TOpParkirCctvs)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("T_OP_PARKIR_CCTV_FK");
-
-            entity.HasOne(d => d.MOpParkirCctvJasnitum).WithMany(p => p.TOpParkirCctvs)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("T_OP_PARKIR_CCTV_FK_JASNITA");
         });
 
         modelBuilder.Entity<TPemeriksaan>(entity =>

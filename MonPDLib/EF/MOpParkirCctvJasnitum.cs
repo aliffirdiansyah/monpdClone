@@ -52,7 +52,4 @@ public partial class MOpParkirCctvJasnitum
     [ForeignKey("Nop")]
     [InverseProperty("MOpParkirCctvJasnita")]
     public virtual MOpParkirCctv NopNavigation { get; set; } = null!;
-
-    [InverseProperty("MOpParkirCctvJasnitum")]
-    public virtual ICollection<TOpParkirCctv> TOpParkirCctvs { get; set; } = new List<TOpParkirCctv>();
 }
