@@ -57,6 +57,10 @@ public partial class TOpParkirCctv
     [Column("WAKTU_KELUAR", TypeName = "DATE")]
     public DateTime? WaktuKeluar { get; set; }
 
+    [Column("DIRECTION")]
+    [Precision(10)]
+    public int Direction { get; set; }
+
     [Column("LOG")]
     [StringLength(300)]
     [Unicode(false)]

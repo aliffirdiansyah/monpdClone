@@ -1015,14 +1015,14 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     .ToList();
 
                 var nopList = context.DbOpRestos
-                    .Where(x => x.TahunBuku == tahun && x.PajakNama != "MAMIN")
+                    .Where(x => x.TahunBuku == tahun && x.PajakNama != "MAMIN" && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
                     .Select(x => x.Nop)
                     .ToList();
 
                 if (uptb != EUPTB.SEMUA)
                 {
                     var kontrolPembayaranList = context.DbCtrlByrRestos
-                    .Where(x => x.Tahun == tahun && x.WilayahPajak == ((int)uptb).ToString())
+                    .Where(x => x.Tahun == tahun && x.WilayahPajak == ((int)uptb).ToString() && nopList.Contains(x.Nop))
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
                     .Select(g => new
                     {
@@ -1209,7 +1209,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 else
                 {
                     var kontrolPembayaranList = context.DbCtrlByrRestos
-                    .Where(x => x.Tahun == tahun)
+                    .Where(x => x.Tahun == tahun && nopList.Contains(x.Nop))
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
                     .Select(g => new
                     {
