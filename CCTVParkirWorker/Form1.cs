@@ -199,7 +199,7 @@ namespace CCTVParkirWorker
 
 
                     var nextRun = DateTime.Now.AddMinutes(_INTERVAL_API);
-                    UpdateLog(row, $"Next Run: {nextRun:dd/MM/yyyy HH:mm:ss}");
+                    UpdateLog(row, $"[DONE] Next Run: {nextRun:dd/MM/yyyy HH:mm:ss}");
                     await Task.Delay(TimeSpan.FromMinutes(_INTERVAL_API), token);
                 }
             }
