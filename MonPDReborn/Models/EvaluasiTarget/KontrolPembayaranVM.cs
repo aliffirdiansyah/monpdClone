@@ -3587,8 +3587,14 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.MakananMinuman:
+
+                        var nopList = context.DbOpRestos
+                         .Where(x => x.TahunBuku == tahun && x.PajakNama != "MAMIN" && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                         .Select(x => x.Nop)
+                         .ToList();
+
                         var queryResto = context.DbCtrlByrRestos
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0).AsQueryable();
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.KategoriId > 0 && nopList.Contains(x.Nop)).AsQueryable();
 
                         if (uptb != EnumFactory.EUPTB.SEMUA)
                         {
@@ -7407,10 +7413,16 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
                     })
                     .ToList();
+
+                var nopList = context.DbOpRestos
+                    .Where(x => x.TahunBuku == tahun && x.PajakNama != "MAMIN" && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                    .Select(x => x.Nop)
+                    .ToList();
+
                 if (uptb != EUPTB.SEMUA)
                 {
                     var kontrolPembayaranList = context.DbCtrlByrRestos
-                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0 && x.WilayahPajak == ((int)uptb).ToString())
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0 && x.WilayahPajak == ((int)uptb).ToString() && nopList.Contains(x.Nop))
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
                     .Select(g => new
                     {
@@ -7471,7 +7483,7 @@ namespace MonPDReborn.Models.EvaluasiTarget
                 else
                 {
                     var kontrolPembayaranList = context.DbCtrlByrRestos
-                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0)
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0 && nopList.Contains(x.Nop))
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
                     .Select(g => new
                     {
@@ -8372,8 +8384,13 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         break;
 
                     case EnumFactory.EPajak.MakananMinuman:
+
+                        var nopList = context.DbOpRestos
+                        .Where(x => x.TahunBuku == tahun && x.PajakNama != "MAMIN" && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                        .Select(x => x.Nop)
+                        .ToList();
                         var queryResto = context.DbCtrlByrRestos
-                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0).AsQueryable();
+                        .Where(x => x.Tahun == tahun && x.Bulan == bulan && x.StatusBayar == 0 && x.KategoriId > 0 && nopList.Contains(x.Nop)).AsQueryable();
 
                         if (uptb != EnumFactory.EUPTB.SEMUA)
                         {
