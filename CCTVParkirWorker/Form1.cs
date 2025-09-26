@@ -153,6 +153,7 @@ namespace CCTVParkirWorker
                                         }
                             }
                                 },
+                                limit = 1000,
                                 offset = 0,
                                 descending = true
                             }
