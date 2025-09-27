@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static MonPDLib.General.EnumFactory;
 
 namespace MonPDLib.General
 {
@@ -24,6 +25,42 @@ namespace MonPDLib.General
             public int Tahun5 { get; set; }
         }
 
+        // Mapping dari EPajakBlok ke EPajak
+        private static readonly Dictionary<EPajakBlok, EPajak> _map = new()
+        {
+            { EPajakBlok.JasaPerhotelan, EPajak.JasaPerhotelan },
+            { EPajakBlok.MakananMinuman, EPajak.MakananMinuman },
+            { EPajakBlok.JasaKesenianHiburan, EPajak.JasaKesenianHiburan },
+            { EPajakBlok.TenagaListrik, EPajak.TenagaListrik },
+            { EPajakBlok.JasaParkir, EPajak.JasaParkir },
+            { EPajakBlok.AirTanah, EPajak.AirTanah }
+        };
+        public static EPajak GetJenisPajakFromNop(string nop)
+        {
+            if (string.IsNullOrWhiteSpace(nop))
+                return EPajak.Semua;
+
+            // Pecah NOP berdasarkan titik
+            var parts = nop.Split('.');
+
+            if (parts.Length < 5)
+                return EPajak.Semua;
+
+            // Ambil blok (posisi ke-4, misalnya "902")
+            if (int.TryParse(parts[4], out int blokCode))
+            {
+                if (Enum.IsDefined(typeof(EPajakBlok), blokCode))
+                {
+                    var blok = (EPajakBlok)blokCode;
+                    if (_map.ContainsKey(blok))
+                    {
+                        return _map[blok];
+                    }
+                }
+            }
+
+            return EPajak.PBB; // fallback default
+        }
         public static TahunModel Generate5TahunKebelakang()
         {
             var tahunList = Enumerable.Range(DateTime.Now.Year - 4, 5).Reverse().ToArray();
@@ -75,5 +112,5 @@ namespace MonPDLib.General
         }
     }
 
-    
-    }
+
+}
