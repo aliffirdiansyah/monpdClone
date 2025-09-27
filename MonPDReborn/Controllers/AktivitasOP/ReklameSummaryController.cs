@@ -208,6 +208,26 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
+        public IActionResult DetailTeguran(int tahun, int bulan, int jenis, int kategori)
+        {
+            try
+            {
+                var model = new Models.AktivitasOP.ReklameSummaryVM.TeguranDetail(tahun, bulan, jenis, kategori);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
         // Detail Upaya
         public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan , int lokasi)
         {
@@ -236,13 +256,22 @@ namespace MonPDReborn.Controllers.Aktivitas
 
             // EF Core query langsung, tanpa ToListAsync
             var query = context.MUpayaReklames
+                .Where(x => x.Id != 3 && x.Id != 4 && x.Id != 5 && x.Id != 6 && x.Id != 7 && x.Id != 8 && x.Id != 9)
                 .Select(item => new UpayaCbView
                 {
                     Value = (int)item.Id,
                     Text = item.Upaya ?? string.Empty
+                })
+                .AsEnumerable() 
+                .OrderBy(x => x.Value switch
+                {
+                    10 => 1, 
+                    1 => 2,  
+                    2 => 3,  
+                    _ => 99  
                 });
 
-            return await DevExtreme.AspNet.Data.DataSourceLoader.LoadAsync(query, loadOptions);
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(query, loadOptions);
         }
         [HttpGet]
         public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)

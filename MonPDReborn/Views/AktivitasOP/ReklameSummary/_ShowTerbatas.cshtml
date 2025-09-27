@@ -57,6 +57,7 @@
                 {
                     bb.AddFor(m => m.SKPDBlmJT).Caption("SKPD").Format("#,##0").DataField("SKPDBlmJT").CellTemplate(new JS("skpdPermanenJTCellTemplate"));
                     bb.AddFor(m => m.NilaiBlmJT).Caption("NILAI").Format("#,##0");
+                    bb.AddFor(m => m.TegurJT).Caption("TEGURAN").Format("#,##0").DataField("TegurJT").CellTemplate(new JS("TegurCellTemplate"));
                     bb.AddFor(m => m.JmlSilangJT).Caption("SILANG").Format("#,##0").DataField("JmlSilangJT").CellTemplate(new JS("SilangCellTemplate"));
                     bb.AddFor(m => m.JmlBongkarJT).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarJT").CellTemplate(new JS("BongkarCellTemplate"));
                     bb.AddFor(m => m.JmlBantipJT).Caption("BANTIP").Format("#,##0").Visible(false);
@@ -67,6 +68,7 @@
                 {
                     bpp.AddFor(m => m.SKPDBlmPanjang).Caption("SKPD").Format("#,##0").DataField("SKPDBlmPanjang").CellTemplate(new JS("skpdPermanenJTCellTemplate"));
                     bpp.AddFor(m => m.NilaiBlmPanjang).Caption("NILAI").Format("#,##0");
+                    bpp.AddFor(m => m.TegurPanjang).Caption("TEGURAN").Format("#,##0").DataField("TegurPanjang").CellTemplate(new JS("TegurCellTemplate"));
                     bpp.AddFor(m => m.JmlSilangPanjang).Caption("SILANG").Format("#,##0").DataField("JmlSilangPanjang").CellTemplate(new JS("SilangCellTemplate"));
                     bpp.AddFor(m => m.JmlBongkarPanjang).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarPanjang").CellTemplate(new JS("BongkarCellTemplate"));
                     bpp.AddFor(m => m.JmlBantipPanjang).Caption("BANTIP").Format("#,##0").Visible(false);
@@ -89,6 +91,7 @@
                 {
                     bk.AddFor(m => m.SKPDBlmKB).Caption("SKPD").Format("#,##0").DataField("SKPDBlmKB").CellTemplate(new JS("skpdPermanenJTCellTemplate"));
                     bk.AddFor(m => m.NilaiBlmKB).Caption("NILAI").Format("#,##0");
+                    bk.AddFor(m => m.TegurKB).Caption("TEGURAN").Format("#,##0").DataField("TegurKB").CellTemplate(new JS("BongkarCellTemplate"));
                     bk.AddFor(m => m.JmlSilangKB).Caption("SILANG").Format("#,##0").DataField("JmlSilangKB").CellTemplate(new JS("SilangCellTemplate"));
                     bk.AddFor(m => m.JmlBongkarKB).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarKB").CellTemplate(new JS("BongkarCellTemplate"));
                     bk.AddFor(m => m.JmlBantipKB).Caption("BANTIP").Format("#,##0").Visible(false);

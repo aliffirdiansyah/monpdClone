@@ -16,9 +16,9 @@ namespace MonPDReborn.Models
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
 
-                nop = nop.Replace(".", "").Replace("-", "").Trim();
 
                 EnumFactory.EPajak jenisPajak = Utility.GetJenisPajakFromNop(nop);
+                nop = nop.Replace(".", "").Replace("-", "").Trim();
 
                 switch (jenisPajak)
                 {
