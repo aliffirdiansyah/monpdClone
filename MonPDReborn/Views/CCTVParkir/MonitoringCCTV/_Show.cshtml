@@ -11,6 +11,23 @@
                         <i class=" ri-store-3-line text-primary fs-1"></i>
                     </div>
                     <div class="text-start">
+                        <h5 class="text-muted">Total OP</h5>
+                        <h2 class="mb-0 fw-bold">@Model.TotalOp.ToString("n0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-store-3-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
                         <h5 class="text-muted">Total CCTV</h5>
                         <h2 class="mb-0 fw-bold">@Model.TotalCCTV.ToString("n0")</h2>
 
@@ -20,7 +37,25 @@
         </div>
     </div>
 
+
     <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-store-3-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Belum Terpasang</h5>
+                        <h2 class="mb-0 fw-bold">@Model.TotalBelumTerpasang.ToString("n0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* <div class="col-lg-3">
         <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
             <div class="card-body">
                 <div class="d-flex justify-content-start align-items-center mb-2">
@@ -36,7 +71,7 @@
         </div>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
             <div class="card-body">
                 <div class="d-flex justify-content-start align-items-center mb-2">
@@ -51,7 +86,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
+
 
 </div>
 
@@ -102,11 +138,11 @@
             .CellTemplate(@<text>
                 <div class="d-flex justify-content-center gap-2">
                     <!-- Tombol Modal -->
-                    <button class="btn btn-sm btn-primary" onclick="lihatDetailModal('<%- data.Nop %>')" title="Lihat di Modal">
+                                   <button class="btn btn-sm btn-primary" onclick="lihatDetailModal('<%- data.Nop %>','<%- data.VedorId %>')" title="Log">
                         <i class="bx bx-area"></i>
                     </button>
                     <!-- Tombol New Tab -->
-                    <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>')" title="Buka di Tab Baru">
+                    <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>','<%- data.VedorId %>')" title="Detail">
                         <i class="bx bx-archive"></i>
                     </button>
                 </div>

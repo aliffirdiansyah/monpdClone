@@ -474,6 +474,7 @@ namespace CCTVParkirWorker
             var pl = _cont.MOpParkirCctvs
                 .Include(x => x.MOpParkirCctvJasnita)
                 .Where(x => x.Vendor == 1)
+                .OrderBy(x => x.NamaOp)
                 .ToList();
 
 
@@ -502,7 +503,7 @@ namespace CCTVParkirWorker
                 }
             }
 
-            return result;
+            return result.OrderBy(x => x.Nama).ToList();
         }
         public ParkirView? GetParkirById(string id)
         {

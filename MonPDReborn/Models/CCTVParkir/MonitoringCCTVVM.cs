@@ -1,4 +1,5 @@
 ﻿using DevExpress.CodeParser;
+using DocumentFormat.OpenXml.Office.CoverPageProps;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.General;
@@ -26,9 +27,13 @@ namespace MonPDReborn.Models.CCTVParkir
         public class Show
         {
             public List<MonitoringCCTV> MonitoringCCTVList { get; set; } = new();
-            public decimal TotalCCTV => MonitoringCCTVList.Count;
-            public decimal TotalAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "AKTIF");
-            public decimal TotalNonAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "NONAKTIF" || c.StatusAktif.ToUpper() == "-");
+            public decimal TotalOp => MonitoringCCTVList.Count;
+            public decimal TotalCCTV => MonitoringCCTVList.Count(x => x.StatusAktif == "TERPASANG");
+            public decimal TotalBelumTerpasang => MonitoringCCTVList.Count(x => x.StatusAktif == "BELUM TERPASANG");
+            //public decimal TotalCCTV => MonitoringCCTVList.Count;
+            //public decimal TotalAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "AKTIF");
+            //public decimal TotalNonAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "NON AKTIF");
+            //public decimal TotalBelumTerpasang => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "BELUM TERPASANG");
             public Show(int uptb)
             {
                 MonitoringCCTVList = Method.GetMonitoringCCTVList(uptb);
@@ -45,9 +50,19 @@ namespace MonPDReborn.Models.CCTVParkir
         public class Kapasitas
         {
             public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
-            public Kapasitas(string nop)
+            public string Nop { get; set; } = "";
+            public Kapasitas(string nop, int vendorId)
             {
-                MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop);
+                Nop = nop;
+                MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop, vendorId);
+            }
+        }
+        public class DataKapasitasParkir
+        {
+            public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
+            public DataKapasitasParkir(string nop, DateTime tglAwal, DateTime tglAkhir)
+            {
+                MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop, tglAwal, tglAkhir);
             }
         }
         public class Log
@@ -89,7 +104,8 @@ namespace MonPDReborn.Models.CCTVParkir
                             c.NamaOp,
                             c.AlamatOp,
                             c.WilayahPajak,
-                            c.Vendor
+                            c.Vendor,
+                            c.IsPasang
                         }
                         into g
                         select new
@@ -99,6 +115,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             g.Key.AlamatOp,
                             g.Key.WilayahPajak,
                             g.Key.Vendor,
+                            g.Key.IsPasang,
                             D1 = g.Select(x => x.d1),
                             D2 = g.Select(x => x.d2),
                             L1 = g.Select(x => x.l1),
@@ -132,7 +149,12 @@ namespace MonPDReborn.Models.CCTVParkir
                             TglTerpasang = tglTerpasang,
                             VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
-                            StatusAktif = lastLog != null ? ((dynamic)lastLog).Status : "-",
+                            //StatusAktif = lastLog != null 
+                            //    ? ((dynamic)lastLog).Status 
+                            //    : (tglTerpasang.HasValue)
+                            //        ? "NON AKTIF"
+                            //        : "BELUM TERPASANG",
+                            StatusAktif = g.IsPasang == 1 ? "TERPASANG" : "BELUM TERPASANG",
                             TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglTerakhirAktif : null
                         };
                     })
@@ -163,7 +185,8 @@ namespace MonPDReborn.Models.CCTVParkir
                             c.NamaOp,
                             c.AlamatOp,
                             c.WilayahPajak,
-                            c.Vendor
+                            c.Vendor,
+                            c.IsPasang
                         }
                         into g
                         select new
@@ -173,6 +196,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             g.Key.AlamatOp,
                             g.Key.WilayahPajak,
                             g.Key.Vendor,
+                            g.Key.IsPasang,
                             D1 = g.Select(x => x.d1),
                             D2 = g.Select(x => x.d2),
                             L1 = g.Select(x => x.l1),
@@ -206,7 +230,12 @@ namespace MonPDReborn.Models.CCTVParkir
                             TglTerpasang = tglTerpasang,
                             VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
-                            StatusAktif = lastLog != null ? ((dynamic)lastLog).Status : "-",
+                            //StatusAktif = lastLog != null
+                            //    ? ((dynamic)lastLog).Status
+                            //    : (tglTerpasang.HasValue)
+                            //        ? "NON AKTIF"
+                            //        : "BELUM TERPASANG",
+                            StatusAktif = g.IsPasang == 1 ? "TERPASANG" : "BELUM TERPASANG",
                             TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglTerakhirAktif : null
                         };
                     })
@@ -254,7 +283,7 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
-            public static List<MonitoringCCTVKapasitas> GetMonitoringCCTVKapasitas(string nop)
+            public static List<MonitoringCCTVKapasitas> GetMonitoringCCTVKapasitas(string nop, int vendorId)
             {
                 var result = new List<MonitoringCCTVKapasitas>();
                 var context = DBClass.GetContext();
@@ -265,6 +294,40 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 var data = context.TOpParkirCctvs
                     .Where(l => l.Nop == nop && l.WaktuMasuk.Date == DateTime.Now.Date)
+                    .GroupBy(l => l.JenisKend)
+                    .Select(g => new
+                    {
+                        JenisKendaraan = g.Key,
+                        JumlahKendaraanTerparkir = g.Count()
+                    })
+                    .ToList();
+                result = data.Select(d => new MonitoringCCTVKapasitas
+                {
+                    Nop = nop,
+                    Tanggal = DateTime.Today,
+                    JenisKendaraan = d.JenisKendaraan,
+                    JumlahKendaraanTerparkir = d.JumlahKendaraanTerparkir,
+                    Kapasitas = d.JenisKendaraan == 1 ? (kapasitas.Any() ? kapasitas.FirstOrDefault().KapMotor ?? 0 : 0) :
+                                d.JenisKendaraan == 2 ? (kapasitas.Any() ? kapasitas.FirstOrDefault().KapMobil ?? 0 : 0) :
+                                d.JenisKendaraan == 3 ? (kapasitas.Any() ? kapasitas.FirstOrDefault().KapTrukBus ?? 0 : 0) : 0,
+
+                    Tarif = d.JenisKendaraan == 1 ? (kapasitas.Any() ? kapasitas.FirstOrDefault().TarifMotor ?? 0 : 0) :
+                            d.JenisKendaraan == 2 ? (kapasitas.Any() ? kapasitas.FirstOrDefault().TarifMobil ?? 0 : 0) :
+                            d.JenisKendaraan == 3 ? (kapasitas.Any() ? kapasitas.FirstOrDefault().TarifTrukBus ?? 0 : 0) : 0,
+                }).ToList();
+                return result;
+            }
+            public static List<MonitoringCCTVKapasitas> GetMonitoringCCTVKapasitas(string nop, DateTime tglAwal, DateTime tglAkhir)
+            {
+                var result = new List<MonitoringCCTVKapasitas>();
+                var context = DBClass.GetContext();
+
+                var kapasitas = context.DbPotensiParkirs
+                    .Where(p => p.Nop == nop && p.TahunBuku == DateTime.Now.Year + 1)
+                    .AsQueryable();
+
+                var data = context.TOpParkirCctvs
+                    .Where(l => l.Nop == nop && l.WaktuMasuk >= tglAwal && l.WaktuKeluar <= tglAkhir)
                     .GroupBy(l => l.JenisKend)
                     .Select(g => new
                     {

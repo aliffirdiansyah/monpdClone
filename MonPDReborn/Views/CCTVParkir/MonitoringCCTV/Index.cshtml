@@ -96,7 +96,7 @@
     </script>
 
     <script>
-        function lihatDetailModal(nop) {
+        function lihatDetailModal(nop, vendorId) {
             // Tampilkan modal
             $("#staticBackdropLargeScrollable").modal("show");
 
@@ -110,8 +110,9 @@
             `);
 
             // Ambil konten detail via AJAX
-            $.get('/MonitoringCCTV/Detail', { nop: nop })
+            $.get('/MonitoringCCTV/Detail', { nop: nop, vendorId : vendorId })
                 .done(function (html) {
+                    $("#staticBackdropLargeScrollable .modal-title").html("Log Aktivitas");
                     $("#staticBackdropLargeScrollable .modal-body").html(html);
                 })
                 .fail(function () {
@@ -123,9 +124,9 @@
                 });
         }
 
-        function lihatDetailNewTab(nop) {
+        function lihatDetailNewTab(nop, vendorId) {
             // Buka halaman detail di tab baru
-            window.open('/MonitoringCCTV/Kapasitas?nop=' + encodeURIComponent(nop), '_blank');
+            window.open('/MonitoringCCTV/Kapasitas?nop=' + encodeURIComponent(nop) + "&vendorId=" + vendorId, '_blank');
         }
 
         function detailOPCellTemplate(cellElement, cellInfo) {

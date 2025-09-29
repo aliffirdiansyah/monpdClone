@@ -75,11 +75,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        public IActionResult Detail(string nop, int vendorid)
+        public IActionResult Detail(string nop, int vendorId)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.Detail(nop, vendorid);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.Detail(nop, vendorId);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -95,11 +95,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        public IActionResult Kapasitas(string nop)
+        public IActionResult Kapasitas(string nop, int vendorId)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.Kapasitas(nop);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.Kapasitas(nop, vendorId);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -113,6 +113,23 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
+            }
+        }
+        public IActionResult DataKapasitasParkir(string nop, DateTime tanggalAwal, DateTime tanggalAkhir)
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.DataKapasitasParkir(nop, tanggalAwal, tanggalAkhir);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                return Json(response.ToErrorInfoMessage(e.Message));
+            }
+            catch (Exception ex)
+            {
+                return Json(response.ToInternalServerError);
             }
         }
         public IActionResult Log(string nop, int jenisKend)
