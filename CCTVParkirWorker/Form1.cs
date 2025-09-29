@@ -39,6 +39,7 @@ namespace CCTVParkirWorker
             foreach (var item in _parkirList)
             {
                 var idx = dataGridView1.Rows.Add(
+                    item.No,
                     item.Id,
                     item.NOP, //NOP
                     item.Nama, //Nama
@@ -55,11 +56,11 @@ namespace CCTVParkirWorker
                 );
             }
 
-            _INTERVAL_API = 15;
+            _INTERVAL_API = 45;
             _URL = "http://202.146.133.26/grpc";
             _USER = "bapendasby";
             _PASS = "surabaya2025!!";
-            _INTERVAL_DAY = 10;
+            _INTERVAL_DAY = 90;
 
             dataGridView1.CellClick += DataGridView1_CellClick;
             btnStartAll.Click += BtnStartAll_Click;
