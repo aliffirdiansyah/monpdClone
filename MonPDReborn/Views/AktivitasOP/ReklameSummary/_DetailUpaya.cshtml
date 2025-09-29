@@ -1,5 +1,6 @@
 ﻿@model MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya
 
+
 <div class="card">
     <div class="card-body">
         <div class="mb-4">
@@ -19,7 +20,7 @@
                 </a>
             </li>
         </ul>
-
+        
         <div class="tab-content text-muted">
             <div class="tab-pane active" id="input-upaya" role="tabpanel">
                 <form id="formUpaya" asp-action="SimpanUpaya" asp-controller="Reklame" method="post" enctype="multipart/form-data">
@@ -28,7 +29,7 @@
                         <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
                             .ID("cbUpaya")
-                            .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
+                            .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter").LoadParams(new { kategori = @ViewBag.Kategori }))
                             .OnValueChanged("fnReloadTindakan")
                             .DisplayExpr("Text")
                             .ValueExpr("Value")

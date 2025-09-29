@@ -151,6 +151,7 @@ namespace MonPDReborn.Controllers.Aktivitas
             try
             {
                 var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailSummary(tahun, bulan, jenis, kategori , lokasi);
+                ViewBag.Kategori = kategori;
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -229,11 +230,12 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
         // Detail Upaya
-        public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan , int lokasi)
+        public IActionResult DetailUpaya(string noFormulir, int tahun, int bulan , int lokasi, int kategori)
         {
             try
             {
                 var model = new Models.AktivitasOP.ReklameSummaryVM.GetDetailUpaya(noFormulir, tahun, bulan, lokasi);
+                ViewBag.Kategori = kategori;
                 return PartialView("../AktivitasOP/ReklameSummary/_DetailUpaya", model);
             }
             catch (ArgumentException e)
@@ -250,29 +252,36 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
         }
         [HttpGet]
-        public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions)
+        public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions, int kategori)
         {
             var context = DBClass.GetContext();
+            var query = context.MUpayaReklames.AsQueryable();
 
-            // EF Core query langsung, tanpa ToListAsync
-            var query = context.MUpayaReklames
-                .Where(x => x.Id != 3 && x.Id != 4 && x.Id != 5 && x.Id != 6 && x.Id != 7 && x.Id != 8 && x.Id != 9)
+            if (kategori != 2)
+            {
+                query = query.Where(x => x.Id != 3 && x.Id != 4 && x.Id != 5 &&
+                                         x.Id != 6 && x.Id != 7 && x.Id != 8 && x.Id != 9);
+            }
+
+            var result = query
                 .Select(item => new UpayaCbView
                 {
                     Value = (int)item.Id,
                     Text = item.Upaya ?? string.Empty
                 })
-                .AsEnumerable() 
+                .AsEnumerable()
                 .OrderBy(x => x.Value switch
                 {
-                    10 => 1, 
-                    1 => 2,  
-                    2 => 3,  
-                    _ => 99  
+                    10 => 1,
+                    1 => 2,
+                    2 => 3,
+                    _ => 99
                 });
 
-            return DevExtreme.AspNet.Data.DataSourceLoader.Load(query, loadOptions);
+            return DataSourceLoader.Load(result, loadOptions);
         }
+
+
         [HttpGet]
         public async Task<object> GetTindakan(DataSourceLoadOptions loadOptions, int idUpaya)
         {

@@ -53,9 +53,9 @@
                                 {
                                     bk.AddFor(m => m.SKPDBlmByr).Caption("SKPD").Format("#,##0").CellTemplate(new JS("skpdPermanenJTCellTemplate2"));
                                     bk.AddFor(m => m.NilaiBlmByr).Caption("NILAI").Format("#,##0");
-                                    bk.AddFor(m => m.Teguran).Caption("TEGURAN").Format("#,##0");
-                                    bk.AddFor(m => m.JmlSilang).Caption("SILANG").Format("#,##0").DataField("JmlSilangKB").CellTemplate(new JS("SilangCellTemplate"));
-                                    bk.AddFor(m => m.JmlBongkar).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarKB").CellTemplate(new JS("BongkarCellTemplate"));
+                                    bk.AddFor(m => m.Teguran).Caption("TEGURAN").Format("#,##0").CellTemplate(new JS("BongkarCellTemplate2"));
+                                    bk.AddFor(m => m.JmlSilang).Caption("SILANG").Format("#,##0").CellTemplate(new JS("SilangCellTemplate2"));
+                                    bk.AddFor(m => m.JmlBongkar).Caption("BONGKAR").Format("#,##0").CellTemplate(new JS("BongkarCellTemplate2"));
                                     bk.AddFor(m => m.JmlBantip).Caption("BANTIP").Format("#,##0").Visible(false);
                                 });
                             });
@@ -98,6 +98,10 @@
                                      .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");
                                 items.AddFor(m => m.NilaiBlmByr)
+                                     .SummaryType(SummaryType.Sum)
+                                     .ValueFormat("#,##0")
+                                     .DisplayFormat("{0}");
+                                items.AddFor(m => m.Teguran)
                                      .SummaryType(SummaryType.Sum)
                                      .ValueFormat("#,##0")
                                      .DisplayFormat("{0}");

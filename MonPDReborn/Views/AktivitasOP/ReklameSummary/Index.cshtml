@@ -443,6 +443,41 @@
             $(cellElement).append($wrapper);
         }
 
+        function BongkarCellTemplate2(cellElement, cellInfo) {
+            const jumlah = cellInfo.data.JmlBongkar;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
+
+            const kategori = 3;
+            const kategoriText = getKategoriText(kategori);
+            const jenisText = getJenisText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                $("#kategoriSpan").text(kategoriLabel);
+                $("#jenisSpan").text(jenisLabel);
+
+                loadDetailBongkar(tahun, bulan, jenis, kategori, lokasi);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
         function loadDetailBongkar(tahun, bulan, jenis, kategori, lokasi) {
             const url = `/ReklameSummary/DetailBongkar?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}&lokasi=${encodeURIComponent(lokasi)}`;
             window.open(url, '_blank');
@@ -468,6 +503,41 @@
             const kategori = getNamaKategoriSilangFromColumn(namaKolom);
             const kategoriLabel = kategoriText(kategori);
             const jenisLabel = jenisText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                $("#kategoriSpan").text(kategoriLabel);
+                $("#jenisSpan").text(jenisLabel);
+
+                loadDetailSilang(tahun, bulan, jenis, kategori, lokasi);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function SilangCellTemplate2(cellElement, cellInfo) {
+            const jumlah = cellInfo.data.JmlSilang;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
+
+            const kategori = 3;
+            const kategoriText = getKategoriText(kategori);
+            const jenisText = getJenisText(jenis);
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')
@@ -537,6 +607,41 @@
             const kategori = getNamadKategoriFromColumn(namaKolom);
             const kategoriLabel = kategoridText(kategori);
             const jenisLabel = jenisdText(jenis);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                $("#kategoriSpan").text(kategoriLabel);
+                $("#jenisSpan").text(jenisLabel);
+
+                loadDetailTegur(tahun, bulan, jenis, kategori);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function TegurCellTemplate2(cellElement, cellInfo) {
+            const jumlah = cellInfo.data.Teguran;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
+
+            const kategori = 3;
+            const kategoriText = getKategoriText(kategori);
+            const jenisText = getJenisText(jenis);
 
             const $link = $('<a>')
                 .addClass('value-link text-decoration-none')

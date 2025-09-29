@@ -192,16 +192,18 @@
                 $(cellElement).text('-');
             }
         }
-        function onDetailClick(e) {
+        var kategoriGlobal = @ViewBag.Kategori;
+                function onDetailClick(e) {
             const noFormulir = (e.row.data.NoFormulir || '').split(' ')[0];
             const tahun = e.row.data.Tahun || new Date().getFullYear();
             const bulan = e.row.data.Bulan || new Date().getMonth() + 1;
             const lokasi = e.row.data.Lokasi;
+            const kategori = kategoriGlobal; // ambil dari ViewBag
 
             $.ajax({
                 url: '/ReklameSummary/DetailUpaya',
                 type: 'GET',
-                data: { noFormulir, tahun, bulan, lokasi },
+                data: { noFormulir, tahun, bulan, lokasi, kategori },
                 beforeSend: function () {
                     $("#loader").show();
 
@@ -234,5 +236,6 @@
                 }
             });
         }
+
     </script>
 }

@@ -134,6 +134,10 @@
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
+                items.AddFor(m => m.TegurJT)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
                 items.AddFor(m => m.JmlSilangJT)
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
@@ -147,6 +151,10 @@
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
                 items.AddFor(m => m.NilaiBlmPanjang)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.TegurPanjang)
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
@@ -179,6 +187,10 @@
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
                 items.AddFor(m => m.NilaiBlmKB)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                items.AddFor(m => m.TegurKB)
                         .SummaryType(SummaryType.Sum)
                         .ValueFormat("#,##0")
                         .DisplayFormat("{0}");
