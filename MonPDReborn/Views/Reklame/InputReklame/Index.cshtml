@@ -27,33 +27,12 @@
         </div>
     </div>
 
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex bg-header-color align-items-center">
-                <div class="flex-grow-1">
-                    <h4 class="card-title fs-16 text-dark mb-0">
-                        <i class="bx bx-bar-chart-alt me-2"></i> Rekap Pendataan Reklame
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <div id="loading2-ShowView" class="spinner-border text-primary" style="display: none">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div id="ShowView"></div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 @section Scripts{
     <script>
         $(document).ready(function () {
             fnShow();
-            fnShowRekap();
         });
 
         function fnShow()
@@ -86,69 +65,6 @@
               }
            });
         }
-
-        function fnShowRekap()
-        {
-            $.ajax({
-              url: '@(Url.Action("ShowView"))',
-              type: 'GET',
-              beforeSend: function () {
-                 $('#loading2-ShowView').show();
-                 $('#ShowView').hide();
-              },
-              success: function (response) {
-                    if (response.Status === undefined) {
-                        $('#loading2-ShowView').hide();
-                        $('#ShowView').show();
-                        $('#ShowView').html(response);
-                    }
-                    else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
-              },
-              error: function (xhr, status, error) {
-                 $('#loading2-ShowView').hide();
-                 $('#ShowView').hide();
-                 $('#ShowView').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-              }
-           });
-        }
-
-        function petugasCellTemplate(cellElement, cellInfo) {
-            const namaPetugas = cellInfo.value ?? "-";   // ambil nama petugas dari kolom
-            const tahun = cellInfo.data.Tahun;
-            const bulan = cellInfo.data.Bulan;
-
-            const $link = $('<a>')
-                .addClass('value-link text-decoration-none')
-                .attr('href', 'javascript:void(0);')
-                .attr('title', 'Lihat Detail Petugas')
-                .text(namaPetugas)
-                .on('click', () => {
-                    console.log("Petugas:", namaPetugas);
-
-                    // update span petugas di modal/header misalnya
-                    $("#petugasSpan").text(namaPetugas);
-
-                    // load detail sesuai petugas
-                    loadDetailPetugas(namaPetugas, tahun, bulan);
-                });
-
-            const $wrapper = $('<div>')
-                .css({
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start'
-                })
-                .append($link);
-
-            $(cellElement).append($wrapper);
-        }
-
 
         function fnReloadTindakan(e) {
             const selectedUpayaId = e.value;

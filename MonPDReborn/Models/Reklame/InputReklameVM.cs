@@ -32,24 +32,6 @@ namespace MonPDReborn.Models.Reklame
             }
         }
 
-        public class ShowView
-        {
-            public List<ViewInputan> Data { get; set; } = new();
-            public ShowView()
-            {
-                Data = Method.GetDataInputan();
-            }
-        }
-
-        public class DetailView
-        {
-            public List<ViewInputanDetail> Data { get; set; } = new();
-            public DetailView(string petugas)
-            {
-                Data = Method.GetDataInputanDetail(petugas);
-            }
-        }
-
         public class Method
         {
             public static void SimpanUpaya(DetailUpaya.NewRow NewRowUpaya)
@@ -125,47 +107,8 @@ namespace MonPDReborn.Models.Reklame
                 context.DbMonReklameUpayas.Add(newUpaya);
                 context.SaveChanges();
             }
-            public static List<ViewInputan> GetDataInputan()
-            {
-                var context = DBClass.GetContext();
-                var result = context.DbMonReklameUpayas
-                    .Where(x => x.KdAktifitas != null && x.KdAktifitas != "-" && x.NikPetugas != null && x.NikPetugas != "-")
-                    .GroupBy(x => x.Petugas)
-                    .Select(g => new ViewInputan
-                    {
-                        NamaPetugas = g.Key!,
-                        JmlBantip = g.Count(x => x.Upaya == "BANTIP REKLAME"), // B = Bantip
-                        JmlSilang = g.Count(x => x.Upaya == "PENYILANGAN"), // S = Silang
-                        JmlSurveys = g.Count(x => x.Upaya =="PENDATAAN SURVEY"), // U = Surveys (misal SURVEYS)
-                        JmlBongkar = g.Count(x => x.Upaya == "PEMBONGKARAN")  // O = Bongkar (misal BONGKAR)
-                    })
-                    .OrderBy(x => x.NamaPetugas)
-                    .ToList();
-                return result;
-            }
-            public static List<ViewInputanDetail> GetDataInputanDetail(string petugas)
-            {
-                var context = DBClass.GetContext();
-                var result = context.DbMonReklameUpayas
-                    .Where(x => x.Petugas == petugas)
-                    .Select(x => new ViewInputanDetail
-                    {
-                        NoFormulir = x.NoFormulir ?? "-",
-                        NOR = x.Nor ?? "-",
-                        Upaya = x.Upaya ?? "-",
-                        Keterangan = x.Keterangan ?? "-",
-                        TglUpaya = x.TglUpaya,
-                        Petugas = x.Petugas ?? "-",
-                        NikPetugas = x.NikPetugas ?? "-",
-                        Lampiran = x.DbMonReklameUpayaDok.Gambar
-                    })
-                    .OrderByDescending(x => x.TglUpaya)
-                    .ToList();
-                return result;
-            }
 
         }
-
         public class UpayaCbView
         {
             public int Value { get; set; }
@@ -206,25 +149,6 @@ namespace MonPDReborn.Models.Reklame
                 public DateTime TglUpaya { get; set; }
                 public byte[] Lampiran { get; set; } = null!;
             }
-        }
-        public class ViewInputan
-        {
-            public string NamaPetugas { get; set; } = null!;
-            public decimal JmlBantip { get; set; }
-            public decimal JmlSilang { get; set; }
-            public decimal JmlSurveys { get; set; }
-            public decimal JmlBongkar { get; set; }
-        }
-        public class ViewInputanDetail
-        {
-            public string NoFormulir { get; set; } = null!;
-            public string NOR { get; set; } = null!;
-            public string Upaya { get; set; } = null!;
-            public string Keterangan { get; set; } = null!;
-            public DateTime TglUpaya { get; set; }
-            public string Petugas { get; set; } = null!;
-            public string NikPetugas { get; set; } = null!;
-            public byte[] Lampiran { get; set; } = null!;
         }
     }
 }

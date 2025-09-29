@@ -30,7 +30,7 @@ public partial class MOpParkirCctvTelkom
     public DateTime TglPasang { get; set; }
 
     [InverseProperty("MOpParkirCctvTelkom")]
-    public virtual MOpParkirCctvTelkomLog? MOpParkirCctvTelkomLog { get; set; }
+    public virtual MOpParkirCctvLog? MOpParkirCctvLog { get; set; }
 
     [ForeignKey("Nop")]
     [InverseProperty("MOpParkirCctvTelkoms")]
