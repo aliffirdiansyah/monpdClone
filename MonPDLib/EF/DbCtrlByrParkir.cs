@@ -10,9 +10,9 @@ namespace MonPDLib.EF;
 public partial class DbCtrlByrParkir
 {
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(50)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
 
     [Column("TAHUN", TypeName = "NUMBER")]
     public decimal? Tahun { get; set; }
@@ -24,22 +24,22 @@ public partial class DbCtrlByrParkir
     public decimal? KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
-    [StringLength(150)]
+    [StringLength(38)]
     [Unicode(false)]
     public string? NamaKategori { get; set; }
 
     [Column("WILAYAH_PAJAK")]
-    [StringLength(20)]
+    [StringLength(1)]
     [Unicode(false)]
     public string? WilayahPajak { get; set; }
 
     [Column("NAMA_OP")]
-    [StringLength(150)]
+    [StringLength(255)]
     [Unicode(false)]
     public string? NamaOp { get; set; }
 
     [Column("ALAMAT_OP")]
-    [StringLength(250)]
+    [StringLength(255)]
     [Unicode(false)]
     public string? AlamatOp { get; set; }
 

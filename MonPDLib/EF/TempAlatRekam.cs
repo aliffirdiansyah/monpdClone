@@ -10,19 +10,4 @@ namespace MonPDLib.EF;
 [Table("TEMP_ALAT_REKAM")]
 public partial class TempAlatRekam
 {
-    [Column("PAJAK_ID", TypeName = "NUMBER")]
-    public decimal? PajakId { get; set; }
-
-    [Column("NOP")]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string? Nop { get; set; }
-
-    [Column("TGL_TERPASANG", TypeName = "DATE")]
-    public DateTime? TglTerpasang { get; set; }
-
-    [Column("KET")]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string? Ket { get; set; }
 }

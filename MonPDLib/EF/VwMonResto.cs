@@ -10,15 +10,15 @@ namespace MonPDLib.EF;
 public partial class VwMonResto
 {
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(100)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
 
     [Column("TAHUN_KETETAPAN", TypeName = "NUMBER")]
     public decimal? TahunKetetapan { get; set; }
 
     [Column("BULAN_KETETAPAN", TypeName = "NUMBER")]
-    public decimal BulanKetetapan { get; set; }
+    public decimal? BulanKetetapan { get; set; }
 
     [Column("JUMLAH_TRANSAKSI", TypeName = "NUMBER")]
     public decimal? JumlahTransaksi { get; set; }

@@ -10,9 +10,9 @@ namespace MonPDLib.EF;
 public partial class VwDataOpParkir
 {
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(50)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
 
     [Column("LAST_BUKA", TypeName = "DATE")]
     public DateTime? LastBuka { get; set; }
@@ -21,12 +21,12 @@ public partial class VwDataOpParkir
     public DateTime? LastTutup { get; set; }
 
     [Column("NAMA_OP")]
-    [StringLength(150)]
+    [StringLength(255)]
     [Unicode(false)]
     public string? NamaOp { get; set; }
 
     [Column("ALAMAT_OP")]
-    [StringLength(250)]
+    [StringLength(255)]
     [Unicode(false)]
     public string? AlamatOp { get; set; }
 
@@ -34,12 +34,12 @@ public partial class VwDataOpParkir
     public decimal? KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
-    [StringLength(150)]
+    [StringLength(38)]
     [Unicode(false)]
     public string? NamaKategori { get; set; }
 
     [Column("WILAYAH")]
-    [StringLength(20)]
+    [StringLength(1)]
     [Unicode(false)]
     public string? Wilayah { get; set; }
 

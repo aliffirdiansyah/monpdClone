@@ -38,6 +38,10 @@ public partial class MOpParkirCctv
     [Unicode(false)]
     public string KategoriNama { get; set; } = null!;
 
+    [Column("IS_PASANG")]
+    [Precision(10)]
+    public int IsPasang { get; set; }
+
     [InverseProperty("NopNavigation")]
     public virtual ICollection<MOpParkirCctvJasnitum> MOpParkirCctvJasnita { get; set; } = new List<MOpParkirCctvJasnitum>();
 
