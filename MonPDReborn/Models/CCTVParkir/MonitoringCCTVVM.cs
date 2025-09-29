@@ -69,12 +69,21 @@ namespace MonPDReborn.Models.CCTVParkir
                 {
                     result = (
                         from c in context.MOpParkirCctvs
-                        join d in context.MOpParkirCctvJasnita on c.Nop equals d.Nop into dets
-                        from d in dets.DefaultIfEmpty()
-                        join l in context.MOpParkirCctvLogs
-                            on new { d.Nop, d.CctvId } equals new { l.Nop, l.CctvId } into logs
-                        from l in logs.DefaultIfEmpty()
-                        group new { c, d, l } by new
+                        join d1 in context.MOpParkirCctvJasnita on c.Nop equals d1.Nop into jasnitaDets
+                        from d1 in jasnitaDets.DefaultIfEmpty()
+                        join d2 in context.MOpParkirCctvTelkoms on c.Nop equals d2.Nop into telkomDets
+                        from d2 in telkomDets.DefaultIfEmpty()
+                        join l1 in context.MOpParkirCctvJasnitaLogs
+                            on new { Nop = (string?)d1.Nop, CctvId = d1.CctvId }
+                            equals new { Nop = (string?)l1.Nop, CctvId = l1.CctvId }
+                            into logsJasnita
+                        from l1 in logsJasnita.DefaultIfEmpty()
+                        join l2 in context.MOpParkirCctvTelkomLogs
+                            on new { Nop = (string?)d2.Nop, CctvId = d2.CctvId }
+                            equals new { Nop = (string?)l2.Nop, CctvId = l2.CctvId }
+                            into logsTelkom
+                        from l2 in logsTelkom.DefaultIfEmpty()
+                        group new { c, d1, d2, l1, l2 } by new
                         {
                             c.Nop,
                             c.NamaOp,
@@ -90,19 +99,27 @@ namespace MonPDReborn.Models.CCTVParkir
                             g.Key.AlamatOp,
                             g.Key.WilayahPajak,
                             g.Key.Vendor,
-                            Dets = g.Select(x => x.d).Where(d => d != null),
-                            Logs = g.Select(x => x.l).Where(l => l != null)
+                            D1 = g.Select(x => x.d1),
+                            D2 = g.Select(x => x.d2),
+                            L1 = g.Select(x => x.l1),
+                            L2 = g.Select(x => x.l2)
                         }
                     )
                     .AsEnumerable()
                     .Select(g =>
                     {
-                        var tglTerpasang = g.Dets
-                            .Select(d => (DateTime?)d.TglPasang)
+                        var dets = g.D1.Where(x => x != null).Cast<object>()
+                            .Concat(g.D2.Where(x => x != null));
+
+                        var logs = g.L1.Where(x => x != null).Cast<object>()
+                            .Concat(g.L2.Where(x => x != null));
+
+                        var tglTerpasang = dets
+                            .Select(d => (DateTime?)((dynamic)d).TglPasang)
                             .Min();
 
-                        var lastLog = g.Logs
-                            .OrderByDescending(l => l.TglAktif)
+                        var lastLog = logs
+                            .OrderByDescending(l => ((dynamic)l).TglAktif)
                             .FirstOrDefault();
 
                         return new MonitoringCCTV
@@ -115,8 +132,8 @@ namespace MonPDReborn.Models.CCTVParkir
                             TglTerpasang = tglTerpasang,
                             VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
-                            StatusAktif = lastLog?.Status ?? "-",
-                            TglTerakhirAktif = lastLog?.TglAktif
+                            StatusAktif = lastLog != null ? ((dynamic)lastLog).Status : "-",
+                            TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglAktif : null
                         };
                     })
                     .ToList();
@@ -125,13 +142,22 @@ namespace MonPDReborn.Models.CCTVParkir
                 {
                     result = (
                         from c in context.MOpParkirCctvs
-                        join d in context.MOpParkirCctvJasnita on c.Nop equals d.Nop into dets
-                        from d in dets.DefaultIfEmpty()
-                        join l in context.MOpParkirCctvLogs
-                            on new { d.Nop, d.CctvId } equals new { l.Nop, l.CctvId } into logs
-                        from l in logs.DefaultIfEmpty()
+                        join d1 in context.MOpParkirCctvJasnita on c.Nop equals d1.Nop into jasnitaDets
+                        from d1 in jasnitaDets.DefaultIfEmpty()
+                        join d2 in context.MOpParkirCctvTelkoms on c.Nop equals d2.Nop into telkomDets
+                        from d2 in telkomDets.DefaultIfEmpty()
+                        join l1 in context.MOpParkirCctvJasnitaLogs
+                            on new { Nop = (string?)d1.Nop, CctvId = d1.CctvId }
+                            equals new { Nop = (string?)l1.Nop, CctvId = l1.CctvId }
+                            into logsJasnita
+                        from l1 in logsJasnita.DefaultIfEmpty()
+                        join l2 in context.MOpParkirCctvTelkomLogs
+                            on new { Nop = (string?)d2.Nop, CctvId = d2.CctvId }
+                            equals new { Nop = (string?)l2.Nop, CctvId = l2.CctvId }
+                            into logsTelkom
+                        from l2 in logsTelkom.DefaultIfEmpty()
                         where c.WilayahPajak == uptbId
-                        group new { c, d, l } by new
+                        group new { c, d1, d2, l1, l2 } by new
                         {
                             c.Nop,
                             c.NamaOp,
@@ -147,19 +173,27 @@ namespace MonPDReborn.Models.CCTVParkir
                             g.Key.AlamatOp,
                             g.Key.WilayahPajak,
                             g.Key.Vendor,
-                            Dets = g.Select(x => x.d).Where(d => d != null),
-                            Logs = g.Select(x => x.l).Where(l => l != null)
+                            D1 = g.Select(x => x.d1),
+                            D2 = g.Select(x => x.d2),
+                            L1 = g.Select(x => x.l1),
+                            L2 = g.Select(x => x.l2)
                         }
                     )
                     .AsEnumerable()
                     .Select(g =>
                     {
-                        var tglTerpasang = g.Dets
-                            .Select(d => (DateTime?)d.TglPasang)
+                        var dets = g.D1.Where(x => x != null).Cast<object>()
+                            .Concat(g.D2.Where(x => x != null));
+
+                        var logs = g.L1.Where(x => x != null).Cast<object>()
+                            .Concat(g.L2.Where(x => x != null));
+
+                        var tglTerpasang = dets
+                            .Select(d => (DateTime?)((dynamic)d).TglPasang)
                             .Min();
 
-                        var lastLog = g.Logs
-                            .OrderByDescending(l => l.TglAktif)
+                        var lastLog = logs
+                            .OrderByDescending(l => ((dynamic)l).TglAktif)
                             .FirstOrDefault();
 
                         return new MonitoringCCTV
@@ -172,13 +206,12 @@ namespace MonPDReborn.Models.CCTVParkir
                             TglTerpasang = tglTerpasang,
                             VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
-                            StatusAktif = lastLog?.Status ?? "-",
-                            TglTerakhirAktif = lastLog?.TglAktif
+                            StatusAktif = lastLog != null ? ((dynamic)lastLog).Status : "-",
+                            TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglAktif : null
                         };
                     })
                     .ToList();
                 }
-
                 return result;
             }
             public static List<MonitoringCCTVDet> GetMonitoringCCTVDetList(string nop/*, EnumFactory.EVendorParkirCCTV vendorid*/)

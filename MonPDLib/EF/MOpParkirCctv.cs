@@ -34,7 +34,7 @@ public partial class MOpParkirCctv
     public int Vendor { get; set; }
 
     [Column("KATEGORI_NAMA")]
-    [StringLength(1)]
+    [StringLength(100)]
     [Unicode(false)]
     public string KategoriNama { get; set; } = null!;
 
