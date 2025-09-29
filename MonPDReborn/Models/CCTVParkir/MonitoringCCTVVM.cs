@@ -327,7 +327,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     .AsQueryable();
 
                 var data = context.TOpParkirCctvs
-                    .Where(l => l.Nop == nop && l.WaktuMasuk >= tglAwal && l.WaktuKeluar <= tglAkhir)
+                    .Where(l => l.Nop == nop && l.WaktuMasuk >= tglAwal && l.WaktuMasuk <= tglAkhir)
                     .GroupBy(l => l.JenisKend)
                     .Select(g => new
                     {
@@ -338,7 +338,6 @@ namespace MonPDReborn.Models.CCTVParkir
                 result = data.Select(d => new MonitoringCCTVKapasitas
                 {
                     Nop = nop,
-                    Tanggal = DateTime.Today,
                     JenisKendaraan = d.JenisKendaraan,
                     JumlahKendaraanTerparkir = d.JumlahKendaraanTerparkir,
                     Kapasitas = d.JenisKendaraan == 1 ? (kapasitas.Any() ? kapasitas.FirstOrDefault().KapMotor ?? 0 : 0) :
@@ -364,7 +363,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     JenisKendaraanNama = ((EnumFactory.EJenisKendParkirCCTV)l.JenisKend).GetDescription(),
                     WaktuIn = l.WaktuMasuk,
                     WaktuOut = l.WaktuKeluar,
-                    PlatNo = l.PlatNo
+                    PlatNo = l.PlatNo ?? "-"
                 })
                 .ToList();
                 return result;

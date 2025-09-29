@@ -1,6 +1,7 @@
 ﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.Kapasitas
 
 @{
+    ViewData["Title"] = "Jumlah Terparkir";
     Layout = "_Layout";
 }
 <div class="row">
@@ -15,24 +16,28 @@
 
                     <div class="col-lg col-md-6">
                         @(Html.DevExtreme().DateBox()
-                            .ID("tanggalAwal")
+                            .ID("bulanAwal")
                             .Type(DateBoxType.Date)
-                            .Placeholder("Tanggal Awal")
+                            .Placeholder("Bulan Awal")
                             .StylingMode(EditorStylingMode.Outlined)
-                            .Value(DateTime.Now.AddDays(-3))   // H-3 dari hari ini
-                            .Max(DateTime.Now)
-                        )
+                            .Value(DateTime.Now.AddMonths(-1))
+                            .DisplayFormat("MMMM yyyy")
+                            .CalendarOptions(c => c.MaxZoomLevel(CalendarZoomLevel.Year))
+                            )
                     </div>
 
                     <div class="col-lg col-md-6">
                         @(Html.DevExtreme().DateBox()
-                            .ID("tanggalAkhir")
+                            .ID("bulanAkhir")
                             .Type(DateBoxType.Date)
-                            .Placeholder("Tanggal Akhir")
+                            .Placeholder("Bulan Akhir")
                             .StylingMode(EditorStylingMode.Outlined)
-                            .Value(DateTime.Now)               // Optional: atur default ke hari ini
-                        )
+                            .Value(DateTime.Now)
+                            .DisplayFormat("MMMM yyyy")
+                            .CalendarOptions(c => c.MaxZoomLevel(CalendarZoomLevel.Year))
+                            )
                     </div>
+
 
                     <div class="col-lg col-md-6">
                         <button type="button" onclick="fnKapasitasParkir()" class="btn btn-success w-100">
@@ -60,25 +65,34 @@
             fnKapasitasParkir();
         });
 
-        function fnKapasitasParkir(){
-            var tanggalAwal = $("#tanggalAwal").dxDateBox("instance").option("value");
-            var tanggalAkhir = $("#tanggalAkhir").dxDateBox("instance").option("value");
-            if (!tanggalAwal || !tanggalAkhir) {
-                alert("Harap pilih kedua tanggal.");
+                function fnKapasitasParkir() {
+            var bulanAwal = $("#bulanAwal").dxDateBox("instance").option("value");
+            var bulanAkhir = $("#bulanAkhir").dxDateBox("instance").option("value");
+
+            if (!bulanAwal || !bulanAkhir) {
+                alert("Harap pilih kedua bulan.");
                 return;
             }
-            if (new Date(tanggalAwal) > new Date(tanggalAkhir)) {
-                alert("Tanggal Awal tidak boleh lebih besar dari Tanggal Akhir.");
+
+            var startDate = new Date(bulanAwal.getFullYear(), bulanAwal.getMonth(), 1);
+            var endDate = new Date(bulanAkhir.getFullYear(), bulanAkhir.getMonth() + 1, 0);
+
+            if (startDate > endDate) {
+                alert("Bulan Awal tidak boleh lebih besar dari Bulan Akhir.");
                 return;
             }
-            $("#DataKapasitasParkir").html('<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+            $("#DataKapasitasParkir").html(
+                '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>'
+            );
+
             $.ajax({
                 url: '@Url.Action("DataKapasitasParkir")',
                 type: 'GET',
                 data: {
-                    nop : '@(Model.Nop)',
-                    tanggalAwal: tanggalAwal.toISOString().split('T')[0],
-                    tanggalAkhir: tanggalAkhir.toISOString().split('T')[0]
+                    nop: '@(Model.Nop)',
+                    tanggalAwal: startDate.toISOString().split('T')[0], // yyyy-MM-dd
+                    tanggalAkhir: endDate.toISOString().split('T')[0]
                 },
                 beforeSend: function () {
                     $('#loading2-DataKapasitasParkir').show();
@@ -93,6 +107,33 @@
                     $('#DataKapasitasParkir').html('<div class="alert alert-danger">❌ Gagal memuat data.</div>').show();
                 }
             });
+        }
+        function lihatDetailLog(nop, jenisKend) {
+            // Tampilkan modal
+            $("#staticBackdropLargeScrollable").modal("show");
+
+            // Kosongkan / tampilkan loading spinner saat request
+            $("#staticBackdropLargeScrollable .modal-body").html(`
+                <div class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+
+            // Ambil konten detail via AJAX
+            $.get('/MonitoringCCTV/Log', { nop: nop, jenisKend : jenisKend })
+                .done(function (html) {
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail Kendaraan");
+                    $("#staticBackdropLargeScrollable .modal-body").html(html);
+                })
+                .fail(function () {
+                    $("#staticBackdropLargeScrollable .modal-body").html(
+                        `<div class="text-danger text-center p-3">
+                            Gagal memuat data detail.
+                        </div>`
+                    );
+                });
         }
     </script>
 }

@@ -42,7 +42,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table">
+                    @* <table class="table">
                         <thead>
                             <tr>
                                 <th style="text-align: center">JENIS PAJAK</th>
@@ -98,7 +98,8 @@
                         <tfoot>
                             <tr><td><b>TOTAL</b></td><td style="text-align: right">7,307,751,999,326</td><td style="text-align: right">323,006,876,893</td><td style="text-align: right">473,928,559,434</td><td style="text-align: right">459,054,292,278</td><td style="text-align: right">442,195,417,794</td><td style="text-align: right">949,239,631,023</td><td style="text-align: right">450,651,229,594</td><td style="text-align: right">547,539,080,920</td><td style="text-align: right">504,221,916,554</td><td style="text-align: right">263,074,643,146</td><td style="text-align: right">-</td><td style="text-align: right">-</td><td style="text-align: right">-</td><td style="text-align: right">4,412,911,647,636</td><td style="text-align: right">2,894,840,351,690-</td><td style="text-align: right">60.39%</td></tr>
                         </tfoot>
-                    </table>
+                    </table> *@
+                    <div id="gridContainerNow"></div>
                 </div>
             </div>
         </div>
@@ -115,7 +116,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table">
+                    @* <table class="table">
                         <thead>
                             <tr>
                                 <th style="text-align: center">JENIS PAJAK</th>
@@ -153,10 +154,556 @@
                         <tfoot>
                             <tr><td><b>TOTAL</b></td><td style="text-align: right">5,168,983,486,267</td><td style="text-align: right">225,248,579,243</td><td style="text-align: right">339,568,847,319</td><td style="text-align: right">417,410,861,604</td><td style="text-align: right">343,185,702,164</td><td style="text-align: right">899,885,391,440</td><td style="text-align: right">365,045,316,691</td><td style="text-align: right">521,163,246,280</td><td style="text-align: right">357,589,796,696</td><td style="text-align: right">292,639,737,122</td><td style="text-align: right">282,564,071,613</td><td style="text-align: right">313,630,579,364</td><td style="text-align: right">426,206,191,682</td><td style="text-align: right">4,784,138,321,218</td><td style="text-align: right">384,845,165,049</td><td style="text-align: right">92.55%</td></tr>
                         </tfoot>
-                    </table>
+                    </table> *@
+                    <div id="GridContainerMines"></div>
                 </div>
                 
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            const data = [
+                {
+                    JenisPajak: "PBJT atas Makanan dan/atau Minuman",
+                    Target: 736275239787,
+                    Jan: 55256415760,
+                    Feb: 57138524562,
+                    Mar: 50361621386,
+                    Apr: 62926698656,
+                    May: 62868039205,
+                    Jun: 63200171508,
+                    Jul: 62439245685,
+                    Aug: 60536398194,
+                    Sep: 58635280208,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 533362395164,
+                    Selisih: 202912844623,
+                    Capaian: "72.44%"
+                },
+                {
+                    JenisPajak: "PBJT atas Tenaga Listrik",
+                    Target: 766551662201,
+                    Jan: 62818852323,
+                    Feb: 59174464560,
+                    Mar: 52956698665,
+                    Apr: 47302947831,
+                    May: 55301084155,
+                    Jun: 56654361293,
+                    Jul: 59970970442,
+                    Aug: 59091027096,
+                    Sep: 60428236751,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 513698643116,
+                    Selisih: 252853019085,
+                    Capaian: "67.01%"
+                },
+                {
+                    JenisPajak: "PBJT atas Jasa Perhotelan",
+                    Target: 405688598057,
+                    Jan: 25819948362,
+                    Feb: 27422583737,
+                    Mar: 28910844460,
+                    Apr: 21080838834,
+                    May: 25102480969,
+                    Jun: 29789054231,
+                    Jul: 29839962558,
+                    Aug: 29053899938,
+                    Sep: 29468136242,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 246487749331,
+                    Selisih: 159200848726,
+                    Capaian: "60.76%"
+                },
+                {
+                    JenisPajak: "PBJT atas Jasa Parkir",
+                    Target: 62125343640,
+                    Jan: 3347869608,
+                    Feb: 4512806688,
+                    Mar: 4357344992,
+                    Apr: 4521115094,
+                    May: 4514838589,
+                    Jun: 4655986070,
+                    Jul: 4677900918,
+                    Aug: 4838001397,
+                    Sep: 5044103148,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 40469966504,
+                    Selisih: 21655377136,
+                    Capaian: "65.14%"
+                },
+                {
+                    JenisPajak: "PBJT atas Jasa Kesenian dan Hiburan",
+                    Target: 102064401727,
+                    Jan: 6262255689,
+                    Feb: 7677536461,
+                    Mar: 5975594478,
+                    Apr: 4654854668,
+                    May: 9761832498,
+                    Jun: 8078333777,
+                    Jul: 8964746660,
+                    Aug: 8500559198,
+                    Sep: 7265192748,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 67140906177,
+                    Selisih: 34923495550,
+                    Capaian: "65.78%"
+                },
+                {
+                    JenisPajak: "Pajak Air Tanah",
+                    Target: 1435906440,
+                    Jan: 123063470,
+                    Feb: 122728110,
+                    Mar: 121234150,
+                    Apr: 121342630,
+                    May: 121460430,
+                    Jun: 141298230,
+                    Jul: 139678460,
+                    Aug: 122349530,
+                    Sep: 117768090,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 1130923100,
+                    Selisih: 304983340,
+                    Capaian: "78.76%"
+                },
+                {
+                    JenisPajak: "Pajak Reklame",
+                    Target: 178291170763,
+                    Jan: 7977899900,
+                    Feb: 10545679900,
+                    Mar: 13941242200,
+                    Apr: 8456961400,
+                    May: 12699874450,
+                    Jun: 11032885225,
+                    Jul: 13123678075,
+                    Aug: 10474797550,
+                    Sep: 9222647300,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 97475666000,
+                    Selisih: 80815504763,
+                    Capaian: "54.67%"
+                },
+                {
+                    JenisPajak: "Pajak Bumi Bangunan",
+                    Target: 1738731114918,
+                    Jan: 45606663294,
+                    Feb: 130101912406,
+                    Mar: 115024468747,
+                    Apr: 150961466941,
+                    May: 600392591490,
+                    Jun: 92196913848,
+                    Jul: 80117423119,
+                    Aug: 63352009339,
+                    Sep: 1012578117,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 1287879230301,
+                    Selisih: 450851884617,
+                    Capaian: "74.07%"
+                },
+                {
+                    JenisPajak: "BPHTB",
+                    Target: 1645077374811,
+                    Jan: 44326462537,
+                    Feb: 95504319222,
+                    Mar: 98747506500,
+                    Apr: 64377941490,
+                    May: 96218871637,
+                    Jun: 115779411000,
+                    Jul: 190388290303,
+                    Aug: 172125306512,
+                    Sep: 52598241692,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 930066350893,
+                    Selisih: 715011023918,
+                    Capaian: "56.54%"
+                },
+                {
+                    JenisPajak: "Opsen PKB",
+                    Target: 1046318203819,
+                    Jan: 47577836550,
+                    Feb: 52410017505,
+                    Mar: 57440683700,
+                    Apr: 52885177150,
+                    May: 54789407800,
+                    Jun: 47004254647,
+                    Jul: 69078591700,
+                    Aug: 70986710800,
+                    Sep: 21840778850,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 474013458702,
+                    Selisih: 572304745117,
+                    Capaian: "45.30%"
+                },
+                {
+                    JenisPajak: "Opsen BBNKB",
+                    Target: 625192983163,
+                    Jan: 23889609400,
+                    Feb: 29317986283,
+                    Mar: 31217053000,
+                    Apr: 24906073100,
+                    May: 27469149800,
+                    Jun: 22118559765,
+                    Jul: 28798593000,
+                    Aug: 25140857000,
+                    Sep: 8328477000,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 221186358348,
+                    Selisih: 404006624815,
+                    Capaian: "35.38%"
+                },
+                {
+                    JenisPajak: "TOTAL",
+                    Target: 7307751999326,
+                    Jan: 323006876893,
+                    Feb: 473928559434,
+                    Mar: 459054292278,
+                    Apr: 442195417794,
+                    May: 949239631023,
+                    Jun: 450651229594,
+                    Jul: 547539080920,
+                    Aug: 504221916554,
+                    Sep: 263074643146,
+                    Oct: null,
+                    Nov: null,
+                    Dec: null,
+                    Jumlah: 4412911647636,
+                    Selisih: 2894840351690,
+                    Capaian: "60.39%"
+                }
+            ];
+                    var dataMines = [
+            {
+                JenisPajak: "PBJT atas Makanan dan/atau Minuman",
+                Target: 655433066321,
+                Jan: 44952959054,
+                Feb: 51461107850,
+                Mar: 52911420475,
+                Apr: 54880060374,
+                May: 59882678633,
+                Jun: 58052028900,
+                Jul: 59054046821,
+                Aug: 57550905082,
+                Sep: 55076702066,
+                Oct: 54306521718,
+                Nov: 55952921794,
+                Dec: 69341223143,
+                Jumlah: 673422575910,
+                Selisih: 17989509589,
+                Capaian: "102.74%"
+            },
+            {
+                JenisPajak: "PBJT atas Tenaga Listrik",
+                Target: 688269513544,
+                Jan: 43248782517,
+                Feb: 43052004369,
+                Mar: 58962306095,
+                Apr: 56653815308,
+                May: 58658123963,
+                Jun: 58084041882,
+                Jul: 61870934644,
+                Aug: 59192338877,
+                Sep: 59151030389,
+                Oct: 60034650979,
+                Nov: 61682727174,
+                Dec: 65344096848,
+                Jumlah: 685934853045,
+                Selisih: 2334660499,
+                Capaian: "99.66%"
+            },
+            {
+                JenisPajak: "PBJT atas Jasa Perhotelan",
+                Target: 405404814687,
+                Jan: 23545191947,
+                Feb: 25141133588,
+                Mar: 26450286960,
+                Apr: 26255784308,
+                May: 24860800394,
+                Jun: 32206666072,
+                Jul: 35037490332,
+                Aug: 36360098874,
+                Sep: 34831920013,
+                Oct: 33992439869,
+                Nov: 37685965655,
+                Dec: 48415510001,
+                Jumlah: 384783288013,
+                Selisih: 20621526674,
+                Capaian: "94.91%"
+            },
+            {
+                JenisPajak: "PBJT atas Jasa Parkir",
+                Target: 57776569585,
+                Jan: 5168019570,
+                Feb: 4462485903,
+                Mar: 4221379693,
+                Apr: 4501093887,
+                May: 4468195637,
+                Jun: 4687398597,
+                Jul: 4546179625,
+                Aug: 4652790072,
+                Sep: 4611140189,
+                Oct: 4464335385,
+                Nov: 4632002496,
+                Dec: 5922708193,
+                Jumlah: 56337729247,
+                Selisih: 1438840338,
+                Capaian: "97.51%"
+            },
+            {
+                JenisPajak: "PBJT atas Jasa Kesenian dan Hiburan",
+                Target: 84327067778,
+                Jan: 5012000671,
+                Feb: 5964412555,
+                Mar: 6247290227,
+                Apr: 5100272023,
+                May: 7239662285,
+                Jun: 7821499149,
+                Jul: 8041956252,
+                Aug: 8907049359,
+                Sep: 7314104030,
+                Oct: 7167064758,
+                Nov: 7551324846,
+                Dec: 9218835874,
+                Jumlah: 85585472029,
+                Selisih: 1258404251,
+                Capaian: "101.49%"
+            },
+            {
+                JenisPajak: "Pajak Air Tanah",
+                Target: 1368359434,
+                Jan: 104111600,
+                Feb: 114687120,
+                Mar: 114272440,
+                Apr: 114281240,
+                May: 115450000,
+                Jun: 114866620,
+                Jul: 115284420,
+                Aug: 125086400,
+                Sep: 123647520,
+                Oct: 125273460,
+                Nov: 123311010,
+                Dec: 123695980,
+                Jumlah: 1413967810,
+                Selisih: 45608376,
+                Capaian: "103.33%"
+            },
+            {
+                JenisPajak: "Pajak Reklame",
+                Target: 161940557833,
+                Jan: 10614397000,
+                Feb: 7886883750,
+                Mar: 14635364300,
+                Apr: 10225156100,
+                May: 9041017400,
+                Jun: 11382613600,
+                Jul: 14577963300,
+                Aug: 12357984700,
+                Sep: 13356736000,
+                Oct: 14160834800,
+                Nov: 11466630200,
+                Dec: 11743735000,
+                Jumlah: 141449316150,
+                Selisih: 20491241683,
+                Capaian: "87.35%"
+            },
+            {
+                JenisPajak: "Pajak Bumi Bangunan",
+                Target: 1644686993252,
+                Jan: 32471839805,
+                Feb: 118884627166,
+                Mar: 153479342675,
+                Apr: 124451497176,
+                May: 648437014745,
+                Jun: 85328810322,
+                Jul: 58183037147,
+                Aug: 55987045171,
+                Sep: 37832948890,
+                Oct: 18372149258,
+                Nov: 27985096705,
+                Dec: 53096785072,
+                Jumlah: 1414510194132,
+                Selisih: 230176799120,
+                Capaian: "86.00%"
+            },
+            {
+                JenisPajak: "BPHTB",
+                Target: 1469776543833,
+                Jan: 60131277079,
+                Feb: 82601505018,
+                Mar: 100389198739,
+                Apr: 61003741748,
+                May: 87182448383,
+                Jun: 107367391549,
+                Jul: 279736353739,
+                Aug: 122456498161,
+                Sep: 80341508025,
+                Oct: 89940801386,
+                Nov: 106550599484,
+                Dec: 162999601571,
+                Jumlah: 1340700924882,
+                Selisih: 129075618951,
+                Capaian: "91.22%"
+            },
+            {
+                JenisPajak: "Opsen PKB",
+                Target: null,
+                Jan: null,
+                Feb: null,
+                Mar: null,
+                Apr: null,
+                May: null,
+                Jun: null,
+                Jul: null,
+                Aug: null,
+                Sep: null,
+                Oct: null,
+                Nov: null,
+                Dec: null,
+                Jumlah: null,
+                Selisih: null,
+                Capaian: "0.00%"
+            },
+            {
+                JenisPajak: "Opsen BBNKB",
+                Target: null,
+                Jan: null,
+                Feb: null,
+                Mar: null,
+                Apr: null,
+                May: null,
+                Jun: null,
+                Jul: null,
+                Aug: null,
+                Sep: null,
+                Oct: null,
+                Nov: null,
+                Dec: null,
+                Jumlah: null,
+                Selisih: null,
+                Capaian: "0.00%"
+            },
+            {
+                JenisPajak: "TOTAL",
+                Target: 5168983486267,
+                Jan: 225248579243,
+                Feb: 339568847319,
+                Mar: 417410861604,
+                Apr: 343185702164,
+                May: 899885391440,
+                Jun: 365045316691,
+                Jul: 521163246280,
+                Aug: 357589796696,
+                Sep: 292639737122,
+                Oct: 282564071613,
+                Nov: 313630579364,
+                Dec: 426206191682,
+                Jumlah: 4784138321218,
+                Selisih: 384845165049,
+                Capaian: "92.55%"
+            }
+        ];
+
+        $("#gridContainerNow").dxDataGrid({
+            dataSource: data,
+            showBorders: true,
+            showRowLines: true,
+            showColumnLines: true,
+            columnAutoWidth: true,
+            allowColumnResizing: true,
+            columnResizingMode: "nextColumn", // atau "widget" kalau mau semua menyesuaikan
+            wordWrapEnabled: false,
+            rowAlternationEnabled: true,
+            columns: [
+                { dataField: "JenisPajak", caption: "JENIS PAJAK" },
+                { dataField: "Target", caption: "TARGET 2025", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jan", caption: "JAN", alignment: "right", customizeText: formatNumber },
+                { dataField: "Feb", caption: "FEB", alignment: "right", customizeText: formatNumber },
+                { dataField: "Mar", caption: "MAR", alignment: "right", customizeText: formatNumber },
+                { dataField: "Apr", caption: "APR", alignment: "right", customizeText: formatNumber },
+                { dataField: "May", caption: "MAY", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jun", caption: "JUN", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jul", caption: "JUL", alignment: "right", customizeText: formatNumber },
+                { dataField: "Aug", caption: "AUG", alignment: "right", customizeText: formatNumber },
+                { dataField: "Sep", caption: "SEP", alignment: "right", customizeText: formatNumber },
+                { dataField: "Oct", caption: "OCT", alignment: "right", customizeText: formatNumber },
+                { dataField: "Nov", caption: "NOV", alignment: "right", customizeText: formatNumber },
+                { dataField: "Dec", caption: "DEC", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jumlah", caption: "JUMLAH", alignment: "right", customizeText: formatNumber },
+                { dataField: "Selisih", caption: "SELISIH", alignment: "right", customizeText: formatNumber },
+                { dataField: "Capaian", caption: "CAPAIAN", alignment: "center" }
+            ],
+            onRowPrepared: function (e) {
+                if (e.rowType === "data" && e.data.JenisPajak === "TOTAL") {
+                    e.rowElement.css("font-weight", "bold");
+                    e.rowElement.css("background-color", "#f5f5f5");
+                }
+            }
+        });
+
+        $("#GridContainerMines").dxDataGrid({
+            dataSource: dataMines, // isi array object hasil convert dari table di atas
+            showBorders: true,
+            showRowLines: true,
+            showColumnLines: true,
+            columnAutoWidth: true,
+            allowColumnResizing: true,
+            columnResizingMode: "nextColumn",
+            wordWrapEnabled: false,
+            rowAlternationEnabled: true,
+            columns: [
+                { dataField: "JenisPajak", caption: "JENIS PAJAK" },
+                { dataField: "Target", caption: "TARGET 2024", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jan", caption: "JAN", alignment: "right", customizeText: formatNumber },
+                { dataField: "Feb", caption: "FEB", alignment: "right", customizeText: formatNumber },
+                { dataField: "Mar", caption: "MAR", alignment: "right", customizeText: formatNumber },
+                { dataField: "Apr", caption: "APR", alignment: "right", customizeText: formatNumber },
+                { dataField: "May", caption: "MAY", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jun", caption: "JUN", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jul", caption: "JUL", alignment: "right", customizeText: formatNumber },
+                { dataField: "Aug", caption: "AUG", alignment: "right", customizeText: formatNumber },
+                { dataField: "Sep", caption: "SEP", alignment: "right", customizeText: formatNumber },
+                { dataField: "Oct", caption: "OCT", alignment: "right", customizeText: formatNumber },
+                { dataField: "Nov", caption: "NOV", alignment: "right", customizeText: formatNumber },
+                { dataField: "Dec", caption: "DEC", alignment: "right", customizeText: formatNumber },
+                { dataField: "Jumlah", caption: "JUMLAH", alignment: "right", customizeText: formatNumber },
+                { dataField: "Selisih", caption: "SELISIH", alignment: "right", customizeText: formatNumber },
+                { dataField: "Capaian", caption: "CAPAIAN", alignment: "center" }
+            ],
+            onRowPrepared: function (e) {
+                if (e.rowType === "data" && e.data.JenisPajak === "TOTAL") {
+                    e.rowElement.css("font-weight", "bold");
+                    e.rowElement.css("background-color", "#f5f5f5");
+                }
+            }
+        });
+        function formatNumber(cellInfo) {
+                if (cellInfo.value === null) return "-";
+                return new Intl.NumberFormat("id-ID").format(cellInfo.value);
+            }
+        });
+    </script>
+}
