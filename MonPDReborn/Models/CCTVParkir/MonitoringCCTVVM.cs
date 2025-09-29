@@ -37,9 +37,9 @@ namespace MonPDReborn.Models.CCTVParkir
         public class Detail
         {
             public List<MonitoringCCTVDet> MonitoringCCTVDetList { get; set; } = new();
-            public Detail(string nop)
+            public Detail(string nop, int vendor)
             {
-                MonitoringCCTVDetList = Method.GetMonitoringCCTVDetList(nop);
+                MonitoringCCTVDetList = Method.GetMonitoringCCTVDetList(nop,(EnumFactory.EVendorParkirCCTV)vendor);
             }
         }
         public class Kapasitas
@@ -214,32 +214,43 @@ namespace MonPDReborn.Models.CCTVParkir
                 }
                 return result;
             }
-            public static List<MonitoringCCTVDet> GetMonitoringCCTVDetList(string nop/*, EnumFactory.EVendorParkirCCTV vendorid*/)
+            public static List<MonitoringCCTVDet> GetMonitoringCCTVDetList(string nop, EnumFactory.EVendorParkirCCTV vendorid)
             {
                 var result = new List<MonitoringCCTVDet>();
                 var context = DBClass.GetContext();
 
-                /*switch (vendorid)
+                switch (vendorid)
                 {
                     case EnumFactory.EVendorParkirCCTV.Jasnita:
-
+                        result = context.MOpParkirCctvJasnitaLogs
+                        .Where(l => l.Nop == nop)
+                        .Select(l => new MonitoringCCTVDet
+                        {
+                            Nop = l.Nop,
+                            Tgl = l.TglAktif,
+                            TglAktif = l.TglAktif,
+                            TglDown = l.TglDown.Value,
+                            StatusAktif = l.Status
+                        })
+                        .ToList();
                         break;
                     case EnumFactory.EVendorParkirCCTV.Telkom:
+                        result = context.MOpParkirCctvTelkomLogs
+                        .Where(l => l.Nop == nop)
+                        .Select(l => new MonitoringCCTVDet
+                        {
+                            Nop = l.Nop,
+                            Tgl = l.TglAktif,
+                            TglAktif = l.TglAktif,
+                            TglDown = l.TglDown.Value,
+                            StatusAktif = l.Status
+                        })
+                        .ToList();
                         break;
                     default:
                         break;
-                }*/
-                result = context.MOpParkirCctvLogs
-                .Where(l => l.Nop == nop)
-                .Select(l => new MonitoringCCTVDet
-                {
-                    Nop = l.Nop,
-                    Tgl = l.TglAktif,
-                    TglAktif = l.TglAktif,
-                    TglDown = l.TglDown.Value,
-                    StatusAktif = l.Status
-                })
-                .ToList();
+                }
+                
 
                 return result;
             }
