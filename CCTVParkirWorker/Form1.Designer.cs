@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
+            btnStartAll = new Button();
+            btnStopAll = new Button();
+            No = new DataGridViewTextBoxColumn();
             Id = new DataGridViewTextBoxColumn();
             Nop = new DataGridViewTextBoxColumn();
             Nama = new DataGridViewTextBoxColumn();
@@ -43,8 +46,6 @@
             Status = new DataGridViewTextBoxColumn();
             Error = new DataGridViewTextBoxColumn();
             Log = new DataGridViewTextBoxColumn();
-            btnStartAll = new Button();
-            btnStopAll = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -53,11 +54,34 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Id, Nop, Nama, Alamat, Uptb, CctvId, AccessPoint, Mode, LastConnected, Action, Status, Error, Log });
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { No, Id, Nop, Nama, Alamat, Uptb, CctvId, AccessPoint, Mode, LastConnected, Action, Status, Error, Log });
             dataGridView1.Location = new Point(12, 77);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(776, 361);
             dataGridView1.TabIndex = 0;
+            // 
+            // btnStartAll
+            // 
+            btnStartAll.Location = new Point(32, 28);
+            btnStartAll.Name = "btnStartAll";
+            btnStartAll.Size = new Size(90, 23);
+            btnStartAll.TabIndex = 1;
+            btnStartAll.Text = "Start All";
+            btnStartAll.UseVisualStyleBackColor = true;
+            // 
+            // btnStopAll
+            // 
+            btnStopAll.Location = new Point(682, 28);
+            btnStopAll.Name = "btnStopAll";
+            btnStopAll.Size = new Size(90, 23);
+            btnStopAll.TabIndex = 2;
+            btnStopAll.Text = "Stop All";
+            btnStopAll.UseVisualStyleBackColor = true;
+            // 
+            // No
+            // 
+            No.HeaderText = "No";
+            No.Name = "No";
             // 
             // Id
             // 
@@ -113,8 +137,8 @@
             // 
             // Status
             // 
-            dataGridViewCellStyle2.BackColor = Color.Red;
-            Status.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.BackColor = Color.Red;
+            Status.DefaultCellStyle = dataGridViewCellStyle1;
             Status.HeaderText = "Status";
             Status.Name = "Status";
             // 
@@ -127,24 +151,6 @@
             // 
             Log.HeaderText = "Log";
             Log.Name = "Log";
-            // 
-            // btnStartAll
-            // 
-            btnStartAll.Location = new Point(32, 28);
-            btnStartAll.Name = "btnStartAll";
-            btnStartAll.Size = new Size(90, 23);
-            btnStartAll.TabIndex = 1;
-            btnStartAll.Text = "Start All";
-            btnStartAll.UseVisualStyleBackColor = true;
-            // 
-            // btnStopAll
-            // 
-            btnStopAll.Location = new Point(682, 28);
-            btnStopAll.Name = "btnStopAll";
-            btnStopAll.Size = new Size(90, 23);
-            btnStopAll.TabIndex = 2;
-            btnStopAll.Text = "Stop All";
-            btnStopAll.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -165,6 +171,9 @@
         #endregion
 
         private DataGridView dataGridView1;
+        private Button btnStartAll;
+        private Button btnStopAll;
+        private DataGridViewTextBoxColumn No;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn Nop;
         private DataGridViewTextBoxColumn Nama;
@@ -178,7 +187,5 @@
         private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn Error;
         private DataGridViewTextBoxColumn Log;
-        private Button btnStartAll;
-        private Button btnStopAll;
     }
 }
