@@ -68,6 +68,111 @@ namespace MonPDReborn.Controllers.Reklame
             }
         }
 
+        public IActionResult RekapView()
+        {
+            try
+            {
+                var model = new Models.Reklame.InputReklameVM.RekapView();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        public IActionResult Detail(string namaPetugas, int noKegiatan)
+        {
+            try
+            {
+                var model = new Models.Reklame.InputReklameVM.Detail(namaPetugas, noKegiatan);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetLampiran(string noFormulir, string nor)
+        {
+            using var context = DBClass.GetContext();
+
+            var query = context.DbMonReklameUpayas.AsQueryable();
+
+            if (!string.IsNullOrEmpty(noFormulir))
+                query = query.Where(x => x.NoFormulir == noFormulir);
+
+            if (!string.IsNullOrEmpty(nor))
+                query = query.Where(x => x.Nor == nor);
+
+            var upaya = query
+                .Select(x => x.DbMonReklameUpayaDok)
+                .FirstOrDefault();
+
+            if (upaya == null || upaya.Gambar == null)
+                return NotFound();
+
+            return File(upaya.Gambar, "image/jpeg");
+        }
+
+        [HttpPost]
+        public IActionResult HapusData(string noFormulir, string nor, string namaPetugas, int seq)
+        {
+            try
+            {
+                var context = DBClass.GetContext();
+
+                // Ambil data utama (Upaya)
+                var data = context.DbMonReklameUpayas
+                    .FirstOrDefault(x => x.NoFormulir == noFormulir && x.Nor == nor && x.Petugas == namaPetugas);
+
+                if (data != null)
+                {
+                    // Ambil semua dokumen terkait
+                    var doks = context.DbMonReklameUpayaDoks
+                        .Where(d => d.NoformS == noFormulir && d.Nor == nor && d.Seq == seq)
+                        .ToList();
+
+                    if (doks.Any())
+                    {
+                        context.DbMonReklameUpayaDoks.RemoveRange(doks);
+                    }
+
+                    // Hapus data utama
+                    context.DbMonReklameUpayas.Remove(data);
+                    context.SaveChanges();
+
+                    return Json(new { success = true });
+                }
+
+                return Json(new { success = false, message = "Data tidak ditemukan" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
+
         [HttpGet]
         public async Task<object> GetUpaya(DataSourceLoadOptions loadOptions)
         {

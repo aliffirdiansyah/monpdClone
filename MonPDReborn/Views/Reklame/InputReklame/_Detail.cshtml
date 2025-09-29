@@ -1,0 +1,47 @@
+﻿@model MonPDReborn.Models.Reklame.InputReklameVM.Detail
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.InputReklameVM.RekapDet>()
+        .ID("detailUpayaInfoGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NoFormulir).Caption("Nomor Formulir");
+            columns.AddFor(m => m.NOR).Caption("NOR");
+            columns.Add()
+                .Caption("Lampiran")
+                .CellTemplate(new JS("lampiranCellTemplate"));
+            columns.AddFor(m => m.TglUpaya).Caption("Tanggal Upaya").Format("dd MMM yyyy");
+            columns.AddFor(m => m.NamaUpaya).Caption("Upaya");
+            columns.AddFor(m => m.Keterangan).Caption("Keterangan");
+            columns.AddFor(m => m.Petugas).Caption("Petugas");
+            columns.AddFor(m => m.Seq).Caption("Petugas").Visible(false);
+
+            columns.Add()
+                    .Caption("Action")
+                    .CellTemplate(@<text>
+                <button class="btn btn-sm btn-danger"
+                        onclick="hapusData('<%- data.NoFormulir %>', '<%- data.NOR %>', '<%- data.Petugas %>', <%- data.Seq %>)">
+            <i class="bx bx-trash"></i>
+                </button>
+            </text>);
+
+        })
+
+        )
+</div>

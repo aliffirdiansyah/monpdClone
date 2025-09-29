@@ -5,6 +5,39 @@
     Layout = "_Layout";
 }
 
+<style>
+  /* overlay background */
+  #lampiranOverlay {
+    display: none; /* awalnya hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6); /* semi transparan */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* kontainer isi lampiran */
+  #lampiranContent {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+  }
+
+  #lampiranContent img,
+  #lampiranContent iframe {
+    max-width: 100%;
+    max-height: 80vh;
+    display: block;
+  }
+</style>
+
 <div class="row">
 
     <div class="col-lg-12">
@@ -27,12 +60,37 @@
         </div>
     </div>
 
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title fs-16 text-dark mb-0">
+                        <i class="bx bx-bar-chart-alt me-2"></i> Rekap Input Reklame
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-ShowView" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="ShowView"></div>
+                <div id="lampiranOverlay">
+                    <div id="lampiranContent"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @section Scripts{
     <script>
         $(document).ready(function () {
             fnShow();
+            fnShowView();
         });
 
         function fnShow()
@@ -62,6 +120,37 @@
                  $('#loading2-Show').hide();
                  $('#Show').hide();
                  $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+
+        function fnShowView()
+        {
+            $.ajax({
+              url: '@(Url.Action("RekapView"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-ShowView').show();
+                 $('#ShowView').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-ShowView').hide();
+                        $('#ShowView').show();
+                        $('#ShowView').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-ShowView').hide();
+                 $('#ShowView').hide();
+                 $('#ShowView').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
               }
            });
         }
@@ -281,6 +370,206 @@
                 }
             });
         }
+
+
+    </script>
+    <script>
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var base64 = cellInfo.data.Lampiran;
+            var mime = 'image/png'; // atau 'image/jpeg' / 'application/pdf'
+
+            if (base64 && base64.length > 100) {
+                var dataUrl = 'data:' + mime + ';base64,' + base64;
+
+                $('<a>')
+                    .attr('href', dataUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', dataUrl)
+                            .addClass('img-thumbnail')
+                            .css({ height: '50px', width: 'auto', cursor: 'zoom-in' })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
+        }
+        function getNoKegiatanFromColumn(columnName) {
+            switch (columnName) {
+                case 'JmlSurvey': return '1';
+                case 'JmlSilang': return '2';
+                case 'JmlBongkar': return '3';
+                case 'JmlBantib': return '4';
+                case 'JmlLain': return '5';
+                case 'JmlBatal': return '6';
+                default: return '-'; // fallback kalau tidak ada
+            }
+        }
+
+        function PetugasCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const namaPetugas = cellInfo.data.namaPetugas;
+            const namaKolom = cellInfo.column.dataField;
+            const noKegiatan = getNoKegiatanFromColumn(namaKolom);
+
+             const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    $("#namaPetugasSpan").text(namaPetugas);
+                    $("#noKegiatanSpan").text(noKegiatan);
+
+                    loadDetailPetugas(noKegiatan, namaPetugas);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function loadDetailPetugas(noKegiatan, namaPetugas) {
+            $.ajax({
+                url: '/InputReklame/Detail',
+                type: 'GET',
+                data: { noKegiatan, namaPetugas},
+                beforeSend: function () {
+                    $("#loader").show();
+                    $("#staticBackdropLargeScrollable").modal('hide');
+                },
+                success: function (response) {
+                    $("#loader").hide();
+                    if (response.Status === undefined) {
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail");
+                        $("#staticBackdropLargeScrollable .modal-body").html(response);
+                        $("#staticBackdropLargeScrollable").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $("#loader").hide();
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail");
+                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#staticBackdropLargeScrollable").modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+        function lampiranCellTemplate(container, cellInfo) {
+            const noFormulir = cellInfo.data.NoFormulir;
+            const nor = cellInfo.data.NOR;
+
+            $("<button>")
+                .addClass("btn btn-sm btn-primary")
+                .html("<i class='dx-icon-find'></i> Lihat")
+                .on("click", function () {
+                    onShowLampiranClick(noFormulir, nor);
+                })
+                .appendTo(container);
+        }
+
+
+              function onShowLampiranClick(noFormulir, nor) {
+          let url = "/InputReklame/GetLampiran";
+
+          const params = [];
+          if (noFormulir && noFormulir !== "-") {
+              params.push("noFormulir=" + encodeURIComponent(noFormulir));
+          }
+          if (nor && nor !== "-") {
+              params.push("nor=" + encodeURIComponent(nor));
+          }
+
+          if (params.length > 0) {
+              url += "?" + params.join("&");
+          }
+
+          // tampilkan di overlay
+          const overlay = document.getElementById("lampiranOverlay");
+          const content = document.getElementById("lampiranContent");
+
+          // asumsi file bisa berupa gambar/pdf
+          if (url.endsWith(".pdf")) {
+            content.innerHTML = `<iframe src="${url}" width="800" height="600"></iframe>`;
+          } else {
+            content.innerHTML = `<img src="${url}" alt="Lampiran">`;
+          }
+
+          overlay.style.display = "flex";
+
+          // klik di luar konten = close
+          overlay.onclick = function(e) {
+            if (e.target === overlay) {
+              overlay.style.display = "none";
+              content.innerHTML = "";
+            }
+          }
+        }
+
+        function hapusData(noFormulir, nor, namaPetugas, seq) {
+            Swal.fire({
+                title: 'Yakin hapus data?',
+                text: "Data yang sudah dihapus tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Reklame/HapusData',
+                        type: 'POST',
+                        data: { noFormulir: noFormulir, nor: nor, namaPetugas: namaPetugas, seq: seq },
+                        success: function (response) {
+                            if (response.Status === 1) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: response.Message
+                                });
+
+                                $('#formUpaya')[0].reset();
+                                $("#gridContainer").dxDataGrid("instance").refresh();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: response.Message
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan saat menghapus data.'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+
 
 
     </script>

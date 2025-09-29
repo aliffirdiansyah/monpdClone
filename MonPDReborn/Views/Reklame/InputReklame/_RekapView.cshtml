@@ -1,0 +1,75 @@
+﻿@model MonPDReborn.Models.Reklame.InputReklameVM.RekapView
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.Reklame.InputReklameVM.Rekap>()
+        .ID("rekapViewGrid")
+        .DataSource(Model.DataRekap)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.namaPetugas).Caption("Nama Petugas");
+            columns.Add().Caption("Total").Columns(sub =>
+            {
+                sub.AddFor(m => m.JmlSurvey).Caption("Pendataan Survey").Format("#,##0").DataField("JmlSurvey").CellTemplate(new JS("PetugasCellTemplate"));
+                sub.AddFor(m => m.JmlSilang).Caption("Penyilangan").Format("#,##0").DataField("JmlSilang").CellTemplate(new JS("PetugasCellTemplate"));
+                sub.AddFor(m => m.JmlBongkar).Caption("Pembongkaran").Format("#,##0").DataField("JmlBongkar").CellTemplate(new JS("PetugasCellTemplate"));
+                sub.AddFor(m => m.JmlBantib).Caption("Bantip Reklame").Format("#,##0").DataField("JmlBantib").CellTemplate(new JS("PetugasCellTemplate"));
+                sub.AddFor(m => m.JmlLain).Caption("Lainnya").Format("#,##0").DataField("JmlLain").CellTemplate(new JS("PetugasCellTemplate"));
+                sub.AddFor(m => m.JmlBatal).Caption("Pembatalan Ketetapan").Format("#,##0").DataField("JmlBatal").CellTemplate(new JS("PetugasCellTemplate"));
+            });
+
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.namaPetugas)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("Total");
+
+                items.AddFor(m => m.JmlSurvey)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.JmlSilang)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.JmlBongkar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.JmlBantib)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.JmlLain)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.JmlBatal)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            });
+        })
+        )
+</div>
