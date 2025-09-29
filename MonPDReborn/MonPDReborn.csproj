@@ -6,17 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Models\Aktivitas\**" />
-    <Compile Remove="Views\PengawasanReklame\ReklameLiar\**" />
     <Content Remove="Models\Aktivitas\**" />
-    <Content Remove="Views\PengawasanReklame\ReklameLiar\**" />
     <EmbeddedResource Remove="Models\Aktivitas\**" />
-    <EmbeddedResource Remove="Views\PengawasanReklame\ReklameLiar\**" />
     <None Remove="Models\Aktivitas\**" />
-    <None Remove="Views\PengawasanReklame\ReklameLiar\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Controllers\PengawasanReklame\ReklameLiarController.cs" />
-    <Compile Remove="Models\PengawasanReklame\ReklameLiarVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
