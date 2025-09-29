@@ -600,7 +600,7 @@ namespace CCTVParkirWorker
                 case "IPDS_SIGNAL_RESTORED":
                     return EnumFactory.EStatusCCTV.Aktif;
                 default:
-                    return EnumFactory.EStatusCCTV.TidakAktif;
+                    return EnumFactory.EStatusCCTV.NonAktif;
             }
         }
         public static DateTime ParseFlexibleDate(string timeStr)
