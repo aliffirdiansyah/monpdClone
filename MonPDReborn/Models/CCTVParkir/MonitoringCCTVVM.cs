@@ -119,7 +119,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             .Min();
 
                         var lastLog = logs
-                            .OrderByDescending(l => ((dynamic)l).TglAktif)
+                            .OrderByDescending(l => ((dynamic)l).TglTerakhirAktif)
                             .FirstOrDefault();
 
                         return new MonitoringCCTV
@@ -133,7 +133,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
                             StatusAktif = lastLog != null ? ((dynamic)lastLog).Status : "-",
-                            TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglAktif : null
+                            TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglTerakhirAktif : null
                         };
                     })
                     .ToList();
@@ -193,7 +193,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             .Min();
 
                         var lastLog = logs
-                            .OrderByDescending(l => ((dynamic)l).TglAktif)
+                            .OrderByDescending(l => ((dynamic)l).TglTerakhirAktif)
                             .FirstOrDefault();
 
                         return new MonitoringCCTV
@@ -207,7 +207,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
                             StatusAktif = lastLog != null ? ((dynamic)lastLog).Status : "-",
-                            TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglAktif : null
+                            TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglTerakhirAktif : null
                         };
                     })
                     .ToList();
@@ -227,9 +227,9 @@ namespace MonPDReborn.Models.CCTVParkir
                         .Select(l => new MonitoringCCTVDet
                         {
                             Nop = l.Nop,
-                            /*Tgl = l.TglAktif,
-                            TglAktif = l.TglAktif,
-                            TglDown = l.TglDown.Value,*/
+                            Tgl = l.TglTerakhirAktif,
+                            TglAktif = l.TglTerakhirAktif,
+                            TglDown = l.TglTerakhirDown.Value,
                             StatusAktif = l.Status
                         })
                         .ToList();
