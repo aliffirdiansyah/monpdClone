@@ -82,7 +82,7 @@ namespace MonPDReborn.Models.PengawasanReklame
 
                 var data = context.DbMonReklameLiars
                     .Where(x => x.KelasJalan == kelasJalan
-                             && x.NamaJalan == namaJalan
+                             /*&& x.NamaJalan == namaJalan*/
                              && x.TanggalSkSilang.Month == bulan)
                     .ToList();
 
@@ -92,12 +92,12 @@ namespace MonPDReborn.Models.PengawasanReklame
                 {
                     Nor = x.Nor ?? "",
                     KelasJalan = "Kelas " + x.KelasJalan ?? "",
-                    NamaJalan = x.NamaJalan ?? "",
-                    AlamatReklame = x.AlamatReklame ?? "",
+                    /*NamaJalan = x.NamaJalan ?? "",
+                    AlamatReklame = x.AlamatReklame ?? "",*/
                     Jenis = x.Jenis ?? "",
                     TanggalSilang = x.TanggalSkSilang.ToString("dd MMMM yyyy", new CultureInfo("id-ID")),
-                    TanggalBantib = x.TanggalBantib.HasValue ? x.TanggalBantib.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-",
-                    TanggalBongkar = x.TanggalBongkar.HasValue ? x.TanggalBongkar.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-",
+                    /*TanggalBantib = x.TanggalBantib.HasValue ? x.TanggalBantib.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-",
+                    TanggalBongkar = x.TanggalBongkar.HasValue ? x.TanggalBongkar.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-",*/
                     TanggalSkBongkar = x.TanggalSkBongkar.HasValue ? x.TanggalSkBongkar.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) : "-"
                 }).ToList();
 
