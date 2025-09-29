@@ -755,9 +755,9 @@ namespace MonPDReborn.Models.MonitoringGlobal
                                 x.TglBayarPokok.Value.Year == tahun &&
                                 x.TglBayarPokok.Value.Month == bulan
                             )
-                            .GroupBy(x => new { x.Nop, TglBayarPokok = x.TglBayarPokok })
+                            .GroupBy(x => new { x.NoFormulir, TglBayarPokok = x.TglBayarPokok })
                             .Select(x => new ValueTuple<string, DateTime, decimal, int>(
-                                x.Key.Nop,
+                                x.Key.NoFormulir,
                                 x.Key.TglBayarPokok.Value,
                                 x.Sum(q => q.NominalPokokBayar) ?? 0,
                                 (int)EnumFactory.EPajak.Reklame

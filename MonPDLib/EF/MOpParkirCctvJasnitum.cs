@@ -49,6 +49,9 @@ public partial class MOpParkirCctvJasnitum
     [Unicode(false)]
     public string CctvId { get; set; } = null!;
 
+    [InverseProperty("MOpParkirCctvJasnitum")]
+    public virtual MOpParkirCctvJasnitaLog? MOpParkirCctvJasnitaLog { get; set; }
+
     [ForeignKey("Nop")]
     [InverseProperty("MOpParkirCctvJasnita")]
     public virtual MOpParkirCctv NopNavigation { get; set; } = null!;

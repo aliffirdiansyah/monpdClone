@@ -121,8 +121,6 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameJitu> DbMonReklameJitus { get; set; }
 
-    public virtual DbSet<DbMonReklameLiar> DbMonReklameLiars { get; set; }
-
     public virtual DbSet<DbMonReklameOk> DbMonReklameOks { get; set; }
 
     public virtual DbSet<DbMonReklamePerpanjangan> DbMonReklamePerpanjangans { get; set; }
@@ -215,11 +213,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MOpParkirCctv> MOpParkirCctvs { get; set; }
 
+    public virtual DbSet<MOpParkirCctvJasnitaLog> MOpParkirCctvJasnitaLogs { get; set; }
+
     public virtual DbSet<MOpParkirCctvJasnitum> MOpParkirCctvJasnita { get; set; }
 
-    public virtual DbSet<MOpParkirCctvLog> MOpParkirCctvLogs { get; set; }
-
     public virtual DbSet<MOpParkirCctvTelkom> MOpParkirCctvTelkoms { get; set; }
+
+    public virtual DbSet<MOpParkirCctvTelkomLog> MOpParkirCctvTelkomLogs { get; set; }
 
     public virtual DbSet<MPajak> MPajaks { get; set; }
 
@@ -1077,11 +1077,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.UpdBy).IsFixedLength();
         });
 
-        modelBuilder.Entity<DbMonReklameLiar>(entity =>
-        {
-            entity.HasKey(e => new { e.Nor, e.TanggalSkSilang }).HasName("PK_REKLAME_LIAR");
-        });
-
         modelBuilder.Entity<DbMonReklameOk>(entity =>
         {
             entity.ToView("DB_MON_REKLAME_OK");
@@ -1467,6 +1462,15 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KategoriNama).HasDefaultValueSql("'-'                   ");
         });
 
+        modelBuilder.Entity<MOpParkirCctvJasnitaLog>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.CctvId }).HasName("PK_CCTV_LOG_JASNITA");
+
+            entity.HasOne(d => d.MOpParkirCctvJasnitum).WithOne(p => p.MOpParkirCctvJasnitaLog)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CCTV_JASNITA");
+        });
+
         modelBuilder.Entity<MOpParkirCctvJasnitum>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.CctvId }).HasName("M_OP_PARKIR_CCTV_JASNITA_PK");
@@ -1478,13 +1482,6 @@ public partial class ModelContext : DbContext
                 .HasConstraintName("M_OP_PARKIR_CCTV_JASNITA_R01");
         });
 
-        modelBuilder.Entity<MOpParkirCctvLog>(entity =>
-        {
-            entity.HasOne(d => d.MOpParkirCctvTelkom).WithOne(p => p.MOpParkirCctvLog)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("M_OP_PARKIR_CCTV_LOG_FK");
-        });
-
         modelBuilder.Entity<MOpParkirCctvTelkom>(entity =>
         {
             entity.HasKey(e => new { e.Nop, e.CctvId }).HasName("PK_M_OP_PARKIR_CCTV_DET");
@@ -1492,6 +1489,15 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.NopNavigation).WithMany(p => p.MOpParkirCctvTelkoms)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DET_OP");
+        });
+
+        modelBuilder.Entity<MOpParkirCctvTelkomLog>(entity =>
+        {
+            entity.HasKey(e => new { e.Nop, e.CctvId }).HasName("PK_M_OP_PARKIR_CCTV_LOG");
+
+            entity.HasOne(d => d.MOpParkirCctvTelkom).WithOne(p => p.MOpParkirCctvTelkomLog)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("M_OP_PARKIR_CCTV_LOG_FK");
         });
 
         modelBuilder.Entity<MPajak>(entity =>
