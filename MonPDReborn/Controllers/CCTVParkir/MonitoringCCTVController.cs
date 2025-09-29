@@ -75,11 +75,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        public IActionResult Detail(string nop)
+        public IActionResult Detail(string nop, int vendorid)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.Detail(nop);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.Detail(nop, vendorid);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

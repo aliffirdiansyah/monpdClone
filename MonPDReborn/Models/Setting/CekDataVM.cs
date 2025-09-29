@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using MonPDLib.General;
-using static MonPDReborn.Models.PengawasanReklame.ReklameLiarVM;
 
 namespace MonPDReborn.Models.Setting
 {

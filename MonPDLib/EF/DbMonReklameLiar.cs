@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("Nor", "TanggalSkSilang")]
+[PrimaryKey("Nor", "TanggalSkSilang", "TanggalBongkar", "TanggalBantib")]
 [Table("DB_MON_REKLAME_LIAR")]
 public partial class DbMonReklameLiar
 {
@@ -58,31 +58,33 @@ public partial class DbMonReklameLiar
     [Unicode(false)]
     public string? NomorSuratBantib { get; set; }
 
+    [Key]
     [Column("TANGGAL_BANTIB", TypeName = "DATE")]
-    public DateTime? TanggalBantib { get; set; }
+    public DateTime TanggalBantib { get; set; }
 
     [Column("KELAS_JALAN")]
     [StringLength(20)]
     [Unicode(false)]
     public string? KelasJalan { get; set; }
 
-    [Column("NAMA_JALAN")]
+    [Column("LOKASI")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? NamaJalan { get; set; }
+    public string? Lokasi { get; set; }
 
-    [Column("ALAMAT_REKLAME")]
+    [Column("ALAMAT_PENEMPATAN")]
     [StringLength(200)]
     [Unicode(false)]
-    public string? AlamatReklame { get; set; }
+    public string? AlamatPenempatan { get; set; }
 
     [Column("JENIS")]
     [StringLength(50)]
     [Unicode(false)]
     public string? Jenis { get; set; }
 
+    [Key]
     [Column("TANGGAL_BONGKAR", TypeName = "DATE")]
-    public DateTime? TanggalBongkar { get; set; }
+    public DateTime TanggalBongkar { get; set; }
 
     [Column("TANGGAL_BAYAR", TypeName = "DATE")]
     public DateTime? TanggalBayar { get; set; }
