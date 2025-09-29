@@ -11,7 +11,7 @@ namespace CCTVParkirWorker
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.            
             ApplicationConfiguration.Initialize();
-            MonPDLib.DBClass.Monpd = "User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;";
+            MonPDLib.DBClass.Monpd = "User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;HA Events=false;Load Balancing=false;";
             Application.Run(new Form1());
         }
     }
