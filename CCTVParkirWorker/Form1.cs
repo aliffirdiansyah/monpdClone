@@ -127,7 +127,7 @@ namespace CCTVParkirWorker
                     var tglAwal = DateTime.Now.AddDays(-1 * _INTERVAL_DAY);
                     var tglAkhir = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
 
-                    var dataCctvParkir = await Task.Run(() => GetDataParkirCctv(row, op, tglAwal, tglAkhir, token));
+                    var dataCctvParkir = await GetDataParkirCctv(row, op, tglAwal, tglAkhir, token);
                     await InsertToDb(op, dataCctvParkir, row, token);
 
                     row.Cells["LastConnected"].Value = DateTime.Now.ToString();
@@ -335,8 +335,7 @@ namespace CCTVParkirWorker
 
                             var id = item.Body.Guid;
 
-                            bool dataExist = await context.TOpParkirCctvs
-                                .AnyAsync(x => x.Id == id, token);
+                            bool dataExist = await context.TOpParkirCctvs.AnyAsync(x => x.Id == id, token);
 
                             if (!dataExist)
                             {
@@ -367,24 +366,37 @@ namespace CCTVParkirWorker
                 }
             }
 
-            // simpan semua sekaligus
-            if (toInsert.Count > 0)
+            try
             {
-                toInsert = toInsert
-                   .GroupBy(x => new { x.Id, x.Nop, x.CctvId })
-                   .Select(g => g.First())
-                   .ToList();
+                if (toInsert.Count > 0)
+                {
+                    toInsert = toInsert
+                       .GroupBy(x => new { x.Id, x.Nop, x.CctvId })
+                       .Select(g => g.First())
+                       .ToList();
 
-                
-                UpdateLog(row, $"Inserting {toInsert.Count} record(s).");
-                await context.TOpParkirCctvs.AddRangeAsync(toInsert, token);
-                await context.SaveChangesAsync(token);
-                UpdateLog(row, $"Inserted {toInsert.Count} record(s).");
+
+                    UpdateLog(row, $"Inserting {toInsert.Count} record(s).");
+                    await context.TOpParkirCctvs.AddRangeAsync(toInsert, token);
+                    await context.SaveChangesAsync(token);
+                    await context.Database.CloseConnectionAsync();
+                    UpdateLog(row, $"Inserted {toInsert.Count} record(s).");
+                }
+                else
+                {
+                    UpdateLog(row, "No new data to insert.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                UpdateLog(row, "No new data to insert.");
+                UpdateLog(row, $"Error Insert Db: {ex.Message}");
             }
+            finally
+            {
+                await context.Database.CloseConnectionAsync();
+            }
+            // simpan semua sekaligus
+           
         }
 
         private async void BtnStartAll_Click(object sender, EventArgs e)
@@ -464,12 +476,14 @@ namespace CCTVParkirWorker
                 .ToList();
 
 
+            int no = 1;
             foreach (var item in pl)
             {
                 foreach (var det in item.MOpParkirCctvJasnita)
                 {
                     result.Add(new ParkirView()
                     {
+                        No = no,
                         Id = item.Nop + "-" + det.CctvId.ToString(),
                         NOP = item.Nop,
                         Nama = item.NamaOp,
@@ -482,6 +496,8 @@ namespace CCTVParkirWorker
                         LastConnected = null,
                         Err = null
                     });
+
+                    no++;
                 }
             }
 
@@ -574,6 +590,17 @@ namespace CCTVParkirWorker
                     return EnumFactory.CctvParkirDirection.Outgoing;
                 default:
                     return EnumFactory.CctvParkirDirection.Unknown;
+            }
+        }
+        public EnumFactory.EStatusCCTV GetStatusCctv(string input)
+        {
+            input = input.ToUpper().Trim();
+            switch (input)
+            {
+                case "IPDS_SIGNAL_RESTORED":
+                    return EnumFactory.EStatusCCTV.Aktif;
+                default:
+                    return EnumFactory.EStatusCCTV.TidakAktif;
             }
         }
         public static DateTime ParseFlexibleDate(string timeStr)

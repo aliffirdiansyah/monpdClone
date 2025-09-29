@@ -1,6 +1,8 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using MonPDLib;
 using MonPDLib.EF;
+using MonPDLib.General;
 using System;
 using System.Numerics;
 using System.Text;
@@ -17,6 +19,8 @@ namespace CobaAPICctv
     {
         private readonly ILogger<Worker> _logger;
         public string TOKEN_AUTH = "";
+        public int _INTERVAL_DAY = 30;
+        public int _LIMIT = 50;
 
         public Worker(ILogger<Worker> logger)
         {
@@ -45,8 +49,14 @@ namespace CobaAPICctv
                     return;
                 }
 
-                var getEventList = await GetEventList(cameraList);
-                var rekapResults = await SetRekap(getEventList);
+                ////event
+                //var getEventList = await GetEventList(cameraList);
+                //var rekapResults = await SetRekapEvent(getEventList);
+
+                ////camera status
+                //var getCameraStatusList = await GetCameraStatusList(cameraList);
+                //var rekapResults = await SetRekapCameraStatus(getCameraStatusList);
+                await SetMappingCameraStatus();
 
                 var x = "";
             }
@@ -160,10 +170,12 @@ namespace CobaAPICctv
 
             return result;
         }
+
         public async Task<List<ViewModel.EventAll.EventAllResponse>> GetEventList(ViewModel.CameraList.CameraListResponse cameraList)
         {
             var allEvents = new List<ViewModel.EventAll.EventAllResponse>();
-            var accessPoints = cameraList?.Items.Take(1);
+            var accessPoints = cameraList?.Items; // SEMUA KAMERA
+            //var accessPoints = cameraList?.Items.Take(1); // CUMA 1 KAMERA
             int seq = 1;
 
             var tgl_awal = DateTime.Now.AddDays(-1).Date;
@@ -176,7 +188,7 @@ namespace CobaAPICctv
                     Console.WriteLine($"[INFO] [{DateTime.Now}] {seq}. AccessPoint: {item.AccessPoint} {item.DisplayName}, Date Range : {tgl_awal} - {tgl_akhir}");
 
                     int totalData = 0;
-                    int limit = 20;
+                    int limit = _LIMIT;
                     int offset = 0;
                     bool hasMore = true;
 
@@ -239,9 +251,9 @@ namespace CobaAPICctv
 
             return allEvents;
         }
-        public async Task<List<ViewModel.RekapResult>> SetRekap(List<ViewModel.EventAll.EventAllResponse> eventList)
+        public async Task<List<ViewModel.RekapEventResult>> SetRekapEvent(List<ViewModel.EventAll.EventAllResponse> eventList)
         {
-            var result = new List<ViewModel.RekapResult>();
+            var result = new List<ViewModel.RekapEventResult>();
 
             var dataCctvResult = eventList.SelectMany(q => q.Items).ToList();
 
@@ -257,7 +269,7 @@ namespace CobaAPICctv
                         var ar = detail.AutoRecognitionResult;
                         if (ar != null)
                         {
-                            var res = new ViewModel.RekapResult();
+                            var res = new ViewModel.RekapEventResult();
                             res.EventType = "AutoRecognitionResult";
                             res.Name = item.Body.OriginExt.FriendlyName;
                             res.Direction = ar.Direction;
@@ -293,7 +305,7 @@ namespace CobaAPICctv
                         //var arx = detail.AutoRecognitionResultEx;
                         //if (arx != null)
                         //{
-                        //    var res = new ViewModel.RekapResult();
+                        //    var res = new ViewModel.RekapEventResult();
                         //    res.EventType = "AutoRecognitionResultEx";
                         //    res.Name = item.Body.OriginExt.FriendlyName;
                         //    res.Direction = arx.Direction.Value;
@@ -333,20 +345,252 @@ namespace CobaAPICctv
             
             return result;
         }
-        public async Task<List<MOpParkirCctv>> MappingData(List<ViewModel.RekapResult> rekapList)
+
+
+        public async Task<List<ViewModel.CameraStatus.CameraStatusResponse>> GetCameraStatusList(ViewModel.CameraList.CameraListResponse cameraList)
         {
-            var result = new List<MOpParkirCctv>();
-            var context = DBClass.GetContext();
-            //Nop
-            //NamaOp
-            //AlamatOp
-            //WilayahPajak
-            //Vendor
+            var allEvents = new List<ViewModel.CameraStatus.CameraStatusResponse>();
+            var accessPoints = cameraList?.Items;
+            //var accessPoints = cameraList?.Items.Take(1);
+            int seq = 1;
+
+            var tgl_awal = DateTime.Now.AddDays(-1 * _INTERVAL_DAY).Date;
+            var tgl_akhir = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
+            if (accessPoints != null)
+            {
+                foreach (var item in accessPoints)
+                {
+                    Console.WriteLine($"");
+                    Console.WriteLine($"[INFO] [{DateTime.Now}] {seq}. AccessPoint: {item.AccessPoint} {item.DisplayName}, Date Range : {tgl_awal} - {tgl_akhir}");
+
+                    int totalData = 0;
+                    int limit = _LIMIT;
+                    int offset = 0;
+                    bool hasMore = true;
+
+                    while (hasMore)
+                    {
+                        try
+                        {
+                            var eventAction = await GetCameraStatus(
+                            limit,
+                            offset,
+                            item.AccessPoint ?? "",
+                            tgl_awal,
+                            tgl_akhir
+                        );
+
+                            if (eventAction == null)
+                            {
+                                Console.WriteLine($"");
+                                Console.Write($"\r[WARN] Tidak ada data event di offset {offset}");
+                                hasMore = false;
+                            }
+                            else
+                            {
+                                Console.Write($"\r[INFO] Dapat {eventAction.Items.Count} event di offset {offset}");
+                                allEvents.Add(eventAction);
 
 
+
+                                totalData += eventAction.Items.Count;
+                                if (eventAction.Items.Count < limit)
+                                {
+                                    Console.WriteLine($"");
+                                    Console.Write($"[INFO] [{DateTime.Now}] Data sudah habis, data didapat : {totalData}.");
+                                    hasMore = false;
+                                }
+                                else
+                                {
+                                    offset += limit;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"");
+                            Console.WriteLine($"\r[ERROR] Gagal ambil event di offset {offset}, AccessPoint: {item.AccessPoint}-{item.DisplayName}. Error: {ex.Message}");
+                            string x = "";
+                        }
+                    }
+
+                    // kasih jeda 5 detik setelah selesai proses 1 AccessPoint
+                    Console.WriteLine("");
+                    Console.WriteLine($"[INFO] Delay 5 detik sebelum lanjut ke AccessPoint berikutnya...");
+                    await Task.Delay(5000);
+                    seq++;
+                }
+            }
+
+
+            Console.WriteLine($"[DONE] Total event terkumpul: {allEvents.Count}");
+
+            return allEvents;
+        }
+        public async Task<List<ViewModel.RekapCameraStatusResult>> SetRekapCameraStatus(List<ViewModel.CameraStatus.CameraStatusResponse> eventList)
+        {
+            var result = new List<ViewModel.RekapCameraStatusResult>();
+
+            var dataList = eventList.SelectMany(q => q.Items).ToList();
+
+            foreach (var item in dataList)
+            {
+                var res = new ViewModel.RekapCameraStatusResult();
+
+                res.AccessPoint = item.Subjects[0];
+                res.Localization = item.Localization.Text;
+                res.State = item.Body.State;
+                res.Tanggal = Method.ParseFlexibleDate(item.Body.Timestamp);
+
+                result.Add(res);
+            }
 
             return result;
         }
+
+        public async Task SetMappingCameraStatus()
+        {
+            var context = DBClass.GetContext();
+            var data = context.MOpParkirCctvJasnita.ToList();
+
+            var allEvents = new List<ViewModel.CameraStatus.CameraStatusResponse>();
+            var tgl_awal = DateTime.Now.AddDays(-1 * _INTERVAL_DAY).Date;
+            var tgl_akhir = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
+            int seq = 1;
+            foreach (var item in data)
+            {
+                Console.WriteLine($"");
+                Console.WriteLine($"[INFO] [{DateTime.Now}] {seq}. AccessPoint: {item.AccessPoint} {item.DisplayName}, Date Range : {tgl_awal} - {tgl_akhir}");
+
+                int totalData = 0;
+                int limit = _LIMIT;
+                int offset = 0;
+                bool hasMore = true;
+
+                while (hasMore)
+                {
+                    try
+                    {
+                        var eventAction = await GetCameraStatus(
+                        limit,
+                        offset,
+                        item.AccessPoint ?? "",
+                        tgl_awal,
+                        tgl_akhir
+                    );
+
+                        if (eventAction == null)
+                        {
+                            Console.WriteLine($"");
+                            Console.Write($"\r[WARN] Tidak ada data event di offset {offset}");
+                            hasMore = false;
+                        }
+                        else
+                        {
+                            Console.Write($"\r[INFO] Dapat {eventAction.Items.Count} event di offset {offset}");
+                            allEvents.Add(eventAction);
+
+
+
+                            totalData += eventAction.Items.Count;
+                            if (eventAction.Items.Count < limit)
+                            {
+                                Console.WriteLine($"");
+                                Console.Write($"[INFO] [{DateTime.Now}] Data sudah habis, data didapat : {totalData}.");
+                                hasMore = false;
+                            }
+                            else
+                            {
+                                offset += limit;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"");
+                        Console.WriteLine($"\r[ERROR] Gagal ambil event di offset {offset}, AccessPoint: {item.AccessPoint}-{item.DisplayName}. Error: {ex.Message}");
+                        string x = "";
+                    }
+                }
+
+                // kasih jeda 5 detik setelah selesai proses 1 AccessPoint
+                Console.WriteLine("");
+                Console.WriteLine($"[INFO] Delay 2 detik sebelum lanjut ke AccessPoint berikutnya...");
+                await Task.Delay(2000);
+                seq++;
+            }
+
+            var rekapResult = new List<ViewModel.RekapCameraStatusResult>();
+            var dataList = allEvents.SelectMany(q => q.Items).ToList();
+            foreach (var item in dataList)
+            {
+                var res = new ViewModel.RekapCameraStatusResult();
+
+                res.AccessPoint = item.Subjects[0];
+                res.Localization = item.Localization.Text;
+                res.State = Method.GetStatusCctv(item.Body.State).GetDescription();
+                res.Tanggal = Method.ParseFlexibleDate(item.Body.Timestamp);
+
+                rekapResult.Add(res);
+            }
+
+            //do logic here
+            var grouped = rekapResult
+                .GroupBy(x => new { x.AccessPoint })
+                .Select(g =>
+                {
+                    //nop
+                    string nop = data.FirstOrDefault(d => d.AccessPoint == g.Key.AccessPoint)?.Nop ?? "Unknown";
+
+                    //cctv id
+                    string cctvId = data.FirstOrDefault(d => d.AccessPoint == g.Key.AccessPoint)?.CctvId ?? "Unknown";
+
+                    // ambil event terakhir (tanggal terbaru)
+                    var lastEvent = g.OrderByDescending(x => x.Tanggal).FirstOrDefault();
+
+                    // ambil waktu terakhir aktif & terakhir nonaktif
+                    var lastAktif = g.Where(x => x.State == "AKTIF")
+                                     .OrderByDescending(x => x.Tanggal)
+                                     .FirstOrDefault();
+
+                    var lastNonAktif = g.Where(x => x.State == "NON AKTIF")
+                                        .OrderByDescending(x => x.Tanggal)
+                                        .FirstOrDefault();
+
+                    // bikin objek hasilnya
+                    return new MOpParkirCctvJasnitaLog
+                    {
+                        Nop = nop, // sesuaikan kalau NOP beda field
+                        CctvId = cctvId,
+                        TglTerakhirAktif = lastAktif?.Tanggal ?? DateTime.MinValue,
+                        TglTerakhirDown = lastNonAktif?.Tanggal ?? DateTime.MinValue,
+                        Status = lastEvent?.State ?? "NON AKTIF"
+                    };
+                })
+                .ToList();
+
+            // simpan ke database
+            foreach (var item in grouped)
+            {
+                var existing = context.MOpParkirCctvJasnitaLogs.FirstOrDefault(x => x.Nop == item.Nop && x.CctvId == item.CctvId);
+                if (existing != null)
+                {
+                    // Update record yang sudah ada
+                    existing.TglTerakhirAktif = item.TglTerakhirAktif;
+                    existing.TglTerakhirDown = item.TglTerakhirDown;
+                    existing.Status = item.Status;
+                }
+                else
+                {
+                    // Tambah record baru
+                    context.MOpParkirCctvJasnitaLogs.Add(item);
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+
         public async Task<ViewModel.EventAll.EventAllResponse?> GetEventAll(int limit, int offset, string access_point, DateTime tgl_awal, DateTime tgl_akhir)
         {
 
@@ -427,6 +671,85 @@ namespace CobaAPICctv
             while (attempt < maxRetry);
             return result;
         }
+        public async Task<ViewModel.CameraStatus.CameraStatusResponse?> GetCameraStatus(int limit, int offset, string access_point, DateTime tgl_awal, DateTime tgl_akhir)
+        {
+            int attempt = 0;
+            const int maxRetry = 5;
+            var result = new ViewModel.CameraStatus.CameraStatusResponse();
+
+            do
+            {
+                string url = "http://202.146.133.26/grpc";
+                using (var client = new HttpClient())
+                {
+
+                    // Bearer Token Auth
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TOKEN_AUTH);
+
+                    // Headers
+                    client.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+                    var body = new
+                    {
+                        method = "axxonsoft.bl.events.EventHistoryService.ReadEvents",
+                        data = new
+                        {
+                            range = new
+                            {
+                                begin_time = tgl_awal.ToString("yyyyMMdd'T'HHmmss.'000'"),
+                                end_time = tgl_akhir.ToString("yyyyMMdd'T'HHmmss.'999'")
+                            },
+                            filters = new
+                            {
+                                filters = new[]
+                                {
+                                new {
+                                    type = "ET_IpDeviceStateChangedEvent",
+                                    subjects = access_point
+                                }
+                            }
+                            },
+                            limit = limit,
+                            offset = offset,
+                            descending = true
+                        }
+                    };
+
+                    var jsonBody = JsonSerializer.Serialize(body);
+                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync(url, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var rawResponse = await response.Content.ReadAsStringAsync();
+                        var apiResponse = Method.ConvertSseOutputJson(rawResponse);
+                        var res = JsonSerializer.Deserialize<ViewModel.CameraStatus.CameraStatusResponse>(apiResponse);
+                        if (res != null)
+                        {
+                            result = res;
+                            return result;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    {
+                        Console.WriteLine($"[DEBUG] [GET_CAMERA_LIST] Token mungkin sudah kadaluarsa, refresh token dan ulangi...");
+
+                        // Refresh token hanya sekali (di attempt pertama gagal 403)
+                        await GenerateToken();
+                    }
+                    else
+                    {
+                        throw new Exception($"Gagal event kamera. Status: {response.StatusCode}, Message: {response.Content}");
+                    }
+                }
+
+            }
+            while (attempt < maxRetry);
+            return result;
+        }
     }
 
     public class Method
@@ -446,6 +769,55 @@ namespace CobaAPICctv
             catch (Exception ex)
             {
                 return output;
+            }
+        }
+        public static DateTime ParseFlexibleDate(string timeStr)
+        {
+            if (string.IsNullOrWhiteSpace(timeStr))
+            {
+                throw new ArgumentException("timeStr tidak boleh kosong");
+            }
+
+            var formats = new[]
+            {
+        "yyyyMMdd'T'HHmmss.ffffff",  // 20250924T083638.867000
+        "yyyyMMdd'T'HHmmss.fff",     // 20250924T083638.867
+        "yyyyMMdd'T'HHmmss",         // ✅ 20250925T073926 (kasus kamu)
+        "yyyy-MM-dd'T'HH:mm:ss.ffffff",
+        "yyyy-MM-dd'T'HH:mm:ss.fff",
+        "yyyy-MM-dd'T'HH:mm:ss",
+        "yyyyMMddHHmmss",            // 20250925073926 (tanpa 'T')
+        "yyyy-MM-dd HH:mm:ss",       // 2025-09-25 07:39:26
+        "yyyy/MM/dd HH:mm:ss",       // 2025/09/25 07:39:26
+        "yyyyMMdd'T'HHmmssZ",        // 20250925T073926Z
+        "yyyy-MM-dd'T'HH:mm:ssZ",    // 2025-09-25T07:39:26Z
+        "yyyy-MM-dd'T'HH:mm:ssK"     // 2025-09-25T07:39:26+07:00
+    };
+
+            foreach (var fmt in formats)
+            {
+                if (DateTime.TryParseExact(
+                    timeStr,
+                    fmt,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.AdjustToUniversal,
+                    out DateTime result))
+                {
+                    return result;
+                }
+            }
+
+            throw new Exception(timeStr + " tidak sesuai format yang dikenali.");
+        }
+        public static EnumFactory.EStatusCCTV GetStatusCctv(string input)
+        {
+            input = input.ToUpper().Trim();
+            switch (input)
+            {
+                case "IPDS_SIGNAL_RESTORED":
+                    return EnumFactory.EStatusCCTV.Aktif;
+                default:
+                    return EnumFactory.EStatusCCTV.NonAktif;
             }
         }
     }
@@ -809,7 +1181,6 @@ namespace CobaAPICctv
                 public bool IsActivated { get; set; }
             }
         }
-
         public class EventAll
         {
             public class AutoRecognitionResult
@@ -1203,9 +1574,7 @@ namespace CobaAPICctv
 
 
         }
-
-
-        public class RekapResult
+        public class RekapEventResult
         {
             public string Name { get; set; }
             public string AccessPoint { get; set; }
@@ -1232,6 +1601,105 @@ namespace CobaAPICctv
             public int VehicleSpeed { get; set; }
             public int VehicleSpeedKmph { get; set; }
             public string PlateType { get; set; }
+        }
+        public class CameraStatus
+        {
+            public class Body
+            {
+                [JsonPropertyName("@type")]
+                public string Type { get; set; }
+
+                [JsonPropertyName("object_id_deprecated")]
+                public string ObjectIdDeprecated { get; set; }
+
+                [JsonPropertyName("timestamp")]
+                public string Timestamp { get; set; }
+
+                [JsonPropertyName("state")]
+                public string State { get; set; }
+
+                [JsonPropertyName("guid")]
+                public string Guid { get; set; }
+
+                [JsonPropertyName("object_id_ext")]
+                public ObjectIdExt ObjectIdExt { get; set; }
+
+                [JsonPropertyName("node_info")]
+                public NodeInfo NodeInfo { get; set; }
+
+                [JsonPropertyName("prev_timestamp")]
+                public string PrevTimestamp { get; set; }
+
+                [JsonPropertyName("extra")]
+                public string Extra { get; set; }
+            }
+
+            public class Item
+            {
+                [JsonPropertyName("event_type")]
+                public string EventType { get; set; }
+
+                [JsonPropertyName("subject")]
+                public string Subject { get; set; }
+
+                [JsonPropertyName("event_name")]
+                public string EventName { get; set; }
+
+                [JsonPropertyName("body")]
+                public Body Body { get; set; }
+
+                [JsonPropertyName("subjects")]
+                public List<string> Subjects { get; set; }
+
+                [JsonPropertyName("external")]
+                public bool External { get; set; }
+
+                [JsonPropertyName("localization")]
+                public Localization Localization { get; set; }
+            }
+
+            public class Localization
+            {
+                [JsonPropertyName("text")]
+                public string Text { get; set; }
+            }
+
+            public class NodeInfo
+            {
+                [JsonPropertyName("name")]
+                public string Name { get; set; }
+
+                [JsonPropertyName("friendly_name")]
+                public string FriendlyName { get; set; }
+            }
+
+            public class ObjectIdExt
+            {
+                [JsonPropertyName("access_point")]
+                public string AccessPoint { get; set; }
+
+                [JsonPropertyName("friendly_name")]
+                public string FriendlyName { get; set; }
+
+                [JsonPropertyName("group")]
+                public string Group { get; set; }
+            }
+
+            public class CameraStatusResponse
+            {
+                [JsonPropertyName("items")]
+                public List<Item> Items { get; set; }
+
+                [JsonPropertyName("unreachable_subjects")]
+                public List<object> UnreachableSubjects { get; set; }
+            }
+        }
+        public class RekapCameraStatusResult
+        {
+            public string AccessPoint { get; set; }
+            public string Localization { get; set; }
+            public string State { get; set; }
+            public DateTime Tanggal { get; set; }
         }
     }
 }

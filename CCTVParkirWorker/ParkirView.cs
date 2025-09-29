@@ -8,6 +8,7 @@ namespace CCTVParkirWorker
 {
     public class ParkirView
     {
+        public int No { get; set; }
         public string Id { get; set; }
         public string NOP { get; set; }
         public string Nama { get; set; }

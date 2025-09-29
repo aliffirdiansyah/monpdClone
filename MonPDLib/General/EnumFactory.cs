@@ -802,6 +802,13 @@ namespace MonPDLib.General
             [Description("Truck")]
             Truck = 3,
         }
+        public enum EStatusCCTV
+        {
+            [Description("NON AKTIF")]
+            NonAktif = 0,
+            [Description("AKTIF")]
+            Aktif = 1
+        }
         public enum CctvParkirDirection
         {
             [Description("Unknown")]
