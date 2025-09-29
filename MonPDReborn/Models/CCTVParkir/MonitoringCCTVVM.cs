@@ -69,7 +69,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 {
                     result = (
                         from c in context.MOpParkirCctvs
-                        join d in context.MOpParkirCctvDets on c.Nop equals d.Nop into dets
+                        join d in context.MOpParkirCctvJasnita on c.Nop equals d.Nop into dets
                         from d in dets.DefaultIfEmpty()
                         join l in context.MOpParkirCctvLogs
                             on new { d.Nop, d.CctvId } equals new { l.Nop, l.CctvId } into logs
@@ -113,6 +113,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             WilayahPajak = ((EnumFactory.EUPTB)g.WilayahPajak).GetDescription(),
                             UptbId = g.WilayahPajak,
                             TglTerpasang = tglTerpasang,
+                            VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
                             StatusAktif = lastLog?.Status ?? "-",
                             TglTerakhirAktif = lastLog?.TglAktif
@@ -124,7 +125,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 {
                     result = (
                         from c in context.MOpParkirCctvs
-                        join d in context.MOpParkirCctvDets on c.Nop equals d.Nop into dets
+                        join d in context.MOpParkirCctvJasnita on c.Nop equals d.Nop into dets
                         from d in dets.DefaultIfEmpty()
                         join l in context.MOpParkirCctvLogs
                             on new { d.Nop, d.CctvId } equals new { l.Nop, l.CctvId } into logs
@@ -169,6 +170,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             WilayahPajak = ((EnumFactory.EUPTB)g.WilayahPajak).GetDescription(),
                             UptbId = g.WilayahPajak,
                             TglTerpasang = tglTerpasang,
+                            VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
                             StatusAktif = lastLog?.Status ?? "-",
                             TglTerakhirAktif = lastLog?.TglAktif
@@ -179,11 +181,21 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
-            public static List<MonitoringCCTVDet> GetMonitoringCCTVDetList(string nop)
+            public static List<MonitoringCCTVDet> GetMonitoringCCTVDetList(string nop/*, EnumFactory.EVendorParkirCCTV vendorid*/)
             {
                 var result = new List<MonitoringCCTVDet>();
                 var context = DBClass.GetContext();
 
+                /*switch (vendorid)
+                {
+                    case EnumFactory.EVendorParkirCCTV.Jasnita:
+
+                        break;
+                    case EnumFactory.EVendorParkirCCTV.Telkom:
+                        break;
+                    default:
+                        break;
+                }*/
                 result = context.MOpParkirCctvLogs
                 .Where(l => l.Nop == nop)
                 .Select(l => new MonitoringCCTVDet
@@ -263,6 +275,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public int UptbId { get; set; }
             public string StatusAktif { get; set; } = null!;
             public DateTime? TglTerpasang { get; set; } = DateTime.MinValue;
+            public int VedorId { get; set; }
             public string Vendor { get; set; } = null!;
             public DateTime? TglTerakhirAktif { get; set; } = DateTime.MinValue;
         }

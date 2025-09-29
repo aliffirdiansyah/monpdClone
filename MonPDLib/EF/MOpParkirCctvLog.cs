@@ -35,5 +35,5 @@ public partial class MOpParkirCctvLog
 
     [ForeignKey("Nop, CctvId")]
     [InverseProperty("MOpParkirCctvLog")]
-    public virtual MOpParkirCctvDet MOpParkirCctvDet { get; set; } = null!;
+    public virtual MOpParkirCctvTelkom MOpParkirCctvTelkom { get; set; } = null!;
 }

@@ -127,6 +127,33 @@
             // Buka halaman detail di tab baru
             window.open('/MonitoringCCTV/Kapasitas?nop=' + encodeURIComponent(nop), '_blank');
         }
+
+        function detailOPCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            // Jika nilainya 0 atau null, tampilkan saja 0
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+
+            const nop = cellInfo.data.Nop;
+            const pajak = 4;
+
+            // Buat link klik
+            const $link = $('<a>')
+                .addClass('text-primary fw-semibold')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    const url = '@Url.Action("Detail", "ProfileOP")'
+                                + '?nop=' + nop
+                                + '&pajak=' + pajak;
+                    window.open(url, '_blank');
+                });
+
+            $(cellElement).append($link);
+        }
     </script>
 
 

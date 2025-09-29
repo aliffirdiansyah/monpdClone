@@ -33,9 +33,14 @@ public partial class MOpParkirCctv
     [Precision(10)]
     public int Vendor { get; set; }
 
-    [InverseProperty("NopNavigation")]
-    public virtual ICollection<MOpParkirCctvDet> MOpParkirCctvDets { get; set; } = new List<MOpParkirCctvDet>();
+    [Column("KATEGORI_NAMA")]
+    [StringLength(1)]
+    [Unicode(false)]
+    public string KategoriNama { get; set; } = null!;
 
     [InverseProperty("NopNavigation")]
     public virtual ICollection<MOpParkirCctvJasnitum> MOpParkirCctvJasnita { get; set; } = new List<MOpParkirCctvJasnitum>();
+
+    [InverseProperty("NopNavigation")]
+    public virtual ICollection<MOpParkirCctvTelkom> MOpParkirCctvTelkoms { get; set; } = new List<MOpParkirCctvTelkom>();
 }
