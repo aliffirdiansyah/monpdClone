@@ -1,6 +1,6 @@
 ﻿@model MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.DataTahunPembayaran
 
-<table class="table table-hover table-bordered align-middle">
+@* <table class="table table-hover table-bordered align-middle">
     <thead class="table-light text-center">
         <tr>
             <th style="width: 30%;">Bulan</th>
@@ -31,5 +31,48 @@
             </tr>
         }
     </tbody>
-</table>
+</table> *@
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.DataRealisasiPajak>()
+        .ID("gridAkpNow" + Model.Tahun)
+        .DataSource(Model.DataRealisasi)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.Enabled(false))
+        .HeaderFilter(h => h.Visible(false))
+        .SearchPanel(sp => sp.Visible(false))
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(c => c.Bulan).Caption("Bulan");
+
+            columns.AddFor(c => c.TglSSPD).Caption("Tanggal SSPD").Format("dd MMM yyyy").Alignment(HorizontalAlignment.Center);
+
+            columns.AddFor(c => c.Realisasi).Caption("Realisasi").Format("#,##0").Alignment(HorizontalAlignment.Right);
+        })
+        .Summary(s =>
+        {
+            s.TotalItems(items =>
+            {
+                items.Add()
+            .Column("Tanggal SSPD")
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+
+                items.Add()
+            .Column("Realisasi")
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("Rp {0}")
+            .Alignment(HorizontalAlignment.Right);
+            });
+        })
+        )
+</div>
 

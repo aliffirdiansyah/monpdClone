@@ -1,11 +1,13 @@
 ﻿using DevExpress.CodeParser;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Globalization;
+using System.Numerics;
 using System.Web.Mvc;
 
 namespace MonPDReborn.Models.CCTVParkir
@@ -63,22 +65,22 @@ namespace MonPDReborn.Models.CCTVParkir
                 Nop = nop;
                 var context = DBClass.GetContext();
                 var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop && m.Vendor == vendorId);
-                if(vendorId == 1)
-                {
-                    var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
-                    if(telkom != null)
-                    {
-                        Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
-                        TanggalPasang = telkom.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    }
-                }
-                if(vendorId == 2)
+                if(vendorId == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
                 {
                     var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
-                    if(jasnita != null)
+                    if (jasnita != null)
                     {
                         Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
-                    TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                        TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                    }
+                }
+                if (vendorId == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
+                {
+                    var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
+                    if (telkom != null)
+                    {
+                        Vendor = (EnumFactory.EVendorParkirCCTV.Telkom).GetDescription();
+                        TanggalPasang = telkom.TglPasang.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
                     }
                 }
 
@@ -92,6 +94,31 @@ namespace MonPDReborn.Models.CCTVParkir
                 RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
 
             }
+        }
+
+        public class KapasitasHarianDetail
+        {
+            public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
+            public KapasitasHarianDetail(string nop, int vendorId, DateTime tanggal)
+            {
+                DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, vendorId, tanggal);
+            }
+        }
+
+        public class MonitoringCctvHarianDetail
+        {
+            public string Id { get; set; } = null!;
+            public string Nop { get; set; } = null!;
+            public string CctvId { get; set; } = null!;
+            public string? NamaOp { get; set; }
+            public string? AlamatOp { get; set; }
+            public int? WilayahPajak { get; set; }
+            public DateTime TanggalMasuk { get; set; }
+            public string JenisKend { get; set; }
+            public string? PlatNo { get; set; }
+            public int Direction { get; set; }
+            public string? Log { get; set; }
+
         }
 
         public class MonitoringCCTVBulanan
@@ -134,7 +161,6 @@ namespace MonPDReborn.Models.CCTVParkir
             public decimal TahunKemarin { get; set; }
             public decimal TahunIni { get; set; }
             public decimal Potensi { get; set; }
-
         }
 
 
@@ -449,7 +475,6 @@ namespace MonPDReborn.Models.CCTVParkir
                 .ToList();
                 return result;
             }
-
             public static List<MonitoringCCTVBulanan> GetMonitoringCCTVBulanan(string nop, int vendorId)
             {
                 var result = new List<MonitoringCCTVBulanan>();
@@ -538,8 +563,6 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
-
-
             public static List<MonitoringCCTVHarian> GetMonitoringCCTVHarian(string nop, int vendorId, int tahun, int bulan)
             {
                 var result = new List<MonitoringCCTVHarian>();
@@ -637,6 +660,35 @@ namespace MonPDReborn.Models.CCTVParkir
                     result.Add(res);
                 }
                 return result.OrderBy(x => x.Tanggal).ToList();
+            }
+            public static List<MonitoringCctvHarianDetail> GetMonitoringHarianDetail(string nop, int vendorId, DateTime tgl)
+            {
+                var result = new List<MonitoringCctvHarianDetail>();
+                var context = DBClass.GetContext();
+
+                var data = context.TOpParkirCctvs.Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl).ToList();
+
+                foreach (var item in data)
+                {
+                    var res = new MonitoringCctvHarianDetail();
+                    res.Id = item.Id;
+                    res.Nop = item.Nop;
+                    res.CctvId = item.CctvId;
+                    res.NamaOp = item.NamaOp;
+                    res.AlamatOp = item.AlamatOp;
+                    res.WilayahPajak = item.WilayahPajak;
+                    res.TanggalMasuk = item.WaktuMasuk;
+                    res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
+                    res.PlatNo = item.PlatNo;
+                    res.Direction = item.Direction;
+                    res.Log = item.Log;
+
+
+                    result.Add(res);
+                }
+
+
+                return result;
             }
         }
 
