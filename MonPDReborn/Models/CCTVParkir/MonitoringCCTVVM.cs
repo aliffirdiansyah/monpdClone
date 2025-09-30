@@ -673,7 +673,7 @@ namespace MonPDReborn.Models.CCTVParkir
 
                     result.Add(res);
                 }
-                return result;
+                return result.OrderBy(x => x.Tanggal).ToList();
             }
         }
 
