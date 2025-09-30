@@ -9,6 +9,9 @@ namespace MonPDLib.EF;
 [Keyless]
 public partial class DbAkunTargetObjekReklame
 {
+    [Column("KATEGORI_ID", TypeName = "NUMBER")]
+    public decimal? KategoriId { get; set; }
+
     [Column("FLAG_PERMOHONAN")]
     [StringLength(10)]
     [Unicode(false)]

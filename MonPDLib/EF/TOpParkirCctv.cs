@@ -65,4 +65,9 @@ public partial class TOpParkirCctv
     [StringLength(300)]
     [Unicode(false)]
     public string? Log { get; set; }
+
+    [Column("IMAGE_URL")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? ImageUrl { get; set; }
 }
