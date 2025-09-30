@@ -134,6 +134,22 @@ namespace MonPDReborn.Controllers.CCTVParkir
             }
         }
 
+        public IActionResult KapasitasHarianDetail(string nop, int vendorId, DateTime tgl)
+        {
+            try
+            {
+                var data = Method.GetMonitoringHarianDetail(nop, vendorId, tgl);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = ex.Message;
+                return Json(response);
+            }
+        }
+
+
         public IActionResult DataKapasitasParkir(string nop, DateTime tanggalAwal, DateTime tanggalAkhir)
         {
             var response = new ResponseBase();
