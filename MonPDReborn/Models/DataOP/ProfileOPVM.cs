@@ -2081,10 +2081,10 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.Reklame:
-                        var OpReklameTutup = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun).ToList();
-                        var OpReklameAwal = context.DbOpReklames.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)).ToList();
-                        var OpReklameBaru = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Value.Year == tahun).ToList();
-                        var OpReklameAkhir = context.DbOpReklames.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun)).ToList();
+                        var OpReklameTutup = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/).ToList();
+                        var OpReklameAwal = context.DbOpReklames.Where(x => x.TahunBuku == tahun - 1 && x.KategoriId == kategori /*- 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/).ToList();
+                        var OpReklameBaru = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori /*&& x.TglMulaiBukaOp.Value.Year == tahun*/).ToList();
+                        var OpReklameAkhir = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun)*/).ToList();
 
                         if (status == "JmlOpAwal")
                         {
@@ -2093,7 +2093,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
-                                NOP = x.Nop,
+                                NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
                                 Alamat = x.Alamat,
                                 JenisOP = "-",
@@ -2107,7 +2107,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
-                                NOP = x.Nop,
+                                NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
                                 Alamat = x.Alamat,
                                 JenisOP = "-",
@@ -2121,7 +2121,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
-                                NOP = x.Nop,
+                                NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
                                 Alamat = x.Alamat,
                                 JenisOP = "-",
@@ -2135,7 +2135,7 @@ namespace MonPDReborn.Models.DataOP
                                 EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.KategoriId,
                                 Kategori_Nama = x.KategoriNama,
-                                NOP = x.Nop,
+                                NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
                                 Alamat = x.Alamat,
                                 JenisOP = "-",
@@ -3318,25 +3318,19 @@ namespace MonPDReborn.Models.DataOP
 
                             case EnumFactory.EPajak.Reklame:
                                 awal = context.DbOpReklames.Count(
-                                    x => x.TahunBuku == year - 1 &&
-                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > (year - 1))
+                                    x => x.TahunBuku == year - 1/* && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > (year - 1))*/
                                 );
 
                                 tutup = context.DbOpReklames.Count(
-                                    x => x.TahunBuku == year &&
-                                        x.TglOpTutup.HasValue &&
-                                        x.TglOpTutup.Value.Year == year
+                                    x => x.TahunBuku == year/* && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year*/
                                 );
 
                                 baru = context.DbOpReklames.Count(
-                                    x => x.TahunBuku == year &&
-                                        x.TglMulaiBukaOp.HasValue &&
-                                        x.TglMulaiBukaOp.Value.Year == year
+                                    x => x.TahunBuku == year /*&& x.TglMulaiBukaOp.HasValue && x.TglMulaiBukaOp.Value.Year == year*/
                                 );
 
                                 akhir = context.DbOpReklames.Count(
-                                    x => x.TahunBuku == year &&
-                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year)
+                                    x => x.TahunBuku == year /*&& (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year)*/
                                 );
                                 break;
 
@@ -3909,21 +3903,16 @@ namespace MonPDReborn.Models.DataOP
                             var query = context.DbOpReklames.Where(x => x.KategoriId == kat.Id);
 
                             tutup = query.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun);
+                                x.TahunBuku == tahun/* && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
 
                             awal = query.Count(x =>
-                                x.TahunBuku == tahun - 1 &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun - 1));
+                                x.TahunBuku == tahun - 1 /*&& (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun - 1)*/);
 
                             baru = query.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglMulaiBukaOp.Value.Year == tahun);
+                                x.TahunBuku == tahun/* && x.TglMulaiBukaOp.Value.Year == tahun*/);
 
                             akhir = query.Count(x =>
-                                x.TahunBuku == tahun &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun));
+                                x.TahunBuku == tahun/* && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun)*/);
 
                             switch (i)
                             {
@@ -4921,7 +4910,15 @@ namespace MonPDReborn.Models.DataOP
             public int Kategori_Id { get; set; }
             public string Kategori_Nama { get; set; } = null!;
             public string NOP { get; set; } = null!;
-            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string FormattedNOP
+            {
+                get
+                {
+                    return EnumPajak == 7 || EnumPajak == 9 || EnumPajak == 12
+                        ? NOP
+                        : Utility.GetFormattedNOP(NOP);
+                }
+            }
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
@@ -4939,7 +4936,15 @@ namespace MonPDReborn.Models.DataOP
             public int Kategori_Id { get; set; }
             public string Kategori_Nama { get; set; } = null!;
             public string NOP { get; set; } = null!;
-            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string FormattedNOP
+            {
+                get
+                {
+                    return EnumPajak == 7 || EnumPajak == 9 || EnumPajak == 12
+                        ? NOP
+                        : Utility.GetFormattedNOP(NOP);
+                }
+            }
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
@@ -4966,7 +4971,15 @@ namespace MonPDReborn.Models.DataOP
             public int Kategori_Id { get; set; }
             public string Kategori_Nama { get; set; } = null!;
             public string NOP { get; set; } = null!;
-            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string FormattedNOP
+            {
+                get
+                {
+                    return EnumPajak == 7 || EnumPajak == 9 || EnumPajak == 12
+                        ? NOP
+                        : Utility.GetFormattedNOP(NOP);
+                }
+            }
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
@@ -4980,7 +4993,15 @@ namespace MonPDReborn.Models.DataOP
             public int Kategori_Id { get; set; }
             public string Kategori_Nama { get; set; } = null!;
             public string NOP { get; set; } = null!;
-            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string FormattedNOP
+            {
+                get
+                {
+                    return EnumPajak == 7 || EnumPajak == 9 || EnumPajak == 12
+                        ? NOP
+                        : Utility.GetFormattedNOP(NOP);
+                }
+            }
             public string NamaOP { get; set; } = null!;
             public string Alamat { get; set; } = null!;
             public string JenisOP { get; set; } = null!;
@@ -4995,7 +5016,15 @@ namespace MonPDReborn.Models.DataOP
             public string AlamatLengkap { get; set; }
             public string WilayahPajak { get; set; }
             public string NOP { get; set; }
-            public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+            public string FormattedNOP
+            {
+                get
+                {
+                    return (int)EnumPajak == 7 || (int)EnumPajak == 9 || (int)EnumPajak == 12
+                        ? NOP
+                        : Utility.GetFormattedNOP(NOP);
+                }
+            }
             public string Telepon { get; set; }
             public DateTime TanggalBuka { get; set; }
             public EnumFactory.EPajak EnumPajak { get; set; }

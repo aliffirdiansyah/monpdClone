@@ -1964,6 +1964,9 @@ namespace MonPDReborn.Models.AktivitasOP
         }
         public class DetailTeguran
         {
+            public string Lokasi { get; set; } = null!;
+            public string Jenis { get; set; }
+            public string KategoriText { get; set; }
             public string DetailLokasi { get; set; } = null!;
             public string BulanNama { get; set; } = null!;
             public int Bulan { get; set; }
