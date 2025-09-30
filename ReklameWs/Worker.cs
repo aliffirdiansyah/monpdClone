@@ -1248,7 +1248,7 @@ WHERE EXTRACT(YEAR FROM mrhr.TGL_BAYAR) = :TAHUN
                 var opList2 = _contMonPd.DbOpReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
 
                 // --- 3. Kosongkan tabel Monitoring ---
-                var existing = _contMonPd.DbMonReklames.Where(x => x.TahunBuku == tahunBuku).ToList();
+                var existing = _contMonPd.DbMonReklames.Where(x => x.TahunBuku == tahunBuku || x.TglBayarPokok.Value.Year == tahunBuku).ToList();
                 _contMonPd.DbMonReklames.RemoveRange(existing);
 
                 Console.ForegroundColor = ConsoleColor.Green;
