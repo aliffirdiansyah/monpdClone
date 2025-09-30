@@ -128,7 +128,37 @@
             columns.AddFor(m => m.TglTerpasang).Caption("Tgl Terpasang").Format("dd MMM yyyy");
             columns.AddFor(m => m.Vendor).Caption("Vendor");
             columns.AddFor(m => m.StatusAktif).Caption("Kondisi CCTV");
-            columns.AddFor(m => m.TglTerakhirAktif).Caption("Terakhir Aktif").Format("dd MMM yyyy HH:mm:ss");
+            
+            columns.AddFor(m => m.TglTerakhirAktif)
+    .Caption("Terakhir Aktif")
+    .Alignment(HorizontalAlignment.Center) // Opsional: Agar badge di tengah
+    .CellTemplate(@<text>
+        <div class="d-flex flex-column align-items-center">
+            <% 
+                @* // Asumsi data.TglTerakhirAktif adalah nilai tanggal (string/Date) atau null *@
+                var tglTerakhirAktif = data.TglTerakhirAktif; 
+
+                if (tglTerakhirAktif == null || tglTerakhirAktif === "") { 
+                    @* // KONDISI 1: NULL (ACTIVE/HIJAU) *@
+            %>
+                    <span class="badge bg-success mb-1" title="CCTV Aktif">
+                        <i class='bx bxs-circle me-1'></i> Active
+                    </span>
+                    @* <small class="text-success fw-bold">Nyala</small> *@
+            <% 
+                } else { 
+            %>
+                    <span class="badge bg-danger mb-1" title="CCTV Inaktif">
+                        <i class='bx bxs-circle me-1'></i> Inactive
+                    </span>
+                    <small class="text-muted">
+                        <%- new Date(tglTerakhirAktif).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) %>
+                    </small>
+            <% 
+                } 
+            %>
+        </div>
+    </text>);
 
             // ✅ Kolom Action
             columns.Add()
