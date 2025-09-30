@@ -120,8 +120,9 @@ namespace MonPDReborn.Models.CCTVParkir
         {
             public string Nop { get; set; } = null!;
             public DateTime Tanggal { get; set; }
+            public string TanggalLabel => Tanggal.ToString("dd");        // 01, 02, 03 ...
+            public string HariLabel => Tanggal.ToString("dddd", new System.Globalization.CultureInfo("id-ID"));            // Senin, Selasa ...
 
-            // Untuk tampilan
             public string FormattedNOP => Utility.GetFormattedNOP(Nop);
 
             // Agregat per bulan
@@ -573,6 +574,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 for (int tgl = 1; tgl <= totalDay; tgl++)
                 {
                     var res = new MonitoringCCTVHarian();
+
 
                     int jmlMotor = kendaraanParkir.Where(x =>
                         x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Motor)

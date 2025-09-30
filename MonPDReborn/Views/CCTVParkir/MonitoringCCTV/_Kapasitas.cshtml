@@ -50,7 +50,7 @@
                                                 .FilterRow(f => f.Visible(true))
                                                 .HeaderFilter(h => h.Visible(true))
                                                 .Sorting(s => s.Mode(GridSortingMode.Multiple))
-                                                .Paging(p => p.PageSize(10))
+                                                .Paging(p => p.PageSize(12))
                                                 .Pager(p => p
                                                 .ShowPageSizeSelector(true)
                                                 .AllowedPageSizes(new[] { 10, 20, 50 })
@@ -127,7 +127,9 @@
                         paging: { pageSize: 31 },
                         pager: { visible: false },
                         columns: [
-                            { dataField: "Tanggal", caption: "Tanggal", dataType: "date", format: "dd-MM-yyyy" },
+                            // { dataField: "Tanggal", caption: "Tanggal", dataType: "date", format: "dd-MM-yyyy" },
+                            { dataField: "TanggalLabel", caption: "Tanggal" },
+                             { dataField: "HariLabel", caption: "Hari" },
                             { dataField: "Motor", caption: "Motor", format: "#,##0" },
                             { dataField: "Mobil", caption: "Mobil", format: "#,##0" },
                             { dataField: "Unknown", caption: "Unknown", format: "#,##0" },
@@ -151,8 +153,6 @@
         }
 
     </script>
-
-
 }
 
 
