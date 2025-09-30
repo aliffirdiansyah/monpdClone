@@ -59,17 +59,75 @@ namespace MonPDReborn.Models.CCTVParkir
             public string AlamatOP { get; set; }
             public string Vendor { get; set; }
 
-           
+
             public Kapasitas(string nop, int vendorId)
             {
                 Nop = nop;
+                NamaOP = "Dummy OP untuk " + nop;
+                AlamatOP = "Alamat Dummy";
+                Vendor = "Vendor Dummy";
+
+                try
+                {
+                    // Kalau DB ready
+                    RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
+
+                    // Kalau kosong (DB ada tapi data ga ada), isi dummy juga
+                    if (RekapBulanan == null || !RekapBulanan.Any())
+                    {
+                        RekapBulanan = GetDummyData();
+                    }
+                }
+                catch
+                {
+                    // Kalau DB error → isi dummy
+                    RekapBulanan = GetDummyData();
+                }
+
                 //tidak dipakai 
                 //MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop, vendorId);
 
                 //ambil bulanan
-                RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
+                //RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
+            }
+
+            private List<MonitoringCCTVBulanan> GetDummyData()
+            {
+                return new List<MonitoringCCTVBulanan>
+        {
+            new MonitoringCCTVBulanan
+            {
+                Nop = Nop,
+                Tahun = DateTime.Now.Year,
+                Bulan = 1,
+                Motor = 120,
+                Mobil = 40,
+                Unknown = 5,
+                Omset = 3000000,
+                EstimasiPajak = 750000,
+                TahunIni = 165,
+                TahunKemarin = 140,
+                Potensi = 4000000
+            },
+                new MonitoringCCTVBulanan
+                {
+                    Nop = Nop,
+                    Tahun = DateTime.Now.Year,
+                    Bulan = 2,
+                    Motor = 80,
+                    Mobil = 60,
+                    Unknown = 8,
+                    Omset = 2500000,
+                    EstimasiPajak = 625000,
+                    TahunIni = 148,
+                    TahunKemarin = 120,
+                    Potensi = 4000000
+                }
+            };
             }
         }
+
+
 
 
 
@@ -81,6 +139,27 @@ namespace MonPDReborn.Models.CCTVParkir
 
             // Untuk tampilan
             public string NamaBulan => new DateTime(Tahun, Bulan, 1).ToString("MMMM");
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+
+            // Agregat per bulan
+            public int Motor { get; set; }
+            public int Mobil { get; set; }
+            public int Unknown { get; set; }
+            public decimal Omset { get; set; }
+            public decimal EstimasiPajak { get; set; }
+            public decimal TahunKemarin { get; set; }
+            public decimal TahunIni { get; set; }
+            public decimal Potensi { get; set; }
+
+        }
+
+        public class MonitoringCCTVHarian
+        {
+            public string Nop { get; set; } = null!;
+            public DateTime Tanggal { get; set; }
+
+
+            // Untuk tampilan
             public string FormattedNOP => Utility.GetFormattedNOP(Nop);
 
             // Agregat per bulan
@@ -469,8 +548,13 @@ namespace MonPDReborn.Models.CCTVParkir
             }
 
 
-            public static List<MonitoringCCTVKapasitas> GetMonitoringCCTVHarian(string nop, int vendorId, int tahun, int bulan)
+            public static List<MonitoringCCTVHarian> GetMonitoringCCTVHarian(string nop, int vendorId, int tahun, int bulan)
             {
+                /************************************
+                 *  AWAS BISA DISESUAIKAN KEBUTUHAN LOGICNYA
+                 * 
+                 */
+
                 var context = DBClass.GetContext();
 
                 var kapasitas = context.DbPotensiParkirs
