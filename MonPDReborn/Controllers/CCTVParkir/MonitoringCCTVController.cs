@@ -132,11 +132,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response.ToInternalServerError);
             }
         }
-        public IActionResult Log(string nop, int jenisKend)
+        public IActionResult Log(string nop, int jenisKend, DateTime tanggalAwal, DateTime tanggalAkhir)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.Log(nop, jenisKend);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.Log(nop, jenisKend, tanggalAwal, tanggalAkhir);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

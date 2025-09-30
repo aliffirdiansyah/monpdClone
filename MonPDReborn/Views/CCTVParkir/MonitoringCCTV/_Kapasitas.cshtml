@@ -109,6 +109,22 @@
             });
         }
         function lihatDetailLog(nop, jenisKend) {
+            var bulanAwal = $("#bulanAwal").dxDateBox("instance").option("value");
+            var bulanAkhir = $("#bulanAkhir").dxDateBox("instance").option("value");
+
+            if (!bulanAwal || !bulanAkhir) {
+                alert("Harap pilih kedua bulan.");
+                return;
+            }
+
+            var startDate = new Date(bulanAwal.getFullYear(), bulanAwal.getMonth(), 1);
+            var endDate = new Date(bulanAkhir.getFullYear(), bulanAkhir.getMonth() + 1, 0);
+
+            if (startDate > endDate) {
+                alert("Bulan Awal tidak boleh lebih besar dari Bulan Akhir.");
+                return;
+            }
+
             // Tampilkan modal
             $("#staticBackdropLargeScrollable").modal("show");
 
@@ -122,7 +138,8 @@
             `);
 
             // Ambil konten detail via AJAX
-            $.get('/MonitoringCCTV/Log', { nop: nop, jenisKend : jenisKend })
+            $.get('/MonitoringCCTV/Log', { nop: nop, jenisKend : jenisKend,tanggalAwal: startDate.toISOString().split('T')[0], // yyyy-MM-dd
+                    tanggalAkhir: endDate.toISOString().split('T')[0]  })
                 .done(function (html) {
                     $("#staticBackdropLargeScrollable .modal-title").html("Detail Kendaraan");
                     $("#staticBackdropLargeScrollable .modal-body").html(html);
