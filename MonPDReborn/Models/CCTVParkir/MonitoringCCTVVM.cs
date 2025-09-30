@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Office.CoverPageProps;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
 using System.Web.Mvc;
 
@@ -410,93 +411,116 @@ namespace MonPDReborn.Models.CCTVParkir
 
             public static List<MonitoringCCTVBulanan> GetMonitoringCCTVBulanan(string nop, int vendorId)
             {
-                /************************************
-                 *  AWAS BISA DISESUAIKAN KEBUTUHAN LOGICNYA
-                 * 
-                 */
+                var result = new List<MonitoringCCTVBulanan>();
+
                 var context = DBClass.GetContext();
+                int tahunKemarin = DateTime.Now.Year - 1;
+                int tahunIni = DateTime.Now.Year;
+                int tahunDepan = DateTime.Now.Year + 1;
 
-                var kapasitas = context.DbPotensiParkirs
-                    .FirstOrDefault(p => p.Nop == nop && p.TahunBuku == DateTime.Now.Year + 1);
+                var parkirPotensi = context.DbPotensiParkirs
+                    .Where(x => x.TahunBuku == tahunDepan && x.Nop == nop)
+                    .FirstOrDefault();
 
-                // data tahun ini
-                var queryTahunIni = context.TOpParkirCctvs
-                    .Where(l => l.Nop == nop && l.WaktuMasuk.Year == DateTime.Now.Year);
-
-                // data tahun kemarin
-                // data tahun kemarin, langsung ToList() biar jadi LINQ to Objects
-                var queryTahunKemarin = context.TOpParkirCctvs
-                    .Where(l => l.Nop == nop && l.WaktuMasuk.Year == DateTime.Now.Year - 1)
-                    .GroupBy(l => l.WaktuMasuk.Month)
-                    .Select(g => new { Bulan = g.Key, Total = g.Count() })
-                    .ToList(); // <-- penting!
-
-
-                var data = queryTahunIni
-                    .GroupBy(l => new { l.WaktuMasuk.Year, l.WaktuMasuk.Month })
-                    .Select(g => new MonitoringCCTVBulanan
-                    {
-                        Nop = nop,
-                        Tahun = g.Key.Year,
-                        Bulan = g.Key.Month,
-
-                        Motor = g.Count(x => x.JenisKend == 1),
-                        Mobil = g.Count(x => x.JenisKend == 2),
-                        Unknown = g.Count(x => x.JenisKend != 1 && x.JenisKend != 2),
-
-                        Omset = g.Sum(x => x.JenisKend == 1 ? (kapasitas.TarifMotor ?? 0) :
-                                           x.JenisKend == 2 ? (kapasitas.TarifMobil ?? 0) :
-                                           x.JenisKend == 3 ? (kapasitas.TarifTrukBus ?? 0) : 0),
-
-                        EstimasiPajak = g.Sum(x => x.JenisKend == 1 ? (kapasitas.TarifMotor ?? 0) :
-                                                   x.JenisKend == 2 ? (kapasitas.TarifMobil ?? 0) :
-                                                   x.JenisKend == 3 ? (kapasitas.TarifTrukBus ?? 0) : 0) * 0.25m,
-
-                        TahunIni = g.Count(),
-                        TahunKemarin = queryTahunKemarin
-                                        .Where(x => x.Bulan == g.Key.Month)
-                                        .Select(x => (int?)x.Total) // cast ke nullable
-                                        .FirstOrDefault() ?? 0,
-
-
-                        Potensi = (kapasitas.TarifMotor ?? 0) * (kapasitas.KapMotor ?? 0) +
-                                  (kapasitas.TarifMobil ?? 0) * (kapasitas.KapMobil ?? 0) +
-                                  (kapasitas.TarifTrukBus ?? 0) * (kapasitas.KapTrukBus ?? 0)
-                    })
+                var parkirTahunKemarin = context.DbMonParkirs
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunKemarin)
                     .ToList();
 
-                return data;
+                var parkirTahunSekarang = context.DbMonParkirs
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunIni)
+                    .ToList();
+
+                var kendaraanParkir = context.TOpParkirCctvs
+                    .Where(x => x.WaktuMasuk.Year == tahunIni && x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming))
+                    .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Month })
+                    .Select(x => new { x.Key.JenisKend, Bln = x.Key.Month, Jml = x.Count() })
+                    .ToList();
+
+                for (int bln = 1; bln <= 12; bln++)
+                {
+                    var res = new MonitoringCCTVBulanan();
+
+                    int jmlMotor = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Motor)
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+                    
+                    int jmlMobil = kendaraanParkir.Where(x => 
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Mobil) 
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+
+                    int jmlTruck = kendaraanParkir.Where(x => 
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Truck) 
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+
+                    int jmlUnknown = kendaraanParkir.Where(x => 
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Unknown) 
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+
+                    decimal tarifMotor = parkirPotensi?.TarifMotor ?? 2000;
+                    decimal tarifMobil = parkirPotensi?.TarifMobil ?? 4000;
+                    decimal tarifUnknown = 2000;
+
+                    decimal omsetMotor = (2000 * jmlMotor);
+                    decimal omsetMobil = (4000 * (jmlMobil + jmlTruck));
+                    decimal omsetUnknown = (tarifUnknown * (jmlUnknown));
+
+                    decimal estimasiPajakMotor = omsetMotor * 0.1m; 
+                    decimal estimasiPajakMobil = omsetMobil * 0.1m;
+                    decimal estimasiPajakUnknown = omsetUnknown * 0.1m;
+
+                    decimal omset = (omsetMotor + omsetMobil + omsetUnknown);
+                    decimal estimasi = (estimasiPajakMotor + estimasiPajakMobil + estimasiPajakUnknown);
+
+                    decimal realisasiTahunKemarin = parkirTahunKemarin.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
+                    decimal realisasiTahunIni = parkirTahunSekarang.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
+                    decimal potensi = realisasiTahunIni - estimasi;
+
+                    res.Nop = nop;
+                    res.Tahun = tahunIni;
+                    res.Bulan = bln;
+                    res.Motor = jmlMotor;
+                    res.Mobil = (jmlMobil + jmlTruck);
+                    res.Unknown = jmlUnknown;
+                    res.Omset = omset;
+                    res.EstimasiPajak = estimasi;
+                    res.TahunKemarin = realisasiTahunKemarin;
+                    res.TahunIni = realisasiTahunIni;
+                    res.Potensi = potensi;
+
+                    result.Add(res);
+                }
+
+                return result;
             }
 
 
             public static List<MonitoringCCTVKapasitas> GetMonitoringCCTVHarian(string nop, int vendorId, int tahun, int bulan)
             {
+                var result = new List<MonitoringCCTVKapasitas>();
                 var context = DBClass.GetContext();
 
-                var kapasitas = context.DbPotensiParkirs
-                    .Where(p => p.Nop == nop && p.TahunBuku == tahun)
-                    .FirstOrDefault();
+                var totalDay = DateTime.DaysInMonth(tahun, bulan);
 
-                //var data = context.TOpParkirCctvs
-                //    .Where(l => l.Nop == nop && l.WaktuMasuk.Year == tahun && l.WaktuMasuk.Month == bulan)
-                //    .GroupBy(l => new { l.WaktuMasuk.Date, l.JenisKend })
-                //    .Select(g => new MonitoringCCTVKapasitas
-                //    {
-                //        Nop = nop,
-                //        Tanggal = g.Key.Date,
-                //        JenisKendaraan = g.Key.JenisKend,
-                //        JumlahKendaraanTerparkir = g.Count(),
-                //        Kapasitas = g.Key.JenisKend == 1 ? (kapasitas?.KapMotor ?? 0) :
-                //                    g.Key.JenisKend == 2 ? (kapasitas?.KapMobil ?? 0) :
-                //                    g.Key.JenisKend == 3 ? (kapasitas?.KapTrukBus ?? 0) : 0,
-                //        Tarif = g.Key.JenisKend == 1 ? (kapasitas?.TarifMotor ?? 0) :
-                //                g.Key.JenisKend == 2 ? (kapasitas?.TarifMobil ?? 0) :
-                //                g.Key.JenisKend == 3 ? (kapasitas?.TarifTrukBus ?? 0) : 0
-                //    })
-                //    .ToList();
+                for (int tgl = 1; tgl <= totalDay; tgl++)
+                {
+                    var res = new MonitoringCCTVKapasitas();
 
-                //dikosongin dulu
-                return null;
+                    //res.Nop = nop;
+                    //res.Tanggal = new DateTime(tahun, bulan, tgl);
+                    //res.JenisKendaraan = 
+                    //res.JumlahKendaraanTerparkir = 
+                    //res.Tarif = 
+                    //res.Kapasitas = 
+
+                    //result.Add(res);
+                }
+
+
+                return result;
             }
 
 
