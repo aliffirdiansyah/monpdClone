@@ -5,6 +5,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.Globalization;
 using System.Web.Mvc;
 
 namespace MonPDReborn.Models.CCTVParkir
@@ -51,87 +52,47 @@ namespace MonPDReborn.Models.CCTVParkir
         }
         public class Kapasitas
         {
-            //tidak dipakai lagi
-            //public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
-
-            // Data Bulanan
             public List<MonitoringCCTVBulanan> RekapBulanan { get; set; } = new();
             public string Nop { get; set; } = "";
             public string NamaOP { get; set; }
             public string AlamatOP { get; set; }
             public string Vendor { get; set; }
-
-
+            public string TanggalPasang { get; set; }
             public Kapasitas(string nop, int vendorId)
             {
                 Nop = nop;
-                NamaOP = "Dummy OP untuk " + nop;
-                AlamatOP = "Alamat Dummy";
-                Vendor = "Vendor Dummy";
-
-                try
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop && m.Vendor == vendorId);
+                if(vendorId == 1)
                 {
-                    // Kalau DB ready
-                    RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
-
-                    // Kalau kosong (DB ada tapi data ga ada), isi dummy juga
-                    if (RekapBulanan == null || !RekapBulanan.Any())
+                    var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
+                    if(telkom != null)
                     {
-                        RekapBulanan = GetDummyData();
+                        Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
+                        TanggalPasang = telkom.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                     }
                 }
-                catch
+                if(vendorId == 2)
                 {
-                    // Kalau DB error → isi dummy
-                    RekapBulanan = GetDummyData();
+                    var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
+                    if(jasnita != null)
+                    {
+                        Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
+                    TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                    }
                 }
 
-                //tidak dipakai 
-                //MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop, vendorId);
-
-                //ambil bulanan
-                //RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
-            }
-
-            private List<MonitoringCCTVBulanan> GetDummyData()
-            {
-                return new List<MonitoringCCTVBulanan>
-        {
-            new MonitoringCCTVBulanan
-            {
-                Nop = Nop,
-                Tahun = DateTime.Now.Year,
-                Bulan = 1,
-                Motor = 120,
-                Mobil = 40,
-                Unknown = 5,
-                Omset = 3000000,
-                EstimasiPajak = 750000,
-                TahunIni = 165,
-                TahunKemarin = 140,
-                Potensi = 4000000
-            },
-                new MonitoringCCTVBulanan
+                if(query != null)
                 {
-                    Nop = Nop,
-                    Tahun = DateTime.Now.Year,
-                    Bulan = 2,
-                    Motor = 80,
-                    Mobil = 60,
-                    Unknown = 8,
-                    Omset = 2500000,
-                    EstimasiPajak = 625000,
-                    TahunIni = 148,
-                    TahunKemarin = 120,
-                    Potensi = 4000000
+                    NamaOP = query.NamaOp;
+                    AlamatOP = query.AlamatOp;
                 }
-            };
+
+
+                RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
+
             }
         }
-
-
-
-
 
         public class MonitoringCCTVBulanan
         {
@@ -140,7 +101,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public int Bulan { get; set; }
 
             // Untuk tampilan
-            public string NamaBulan => new DateTime(Tahun, Bulan, 1).ToString("MMMM");
+            public string NamaBulan { get; set; }
             public string FormattedNOP => Utility.GetFormattedNOP(Nop);
 
             // Agregat per bulan
@@ -159,7 +120,6 @@ namespace MonPDReborn.Models.CCTVParkir
         {
             public string Nop { get; set; } = null!;
             public DateTime Tanggal { get; set; }
-
 
             // Untuk tampilan
             public string FormattedNOP => Utility.GetFormattedNOP(Nop);
@@ -562,6 +522,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.Nop = nop;
                     res.Tahun = tahunIni;
                     res.Bulan = bln;
+                    res.NamaBulan = new DateTime(tahunIni, bln, 1).ToString("MMMM", new CultureInfo("id-ID"));
                     res.Motor = jmlMotor;
                     res.Mobil = (jmlMobil + jmlTruck);
                     res.Unknown = jmlUnknown;

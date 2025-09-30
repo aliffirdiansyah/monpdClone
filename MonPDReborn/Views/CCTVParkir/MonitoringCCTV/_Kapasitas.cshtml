@@ -19,15 +19,15 @@
                 <div class="row text-left g-3 mt-1">
                     <!-- Col 1 -->
                     <div class="col-md-6">
-                        <h5 class="text-dark">Nama OP : Static Nama Op</h5>
-                        <h5 class="text-dark">No OP : Static No OP</h5>
-                        <h5 class="text-dark">Alamat : static Lokasi</h5>
+                        <h5 class="text-dark">Nama OP : @Model.NamaOP</h5>
+                        <h5 class="text-dark">No OP : @Model.Nop</h5>
+                        <h5 class="text-dark">Alamat : @Model.AlamatOP</h5>
                     </div>
 
                     <!-- Col 2 -->
                     <div class="col-md-6">
-                        <h5 class="text-dark">Vendor : static vendor</h5>
-                        <h5 class="text-dark">Tanggal Pasang : static tanggal</h5>
+                        <h5 class="text-dark">Vendor : @Model.Vendor</h5>
+                        <h5 class="text-dark">Tanggal Pasang : @Model.TanggalPasang</h5>
 
                     </div>
                 </div>
@@ -36,10 +36,9 @@
 
 
                     <div class="table-responsive">
-                        @(
-                                                Html.DevExtreme().DataGrid<object>() // pakai object dulu kalau model belum ada
+                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTVBulanan>()
                                                 .ID("KapasitasMonitoringCCTVGrid")
-                                                .DataSource(new object[] { }) // data kosong
+                                                .DataSource(Model.RekapBulanan)
                                                 .ShowBorders(true)
                                                 .ShowColumnHeaders(true)
                                                 .ShowColumnLines(true)
@@ -61,128 +60,103 @@
                                                 .OnExporting("exportGrid")
                                                 .Columns(columns =>
                                                 {
-                                                    columns.Add().Caption("Bulan");
-                                                    columns.Add().Caption("Motor");
-                                                    columns.Add().Caption("Mobil");
-                                                    columns.Add().Caption("Uknown");
-                                                    columns.Add().Caption("Omset");
-                                                    columns.Add().Caption("Est. Pajak");
-                                                    columns.Add().Caption("Tahun Kemaren");
-                                                    columns.Add().Caption("Tahun ini");
-                                                    columns.Add().Caption("Potensi");
+                                                    columns.AddFor(m => m.NamaBulan).Caption("Bulan");
+                                                    columns.AddFor(m => m.Motor).Caption("Motor");
+                                                    columns.AddFor(m => m.Mobil).Caption("Mobil");
+                                                    columns.AddFor(m => m.Unknown).Caption("Unknown");
+                                                    columns.AddFor(m => m.Omset).Caption("Omset").Format("#,##0");
+                                                    columns.AddFor(m => m.EstimasiPajak).Caption("Est. Pajak").Format("#,##0");
+                                                    columns.AddFor(m => m.TahunKemarin).Caption("Tahun Kemarin").Format("#,##0");
+                                                    columns.AddFor(m => m.TahunIni).Caption("Tahun Ini").Format("#,##0");
+                                                    columns.AddFor(m => m.Potensi).Caption("Potensi").Format("#,##0");
                                                 })
+                                                .MasterDetail(md => md
+                                                .Enabled(true)
+                                                .Template(new JS("ShowKapasitasHarian"))
+                                                )
                                                 )
                     </div>
-
-
-                    @* <div class="col-lg col-md-6">
-                        @(Html.DevExtreme().DateBox()
-                            .ID("bulanAwal")
-                            .Type(DateBoxType.Date)
-                            .Placeholder("Bulan Awal")
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .Value(DateTime.Now.AddMonths(-1))
-                            .DisplayFormat("MMMM yyyy")
-                            .CalendarOptions(c => c.MaxZoomLevel(CalendarZoomLevel.Year))
-                            )
-                    </div>
-
-                    <div class="col-lg col-md-6">
-                        @(Html.DevExtreme().DateBox()
-                            .ID("bulanAkhir")
-                            .Type(DateBoxType.Date)
-                            .Placeholder("Bulan Akhir")
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .Value(DateTime.Now)
-                            .DisplayFormat("MMMM yyyy")
-                            .CalendarOptions(c => c.MaxZoomLevel(CalendarZoomLevel.Year))
-                            )
-                    </div>
-
-
-                    <div class="col-lg col-md-6">
-                        <button type="button" onclick="fnKapasitasParkir()" class="btn btn-success w-100">
-                            Terapkan Filter
-                        </button>
-                    </div> *@
-
-
-
-
-
-                    @* <div class="text-center">
-                        <div id="loading2-DataKapasitasParkir" class="spinner-border text-primary" style="display: none">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                    <div id="DataKapasitasParkir" class="mt-3"></div> *@
-
-                    
-
                 </div>
-
-                <div class="table-responsive mt-4">
-                    @(
-                                        Html.DevExtreme().DataGrid<object>()
-                                        .ID("KapasitasMonitoringCCTVHarianGrid")
-                                        .DataSource(new object[] { }) // kosong dulu
-                                        .ShowBorders(true)
-                                        .ShowColumnHeaders(true)
-                                        .RowAlternationEnabled(true)
-                                        .ColumnAutoWidth(true)
-                                        .Paging(p => p.PageSize(10))
-                                        .Columns(columns =>
-                                        {
-                                            columns.Add().Caption("Tanggal");
-                                            columns.Add().Caption("Motor");
-                                            columns.Add().Caption("Mobil");
-                                            columns.Add().Caption("Unknown");
-                                            columns.Add().Caption("Omset");
-                                            columns.Add().Caption("Est. Pajak");
-                                        })
-                                        )
-                </div>
-
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
+
     <script>
-        $(function () {
-            // Dummy data bulanan
-            var dummyBulanan = [
-                { Bulan: "Januari", Motor: 120, Mobil: 80, Unknown: 5, Omset: 2000000, EstPajak: 500000, TahunKemaren: 150, TahunIni: 205, Potensi: 3000000 },
-                { Bulan: "Februari", Motor: 90, Mobil: 70, Unknown: 2, Omset: 1500000, EstPajak: 375000, TahunKemaren: 120, TahunIni: 162, Potensi: 2800000 },
-                { Bulan: "Maret", Motor: 110, Mobil: 85, Unknown: 3, Omset: 2100000, EstPajak: 525000, TahunKemaren: 160, TahunIni: 198, Potensi: 3100000 }
-            ];
 
-            $("#KapasitasMonitoringCCTVGrid").dxDataGrid("instance").option("dataSource", dummyBulanan);
-        });
+            function ShowKapasitasHarian(container, options) {
+            var row = options.data;
 
-        // Dummy data harian
-            var dummyHarian = [
-                { Tanggal: "2025-09-01", Motor: 15, Mobil: 8, Unknown: 0, Omset: 400000, EstPajak: 100000 },
-                { Tanggal: "2025-09-02", Motor: 12, Mobil: 10, Unknown: 1, Omset: 380000, EstPajak: 95000 },
-                { Tanggal: "2025-09-03", Motor: 20, Mobil: 7, Unknown: 0, Omset: 500000, EstPajak: 125000 }
-            ];
-            $("#KapasitasMonitoringCCTVHarianGrid").dxDataGrid("instance").option("dataSource", dummyHarian);
+            // param dari row bulanan
+            var nop = row.Nop;          // pastikan property ini ada di VM bulanan
+            var vendorId = row.VendorId; // sama, harus ada di VM
+            var tahun = row.Tahun;       // ambil tahun dari VM bulanan
+            var bulan = row.Bulan;       // ambil bulan dari VM bulanan (1-12)
 
-            // Event klik baris bulanan → filter harian
-            $("#KapasitasMonitoringCCTVGrid").dxDataGrid("instance").option("onRowClick", function (e) {
-                var selectedMonth = e.data.Bulan;
-                var filtered = dummyHarian.filter(x => x.Tanggal.startsWith("2025-09")); // sementara hardcode
-                $("#KapasitasMonitoringCCTVHarianGrid").dxDataGrid("instance").option("dataSource", filtered);
+            var $wrapper = $("<div>").appendTo(container);
+            $("<p>")
+                .text("Detail Harian")
+                .css({ "font-weight": "bold", "margin-bottom": "5px" })
+                .appendTo($wrapper);
+
+            var $gridContainer = $("<div>").appendTo($wrapper);
+
+            // load data via ajax
+            $.ajax({
+                url: '/MonitoringCCTV/KapasitasHarian',
+                type: 'GET',
+                data: { nop: nop, vendorId: vendorId, tahun: tahun, bulan: bulan },
+                success: function (data) {
+                    $gridContainer.dxDataGrid({
+                        dataSource: data,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" },
+                        filterRow: {
+                            visible: true,
+                            applyFilter: "auto"
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 31 },
+                        pager: { visible: false },
+                        columns: [
+                            { dataField: "Tanggal", caption: "Tanggal", dataType: "date", format: "dd-MM-yyyy" },
+                            { dataField: "Motor", caption: "Motor", format: "#,##0" },
+                            { dataField: "Mobil", caption: "Mobil", format: "#,##0" },
+                            { dataField: "Unknown", caption: "Unknown", format: "#,##0" },
+                            { dataField: "Omset", caption: "Omset", format: "#,##0" },
+                            { dataField: "EstimasiPajak", caption: "Est. Pajak", format: "#,##0" }
+                        ],
+                        export: {
+                            enabled: true,
+                            allowExportSelectedData: false,
+                            formats: ["xlsx", "pdf"]
+                        },
+                        onExporting: exportGrid,
+                        width: "100%"
+                    });
+                },
+                error: function (xhr) {
+                    $wrapper.append($("<div style='color:red'>")
+                        .text("Error load data harian: " + xhr.responseText));
+                }
             });
-        });
+        }
+
     </script>
 
 
 }
 
 
-@section Scripts {
+@* @section Scripts {
     <script>
         $(document).ready(function () {
             fnKapasitasParkir();
@@ -278,4 +252,4 @@
                 });
         }
     </script>
-}
+} *@
