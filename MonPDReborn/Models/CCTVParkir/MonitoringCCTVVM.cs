@@ -116,7 +116,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public DateTime TanggalMasuk { get; set; }
             public string JenisKend { get; set; }
             public string? PlatNo { get; set; }
-            public int Direction { get; set; }
+            public String Direction { get; set; }
             public string? Log { get; set; }
 
         }
@@ -680,7 +680,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.TanggalMasuk = item.WaktuMasuk;
                     res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
                     res.PlatNo = item.PlatNo;
-                    res.Direction = item.Direction;
+                    res.Direction = ((EnumFactory.CctvParkirDirection)item.Direction).GetDescription();
                     res.Log = item.Log;
 
 
