@@ -1,8 +1,13 @@
 ﻿using DevExpress.CodeParser;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
+using MonPDLib.EF;
 using MonPDLib.General;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.Globalization;
+using System.Numerics;
 using System.Web.Mvc;
 
 namespace MonPDReborn.Models.CCTVParkir
@@ -49,14 +54,115 @@ namespace MonPDReborn.Models.CCTVParkir
         }
         public class Kapasitas
         {
-            public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
+            public List<MonitoringCCTVBulanan> RekapBulanan { get; set; } = new();
             public string Nop { get; set; } = "";
+            public string NamaOP { get; set; }
+            public string AlamatOP { get; set; }
+            public string Vendor { get; set; }
+            public string TanggalPasang { get; set; }
             public Kapasitas(string nop, int vendorId)
             {
                 Nop = nop;
-                MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop, vendorId);
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop && m.Vendor == vendorId);
+                if(vendorId == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
+                {
+                    var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
+                    if (jasnita != null)
+                    {
+                        Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
+                        TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                    }
+                }
+                if (vendorId == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
+                {
+                    var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
+                    if (telkom != null)
+                    {
+                        Vendor = (EnumFactory.EVendorParkirCCTV.Telkom).GetDescription();
+                        TanggalPasang = telkom.TglPasang.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
+                    }
+                }
+
+                if(query != null)
+                {
+                    NamaOP = query.NamaOp;
+                    AlamatOP = query.AlamatOp;
+                }
+
+
+                RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
+
             }
         }
+
+        public class KapasitasHarianDetail
+        {
+            public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
+            public KapasitasHarianDetail(string nop, int vendorId, DateTime tanggal)
+            {
+                DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, vendorId, tanggal);
+            }
+        }
+
+        public class MonitoringCctvHarianDetail
+        {
+            public string Id { get; set; } = null!;
+            public string Nop { get; set; } = null!;
+            public string CctvId { get; set; } = null!;
+            public string? NamaOp { get; set; }
+            public string? AlamatOp { get; set; }
+            public int? WilayahPajak { get; set; }
+            public DateTime TanggalMasuk { get; set; }
+            public string JenisKend { get; set; }
+            public string? PlatNo { get; set; }
+            public int Direction { get; set; }
+            public string? Log { get; set; }
+
+        }
+
+        public class MonitoringCCTVBulanan
+        {
+            public string Nop { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+
+            // Untuk tampilan
+            public string NamaBulan { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+
+            // Agregat per bulan
+            public int Motor { get; set; }
+            public int Mobil { get; set; }
+            public int Unknown { get; set; }
+            public decimal Omset { get; set; }
+            public decimal EstimasiPajak { get; set; }
+            public decimal TahunKemarin { get; set; }
+            public decimal TahunIni { get; set; }
+            public decimal Potensi { get; set; }
+
+        }
+
+        public class MonitoringCCTVHarian
+        {
+            public string Nop { get; set; } = null!;
+            public DateTime Tanggal { get; set; }
+
+            // Untuk tampilan
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+
+            // Agregat per bulan
+            public int Motor { get; set; }
+            public int Mobil { get; set; }
+            public int Unknown { get; set; }
+            public decimal Omset { get; set; }
+            public decimal EstimasiPajak { get; set; }
+            public decimal TahunKemarin { get; set; }
+            public decimal TahunIni { get; set; }
+            public decimal Potensi { get; set; }
+        }
+
+
         public class DataKapasitasParkir
         {
             public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
@@ -366,6 +472,220 @@ namespace MonPDReborn.Models.CCTVParkir
                     PlatNo = l.PlatNo ?? "-"
                 })
                 .ToList();
+                return result;
+            }
+            public static List<MonitoringCCTVBulanan> GetMonitoringCCTVBulanan(string nop, int vendorId)
+            {
+                var result = new List<MonitoringCCTVBulanan>();
+
+                var context = DBClass.GetContext();
+                int tahunKemarin = DateTime.Now.Year - 1;
+                int tahunIni = DateTime.Now.Year;
+                int tahunDepan = DateTime.Now.Year + 1;
+
+                var parkirPotensi = context.DbPotensiParkirs
+                    .Where(x => x.TahunBuku == tahunDepan && x.Nop == nop)
+                    .FirstOrDefault();
+
+                var parkirTahunKemarin = context.DbMonParkirs
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunKemarin)
+                    .ToList();
+
+                var parkirTahunSekarang = context.DbMonParkirs
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunIni)
+                    .ToList();
+
+                var kendaraanParkir = context.TOpParkirCctvs
+                    .Where(x => x.WaktuMasuk.Year == tahunIni && x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming))
+                    .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Month })
+                    .Select(x => new { x.Key.JenisKend, Bln = x.Key.Month, Jml = x.Count() })
+                    .ToList();
+
+                for (int bln = 1; bln <= 12; bln++)
+                {
+                    var res = new MonitoringCCTVBulanan();
+
+                    int jmlMotor = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Motor)
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+                    
+                    int jmlMobil = kendaraanParkir.Where(x => 
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Mobil) 
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+
+                    int jmlTruck = kendaraanParkir.Where(x => 
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Truck) 
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+
+                    int jmlUnknown = kendaraanParkir.Where(x => 
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Unknown) 
+                        && x.Bln == bln
+                    ).Sum(q => q.Jml);
+
+                    decimal tarifMotor = parkirPotensi?.TarifMotor ?? 2000;
+                    decimal tarifMobil = parkirPotensi?.TarifMobil ?? 4000;
+                    decimal tarifUnknown = 2000;
+
+                    decimal omsetMotor = (2000 * jmlMotor);
+                    decimal omsetMobil = (4000 * (jmlMobil + jmlTruck));
+                    decimal omsetUnknown = (tarifUnknown * (jmlUnknown));
+
+                    decimal estimasiPajakMotor = omsetMotor * 0.1m; 
+                    decimal estimasiPajakMobil = omsetMobil * 0.1m;
+                    decimal estimasiPajakUnknown = omsetUnknown * 0.1m;
+
+                    decimal omset = (omsetMotor + omsetMobil + omsetUnknown);
+                    decimal estimasi = (estimasiPajakMotor + estimasiPajakMobil + estimasiPajakUnknown);
+
+                    decimal realisasiTahunKemarin = parkirTahunKemarin.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
+                    decimal realisasiTahunIni = parkirTahunSekarang.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
+                    decimal potensi = realisasiTahunIni - estimasi;
+
+                    res.Nop = nop;
+                    res.Tahun = tahunIni;
+                    res.Bulan = bln;
+                    res.NamaBulan = new DateTime(tahunIni, bln, 1).ToString("MMMM", new CultureInfo("id-ID"));
+                    res.Motor = jmlMotor;
+                    res.Mobil = (jmlMobil + jmlTruck);
+                    res.Unknown = jmlUnknown;
+                    res.Omset = omset;
+                    res.EstimasiPajak = estimasi;
+                    res.TahunKemarin = realisasiTahunKemarin;
+                    res.TahunIni = realisasiTahunIni;
+                    res.Potensi = potensi;
+
+                    result.Add(res);
+                }
+
+                return result;
+            }
+            public static List<MonitoringCCTVHarian> GetMonitoringCCTVHarian(string nop, int vendorId, int tahun, int bulan)
+            {
+                var result = new List<MonitoringCCTVHarian>();
+                var context = DBClass.GetContext();
+                int tahunKemarin = DateTime.Now.Year - 1;
+                int tahunIni = DateTime.Now.Year;
+                int tahunDepan = DateTime.Now.Year + 1;
+
+                var parkirPotensi = context.DbPotensiParkirs
+                    .Where(x => x.TahunBuku == tahunDepan && x.Nop == nop)
+                    .FirstOrDefault();
+
+                var parkirTahunKemarin = context.DbMonParkirs
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunKemarin && x.TglBayarPokok.Value.Month == bulan)
+                    .ToList();
+
+                var parkirTahunSekarang = context.DbMonParkirs
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunIni && x.TglBayarPokok.Value.Month == bulan)
+                    .ToList();
+
+                var kendaraanParkir = context.TOpParkirCctvs
+                    .Where(x => x.WaktuMasuk.Year == tahunIni 
+                        && x.WaktuMasuk.Month == bulan 
+                        && x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming)
+                    )
+                    .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Month, x.WaktuMasuk.Day })
+                    .Select(x => new { x.Key.JenisKend, Bln = x.Key.Month, Hari = x.Key.Day, Jml = x.Count() })
+                    .ToList();
+
+                var totalDay = DateTime.DaysInMonth(tahun, bulan);
+
+                for (int tgl = 1; tgl <= totalDay; tgl++)
+                {
+                    var res = new MonitoringCCTVHarian();
+
+                    int jmlMotor = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Motor)
+                        && x.Bln == bulan
+                        && x.Hari == tgl
+                    ).Sum(q => q.Jml);
+
+                    int jmlMobil = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Mobil)
+                        && x.Bln == bulan
+                        && x.Hari == tgl
+                    ).Sum(q => q.Jml);
+
+                    int jmlTruck = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Truck)
+                        && x.Bln == bulan
+                        && x.Hari == tgl
+                    ).Sum(q => q.Jml);
+
+                    int jmlUnknown = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Unknown)
+                        && x.Bln == bulan
+                        && x.Hari == tgl
+                    ).Sum(q => q.Jml);
+
+                    decimal tarifMotor = parkirPotensi?.TarifMotor ?? 2000;
+                    decimal tarifMobil = parkirPotensi?.TarifMobil ?? 4000;
+                    decimal tarifUnknown = 2000;
+
+                    decimal omsetMotor = (2000 * jmlMotor);
+                    decimal omsetMobil = (4000 * (jmlMobil + jmlTruck));
+                    decimal omsetUnknown = (tarifUnknown * (jmlUnknown));
+
+                    decimal estimasiPajakMotor = omsetMotor * 0.1m;
+                    decimal estimasiPajakMobil = omsetMobil * 0.1m;
+                    decimal estimasiPajakUnknown = omsetUnknown * 0.1m;
+
+                    decimal omset = (omsetMotor + omsetMobil + omsetUnknown);
+                    decimal estimasi = (estimasiPajakMotor + estimasiPajakMobil + estimasiPajakUnknown);
+
+                    decimal realisasiTahunKemarin = parkirTahunKemarin
+                        .Where(x => x.TglBayarPokok.Value.Month == bulan && x.TglBayarPokok.Value.Day == tgl)
+                        .Sum(q => q.NominalPokokBayar) ?? 0;
+                    decimal realisasiTahunIni = parkirTahunSekarang
+                        .Where(x => x.TglBayarPokok.Value.Month == bulan && x.TglBayarPokok.Value.Day == tgl)
+                        .Sum(q => q.NominalPokokBayar) ?? 0;
+                    decimal potensi = realisasiTahunIni - estimasi;
+
+                    res.Nop = nop;
+                    res.Tanggal = new DateTime(tahun, bulan, tgl);
+                    res.Motor = jmlMotor;
+                    res.Mobil = (jmlMobil + jmlTruck);
+                    res.Unknown = jmlUnknown;
+                    res.Omset = omset;
+                    res.EstimasiPajak = estimasi;
+                    res.TahunKemarin = realisasiTahunKemarin;
+                    res.TahunIni = realisasiTahunIni;
+                    res.Potensi = potensi;
+
+                    result.Add(res);
+                }
+                return result.OrderBy(x => x.Tanggal).ToList();
+            }
+            public static List<MonitoringCctvHarianDetail> GetMonitoringHarianDetail(string nop, int vendorId, DateTime tgl)
+            {
+                var result = new List<MonitoringCctvHarianDetail>();
+                var context = DBClass.GetContext();
+
+                var data = context.TOpParkirCctvs.Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl).ToList();
+
+                foreach (var item in data)
+                {
+                    var res = new MonitoringCctvHarianDetail();
+                    res.Id = item.Id;
+                    res.Nop = item.Nop;
+                    res.CctvId = item.CctvId;
+                    res.NamaOp = item.NamaOp;
+                    res.AlamatOp = item.AlamatOp;
+                    res.WilayahPajak = item.WilayahPajak;
+                    res.TanggalMasuk = item.WaktuMasuk;
+                    res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
+                    res.PlatNo = item.PlatNo;
+                    res.Direction = item.Direction;
+                    res.Log = item.Log;
+
+
+                    result.Add(res);
+                }
+
+
                 return result;
             }
         }

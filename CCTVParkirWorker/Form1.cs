@@ -33,12 +33,30 @@ namespace CCTVParkirWorker
         private void Form1_Load(object sender, EventArgs e)
         {
             dataGridView1.AllowUserToAddRows = false;
+            dataGridView2.AllowUserToAddRows = false;
 
             _parkirList = GetOpParkirCctv();
 
             foreach (var item in _parkirList)
             {
                 var idx = dataGridView1.Rows.Add(
+                    item.No,
+                    item.Id,
+                    item.NOP, //NOP
+                    item.Nama, //Nama
+                    item.Alamat, //Alamat
+                    item.Uptb, //CCTVId
+                    item.CCTVId, //CCTVId
+                    item.AccessPoint, //AccessPoint
+                    item.Mode, //Mode
+                     "", //LastConnected
+                     "Start", //Action
+                     "Idle", //Status
+                     "", //ErrMessage
+                     "" //Log
+                );
+
+                var idxLog = dataGridView2.Rows.Add(
                     item.No,
                     item.Id,
                     item.NOP, //NOP
@@ -65,6 +83,10 @@ namespace CCTVParkirWorker
             dataGridView1.CellClick += DataGridView1_CellClick;
             btnStartAll.Click += BtnStartAll_Click;
             btnStopAll.Click += BtnStopAll_Click;
+
+            dataGridView2.CellClick += DataGridView2_CellClick;
+            btnStartAllLogJasnita.Click += BtnStartLogAll_Click;
+            btnStopAllLogJasnita.Click += BtnStopLogAll_Click;
         }
         private async void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -117,6 +139,60 @@ namespace CCTVParkirWorker
                 }
             }
         }
+        private async void DataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dataGridView2.Columns[e.ColumnIndex].Name == "ActionLog")
+            {
+                var row = dataGridView2.Rows[e.RowIndex];
+                var btnCell = (DataGridViewButtonCell)row.Cells["ActionLog"];
+
+                if (btnCell.Value.ToString() == "Start")
+                {
+                    btnCell.Value = "Stop";
+                    row.Cells["ErrorLog"].Value = "";
+                    row.Cells["StatusLog"].Value = "";
+                    row.Cells["StatusLog"].Style.BackColor = Color.Green;
+
+                    // mulai task
+                    var cts = new CancellationTokenSource();
+                    _taskTokens[e.RowIndex] = cts;
+
+                    string id = row.Cells["IdLog"].Value?.ToString() ?? "";
+                    var parkir = GetParkirById(id);
+
+                    if (parkir == null)
+                    {
+                        row.Cells["ErrorLog"].Value = "Data parkir tidak ditemukan";
+                        btnCell.Value = "Start";
+                        row.Cells["StatusLog"].Value = "";
+                        row.Cells["StatusLog"].Style.BackColor = Color.Red;
+                        _taskTokens.Remove(e.RowIndex);
+                        return;
+                    }
+
+                    // Jalankan task di thread background
+                    _ = Task.Run(async () =>
+                    {
+                        await RunTaskCctvLog(parkir, cts.Token, row);
+                    });
+                }
+                else // tombol Stop ditekan
+                {
+                    if (_taskTokens.ContainsKey(e.RowIndex))
+                    {
+                        _taskTokens[e.RowIndex].Cancel();
+                        _taskTokens.Remove(e.RowIndex);
+                    }
+
+                    btnCell.Value = "Start";
+                    row.Cells["StatusLog"].Value = "";
+                    row.Cells["StatusLog"].Style.BackColor = Color.Red;
+                }
+            }
+        }
+
+
+        //DATAGRIDVIEW 1 - PARKIR CCTV
         private async Task RunTaskCctv(ParkirView op, CancellationToken token, DataGridViewRow row)
         {
             try
@@ -129,7 +205,7 @@ namespace CCTVParkirWorker
                     var tglAkhir = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
 
                     var dataCctvParkir = await GetDataParkirCctv(row, op, tglAwal, tglAkhir, token);
-                    await InsertToDb(op, dataCctvParkir, row, token);
+                    await InsertToDbCctv(op, dataCctvParkir, row, token);
 
                     row.Cells["LastConnected"].Value = DateTime.Now.ToString();
                     UpdateLog(row, "Inserted");
@@ -174,7 +250,6 @@ namespace CCTVParkirWorker
                 return;
             }
         }
-
         public async Task<List<EventAll.EventAllResponse>> GetDataParkirCctv(DataGridViewRow row, ParkirView op, DateTime tglAwal, DateTime tglAkhir, CancellationToken token)
         {
             var result = new List<EventAll.EventAllResponse>();
@@ -309,7 +384,7 @@ namespace CCTVParkirWorker
 
             return result;
         }
-        public async Task InsertToDb(ParkirView op, List<EventAll.EventAllResponse> dataList, DataGridViewRow row, CancellationToken token)
+        public async Task InsertToDbCctv(ParkirView op, List<EventAll.EventAllResponse> dataList, DataGridViewRow row, CancellationToken token)
         {
             await using var context = DBClass.GetContext();
 
@@ -400,6 +475,277 @@ namespace CCTVParkirWorker
            
         }
 
+
+
+        //DATAGRIDVIEW 2 - LOG JASNITA
+        private async Task RunTaskCctvLog(ParkirView op, CancellationToken token, DataGridViewRow row)
+        {
+            try
+            {
+                while (!token.IsCancellationRequested) // loop terus
+                {
+                    UpdateLogLog(row, "Fetching...");
+
+                    var tglAwal = DateTime.Now.AddDays(-1 * _INTERVAL_DAY);
+                    var tglAkhir = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
+
+                    var data = await GetDataParkirCctvLog(row, op, tglAwal, tglAkhir, token);
+                    await InsertToDbCctvLog(op, data, row, token);
+
+                    row.Cells["LastConnectedLog"].Value = DateTime.Now.ToString();
+                    UpdateLogLog(row, "Inserted");
+
+                    if (token.IsCancellationRequested)
+                        break;
+
+                    var nextRun = DateTime.Now.AddMinutes(_INTERVAL_API);
+                    UpdateLogLog(row, $"[DONE] Next Run: {nextRun:dd/MM/yyyy HH:mm:ss}");
+                    await Task.Delay(TimeSpan.FromMinutes(_INTERVAL_API), token);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                UpdateLogLog(row, "Dihentikan manual ❌");
+            }
+            catch (Exception ex)
+            {
+                // ✅ Log error di UI
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new Action(() =>
+                    {
+                        row.Cells["ErrorLog"].Value = ex.Message;
+                        row.Cells["StatusLog"].Style.BackColor = Color.Red;
+                        row.Cells["StatusLog"].Value = "Error";
+                        var btnCell = (DataGridViewButtonCell)row.Cells["ActionLog"];
+                        btnCell.Value = "Start";
+                    }));
+                }
+                else
+                {
+                    row.Cells["ErrorLog"].Value = ex.Message;
+                    row.Cells["StatusLog"].Style.BackColor = Color.Red;
+                    row.Cells["StatusLog"].Value = "Error";
+                    var btnCell = (DataGridViewButtonCell)row.Cells["ActionLog"];
+                    btnCell.Value = "Start";
+                }
+
+                UpdateLogLog(row, $"{op.AccessPoint} Error: " + ex.Message);
+
+                return;
+            }
+        }
+        public async Task<List<CameraStatus.CameraStatusResponse>> GetDataParkirCctvLog(DataGridViewRow row, ParkirView op, DateTime tglAwal, DateTime tglAkhir, CancellationToken token)
+        {
+            var result = new List<CameraStatus.CameraStatusResponse>();
+
+            using (var client = new HttpClient())
+            {
+                await GenerateToken(row);
+
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN);
+                client.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+
+                int totalData = 0;
+                int limit = 50;
+                int offset = 0;
+                bool hasMore = true;
+                int attempt = 0;
+                const int maxRetry = 5;
+
+                while (hasMore)
+                {
+                    try
+                    {
+                        // 🔹 cek cancel sebelum request
+                        token.ThrowIfCancellationRequested();
+
+                        var resEvent = new CameraStatus.CameraStatusResponse();
+
+                        do
+                        {
+                            // 🔹 cek cancel di setiap iterasi retry
+                            token.ThrowIfCancellationRequested();
+
+                            var body = new
+                            {
+                                method = "axxonsoft.bl.events.EventHistoryService.ReadEvents",
+                                data = new
+                                {
+                                    range = new
+                                    {
+                                        begin_time = tglAwal.ToString("yyyyMMdd'T'HHmmss.'000'"),
+                                        end_time = tglAkhir.ToString("yyyyMMdd'T'HHmmss.'999'")
+                                    },
+                                    filters = new
+                                    {
+                                        filters = new[]
+                                        {
+                                new {
+                                    type = "ET_IpDeviceStateChangedEvent",
+                                    subjects = op.AccessPoint
+                                }
+                            }
+                                    },
+                                    limit = limit,
+                                    offset = offset,
+                                    descending = true
+                                }
+                            };
+
+                            var jsonBody = JsonSerializer.Serialize(body);
+                            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                            //UpdateLog(row, $"Getting Data {tglAwal} s/d {tglAkhir}");
+
+                            // 🔹 kirim request dengan token
+                            HttpResponseMessage response = await client.PostAsync(_URL, content, token);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                UpdateLogLog(row, "Data Received, Processing...");
+
+                                var rawResponse = await response.Content.ReadAsStringAsync(token);
+                                var apiResponse = ConvertSseOutputJson(rawResponse);
+                                var res = JsonSerializer.Deserialize<CameraStatus.CameraStatusResponse>(apiResponse);
+
+                                if (res == null)
+                                    throw new Exception("Response dari API tidak valid");
+
+                                resEvent = res;
+                                break;
+                            }
+                            else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                            {
+                                UpdateLogLog(row, "Token kadaluarsa, refresh token dan ulangi...");
+                                await GenerateToken(row);
+                            }
+                            else
+                            {
+                                UpdateLogLog(row, $"Error: {response.StatusCode}");
+                            }
+
+                            attempt++;
+                            if (attempt >= maxRetry)
+                            {
+                                UpdateLogLog(row, $"Gagal setelah {maxRetry} percobaan pada offset {offset}");
+                                break;
+                            }
+
+                        } while (attempt < maxRetry);
+
+                        // 🔹 setelah selesai mencoba, cek cancel
+                        token.ThrowIfCancellationRequested();
+
+                        if (resEvent == null || resEvent.Items == null || resEvent.Items.Count == 0)
+                        {
+                            UpdateLogLog(row, $"Tidak ada data event di offset {offset}");
+                            hasMore = false;
+                        }
+                        else
+                        {
+                            UpdateLogLog(row, $"Dapat {resEvent.Items.Count} event/items di offset {offset}");
+                            result.Add(resEvent);
+
+                            totalData += resEvent.Items.Count;
+                            if (resEvent.Items.Count < limit)
+                            {
+                                UpdateLogLog(row, $"Data sudah habis, total {totalData} event.");
+                                hasMore = false;
+                            }
+                            else
+                            {
+                                offset += limit;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        UpdateLogLog(row, $"Error: {ex.Message}");
+                    }
+                }
+            }
+
+            return result;
+        }
+        public async Task InsertToDbCctvLog(ParkirView op, List<CameraStatus.CameraStatusResponse> dataCameraStatusList, DataGridViewRow row, CancellationToken token)
+        {
+            var context = DBClass.GetContext();
+
+            var rekapResult = new List<CameraStatusRekap>();
+            var dataList = dataCameraStatusList.SelectMany(x => x.Items).ToList();
+
+            foreach (var item in dataList)
+            {
+                var res = new CameraStatusRekap();
+
+                res.AccessPoint = item.Subjects[0];
+                res.Localization = item.Localization.Text;
+                res.State = GetStatusCctv(item.Body.State).GetDescription();
+                res.Tanggal = ParseFlexibleDate(item.Body.Timestamp);
+
+                rekapResult.Add(res);
+            }
+
+            //do logic here
+            var dataLog = rekapResult
+                .GroupBy(x => new { x.AccessPoint })
+                .Select(g =>
+                {
+                    //nop
+                    string nop = op.NOP;
+
+                    //cctv id
+                    string cctvId = op.CCTVId;
+
+                    // ambil event terakhir (tanggal terbaru)
+                    var lastEvent = g.OrderByDescending(x => x.Tanggal).FirstOrDefault();
+
+                    // ambil waktu terakhir aktif & terakhir nonaktif
+                    var lastAktif = g.Where(x => x.State == "AKTIF")
+                                     .OrderByDescending(x => x.Tanggal)
+                                     .FirstOrDefault();
+
+                    var lastNonAktif = g.Where(x => x.State == "NON AKTIF")
+                                        .OrderByDescending(x => x.Tanggal)
+                                        .FirstOrDefault();
+
+                    // bikin objek hasilnya
+                    return new MOpParkirCctvJasnitaLog
+                    {
+                        Nop = nop, // sesuaikan kalau NOP beda field
+                        CctvId = cctvId,
+                        TglTerakhirAktif = lastAktif?.Tanggal ?? DateTime.MinValue,
+                        TglTerakhirDown = lastNonAktif?.Tanggal ?? DateTime.MinValue,
+                        Status = lastEvent?.State ?? "NON AKTIF"
+                    };
+                })
+                .FirstOrDefault();
+
+            if (dataLog != null)
+            {
+                var existing = context.MOpParkirCctvJasnitaLogs.FirstOrDefault(x => x.Nop == op.NOP && x.CctvId == op.CCTVId);
+                if (existing != null)
+                {
+                    // Update record yang sudah ada
+                    existing.TglTerakhirAktif = dataLog.TglTerakhirAktif;
+                    existing.TglTerakhirDown = dataLog.TglTerakhirDown;
+                    existing.Status = dataLog.Status;
+                }
+                else
+                {
+                    // Tambah record baru
+                    context.MOpParkirCctvJasnitaLogs.Add(dataLog);
+                }
+            }
+
+            UpdateLogLog(row, "Inserting...");
+            context.SaveChanges();
+        }
+
+
+        // EVENT
         private async void BtnStartAll_Click(object sender, EventArgs e)
         {
             // Disable tombol start, enable tombol stop
@@ -456,16 +802,66 @@ namespace CCTVParkirWorker
                 }
             }
         }
-        private void UpdateLog(DataGridViewRow row, string message)
+        private async void BtnStartLogAll_Click(object sender, EventArgs e)
         {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new Action(() => UpdateLog(row, message)));
-                return;
-            }
+            // Disable tombol start, enable tombol stop
+            btnStartAll.Enabled = false;
+            btnStopAll.Enabled = true;
 
-            row.Cells["Log"].Value = message; // ✅ replace, bukan append
+            foreach (DataGridViewRow row in dataGridView2.Rows)
+            {
+                if (row.Cells["ActionLog"] is DataGridViewButtonCell btnCell)
+                {
+                    string actionText = btnCell.Value?.ToString() ?? "";
+
+                    if (actionText == "Start")
+                    {
+                        int rowIndex = row.Index;
+                        int colIndex = dataGridView2.Columns["ActionLog"].Index;
+
+                        await Task.Run(() =>
+                        {
+                            DataGridView2_CellClick(
+                                dataGridView2,
+                                new DataGridViewCellEventArgs(colIndex, rowIndex)
+                            );
+                        });
+
+                        // kasih jeda sedikit biar tidak semua nembak API bersamaan
+                        await Task.Delay(300);
+                    }
+                }
+            }
         }
+        private void BtnStopLogAll_Click(object sender, EventArgs e)
+        {
+            // Enable kembali tombol start, disable tombol stop
+            btnStartAll.Enabled = true;
+            btnStopAll.Enabled = false;
+
+            foreach (DataGridViewRow row in dataGridView2.Rows)
+            {
+                if (row.Cells["ActionLog"] is DataGridViewButtonCell btnCell)
+                {
+                    string actionText = btnCell.Value?.ToString() ?? "";
+
+                    if (actionText == "Stop")
+                    {
+                        int rowIndex = row.Index;
+                        int colIndex = dataGridView2.Columns["ActionLog"].Index;
+
+                        DataGridView2_CellClick(
+                            dataGridView2,
+                            new DataGridViewCellEventArgs(colIndex, rowIndex)
+                        );
+                    }
+                }
+            }
+        }
+
+
+
+
         public List<ParkirView> GetOpParkirCctv()
         {
             var result = new List<ParkirView>();
@@ -473,7 +869,7 @@ namespace CCTVParkirWorker
             var _cont = DBClass.GetContext();
             var pl = _cont.MOpParkirCctvs
                 .Include(x => x.MOpParkirCctvJasnita)
-                .Where(x => x.Vendor == 1)
+                .Where(x => x.Vendor == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
                 .OrderBy(x => x.NamaOp)
                 .ToList();
 
@@ -535,7 +931,6 @@ namespace CCTVParkirWorker
 
                 HttpResponseMessage response = await client.PostAsync(_URL, content);
 
-                UpdateLog(row, "Token Received");
                 if (response.IsSuccessStatusCode)
                 {
                     string result = await response.Content.ReadAsStringAsync();
@@ -642,6 +1037,26 @@ namespace CCTVParkirWorker
             }
 
             throw new Exception(timeStr + " tidak sesuai format yang dikenali.");
+        }
+        private void UpdateLog(DataGridViewRow row, string message)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => UpdateLog(row, message)));
+                return;
+            }
+
+            row.Cells["Log"].Value = message; // ✅ replace, bukan append
+        }
+        private void UpdateLogLog(DataGridViewRow row, string message)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => UpdateLogLog(row, message)));
+                return;
+            }
+
+            row.Cells["LogLog"].Value = message; // ✅ replace, bukan append
         }
     }
 }
