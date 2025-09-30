@@ -63,22 +63,22 @@ namespace MonPDReborn.Models.CCTVParkir
                 Nop = nop;
                 var context = DBClass.GetContext();
                 var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop && m.Vendor == vendorId);
-                if(vendorId == 1)
-                {
-                    var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
-                    if(telkom != null)
-                    {
-                        Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
-                        TanggalPasang = telkom.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    }
-                }
-                if(vendorId == 2)
+                if(vendorId == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
                 {
                     var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
-                    if(jasnita != null)
+                    if (jasnita != null)
                     {
                         Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
-                    TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                        TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                    }
+                }
+                if (vendorId == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
+                {
+                    var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
+                    if (telkom != null)
+                    {
+                        Vendor = (EnumFactory.EVendorParkirCCTV.Telkom).GetDescription();
+                        TanggalPasang = telkom.TglPasang.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
                     }
                 }
 

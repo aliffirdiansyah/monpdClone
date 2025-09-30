@@ -869,7 +869,7 @@ namespace CCTVParkirWorker
             var _cont = DBClass.GetContext();
             var pl = _cont.MOpParkirCctvs
                 .Include(x => x.MOpParkirCctvJasnita)
-                .Where(x => x.Vendor == 1)
+                .Where(x => x.Vendor == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
                 .OrderBy(x => x.NamaOp)
                 .ToList();
 
