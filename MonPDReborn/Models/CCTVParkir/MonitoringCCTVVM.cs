@@ -56,6 +56,7 @@ namespace MonPDReborn.Models.CCTVParkir
         {
             public List<MonitoringCCTVBulanan> RekapBulanan { get; set; } = new();
             public string Nop { get; set; } = "";
+            public string formattedNop { get; set; }
             public string NamaOP { get; set; }
             public string AlamatOP { get; set; }
             public string Vendor { get; set; }
@@ -63,6 +64,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public Kapasitas(string nop, int vendorId)
             {
                 Nop = nop;
+                formattedNop = Utility.GetFormattedNOP(Nop);
                 var context = DBClass.GetContext();
                 var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop && m.Vendor == vendorId);
                 if(vendorId == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
@@ -139,7 +141,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public decimal EstimasiPajak { get; set; }
             public decimal TahunKemarin { get; set; }
             public decimal TahunIni { get; set; }
-            public decimal Potensi { get; set; }
+            public string Potensi { get; set; }
 
         }
 
@@ -543,7 +545,28 @@ namespace MonPDReborn.Models.CCTVParkir
 
                     decimal realisasiTahunKemarin = parkirTahunKemarin.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
                     decimal realisasiTahunIni = parkirTahunSekarang.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
+
                     decimal potensi = realisasiTahunIni - estimasi;
+
+                    // ** LOGIKA BARU UNTUK POTENSI **
+                    string potensiString = "";
+
+                    if (realisasiTahunIni >= estimasi)
+                    {
+                        // KONDISI 1: Realisasi lebih besar dari estimasi -> Potensi = 0
+                        potensiString = "0"; // Atau "0 (100%)" atau "Sesuai Target"
+                    }
+                    else
+                    {
+                        // KONDISI 2: Estimasi lebih besar dari Realisasi -> Hitung Selisih dan Persentase
+                        decimal selisihNominal = estimasi - realisasiTahunIni;
+                        decimal persentaseRealisasi = (estimasi == 0) ? 0 : (realisasiTahunIni / estimasi) * 100m;
+                        string selisihFormat = selisihNominal.ToString("N0", new CultureInfo("id-ID")); // Format Rupiah tanpa simbol
+                        string persenFormat = persentaseRealisasi.ToString("F2", CultureInfo.InvariantCulture); // Format Persen 2 desimal
+
+                        potensiString = $"-Rp {selisihFormat} ({persenFormat}%)";
+
+                    }
 
                     res.Nop = nop;
                     res.Tahun = tahunIni;
@@ -556,7 +579,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.EstimasiPajak = estimasi;
                     res.TahunKemarin = realisasiTahunKemarin;
                     res.TahunIni = realisasiTahunIni;
-                    res.Potensi = potensi;
+                    res.Potensi = potensiString;
 
                     result.Add(res);
                 }
@@ -644,6 +667,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     decimal realisasiTahunIni = parkirTahunSekarang
                         .Where(x => x.TglBayarPokok.Value.Month == bulan && x.TglBayarPokok.Value.Day == tgl)
                         .Sum(q => q.NominalPokokBayar) ?? 0;
+
                     decimal potensi = realisasiTahunIni - estimasi;
 
                     res.Nop = nop;
