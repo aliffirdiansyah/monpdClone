@@ -23,6 +23,9 @@ public partial class DbAkunTargetObjekAbt
     [Unicode(false)]
     public string Nop { get; set; } = null!;
 
+    [Column("KATEGORI_ID", TypeName = "NUMBER")]
+    public decimal? KategoriId { get; set; }
+
     [Column("AVG_NILAI", TypeName = "NUMBER")]
     public decimal? AvgNilai { get; set; }
 

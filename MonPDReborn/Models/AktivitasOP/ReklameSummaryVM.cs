@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using static MonPDReborn.Models.AktivitasOP.ReklameSummaryIndoorVM;
 using static MonPDReborn.Models.AktivitasOP.ReklameSummaryVM.DetailUpaya;
+using static MonPDReborn.Models.DashboardUPTBVM.ViewModel;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 using static MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.MonitoringTahunanViewModels;
 
@@ -164,10 +165,10 @@ namespace MonPDReborn.Models.AktivitasOP
                             SKPDJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Count(),
                             NilaiJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null).Sum(x => x.PajakPokok) ?? 0,
 
-                            JmlBantipJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null ).Sum(x => x.Bantip) ?? 0,
-                            JmlSilangJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null ).Sum(x => x.Silang) ?? 0,
-                            JmlBongkarJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null ).Sum(x => x.Bongkar) ?? 0,
-                            TegurJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null && x.u.Upaya == "TEGURAN").Count(),
+                            JmlBantipJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.Bantip) ?? 0,
+                            JmlSilangJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.Silang) ?? 0,
+                            JmlBongkarJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.Bongkar) ?? 0,
+                            TegurJT = joinData.Where(x => x.s.IdFlagPermohonan == 2 && x.s.Tahun == tahun && x.s.Bulan == i && x.s.NoFormulir != null && !x.s.TglBayarPokok.HasValue && x.u.Upaya == "TEGURAN").Count(),
 
                             SKPDBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Count(),
                             NilaiBlmJT = dataPer.Where(x => x.IdFlagPermohonan == 2 && x.Tahun == tahun && x.Bulan == i && x.NoFormulir != null && !x.TglBayarPokok.HasValue).Sum(x => x.PajakPokok) ?? 0,
@@ -1110,7 +1111,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         predicate = x => x.IdFlagPermohonan == 2 &&
                                          x.Tahun == tahun && x.Bulan == bulan &&
-                                         x.NoFormulir != null &&
+                                         x.NoFormulir != null && !x.TglBayarPokok.HasValue &&
                                          x.Bongkar.HasValue && x.Bongkar.Value == 1;
                     }
                     else if (jenis == 2 && kategori == 2)
@@ -1406,7 +1407,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     {
                         predicate = x => x.IdFlagPermohonan == 2 &&
                                          x.Tahun == tahun && x.Bulan == bulan &&
-                                         x.NoFormulir != null &&
+                                         x.NoFormulir != null && !x.TglBayarPokok.HasValue &&
                                          x.Silang.HasValue && x.Silang.Value == 1;
                     }
                     else if (jenis == 2 && kategori == 2)
@@ -1672,13 +1673,13 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Where(s =>
                         formulirTeguran.Contains(s.NoFormulir.Trim().ToLower()) &&
                         (
-                            (jenis == 1 && kategori == 1 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan) ||
+                            (jenis == 1 && kategori == 1 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan && !string.IsNullOrEmpty(s.NoFormulir)) ||
                             (jenis == 1 && kategori == 2 && s.IdFlagPermohonan == 1 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
                             (jenis == 1 && kategori == 3 && s.IdFlagPermohonanA == 1 && s.TahunA == tahun && s.BulanA == bulan && s.BongkarA == 1) ||
-                            (jenis == 2 && kategori == 1 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan) ||
+                            (jenis == 2 && kategori == 1 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan && !s.TglBayarPokok.HasValue) ||
                             (jenis == 2 && kategori == 2 && s.IdFlagPermohonan == 2 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
                             (jenis == 2 && kategori == 3 && s.IdFlagPermohonanA == 2 && s.TahunA == tahun && s.BulanA == bulan) ||
-                            (jenis == 3 && kategori == 1 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan) ||
+                            (jenis == 3 && kategori == 1 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan && !s.TglBayarPokok.HasValue) ||
                             (jenis == 3 && kategori == 2 && s.IdFlagPermohonan == 3 && s.Tahun == tahun && s.Bulan == bulan && s.IsPerpanjangan == 0) ||
                             (jenis == 3 && kategori == 3 && s.IdFlagPermohonanA == 3 && s.TahunA == tahun && s.BulanA == bulan)
                         )
@@ -1734,6 +1735,13 @@ namespace MonPDReborn.Models.AktivitasOP
                         JumlahNilai = (kategori == 3) ? (s.PajakPokokA ?? 0) : (s.PajakPokok ?? 0),
                         InformasiEmail = email,
                         JumlahUpaya = jumlahUpaya,
+                        KategoriText = kategori switch
+                        {
+                            1 => "Belum Bayar",
+                            2 => "Belum Perpanjangan",
+                            3 => "Belum Bayar",
+                            _ => string.Empty
+                        }
                     };
                 }).ToList();
 
@@ -1956,6 +1964,9 @@ namespace MonPDReborn.Models.AktivitasOP
         }
         public class DetailTeguran
         {
+            public string Lokasi { get; set; } = null!;
+            public string Jenis { get; set; }
+            public string KategoriText { get; set; }
             public string DetailLokasi { get; set; } = null!;
             public string BulanNama { get; set; } = null!;
             public int Bulan { get; set; }

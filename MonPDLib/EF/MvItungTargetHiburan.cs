@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [Keyless]
-public partial class DbAkunTargetObjekPpj
+public partial class MvItungTargetHiburan
 {
     [Column("PAJAK_ID", TypeName = "NUMBER")]
     public decimal? PajakId { get; set; }
@@ -22,9 +22,6 @@ public partial class DbAkunTargetObjekPpj
     [StringLength(30)]
     [Unicode(false)]
     public string Nop { get; set; } = null!;
-
-    [Column("KATEGORI_ID", TypeName = "NUMBER")]
-    public decimal? KategoriId { get; set; }
 
     [Column("AVG_NILAI", TypeName = "NUMBER")]
     public decimal? AvgNilai { get; set; }
@@ -43,4 +40,7 @@ public partial class DbAkunTargetObjekPpj
 
     [Column("TARGET_BULAN", TypeName = "NUMBER")]
     public decimal? TargetBulan { get; set; }
+
+    [Column("INSIDENTIL", TypeName = "NUMBER")]
+    public decimal? Insidentil { get; set; }
 }

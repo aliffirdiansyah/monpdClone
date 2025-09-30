@@ -32,6 +32,21 @@
                     </div>
                 </div>
 
+                <!-- Modal untuk Detail Harian -->
+                <div class="modal fade" id="modalDetailHarian" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail Kapasitas Harian</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="gridDetailHarian"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row g-3 align-items-center">
 
 
@@ -50,7 +65,7 @@
                                                 .FilterRow(f => f.Visible(true))
                                                 .HeaderFilter(h => h.Visible(true))
                                                 .Sorting(s => s.Mode(GridSortingMode.Multiple))
-                                                .Paging(p => p.PageSize(10))
+                                                .Paging(p => p.PageSize(12))
                                                 .Pager(p => p
                                                 .ShowPageSizeSelector(true)
                                                 .AllowedPageSizes(new[] { 10, 20, 50 })
@@ -68,7 +83,7 @@
                                                     columns.AddFor(m => m.EstimasiPajak).Caption("Est. Pajak").Format("#,##0");
                                                     columns.AddFor(m => m.TahunKemarin).Caption("Tahun Kemarin").Format("#,##0");
                                                     columns.AddFor(m => m.TahunIni).Caption("Tahun Ini").Format("#,##0");
-                                                    columns.AddFor(m => m.Potensi).Caption("Potensi").Format("#,##0");
+                                                    @* columns.AddFor(m => m.Potensi).Caption("Potensi").Format("#,##0"); *@
                                                 })
                                                 .MasterDetail(md => md
                                                 .Enabled(true)
@@ -85,8 +100,7 @@
 @section Scripts {
 
     <script>
-
-            function ShowKapasitasHarian(container, options) {
+        function ShowKapasitasHarian(container, options) {
             var row = options.data;
 
             // param dari row bulanan
@@ -119,15 +133,16 @@
                         allowColumnReordering: true,
                         columnAutoWidth: true,
                         sorting: { mode: "multiple" },
-                        filterRow: {
-                            visible: true,
-                            applyFilter: "auto"
+                        headerFilter: {
+                            visible: true
                         },
                         headerFilter: { visible: true },
                         paging: { pageSize: 31 },
                         pager: { visible: false },
                         columns: [
-                            { dataField: "Tanggal", caption: "Tanggal", dataType: "date", format: "dd-MM-yyyy" },
+                            { dataField: "TanggalLabel", caption: "Tanggal" },
+                            { dataField: "HariLabel", caption: "Hari",
+                              cssClass: "clickable-cell" }, // kasih style biar kelihatan bisa diklik
                             { dataField: "Motor", caption: "Motor", format: "#,##0" },
                             { dataField: "Mobil", caption: "Mobil", format: "#,##0" },
                             { dataField: "Unknown", caption: "Unknown", format: "#,##0" },
@@ -140,7 +155,56 @@
                             formats: ["xlsx", "pdf"]
                         },
                         onExporting: exportGrid,
-                        width: "100%"
+                        width: "100%",
+
+                        onCellPrepared: function(e) {
+                            if (e.rowType === "data" && e.column.dataField === "HariLabel") {
+                                e.cellElement.css({
+                                    "cursor": "pointer",
+                                    "color": "blue",
+                                    "text-decoration": "underline"
+                                });
+                            }
+                        },
+
+
+                        // tambahin event klik cell
+                        onCellClick: function (e) {
+                            if (e.column.dataField === "HariLabel") {
+                                var tgl = e.data.Tanggal; // pastikan ada property Tanggal di JSON backend
+
+                                $.ajax({
+                                    url: '/MonitoringCCTV/KapasitasHarianDetail',
+                                    type: 'GET',
+                                    data: { nop: nop, vendorId: vendorId, tgl: tgl },
+                                    success: function (detailData) {
+                                        $("#gridDetailHarian").dxDataGrid({
+                                            dataSource: detailData,
+                                            showBorders: true,
+                                            columnAutoWidth: true,
+                                            paging: { pageSize: 10 },
+                                            pager: { showPageSizeSelector: true },
+                                            headerFilter: {
+                                                visible: true
+                                            },
+                                            columns: [
+                                                { dataField: "TanggalMasuk", caption: "Waktu Masuk", dataType: "datetime", format: "dd-MM-yyyy HH:mm", alignment:"center" },
+                                                { dataField: "CctvId", caption: "CCTV" , alignment:"center" },
+                                                { dataField: "JenisKend", caption: "Jenis Kendaraan"  , alignment:"center"},
+                                                { dataField: "PlatNo", caption: "Plat Nomor" , alignment:"center" },
+                                                { dataField: "Direction", caption: "Direction"  , alignment:"center"},
+                                            ]
+                                        });
+
+                                        // tampilkan modal
+                                        $("#modalDetailHarian").modal("show");
+                                    },
+                                    error: function (xhr) {
+                                        alert("Gagal load detail: " + xhr.responseText);
+                                    }
+                                });
+                            }
+                        }
                     });
                 },
                 error: function (xhr) {
@@ -149,10 +213,7 @@
                 }
             });
         }
-
     </script>
-
-
 }
 
 

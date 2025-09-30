@@ -260,46 +260,82 @@ namespace MonPDReborn.Models.AktivitasOP
                 int tahunSekarang = DateTime.Now.Year;
                 int tahunAwal = tahunSekarang - 7;
 
-                ret = context.DbMonAlatRekams
-                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang)
-                    .GroupBy(x => new { x.PajakId, x.Tahun })
+                var pemasangan = context.DbMonAlatRekams
+                    .Where(x => x.TglTerpasang.HasValue
+                             && x.TglTerpasang.Value.Year >= tahunAwal
+                             && x.TglTerpasang.Value.Year <= tahunSekarang)
+                    .GroupBy(x => new { x.PajakId })
                     .Select(g => new
                     {
-                        g.Key.PajakId,
-                        g.Key.Tahun,
-                        JumlahOP = g.Count(),
-                        TerpasangTS = g.Select(x => x.Nop)
-                         .Distinct()
-                         .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.JenisAlat == "TS"))),
-                        TerpasangTB = g.Select(x => x.Nop)
-                         .Distinct()
-                         .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.JenisAlat == "TB"))),
-                        TerpasangSB = g.Select(x => x.Nop)
-                         .Distinct()
-                         .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.JenisAlat == "SB"))),
+                        PajakId = g.Key.PajakId,
+                        TerpasangTS = g.Select(x => x.Nop).Distinct()
+                                       .Count(nop => g.Any(y => y.Nop == nop && y.JenisAlat == "TS")),
+                        TerpasangTB = g.Select(x => x.Nop).Distinct()
+                                       .Count(nop => g.Any(y => y.Nop == nop && y.JenisAlat == "TB")),
+                        TerpasangSB = g.Select(x => x.Nop).Distinct()
+                                       .Count(nop => g.Any(y => y.Nop == nop && y.JenisAlat == "SB")),
                     })
-                    .AsNoTracking()
-                    .ToList()
-                    .GroupBy(x => x.PajakId)
-                    .Select(g =>
+                    .AsQueryable();
+
+                var dbopResto = context.DbOpRestos
+                    .Where(x => x.TahunBuku == tahunSekarang && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahunSekarang) && x.PajakNama != "MAMIN")
+                    .GroupBy(x => 1)
+                    .Select(g => new
                     {
-                        var s = new DataPemasanganAlat
-                        {
-                            EnumPajak = (int)(EnumFactory.EPajak)g.Key,
-                            JenisPajak = ((EnumFactory.EPajak)g.Key).GetDescription(),
-                            JumlahOP = g.Sum(x => x.JumlahOP)
-                        };
-                        s.TerpasangTS = g.Sum(x => x.TerpasangTS);
-                        s.TerpasangTB = g.Sum(x => x.TerpasangTB);
-                        s.TerpasangSB = g.Sum(x => x.TerpasangSB);
-
-                        return s;
+                        PajakId = (int)EnumFactory.EPajak.MakananMinuman,
+                        JumlahOP = g.Count()
                     })
-                    .ToList();
+                    .AsQueryable();
 
+                var dbopHotel = context.DbOpHotels
+                    .Where(x => x.TahunBuku == tahunSekarang && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahunSekarang))
+                    .GroupBy(x => 3)
+                    .Select(g => new
+                    {
+                        PajakId = (int)EnumFactory.EPajak.JasaPerhotelan,
+                        JumlahOP = g.Count()
+                    })
+                    .AsQueryable();
+
+                var dbopHiburan = context.DbOpHiburans
+                    .Where(x => x.TahunBuku == tahunSekarang && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahunSekarang))
+                    .GroupBy(x => 5)
+                    .Select(g => new
+                    {
+                        PajakId =(int)EnumFactory.EPajak.JasaKesenianHiburan,
+                        JumlahOP = g.Count()
+                    })
+                    .AsQueryable();
+
+                var dbopParkir = context.DbOpParkirs
+                    .Where(x => x.TahunBuku == tahunSekarang && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahunSekarang))
+                    .GroupBy(x => 4)
+                    .Select(g => new
+                    {
+                        PajakId =(int)EnumFactory.EPajak.JasaParkir,
+                        JumlahOP = g.Count()
+                    })
+                    .AsQueryable();
+
+                var dbopAll = dbopResto
+                    .Union(dbopHotel)
+                    .Union(dbopHiburan)
+                    .Union(dbopParkir)
+                    .AsQueryable();
+
+                ret = (from op in dbopAll
+                       join alat in pemasangan on op.PajakId equals alat.PajakId into gj
+                           from alat in gj.DefaultIfEmpty()
+                           select new DataPemasanganAlat
+                           {
+                               EnumPajak = (int)(EnumFactory.EPajak)op.PajakId,
+                               JenisPajak = ((EnumFactory.EPajak)op.PajakId).GetDescription(),
+                               JumlahOP = op.JumlahOP,
+                               TerpasangTS = alat.TerpasangTS,
+                               TerpasangTB = alat.TerpasangTB,
+                               TerpasangSB = alat.TerpasangSB
+                           })
+                           .ToList();
 
                 return ret;
             }
@@ -308,39 +344,94 @@ namespace MonPDReborn.Models.AktivitasOP
                 using var context = DBClass.GetContext();
                 int tahunSekarang = DateTime.Now.Year;
                 int tahunAwal = tahunSekarang - 7;
-                // Ambil daftar kategori
+
                 var kategoriList = context.MKategoriPajaks
-                    .Where(x => x.PajakId == (int)jenisPajak).OrderBy(x => x.Urutan)
+                    .Where(x => x.PajakId == (int)jenisPajak)
+                    .OrderBy(x => x.Urutan)
                     .Select(x => new
                     {
                         x.Id,
-                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                        Nama = CultureInfo.CurrentCulture.TextInfo
+                                  .ToTitleCase(x.Nama.ToLower())
                     })
-                    .ToList();
-                // Ambil data pemasangan alat
-                var query = context.DbMonAlatRekams
-                    .Where(x => x.TglTerpasang.HasValue && x.TglTerpasang.Value.Year >= tahunAwal && x.TglTerpasang.Value.Year <= tahunSekarang
-                                && x.PajakId == (int)jenisPajak)
-                    .GroupBy(x => new { x.KategoriId })
+                    .AsQueryable();
+
+                var pemasangan = context.DbMonAlatRekams
+                    .Where(x => x.TglTerpasang.HasValue
+                             && x.TglTerpasang.Value.Year >= tahunAwal
+                             && x.TglTerpasang.Value.Year <= tahunSekarang
+                             && x.PajakId == (int)jenisPajak)
+                    .GroupBy(x => x.KategoriId)
+                    .Select(g => new
+                    {
+                        KategoriId = g.Key,
+                        TerpasangTS = g.Select(x => x.Nop).Distinct()
+                                       .Count(nop => g.Any(y => y.Nop == nop && y.JenisAlat == "TS")),
+                        TerpasangTB = g.Select(x => x.Nop).Distinct()
+                                       .Count(nop => g.Any(y => y.Nop == nop && y.JenisAlat == "TB")),
+                        TerpasangSB = g.Select(x => x.Nop).Distinct()
+                                       .Count(nop => g.Any(y => y.Nop == nop && y.JenisAlat == "SB")),
+                    })
+                    .AsQueryable();
+
+                var dbopResto = context.DbOpRestos
+                     .Where(x => x.TahunBuku == tahunSekarang
+                              && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahunSekarang)
+                              && x.PajakNama != "MAMIN")
+                     .GroupBy(x => new { PajakId = (int)EnumFactory.EPajak.MakananMinuman, x.KategoriId })
                      .Select(g => new
                      {
-                         g.Key.KategoriId,
-                         JumlahOP = g.Count(),
-                         TerpasangTS = g.Select(x => x.Nop)
-                         .Distinct()
-                         .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.JenisAlat == "TS"))),
-                         TerpasangTB = g.Select(x => x.Nop)
-                         .Distinct()
-                         .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.JenisAlat == "TB"))),
-                         TerpasangSB = g.Select(x => x.Nop)
-                         .Distinct()
-                         .Count(nop => g.Any(y => y.Nop == nop &&
-                                      (y.JenisAlat == "SB"))),
+                         PajakId = g.Key.PajakId,
+                         KategoriId = g.Key.KategoriId,
+                         JumlahOP = g.Count()
                      })
-                    .ToList();
+                     .AsQueryable();
+
+                var dbopHotel = context.DbOpHotels
+                    .Where(x => x.TahunBuku == tahunSekarang
+                             && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahunSekarang))
+                    .GroupBy(x => new { PajakId = (int)EnumFactory.EPajak.JasaPerhotelan, x.KategoriId })
+                    .Select(g => new
+                    {
+                        PajakId = g.Key.PajakId,
+                        KategoriId = g.Key.KategoriId,
+                        JumlahOP = g.Count()
+                    })
+                    .AsQueryable();
+
+                var dbopHiburan = context.DbOpHiburans
+                    .Where(x => x.TahunBuku == tahunSekarang
+                             && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahunSekarang))
+                    .GroupBy(x => new { PajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan, x.KategoriId })
+                    .Select(g => new
+                    {
+                        PajakId = g.Key.PajakId,
+                        KategoriId = g.Key.KategoriId,
+                        JumlahOP = g.Count()
+                    })
+                    .AsQueryable();
+
+                var dbopParkir = context.DbOpParkirs
+                    .Where(x => x.TahunBuku == tahunSekarang
+                             && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahunSekarang))
+                    .GroupBy(x => new { PajakId = (int)EnumFactory.EPajak.JasaParkir, x.KategoriId })
+                    .Select(g => new
+                    {
+                        PajakId = g.Key.PajakId,
+                        KategoriId = g.Key.KategoriId,
+                        JumlahOP = g.Count()
+                    })
+                    .AsQueryable();
+
+                // Gabungan NOP
+                var dbopAll = dbopResto
+                    .Union(dbopHotel)
+                    .Union(dbopHiburan)
+                    .Union(dbopParkir)
+                    .AsQueryable();
+
                 var result = new List<DetailDataPemasanganAlat>();
+
                 foreach (var kategori in kategoriList)
                 {
                     var s = new DetailDataPemasanganAlat
@@ -348,16 +439,20 @@ namespace MonPDReborn.Models.AktivitasOP
                         EnumPajak = (int)jenisPajak,
                         JenisPajak = jenisPajak.GetDescription(),
                         KategoriId = (int)kategori.Id,
-                        KategoriNama = kategori.Nama
+                        KategoriNama = kategori.Nama,
+                        JumlahOP = dbopAll.Where(d => d.KategoriId == kategori.Id)
+                                       .Sum(d => d.JumlahOP),
+                        TerpasangTS = pemasangan.Where(p => p.KategoriId == kategori.Id)
+                                                .Sum(p => p.TerpasangTS),
+                        TerpasangTB = pemasangan.Where(p => p.KategoriId == kategori.Id)
+                                                .Sum(p => p.TerpasangTB),
+                        TerpasangSB = pemasangan.Where(p => p.KategoriId == kategori.Id)
+                                                .Sum(p => p.TerpasangSB)
                     };
-                    var dataKategori = query.Where(q => q.KategoriId == kategori.Id).ToList();
-                    s.JumlahOP = dataKategori.Sum(d => d.JumlahOP);
-                    s.TerpasangTS = dataKategori.Sum(d => d.TerpasangTS);
-                    s.TerpasangTB = dataKategori.Sum(d => d.TerpasangTB);
-                    s.TerpasangSB = dataKategori.Sum(d => d.TerpasangSB);
 
                     result.Add(s);
                 }
+
 
                 return result;
             }
