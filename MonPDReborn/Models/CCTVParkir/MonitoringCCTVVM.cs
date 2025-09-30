@@ -1,11 +1,13 @@
 ﻿using DevExpress.CodeParser;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Globalization;
+using System.Numerics;
 using System.Web.Mvc;
 
 namespace MonPDReborn.Models.CCTVParkir
@@ -94,6 +96,31 @@ namespace MonPDReborn.Models.CCTVParkir
             }
         }
 
+        public class KapasitasHarianDetail
+        {
+            public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
+            public KapasitasHarianDetail(string nop, int vendorId, DateTime tanggal)
+            {
+                DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, vendorId, tanggal);
+            }
+        }
+
+        public class MonitoringCctvHarianDetail
+        {
+            public string Id { get; set; } = null!;
+            public string Nop { get; set; } = null!;
+            public string CctvId { get; set; } = null!;
+            public string? NamaOp { get; set; }
+            public string? AlamatOp { get; set; }
+            public int? WilayahPajak { get; set; }
+            public DateTime TanggalMasuk { get; set; }
+            public string JenisKend { get; set; }
+            public string? PlatNo { get; set; }
+            public int Direction { get; set; }
+            public string? Log { get; set; }
+
+        }
+
         public class MonitoringCCTVBulanan
         {
             public string Nop { get; set; } = null!;
@@ -133,7 +160,6 @@ namespace MonPDReborn.Models.CCTVParkir
             public decimal TahunKemarin { get; set; }
             public decimal TahunIni { get; set; }
             public decimal Potensi { get; set; }
-
         }
 
 
@@ -448,7 +474,6 @@ namespace MonPDReborn.Models.CCTVParkir
                 .ToList();
                 return result;
             }
-
             public static List<MonitoringCCTVBulanan> GetMonitoringCCTVBulanan(string nop, int vendorId)
             {
                 var result = new List<MonitoringCCTVBulanan>();
@@ -537,8 +562,6 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
-
-
             public static List<MonitoringCCTVHarian> GetMonitoringCCTVHarian(string nop, int vendorId, int tahun, int bulan)
             {
                 var result = new List<MonitoringCCTVHarian>();
@@ -635,6 +658,35 @@ namespace MonPDReborn.Models.CCTVParkir
                     result.Add(res);
                 }
                 return result.OrderBy(x => x.Tanggal).ToList();
+            }
+            public static List<MonitoringCctvHarianDetail> GetMonitoringHarianDetail(string nop, int vendorId, DateTime tgl)
+            {
+                var result = new List<MonitoringCctvHarianDetail>();
+                var context = DBClass.GetContext();
+
+                var data = context.TOpParkirCctvs.Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl).ToList();
+
+                foreach (var item in data)
+                {
+                    var res = new MonitoringCctvHarianDetail();
+                    res.Id = item.Id;
+                    res.Nop = item.Nop;
+                    res.CctvId = item.CctvId;
+                    res.NamaOp = item.NamaOp;
+                    res.AlamatOp = item.AlamatOp;
+                    res.WilayahPajak = item.WilayahPajak;
+                    res.TanggalMasuk = item.WaktuMasuk;
+                    res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
+                    res.PlatNo = item.PlatNo;
+                    res.Direction = item.Direction;
+                    res.Log = item.Log;
+
+
+                    result.Add(res);
+                }
+
+
+                return result;
             }
         }
 
