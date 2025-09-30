@@ -2,6 +2,7 @@
 using MonPDLib.General;
 using MonPDReborn.Controllers.Aktivitas;
 using MonPDReborn.Lib.General;
+using static MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.CCTVParkir
@@ -95,6 +96,7 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
+        //ini sebagai kapasistas bulanan
         public IActionResult Kapasitas(string nop, int vendorId)
         {
             try
@@ -115,6 +117,23 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
+
+        
+        public IActionResult KapasitasHarian(string nop, int vendorId, int tahun, int bulan)
+        {
+            try
+            {
+                var data = Method.GetMonitoringCCTVHarian(nop, vendorId, tahun, bulan);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = ex.Message;
+                return Json(response);
+            }
+        }
+
         public IActionResult DataKapasitasParkir(string nop, DateTime tanggalAwal, DateTime tanggalAkhir)
         {
             var response = new ResponseBase();
@@ -132,11 +151,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response.ToInternalServerError);
             }
         }
-        public IActionResult Log(string nop, int jenisKend)
+        public IActionResult Log(string nop, int jenisKend, DateTime tanggalAwal, DateTime tanggalAkhir)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.Log(nop, jenisKend);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.Log(nop, jenisKend, tanggalAwal, tanggalAkhir);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
