@@ -49,14 +49,53 @@ namespace MonPDReborn.Models.CCTVParkir
         }
         public class Kapasitas
         {
-            public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
+            //tidak dipakai lagi
+            //public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
+
+            // Data Bulanan
+            public List<MonitoringCCTVBulanan> RekapBulanan { get; set; } = new();
             public string Nop { get; set; } = "";
+            public string NamaOP { get; set; }
+            public string AlamatOP { get; set; }
+            public string Vendor { get; set; }
+
+           
             public Kapasitas(string nop, int vendorId)
             {
                 Nop = nop;
-                MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop, vendorId);
+                //tidak dipakai 
+                //MonitoringCCTVKapasitasList = Method.GetMonitoringCCTVKapasitas(nop, vendorId);
+
+                //ambil bulanan
+                RekapBulanan = Method.GetMonitoringCCTVBulanan(nop, vendorId);
             }
         }
+
+
+
+        public class MonitoringCCTVBulanan
+        {
+            public string Nop { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+
+            // Untuk tampilan
+            public string NamaBulan => new DateTime(Tahun, Bulan, 1).ToString("MMMM");
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+
+            // Agregat per bulan
+            public int Motor { get; set; }
+            public int Mobil { get; set; }
+            public int Unknown { get; set; }
+            public decimal Omset { get; set; }
+            public decimal EstimasiPajak { get; set; }
+            public decimal TahunKemarin { get; set; }
+            public decimal TahunIni { get; set; }
+            public decimal Potensi { get; set; }
+
+        }
+
+
         public class DataKapasitasParkir
         {
             public List<MonitoringCCTVKapasitas> MonitoringCCTVKapasitasList { get; set; } = new();
@@ -368,6 +407,99 @@ namespace MonPDReborn.Models.CCTVParkir
                 .ToList();
                 return result;
             }
+
+            public static List<MonitoringCCTVBulanan> GetMonitoringCCTVBulanan(string nop, int vendorId)
+            {
+                /************************************
+                 *  AWAS BISA DISESUAIKAN KEBUTUHAN LOGICNYA
+                 * 
+                 */
+                var context = DBClass.GetContext();
+
+                var kapasitas = context.DbPotensiParkirs
+                    .FirstOrDefault(p => p.Nop == nop && p.TahunBuku == DateTime.Now.Year + 1);
+
+                // data tahun ini
+                var queryTahunIni = context.TOpParkirCctvs
+                    .Where(l => l.Nop == nop && l.WaktuMasuk.Year == DateTime.Now.Year);
+
+                // data tahun kemarin
+                // data tahun kemarin, langsung ToList() biar jadi LINQ to Objects
+                var queryTahunKemarin = context.TOpParkirCctvs
+                    .Where(l => l.Nop == nop && l.WaktuMasuk.Year == DateTime.Now.Year - 1)
+                    .GroupBy(l => l.WaktuMasuk.Month)
+                    .Select(g => new { Bulan = g.Key, Total = g.Count() })
+                    .ToList(); // <-- penting!
+
+
+                var data = queryTahunIni
+                    .GroupBy(l => new { l.WaktuMasuk.Year, l.WaktuMasuk.Month })
+                    .Select(g => new MonitoringCCTVBulanan
+                    {
+                        Nop = nop,
+                        Tahun = g.Key.Year,
+                        Bulan = g.Key.Month,
+
+                        Motor = g.Count(x => x.JenisKend == 1),
+                        Mobil = g.Count(x => x.JenisKend == 2),
+                        Unknown = g.Count(x => x.JenisKend != 1 && x.JenisKend != 2),
+
+                        Omset = g.Sum(x => x.JenisKend == 1 ? (kapasitas.TarifMotor ?? 0) :
+                                           x.JenisKend == 2 ? (kapasitas.TarifMobil ?? 0) :
+                                           x.JenisKend == 3 ? (kapasitas.TarifTrukBus ?? 0) : 0),
+
+                        EstimasiPajak = g.Sum(x => x.JenisKend == 1 ? (kapasitas.TarifMotor ?? 0) :
+                                                   x.JenisKend == 2 ? (kapasitas.TarifMobil ?? 0) :
+                                                   x.JenisKend == 3 ? (kapasitas.TarifTrukBus ?? 0) : 0) * 0.25m,
+
+                        TahunIni = g.Count(),
+                        TahunKemarin = queryTahunKemarin
+                                        .Where(x => x.Bulan == g.Key.Month)
+                                        .Select(x => (int?)x.Total) // cast ke nullable
+                                        .FirstOrDefault() ?? 0,
+
+
+                        Potensi = (kapasitas.TarifMotor ?? 0) * (kapasitas.KapMotor ?? 0) +
+                                  (kapasitas.TarifMobil ?? 0) * (kapasitas.KapMobil ?? 0) +
+                                  (kapasitas.TarifTrukBus ?? 0) * (kapasitas.KapTrukBus ?? 0)
+                    })
+                    .ToList();
+
+                return data;
+            }
+
+
+            public static List<MonitoringCCTVKapasitas> GetMonitoringCCTVHarian(string nop, int vendorId, int tahun, int bulan)
+            {
+                var context = DBClass.GetContext();
+
+                var kapasitas = context.DbPotensiParkirs
+                    .Where(p => p.Nop == nop && p.TahunBuku == tahun)
+                    .FirstOrDefault();
+
+                //var data = context.TOpParkirCctvs
+                //    .Where(l => l.Nop == nop && l.WaktuMasuk.Year == tahun && l.WaktuMasuk.Month == bulan)
+                //    .GroupBy(l => new { l.WaktuMasuk.Date, l.JenisKend })
+                //    .Select(g => new MonitoringCCTVKapasitas
+                //    {
+                //        Nop = nop,
+                //        Tanggal = g.Key.Date,
+                //        JenisKendaraan = g.Key.JenisKend,
+                //        JumlahKendaraanTerparkir = g.Count(),
+                //        Kapasitas = g.Key.JenisKend == 1 ? (kapasitas?.KapMotor ?? 0) :
+                //                    g.Key.JenisKend == 2 ? (kapasitas?.KapMobil ?? 0) :
+                //                    g.Key.JenisKend == 3 ? (kapasitas?.KapTrukBus ?? 0) : 0,
+                //        Tarif = g.Key.JenisKend == 1 ? (kapasitas?.TarifMotor ?? 0) :
+                //                g.Key.JenisKend == 2 ? (kapasitas?.TarifMobil ?? 0) :
+                //                g.Key.JenisKend == 3 ? (kapasitas?.TarifTrukBus ?? 0) : 0
+                //    })
+                //    .ToList();
+
+                //dikosongin dulu
+                return null;
+            }
+
+
         }
 
 
