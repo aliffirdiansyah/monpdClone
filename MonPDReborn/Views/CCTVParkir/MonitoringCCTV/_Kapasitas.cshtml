@@ -120,10 +120,66 @@
                     
 
                 </div>
+
+                <div class="table-responsive mt-4">
+                    @(
+                                        Html.DevExtreme().DataGrid<object>()
+                                        .ID("KapasitasMonitoringCCTVHarianGrid")
+                                        .DataSource(new object[] { }) // kosong dulu
+                                        .ShowBorders(true)
+                                        .ShowColumnHeaders(true)
+                                        .RowAlternationEnabled(true)
+                                        .ColumnAutoWidth(true)
+                                        .Paging(p => p.PageSize(10))
+                                        .Columns(columns =>
+                                        {
+                                            columns.Add().Caption("Tanggal");
+                                            columns.Add().Caption("Motor");
+                                            columns.Add().Caption("Mobil");
+                                            columns.Add().Caption("Unknown");
+                                            columns.Add().Caption("Omset");
+                                            columns.Add().Caption("Est. Pajak");
+                                        })
+                                        )
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Dummy data bulanan
+            var dummyBulanan = [
+                { Bulan: "Januari", Motor: 120, Mobil: 80, Unknown: 5, Omset: 2000000, EstPajak: 500000, TahunKemaren: 150, TahunIni: 205, Potensi: 3000000 },
+                { Bulan: "Februari", Motor: 90, Mobil: 70, Unknown: 2, Omset: 1500000, EstPajak: 375000, TahunKemaren: 120, TahunIni: 162, Potensi: 2800000 },
+                { Bulan: "Maret", Motor: 110, Mobil: 85, Unknown: 3, Omset: 2100000, EstPajak: 525000, TahunKemaren: 160, TahunIni: 198, Potensi: 3100000 }
+            ];
+
+            $("#KapasitasMonitoringCCTVGrid").dxDataGrid("instance").option("dataSource", dummyBulanan);
+        });
+
+        // Dummy data harian
+            var dummyHarian = [
+                { Tanggal: "2025-09-01", Motor: 15, Mobil: 8, Unknown: 0, Omset: 400000, EstPajak: 100000 },
+                { Tanggal: "2025-09-02", Motor: 12, Mobil: 10, Unknown: 1, Omset: 380000, EstPajak: 95000 },
+                { Tanggal: "2025-09-03", Motor: 20, Mobil: 7, Unknown: 0, Omset: 500000, EstPajak: 125000 }
+            ];
+            $("#KapasitasMonitoringCCTVHarianGrid").dxDataGrid("instance").option("dataSource", dummyHarian);
+
+            // Event klik baris bulanan → filter harian
+            $("#KapasitasMonitoringCCTVGrid").dxDataGrid("instance").option("onRowClick", function (e) {
+                var selectedMonth = e.data.Bulan;
+                var filtered = dummyHarian.filter(x => x.Tanggal.startsWith("2025-09")); // sementara hardcode
+                $("#KapasitasMonitoringCCTVHarianGrid").dxDataGrid("instance").option("dataSource", filtered);
+            });
+        });
+    </script>
+
+
+}
 
 
 @section Scripts {
