@@ -197,6 +197,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DetailUpayaReklame> DetailUpayaReklames { get; set; }
 
+    public virtual DbSet<ItungAvgPerNop> ItungAvgPerNops { get; set; }
+
+    public virtual DbSet<ItungTargetHiburan> ItungTargetHiburans { get; set; }
+
     public virtual DbSet<MAbtKelompok> MAbtKelompoks { get; set; }
 
     public virtual DbSet<MAbtKelompokHdum> MAbtKelompokHda { get; set; }
@@ -252,6 +256,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MvDbePbjtRekapDetail> MvDbePbjtRekapDetails { get; set; }
 
     public virtual DbSet<MvDbeWilayah> MvDbeWilayahs { get; set; }
+
+    public virtual DbSet<MvItungTargetHiburan> MvItungTargetHiburans { get; set; }
 
     public virtual DbSet<MvPrediksi2025> MvPrediksi2025s { get; set; }
 
@@ -493,7 +499,7 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+   /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
 
@@ -1325,6 +1331,16 @@ public partial class ModelContext : DbContext
             entity.HasKey(e => new { e.Nop, e.Tanggal, e.Seq }).HasName("SYS_C0032871");
         });
 
+        modelBuilder.Entity<ItungAvgPerNop>(entity =>
+        {
+            entity.ToView("ITUNG_AVG_PER_NOP");
+        });
+
+        modelBuilder.Entity<ItungTargetHiburan>(entity =>
+        {
+            entity.ToView("ITUNG_TARGET_HIBURAN");
+        });
+
         modelBuilder.Entity<MAbtKelompok>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("M_ABT_KELOMPOK_PK");
@@ -1557,6 +1573,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MvDbeWilayah>(entity =>
         {
             entity.ToView("MV_DBE_WILAYAH");
+        });
+
+        modelBuilder.Entity<MvItungTargetHiburan>(entity =>
+        {
+            entity.ToView("MV_ITUNG_TARGET_HIBURAN");
         });
 
         modelBuilder.Entity<MvPrediksi2025>(entity =>

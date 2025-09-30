@@ -19,9 +19,12 @@ public partial class DbAkunTargetObjekResto
     public decimal? BulanBuku { get; set; }
 
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(100)]
     [Unicode(false)]
-    public string Nop { get; set; } = null!;
+    public string? Nop { get; set; }
+
+    [Column("KATEGORI_ID", TypeName = "NUMBER")]
+    public decimal? KategoriId { get; set; }
 
     [Column("AVG_NILAI", TypeName = "NUMBER")]
     public decimal? AvgNilai { get; set; }
