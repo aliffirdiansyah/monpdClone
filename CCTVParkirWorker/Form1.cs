@@ -3,12 +3,14 @@ using Microsoft.VisualBasic.ApplicationServices;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
+using System.Net.Http.Headers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CCTVParkirWorker
@@ -17,11 +19,15 @@ namespace CCTVParkirWorker
     {
         ApiWorker _ApiWorker = new ApiWorker();
         private List<ParkirView> _parkirList;
+        private List<ParkirView> _parkirListTelkom;
 
         public int _INTERVAL_API;
         public string _URL;
         public string _USER;
         public string _PASS;
+        public string _USER_TELKOM;
+        public string _PASS_TELKOM;
+        public string _TOKEN_TELKOM;
         public string _TOKEN;
         public int _INTERVAL_DAY;
 
@@ -34,9 +40,9 @@ namespace CCTVParkirWorker
         {
             dataGridView1.AllowUserToAddRows = false;
             dataGridView2.AllowUserToAddRows = false;
+            dataGridView3.AllowUserToAddRows = false;
 
             _parkirList = GetOpParkirCctv();
-
             foreach (var item in _parkirList)
             {
                 var idx = dataGridView1.Rows.Add(
@@ -74,10 +80,35 @@ namespace CCTVParkirWorker
                 );
             }
 
+            _parkirListTelkom = GetOpParkirCctvTelkom();
+            foreach (var item in _parkirListTelkom)
+            {
+                var idx = dataGridView3.Rows.Add(
+                    item.No,
+                    item.Id,
+                    item.NOP, //NOP
+                    item.Nama, //Nama
+                    item.Alamat, //Alamat
+                    item.Uptb, //CCTVId
+                    item.CCTVId, //CCTVId
+                    item.Mode, //Mode
+                     "", //LastConnected
+                     "Start", //Action
+                     "Idle", //Status
+                     "", //ErrMessage
+                     "" //Log
+                );
+            }
+
             _INTERVAL_API = 45;
             _URL = "http://202.146.133.26/grpc";
+
             _USER = "bapendasby";
             _PASS = "surabaya2025!!";
+
+            _USER_TELKOM = "pemkot_surabaya_va";
+            _PASS_TELKOM = "P3mk0tSuR4b4Ya";
+
             _INTERVAL_DAY = 90;
 
             dataGridView1.CellClick += DataGridView1_CellClick;
@@ -86,6 +117,10 @@ namespace CCTVParkirWorker
 
             dataGridView2.CellClick += DataGridView2_CellClick;
             btnStartAllLogJasnita.Click += BtnStartLogAll_Click;
+            btnStopAllLogJasnita.Click += BtnStopLogAll_Click;
+
+            dataGridView3.CellClick += DataGridView3_CellClick;
+            btnStartAllTelkom.Click += BtnStartLogAll_Click;
             btnStopAllLogJasnita.Click += BtnStopLogAll_Click;
         }
         private async void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -136,6 +171,9 @@ namespace CCTVParkirWorker
                     btnCell.Value = "Start";
                     row.Cells["Status"].Value = "";
                     row.Cells["Status"].Style.BackColor = Color.Red;
+
+                    var context = DBClass.GetContext();
+                    await context.Database.CloseConnectionAsync();
                 }
             }
         }
@@ -187,6 +225,63 @@ namespace CCTVParkirWorker
                     btnCell.Value = "Start";
                     row.Cells["StatusLog"].Value = "";
                     row.Cells["StatusLog"].Style.BackColor = Color.Red;
+
+                    var context = DBClass.GetContext();
+                    await context.Database.CloseConnectionAsync();
+                }
+            }
+        }
+        private async void DataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dataGridView3.Columns[e.ColumnIndex].Name == "ActionTelkom")
+            {
+                var row = dataGridView3.Rows[e.RowIndex];
+                var btnCell = (DataGridViewButtonCell)row.Cells["ActionTelkom"];
+
+                if (btnCell.Value.ToString() == "Start")
+                {
+                    btnCell.Value = "Stop";
+                    row.Cells["ErrorTelkom"].Value = "";
+                    row.Cells["StatusTelkom"].Value = "";
+                    row.Cells["StatusTelkom"].Style.BackColor = Color.Green;
+
+                    // mulai task
+                    var cts = new CancellationTokenSource();
+                    _taskTokens[e.RowIndex] = cts;
+
+                    string id = row.Cells["IdTelkom"].Value?.ToString() ?? "";
+                    var parkir = GetParkirById(id);
+
+                    if (parkir == null)
+                    {
+                        row.Cells["ErrorTelkom"].Value = "Data parkir tidak ditemukan";
+                        btnCell.Value = "Start";
+                        row.Cells["StatusTelkom"].Value = "";
+                        row.Cells["StatusTelkom"].Style.BackColor = Color.Red;
+                        _taskTokens.Remove(e.RowIndex);
+                        return;
+                    }
+
+                    // Jalankan task di thread background
+                    _ = Task.Run(async () =>
+                    {
+                        await RunTaskCctvTelkom(parkir, cts.Token, row);
+                    });
+                }
+                else // tombol Stop ditekan
+                {
+                    if (_taskTokens.ContainsKey(e.RowIndex))
+                    {
+                        _taskTokens[e.RowIndex].Cancel();
+                        _taskTokens.Remove(e.RowIndex);
+                    }
+
+                    btnCell.Value = "Start";
+                    row.Cells["StatusTelkom"].Value = "";
+                    row.Cells["StatusTelkom"].Style.BackColor = Color.Red;
+
+                    var context = DBClass.GetContext();
+                    await context.Database.CloseConnectionAsync();
                 }
             }
         }
@@ -444,6 +539,7 @@ namespace CCTVParkirWorker
 
             try
             {
+                await context.Database.OpenConnectionAsync(token);
                 if (toInsert.Count > 0)
                 {
                     toInsert = toInsert
@@ -474,7 +570,6 @@ namespace CCTVParkirWorker
             // simpan semua sekaligus
            
         }
-
 
 
         //DATAGRIDVIEW 2 - LOG JASNITA
@@ -745,6 +840,205 @@ namespace CCTVParkirWorker
         }
 
 
+        //DATAGRIDVIEW 3 - PARKIR CCTV TELKOM
+        private async Task RunTaskCctvTelkom(ParkirView op, CancellationToken token, DataGridViewRow row)
+        {
+            try
+            {
+                while (!token.IsCancellationRequested) // loop terus
+                {
+                    UpdateLogTelkom(row, "Fetching...");
+
+                    var tglAwal = DateTime.Now.AddDays(-1 * _INTERVAL_DAY);
+                    var tglAkhir = DateTime.Now.Date.AddDays(1).AddMilliseconds(-1);
+
+                    var dataCctvParkir = await GetDataParkirCctvTelkom(row, op, tglAwal, tglAkhir, token);
+                    await InsertToDbCctvTelkom(op, dataCctvParkir, row, token);
+
+                    row.Cells["LastConnected"].Value = DateTime.Now.ToString();
+                    UpdateLogTelkom(row, "Inserted");
+
+                    if (token.IsCancellationRequested)
+                        break;
+
+                    var nextRun = DateTime.Now.AddMinutes(_INTERVAL_API);
+                    UpdateLogTelkom(row, $"[DONE] Next Run: {nextRun:dd/MM/yyyy HH:mm:ss}");
+                    await Task.Delay(TimeSpan.FromMinutes(_INTERVAL_API), token);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                UpdateLogTelkom(row, "Dihentikan manual ❌");
+            }
+            catch (Exception ex)
+            {
+                // ✅ Log error di UI
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new Action(() =>
+                    {
+                        row.Cells["Error"].Value = ex.Message;
+                        row.Cells["Status"].Style.BackColor = Color.Red;
+                        row.Cells["Status"].Value = "Error";
+                        var btnCell = (DataGridViewButtonCell)row.Cells["Action"];
+                        btnCell.Value = "Start";
+                    }));
+                }
+                else
+                {
+                    row.Cells["Error"].Value = ex.Message;
+                    row.Cells["Status"].Style.BackColor = Color.Red;
+                    row.Cells["Status"].Value = "Error";
+                    var btnCell = (DataGridViewButtonCell)row.Cells["Action"];
+                    btnCell.Value = "Start";
+                }
+
+                UpdateLogTelkom(row, $"{op.AccessPoint} Error: " + ex.Message);
+
+                return;
+            }
+        }
+        public async Task<List<TelkomEvent.Result>> GetDataParkirCctvTelkom(DataGridViewRow row, ParkirView op, DateTime tglAwal, DateTime tglAkhir, CancellationToken token)
+        {
+            var results = new List<TelkomEvent.Result>();
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(_TOKEN_TELKOM))
+                    {
+                        UpdateLogTelkom(row, "Token Telkom belum dibuat. Silakan login dulu.");
+                        return results;
+                    }
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_TELKOM);
+
+                    // Loop dari tanggal awal sampai akhir
+                    for (var tgl = tglAwal; tgl <= tglAkhir; tgl = tgl.AddDays(1))
+                    {
+                        if (token.IsCancellationRequested)
+                            break;
+
+                        string dateStr = tgl.ToString("yyyy-MM-dd");
+                        string url = $"https://bigvision.id/api/analytics/license-plate-recognition/data-tables?date={dateStr}&id_camera={op.CCTVId}";
+
+                        var response = await client.GetAsync(url, token);
+
+                        // Jika status bukan sukses, lanjut ke tanggal berikutnya
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            UpdateLogTelkom(row,$"Gagal ambil data Telkom untuk {dateStr}: {response.StatusCode}");
+                            continue;
+                        }
+
+                        var json = await response.Content.ReadAsStringAsync(token);
+
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                        var data = JsonSerializer.Deserialize<TelkomEvent.TelkomEventResponse>(json, options);
+
+                        if (data?.Result != null && data.Result.Count > 0)
+                        {
+                            results.AddRange(data.Result);
+                            UpdateLogTelkom(row,$"✅ {dateStr} → {data.Result.Count} data");
+                        }
+                        else
+                        {
+                            UpdateLogTelkom(row,$"ℹ️ {dateStr} → tidak ada data");
+                        }
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    UpdateLogTelkom(row, "Dihentikan manual ❌");
+                }
+                catch (Exception ex)
+                {
+                    // ✅ Log error di UI
+                    if (InvokeRequired)
+                    {
+                        BeginInvoke(new Action(() =>
+                        {
+                            row.Cells["ErrorTelkom"].Value = ex.Message;
+                            row.Cells["StatusTelkom"].Style.BackColor = Color.Red;
+                            row.Cells["StatusTelkom"].Value = "Error";
+                            var btnCell = (DataGridViewButtonCell)row.Cells["ActionTelkom"];
+                            btnCell.Value = "Start";
+                        }));
+                    }
+                    else
+                    {
+                        row.Cells["ErrorTelkom"].Value = ex.Message;
+                        row.Cells["StatusTelkom"].Style.BackColor = Color.Red;
+                        row.Cells["StatusTelkom"].Value = "Error";
+                        var btnCell = (DataGridViewButtonCell)row.Cells["ActionTelkom"];
+                        btnCell.Value = "Start";
+                    }
+
+                    UpdateLogTelkom(row, $"{op.NOP} {op.CCTVId} Error: " + ex.Message);
+                }
+            }
+
+            return results;
+        }
+        public async Task InsertToDbCctvTelkom(ParkirView op, List<TelkomEvent.Result> dataList, DataGridViewRow row, CancellationToken token)
+        {
+            var context = DBClass.GetContext();
+            var toInsert = new List<TOpParkirCctv>();
+            foreach (var item in dataList)
+            {
+                bool isIdExist = context.TOpParkirCctvs.Any(x => x.Id == item.Id.ToString() && x.Nop == op.NOP && x.CctvId == op.CCTVId);
+                if (!isIdExist)
+                {
+                    var insert = new TOpParkirCctv();
+                    insert.Id = item.Id.ToString();
+                    insert.Nop = op.NOP;
+                    insert.CctvId = op.CCTVId;
+                    insert.NamaOp = op.Nama;
+                    insert.AlamatOp = op.Alamat;
+                    insert.WilayahPajak = op.Uptb;
+                    insert.WaktuMasuk = ParseFlexibleDate(item.Timestamp);
+                    insert.JenisKend = (int)GetJenisKendaraan(item.TipeKendaraan);
+                    insert.PlatNo = item.PlatNomor.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor.ToUpper();
+                    insert.WaktuKeluar = ParseFlexibleDate(item.Timestamp);
+                    insert.Direction = (int)EnumFactory.CctvParkirDirection.Incoming;
+                    insert.Log = "";
+                    insert.ImageUrl = item.Image;
+
+                    toInsert.Add(insert);
+                }
+            }
+
+            try
+            {
+                await context.Database.OpenConnectionAsync(token);
+                if (toInsert.Count > 0)
+                {
+                    UpdateLogTelkom(row, $"Inserting {toInsert.Count} record(s).");
+                    await context.TOpParkirCctvs.AddRangeAsync(toInsert, token);
+                    await context.SaveChangesAsync(token);
+                    await context.Database.CloseConnectionAsync();
+                    UpdateLogTelkom(row, $"Inserted {toInsert.Count} record(s).");
+                }
+                else
+                {
+                    UpdateLogTelkom(row, "No new data to insert.");
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateLogTelkom(row, $"Error Insert Db: {ex.Message}");
+            }
+            finally
+            {
+                await context.Database.CloseConnectionAsync();
+            }
+        }
+
         // EVENT
         private async void BtnStartAll_Click(object sender, EventArgs e)
         {
@@ -858,10 +1152,103 @@ namespace CCTVParkirWorker
                 }
             }
         }
+        private async void BtnStartTelkomAll_Click(object sender, EventArgs e)
+        {
+            // Disable tombol start, enable tombol stop
+            btnStartAll.Enabled = false;
+            btnStopAll.Enabled = true;
+
+            foreach (DataGridViewRow row in dataGridView3.Rows)
+            {
+                if (row.Cells["ActionTelkom"] is DataGridViewButtonCell btnCell)
+                {
+                    string actionText = btnCell.Value?.ToString() ?? "";
+
+                    if (actionText == "Start")
+                    {
+                        int rowIndex = row.Index;
+                        int colIndex = dataGridView3.Columns["ActionTelkom"].Index;
+
+                        await Task.Run(() =>
+                        {
+                            DataGridView3_CellClick(
+                                dataGridView3,
+                                new DataGridViewCellEventArgs(colIndex, rowIndex)
+                            );
+                        });
+
+                        // kasih jeda sedikit biar tidak semua nembak API bersamaan
+                        await Task.Delay(300);
+                    }
+                }
+            }
+        }
+        private void BtnStopTelkomAll_Click(object sender, EventArgs e)
+        {
+            // Enable kembali tombol start, disable tombol stop
+            btnStartAll.Enabled = true;
+            btnStopAll.Enabled = false;
+
+            foreach (DataGridViewRow row in dataGridView3.Rows)
+            {
+                if (row.Cells["ActionTelkom"] is DataGridViewButtonCell btnCell)
+                {
+                    string actionText = btnCell.Value?.ToString() ?? "";
+
+                    if (actionText == "Stop")
+                    {
+                        int rowIndex = row.Index;
+                        int colIndex = dataGridView3.Columns["ActionTelkom"].Index;
+
+                        DataGridView3_CellClick(
+                            dataGridView3,
+                            new DataGridViewCellEventArgs(colIndex, rowIndex)
+                        );
+                    }
+                }
+            }
+        }
 
 
 
+        public List<ParkirView> GetOpParkirCctvTelkom()
+        {
+            var result = new List<ParkirView>();
 
+            var _cont = DBClass.GetContext();
+            var pl = _cont.MOpParkirCctvs
+                .Include(x => x.MOpParkirCctvTelkoms)
+                .Where(x => x.Vendor == (int)EnumFactory.EVendorParkirCCTV.Telkom)
+                .OrderBy(x => x.NamaOp)
+                .ToList();
+
+
+            int no = 1;
+            foreach (var item in pl)
+            {
+                foreach (var det in item.MOpParkirCctvTelkoms)
+                {
+                    result.Add(new ParkirView()
+                    {
+                        No = no,
+                        Id = item.Nop + "-" + det.CctvId.ToString(),
+                        NOP = item.Nop,
+                        Nama = item.NamaOp,
+                        Alamat = item.AlamatOp,
+                        Uptb = item.WilayahPajak,
+                        CCTVId = !string.IsNullOrEmpty(det.CctvId) ? det.CctvId : "",
+                        Mode = det.CctvMode == 1 ? "IN" : det.CctvMode == 2 ? "OUT" : "HYBRID",
+                        Status = "Idle",
+                        LastConnected = null,
+                        Err = null
+                    });
+
+                    no++;
+                }
+            }
+
+            return result.OrderBy(x => x.Nama).ToList();
+        }
         public List<ParkirView> GetOpParkirCctv()
         {
             var result = new List<ParkirView>();
@@ -905,6 +1292,10 @@ namespace CCTVParkirWorker
         {
             return _parkirList.FirstOrDefault(q => q.Id == id);
         }
+        public ParkirView? GetParkirTelkomById(string id)
+        {
+            return _parkirListTelkom.FirstOrDefault(q => q.Id == id);
+        }
         private async Task GenerateToken(DataGridViewRow row)
         {
             using (var client = new HttpClient())
@@ -944,6 +1335,62 @@ namespace CCTVParkirWorker
                 }
             }
         }
+        private async Task GenerateTokenTelkom(DataGridViewRow row)
+        {
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    // URL endpoint login
+                    var url = "https://stage1.bigvision.id/api/user/vaq/login";
+
+                    // Body request (ubah sesuai kredensial sebenarnya)
+                    var requestBody = new
+                    {
+                        username = "qwe",
+                        password = "ewq"
+                    };
+
+                    // Serialize body ke JSON
+                    var json = JsonSerializer.Serialize(requestBody);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    // Kirim POST request
+                    var response = await client.PostAsync(url, content);
+
+                    // Pastikan respons sukses
+                    response.EnsureSuccessStatusCode();
+
+                    // Baca hasil JSON
+                    var responseString = await response.Content.ReadAsStringAsync();
+
+                    // Parse JSON
+                    using var doc = JsonDocument.Parse(responseString);
+                    var root = doc.RootElement;
+
+                    // Ambil access_token
+                    var token = root.GetProperty("result").GetProperty("access_token").GetString();
+
+                    // Simpan ke field global
+                    _TOKEN_TELKOM = token ?? "";
+
+                    // Opsional: tampilkan di debug/log
+                    Console.WriteLine($"TOKEN_TELKOM: {_TOKEN_TELKOM}");
+                }
+                catch (HttpRequestException ex)
+                {
+                    MessageBox.Show($"Gagal menghubungi server Telkom: {ex.Message}");
+                }
+                catch (JsonException ex)
+                {
+                    MessageBox.Show($"Gagal parsing respon login Telkom: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error tidak terduga: {ex.Message}");
+                }
+            }
+        }
         private static string ConvertSseOutputJson(string output)
         {
             try
@@ -972,6 +1419,8 @@ namespace CCTVParkirWorker
                     return EnumFactory.EJenisKendParkirCCTV.Motor;
                 case "TRUCK":
                     return EnumFactory.EJenisKendParkirCCTV.Truck;
+                case "BUS":
+                    return EnumFactory.EJenisKendParkirCCTV.Bus;
                 default:
                     return EnumFactory.EJenisKendParkirCCTV.Unknown;
             }
@@ -1057,6 +1506,16 @@ namespace CCTVParkirWorker
             }
 
             row.Cells["LogLog"].Value = message; // ✅ replace, bukan append
+        }
+        private void UpdateLogTelkom(DataGridViewRow row, string message)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => UpdateLogTelkom(row, message)));
+                return;
+            }
+
+            row.Cells["LogTelkom"].Value = message; // ✅ replace, bukan append
         }
     }
 }

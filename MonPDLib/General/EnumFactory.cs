@@ -801,6 +801,8 @@ namespace MonPDLib.General
             Mobil = 2,
             [Description("Truck")]
             Truck = 3,
+            [Description("Bus")]
+            Bus = 4,
         }
         public enum EStatusCCTV
         {
